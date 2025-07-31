@@ -209,9 +209,9 @@
     }
 
     function formatContact(txt) {
-      const phoneMatch = txt?.match(/(\+?\d[\d\s.-]{6,})/);
+      const phoneMatch = txt?.match(/(\+?\d[\d\s.,*-]{6,})/);
       if (phoneMatch) {
-        const raw = phoneMatch[1].replace(/[^\d+]/g, "");
+        const raw = phoneMatch[1].replace(/[^\d+,*]/g, "");
         return txt.replace(phoneMatch[1], `<a href="tel:${raw}">${phoneMatch[1]}</a>`);
       }
       return txt || "";
@@ -219,11 +219,8 @@
 
     function formatPortail(value) {
       if (!value) return "";
-      const digitsOnly = value.replace(/\D/g, "");
-      if (digitsOnly.length >= 8) {
-        return `<a href="tel:${digitsOnly}">${value}</a>`;
-      }
-      return value;
+      // on affiche et on compose exactement la valeur (avec virgule, étoile, etc)
+      return `<a href="tel:${value}">${value}</a>`;
     }
 
     function formatRSS(value) {
