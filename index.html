@@ -8,7 +8,7 @@
     body {
       font-family: 'Inter', sans-serif;
       background-color: #fff;
-      padding: 2rem;
+      padding: 1rem 1rem 2rem;
       color: #333;
       margin: 0;
       display: flex;
@@ -16,19 +16,20 @@
       align-items: center;
     }
 
+    /* Animation du train */
     #train-container {
       width: 100%;
       max-width: 600px;
-      height: 48px;
+      height: 40px;
       overflow: hidden;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
       position: relative;
     }
     #train {
       position: absolute;
       top: 0;
       left: -150px;
-      height: 42px;
+      height: 36px;
       animation: trainMove 18s linear infinite;
     }
     @keyframes trainMove {
@@ -37,7 +38,7 @@
     }
 
     h1 {
-      font-size: 22px;
+      font-size: 20px;
       margin: 0 0 1rem 0;
       font-weight: 600;
       width: 100%;
@@ -48,8 +49,8 @@
     input[type="text"] {
       width: 100%;
       max-width: 600px;
-      padding: 14px 20px;
-      font-size: 17px;
+      padding: 12px 16px;
+      font-size: 16px;
       border-radius: 12px;
       border: 1px solid #ccc;
       box-shadow: 0 4px 10px rgba(0,0,0,0.05);
@@ -91,6 +92,7 @@
       color: #444;
       font-size: 16px;
       line-height: 1.5;
+      box-sizing: border-box;
     }
 
     #result h2 {
@@ -115,6 +117,7 @@
       border: 1px solid #1a73e8;
       border-radius: 10px;
       transition: 0.3s;
+      white-space: nowrap;
     }
 
     .inline-links a:hover {
@@ -129,9 +132,49 @@
     #result p strong {
       color: #333;
     }
+
+    /* Media queries pour mobile */
+    @media (max-width: 480px) {
+      body {
+        padding: 1rem 1rem 1.5rem;
+      }
+      h1 {
+        font-size: 18px;
+        margin-bottom: 0.8rem;
+      }
+      input[type="text"] {
+        font-size: 15px;
+        padding: 10px 14px;
+      }
+      ul#suggestions li {
+        padding: 12px 16px;
+        font-size: 15px;
+      }
+      #result {
+        font-size: 14px;
+        padding: 1rem 1rem;
+      }
+      #train-container {
+        height: 36px;
+      }
+      #train {
+        height: 32px;
+      }
+      .inline-links {
+        flex-direction: column;
+        gap: 4px;
+      }
+      .inline-links a {
+        font-size: 13px;
+        padding: 6px 10px;
+        white-space: normal;
+      }
+    }
   </style>
 </head>
 <body>
+
+  <!-- Site créé par Arnaud Debaecker -->
 
   <div id="train-container">
     <img id="train" src="https://bit.ly/458iTYc" alt="Train animé" />
@@ -143,15 +186,38 @@
   <div id="result"></div>
 
   <script>
+    const sheetUrl = "https://docs.google.com/spreadsheets/d/1rn_tJ0GZJqHHTgWUcZoRloVOHAQcApw37SVrStZAc4k/gviz/tq?tqx=out:json";
     let lieux = [];
 
-    async function loadData() {
-      try {
-        const response = await fetch('lieux.json');
-        lieux = await response.json();
-      } catch (e) {
-        alert('Erreur de chargement des lieux : ' + e);
-      }
+    function parseGoogleSheetData(json) {
+      const data = [];
+      const rows = json.table.rows;
+      rows.forEach(row => {
+        const nom = row.c[0]?.v || "";
+        const lat = row.c[1]?.v || "";
+        const lon = row.c[2]?.v || "";
+        const desc = row.c[3]?.v || "";
+        const rss = row.c[4]?.v || "";
+        const contact = row.c[5]?.v || "";
+        const portail = row.c[6]?.v || "";
+        if (nom && lat && lon) {
+          data.push({ nom, latitude: lat, longitude: lon, description: desc, rss, contact, portail });
+        }
+      });
+      return data;
+    }
+
+    function loadData() {
+      fetch(sheetUrl)
+        .then(res => res.text())
+        .then(text => {
+          const jsonText = text.substring(text.indexOf("{"), text.lastIndexOf("}") + 1);
+          const data = JSON.parse(jsonText);
+          lieux = parseGoogleSheetData(data);
+        })
+        .catch(err => {
+          alert("Erreur de chargement : " + err);
+        });
     }
 
     function formatContact(txt) {
