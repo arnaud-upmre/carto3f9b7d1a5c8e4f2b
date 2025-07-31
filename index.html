@@ -7,53 +7,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <style>
-    :root {
-      --bg-light: #fff;
-      --bg-dark: #121212;
-      --text-light: #333;
-      --text-dark: #ddd;
-      --blue: #1a73e8;
-      --blue-hover: #145dbf;
-      --shadow-light: rgba(0,0,0,0.1);
-      --shadow-dark: rgba(255,255,255,0.1);
-    }
     body {
       font-family: 'Inter', sans-serif;
-      background-color: var(--bg-light);
-      color: var(--text-light);
+      background-color: #fff;
       padding: 1rem;
+      color: #333;
       margin: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
       width: 100vw;
       box-sizing: border-box;
-      transition: background-color 0.3s ease, color 0.3s ease;
-      min-height: 100vh;
-      position: relative;
     }
-    body.dark {
-      background-color: var(--bg-dark);
-      color: var(--text-dark);
-    }
-    #mode-toggle {
-      position: fixed;
-      top: 12px;
-      right: 12px;
-      background: var(--blue);
-      color: white;
-      border: none;
-      padding: 8px 12px;
-      border-radius: 20px;
-      cursor: pointer;
-      font-weight: 600;
-      box-shadow: 0 3px 8px var(--shadow-light);
-      transition: background-color 0.3s ease;
-      z-index: 10;
-    }
-    #mode-toggle:hover {
-      background-color: var(--blue-hover);
-    }
+
     #train-container {
       width: 100%;
       max-width: 600px;
@@ -73,6 +39,7 @@
       from { left: -150px; }
       to { left: 100%; }
     }
+
     h1 {
       font-size: 20px;
       margin: 0 0 0.8rem 0;
@@ -82,6 +49,7 @@
       padding: 0 1rem;
       text-align: left;
     }
+
     input[type="text"] {
       width: 100%;
       max-width: 600px;
@@ -91,19 +59,13 @@
       border: 1px solid #ccc;
       box-sizing: border-box;
       outline: none;
-      transition: border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease;
-      background-color: var(--bg-light);
-      color: var(--text-light);
-    }
-    body.dark input[type="text"] {
-      background-color: #222;
-      border-color: #444;
-      color: var(--text-dark);
+      transition: border-color 0.3s ease;
     }
     input[type="text"]:focus {
-      border-color: var(--blue);
+      border-color: #1a73e8;
       box-shadow: 0 4px 14px rgba(26,115,232,0.4);
     }
+
     ul#suggestions {
       list-style: none;
       padding: 0;
@@ -112,72 +74,40 @@
       width: 100%;
       border-radius: 12px;
       overflow: hidden;
-      box-shadow: 0 6px 15px var(--shadow-light);
-      background-color: var(--bg-light);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+      background-color: #fff;
       font-size: 15px;
-      color: var(--text-light);
-      opacity: 0;
-      max-height: 0;
-      transition: opacity 0.3s ease, max-height 0.3s ease;
-    }
-    body.dark ul#suggestions {
-      box-shadow: 0 6px 15px var(--shadow-dark);
-      background-color: #222;
-      color: var(--text-dark);
-    }
-    ul#suggestions.visible {
-      opacity: 1;
-      max-height: 400px;
+      color: #333;
     }
     ul#suggestions li {
       padding: 12px 16px;
       cursor: pointer;
       border-bottom: 1px solid #eee;
-      transition: background-color 0.3s ease, color 0.3s ease;
-    }
-    body.dark ul#suggestions li {
-      border-color: #444;
     }
     ul#suggestions li:hover {
       background-color: #f0f8ff;
-      color: var(--blue);
+      color: #1a73e8;
     }
-    body.dark ul#suggestions li:hover {
-      background-color: #145dbf;
-      color: white;
-    }
+
     #result {
       display: none;
-      background: var(--bg-light);
+      background: #ffffff;
       padding: 1rem 1.5rem;
       border-radius: 18px;
-      box-shadow: 0 8px 24px var(--shadow-light);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
       max-width: 600px;
       width: 100%;
-      color: var(--text-light);
+      color: #444;
       font-size: 15px;
       line-height: 1.5;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-    body.dark #result {
-      background: #222;
-      box-shadow: 0 8px 24px var(--shadow-dark);
-      color: var(--text-dark);
-    }
-    #result.visible {
-      display: block;
-      opacity: 1;
     }
     #result h2 {
       margin-top: 0;
       font-size: 22px;
       font-weight: 700;
-      color: var(--blue);
+      color: #1a73e8;
     }
-    body.dark #result h2 {
-      color: var(--blue);
-    }
+
     .inline-links {
       display: flex;
       flex-wrap: wrap;
@@ -189,26 +119,25 @@
       padding: 6px 10px;
       font-size: 14px;
       text-decoration: none;
-      color: var(--blue);
-      border: 1px solid var(--blue);
+      color: #1a73e8;
+      border: 1px solid #1a73e8;
       border-radius: 10px;
       transition: 0.3s;
       white-space: nowrap;
     }
     .inline-links a:hover {
-      background-color: var(--blue);
+      background-color: #1a73e8;
       color: white;
     }
+
     #result p {
       margin-top: 1rem;
       color: #555;
     }
-    body.dark #result p {
-      color: #ccc;
-    }
     #result p strong {
-      color: var(--text-light);
+      color: #333;
     }
+
     @media (max-width: 480px) {
       body {
         padding: 0.8rem;
@@ -253,7 +182,7 @@
 </head>
 <body>
 
-  <button id="mode-toggle" aria-label="Basculer mode clair/sombre">🌙</button>
+  <!-- Site créé par Arnaud Debaecker -->
 
   <div id="train-container">
     <img id="train" src="https://bit.ly/458iTYc" alt="Train animé" />
@@ -280,7 +209,7 @@
     }
 
     function formatContact(txt) {
-      const phoneMatch = txt?.match(/(\+?\d[\d\s.,*-]{6,})/);
+      const phoneMatch = txt?.match(/(\+?\d[\d\s.-]{6,})/);
       if (phoneMatch) {
         const raw = phoneMatch[1].replace(/[^\d+]/g, "");
         return txt.replace(phoneMatch[1], `<a href="tel:${raw}">${phoneMatch[1]}</a>`);
@@ -290,14 +219,9 @@
 
     function formatPortail(value) {
       if (!value) return "";
-      if(value.startsWith("#")) {
-        // Ici tu peux modifier l'affichage si tu veux décoder le code, sinon on affiche brut
-        // Par exemple afficher "Code protégé" ou autre
-        return `<span style="font-style: italic; color: gray;">Code protégé</span>`;
-      }
-      // Sinon on crée lien tel normal, en nettoyant num (garde virgule, *, #)
-      let telNumber = value.replace(/[^0-9,+*,#,]/g, "");
-      return `<a href="tel:${telNumber}">${value}</a>`;
+      // Encode les virgules et astérisques pour l'URL tel:
+      const encoded = value.replace(/,/g, "%2C").replace(/\*/g, "%2A");
+      return `<a href="tel:${encoded}">${value}</a>`;
     }
 
     function formatRSS(value) {
@@ -323,7 +247,7 @@
     function showLieu(lieu) {
       const result = document.getElementById("result");
       document.getElementById("suggestions").innerHTML = "";
-      result.classList.add("visible");
+      result.style.display = "block";
       result.innerHTML = `
         <h2>📍 ${lieu.nom}</h2>
         <div class="inline-links">
@@ -344,32 +268,17 @@
       const resultEl = document.getElementById("result");
       suggestionsEl.innerHTML = "";
       resultEl.innerHTML = "";
-      resultEl.classList.remove("visible");
-      suggestionsEl.classList.remove("visible");
+      resultEl.style.display = "none";
 
       if (!query) return;
 
       const filtered = lieux.filter(l => l.nom.toLowerCase().startsWith(query));
-      if(filtered.length === 0){
-        suggestionsEl.innerHTML = `<li style="cursor:default; color: gray;">Aucun lieu trouvé</li>`;
-        suggestionsEl.classList.add("visible");
-        return;
-      }
-
       filtered.forEach(lieu => {
         const li = document.createElement("li");
         li.textContent = lieu.nom;
         li.onclick = () => showLieu(lieu);
         suggestionsEl.appendChild(li);
       });
-      suggestionsEl.classList.add("visible");
-    });
-
-    document.getElementById("mode-toggle").addEventListener("click", () => {
-      document.body.classList.toggle("dark");
-      // Change emoji
-      const btn = document.getElementById("mode-toggle");
-      btn.textContent = document.body.classList.contains("dark") ? "☀️" : "🌙";
     });
 
     loadData();
