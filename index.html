@@ -19,7 +19,6 @@
       box-sizing: border-box;
     }
 
-    /* Animation du train */
     #train-container {
       width: 100%;
       max-width: 600px;
@@ -138,7 +137,6 @@
       color: #333;
     }
 
-    /* Responsive mobile */
     @media (max-width: 480px) {
       body {
         padding: 0.8rem;
@@ -195,47 +193,27 @@
   <div id="result"></div>
 
   <script>
-    const sheetUrl = "https://docs.google.com/spreadsheets/d/1rn_tJ0GZJqHHTgWUcZoRloVOHAQcApw37SVrStZAc4k/gviz/tq?tqx=out:json";
+    const jsonUrl = "https://raw.githubusercontent.com/arnaud-upmre/recherche-lieux/main/lieux.json";
     let lieux = [];
 
-    function parseGoogleSheetData(json) {
-      const data = [];
-      const rows = json.table.rows;
-      rows.forEach(row => {
-        const nom = row.c[0]?.v || "";
-        const lat = row.c[1]?.v || "";
-        const lon = row.c[2]?.v || "";
-        const desc = row.c[3]?.v || "";
-        const rss = row.c[4]?.v || "";
-        const contact = row.c[5]?.v || "";
-        const portail = row.c[6]?.v || "";
-        if (nom && lat && lon) {
-          data.push({ nom, latitude: lat, longitude: lon, description: desc, rss, contact, portail });
-        }
-      });
-      return data;
-    }
-
     function loadData() {
-      fetch(sheetUrl)
-        .then(res => res.text())
-        .then(text => {
-          const jsonText = text.substring(text.indexOf("{"), text.lastIndexOf("}") + 1);
-          const data = JSON.parse(jsonText);
-          lieux = parseGoogleSheetData(data);
+      fetch(jsonUrl)
+        .then(res => res.json())
+        .then(data => {
+          lieux = data;
         })
         .catch(err => {
-          alert("Erreur de chargement : " + err);
+          alert("Erreur de chargement du JSON : " + err);
         });
     }
 
     function formatContact(txt) {
-      const phoneMatch = txt.match(/(\+?\d[\d\s.-]{6,})/);
+      const phoneMatch = txt?.match(/(\+?\d[\d\s.-]{6,})/);
       if (phoneMatch) {
         const raw = phoneMatch[1].replace(/[^\d+]/g, "");
         return txt.replace(phoneMatch[1], `<a href="tel:${raw}">${phoneMatch[1]}</a>`);
       }
-      return txt;
+      return txt || "";
     }
 
     function formatPortail(value) {
@@ -253,7 +231,7 @@
         "B": ["03 28 55 82 58", "03 28 55 82 59"],
         "C": ["03 28 55 82 53", "03 28 55 82 54"]
       };
-      const trimmed = value.trim().toUpperCase();
+      const trimmed = (value || "").trim().toUpperCase();
       if (tables[trimmed]) {
         const nums = tables[trimmed];
         return `
