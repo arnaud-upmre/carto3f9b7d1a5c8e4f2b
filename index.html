@@ -66,6 +66,16 @@
       box-shadow: 0 4px 14px rgba(26,115,232,0.4);
     }
 
+    #counter {
+      margin-top: 10px;
+      font-weight: bold;
+      color: #1a73e8;
+      max-width: 600px;
+      width: 100%;
+      padding-left: 1rem;
+      box-sizing: border-box;
+    }
+
     ul#suggestions {
       list-style: none;
       padding: 0;
@@ -190,6 +200,7 @@
 
   <h1>🔍 Rechercher un lieu</h1>
   <input type="text" id="search" placeholder="Commencez à taper un nom…" autocomplete="off" />
+  <p id="counter">Chargement du compteur...</p>
   <ul id="suggestions"></ul>
   <div id="result"></div>
 
@@ -283,6 +294,22 @@
       });
     });
 
+    // Compteur de visites CountAPI
+    const countApiNamespace = "nono3f9mre1a5ckJib";
+    const countApiKey = "compteur1";
+
+    function incrementCount() {
+      fetch(`https://api.countapi.xyz/hit/${countApiNamespace}/${countApiKey}`)
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("counter").textContent = `Visites : ${data.value}`;
+        })
+        .catch(() => {
+          document.getElementById("counter").textContent = "Erreur compteur";
+        });
+    }
+
+    incrementCount();
     loadData();
   </script>
 </body>
