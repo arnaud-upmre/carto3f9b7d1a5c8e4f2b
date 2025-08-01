@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <!-- Empêche les moteurs de recherche d'indexer la page -->
+  <!-- Meta pour empêcher l'indexation par les moteurs -->
   <meta name="robots" content="noindex, nofollow" />
   <meta charset="UTF-8" />
   <title>Recherche de lieux</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <style>
-    /* Style général du body */
+    /* Styles généraux */
     body {
       font-family: 'Inter', sans-serif;
       background-color: #fff;
@@ -20,10 +20,11 @@
       align-items: center;
       width: 100vw;
       box-sizing: border-box;
-      min-height: 100vh; /* Permet de gérer le centrage vertical */
+      min-height: 100vh; /* Pour bien centrer verticalement */
+      justify-content: flex-start; /* On garde en haut par défaut */
     }
 
-    /* Conteneur pour l'animation du train */
+    /* Container du train animé */
     #train-container {
       width: 100%;
       max-width: 600px;
@@ -67,13 +68,41 @@
       box-sizing: border-box;
       outline: none;
       transition: border-color 0.3s ease;
+      position: relative;
+      z-index: 3;
     }
     input[type="text"]:focus {
       border-color: #1a73e8;
       box-shadow: 0 4px 14px rgba(26,115,232,0.4);
     }
 
-    /* Liste des suggestions */
+    /* Espace invisible entre champ recherche et logo */
+    .spacer {
+      height: 40px; /* Ajustable */
+      pointer-events: none; /* Ne gêne pas les clics */
+      width: 100%;
+      max-width: 600px;
+    }
+
+    /* Conteneur du logo */
+    #logo-container {
+      width: 100%;
+      max-width: 600px;
+      display: flex;
+      justify-content: center;
+      opacity: 1;
+      transition: opacity 2s ease;
+      z-index: 2;
+    }
+    #logo {
+      max-width: 180px;
+      width: 100%;
+      height: auto;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    /* Suggestions sous le champ */
     ul#suggestions {
       list-style: none;
       padding: 0;
@@ -86,6 +115,8 @@
       background-color: #fff;
       font-size: 15px;
       color: #333;
+      position: relative;
+      z-index: 4;
     }
     ul#suggestions li {
       padding: 12px 16px;
@@ -97,7 +128,7 @@
       color: #1a73e8;
     }
 
-    /* Résultat affiché */
+    /* Résultat détaillé */
     #result {
       display: none;
       background: #ffffff;
@@ -109,6 +140,8 @@
       color: #444;
       font-size: 15px;
       line-height: 1.5;
+      position: relative;
+      z-index: 4;
     }
     #result h2 {
       margin-top: 0;
@@ -117,7 +150,7 @@
       color: #1a73e8;
     }
 
-    /* Liens inline dans le résultat */
+    /* Liens inline sous résultat */
     .inline-links {
       display: flex;
       flex-wrap: wrap;
@@ -140,7 +173,7 @@
       color: white;
     }
 
-    /* Paragraphes dans le résultat */
+    /* Texte du résultat */
     #result p {
       margin-top: 1rem;
       color: #555;
@@ -149,26 +182,11 @@
       color: #333;
     }
 
-    /* Conteneur du logo - centré et avec marges */
-    #logo-container {
-      margin-top: 30px;    /* Décalage vers le bas par rapport au champ */
-      margin-bottom: 12px; /* Espace en dessous */
-      text-align: center;
-      transition: opacity 0.3s ease, height 0.3s ease, margin 0.3s ease;
-      overflow: hidden;
-    }
-    /* Image logo, taille fixe */
-    #logo-container img {
-      max-width: 160px;
-      width: 100%;
-      height: auto;
-      display: inline-block;
-    }
-
-    /* Responsive - petits écrans */
+    /* Responsive (téléphone) */
     @media (max-width: 480px) {
       body {
         padding: 0.8rem;
+        min-height: 100vh;
       }
       h1 {
         font-size: 18px;
@@ -198,11 +216,12 @@
         white-space: normal;
         width: fit-content;
       }
-
-      /* Logo container plus compact sur mobile */
-      #logo-container {
-        margin-top: 10px;
-        margin-bottom: 10px;
+      #train-container {
+        max-width: 100%;
+      }
+      #train {
+        height: 30px;
+        left: -100px;
       }
     }
   </style>
@@ -212,6 +231,7 @@
   <!-- Site créé par Arnaud Debaecker -->
 
   <div id="train-container">
+    <!-- Animation train -->
     <img id="train" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/train.gif" alt="Train animé" />
   </div>
 
@@ -220,15 +240,18 @@
   <!-- Champ de recherche -->
   <input type="text" id="search" placeholder="Commencez à taper un nom…" autocomplete="off" />
 
-  <!-- Conteneur du logo centré sous le champ, visible avant la recherche -->
+  <!-- Espace invisible entre champ recherche et logo -->
+  <div class="spacer"></div>
+
+  <!-- Logo EALE centré sous le champ recherche -->
   <div id="logo-container">
-    <img src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/Logo%20EALE.png" alt="Logo EALE" />
+    <img id="logo" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/Logo%20EALE.png" alt="Logo EALE" />
   </div>
 
   <!-- Liste des suggestions -->
   <ul id="suggestions"></ul>
 
-  <!-- Zone d'affichage du résultat sélectionné -->
+  <!-- Résultat sélectionné -->
   <div id="result"></div>
 
   <script>
@@ -248,7 +271,7 @@
         });
     }
 
-    // Formate un contact avec lien téléphone
+    // Formate un contact téléphonique en lien cliquable
     function formatContact(txt) {
       const phoneMatch = txt?.match(/(\+?\d[\d\s.-]{6,})/);
       if (phoneMatch) {
@@ -258,14 +281,15 @@
       return txt || "";
     }
 
-    // Formate le numéro portail avec virgules et astérisques encodés
+    // Formate un numéro de portail en lien tel: avec encodage de caractères spéciaux
     function formatPortail(value) {
       if (!value) return "";
+      // Encode les virgules et astérisques pour l'URL tel:
       const encoded = value.replace(/,/g, "%2C").replace(/\*/g, "%2A");
       return `<a href="tel:${encoded}">${value}</a>`;
     }
 
-    // Affiche les infos RSS spécifiques
+    // Formate les numéros RSS (fixes) avec liens cliquables
     function formatRSS(value) {
       const tables = {
         "A": ["03 28 55 82 56", "03 28 55 82 57"],
@@ -305,7 +329,7 @@
       `;
     }
 
-    // Gestion de la recherche avec suggestions
+    // Gère la saisie utilisateur dans le champ recherche
     document.getElementById("search").addEventListener("input", e => {
       const query = e.target.value.trim().toLowerCase();
       const suggestionsEl = document.getElementById("suggestions");
@@ -316,24 +340,19 @@
       resultEl.innerHTML = "";
       resultEl.style.display = "none";
 
-      if (!query) {
-        // Si champ vide, on fait réapparaître le logo progressivement (2s)
+      if (query.length > 0) {
+        // Dès qu'on tape, on fait disparaître rapidement le logo (opacity à 0 en 0.3s)
+        logoContainer.style.transition = "opacity 0.3s ease";
+        logoContainer.style.opacity = "0";
+      } else {
+        // Si champ vide, logo réapparait progressivement en 2s
         logoContainer.style.transition = "opacity 2s ease";
-        logoContainer.style.opacity = 1;
-        logoContainer.style.height = "auto";
-        logoContainer.style.marginTop = "12px";
-        logoContainer.style.marginBottom = "12px";
-        return;
+        logoContainer.style.opacity = "1";
       }
 
-      // Dès que l'utilisateur tape, on fait disparaître vite le logo (0.3s)
-      logoContainer.style.transition = "opacity 0.3s ease";
-      logoContainer.style.opacity = 0;
-      logoContainer.style.height = 0;
-      logoContainer.style.marginTop = 0;
-      logoContainer.style.marginBottom = 0;
+      if (!query) return;
 
-      // Filtre des lieux dont le nom commence par la recherche
+      // Recherche basique : lieu dont le nom commence par la recherche
       const filtered = lieux.filter(l => l.nom.toLowerCase().startsWith(query));
       filtered.forEach(lieu => {
         const li = document.createElement("li");
@@ -343,7 +362,7 @@
       });
     });
 
-    // Chargement initial des données
+    // Chargement initial des données JSON
     loadData();
   </script>
 </body>
