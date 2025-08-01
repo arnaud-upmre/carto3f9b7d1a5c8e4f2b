@@ -19,6 +19,10 @@
       align-items: center;
       width: 100vw;
       box-sizing: border-box;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
     }
 
     /* Animation du train */
@@ -65,6 +69,23 @@
       max-width: 600px;
       padding: 0 1rem;
       text-align: left;
+      user-select: text;
+    }
+
+    /* Bouton synchronisation */
+    #btn-sync {
+      cursor: pointer;
+      font-size: 18px;
+      color: #1a73e8;
+      border: none;
+      background: none;
+      padding: 0 1rem 0.5rem 0;
+      align-self: flex-start;
+      user-select: none;
+      transition: color 0.3s ease;
+    }
+    #btn-sync:hover {
+      color: #155ab6;
     }
 
     input[type="text"] {
@@ -77,6 +98,7 @@
       box-sizing: border-box;
       outline: none;
       transition: border-color 0.3s ease;
+      user-select: text;
     }
 
     input[type="text"]:focus {
@@ -96,6 +118,7 @@
       background-color: #fff;
       font-size: 15px;
       color: #333;
+      user-select: none;
     }
 
     ul#suggestions li {
@@ -120,6 +143,7 @@
       color: #444;
       font-size: 15px;
       line-height: 1.5;
+      user-select: text;
     }
 
     #result h2 {
@@ -162,21 +186,6 @@
       color: #333;
     }
 
-    /* Bouton synchronisation */
-    #refreshBtn {
-      font-size: 18px;
-      cursor: pointer;
-      margin-bottom: 1rem;
-      background: transparent;
-      border: none;
-      color: #1a73e8;
-      user-select: none;
-      align-self: flex-start;
-    }
-    #refreshBtn:hover {
-      color: #1558b0;
-    }
-
     @media (max-width: 480px) {
       body {
         padding: 0.8rem;
@@ -185,6 +194,11 @@
       h1 {
         font-size: 18px;
         padding: 0 0.5rem;
+      }
+
+      #btn-sync {
+        padding: 0 0.5rem 0.5rem 0;
+        font-size: 16px;
       }
 
       input[type="text"] {
@@ -224,64 +238,34 @@
 </head>
 <body>
 
+  <!-- Site créé par Arnaud Debaecker -->
   <div id="train-container">
-    <img id="train" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/refs/heads/main/train.gif" alt="Train animé" />
+    <img id="train" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1e3f2b/refs/heads/main/train.gif" alt="Train animé" />
   </div>
 
+  <button id="btn-sync" title="Synchroniser les données">🔄</button>
   <h1>🔍 Rechercher un lieu</h1>
-  <button id="refreshBtn" title="🔄 Synchroniser les données">🔄</button>
   <input type="text" id="search" placeholder="Commencez à taper un nom…" autocomplete="off" />
   <ul id="suggestions"></ul>
   <div id="result"></div>
 
   <script>
-    const jsonUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/nono-9f4a8b2c7d1e3f56.json";
+    const jsonUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1e3f2b/main/nono-9f4a8b2c7d1e3f56.json";
     let lieux = [];
 
-    function loadData(forceReload = false) {
-      let url = jsonUrl;
-      if (forceReload) {
-        url += '?t=' + new Date().getTime();
-      }
-      console.log("Chargement JSON depuis : ", url);
-      fetch(url)
+    function loadData(force = false) {
+      const urlWithTimestamp = jsonUrl + (force ? "?t=" + Date.now() : "");
+      console.log("Chargement JSON depuis : ", urlWithTimestamp);
+      fetch(urlWithTimestamp)
         .then(res => res.json())
         .then(data => {
           lieux = data;
           console.log("JSON chargé, lieux:", lieux.length, "éléments");
-          const searchInput = document.getElementById('search');
-          if (searchInput.value.trim() !== '') {
-            searchInput.dispatchEvent(new Event('input'));
-          }
         })
         .catch(err => {
           alert("Erreur de chargement du JSON : " + err);
         });
     }
-
-    document.getElementById('refreshBtn').addEventListener('click', () => {
-      console.log("Bouton synchronisation cliqué");
-      loadData(true);
-    });
-
-    document.getElementById("search").addEventListener("input", e => {
-      const query = e.target.value.trim().toLowerCase();
-      const suggestionsEl = document.getElementById("suggestions");
-      const resultEl = document.getElementById("result");
-      suggestionsEl.innerHTML = "";
-      resultEl.innerHTML = "";
-      resultEl.style.display = "none";
-
-      if (!query) return;
-
-      const filtered = lieux.filter(l => l.nom.toLowerCase().startsWith(query));
-      filtered.forEach(lieu => {
-        const li = document.createElement("li");
-        li.textContent = lieu.nom;
-        li.onclick = () => showLieu(lieu);
-        suggestionsEl.appendChild(li);
-      });
-    });
 
     function formatContact(txt) {
       const phoneMatch = txt?.match(/(\+?\d[\d\s.-]{6,})/);
@@ -336,7 +320,37 @@
       `;
     }
 
-    // Chargement initial des données
+    document.getElementById("search").addEventListener("input", e => {
+      const query = e.target.value.trim().toLowerCase();
+      const suggestionsEl = document.getElementById("suggestions");
+      const resultEl = document.getElementById("result");
+      suggestionsEl.innerHTML = "";
+      resultEl.innerHTML = "";
+      resultEl.style.display = "none";
+
+      if (!query) return;
+
+      const filtered = lieux.filter(l => l.nom.toLowerCase().startsWith(query));
+      filtered.forEach(lieu => {
+        const li = document.createElement("li");
+        li.textContent = lieu.nom;
+        li.onclick = () => showLieu(lieu);
+        suggestionsEl.appendChild(li);
+      });
+    });
+
+    document.getElementById("btn-sync").addEventListener("click", () => {
+      console.log("Bouton synchronisation cliqué");
+      loadData(true);
+      // Réinitialiser la zone de recherche et affichage
+      const searchInput = document.getElementById("search");
+      searchInput.value = "";
+      document.getElementById("suggestions").innerHTML = "";
+      const resultEl = document.getElementById("result");
+      resultEl.innerHTML = "";
+      resultEl.style.display = "none";
+    });
+
     loadData();
   </script>
 </body>
