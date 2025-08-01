@@ -19,7 +19,6 @@
       align-items: center;
       width: 100vw;
       box-sizing: border-box;
-      /* Protection : pas de sélection */
       user-select: none;
       -webkit-user-select: none;
       -moz-user-select: none;
@@ -42,7 +41,7 @@
       left: 0;
       height: 42px;
       animation: trainVaEtVient 25s ease-in-out infinite;
-      pointer-events: none; /* Pas cliquable */
+      pointer-events: none;
     }
 
     @keyframes trainVaEtVient {
@@ -50,16 +49,16 @@
         left: 0;
       }
       45% {
-        left: calc(100% - 95px);
+        left: calc(100% - 90px);
       }
       50% {
-        left: calc(100% - 95px); /* pause à droite */
+        left: calc(100% - 90px);
       }
       95% {
         left: 0;
       }
       100% {
-        left: 0; /* pause à gauche */
+        left: 0;
       }
     }
 
@@ -229,8 +228,8 @@
     let lieux = [];
 
     function loadData() {
-      const url = jsonUrl + "?t=" + new Date().getTime(); // Forcer le rechargement à chaque fois
-      fetch(url)
+      const url = jsonUrl + "?t=" + new Date().getTime();
+      fetch(url, { cache: "no-store" })
         .then(res => res.json())
         .then(data => {
           lieux = data;
