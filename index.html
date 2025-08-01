@@ -6,7 +6,6 @@
   <title>Recherche de lieux</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
-
   <style>
     body {
       font-family: 'Inter', sans-serif;
@@ -19,20 +18,14 @@
       align-items: center;
       width: 100vw;
       box-sizing: border-box;
-      user-select: none; /* Empêche la sélection */
+      -webkit-user-select: none; /* désactive sélection */
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
     }
-
-    /* Empêche clic droit */
-    body {
-      -webkit-touch-callout: none; /* iOS Safari */
-      -webkit-user-select: none;   /* Safari */
-      -khtml-user-select: none;    /* Konqueror HTML */
-      -moz-user-select: none;      /* Firefox */
-      -ms-user-select: none;       /* Internet Explorer/Edge */
-      user-select: none;           /* Non-prefixed version */
-    }
-    body.oncontextmenu {
-      pointer-events: none;
+    body, html {
+      -webkit-touch-callout: none; /* désactive clic droit sur iOS */
+      -webkit-user-drag: none;
     }
 
     /* Animation du train */
@@ -44,7 +37,6 @@
       margin-bottom: 1.5rem;
       position: relative;
     }
-
     #train {
       position: absolute;
       top: 0;
@@ -52,16 +44,15 @@
       height: 42px;
       animation: trainVaEtVient 25s ease-in-out infinite;
     }
-
     @keyframes trainVaEtVient {
       0% {
         left: 0;
       }
       45% {
-        left: calc(100% - 95px);
+        left: calc(100% - 90px);
       }
       50% {
-        left: calc(100% - 95px); /* pause à droite */
+        left: calc(100% - 90px); /* pause à droite */
       }
       95% {
         left: 0;
@@ -80,7 +71,6 @@
       padding: 0 1rem;
       text-align: left;
     }
-
     input[type="text"] {
       width: 100%;
       max-width: 600px;
@@ -92,12 +82,10 @@
       outline: none;
       transition: border-color 0.3s ease;
     }
-
     input[type="text"]:focus {
       border-color: #1a73e8;
       box-shadow: 0 4px 14px rgba(26,115,232,0.4);
     }
-
     ul#suggestions {
       list-style: none;
       padding: 0;
@@ -111,18 +99,15 @@
       font-size: 15px;
       color: #333;
     }
-
     ul#suggestions li {
       padding: 12px 16px;
       cursor: pointer;
       border-bottom: 1px solid #eee;
     }
-
     ul#suggestions li:hover {
       background-color: #f0f8ff;
       color: #1a73e8;
     }
-
     #result {
       display: none;
       background: #ffffff;
@@ -135,14 +120,12 @@
       font-size: 15px;
       line-height: 1.5;
     }
-
     #result h2 {
       margin-top: 0;
       font-size: 22px;
       font-weight: 700;
       color: #1a73e8;
     }
-
     .inline-links {
       display: flex;
       flex-wrap: wrap;
@@ -150,7 +133,6 @@
       font-size: 14px;
       padding: 0 1rem 0 0;
     }
-
     .inline-links a {
       padding: 6px 10px;
       font-size: 14px;
@@ -161,80 +143,50 @@
       transition: 0.3s;
       white-space: nowrap;
     }
-
     .inline-links a:hover {
       background-color: #1a73e8;
       color: white;
     }
-
     #result p {
       margin-top: 1rem;
       color: #555;
     }
-
     #result p strong {
       color: #333;
-    }
-
-    /* Bouton synchronisation */
-    #btnSync {
-      cursor: pointer;
-      font-size: 20px;
-      position: fixed;
-      top: 8px;
-      right: 8px;
-      padding: 4px 8px;
-      background: #1a73e8;
-      color: white;
-      border-radius: 12px;
-      user-select: none;
-      z-index: 999;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-      transition: background-color 0.3s ease;
-    }
-    #btnSync:hover {
-      background: #155dbb;
     }
 
     @media (max-width: 480px) {
       body {
         padding: 0.8rem;
       }
-
       h1 {
         font-size: 18px;
         padding: 0 0.5rem;
       }
-
       input[type="text"] {
         font-size: 14px;
         padding: 10px 14px;
       }
-
       ul#suggestions li {
         padding: 10px 14px;
         font-size: 14px;
       }
-
       #result {
         font-size: 14px;
         padding: 0.8rem 0.5rem;
       }
-
       .inline-links {
         gap: 4px;
         padding: 0 0.5rem 0 0;
         flex-direction: column;
         align-items: flex-start;
       }
-
       .inline-links a {
         font-size: 13px;
         padding: 8px 10px;
         white-space: normal;
         width: fit-content;
       }
-
       #train {
         height: 30px;
       }
@@ -243,8 +195,9 @@
 </head>
 <body>
 
+  <!-- Site créé par Arnaud Debaecker -->
   <div id="train-container">
-    <img id="train" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/train.gif" alt="Train animé" />
+    <img id="train" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1e3f56.json/train.gif" alt="Train animé" />
   </div>
 
   <h1>🔍 Rechercher un lieu</h1>
@@ -252,16 +205,13 @@
   <ul id="suggestions"></ul>
   <div id="result"></div>
 
-  <!-- Bouton synchronisation -->
-  <div id="btnSync" title="Synchroniser les données">🔄</div>
-
   <script>
-    const jsonUrlBase = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1e3f56.json";
+    const jsonUrlBase = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1e3f56.json/main/nono-9f4a8b2c7d1e3f56.json";
     let lieux = [];
 
     function loadData() {
       const timestamp = Date.now();
-      const url = `https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1e3f56.json?t=${timestamp}`;
+      const url = `${jsonUrlBase}?t=${timestamp}`;
       console.log("Chargement JSON depuis :", url);
       fetch(url)
         .then(res => res.json())
@@ -327,8 +277,7 @@
       `;
     }
 
-    const searchInput = document.getElementById("search");
-    searchInput.addEventListener("input", e => {
+    document.getElementById("search").addEventListener("input", e => {
       const query = e.target.value.trim().toLowerCase();
       const suggestionsEl = document.getElementById("suggestions");
       const resultEl = document.getElementById("result");
@@ -347,20 +296,7 @@
       });
     });
 
-    // Chargement initial des données
     loadData();
-
-    // Bouton synchronisation
-    const btnSync = document.getElementById("btnSync");
-    btnSync.addEventListener("click", () => {
-      console.log("Bouton synchronisation cliqué");
-      searchInput.value = "";
-      document.getElementById("suggestions").innerHTML = "";
-      document.getElementById("result").innerHTML = "";
-      document.getElementById("result").style.display = "none";
-      loadData();
-    });
-
   </script>
 </body>
 </html>
