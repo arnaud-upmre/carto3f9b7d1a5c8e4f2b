@@ -19,6 +19,7 @@
       width: 100vw;
       box-sizing: border-box;
       min-height: 100vh;
+      position: relative;
     }
 
     /* Train animé */
@@ -29,6 +30,7 @@
       overflow: hidden;
       margin-bottom: 1.5rem;
       position: relative;
+      z-index: 30;
     }
     #train {
       position: absolute;
@@ -50,16 +52,18 @@
       max-width: 600px;
       padding: 0 1rem;
       text-align: left;
+      z-index: 30;
+      position: relative;
     }
 
-    /* Conteneur de recherche + suggestions */
+    /* Conteneur recherche + suggestions + résultat */
     #search-wrapper {
       width: 100%;
       max-width: 600px;
       display: flex;
       flex-direction: column;
       position: relative;
-      z-index: 20; /* au-dessus du logo */
+      z-index: 40; /* toujours au-dessus du logo */
     }
 
     /* Champ de recherche */
@@ -72,6 +76,9 @@
       box-sizing: border-box;
       outline: none;
       transition: border-color 0.3s ease;
+      position: relative;
+      z-index: 40;
+      background: white;
     }
     #search:focus {
       border-color: #1a73e8;
@@ -83,7 +90,7 @@
       list-style: none;
       padding: 0;
       margin: 6px 0 0 0;
-      max-height: 200px; /* limite la hauteur de la liste */
+      max-height: 200px;
       overflow-y: auto;
       border-radius: 0 0 12px 12px;
       box-shadow: 0 6px 15px rgba(0,0,0,0.1);
@@ -92,7 +99,9 @@
       color: #333;
       border: 1px solid #ccc;
       border-top: none;
-      display: none; /* caché par défaut */
+      display: none;
+      position: relative;
+      z-index: 40;
     }
     ul#suggestions li {
       padding: 12px 16px;
@@ -102,31 +111,6 @@
     ul#suggestions li:hover {
       background-color: #f0f8ff;
       color: #1a73e8;
-    }
-
-    /* Conteneur du logo, hauteur fixe pour éviter décalage */
-    #logo-container {
-      width: 100%;
-      max-width: 600px;
-      height: 160px; /* hauteur fixe pour éviter saut */
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-top: 20px;
-      user-select: none;
-      pointer-events: none;
-      opacity: 1;
-      transition: opacity 0.3s ease;
-    }
-    #logo-container.hidden {
-      opacity: 0;
-      pointer-events: none;
-    }
-    #logo-container img {
-      max-width: 150px;
-      height: auto;
-      user-select: none;
-      pointer-events: none;
     }
 
     /* Résultat affiché */
@@ -143,7 +127,7 @@
       line-height: 1.5;
       margin-top: 1rem;
       position: relative;
-      z-index: 20; /* au-dessus du logo */
+      z-index: 40;
     }
     #result h2 {
       margin-top: 0;
@@ -182,7 +166,35 @@
       color: #333;
     }
 
-    /* Responsive mobile */
+    /* Logo positionné en absolute, centré sous le champ */
+    #logo-container {
+      position: absolute;
+      top: 62px; /* juste sous le champ (48px champ + 14px marge) */
+      left: 50%;
+      transform: translateX(-50%);
+      pointer-events: none;
+      user-select: none;
+      opacity: 1;
+      transition: opacity 0.2s ease;
+      z-index: 10;
+      width: 150px;
+      height: auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    #logo-container.hidden {
+      opacity: 0;
+    }
+    #logo-container img {
+      max-width: 150px;
+      height: auto;
+      user-select: none;
+      pointer-events: none;
+      display: block;
+    }
+
+    /* Responsive */
     @media (max-width: 480px) {
       body {
         padding: 0.8rem;
@@ -223,8 +235,8 @@
         left: -100px;
       }
       #logo-container {
-        height: 130px;
-        margin-top: 15px;
+        top: 54px; /* un peu plus près sur mobile */
+        width: 120px;
       }
     }
   </style>
@@ -241,19 +253,17 @@
   <!-- Titre -->
   <h1>🔍 Rechercher un lieu</h1>
 
-  <!-- Wrapper champ + suggestions -->
+  <!-- Wrapper champ + suggestions + résultat -->
   <div id="search-wrapper">
     <input type="text" id="search" placeholder="Commencez à taper un nom…" autocomplete="off" />
     <ul id="suggestions"></ul>
+    <div id="result"></div>
   </div>
 
-  <!-- Logo toujours affiché sous le champ, ne bouge jamais -->
+  <!-- Logo sous le champ (en absolute) -->
   <div id="logo-container">
     <img src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/Logo%20EALE.png" alt="Logo EALE" />
   </div>
-
-  <!-- Résultat affiché -->
-  <div id="result"></div>
 
   <script>
     const jsonUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/nono-9f4a8b2c7d1e3f56.json";
@@ -321,6 +331,9 @@
         ${lieu.contact ? `<p><strong>👤 Contact :</strong> ${formatContact(lieu.contact)}</p>` : ""}
         ${lieu.portail ? `<p><strong>🚧 Portail :</strong> ${formatPortail(lieu.portail)}</p>` : ""}
       `;
+
+      // On masque le logo quand on affiche un lieu
+      document.getElementById("logo-container").classList.add("hidden");
     }
 
     // Gestion affichage suggestions + logo
@@ -336,7 +349,7 @@
       resultEl.style.display = "none";
 
       if (!query) {
-        // Pas de recherche => on cache suggestions et on montre logo
+        // Pas de recherche => on cache suggestions, résultat et on montre logo
         suggestionsEl.style.display = "none";
         logoContainer.classList.remove("hidden");
         return;
