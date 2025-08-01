@@ -7,6 +7,7 @@
 <title>Recherche de lieux</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
 <style>
+  /* Style global */
   body {
     font-family: 'Inter', sans-serif;
     background-color: #fff;
@@ -20,13 +21,14 @@
     box-sizing: border-box;
     min-height: 100vh;
   }
-  /* Train animé */
+
+  /* Train animé en bas */
   #train-container {
     width: 100%;
     max-width: 600px;
     height: 48px;
     overflow: hidden;
-    margin-top: auto; /* pousse train en bas */
+    margin-top: auto;
     position: relative;
   }
   #train {
@@ -41,6 +43,7 @@
     to { left: 100%; }
   }
 
+  /* Titre */
   h1 {
     font-size: 20px;
     margin: 0 0 0.8rem 0;
@@ -51,6 +54,7 @@
     text-align: left;
   }
 
+  /* Champ de recherche */
   #search {
     width: 100%;
     max-width: 600px;
@@ -62,32 +66,38 @@
     outline: none;
     transition: border-color 0.3s ease;
     background: white;
+    position: relative;
+    z-index: 2; /* devant */
   }
   #search:focus {
     border-color: #1a73e8;
     box-shadow: 0 4px 14px rgba(26,115,232,0.4);
   }
 
-  /* Conteneur qui contient soit le logo, soit les suggestions, soit le résultat */
+  /* Conteneur sous le champ: contiendra logo / suggestions / résultat */
   #under-search {
     width: 100%;
     max-width: 600px;
-    margin-top: 10px;
-    min-height: 150px; /* hauteur minimale pour pas sauter trop */
+    margin-top: 12px;
     position: relative;
+    z-index: 1; /* derrière le champ */
+    min-height: 150px; /* hauteur minimale pour stabilité */
   }
 
-  /* Logo */
+  /* Logo visible par défaut */
   #logo {
+    display: block;
     width: 150px;
     margin: 0 auto;
-    opacity: 1;
-    transition: opacity 0.3s ease;
     user-select: none;
     pointer-events: none;
+    transition: opacity 0.3s ease;
+    opacity: 1;
   }
+  /* Masqué */
   #logo.hidden {
     opacity: 0;
+    display: none;
     transition: opacity 0.15s ease;
   }
 
@@ -218,7 +228,7 @@
 <h1>🔍 Rechercher un lieu</h1>
 <input type="text" id="search" placeholder="Commencez à taper un nom…" autocomplete="off" />
 
-<!-- Conteneur qui va afficher soit logo, soit suggestions, soit résultat -->
+<!-- Conteneur sous le champ : logo / suggestions / résultat -->
 <div id="under-search">
   <img id="logo" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/Logo%20EALE.png" alt="Logo EALE" />
   <ul id="suggestions"></ul>
@@ -229,6 +239,7 @@
   const jsonUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/nono-9f4a8b2c7d1e3f56.json";
   let lieux = [];
 
+  // Charge les lieux depuis le JSON
   function loadData() {
     fetch(jsonUrl)
       .then(res => res.json())
@@ -240,6 +251,7 @@
       });
   }
 
+  // Formate les contacts avec liens téléphoniques
   function formatContact(txt) {
     const phoneMatch = txt?.match(/(\+?\d[\d\s.-]{6,})/);
     if (phoneMatch) {
@@ -249,12 +261,14 @@
     return txt || "";
   }
 
+  // Formate les numéros de portail (encode virgules, astérisques)
   function formatPortail(value) {
     if (!value) return "";
     const encoded = value.replace(/,/g, "%2C").replace(/\*/g, "%2A");
     return `<a href="tel:${encoded}">${value}</a>`;
   }
 
+  // Formate la section RSS avec des numéros fixes selon table A, B, C
   function formatRSS(value) {
     const tables = {
       "A": ["03 28 55 82 56", "03 28 55 82 57"],
@@ -275,17 +289,18 @@
     return "";
   }
 
+  // Affiche les détails du lieu sélectionné
   function showLieu(lieu) {
     const result = document.getElementById("result");
     const suggestions = document.getElementById("suggestions");
     const logo = document.getElementById("logo");
 
-    // Vide et cache les suggestions et logo
+    // Cache suggestions et logo
     suggestions.innerHTML = "";
     suggestions.style.display = "none";
     logo.classList.add("hidden");
 
-    // Affiche le résultat
+    // Affiche résultat
     result.style.display = "block";
     result.innerHTML = `
       <h2>📍 ${lieu.nom}</h2>
@@ -306,24 +321,26 @@
   const logoEl = document.getElementById("logo");
   const resultEl = document.getElementById("result");
 
+  // Gestion de la saisie dans le champ de recherche
   searchInput.addEventListener("input", e => {
     const query = e.target.value.trim().toLowerCase();
 
+    // Cache le résultat
     resultEl.style.display = "none";
     resultEl.innerHTML = "";
 
     if (!query) {
-      // Si rien tapé : affiche logo, cache suggestions et résultat
+      // Si champ vide, affiche logo, masque suggestions
       logoEl.classList.remove("hidden");
       suggestionsEl.style.display = "none";
       suggestionsEl.innerHTML = "";
       return;
     }
 
-    // Sinon on masque logo
+    // Sinon masque logo
     logoEl.classList.add("hidden");
 
-    // Recherche filtrée
+    // Filtre lieux commençant par la saisie
     const filtered = lieux.filter(l => l.nom.toLowerCase().startsWith(query));
 
     if (filtered.length === 0) {
@@ -332,7 +349,7 @@
       return;
     }
 
-    // Affiche suggestions sous le champ
+    // Affiche suggestions sous champ
     suggestionsEl.style.display = "block";
     suggestionsEl.innerHTML = "";
 
@@ -346,5 +363,6 @@
 
   loadData();
 </script>
+
 </body>
 </html>
