@@ -2,26 +2,25 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="robots" content="noindex, nofollow" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Recherche de lieux</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <style>
-    /* Base */
+    /* ---------- Styles de base ---------- */
     body {
       font-family: 'Inter', sans-serif;
-      background: #fff;
-      padding: 2rem;
-      color: #333;
+      background-color: #fff;
+      padding: 1rem;
       margin: 0;
+      color: #333;
       display: flex;
       flex-direction: column;
       align-items: center;
-      width: 100vw;
       box-sizing: border-box;
     }
 
-    /* Conteneur du train */
+    /* ---------- Conteneur du train ---------- */
     #train-container {
       width: 100%;
       max-width: 600px;
@@ -31,41 +30,39 @@
       position: relative;
     }
 
-    /* Train animé */
+    /* ---------- Image du train + animation ---------- */
     #train {
       position: absolute;
       top: 0;
-      left: -150px;
+      left: 0; /* Le train commence visible à gauche */
       height: 42px;
       animation: trainMove 18s linear infinite;
-      animation-delay: 0.5s; /* Délai avant démarrage */
+      animation-delay: 0.5s; /* Lance l'animation après 0,5s */
     }
 
-    /* Animation mouvement du train */
     @keyframes trainMove {
-      from { left: -150px; }
-      to { left: 100%; }
+      from { left: 0; }       /* Démarre visible */
+      to { left: 100%; }      /* Va complètement à droite */
     }
 
-    /* Titre */
+    /* ---------- Titre et champ recherche ---------- */
     h1 {
       font-size: 20px;
-      margin: 0 0 0.8rem 0;
       font-weight: 600;
+      margin: 0 0 1rem 0;
       max-width: 600px;
-      padding: 0 1rem;
       text-align: left;
       width: 100%;
+      padding: 0 1rem;
     }
 
-    /* Champ de recherche */
     input[type="text"] {
       width: 100%;
       max-width: 600px;
       padding: 12px 16px;
       font-size: 16px;
-      border-radius: 10px;
       border: 1px solid #ccc;
+      border-radius: 10px;
       box-sizing: border-box;
       outline: none;
       transition: border-color 0.3s ease;
@@ -76,7 +73,7 @@
       box-shadow: 0 4px 14px rgba(26,115,232,0.4);
     }
 
-    /* Suggestions */
+    /* ---------- Liste des suggestions ---------- */
     ul#suggestions {
       list-style: none;
       padding: 0;
@@ -88,7 +85,6 @@
       box-shadow: 0 6px 15px rgba(0,0,0,0.1);
       background-color: #fff;
       font-size: 15px;
-      color: #333;
     }
 
     ul#suggestions li {
@@ -102,7 +98,7 @@
       color: #1a73e8;
     }
 
-    /* Résultat affiché */
+    /* ---------- Résultat ---------- */
     #result {
       display: none;
       background: #ffffff;
@@ -133,7 +129,6 @@
 
     .inline-links a {
       padding: 6px 10px;
-      font-size: 14px;
       text-decoration: none;
       color: #1a73e8;
       border: 1px solid #1a73e8;
@@ -156,57 +151,60 @@
       color: #333;
     }
 
-    /* Responsive mobile */
+    /* ---------- Responsive ---------- */
     @media (max-width: 480px) {
-      body {
-        padding: 0.8rem;
-      }
       h1 {
         font-size: 18px;
         padding: 0 0.5rem;
       }
+
       input[type="text"] {
         font-size: 14px;
         padding: 10px 14px;
       }
+
       ul#suggestions li {
         padding: 10px 14px;
         font-size: 14px;
       }
+
       #result {
         font-size: 14px;
         padding: 0.8rem 0.5rem;
       }
+
       .inline-links {
         gap: 4px;
         padding: 0 0.5rem 0 0;
         flex-direction: column;
         align-items: flex-start;
       }
+
       .inline-links a {
         font-size: 13px;
         padding: 8px 10px;
         white-space: normal;
         width: fit-content;
       }
+
       #train-container {
         max-width: 100%;
       }
+
       #train {
         height: 30px;
-        left: -100px;
       }
     }
   </style>
 </head>
 <body>
 
-  <!-- 🚄 Animation du train -->
+  <!-- Site créé par Arnaud Debaecker -->
+
   <div id="train-container">
-    <img id="train" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/train.gif" alt="Train animé" />
+    <img id="train" src="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/train.gif" alt="Train animé" />
   </div>
 
-  <!-- 🔍 Champ de recherche -->
   <h1>🔍 Rechercher un lieu</h1>
   <input type="text" id="search" placeholder="Commencez à taper un nom…" autocomplete="off" />
   <ul id="suggestions"></ul>
@@ -269,9 +267,9 @@
       result.innerHTML = `
         <h2>📍 ${lieu.nom}</h2>
         <div class="inline-links">
-          <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🗺️ Google Maps</a>
-          <a href="https://maps.apple.com/?daddr=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🍎 Apple Plans</a>
-          <a href="https://waze.com/ul?ll=${lieu.latitude},${lieu.longitude}&navigate=yes" target="_blank" rel="noopener">🚗 Waze</a>
+          <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank">🗺️ Google Maps</a>
+          <a href="https://maps.apple.com/?daddr=${lieu.latitude},${lieu.longitude}" target="_blank">🍎 Apple Plans</a>
+          <a href="https://waze.com/ul?ll=${lieu.latitude},${lieu.longitude}&navigate=yes" target="_blank">🚗 Waze</a>
         </div>
         ${lieu.description ? `<p>${lieu.description}</p>` : ""}
         ${formatRSS(lieu.rss)}
