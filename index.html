@@ -238,15 +238,7 @@
 
     function formatPortail(value) {
       if (!value) return "";
-
-      const cleanValueForCount = value.replace(/[\s]/g, "");
-      const digitCount = (cleanValueForCount.match(/\d/g) || []).length;
-
-      if (digitCount < 6) {
-        return value;
-      }
-
-      const encoded = value.replace(/,/g, "%2C").replace(/\*/g, "%2A").replace(/\s/g, "");
+      const encoded = value.replace(/,/g, "%2C").replace(/\*/g, "%2A");
       return `<a href="tel:${encoded}">${value}</a>`;
     }
 
