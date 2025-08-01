@@ -44,10 +44,10 @@
         left: 0;
       }
       45% {
-        left: 95%;
+        left: calc(100% - 90px);
       }
       50% {
-        left: 95%; /* pause à droite */
+        left: calc(100% - 90px); /* pause à droite */
       }
       95% {
         left: 0;
@@ -162,6 +162,25 @@
       color: #333;
     }
 
+    /* Bouton rafraîchir */
+    #refresh-btn {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background: transparent;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #1a73e8;
+      opacity: 0.6;
+      transition: opacity 0.3s;
+      z-index: 1000;
+    }
+
+    #refresh-btn:hover {
+      opacity: 1;
+    }
+
     @media (max-width: 480px) {
       body {
         padding: 0.8rem;
@@ -204,10 +223,19 @@
       #train {
         height: 30px;
       }
+
+      #refresh-btn {
+        font-size: 20px;
+        top: 8px;
+        right: 8px;
+      }
     }
   </style>
 </head>
 <body>
+
+  <!-- Bouton rafraîchir JSON -->
+  <button id="refresh-btn" title="Recharger les données">🔄</button>
 
   <!-- Site créé par Arnaud Debaecker -->
   <div id="train-container">
@@ -224,7 +252,7 @@
     let lieux = [];
 
     function loadData() {
-      fetch(jsonUrl)
+      fetch(jsonUrl + "?t=" + new Date().getTime())
         .then(res => res.json())
         .then(data => {
           lieux = data;
@@ -286,6 +314,18 @@
         ${lieu.portail ? `<p><strong>🚧 Portail :</strong> ${formatPortail(lieu.portail)}</p>` : ""}
       `;
     }
+
+    function refreshData() {
+      lieux = [];
+      document.getElementById("suggestions").innerHTML = "";
+      document.getElementById("result").innerHTML = "";
+      document.getElementById("result").style.display = "none";
+      loadData();
+    }
+
+    document.getElementById("refresh-btn").addEventListener("click", () => {
+      refreshData();
+    });
 
     document.getElementById("search").addEventListener("input", e => {
       const query = e.target.value.trim().toLowerCase();
