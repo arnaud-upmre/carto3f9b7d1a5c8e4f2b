@@ -1,44 +1,69 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
   <meta name="robots" content="noindex, nofollow" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Train animé avec pause et va-et-vient</title>
+
+  <!-- Définit l'encodage des caractères -->
+  <meta charset="UTF-8" />
+
+  <!-- Titre affiché dans l'onglet du navigateur -->
+  <title>Recherche de lieux</title>
+
+  <!-- Rend la page responsive sur les mobiles -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+
+  <!-- Police définie via Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+
+  <!-- Styles CSS principaux -->
   <style>
+    /* Mise en page principale */
     body {
       font-family: 'Inter', sans-serif;
-      margin: 0; padding: 1rem;
-      display: flex; flex-direction: column; align-items: center;
-      background: #fff; color: #333;
+      background-color: #fff;
+      padding: 1rem;
+      color: #333;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100vw;
       box-sizing: border-box;
     }
+
+    /* Animation du train */
     #train-container {
       width: 100%;
       max-width: 600px;
       height: 48px;
       overflow: hidden;
-      position: relative;
       margin-bottom: 1.5rem;
-      background: #f9f9f9; /* juste pour voir conteneur */
+      position: relative;
     }
     #train {
       position: absolute;
-      top: 3px;
-      left: 0;
+      top: 0;
+      left: -150px;
       height: 42px;
-      user-select: none;
-      -webkit-user-drag: none;
+      animation: trainMove 18s linear infinite;
     }
+    @keyframes trainMove {
+      from { left: -150px; }
+      to { left: 100%; }
+    }
+
+    /* Titre principal */
     h1 {
+      font-size: 20px;
+      margin: 0 0 0.8rem 0;
       font-weight: 600;
       width: 100%;
       max-width: 600px;
-      padding-left: 1rem;
-      font-size: 20px;
-      margin: 0 0 0.8rem 0;
+      padding: 0 1rem;
       text-align: left;
     }
+
+    /* Champ de recherche */
     input[type="text"] {
       width: 100%;
       max-width: 600px;
@@ -49,17 +74,135 @@
       box-sizing: border-box;
       outline: none;
       transition: border-color 0.3s ease;
-      margin-bottom: 0.5rem;
     }
     input[type="text"]:focus {
       border-color: #1a73e8;
       box-shadow: 0 4px 14px rgba(26,115,232,0.4);
     }
+
+    /* Liste des suggestions */
+    ul#suggestions {
+      list-style: none;
+      padding: 0;
+      margin: 0.5rem 0 1.5rem 0;
+      max-width: 600px;
+      width: 100%;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+      background-color: #fff;
+      font-size: 15px;
+      color: #333;
+    }
+    ul#suggestions li {
+      padding: 12px 16px;
+      cursor: pointer;
+      border-bottom: 1px solid #eee;
+    }
+    ul#suggestions li:hover {
+      background-color: #f0f8ff;
+      color: #1a73e8;
+    }
+
+    /* Résultat sélectionné */
+    #result {
+      display: none;
+      background: #ffffff;
+      padding: 1rem 1.5rem;
+      border-radius: 18px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      max-width: 600px;
+      width: 100%;
+      color: #444;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    #result h2 {
+      margin-top: 0;
+      font-size: 22px;
+      font-weight: 700;
+      color: #1a73e8;
+    }
+
+    /* Liens inline */
+    .inline-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      font-size: 14px;
+      padding: 0 1rem 0 0;
+    }
+    .inline-links a {
+      padding: 6px 10px;
+      font-size: 14px;
+      text-decoration: none;
+      color: #1a73e8;
+      border: 1px solid #1a73e8;
+      border-radius: 10px;
+      transition: 0.3s;
+      white-space: nowrap;
+    }
+    .inline-links a:hover {
+      background-color: #1a73e8;
+      color: white;
+    }
+
+    #result p {
+      margin-top: 1rem;
+      color: #555;
+    }
+    #result p strong {
+      color: #333;
+    }
+
+    /* Adaptation mobile */
+    @media (max-width: 480px) {
+      body {
+        padding: 0.8rem;
+      }
+      h1 {
+        font-size: 18px;
+        padding: 0 0.5rem;
+      }
+      input[type="text"] {
+        font-size: 14px;
+        padding: 10px 14px;
+      }
+      ul#suggestions li {
+        padding: 10px 14px;
+        font-size: 14px;
+      }
+      #result {
+        font-size: 14px;
+        padding: 0.8rem 0.5rem;
+      }
+      .inline-links {
+        gap: 4px;
+        padding: 0 0.5rem 0 0;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .inline-links a {
+        font-size: 13px;
+        padding: 8px 10px;
+        white-space: normal;
+        width: fit-content;
+      }
+      #train-container {
+        max-width: 100%;
+      }
+      #train {
+        height: 30px;
+        left: -100px;
+      }
+    }
   </style>
 </head>
 <body>
+
+  <!-- Site créé par Arnaud Debaecker -->
   <div id="train-container">
-    <img id="train" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/train.gif" alt="Train animé" draggable="false" />
+    <img id="train" src="https://bit.ly/458iTYc" alt="Train animé" />
   </div>
 
   <h1>🔍 Rechercher un lieu</h1>
@@ -68,66 +211,101 @@
   <div id="result"></div>
 
   <script>
-    (() => {
-      const train = document.getElementById('train');
-      const container = document.getElementById('train-container');
+    // URL du fichier JSON hébergé sur GitHub
+    const jsonUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/nono-9f4a8b2c7d1e3f56.json";
+    let lieux = [];
 
-      let direction = 1; // 1 = vers la droite, -1 = vers la gauche
-      let position = -60; // marge plus large à gauche, pour ne pas couper l'image
-      const leftLimit = -60; 
-      let rightLimit;
+    // Charge les données JSON depuis l'URL
+    function loadData() {
+      fetch(jsonUrl)
+        .then(res => res.json())
+        .then(data => {
+          lieux = data;
+        })
+        .catch(err => {
+          alert("Erreur de chargement du JSON : " + err);
+        });
+    }
 
-      const speed = 60; // vitesse en px par seconde (ralenti)
-      const pauseDuration = 300; // ms de pause aux extrémités
-
-      function calcLimits() {
-        rightLimit = container.clientWidth - train.clientWidth + 60; 
-        // +60 ici pour marge droite symétrique, train ne sera pas coupé
+    // Formate le champ contact (tel clickable)
+    function formatContact(txt) {
+      const phoneMatch = txt?.match(/(\+?\d[\d\s.-]{6,})/);
+      if (phoneMatch) {
+        const raw = phoneMatch[1].replace(/[^\d+]/g, "");
+        return txt.replace(phoneMatch[1], `<a href="tel:${raw}">${phoneMatch[1]}</a>`);
       }
-      calcLimits();
+      return txt || "";
+    }
 
-      let lastTime = null;
-      let paused = false;
+    // Formate le champ portail pour appel automatique avec virgule et astérisque encodés
+    function formatPortail(value) {
+      if (!value) return "";
+      const encoded = value.replace(/,/g, "%2C").replace(/\*/g, "%2A");
+      return `<a href="tel:${encoded}">${value}</a>`;
+    }
 
-      function step(timestamp) {
-        if (!lastTime) lastTime = timestamp;
-        const delta = timestamp - lastTime;
-        lastTime = timestamp;
-
-        if (!paused) {
-          position += direction * (speed * delta / 1000);
-
-          if (direction === 1 && position >= rightLimit) {
-            position = rightLimit;
-            paused = true;
-            setTimeout(() => {
-              direction = -1;
-              paused = false;
-              lastTime = null;
-              window.requestAnimationFrame(step);
-            }, pauseDuration);
-          } else if (direction === -1 && position <= leftLimit) {
-            position = leftLimit;
-            paused = true;
-            setTimeout(() => {
-              direction = 1;
-              paused = false;
-              lastTime = null;
-              window.requestAnimationFrame(step);
-            }, pauseDuration);
-          }
-          train.style.left = position + 'px';
-        }
-        if (!paused) window.requestAnimationFrame(step);
+    // Formate l'affichage des numéros RSS par table (A/B/C)
+    function formatRSS(value) {
+      const tables = {
+        "A": ["03 28 55 82 56", "03 28 55 82 57"],
+        "B": ["03 28 55 82 58", "03 28 55 82 59"],
+        "C": ["03 28 55 82 53", "03 28 55 82 54"]
+      };
+      const trimmed = (value || "").trim().toUpperCase();
+      if (tables[trimmed]) {
+        const nums = tables[trimmed];
+        return `
+          <p><strong>📞 RSS Table ${trimmed === 'A' ? '1' : trimmed === 'B' ? '2' : '3'} :</strong></p>
+          <div class="inline-links">
+            <a href="tel:${nums[0].replace(/\D/g, '')}">${nums[0]}</a>
+            <a href="tel:${nums[1].replace(/\D/g, '')}">${nums[1]}</a>
+          </div>
+        `;
       }
+      return "";
+    }
 
-      window.addEventListener('resize', () => {
-        calcLimits();
+    // Affiche le lieu sélectionné avec infos formatées
+    function showLieu(lieu) {
+      const result = document.getElementById("result");
+      document.getElementById("suggestions").innerHTML = "";
+      result.style.display = "block";
+      result.innerHTML = `
+        <h2>📍 ${lieu.nom}</h2>
+        <div class="inline-links">
+          <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🗺️ Google Maps</a>
+          <a href="https://maps.apple.com/?daddr=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🍎 Apple Plans</a>
+          <a href="https://waze.com/ul?ll=${lieu.latitude},${lieu.longitude}&navigate=yes" target="_blank" rel="noopener">🚗 Waze</a>
+        </div>
+        ${lieu.description ? `<p>${lieu.description}</p>` : ""}
+        ${formatRSS(lieu.rss)}
+        ${lieu.contact ? `<p><strong>👤 Contact :</strong> ${formatContact(lieu.contact)}</p>` : ""}
+        ${lieu.portail ? `<p><strong>🚧 Portail :</strong> ${formatPortail(lieu.portail)}</p>` : ""}
+      `;
+    }
+
+    // Recherche dynamique et suggestions lors de la saisie
+    document.getElementById("search").addEventListener("input", e => {
+      const query = e.target.value.trim().toLowerCase();
+      const suggestionsEl = document.getElementById("suggestions");
+      const resultEl = document.getElementById("result");
+      suggestionsEl.innerHTML = "";
+      resultEl.innerHTML = "";
+      resultEl.style.display = "none";
+
+      if (!query) return;
+
+      const filtered = lieux.filter(l => l.nom.toLowerCase().startsWith(query));
+      filtered.forEach(lieu => {
+        const li = document.createElement("li");
+        li.textContent = lieu.nom;
+        li.onclick = () => showLieu(lieu);
+        suggestionsEl.appendChild(li);
       });
+    });
 
-      train.style.left = position + 'px';
-      window.requestAnimationFrame(step);
-    })();
+    // Déclenche le chargement des données
+    loadData();
   </script>
 </body>
 </html>
