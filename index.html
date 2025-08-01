@@ -6,7 +6,6 @@
   <title>Recherche de lieux</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
-
   <style>
     body {
       font-family: 'Inter', sans-serif;
@@ -20,12 +19,8 @@
       width: 100vw;
       box-sizing: border-box;
       user-select: none;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
     }
 
-    /* Animation du train */
     #train-container {
       width: 100%;
       max-width: 600px;
@@ -41,7 +36,6 @@
       left: 0;
       height: 42px;
       animation: trainVaEtVient 25s ease-in-out infinite;
-      pointer-events: none;
     }
 
     @keyframes trainVaEtVient {
@@ -49,10 +43,10 @@
         left: 0;
       }
       45% {
-        left: calc(100% - 90px);
+        left: calc(100% - 85px);
       }
       50% {
-        left: calc(100% - 90px);
+        left: calc(100% - 85px);
       }
       95% {
         left: 0;
@@ -211,9 +205,14 @@
       }
     }
   </style>
+
+  <script>
+    // Désactiver clic droit et sélection
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('selectstart', e => e.preventDefault());
+  </script>
 </head>
-<body oncontextmenu="return false;">
-  <!-- Site créé par Arnaud Debaecker -->
+<body>
   <div id="train-container">
     <img id="train" src="https://bit.ly/458iTYc" alt="Train animé" />
   </div>
@@ -225,19 +224,6 @@
 
   <script>
     const jsonUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/nono-9f4a8b2c7d1e3f56.json";
-    let lieux = [];
-
-    function loadData() {
-      const url = jsonUrl + "?t=" + new Date().getTime();
-      fetch(url, { cache: "no-store" })
-        .then(res => res.json())
-        .then(data => {
-          lieux = data;
-        })
-        .catch(err => {
-          alert("Erreur de chargement du JSON : " + err);
-        });
-    }
 
     function formatContact(txt) {
       const phoneMatch = txt?.match(/(\+?\d[\d\s.-]{6,})/);
@@ -302,16 +288,22 @@
 
       if (!query) return;
 
-      const filtered = lieux.filter(l => l.nom.toLowerCase().startsWith(query));
-      filtered.forEach(lieu => {
-        const li = document.createElement("li");
-        li.textContent = lieu.nom;
-        li.onclick = () => showLieu(lieu);
-        suggestionsEl.appendChild(li);
-      });
+      // Recharger le JSON à chaque saisie avec anti-cache
+      fetch(jsonUrl + "?t=" + Date.now())
+        .then(res => res.json())
+        .then(data => {
+          const filtered = data.filter(l => l.nom.toLowerCase().startsWith(query));
+          filtered.forEach(lieu => {
+            const li = document.createElement("li");
+            li.textContent = lieu.nom;
+            li.onclick = () => showLieu(lieu);
+            suggestionsEl.appendChild(li);
+          });
+        })
+        .catch(err => {
+          console.error("Erreur lors du chargement du JSON :", err);
+        });
     });
-
-    loadData();
   </script>
 </body>
 </html>
