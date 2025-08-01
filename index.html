@@ -7,7 +7,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <style>
-    /* --- Style général --- */
     body {
       font-family: 'Inter', sans-serif;
       background-color: #fff;
@@ -22,7 +21,6 @@
       min-height: 100vh;
     }
 
-    /* --- Conteneur du train animé --- */
     #train-container {
       width: 100%;
       max-width: 600px;
@@ -43,7 +41,6 @@
       to { left: 100%; }
     }
 
-    /* --- Titre --- */
     h1 {
       font-size: 20px;
       margin: 0 0 0.8rem 0;
@@ -54,7 +51,6 @@
       text-align: left;
     }
 
-    /* --- Champ de recherche --- */
     input[type="text"] {
       width: 100%;
       max-width: 600px;
@@ -65,18 +61,17 @@
       box-sizing: border-box;
       outline: none;
       transition: border-color 0.3s ease;
-      margin-bottom: 0; /* important : pas de marge sous le champ */
+      margin-bottom: 0; /* pas d’espace sous le champ */
     }
     input[type="text"]:focus {
       border-color: #1a73e8;
       box-shadow: 0 4px 14px rgba(26,115,232,0.4);
     }
 
-    /* --- Liste des suggestions --- */
     ul#suggestions {
       list-style: none;
       padding: 0;
-      margin: 0; /* Coller la liste au champ */
+      margin: 0; /* coller au champ */
       max-width: 600px;
       width: 100%;
       border-radius: 12px;
@@ -96,14 +91,14 @@
       color: #1a73e8;
     }
 
-    /* --- Espace fixe entre liste et logo --- */
+    /* Espace fixe entre liste et logo */
     #logo-spacing {
       height: 30px;
       width: 100%;
       max-width: 600px;
     }
 
-    /* --- Logo centré et taille max --- */
+    /* Logo centré et taille max */
     #logo {
       display: block;
       margin: 0 auto;
@@ -112,7 +107,13 @@
       transition: opacity 0.3s ease;
     }
 
-    /* --- Résultat affiché sous le logo --- */
+    /* Quand logo caché on masque totalement avec display:none */
+    #logo.hidden {
+      opacity: 0 !important;
+      display: none !important;
+      transition: none !important;
+    }
+
     #result {
       display: none;
       background: #ffffff;
@@ -133,7 +134,6 @@
       color: #1a73e8;
     }
 
-    /* --- Liens sous résultat --- */
     .inline-links {
       display: flex;
       flex-wrap: wrap;
@@ -164,7 +164,6 @@
       color: #333;
     }
 
-    /* --- Responsive mobile --- */
     @media (max-width: 480px) {
       body {
         padding: 0.8rem;
@@ -204,11 +203,9 @@
         height: 30px;
         left: -100px;
       }
-      /* Ajuster taille logo */
       #logo {
         max-width: 120px;
       }
-      /* Maintenir l'espace entre liste et logo sur mobile */
       #logo-spacing {
         height: 25px;
       }
@@ -219,26 +216,20 @@
 
   <!-- Site créé par Arnaud Debaecker -->
 
-  <!-- Conteneur train animé en haut -->
   <div id="train-container">
     <img id="train" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/train.gif" alt="Train animé" />
   </div>
 
   <h1>🔍 Rechercher un lieu</h1>
 
-  <!-- Champ de recherche -->
   <input type="text" id="search" placeholder="Commencez à taper un nom…" autocomplete="off" />
 
-  <!-- Liste des suggestions, collée au champ -->
   <ul id="suggestions"></ul>
 
-  <!-- Espace fixe entre liste et logo -->
   <div id="logo-spacing"></div>
 
-  <!-- Logo visible au départ, disparait au début de la recherche -->
   <img id="logo" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/Logo%20EALE.png" alt="Logo EALE" />
 
-  <!-- Résultat détaillé affiché en dessous -->
   <div id="result"></div>
 
   <script>
@@ -256,7 +247,6 @@
         });
     }
 
-    // Formatte le contact pour transformer les numéros en liens tel:
     function formatContact(txt) {
       const phoneMatch = txt?.match(/(\+?\d[\d\s.-]{6,})/);
       if (phoneMatch) {
@@ -266,14 +256,12 @@
       return txt || "";
     }
 
-    // Formatte le portail pour inclure des virgules et étoiles dans l'appel tel:
     function formatPortail(value) {
       if (!value) return "";
       const encoded = value.replace(/,/g, "%2C").replace(/\*/g, "%2A");
       return `<a href="tel:${encoded}">${value}</a>`;
     }
 
-    // Formatte le bloc RSS selon la table A, B ou C
     function formatRSS(value) {
       const tables = {
         "A": ["03 28 55 82 56", "03 28 55 82 57"],
@@ -294,7 +282,6 @@
       return "";
     }
 
-    // Affiche les détails du lieu sélectionné
     function showLieu(lieu) {
       const result = document.getElementById("result");
       document.getElementById("suggestions").innerHTML = "";
@@ -313,7 +300,7 @@
       `;
     }
 
-    // Gestion des entrées dans le champ recherche
+    // Gestion input recherche + affichage logo et suggestions
     document.getElementById("search").addEventListener("input", e => {
       const query = e.target.value.trim().toLowerCase();
       const suggestionsEl = document.getElementById("suggestions");
@@ -324,20 +311,24 @@
       resultEl.innerHTML = "";
       resultEl.style.display = "none";
 
-      // Gestion de la visibilité du logo avec transition rapide disparition, lente apparition
       if (query.length > 0) {
-        // Disparition rapide logo
+        // Cacher logo avec transition rapide + display none pour ne pas prendre de place
         logo.style.transition = "opacity 0.2s ease";
         logo.style.opacity = 0;
+        setTimeout(() => {
+          logo.classList.add("hidden");
+        }, 200);
       } else {
-        // Apparition lente logo
-        logo.style.transition = "opacity 2s ease";
-        logo.style.opacity = 1;
+        // Montrer logo avec display block puis transition lente sur opacity
+        logo.classList.remove("hidden");
+        setTimeout(() => {
+          logo.style.transition = "opacity 2s ease";
+          logo.style.opacity = 1;
+        }, 20);
       }
 
       if (!query) return;
 
-      // Filtrage des lieux pour suggestions (début du nom)
       const filtered = lieux.filter(l => l.nom.toLowerCase().startsWith(query));
       filtered.forEach(lieu => {
         const li = document.createElement("li");
@@ -347,7 +338,6 @@
       });
     });
 
-    // Chargement des données JSON
     loadData();
   </script>
 </body>
