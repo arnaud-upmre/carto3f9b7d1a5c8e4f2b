@@ -7,7 +7,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <style>
-    /* Corps de page */
     body {
       font-family: 'Inter', sans-serif;
       background-color: #fff;
@@ -21,7 +20,6 @@
       box-sizing: border-box;
     }
 
-    /* Conteneur train animé */
     #train-container {
       width: 100%;
       max-width: 600px;
@@ -42,7 +40,6 @@
       to { left: 100%; }
     }
 
-    /* Titre */
     h1 {
       font-size: 20px;
       margin: 0 0 0.8rem 0;
@@ -53,7 +50,6 @@
       text-align: left;
     }
 
-    /* Champ recherche */
     input[type="text"] {
       width: 100%;
       max-width: 600px;
@@ -64,35 +60,37 @@
       box-sizing: border-box;
       outline: none;
       transition: border-color 0.3s ease;
-      margin-bottom: 10px; /* espace sous le champ */
+      margin-bottom: 10px;
     }
     input[type="text"]:focus {
       border-color: #1a73e8;
       box-shadow: 0 4px 14px rgba(26,115,232,0.4);
     }
 
-    /* Logo affiché sous le champ */
+    /* Logo container visible by default */
     #logo-container {
       max-width: 600px;
       width: 100%;
-      display: flex;
+      display: flex; /* visible */
       justify-content: center;
-      margin-bottom: 15px; /* espace entre logo et liste */
-      transition: opacity 0.3s ease;
-      /* initialement visible */
+      margin-bottom: 15px;
       opacity: 1;
-    }
-    #logo-container.hidden {
-      opacity: 0;
-      pointer-events: none; /* ne pas interférer quand caché */
       transition: opacity 0.15s ease;
     }
+
+    /* Classe cachée = opacité 0 */
+    #logo-container.hidden {
+      opacity: 0;
+      pointer-events: none;
+      /* display:none sera mis via JS après transition */
+      transition: opacity 0.15s ease;
+    }
+
     #logo {
       max-height: 80px;
       width: auto;
     }
 
-    /* Liste suggestions */
     ul#suggestions {
       list-style: none;
       padding: 0;
@@ -116,7 +114,6 @@
       color: #1a73e8;
     }
 
-    /* Résultat sélectionné */
     #result {
       display: none;
       background: #ffffff;
@@ -136,7 +133,6 @@
       color: #1a73e8;
     }
 
-    /* Liens inline */
     .inline-links {
       display: flex;
       flex-wrap: wrap;
@@ -159,7 +155,6 @@
       color: white;
     }
 
-    /* Texte résultat */
     #result p {
       margin-top: 1rem;
       color: #555;
@@ -168,7 +163,6 @@
       color: #333;
     }
 
-    /* Responsive */
     @media (max-width: 480px) {
       body {
         padding: 0.8rem;
@@ -227,7 +221,6 @@
 
   <input type="text" id="search" placeholder="Commencez à taper un nom…" autocomplete="off" />
 
-  <!-- Conteneur du logo sous le champ -->
   <div id="logo-container">
     <img id="logo" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/Logo%20EALE.png" alt="Logo EALE" />
   </div>
@@ -236,23 +229,16 @@
   <div id="result"></div>
 
   <script>
-    // URL du fichier JSON avec les données
     const jsonUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/nono-9f4a8b2c7d1e3f56.json";
     let lieux = [];
 
-    // Chargement des données JSON
     function loadData() {
       fetch(jsonUrl)
         .then(res => res.json())
-        .then(data => {
-          lieux = data;
-        })
-        .catch(err => {
-          alert("Erreur de chargement du JSON : " + err);
-        });
+        .then(data => { lieux = data; })
+        .catch(err => { alert("Erreur de chargement du JSON : " + err); });
     }
 
-    // Formate le contact en lien tel: si possible
     function formatContact(txt) {
       const phoneMatch = txt?.match(/(\+?\d[\d\s.-]{6,})/);
       if (phoneMatch) {
@@ -262,14 +248,12 @@
       return txt || "";
     }
 
-    // Formate le portail en lien tel: avec encodage virgule et astérisque
     function formatPortail(value) {
       if (!value) return "";
       const encoded = value.replace(/,/g, "%2C").replace(/\*/g, "%2A");
       return `<a href="tel:${encoded}">${value}</a>`;
     }
 
-    // Formate les numéros RSS
     function formatRSS(value) {
       const tables = {
         "A": ["03 28 55 82 56", "03 28 55 82 57"],
@@ -290,7 +274,6 @@
       return "";
     }
 
-    // Affiche les détails d'un lieu sélectionné
     function showLieu(lieu) {
       const result = document.getElementById("result");
       document.getElementById("suggestions").innerHTML = "";
@@ -309,13 +292,11 @@
       `;
     }
 
-    // Gère l'affichage dynamique : logo visible ou non selon saisie
     const searchInput = document.getElementById("search");
     const logoContainer = document.getElementById("logo-container");
 
     searchInput.addEventListener("input", e => {
       const query = e.target.value.trim().toLowerCase();
-
       const suggestionsEl = document.getElementById("suggestions");
       const resultEl = document.getElementById("result");
 
@@ -324,13 +305,16 @@
       resultEl.style.display = "none";
 
       if (!query) {
-        // Affiche logo avec transition d'opacité lente (2s)
-        logoContainer.classList.remove("hidden");
+        // Affiche logo : remet display:flex et opacité 1
+        logoContainer.style.display = "flex";
+        // timeout nécessaire pour que le browser applique display avant d'animer l'opacité
+        setTimeout(() => logoContainer.classList.remove("hidden"), 20);
       } else {
-        // Cache logo avec transition plus rapide (0.15s)
+        // Cache logo : opacité 0 puis après délai display:none
         logoContainer.classList.add("hidden");
+      }
 
-        // Recherche et affichage des suggestions
+      if (query) {
         const filtered = lieux.filter(l => l.nom.toLowerCase().startsWith(query));
         filtered.forEach(lieu => {
           const li = document.createElement("li");
@@ -341,17 +325,15 @@
       }
     });
 
-    // Charger les données JSON au chargement
-    loadData();
-
-    // Gestion fin transition pour display:none afin que logo ne prenne plus de place
+    // Après la fin de la transition opacity sur logo-container
     logoContainer.addEventListener("transitionend", () => {
       if (logoContainer.classList.contains("hidden")) {
+        // On cache complètement pour ne plus prendre d'espace
         logoContainer.style.display = "none";
-      } else {
-        logoContainer.style.display = "flex";
       }
     });
+
+    loadData();
   </script>
 </body>
 </html>
