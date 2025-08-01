@@ -8,6 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
 
   <style>
+    /* ---------- STYLE GENERAL ---------- */
     body {
       font-family: 'Inter', sans-serif;
       background-color: #fff;
@@ -17,14 +18,13 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
       width: 100vw;
+      height: 100vh;
       box-sizing: border-box;
-      min-height: 100vh;
       position: relative;
     }
 
-    /* Conteneur du train animé */
+    /* ---------- ANIMATION TRAIN ---------- */
     #train-container {
       width: 100%;
       max-width: 600px;
@@ -47,6 +47,7 @@
       to { left: 100%; }
     }
 
+    /* ---------- TITRE ---------- */
     h1 {
       font-size: 20px;
       margin: 0 0 0.8rem 0;
@@ -57,6 +58,7 @@
       text-align: left;
     }
 
+    /* ---------- CHAMP DE RECHERCHE ---------- */
     input[type="text"] {
       width: 100%;
       max-width: 600px;
@@ -67,7 +69,6 @@
       box-sizing: border-box;
       outline: none;
       transition: border-color 0.3s ease;
-      z-index: 2;
     }
 
     input[type="text"]:focus {
@@ -75,21 +76,7 @@
       box-shadow: 0 4px 14px rgba(26,115,232,0.4);
     }
 
-    #logo-accueil {
-      position: absolute;
-      top: 45%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      transition: opacity 2s ease;
-      max-width: 150px;
-      z-index: 1;
-    }
-
-    #logo-accueil.hide {
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
+    /* ---------- SUGGESTIONS ---------- */
     ul#suggestions {
       list-style: none;
       padding: 0;
@@ -115,6 +102,7 @@
       color: #1a73e8;
     }
 
+    /* ---------- RÉSULTAT ---------- */
     #result {
       display: none;
       background: #ffffff;
@@ -168,35 +156,189 @@
       color: #333;
     }
 
-    @media (max-height: 700px) {
-      #logo-accueil {
-        top: 38%;
+    /* ---------- LOGO AU CENTRE ---------- */
+    #center-logo-container {
+      position: absolute;
+      top: 35%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 1;
+      transition: opacity 0.25s ease-out;
+      z-index: 0;
+    }
+
+    #center-logo-container.hidden {
+      opacity: 0;
+      transition: opacity 2s ease-in;
+    }
+
+    #center-logo {
+      width: 90px;
+      height: auto;
+      opacity: 0.95;
+    }
+
+    /* ---------- RESPONSIVE ---------- */
+    @media (max-width: 480px) {
+      body {
+        padding: 0.8rem;
+      }
+      h1 {
+        font-size: 18px;
+        padding: 0 0.5rem;
+      }
+      input[type="text"] {
+        font-size: 14px;
+        padding: 10px 14px;
+      }
+      ul#suggestions li {
+        padding: 10px 14px;
+        font-size: 14px;
+      }
+      #result {
+        font-size: 14px;
+        padding: 0.8rem 0.5rem;
+      }
+      .inline-links {
+        gap: 4px;
+        padding: 0 0.5rem 0 0;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .inline-links a {
+        font-size: 13px;
+        padding: 8px 10px;
+        white-space: normal;
+        width: fit-content;
       }
     }
   </style>
 </head>
+
 <body>
+
+  <!-- ✅ Animation de train -->
   <div id="train-container">
     <img id="train" src="https://bit.ly/458iTYc" alt="Train animé" />
   </div>
 
+  <!-- ✅ Logo centré affiché au chargement -->
+  <div id="center-logo-container">
+    <img id="center-logo" src="https://lh3.googleusercontent.com/pw/AP1GczN_XLcL4WmC4cm6cTW4kwjuQzEI3K5rbbgpKe2nF3vxjfYJHVM9QHkNsz35e0WV9nYpSV84emvilKtHWdxGcRf-PRcxyutv7o1skvBidVe8xw3OPFhG8rZoLDRnYxfzI35AUTzhPUmuftc7CNXfniu6DQ=w768-h838-s-no?authuser=0" alt="Logo" />
+  </div>
+
+  <!-- ✅ Titre -->
   <h1>🔍 Rechercher un lieu</h1>
+
+  <!-- ✅ Champ de recherche -->
   <input type="text" id="search" placeholder="Commencez à taper un nom…" autocomplete="off" />
-  <img id="logo-accueil" src="http://bit.ly/46Ei3F8" alt="Logo d'accueil" />
+
+  <!-- ✅ Résultats suggérés -->
   <ul id="suggestions"></ul>
+
+  <!-- ✅ Résultat affiché -->
   <div id="result"></div>
 
+  <!-- ✅ Script JS principal -->
   <script>
-    const logo = document.getElementById("logo-accueil");
-    const searchInput = document.getElementById("search");
+    const jsonUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/nono-9f4a8b2c7d1e3f56.json";
+    let lieux = [];
 
-    searchInput.addEventListener("input", () => {
-      if (searchInput.value.trim()) {
-        logo.classList.add("hide");
-      } else {
-        logo.classList.remove("hide");
+    function loadData() {
+      fetch(jsonUrl)
+        .then(res => res.json())
+        .then(data => {
+          lieux = data;
+        })
+        .catch(err => {
+          alert("Erreur de chargement du JSON : " + err);
+        });
+    }
+
+    function formatContact(txt) {
+      const phoneMatch = txt?.match(/(\+?\d[\d\s.-]{6,})/);
+      if (phoneMatch) {
+        const raw = phoneMatch[1].replace(/[^\d+]/g, "");
+        return txt.replace(phoneMatch[1], `<a href="tel:${raw}">${phoneMatch[1]}</a>`);
       }
+      return txt || "";
+    }
+
+    function formatPortail(value) {
+      if (!value) return "";
+      const encoded = value.replace(/,/g, "%2C").replace(/\*/g, "%2A");
+      return `<a href="tel:${encoded}">${value}</a>`;
+    }
+
+    function formatRSS(value) {
+      const tables = {
+        "A": ["03 28 55 82 56", "03 28 55 82 57"],
+        "B": ["03 28 55 82 58", "03 28 55 82 59"],
+        "C": ["03 28 55 82 53", "03 28 55 82 54"]
+      };
+      const trimmed = (value || "").trim().toUpperCase();
+      if (tables[trimmed]) {
+        const nums = tables[trimmed];
+        return `
+          <p><strong>📞 RSS Table ${trimmed === 'A' ? '1' : trimmed === 'B' ? '2' : '3'} :</strong></p>
+          <div class="inline-links">
+            <a href="tel:${nums[0].replace(/\D/g, '')}">${nums[0]}</a>
+            <a href="tel:${nums[1].replace(/\D/g, '')}">${nums[1]}</a>
+          </div>
+        `;
+      }
+      return "";
+    }
+
+    function showLieu(lieu) {
+      const result = document.getElementById("result");
+      document.getElementById("suggestions").innerHTML = "";
+      result.style.display = "block";
+      result.innerHTML = `
+        <h2>📍 ${lieu.nom}</h2>
+        <div class="inline-links">
+          <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🗺️ Google Maps</a>
+          <a href="https://maps.apple.com/?daddr=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🍎 Apple Plans</a>
+          <a href="https://waze.com/ul?ll=${lieu.latitude},${lieu.longitude}&navigate=yes" target="_blank" rel="noopener">🚗 Waze</a>
+        </div>
+        ${lieu.description ? `<p>${lieu.description}</p>` : ""}
+        ${formatRSS(lieu.rss)}
+        ${lieu.contact ? `<p><strong>👤 Contact :</strong> ${formatContact(lieu.contact)}</p>` : ""}
+        ${lieu.portail ? `<p><strong>🚧 Portail :</strong> ${formatPortail(lieu.portail)}</p>` : ""}
+      `;
+    }
+
+    // ✅ Gérer la recherche
+    document.getElementById("search").addEventListener("input", e => {
+      const logo = document.getElementById("center-logo-container");
+      const query = e.target.value.trim().toLowerCase();
+      const suggestionsEl = document.getElementById("suggestions");
+      const resultEl = document.getElementById("result");
+
+      // ✅ Masquer/Afficher le logo selon la saisie
+      if (query && logo) {
+        logo.classList.add("hidden");
+      } else if (logo) {
+        logo.classList.remove("hidden");
+      }
+
+      // ✅ Mise à jour des résultats
+      suggestionsEl.innerHTML = "";
+      resultEl.innerHTML = "";
+      resultEl.style.display = "none";
+
+      if (!query) return;
+
+      const filtered = lieux.filter(l => l.nom.toLowerCase().startsWith(query));
+      filtered.forEach(lieu => {
+        const li = document.createElement("li");
+        li.textContent = lieu.nom;
+        li.onclick = () => showLieu(lieu);
+        suggestionsEl.appendChild(li);
+      });
     });
+
+    loadData();
   </script>
 </body>
 </html>
