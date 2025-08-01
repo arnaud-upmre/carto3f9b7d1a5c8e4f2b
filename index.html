@@ -6,6 +6,7 @@
   <title>Recherche de lieux</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+
   <style>
     body {
       font-family: 'Inter', sans-serif;
@@ -20,6 +21,7 @@
       box-sizing: border-box;
     }
 
+    /* Animation du train */
     #train-container {
       width: 100%;
       max-width: 600px;
@@ -28,28 +30,30 @@
       margin-bottom: 1.5rem;
       position: relative;
     }
+
     #train {
       position: absolute;
       top: 0;
       left: 0;
       height: 42px;
-      animation: trainVaEtVient 12s ease-in-out infinite alternate;
+      animation: trainVaEtVient 10s ease-in-out infinite;
     }
+
     @keyframes trainVaEtVient {
       0% {
         left: 0;
       }
       45% {
-        left: calc(100% - 150px);
+        left: calc(100% - 80px);
       }
       50% {
-        left: calc(100% - 150px);
+        left: calc(100% - 80px); /* pause à droite */
       }
       95% {
         left: 0;
       }
       100% {
-        left: 0;
+        left: 0; /* pause à gauche */
       }
     }
 
@@ -74,6 +78,7 @@
       outline: none;
       transition: border-color 0.3s ease;
     }
+
     input[type="text"]:focus {
       border-color: #1a73e8;
       box-shadow: 0 4px 14px rgba(26,115,232,0.4);
@@ -92,11 +97,13 @@
       font-size: 15px;
       color: #333;
     }
+
     ul#suggestions li {
       padding: 12px 16px;
       cursor: pointer;
       border-bottom: 1px solid #eee;
     }
+
     ul#suggestions li:hover {
       background-color: #f0f8ff;
       color: #1a73e8;
@@ -114,6 +121,7 @@
       font-size: 15px;
       line-height: 1.5;
     }
+
     #result h2 {
       margin-top: 0;
       font-size: 22px;
@@ -128,6 +136,7 @@
       font-size: 14px;
       padding: 0 1rem 0 0;
     }
+
     .inline-links a {
       padding: 6px 10px;
       font-size: 14px;
@@ -138,6 +147,7 @@
       transition: 0.3s;
       white-space: nowrap;
     }
+
     .inline-links a:hover {
       background-color: #1a73e8;
       color: white;
@@ -147,6 +157,7 @@
       margin-top: 1rem;
       color: #555;
     }
+
     #result p strong {
       color: #333;
     }
@@ -155,37 +166,41 @@
       body {
         padding: 0.8rem;
       }
+
       h1 {
         font-size: 18px;
         padding: 0 0.5rem;
       }
+
       input[type="text"] {
         font-size: 14px;
         padding: 10px 14px;
       }
+
       ul#suggestions li {
         padding: 10px 14px;
         font-size: 14px;
       }
+
       #result {
         font-size: 14px;
         padding: 0.8rem 0.5rem;
       }
+
       .inline-links {
         gap: 4px;
         padding: 0 0.5rem 0 0;
         flex-direction: column;
         align-items: flex-start;
       }
+
       .inline-links a {
         font-size: 13px;
         padding: 8px 10px;
         white-space: normal;
         width: fit-content;
       }
-      #train-container {
-        max-width: 100%;
-      }
+
       #train {
         height: 30px;
       }
