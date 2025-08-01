@@ -21,7 +21,6 @@
       box-sizing: border-box;
     }
 
-    /* Animation du train */
     #train-container {
       width: 100%;
       max-width: 600px;
@@ -40,11 +39,9 @@
     }
 
     @keyframes trainVaEtVient {
-      0% { left: 0; }
-      45% { left: calc(100% - 95px); }
-      50% { left: calc(100% - 95px); }
+      0%, 100% { left: 0; }
+      45%, 50% { left: calc(100% - 95px); }
       95% { left: 0; }
-      100% { left: 0; }
     }
 
     h1 {
@@ -159,24 +156,47 @@
     }
 
     @media (max-width: 480px) {
-      body { padding: 0.8rem; }
-      h1 { font-size: 18px; padding: 0 0.5rem; }
-      input[type="text"] { font-size: 14px; padding: 10px 14px; }
-      ul#suggestions li { padding: 10px 14px; font-size: 14px; }
-      #result { font-size: 14px; padding: 0.8rem 0.5rem; }
+      body {
+        padding: 0.8rem;
+      }
+
+      h1 {
+        font-size: 18px;
+        padding: 0 0.5rem;
+      }
+
+      input[type="text"] {
+        font-size: 14px;
+        padding: 10px 14px;
+      }
+
+      ul#suggestions li {
+        padding: 10px 14px;
+        font-size: 14px;
+      }
+
+      #result {
+        font-size: 14px;
+        padding: 0.8rem 0.5rem;
+      }
+
       .inline-links {
         gap: 4px;
         padding: 0 0.5rem 0 0;
         flex-direction: column;
         align-items: flex-start;
       }
+
       .inline-links a {
         font-size: 13px;
         padding: 8px 10px;
         white-space: normal;
         width: fit-content;
       }
-      #train { height: 30px; }
+
+      #train {
+        height: 30px;
+      }
     }
   </style>
 </head>
@@ -246,19 +266,32 @@
       const result = document.getElementById("result");
       document.getElementById("suggestions").innerHTML = "";
       result.style.display = "block";
-      result.innerHTML = `
+
+      let html = `
         <h2>📍 ${lieu.nom}</h2>
         <div class="inline-links">
           <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🗺️ Google Maps</a>
           <a href="https://maps.apple.com/?daddr=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🍎 Apple Plans</a>
           <a href="https://waze.com/ul?ll=${lieu.latitude},${lieu.longitude}&navigate=yes" target="_blank" rel="noopener">🚗 Waze</a>
         </div>
-        ${lieu.description ? `<p>${lieu.description}</p><hr class="separator" />` : ""}
-        ${formatRSS(lieu.rss) ? `${formatRSS(lieu.rss)}<hr class="separator" />` : ""}
-        ${lieu.contact ? `<p><strong>👤 Contact :</strong> ${formatContact(lieu.contact)}</p><hr class="separator" />` : ""}
-        ${lieu.portail ? `<p><strong>🚧 Portail :</strong> ${formatPortail(lieu.portail)}</p><hr class="separator" />` : ""}
-        <p>📍 Localiser les appareils du poste <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&amp;usp=sharing" target="_blank" rel="noopener">ICI</a></p>
       `;
+
+      const blocs = [];
+
+      if (lieu.description) blocs.push(`<p>${lieu.description}</p>`);
+      const rss = formatRSS(lieu.rss);
+      if (rss) blocs.push(rss);
+      if (lieu.contact) blocs.push(`<p><strong>👤 Contact :</strong> ${formatContact(lieu.contact)}</p>`);
+      if (lieu.portail) blocs.push(`<p><strong>🚧 Portail :</strong> ${formatPortail(lieu.portail)}</p>`);
+
+      html += blocs.join('<hr class="separator" />');
+
+      html += `
+        <hr class="separator" />
+        <p>📍 Localiser les appareils du poste <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&usp=sharing" target="_blank" rel="noopener">ICI</a></p>
+      `;
+
+      result.innerHTML = html;
     }
 
     document.getElementById("search").addEventListener("input", e => {
