@@ -2,11 +2,22 @@
 <html lang="fr">
 <head>
   <meta name="robots" content="noindex, nofollow" />
+
+  <!-- Définit l'encodage des caractères -->
   <meta charset="UTF-8" />
+
+  <!-- Titre affiché dans l'onglet du navigateur -->
   <title>Recherche de lieux</title>
+
+  <!-- Rend la page responsive sur les mobiles -->
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+
+  <!-- Police définie via Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+
+  <!-- Styles CSS principaux -->
   <style>
+    /* Mise en page principale */
     body {
       font-family: 'Inter', sans-serif;
       background-color: #fff;
@@ -20,6 +31,7 @@
       box-sizing: border-box;
     }
 
+    /* Animation du train */
     #train-container {
       width: 100%;
       max-width: 600px;
@@ -40,6 +52,7 @@
       to { left: 100%; }
     }
 
+    /* Titre principal */
     h1 {
       font-size: 20px;
       margin: 0 0 0.8rem 0;
@@ -50,6 +63,7 @@
       text-align: left;
     }
 
+    /* Champ de recherche */
     input[type="text"] {
       width: 100%;
       max-width: 600px;
@@ -66,6 +80,7 @@
       box-shadow: 0 4px 14px rgba(26,115,232,0.4);
     }
 
+    /* Liste des suggestions */
     ul#suggestions {
       list-style: none;
       padding: 0;
@@ -89,6 +104,7 @@
       color: #1a73e8;
     }
 
+    /* Résultat sélectionné */
     #result {
       display: none;
       background: #ffffff;
@@ -108,6 +124,7 @@
       color: #1a73e8;
     }
 
+    /* Liens inline */
     .inline-links {
       display: flex;
       flex-wrap: wrap;
@@ -138,6 +155,7 @@
       color: #333;
     }
 
+    /* Adaptation mobile */
     @media (max-width: 480px) {
       body {
         padding: 0.8rem;
@@ -183,7 +201,6 @@
 <body>
 
   <!-- Site créé par Arnaud Debaecker -->
-
   <div id="train-container">
     <img id="train" src="https://bit.ly/458iTYc" alt="Train animé" />
   </div>
@@ -194,9 +211,11 @@
   <div id="result"></div>
 
   <script>
+    // URL du fichier JSON hébergé sur GitHub
     const jsonUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/nono-9f4a8b2c7d1e3f56.json";
     let lieux = [];
 
+    // Charge les données JSON depuis l'URL
     function loadData() {
       fetch(jsonUrl)
         .then(res => res.json())
@@ -208,6 +227,7 @@
         });
     }
 
+    // Formate le champ contact (tel clickable)
     function formatContact(txt) {
       const phoneMatch = txt?.match(/(\+?\d[\d\s.-]{6,})/);
       if (phoneMatch) {
@@ -217,13 +237,14 @@
       return txt || "";
     }
 
+    // Formate le champ portail pour appel automatique avec virgule et astérisque encodés
     function formatPortail(value) {
       if (!value) return "";
-      // Encode les virgules et astérisques pour l'URL tel:
       const encoded = value.replace(/,/g, "%2C").replace(/\*/g, "%2A");
       return `<a href="tel:${encoded}">${value}</a>`;
     }
 
+    // Formate l'affichage des numéros RSS par table (A/B/C)
     function formatRSS(value) {
       const tables = {
         "A": ["03 28 55 82 56", "03 28 55 82 57"],
@@ -244,6 +265,7 @@
       return "";
     }
 
+    // Affiche le lieu sélectionné avec infos formatées
     function showLieu(lieu) {
       const result = document.getElementById("result");
       document.getElementById("suggestions").innerHTML = "";
@@ -262,6 +284,7 @@
       `;
     }
 
+    // Recherche dynamique et suggestions lors de la saisie
     document.getElementById("search").addEventListener("input", e => {
       const query = e.target.value.trim().toLowerCase();
       const suggestionsEl = document.getElementById("suggestions");
@@ -281,6 +304,7 @@
       });
     });
 
+    // Déclenche le chargement des données
     loadData();
   </script>
 </body>
