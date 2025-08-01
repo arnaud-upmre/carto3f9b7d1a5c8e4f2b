@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+  <!-- Meta tags pour SEO, charset, responsive -->
   <meta name="robots" content="noindex, nofollow" />
   <meta charset="UTF-8" />
   <title>Recherche de lieux</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  
+  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  
   <style>
-    /* Style général du body */
+    /* Corps de la page - centrage, police, couleur, taille */
     body {
       font-family: 'Inter', sans-serif;
       background-color: #fff;
@@ -21,7 +25,7 @@
       box-sizing: border-box;
     }
 
-    /* Conteneur du train avec position relative pour l'animation */
+    /* Conteneur de l'animation train */
     #train-container {
       width: 100%;
       max-width: 600px;
@@ -30,7 +34,8 @@
       margin-bottom: 1.5rem;
       position: relative;
     }
-    /* Train animé positionné absolument, animé de gauche à droite */
+
+    /* Image train animée, position absolue pour animation */
     #train {
       position: absolute;
       top: 0;
@@ -38,26 +43,14 @@
       height: 42px;
       animation: trainMove 18s linear infinite;
     }
+
+    /* Animation horizontale du train */
     @keyframes trainMove {
       from { left: -150px; }
       to { left: 100%; }
     }
 
-    /* Logo EALE au-dessus du champ recherche */
-    #logo {
-      width: 140px;
-      margin: 0 auto 1rem;
-      display: block;
-      opacity: 1;
-      transition: opacity 2s ease-in; /* apparition douce */
-    }
-    /* Classe pour cacher le logo rapidement */
-    #logo.hide {
-      opacity: 0;
-      transition: opacity 0.2s ease-out; /* disparition rapide */
-    }
-
-    /* Titre de la page */
+    /* Titre principal */
     h1 {
       font-size: 20px;
       margin: 0 0 0.8rem 0;
@@ -85,7 +78,7 @@
       box-shadow: 0 4px 14px rgba(26,115,232,0.4);
     }
 
-    /* Liste des suggestions */
+    /* Liste des suggestions sous le champ */
     ul#suggestions {
       list-style: none;
       padding: 0;
@@ -109,7 +102,7 @@
       color: #1a73e8;
     }
 
-    /* Résultat affiché */
+    /* Résultat détaillé affiché sous les suggestions */
     #result {
       display: none;
       background: #ffffff;
@@ -129,7 +122,7 @@
       color: #1a73e8;
     }
 
-    /* Liens inline */
+    /* Liens inline pour maps, contacts etc */
     .inline-links {
       display: flex;
       flex-wrap: wrap;
@@ -152,12 +145,32 @@
       color: white;
     }
 
+    /* Texte dans résultat */
     #result p {
       margin-top: 1rem;
       color: #555;
     }
     #result p strong {
       color: #333;
+    }
+
+    /* Logo affiché sous le champ de recherche au chargement */
+    #logo {
+      width: 140px;
+      margin: 20px auto 1rem auto; /* margin-top plus grand pour éloigner du champ */
+      display: block;
+      opacity: 1;
+      height: auto;
+      transition: opacity 2s ease-in, height 2s ease-in, margin 2s ease-in;
+    }
+
+    /* Classe qui masque le logo avec transition rapide */
+    #logo.hide {
+      opacity: 0;
+      height: 0;
+      margin: 0;
+      transition: opacity 0.2s ease-out, height 0.2s ease-out, margin 0.2s ease-out;
+      overflow: hidden;
     }
 
     /* Responsive mobile */
@@ -205,25 +218,32 @@
 </head>
 <body>
 
-  <!-- Site créé par Arnaud Debaecker -->
-
-  <!-- Logo EALE affiché au dessus du champ recherche -->
-  <img id="logo" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/Logo%20EALE.png" alt="Logo EALE" />
-
+  <!-- Animation train en haut -->
   <div id="train-container">
     <img id="train" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/train.gif" alt="Train animé" />
   </div>
 
+  <!-- Titre de la page -->
   <h1>🔍 Rechercher un lieu</h1>
+
+  <!-- Champ de recherche -->
   <input type="text" id="search" placeholder="Commencez à taper un nom…" autocomplete="off" />
+
+  <!-- Logo affiché au départ (centré sous le champ) -->
+  <img id="logo" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/Logo%20EALE.png" alt="Logo EALE" />
+
+  <!-- Liste des suggestions qui s'affichent sous le champ -->
   <ul id="suggestions"></ul>
+
+  <!-- Résultat détaillé d'un lieu sélectionné -->
   <div id="result"></div>
 
   <script>
+    // URL du fichier JSON avec les lieux
     const jsonUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/nono-9f4a8b2c7d1e3f56.json";
     let lieux = [];
 
-    // Charge les données JSON
+    // Chargement des données JSON
     function loadData() {
       fetch(jsonUrl)
         .then(res => res.json())
@@ -235,7 +255,7 @@
         });
     }
 
-    // Format du contact : création d'un lien téléphonique cliquable
+    // Formatage du contact avec lien téléphone
     function formatContact(txt) {
       const phoneMatch = txt?.match(/(\+?\d[\d\s.-]{6,})/);
       if (phoneMatch) {
@@ -245,14 +265,14 @@
       return txt || "";
     }
 
-    // Format du portail, encode virgules et astérisques dans l'URL tel:
+    // Formatage du portail avec gestion des caractères spéciaux dans tel:
     function formatPortail(value) {
       if (!value) return "";
       const encoded = value.replace(/,/g, "%2C").replace(/\*/g, "%2A");
       return `<a href="tel:${encoded}">${value}</a>`;
     }
 
-    // Format RSS avec numéros spécifiques
+    // Formatage du champ RSS pour afficher les numéros fixes
     function formatRSS(value) {
       const tables = {
         "A": ["03 28 55 82 56", "03 28 55 82 57"],
@@ -273,7 +293,7 @@
       return "";
     }
 
-    // Affiche les infos d'un lieu sélectionné
+    // Affiche le détail du lieu sélectionné
     function showLieu(lieu) {
       const result = document.getElementById("result");
       document.getElementById("suggestions").innerHTML = "";
@@ -292,30 +312,38 @@
       `;
     }
 
-    // Gestion de la recherche et affichage suggestions
-    const logo = document.getElementById("logo");
-    const suggestionsEl = document.getElementById("suggestions");
-    const resultEl = document.getElementById("result");
+    // Gestion de la saisie dans le champ recherche
     const searchInput = document.getElementById("search");
+    const logo = document.getElementById("logo");
 
     searchInput.addEventListener("input", e => {
       const query = e.target.value.trim().toLowerCase();
+      const suggestionsEl = document.getElementById("suggestions");
+      const resultEl = document.getElementById("result");
 
-      if (query.length > 0) {
-        // Cacher le logo rapidement quand l'utilisateur tape
-        logo.classList.add("hide");
-      } else {
-        // Réafficher le logo doucement si recherche vide
+      // Vider listes et résultat si recherche vide
+      if (!query) {
+        // Faire réapparaître le logo progressivement (2s)
         logo.classList.remove("hide");
+        suggestionsEl.innerHTML = "";
+        resultEl.innerHTML = "";
+        resultEl.style.display = "none";
+        return;
       }
 
+      // Masquer le logo rapidement (0.2s)
+      if (!logo.classList.contains("hide")) {
+        logo.classList.add("hide");
+      }
+
+      // Filtrer lieux par nom qui commence par la saisie
+      const filtered = lieux.filter(l => l.nom.toLowerCase().startsWith(query));
+
+      // Affichage suggestions
       suggestionsEl.innerHTML = "";
       resultEl.innerHTML = "";
       resultEl.style.display = "none";
 
-      if (!query) return;
-
-      const filtered = lieux.filter(l => l.nom.toLowerCase().startsWith(query));
       filtered.forEach(lieu => {
         const li = document.createElement("li");
         li.textContent = lieu.nom;
@@ -324,6 +352,7 @@
       });
     });
 
+    // Chargement des données JSON au démarrage
     loadData();
   </script>
 </body>
