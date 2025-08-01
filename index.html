@@ -7,6 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <style>
+    /* Corps de page */
     body {
       font-family: 'Inter', sans-serif;
       background-color: #fff;
@@ -18,10 +19,9 @@
       align-items: center;
       width: 100vw;
       box-sizing: border-box;
-      min-height: 100vh;
-      justify-content: flex-start;
     }
 
+    /* Conteneur train animé */
     #train-container {
       width: 100%;
       max-width: 600px;
@@ -42,6 +42,7 @@
       to { left: 100%; }
     }
 
+    /* Titre */
     h1 {
       font-size: 20px;
       margin: 0 0 0.8rem 0;
@@ -52,6 +53,7 @@
       text-align: left;
     }
 
+    /* Champ recherche */
     input[type="text"] {
       width: 100%;
       max-width: 600px;
@@ -62,37 +64,39 @@
       box-sizing: border-box;
       outline: none;
       transition: border-color 0.3s ease;
-      position: relative;
-      z-index: 3;
+      margin-bottom: 10px; /* espace sous le champ */
     }
     input[type="text"]:focus {
       border-color: #1a73e8;
       box-shadow: 0 4px 14px rgba(26,115,232,0.4);
     }
 
-    /* Logo avec margin-top pour espacer */
+    /* Logo affiché sous le champ */
     #logo-container {
-      width: 100%;
       max-width: 600px;
+      width: 100%;
       display: flex;
       justify-content: center;
+      margin-bottom: 15px; /* espace entre logo et liste */
+      transition: opacity 0.3s ease;
+      /* initialement visible */
       opacity: 1;
-      transition: opacity 2s ease;
-      z-index: 2;
-      margin-top: 40px; /* <-- Décalage vertical sous le champ */
+    }
+    #logo-container.hidden {
+      opacity: 0;
+      pointer-events: none; /* ne pas interférer quand caché */
+      transition: opacity 0.15s ease;
     }
     #logo {
-      max-width: 180px;
-      width: 100%;
-      height: auto;
-      user-select: none;
-      pointer-events: none;
+      max-height: 80px;
+      width: auto;
     }
 
+    /* Liste suggestions */
     ul#suggestions {
       list-style: none;
       padding: 0;
-      margin: 0.5rem 0 1.5rem 0;
+      margin: 0 0 1.5rem 0;
       max-width: 600px;
       width: 100%;
       border-radius: 12px;
@@ -101,8 +105,6 @@
       background-color: #fff;
       font-size: 15px;
       color: #333;
-      position: relative;
-      z-index: 4;
     }
     ul#suggestions li {
       padding: 12px 16px;
@@ -114,6 +116,7 @@
       color: #1a73e8;
     }
 
+    /* Résultat sélectionné */
     #result {
       display: none;
       background: #ffffff;
@@ -125,8 +128,6 @@
       color: #444;
       font-size: 15px;
       line-height: 1.5;
-      position: relative;
-      z-index: 4;
     }
     #result h2 {
       margin-top: 0;
@@ -135,6 +136,7 @@
       color: #1a73e8;
     }
 
+    /* Liens inline */
     .inline-links {
       display: flex;
       flex-wrap: wrap;
@@ -157,6 +159,7 @@
       color: white;
     }
 
+    /* Texte résultat */
     #result p {
       margin-top: 1rem;
       color: #555;
@@ -165,10 +168,10 @@
       color: #333;
     }
 
+    /* Responsive */
     @media (max-width: 480px) {
       body {
         padding: 0.8rem;
-        min-height: 100vh;
       }
       h1 {
         font-size: 18px;
@@ -177,6 +180,7 @@
       input[type="text"] {
         font-size: 14px;
         padding: 10px 14px;
+        margin-bottom: 8px;
       }
       ul#suggestions li {
         padding: 10px 14px;
@@ -205,6 +209,9 @@
         height: 30px;
         left: -100px;
       }
+      #logo {
+        max-height: 60px;
+      }
     }
   </style>
 </head>
@@ -220,18 +227,20 @@
 
   <input type="text" id="search" placeholder="Commencez à taper un nom…" autocomplete="off" />
 
-  <!-- Logo sous le champ avec marge pour espacer -->
+  <!-- Conteneur du logo sous le champ -->
   <div id="logo-container">
-    <img id="logo" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5ckJib/main/Logo%20EALE.png" alt="Logo EALE" />
+    <img id="logo" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/Logo%20EALE.png" alt="Logo EALE" />
   </div>
 
   <ul id="suggestions"></ul>
   <div id="result"></div>
 
   <script>
+    // URL du fichier JSON avec les données
     const jsonUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/nono-9f4a8b2c7d1e3f56.json";
     let lieux = [];
 
+    // Chargement des données JSON
     function loadData() {
       fetch(jsonUrl)
         .then(res => res.json())
@@ -243,6 +252,7 @@
         });
     }
 
+    // Formate le contact en lien tel: si possible
     function formatContact(txt) {
       const phoneMatch = txt?.match(/(\+?\d[\d\s.-]{6,})/);
       if (phoneMatch) {
@@ -252,12 +262,14 @@
       return txt || "";
     }
 
+    // Formate le portail en lien tel: avec encodage virgule et astérisque
     function formatPortail(value) {
       if (!value) return "";
       const encoded = value.replace(/,/g, "%2C").replace(/\*/g, "%2A");
       return `<a href="tel:${encoded}">${value}</a>`;
     }
 
+    // Formate les numéros RSS
     function formatRSS(value) {
       const tables = {
         "A": ["03 28 55 82 56", "03 28 55 82 57"],
@@ -278,6 +290,7 @@
       return "";
     }
 
+    // Affiche les détails d'un lieu sélectionné
     function showLieu(lieu) {
       const result = document.getElementById("result");
       document.getElementById("suggestions").innerHTML = "";
@@ -296,38 +309,49 @@
       `;
     }
 
-    document.getElementById("search").addEventListener("input", e => {
+    // Gère l'affichage dynamique : logo visible ou non selon saisie
+    const searchInput = document.getElementById("search");
+    const logoContainer = document.getElementById("logo-container");
+
+    searchInput.addEventListener("input", e => {
       const query = e.target.value.trim().toLowerCase();
+
       const suggestionsEl = document.getElementById("suggestions");
       const resultEl = document.getElementById("result");
-      const logoContainer = document.getElementById("logo-container");
 
       suggestionsEl.innerHTML = "";
       resultEl.innerHTML = "";
       resultEl.style.display = "none";
 
-      if (query.length > 0) {
-        // Disparition rapide du logo
-        logoContainer.style.transition = "opacity 0.3s ease";
-        logoContainer.style.opacity = "0";
+      if (!query) {
+        // Affiche logo avec transition d'opacité lente (2s)
+        logoContainer.classList.remove("hidden");
       } else {
-        // Réapparition lente du logo
-        logoContainer.style.transition = "opacity 2s ease";
-        logoContainer.style.opacity = "1";
+        // Cache logo avec transition plus rapide (0.15s)
+        logoContainer.classList.add("hidden");
+
+        // Recherche et affichage des suggestions
+        const filtered = lieux.filter(l => l.nom.toLowerCase().startsWith(query));
+        filtered.forEach(lieu => {
+          const li = document.createElement("li");
+          li.textContent = lieu.nom;
+          li.onclick = () => showLieu(lieu);
+          suggestionsEl.appendChild(li);
+        });
       }
-
-      if (!query) return;
-
-      const filtered = lieux.filter(l => l.nom.toLowerCase().startsWith(query));
-      filtered.forEach(lieu => {
-        const li = document.createElement("li");
-        li.textContent = lieu.nom;
-        li.onclick = () => showLieu(lieu);
-        suggestionsEl.appendChild(li);
-      });
     });
 
+    // Charger les données JSON au chargement
     loadData();
+
+    // Gestion fin transition pour display:none afin que logo ne prenne plus de place
+    logoContainer.addEventListener("transitionend", () => {
+      if (logoContainer.classList.contains("hidden")) {
+        logoContainer.style.display = "none";
+      } else {
+        logoContainer.style.display = "flex";
+      }
+    });
   </script>
 </body>
 </html>
