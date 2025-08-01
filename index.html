@@ -1,12 +1,17 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+  <!-- Meta et titres -->
   <meta name="robots" content="noindex, nofollow" />
   <meta charset="UTF-8" />
   <title>Recherche de lieux</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  
+  <!-- Google Font Inter -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  
   <style>
+    /* Styles globaux et corps */
     body {
       font-family: 'Inter', sans-serif;
       background-color: #fff;
@@ -20,6 +25,7 @@
       box-sizing: border-box;
     }
 
+    /* Conteneur train animé */
     #train-container {
       width: 100%;
       max-width: 600px;
@@ -40,6 +46,7 @@
       to { left: 100%; }
     }
 
+    /* Titre principal */
     h1 {
       font-size: 20px;
       margin: 0 0 0.8rem 0;
@@ -50,7 +57,8 @@
       text-align: left;
     }
 
-    input[type="text"] {
+    /* Champ de recherche */
+    #search {
       width: 100%;
       max-width: 600px;
       padding: 12px 16px;
@@ -60,41 +68,19 @@
       box-sizing: border-box;
       outline: none;
       transition: border-color 0.3s ease;
-      margin-bottom: 10px;
+      position: relative;
+      z-index: 10; /* au-dessus du logo */
     }
-    input[type="text"]:focus {
+    #search:focus {
       border-color: #1a73e8;
       box-shadow: 0 4px 14px rgba(26,115,232,0.4);
     }
 
-    /* Logo container visible by default */
-    #logo-container {
-      max-width: 600px;
-      width: 100%;
-      display: flex; /* visible */
-      justify-content: center;
-      margin-bottom: 15px;
-      opacity: 1;
-      transition: opacity 0.15s ease;
-    }
-
-    /* Classe cachée = opacité 0 */
-    #logo-container.hidden {
-      opacity: 0;
-      pointer-events: none;
-      /* display:none sera mis via JS après transition */
-      transition: opacity 0.15s ease;
-    }
-
-    #logo {
-      max-height: 80px;
-      width: auto;
-    }
-
+    /* Liste des suggestions */
     ul#suggestions {
       list-style: none;
       padding: 0;
-      margin: 0 0 1.5rem 0;
+      margin: 0.5rem 0 1.5rem 0;
       max-width: 600px;
       width: 100%;
       border-radius: 12px;
@@ -103,6 +89,8 @@
       background-color: #fff;
       font-size: 15px;
       color: #333;
+      position: relative;
+      z-index: 10; /* au-dessus du logo */
     }
     ul#suggestions li {
       padding: 12px 16px;
@@ -114,6 +102,24 @@
       color: #1a73e8;
     }
 
+    /* Conteneur du logo, centré sous le champ */
+    #logo-container {
+      width: 100%;
+      max-width: 600px;
+      display: flex;
+      justify-content: center;
+      margin-top: 15px; /* Espace entre champ et logo */
+      position: relative;
+      z-index: 1; /* en dessous du champ */
+    }
+    #logo-container img {
+      max-width: 150px;
+      height: auto;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    /* Résultat affiché */
     #result {
       display: none;
       background: #ffffff;
@@ -125,6 +131,8 @@
       color: #444;
       font-size: 15px;
       line-height: 1.5;
+      position: relative;
+      z-index: 10; /* au-dessus du logo */
     }
     #result h2 {
       margin-top: 0;
@@ -133,6 +141,7 @@
       color: #1a73e8;
     }
 
+    /* Liens inline */
     .inline-links {
       display: flex;
       flex-wrap: wrap;
@@ -163,6 +172,7 @@
       color: #333;
     }
 
+    /* Responsive mobile */
     @media (max-width: 480px) {
       body {
         padding: 0.8rem;
@@ -171,10 +181,9 @@
         font-size: 18px;
         padding: 0 0.5rem;
       }
-      input[type="text"] {
+      #search {
         font-size: 14px;
         padding: 10px 14px;
-        margin-bottom: 8px;
       }
       ul#suggestions li {
         padding: 10px 14px;
@@ -203,8 +212,8 @@
         height: 30px;
         left: -100px;
       }
-      #logo {
-        max-height: 60px;
+      #logo-container {
+        margin-top: 10px;
       }
     }
   </style>
@@ -213,32 +222,46 @@
 
   <!-- Site créé par Arnaud Debaecker -->
 
+  <!-- Train animé -->
   <div id="train-container">
     <img id="train" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/train.gif" alt="Train animé" />
   </div>
 
+  <!-- Titre -->
   <h1>🔍 Rechercher un lieu</h1>
 
+  <!-- Champ de recherche -->
   <input type="text" id="search" placeholder="Commencez à taper un nom…" autocomplete="off" />
 
+  <!-- Liste des suggestions -->
+  <ul id="suggestions"></ul>
+
+  <!-- Logo centré sous le champ -->
   <div id="logo-container">
-    <img id="logo" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/Logo%20EALE.png" alt="Logo EALE" />
+    <img src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/Logo%20EALE.png" alt="Logo EALE" />
   </div>
 
-  <ul id="suggestions"></ul>
+  <!-- Résultat affiché -->
   <div id="result"></div>
 
   <script>
+    // URL du fichier JSON contenant les lieux
     const jsonUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/nono-9f4a8b2c7d1e3f56.json";
     let lieux = [];
 
+    // Charge les données JSON
     function loadData() {
       fetch(jsonUrl)
         .then(res => res.json())
-        .then(data => { lieux = data; })
-        .catch(err => { alert("Erreur de chargement du JSON : " + err); });
+        .then(data => {
+          lieux = data;
+        })
+        .catch(err => {
+          alert("Erreur de chargement du JSON : " + err);
+        });
     }
 
+    // Formate les contacts (numéros de téléphone)
     function formatContact(txt) {
       const phoneMatch = txt?.match(/(\+?\d[\d\s.-]{6,})/);
       if (phoneMatch) {
@@ -248,12 +271,14 @@
       return txt || "";
     }
 
+    // Formate le champ portail, encode virgules et astérisques pour l'appel
     function formatPortail(value) {
       if (!value) return "";
       const encoded = value.replace(/,/g, "%2C").replace(/\*/g, "%2A");
       return `<a href="tel:${encoded}">${value}</a>`;
     }
 
+    // Affiche les contacts RSS si disponibles
     function formatRSS(value) {
       const tables = {
         "A": ["03 28 55 82 56", "03 28 55 82 57"],
@@ -274,6 +299,7 @@
       return "";
     }
 
+    // Affiche un lieu sélectionné
     function showLieu(lieu) {
       const result = document.getElementById("result");
       document.getElementById("suggestions").innerHTML = "";
@@ -292,47 +318,27 @@
       `;
     }
 
-    const searchInput = document.getElementById("search");
-    const logoContainer = document.getElementById("logo-container");
-
-    searchInput.addEventListener("input", e => {
+    // Recherche avec suggestions dynamique
+    document.getElementById("search").addEventListener("input", e => {
       const query = e.target.value.trim().toLowerCase();
       const suggestionsEl = document.getElementById("suggestions");
       const resultEl = document.getElementById("result");
-
       suggestionsEl.innerHTML = "";
       resultEl.innerHTML = "";
       resultEl.style.display = "none";
 
-      if (!query) {
-        // Affiche logo : remet display:flex et opacité 1
-        logoContainer.style.display = "flex";
-        // timeout nécessaire pour que le browser applique display avant d'animer l'opacité
-        setTimeout(() => logoContainer.classList.remove("hidden"), 20);
-      } else {
-        // Cache logo : opacité 0 puis après délai display:none
-        logoContainer.classList.add("hidden");
-      }
+      if (!query) return;
 
-      if (query) {
-        const filtered = lieux.filter(l => l.nom.toLowerCase().startsWith(query));
-        filtered.forEach(lieu => {
-          const li = document.createElement("li");
-          li.textContent = lieu.nom;
-          li.onclick = () => showLieu(lieu);
-          suggestionsEl.appendChild(li);
-        });
-      }
+      const filtered = lieux.filter(l => l.nom.toLowerCase().startsWith(query));
+      filtered.forEach(lieu => {
+        const li = document.createElement("li");
+        li.textContent = lieu.nom;
+        li.onclick = () => showLieu(lieu);
+        suggestionsEl.appendChild(li);
+      });
     });
 
-    // Après la fin de la transition opacity sur logo-container
-    logoContainer.addEventListener("transitionend", () => {
-      if (logoContainer.classList.contains("hidden")) {
-        // On cache complètement pour ne plus prendre d'espace
-        logoContainer.style.display = "none";
-      }
-    });
-
+    // Chargement initial des données
     loadData();
   </script>
 </body>
