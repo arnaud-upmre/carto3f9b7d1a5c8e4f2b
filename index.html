@@ -1,17 +1,12 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <!-- Meta et titres -->
   <meta name="robots" content="noindex, nofollow" />
   <meta charset="UTF-8" />
   <title>Recherche de lieux</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  
-  <!-- Google Font Inter -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
-  
   <style>
-    /* Styles globaux et corps */
     body {
       font-family: 'Inter', sans-serif;
       background-color: #fff;
@@ -23,9 +18,10 @@
       align-items: center;
       width: 100vw;
       box-sizing: border-box;
+      min-height: 100vh;
     }
 
-    /* Conteneur train animé */
+    /* Train animé */
     #train-container {
       width: 100%;
       max-width: 600px;
@@ -46,7 +42,6 @@
       to { left: 100%; }
     }
 
-    /* Titre principal */
     h1 {
       font-size: 20px;
       margin: 0 0 0.8rem 0;
@@ -57,10 +52,19 @@
       text-align: left;
     }
 
+    /* Conteneur de recherche + suggestions */
+    #search-wrapper {
+      width: 100%;
+      max-width: 600px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      z-index: 20; /* au-dessus du logo */
+    }
+
     /* Champ de recherche */
     #search {
       width: 100%;
-      max-width: 600px;
       padding: 12px 16px;
       font-size: 16px;
       border-radius: 10px;
@@ -68,8 +72,6 @@
       box-sizing: border-box;
       outline: none;
       transition: border-color 0.3s ease;
-      position: relative;
-      z-index: 10; /* au-dessus du logo */
     }
     #search:focus {
       border-color: #1a73e8;
@@ -80,17 +82,17 @@
     ul#suggestions {
       list-style: none;
       padding: 0;
-      margin: 0.5rem 0 1.5rem 0;
-      max-width: 600px;
-      width: 100%;
-      border-radius: 12px;
-      overflow: hidden;
+      margin: 6px 0 0 0;
+      max-height: 200px; /* limite la hauteur de la liste */
+      overflow-y: auto;
+      border-radius: 0 0 12px 12px;
       box-shadow: 0 6px 15px rgba(0,0,0,0.1);
       background-color: #fff;
       font-size: 15px;
       color: #333;
-      position: relative;
-      z-index: 10; /* au-dessus du logo */
+      border: 1px solid #ccc;
+      border-top: none;
+      display: none; /* caché par défaut */
     }
     ul#suggestions li {
       padding: 12px 16px;
@@ -102,15 +104,23 @@
       color: #1a73e8;
     }
 
-    /* Conteneur du logo, centré sous le champ */
+    /* Conteneur du logo, hauteur fixe pour éviter décalage */
     #logo-container {
       width: 100%;
       max-width: 600px;
+      height: 160px; /* hauteur fixe pour éviter saut */
       display: flex;
       justify-content: center;
-      margin-top: 15px; /* Espace entre champ et logo */
-      position: relative;
-      z-index: 1; /* en dessous du champ */
+      align-items: center;
+      margin-top: 20px;
+      user-select: none;
+      pointer-events: none;
+      opacity: 1;
+      transition: opacity 0.3s ease;
+    }
+    #logo-container.hidden {
+      opacity: 0;
+      pointer-events: none;
     }
     #logo-container img {
       max-width: 150px;
@@ -131,8 +141,9 @@
       color: #444;
       font-size: 15px;
       line-height: 1.5;
+      margin-top: 1rem;
       position: relative;
-      z-index: 10; /* au-dessus du logo */
+      z-index: 20; /* au-dessus du logo */
     }
     #result h2 {
       margin-top: 0;
@@ -141,7 +152,6 @@
       color: #1a73e8;
     }
 
-    /* Liens inline */
     .inline-links {
       display: flex;
       flex-wrap: wrap;
@@ -213,7 +223,8 @@
         left: -100px;
       }
       #logo-container {
-        margin-top: 10px;
+        height: 130px;
+        margin-top: 15px;
       }
     }
   </style>
@@ -230,13 +241,13 @@
   <!-- Titre -->
   <h1>🔍 Rechercher un lieu</h1>
 
-  <!-- Champ de recherche -->
-  <input type="text" id="search" placeholder="Commencez à taper un nom…" autocomplete="off" />
+  <!-- Wrapper champ + suggestions -->
+  <div id="search-wrapper">
+    <input type="text" id="search" placeholder="Commencez à taper un nom…" autocomplete="off" />
+    <ul id="suggestions"></ul>
+  </div>
 
-  <!-- Liste des suggestions -->
-  <ul id="suggestions"></ul>
-
-  <!-- Logo centré sous le champ -->
+  <!-- Logo toujours affiché sous le champ, ne bouge jamais -->
   <div id="logo-container">
     <img src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/Logo%20EALE.png" alt="Logo EALE" />
   </div>
@@ -245,11 +256,9 @@
   <div id="result"></div>
 
   <script>
-    // URL du fichier JSON contenant les lieux
     const jsonUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/nono-9f4a8b2c7d1e3f56.json";
     let lieux = [];
 
-    // Charge les données JSON
     function loadData() {
       fetch(jsonUrl)
         .then(res => res.json())
@@ -261,7 +270,6 @@
         });
     }
 
-    // Formate les contacts (numéros de téléphone)
     function formatContact(txt) {
       const phoneMatch = txt?.match(/(\+?\d[\d\s.-]{6,})/);
       if (phoneMatch) {
@@ -271,14 +279,12 @@
       return txt || "";
     }
 
-    // Formate le champ portail, encode virgules et astérisques pour l'appel
     function formatPortail(value) {
       if (!value) return "";
       const encoded = value.replace(/,/g, "%2C").replace(/\*/g, "%2A");
       return `<a href="tel:${encoded}">${value}</a>`;
     }
 
-    // Affiche les contacts RSS si disponibles
     function formatRSS(value) {
       const tables = {
         "A": ["03 28 55 82 56", "03 28 55 82 57"],
@@ -299,7 +305,6 @@
       return "";
     }
 
-    // Affiche un lieu sélectionné
     function showLieu(lieu) {
       const result = document.getElementById("result");
       document.getElementById("suggestions").innerHTML = "";
@@ -318,17 +323,26 @@
       `;
     }
 
-    // Recherche avec suggestions dynamique
-    document.getElementById("search").addEventListener("input", e => {
+    // Gestion affichage suggestions + logo
+    const searchInput = document.getElementById("search");
+    const suggestionsEl = document.getElementById("suggestions");
+    const logoContainer = document.getElementById("logo-container");
+    const resultEl = document.getElementById("result");
+
+    searchInput.addEventListener("input", e => {
       const query = e.target.value.trim().toLowerCase();
-      const suggestionsEl = document.getElementById("suggestions");
-      const resultEl = document.getElementById("result");
       suggestionsEl.innerHTML = "";
       resultEl.innerHTML = "";
       resultEl.style.display = "none";
 
-      if (!query) return;
+      if (!query) {
+        // Pas de recherche => on cache suggestions et on montre logo
+        suggestionsEl.style.display = "none";
+        logoContainer.classList.remove("hidden");
+        return;
+      }
 
+      // Recherche en cours => afficher suggestions + cacher logo
       const filtered = lieux.filter(l => l.nom.toLowerCase().startsWith(query));
       filtered.forEach(lieu => {
         const li = document.createElement("li");
@@ -336,9 +350,10 @@
         li.onclick = () => showLieu(lieu);
         suggestionsEl.appendChild(li);
       });
+      suggestionsEl.style.display = filtered.length ? "block" : "none";
+      logoContainer.classList.add("hidden");
     });
 
-    // Chargement initial des données
     loadData();
   </script>
 </body>
