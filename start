@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chargement...</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: #ffffff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      animation: fadeOut 2s ease-in forwards;
+    }
+
+    img {
+      width: 150px;
+      height: auto;
+      opacity: 1;
+      animation: logoFade 2s ease-in forwards;
+    }
+
+    @keyframes logoFade {
+      0% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
+    @keyframes fadeOut {
+      0% { background-color: #fff; }
+      100% { background-color: #fff; }
+    }
+  </style>
+  <script>
+    setTimeout(() => {
+      window.location.href = "index.html";
+    }, 2000);
+  </script>
+</head>
+<body>
+  <img src="Logo EALE.png" alt="Logo EALE" />
+</body>
+</html>
