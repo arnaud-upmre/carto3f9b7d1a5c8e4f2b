@@ -19,6 +19,12 @@
       align-items: center;
       width: 100vw;
       box-sizing: border-box;
+
+      /* Désactivation sélection texte */
+      user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
     }
 
     /* Animation du train */
@@ -307,6 +313,9 @@
     });
 
     loadData();
+
+    // Bloquer le clic droit (menu contextuel)
+    document.addEventListener('contextmenu', event => event.preventDefault());
   </script>
 </body>
 </html>
