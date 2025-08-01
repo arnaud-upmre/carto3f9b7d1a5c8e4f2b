@@ -1,13 +1,23 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
   <meta name="robots" content="noindex, nofollow" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Définit l'encodage des caractères -->
+  <meta charset="UTF-8" />
+
+  <!-- Titre affiché dans l'onglet du navigateur -->
   <title>Recherche de lieux</title>
+
+  <!-- Rend la page responsive sur les mobiles -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+
+  <!-- Police définie via Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+
+  <!-- Styles CSS principaux -->
   <style>
-    /* Style général de la page */
+    /* Mise en page principale */
     body {
       font-family: 'Inter', sans-serif;
       background-color: #fff;
@@ -17,10 +27,11 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      width: 100vw;
       box-sizing: border-box;
     }
 
-    /* Animation train */
+    /* Animation du train */
     #train-container {
       width: 100%;
       max-width: 600px;
@@ -29,7 +40,6 @@
       margin-bottom: 1.5rem;
       position: relative;
     }
-
     #train {
       position: absolute;
       top: 0;
@@ -37,13 +47,12 @@
       height: 42px;
       animation: trainMove 18s linear infinite;
     }
-
     @keyframes trainMove {
       from { left: -150px; }
       to { left: 100%; }
     }
 
-    /* Titre */
+    /* Titre principal */
     h1 {
       font-size: 20px;
       margin: 0 0 0.8rem 0;
@@ -66,7 +75,6 @@
       outline: none;
       transition: border-color 0.3s ease;
     }
-
     input[type="text"]:focus {
       border-color: #1a73e8;
       box-shadow: 0 4px 14px rgba(26,115,232,0.4);
@@ -86,19 +94,17 @@
       font-size: 15px;
       color: #333;
     }
-
     ul#suggestions li {
       padding: 12px 16px;
       cursor: pointer;
       border-bottom: 1px solid #eee;
     }
-
     ul#suggestions li:hover {
       background-color: #f0f8ff;
       color: #1a73e8;
     }
 
-    /* Zone d'affichage des résultats */
+    /* Résultat sélectionné */
     #result {
       display: none;
       background: #ffffff;
@@ -111,7 +117,6 @@
       font-size: 15px;
       line-height: 1.5;
     }
-
     #result h2 {
       margin-top: 0;
       font-size: 22px;
@@ -119,6 +124,7 @@
       color: #1a73e8;
     }
 
+    /* Liens inline */
     .inline-links {
       display: flex;
       flex-wrap: wrap;
@@ -126,7 +132,6 @@
       font-size: 14px;
       padding: 0 1rem 0 0;
     }
-
     .inline-links a {
       padding: 6px 10px;
       font-size: 14px;
@@ -137,7 +142,6 @@
       transition: 0.3s;
       white-space: nowrap;
     }
-
     .inline-links a:hover {
       background-color: #1a73e8;
       color: white;
@@ -147,69 +151,46 @@
       margin-top: 1rem;
       color: #555;
     }
-
     #result p strong {
       color: #333;
     }
 
-    /* Calque de logo pleine page */
-    #intro-logo {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 10000;
-      transition: opacity 0.5s ease;
-    }
-
-    #intro-logo img {
-      width: 140px;
-      height: auto;
-    }
-
-    /* Cacher le logo après disparition */
-    #intro-logo.hidden {
-      opacity: 0;
-      pointer-events: none;
-    }
-
+    /* Adaptation mobile */
     @media (max-width: 480px) {
+      body {
+        padding: 0.8rem;
+      }
+      h1 {
+        font-size: 18px;
+        padding: 0 0.5rem;
+      }
       input[type="text"] {
         font-size: 14px;
         padding: 10px 14px;
       }
-
       ul#suggestions li {
         padding: 10px 14px;
         font-size: 14px;
       }
-
       #result {
         font-size: 14px;
         padding: 0.8rem 0.5rem;
       }
-
       .inline-links {
+        gap: 4px;
+        padding: 0 0.5rem 0 0;
         flex-direction: column;
         align-items: flex-start;
       }
-
       .inline-links a {
         font-size: 13px;
         padding: 8px 10px;
         white-space: normal;
         width: fit-content;
       }
-
       #train-container {
         max-width: 100%;
       }
-
       #train {
         height: 30px;
         left: -100px;
@@ -219,28 +200,22 @@
 </head>
 <body>
 
-  <!-- Calque de logo centré -->
-  <div id="intro-logo">
-    <img src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/Logo%20EALE.png" alt="Logo EALE" />
-  </div>
-
-  <!-- Animation de train -->
+  <!-- Site créé par Arnaud Debaecker -->
   <div id="train-container">
-    <img id="train" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/train.gif" alt="Train animé" />
+    <img id="train" src="https://bit.ly/458iTYc" alt="Train animé" />
   </div>
 
-  <!-- Titre et champ de recherche -->
   <h1>🔍 Rechercher un lieu</h1>
   <input type="text" id="search" placeholder="Commencez à taper un nom…" autocomplete="off" />
   <ul id="suggestions"></ul>
   <div id="result"></div>
 
   <script>
-    // URL du fichier JSON
+    // URL du fichier JSON hébergé sur GitHub
     const jsonUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/nono-9f4a8b2c7d1e3f56.json";
     let lieux = [];
 
-    // Charger les données
+    // Charge les données JSON depuis l'URL
     function loadData() {
       fetch(jsonUrl)
         .then(res => res.json())
@@ -252,7 +227,7 @@
         });
     }
 
-    // Formatage des numéros de contact
+    // Formate le champ contact (tel clickable)
     function formatContact(txt) {
       const phoneMatch = txt?.match(/(\+?\d[\d\s.-]{6,})/);
       if (phoneMatch) {
@@ -262,14 +237,14 @@
       return txt || "";
     }
 
-    // Format du champ portail
+    // Formate le champ portail pour appel automatique avec virgule et astérisque encodés
     function formatPortail(value) {
       if (!value) return "";
       const encoded = value.replace(/,/g, "%2C").replace(/\*/g, "%2A");
       return `<a href="tel:${encoded}">${value}</a>`;
     }
 
-    // Format du champ RSS
+    // Formate l'affichage des numéros RSS par table (A/B/C)
     function formatRSS(value) {
       const tables = {
         "A": ["03 28 55 82 56", "03 28 55 82 57"],
@@ -290,7 +265,7 @@
       return "";
     }
 
-    // Afficher les détails d’un lieu
+    // Affiche le lieu sélectionné avec infos formatées
     function showLieu(lieu) {
       const result = document.getElementById("result");
       document.getElementById("suggestions").innerHTML = "";
@@ -298,9 +273,9 @@
       result.innerHTML = `
         <h2>📍 ${lieu.nom}</h2>
         <div class="inline-links">
-          <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank">🗺️ Google Maps</a>
-          <a href="https://maps.apple.com/?daddr=${lieu.latitude},${lieu.longitude}" target="_blank">🍎 Apple Plans</a>
-          <a href="https://waze.com/ul?ll=${lieu.latitude},${lieu.longitude}&navigate=yes" target="_blank">🚗 Waze</a>
+          <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🗺️ Google Maps</a>
+          <a href="https://maps.apple.com/?daddr=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🍎 Apple Plans</a>
+          <a href="https://waze.com/ul?ll=${lieu.latitude},${lieu.longitude}&navigate=yes" target="_blank" rel="noopener">🚗 Waze</a>
         </div>
         ${lieu.description ? `<p>${lieu.description}</p>` : ""}
         ${formatRSS(lieu.rss)}
@@ -309,15 +284,8 @@
       `;
     }
 
-    // Gérer les suggestions en direct
+    // Recherche dynamique et suggestions lors de la saisie
     document.getElementById("search").addEventListener("input", e => {
-      // Disparition du logo dès la saisie
-      const intro = document.getElementById("intro-logo");
-      if (intro && !intro.classList.contains("hidden")) {
-        intro.classList.add("hidden");
-        setTimeout(() => intro.remove(), 600);
-      }
-
       const query = e.target.value.trim().toLowerCase();
       const suggestionsEl = document.getElementById("suggestions");
       const resultEl = document.getElementById("result");
@@ -336,6 +304,7 @@
       });
     });
 
+    // Déclenche le chargement des données
     loadData();
   </script>
 </body>
