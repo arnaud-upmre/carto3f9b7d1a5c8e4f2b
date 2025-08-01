@@ -6,9 +6,7 @@
   <title>Recherche de lieux</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
-
   <style>
-    /* ---------- STYLE GENERAL ---------- */
     body {
       font-family: 'Inter', sans-serif;
       background-color: #fff;
@@ -19,12 +17,11 @@
       flex-direction: column;
       align-items: center;
       width: 100vw;
-      height: 100vh;
       box-sizing: border-box;
-      position: relative;
+      overflow-x: hidden;
     }
 
-    /* ---------- ANIMATION TRAIN ---------- */
+    /* Train animé */
     #train-container {
       width: 100%;
       max-width: 600px;
@@ -32,22 +29,29 @@
       overflow: hidden;
       margin-bottom: 1.5rem;
       position: relative;
+      /* plus besoin d'animation left car gif animé */
     }
-
     #train {
-      position: absolute;
-      top: 0;
-      left: -150px;
-      height: 42px;
-      animation: trainMove 18s linear infinite;
+      height: 48px;
+      width: auto;
+      display: block;
+      margin: 0 auto;
     }
 
-    @keyframes trainMove {
-      from { left: -150px; }
-      to { left: 100%; }
+    /* Logo centré */
+    #center-logo {
+      max-width: 180px;
+      height: auto;
+      margin: 1rem auto;
+      transition: opacity 0.5s ease;
     }
 
-    /* ---------- TITRE ---------- */
+    #center-logo.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Titre */
     h1 {
       font-size: 20px;
       margin: 0 0 0.8rem 0;
@@ -58,7 +62,7 @@
       text-align: left;
     }
 
-    /* ---------- CHAMP DE RECHERCHE ---------- */
+    /* Champ de recherche */
     input[type="text"] {
       width: 100%;
       max-width: 600px;
@@ -70,13 +74,12 @@
       outline: none;
       transition: border-color 0.3s ease;
     }
-
     input[type="text"]:focus {
       border-color: #1a73e8;
       box-shadow: 0 4px 14px rgba(26,115,232,0.4);
     }
 
-    /* ---------- SUGGESTIONS ---------- */
+    /* Suggestions */
     ul#suggestions {
       list-style: none;
       padding: 0;
@@ -90,19 +93,17 @@
       font-size: 15px;
       color: #333;
     }
-
     ul#suggestions li {
       padding: 12px 16px;
       cursor: pointer;
       border-bottom: 1px solid #eee;
     }
-
     ul#suggestions li:hover {
       background-color: #f0f8ff;
       color: #1a73e8;
     }
 
-    /* ---------- RÉSULTAT ---------- */
+    /* Zone résultat */
     #result {
       display: none;
       background: #ffffff;
@@ -115,7 +116,6 @@
       font-size: 15px;
       line-height: 1.5;
     }
-
     #result h2 {
       margin-top: 0;
       font-size: 22px;
@@ -123,6 +123,7 @@
       color: #1a73e8;
     }
 
+    /* Liens formatés */
     .inline-links {
       display: flex;
       flex-wrap: wrap;
@@ -130,7 +131,6 @@
       font-size: 14px;
       padding: 0 1rem 0 0;
     }
-
     .inline-links a {
       padding: 6px 10px;
       font-size: 14px;
@@ -141,48 +141,13 @@
       transition: 0.3s;
       white-space: nowrap;
     }
-
     .inline-links a:hover {
       background-color: #1a73e8;
       color: white;
     }
 
-    #result p {
-      margin-top: 1rem;
-      color: #555;
-    }
-
-    #result p strong {
-      color: #333;
-    }
-
-    /* ---------- LOGO AU CENTRE ---------- */
-    #center-logo-container {
-      position: absolute;
-      top: 35%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      opacity: 1;
-      transition: opacity 0.25s ease-out;
-      z-index: 0;
-    }
-
-    #center-logo-container.hidden {
-      opacity: 0;
-      transition: opacity 2s ease-in;
-    }
-
-    #center-logo {
-      width: 90px;
-      height: auto;
-      opacity: 0.95;
-    }
-
-    /* ---------- RESPONSIVE ---------- */
+    /* Responsive */
     @media (max-width: 480px) {
-      body {
-        padding: 0.8rem;
-      }
       h1 {
         font-size: 18px;
         padding: 0 0.5rem;
@@ -214,33 +179,33 @@
     }
   </style>
 </head>
-
 <body>
 
-  <!-- ✅ Animation de train -->
+  <!-- Site créé par Arnaud Debaecker -->
+
+  <!-- Animation train -->
   <div id="train-container">
-    <img id="train" src="https://bit.ly/458iTYc" alt="Train animé" />
+    <img id="train" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/train.gif" alt="Train animé" />
   </div>
 
-  <!-- ✅ Logo centré affiché au chargement -->
-  <div id="center-logo-container">
-    <img id="center-logo" src="https://lh3.googleusercontent.com/pw/AP1GczN_XLcL4WmC4cm6cTW4kwjuQzEI3K5rbbgpKe2nF3vxjfYJHVM9QHkNsz35e0WV9nYpSV84emvilKtHWdxGcRf-PRcxyutv7o1skvBidVe8xw3OPFhG8rZoLDRnYxfzI35AUTzhPUmuftc7CNXfniu6DQ=w768-h838-s-no?authuser=0" alt="Logo" />
-  </div>
+  <!-- Logo EALE centré -->
+  <img id="center-logo" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/Logo%20EALE.png" alt="Logo EALE" />
 
-  <!-- ✅ Titre -->
+  <!-- Titre -->
   <h1>🔍 Rechercher un lieu</h1>
 
-  <!-- ✅ Champ de recherche -->
+  <!-- Champ de recherche -->
   <input type="text" id="search" placeholder="Commencez à taper un nom…" autocomplete="off" />
 
-  <!-- ✅ Résultats suggérés -->
+  <!-- Liste des suggestions -->
   <ul id="suggestions"></ul>
 
-  <!-- ✅ Résultat affiché -->
+  <!-- Résultat sélectionné -->
   <div id="result"></div>
 
-  <!-- ✅ Script JS principal -->
+  <!-- Script JS -->
   <script>
+    // URL du fichier JSON contenant les lieux
     const jsonUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/nono-9f4a8b2c7d1e3f56.json";
     let lieux = [];
 
@@ -308,26 +273,23 @@
       `;
     }
 
-    // ✅ Gérer la recherche
+    // Événement à la saisie dans le champ de recherche
     document.getElementById("search").addEventListener("input", e => {
-      const logo = document.getElementById("center-logo-container");
       const query = e.target.value.trim().toLowerCase();
       const suggestionsEl = document.getElementById("suggestions");
       const resultEl = document.getElementById("result");
+      const logoEl = document.getElementById("center-logo");
 
-      // ✅ Masquer/Afficher le logo selon la saisie
-      if (query && logo) {
-        logo.classList.add("hidden");
-      } else if (logo) {
-        logo.classList.remove("hidden");
-      }
-
-      // ✅ Mise à jour des résultats
       suggestionsEl.innerHTML = "";
       resultEl.innerHTML = "";
       resultEl.style.display = "none";
 
-      if (!query) return;
+      // Masque ou affiche le logo selon la recherche
+      if (query.length > 0) {
+        logoEl.classList.add("hidden");
+      } else {
+        logoEl.classList.remove("hidden");
+      }
 
       const filtered = lieux.filter(l => l.nom.toLowerCase().startsWith(query));
       filtered.forEach(lieu => {
