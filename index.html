@@ -238,8 +238,16 @@
 
     function formatPortail(value) {
       if (!value) return "";
-      const encoded = value.replace(/,/g, "%2C").replace(/\*/g, "%2A");
-      return `<a href="tel:${encoded}">${value}</a>`;
+
+      const cleanValue = value.replace(/\s/g, "");
+      const phonePattern = /^(\+?\d{6,})$/;
+
+      if (phonePattern.test(cleanValue)) {
+        const encoded = cleanValue.replace(/,/g, "%2C").replace(/\*/g, "%2A");
+        return `<a href="tel:${encoded}">${value}</a>`;
+      }
+      
+      return value;
     }
 
     function formatRSS(value) {
