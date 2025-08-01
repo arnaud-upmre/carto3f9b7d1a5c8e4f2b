@@ -20,10 +20,11 @@
       overflow: hidden;
       position: relative;
       margin-bottom: 1.5rem;
+      background: #f9f9f9; /* juste pour voir conteneur */
     }
     #train {
       position: absolute;
-      top: 3px;  /* ajusté pour centrer verticalement */
+      top: 3px;
       left: 0;
       height: 42px;
       user-select: none;
@@ -54,7 +55,6 @@
       border-color: #1a73e8;
       box-shadow: 0 4px 14px rgba(26,115,232,0.4);
     }
-    /* ... le reste du style pour les suggestions, résultats ... */
   </style>
 </head>
 <body>
@@ -68,25 +68,24 @@
   <div id="result"></div>
 
   <script>
-    // Animation JS du train : va vers la droite, pause, retour, pause, boucle
     (() => {
       const train = document.getElementById('train');
       const container = document.getElementById('train-container');
 
       let direction = 1; // 1 = vers la droite, -1 = vers la gauche
-      let position = -80; // position initiale en px (à gauche, hors conteneur)
-      const leftLimit = -80; // position la plus à gauche
-      let rightLimit; // sera calculée selon largeur conteneur et train
-      const speed = 120; // px par seconde
-      const pauseDuration = 300; // ms
+      let position = -60; // marge plus large à gauche, pour ne pas couper l'image
+      const leftLimit = -60; 
+      let rightLimit;
 
-      // Calculer limite droite (largeur conteneur - largeur train - marge)
+      const speed = 60; // vitesse en px par seconde (ralenti)
+      const pauseDuration = 300; // ms de pause aux extrémités
+
       function calcLimits() {
-        rightLimit = container.clientWidth - train.clientWidth - 10; // 10px marge à droite
+        rightLimit = container.clientWidth - train.clientWidth + 60; 
+        // +60 ici pour marge droite symétrique, train ne sera pas coupé
       }
       calcLimits();
 
-      // Fonction animation par frame
       let lastTime = null;
       let paused = false;
 
@@ -97,6 +96,7 @@
 
         if (!paused) {
           position += direction * (speed * delta / 1000);
+
           if (direction === 1 && position >= rightLimit) {
             position = rightLimit;
             paused = true;
@@ -125,7 +125,6 @@
         calcLimits();
       });
 
-      // Démarrer animation
       train.style.left = position + 'px';
       window.requestAnimationFrame(step);
     })();
