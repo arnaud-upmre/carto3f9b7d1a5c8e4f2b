@@ -7,6 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <style>
+    /* Styles généraux */
     body {
       font-family: 'Inter', sans-serif;
       background-color: #fff;
@@ -18,9 +19,9 @@
       align-items: center;
       width: 100vw;
       box-sizing: border-box;
-      min-height: 100vh;
     }
 
+    /* Conteneur et animation du train */
     #train-container {
       width: 100%;
       max-width: 600px;
@@ -41,6 +42,7 @@
       to { left: 100%; }
     }
 
+    /* Titre */
     h1 {
       font-size: 20px;
       margin: 0 0 0.8rem 0;
@@ -51,6 +53,7 @@
       text-align: left;
     }
 
+    /* Champ de recherche */
     input[type="text"] {
       width: 100%;
       max-width: 600px;
@@ -61,17 +64,30 @@
       box-sizing: border-box;
       outline: none;
       transition: border-color 0.3s ease;
-      margin-bottom: 0; /* pas d’espace sous le champ */
+      position: relative;
+      z-index: 2; /* Toujours devant le logo */
     }
     input[type="text"]:focus {
       border-color: #1a73e8;
       box-shadow: 0 4px 14px rgba(26,115,232,0.4);
     }
 
+    /* Logo sous le champ de recherche */
+    #logo {
+      display: block;
+      margin: 20px auto 0 auto; /* marge haute = 20px, tu peux augmenter pour descendre plus */
+      max-width: 200px;
+      width: 80%;
+      transition: opacity 0.5s ease;
+      opacity: 1;
+      z-index: 1; /* Derrière le champ de recherche */
+    }
+
+    /* Suggestions de recherche */
     ul#suggestions {
       list-style: none;
       padding: 0;
-      margin: 0; /* coller au champ */
+      margin: 0.5rem 0 1.5rem 0;
       max-width: 600px;
       width: 100%;
       border-radius: 12px;
@@ -80,10 +96,12 @@
       background-color: #fff;
       font-size: 15px;
       color: #333;
-      cursor: pointer;
+      position: relative;
+      z-index: 3;
     }
     ul#suggestions li {
       padding: 12px 16px;
+      cursor: pointer;
       border-bottom: 1px solid #eee;
     }
     ul#suggestions li:hover {
@@ -91,29 +109,7 @@
       color: #1a73e8;
     }
 
-    /* Espace fixe entre liste et logo */
-    #logo-spacing {
-      height: 30px;
-      width: 100%;
-      max-width: 600px;
-    }
-
-    /* Logo centré et taille max */
-    #logo {
-      display: block;
-      margin: 0 auto;
-      max-width: 150px;
-      opacity: 1;
-      transition: opacity 0.3s ease;
-    }
-
-    /* Quand logo caché on masque totalement avec display:none */
-    #logo.hidden {
-      opacity: 0 !important;
-      display: none !important;
-      transition: none !important;
-    }
-
+    /* Résultat affiché */
     #result {
       display: none;
       background: #ffffff;
@@ -125,7 +121,8 @@
       color: #444;
       font-size: 15px;
       line-height: 1.5;
-      margin-top: 1rem;
+      position: relative;
+      z-index: 3;
     }
     #result h2 {
       margin-top: 0;
@@ -134,6 +131,7 @@
       color: #1a73e8;
     }
 
+    /* Liens inline */
     .inline-links {
       display: flex;
       flex-wrap: wrap;
@@ -164,6 +162,7 @@
       color: #333;
     }
 
+    /* Responsive */
     @media (max-width: 480px) {
       body {
         padding: 0.8rem;
@@ -203,11 +202,9 @@
         height: 30px;
         left: -100px;
       }
+      /* Ajuste la marge haute du logo sur mobile si besoin */
       #logo {
-        max-width: 120px;
-      }
-      #logo-spacing {
-        height: 25px;
+        margin-top: 25px;
       }
     }
   </style>
@@ -221,15 +218,12 @@
   </div>
 
   <h1>🔍 Rechercher un lieu</h1>
-
   <input type="text" id="search" placeholder="Commencez à taper un nom…" autocomplete="off" />
-
-  <ul id="suggestions"></ul>
-
-  <div id="logo-spacing"></div>
-
+  
+  <!-- Logo EALE placé sous le champ de recherche -->
   <img id="logo" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/Logo%20EALE.png" alt="Logo EALE" />
 
+  <ul id="suggestions"></ul>
   <div id="result"></div>
 
   <script>
@@ -258,6 +252,7 @@
 
     function formatPortail(value) {
       if (!value) return "";
+      // Encode les virgules et astérisques pour l'URL tel:
       const encoded = value.replace(/,/g, "%2C").replace(/\*/g, "%2A");
       return `<a href="tel:${encoded}">${value}</a>`;
     }
@@ -300,35 +295,29 @@
       `;
     }
 
-    // Gestion input recherche + affichage logo et suggestions
+    // Gestion de la saisie dans le champ de recherche
     document.getElementById("search").addEventListener("input", e => {
       const query = e.target.value.trim().toLowerCase();
       const suggestionsEl = document.getElementById("suggestions");
       const resultEl = document.getElementById("result");
-      const logo = document.getElementById("logo");
 
       suggestionsEl.innerHTML = "";
       resultEl.innerHTML = "";
       resultEl.style.display = "none";
 
-      if (query.length > 0) {
-        // Cacher logo avec transition rapide + display none pour ne pas prendre de place
+      // Gérer l'opacité du logo (disparition rapide quand on tape)
+      const logo = document.getElementById("logo");
+      if(query.length > 0){
         logo.style.transition = "opacity 0.2s ease";
-        logo.style.opacity = 0;
-        setTimeout(() => {
-          logo.classList.add("hidden");
-        }, 200);
+        logo.style.opacity = "0";
       } else {
-        // Montrer logo avec display block puis transition lente sur opacity
-        logo.classList.remove("hidden");
-        setTimeout(() => {
-          logo.style.transition = "opacity 2s ease";
-          logo.style.opacity = 1;
-        }, 20);
+        logo.style.transition = "opacity 2s ease";
+        logo.style.opacity = "1";
       }
 
       if (!query) return;
 
+      // Filtrer lieux par début du nom
       const filtered = lieux.filter(l => l.nom.toLowerCase().startsWith(query));
       filtered.forEach(lieu => {
         const li = document.createElement("li");
