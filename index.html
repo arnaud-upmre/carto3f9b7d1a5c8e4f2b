@@ -7,11 +7,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <style>
-    /* Corps principal : colonne centrée horizontalement */
+    /* === Style global === */
     body {
       font-family: 'Inter', sans-serif;
       background-color: #fff;
-      padding: 1rem;
+      padding: 1rem 1rem 2rem 1rem;
       color: #333;
       margin: 0;
       display: flex;
@@ -19,16 +19,25 @@
       align-items: center;
       width: 100vw;
       box-sizing: border-box;
+      min-height: 100vh;
     }
 
-    /* Conteneur train en haut avec animation */
-    #train-container {
+    /* Conteneur principal */
+    .container {
       width: 100%;
       max-width: 600px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Train animé positionné en haut, avec animation horizontale */
+    #train-container {
+      width: 100%;
       height: 48px;
       overflow: hidden;
-      margin-bottom: 1.5rem;
       position: relative;
+      margin-bottom: 12px;
     }
     #train {
       position: absolute;
@@ -36,27 +45,17 @@
       left: -150px;
       height: 42px;
       animation: trainMove 18s linear infinite;
+      user-select: none;
+      pointer-events: none;
     }
     @keyframes trainMove {
       from { left: -150px; }
       to { left: 100%; }
     }
 
-    /* Titre */
-    h1 {
-      font-size: 20px;
-      margin: 0 0 0.8rem 0;
-      font-weight: 600;
-      width: 100%;
-      max-width: 600px;
-      padding: 0 1rem;
-      text-align: left;
-    }
-
     /* Champ de recherche */
-    input[type="text"] {
+    #search {
       width: 100%;
-      max-width: 600px;
       padding: 12px 16px;
       font-size: 16px;
       border-radius: 10px;
@@ -64,51 +63,55 @@
       box-sizing: border-box;
       outline: none;
       transition: border-color 0.3s ease;
+      margin-bottom: 8px;
     }
-    input[type="text"]:focus {
+    #search:focus {
       border-color: #1a73e8;
       box-shadow: 0 4px 14px rgba(26,115,232,0.4);
     }
 
-    /* Conteneur du logo, sous le champ recherche, centré horizontalement avec marge */
+    /* Logo sous le champ recherche */
     #logo-container {
-      width: 100%;
-      max-width: 600px;
-      display: flex;
-      justify-content: center; /* centre horizontal */
-      margin-top: 0.5rem; /* espace au-dessus du logo */
-      margin-bottom: 1.5rem;
-      transition: opacity 0.5s ease;
+      margin-bottom: 12px; /* espace sous logo */
+      text-align: center;
+      transition: opacity 0.3s ease, height 0.3s ease, margin 0.3s ease;
+      overflow: hidden;
     }
-    /* Logo responsive */
-    #logo {
-      max-width: 200px;
-      width: 50vw;
+    #logo-container.hidden {
+      opacity: 0;
+      height: 0;
+      margin: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease, height 0.2s ease, margin 0.2s ease;
+    }
+    #logo-container img {
+      max-width: 180px;
+      width: 100%;
       height: auto;
       user-select: none;
       pointer-events: none;
     }
 
     /* Liste suggestions */
-    ul#suggestions {
+    #suggestions {
       list-style: none;
       padding: 0;
-      margin: 0.5rem 0 1.5rem 0;
-      max-width: 600px;
-      width: 100%;
+      margin: 0 0 20px 0;
       border-radius: 12px;
-      overflow: hidden;
       box-shadow: 0 6px 15px rgba(0,0,0,0.1);
       background-color: #fff;
       font-size: 15px;
       color: #333;
+      width: 100%;
+      max-height: 250px;
+      overflow-y: auto;
     }
-    ul#suggestions li {
+    #suggestions li {
       padding: 12px 16px;
       cursor: pointer;
       border-bottom: 1px solid #eee;
     }
-    ul#suggestions li:hover {
+    #suggestions li:hover {
       background-color: #f0f8ff;
       color: #1a73e8;
     }
@@ -120,11 +123,10 @@
       padding: 1rem 1.5rem;
       border-radius: 18px;
       box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-      max-width: 600px;
-      width: 100%;
       color: #444;
       font-size: 15px;
       line-height: 1.5;
+      width: 100%;
     }
     #result h2 {
       margin-top: 0;
@@ -133,6 +135,7 @@
       color: #1a73e8;
     }
 
+    /* Liens dans résultat */
     .inline-links {
       display: flex;
       flex-wrap: wrap;
@@ -163,20 +166,20 @@
       color: #333;
     }
 
-    /* Responsive mobile */
+    /* Media queries pour mobile */
     @media (max-width: 480px) {
       body {
         padding: 0.8rem;
       }
-      h1 {
-        font-size: 18px;
-        padding: 0 0.5rem;
-      }
-      input[type="text"] {
+      #search {
         font-size: 14px;
         padding: 10px 14px;
+        margin-bottom: 6px;
       }
-      ul#suggestions li {
+      #logo-container {
+        margin-bottom: 10px;
+      }
+      #suggestions li {
         padding: 10px 14px;
         font-size: 14px;
       }
@@ -196,9 +199,6 @@
         white-space: normal;
         width: fit-content;
       }
-      #train-container {
-        max-width: 100%;
-      }
       #train {
         height: 30px;
         left: -100px;
@@ -210,34 +210,35 @@
 
   <!-- Site créé par Arnaud Debaecker -->
 
-  <!-- Conteneur pour le train animé -->
-  <div id="train-container">
-    <img id="train" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/train.gif" alt="Train animé" />
+  <div class="container">
+
+    <!-- Train animé tout en haut -->
+    <div id="train-container">
+      <img id="train" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/train.gif" alt="Train animé" />
+    </div>
+
+    <!-- Champ de recherche -->
+    <input type="text" id="search" placeholder="Commencez à taper un nom…" autocomplete="off" />
+
+    <!-- Logo sous le champ, disparaît quand on tape -->
+    <div id="logo-container">
+      <img src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/Logo%20EALE.png" alt="Logo EALE" />
+    </div>
+
+    <!-- Suggestions -->
+    <ul id="suggestions"></ul>
+
+    <!-- Résultat -->
+    <div id="result"></div>
+
   </div>
-
-  <!-- Titre -->
-  <h1>🔍 Rechercher un lieu</h1>
-
-  <!-- Champ de recherche -->
-  <input type="text" id="search" placeholder="Commencez à taper un nom…" autocomplete="off" />
-
-  <!-- Conteneur du logo EALE, sous le champ recherche -->
-  <div id="logo-container">
-    <img id="logo" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/Logo%20EALE.png" alt="Logo EALE" />
-  </div>
-
-  <!-- Liste de suggestions -->
-  <ul id="suggestions"></ul>
-
-  <!-- Résultat affiché -->
-  <div id="result"></div>
 
   <script>
-    // URL du fichier JSON avec les lieux
+    // URL fichier JSON
     const jsonUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/nono-9f4a8b2c7d1e3f56.json";
     let lieux = [];
 
-    // Charge les données JSON
+    // Charger données
     function loadData() {
       fetch(jsonUrl)
         .then(res => res.json())
@@ -249,7 +250,7 @@
         });
     }
 
-    // Formate un contact téléphonique avec lien "tel:"
+    // Format contact en lien tel
     function formatContact(txt) {
       const phoneMatch = txt?.match(/(\+?\d[\d\s.-]{6,})/);
       if (phoneMatch) {
@@ -259,14 +260,14 @@
       return txt || "";
     }
 
-    // Formate le numéro portail en lien tel:, encode les virgules et *
+    // Format portail avec %2C et %2A pour virgule et *
     function formatPortail(value) {
       if (!value) return "";
       const encoded = value.replace(/,/g, "%2C").replace(/\*/g, "%2A");
       return `<a href="tel:${encoded}">${value}</a>`;
     }
 
-    // Affiche les numéros RSS selon valeur
+    // Format RSS simplifié
     function formatRSS(value) {
       const tables = {
         "A": ["03 28 55 82 56", "03 28 55 82 57"],
@@ -287,7 +288,7 @@
       return "";
     }
 
-    // Affiche les détails du lieu sélectionné
+    // Affiche détails lieu sélectionné
     function showLieu(lieu) {
       const result = document.getElementById("result");
       document.getElementById("suggestions").innerHTML = "";
@@ -306,7 +307,7 @@
       `;
     }
 
-    // Gestion saisie dans champ recherche
+    // Événement sur saisie recherche
     document.getElementById("search").addEventListener("input", e => {
       const query = e.target.value.trim().toLowerCase();
       const suggestionsEl = document.getElementById("suggestions");
@@ -318,17 +319,15 @@
       resultEl.style.display = "none";
 
       if (!query) {
-        // Réaffiche doucement le logo si champ vide
-        logoContainer.style.transition = "opacity 2s ease";
-        logoContainer.style.opacity = "1";
+        // Si champ vide, logo réapparaît lentement
+        logoContainer.classList.remove("hidden");
         return;
       }
 
-      // Cache rapidement le logo quand on tape
-      logoContainer.style.transition = "opacity 0.3s ease";
-      logoContainer.style.opacity = "0";
+      // Dès qu'on tape, logo disparaît rapidement
+      logoContainer.classList.add("hidden");
 
-      // Filtre lieux selon début du nom
+      // Filtre les lieux par nom
       const filtered = lieux.filter(l => l.nom.toLowerCase().startsWith(query));
       filtered.forEach(lieu => {
         const li = document.createElement("li");
@@ -338,8 +337,8 @@
       });
     });
 
-    // Chargement initial des données
     loadData();
   </script>
+
 </body>
 </html>
