@@ -1,14 +1,12 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <!-- Meta pour empêcher l'indexation par les moteurs -->
   <meta name="robots" content="noindex, nofollow" />
   <meta charset="UTF-8" />
   <title>Recherche de lieux</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <style>
-    /* Styles généraux */
     body {
       font-family: 'Inter', sans-serif;
       background-color: #fff;
@@ -20,11 +18,10 @@
       align-items: center;
       width: 100vw;
       box-sizing: border-box;
-      min-height: 100vh; /* Pour bien centrer verticalement */
-      justify-content: flex-start; /* On garde en haut par défaut */
+      min-height: 100vh;
+      justify-content: flex-start;
     }
 
-    /* Container du train animé */
     #train-container {
       width: 100%;
       max-width: 600px;
@@ -33,7 +30,6 @@
       margin-bottom: 1.5rem;
       position: relative;
     }
-    /* Animation du train */
     #train {
       position: absolute;
       top: 0;
@@ -46,7 +42,6 @@
       to { left: 100%; }
     }
 
-    /* Titre principal */
     h1 {
       font-size: 20px;
       margin: 0 0 0.8rem 0;
@@ -57,7 +52,6 @@
       text-align: left;
     }
 
-    /* Champ de recherche */
     input[type="text"] {
       width: 100%;
       max-width: 600px;
@@ -76,15 +70,7 @@
       box-shadow: 0 4px 14px rgba(26,115,232,0.4);
     }
 
-    /* Espace invisible entre champ recherche et logo */
-    .spacer {
-      height: 40px; /* Ajustable */
-      pointer-events: none; /* Ne gêne pas les clics */
-      width: 100%;
-      max-width: 600px;
-    }
-
-    /* Conteneur du logo */
+    /* Logo avec margin-top pour espacer */
     #logo-container {
       width: 100%;
       max-width: 600px;
@@ -93,6 +79,7 @@
       opacity: 1;
       transition: opacity 2s ease;
       z-index: 2;
+      margin-top: 40px; /* <-- Décalage vertical sous le champ */
     }
     #logo {
       max-width: 180px;
@@ -102,7 +89,6 @@
       pointer-events: none;
     }
 
-    /* Suggestions sous le champ */
     ul#suggestions {
       list-style: none;
       padding: 0;
@@ -128,7 +114,6 @@
       color: #1a73e8;
     }
 
-    /* Résultat détaillé */
     #result {
       display: none;
       background: #ffffff;
@@ -150,7 +135,6 @@
       color: #1a73e8;
     }
 
-    /* Liens inline sous résultat */
     .inline-links {
       display: flex;
       flex-wrap: wrap;
@@ -173,7 +157,6 @@
       color: white;
     }
 
-    /* Texte du résultat */
     #result p {
       margin-top: 1rem;
       color: #555;
@@ -182,7 +165,6 @@
       color: #333;
     }
 
-    /* Responsive (téléphone) */
     @media (max-width: 480px) {
       body {
         padding: 0.8rem;
@@ -231,35 +213,25 @@
   <!-- Site créé par Arnaud Debaecker -->
 
   <div id="train-container">
-    <!-- Animation train -->
     <img id="train" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/train.gif" alt="Train animé" />
   </div>
 
   <h1>🔍 Rechercher un lieu</h1>
 
-  <!-- Champ de recherche -->
   <input type="text" id="search" placeholder="Commencez à taper un nom…" autocomplete="off" />
 
-  <!-- Espace invisible entre champ recherche et logo -->
-  <div class="spacer"></div>
-
-  <!-- Logo EALE centré sous le champ recherche -->
+  <!-- Logo sous le champ avec marge pour espacer -->
   <div id="logo-container">
-    <img id="logo" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/Logo%20EALE.png" alt="Logo EALE" />
+    <img id="logo" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5ckJib/main/Logo%20EALE.png" alt="Logo EALE" />
   </div>
 
-  <!-- Liste des suggestions -->
   <ul id="suggestions"></ul>
-
-  <!-- Résultat sélectionné -->
   <div id="result"></div>
 
   <script>
-    // URL du fichier JSON contenant les lieux
     const jsonUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/nono-9f4a8b2c7d1e3f56.json";
     let lieux = [];
 
-    // Charge les données JSON
     function loadData() {
       fetch(jsonUrl)
         .then(res => res.json())
@@ -271,7 +243,6 @@
         });
     }
 
-    // Formate un contact téléphonique en lien cliquable
     function formatContact(txt) {
       const phoneMatch = txt?.match(/(\+?\d[\d\s.-]{6,})/);
       if (phoneMatch) {
@@ -281,15 +252,12 @@
       return txt || "";
     }
 
-    // Formate un numéro de portail en lien tel: avec encodage de caractères spéciaux
     function formatPortail(value) {
       if (!value) return "";
-      // Encode les virgules et astérisques pour l'URL tel:
       const encoded = value.replace(/,/g, "%2C").replace(/\*/g, "%2A");
       return `<a href="tel:${encoded}">${value}</a>`;
     }
 
-    // Formate les numéros RSS (fixes) avec liens cliquables
     function formatRSS(value) {
       const tables = {
         "A": ["03 28 55 82 56", "03 28 55 82 57"],
@@ -310,7 +278,6 @@
       return "";
     }
 
-    // Affiche les détails d'un lieu sélectionné
     function showLieu(lieu) {
       const result = document.getElementById("result");
       document.getElementById("suggestions").innerHTML = "";
@@ -329,7 +296,6 @@
       `;
     }
 
-    // Gère la saisie utilisateur dans le champ recherche
     document.getElementById("search").addEventListener("input", e => {
       const query = e.target.value.trim().toLowerCase();
       const suggestionsEl = document.getElementById("suggestions");
@@ -341,18 +307,17 @@
       resultEl.style.display = "none";
 
       if (query.length > 0) {
-        // Dès qu'on tape, on fait disparaître rapidement le logo (opacity à 0 en 0.3s)
+        // Disparition rapide du logo
         logoContainer.style.transition = "opacity 0.3s ease";
         logoContainer.style.opacity = "0";
       } else {
-        // Si champ vide, logo réapparait progressivement en 2s
+        // Réapparition lente du logo
         logoContainer.style.transition = "opacity 2s ease";
         logoContainer.style.opacity = "1";
       }
 
       if (!query) return;
 
-      // Recherche basique : lieu dont le nom commence par la recherche
       const filtered = lieux.filter(l => l.nom.toLowerCase().startsWith(query));
       filtered.forEach(lieu => {
         const li = document.createElement("li");
@@ -362,7 +327,6 @@
       });
     });
 
-    // Chargement initial des données JSON
     loadData();
   </script>
 </body>
