@@ -19,6 +19,8 @@
       align-items: center;
       width: 100vw;
       box-sizing: border-box;
+      position: relative;
+      min-height: 100vh;
     }
 
     /* Conteneur du train */
@@ -31,25 +33,25 @@
       position: relative;
     }
 
-    /* Image du train avec animation va-et-vient */
+    /* Image du train animée en va-et-vient avec pause */
     #train {
       position: absolute;
       top: 0;
-      left: -50px; /* point de départ légèrement hors écran */
+      left: -80px; /* départ plus à gauche pour ne pas couper */
       height: 42px;
-      animation: trainPingPong 4s ease-in-out infinite alternate;
+      animation: trainPingPong 5s ease-in-out infinite;
+      animation-fill-mode: forwards;
     }
 
     /* Animation va-et-vient avec pauses */
     @keyframes trainPingPong {
-      0%   { left: -50px; }                         /* Départ à gauche */
-      40%  { left: calc(100% - 100px); }           /* Arrivée à droite */
-      50%  { left: calc(100% - 100px); }           /* Pause à droite */
-      90%  { left: -50px; }                         /* Retour à gauche */
-      100% { left: -50px; }                         /* Pause à gauche */
+      0%   { left: -80px; }
+      40%  { left: calc(100% - 80px); } /* presque à droite */
+      50%  { left: calc(100% - 80px); } /* pause 0.5s */
+      90%  { left: -80px; }             /* retour à gauche */
+      100% { left: -80px; }             /* pause 0.5s */
     }
 
-    /* Titre */
     h1 {
       font-size: 20px;
       margin: 0 0 0.8rem 0;
@@ -60,7 +62,6 @@
       text-align: left;
     }
 
-    /* Champ de recherche */
     input[type="text"] {
       width: 100%;
       max-width: 600px;
@@ -77,7 +78,6 @@
       box-shadow: 0 4px 14px rgba(26,115,232,0.4);
     }
 
-    /* Suggestions */
     ul#suggestions {
       list-style: none;
       padding: 0;
@@ -101,7 +101,6 @@
       color: #1a73e8;
     }
 
-    /* Résultat affiché */
     #result {
       display: none;
       background: #ffffff;
@@ -121,7 +120,6 @@
       color: #1a73e8;
     }
 
-    /* Liens inline */
     .inline-links {
       display: flex;
       flex-wrap: wrap;
@@ -144,7 +142,6 @@
       color: white;
     }
 
-    /* Paragraphes dans résultat */
     #result p {
       margin-top: 1rem;
       color: #555;
@@ -153,7 +150,6 @@
       color: #333;
     }
 
-    /* Responsive */
     @media (max-width: 480px) {
       body {
         padding: 0.8rem;
@@ -191,7 +187,7 @@
       }
       #train {
         height: 30px;
-        left: -30px;
+        left: -50px; /* un peu moins sur mobile */
       }
     }
   </style>
@@ -200,7 +196,6 @@
 
   <!-- Site créé par Arnaud Debaecker -->
 
-  <!-- Conteneur du train animé -->
   <div id="train-container">
     <img id="train" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/train.gif" alt="Train animé" />
   </div>
@@ -214,7 +209,7 @@
     const jsonUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/nono-9f4a8b2c7d1e3f56.json";
     let lieux = [];
 
-    // Charge les données JSON des lieux
+    // Chargement des données JSON
     function loadData() {
       fetch(jsonUrl)
         .then(res => res.json())
@@ -226,7 +221,7 @@
         });
     }
 
-    // Format contact avec lien tel: si numéro détecté
+    // Formatage du contact pour insérer un lien tel:
     function formatContact(txt) {
       const phoneMatch = txt?.match(/(\+?\d[\d\s.-]{6,})/);
       if (phoneMatch) {
@@ -236,14 +231,14 @@
       return txt || "";
     }
 
-    // Format portail avec encodage virgule et *
+    // Formatage du portail en lien tel: en encodant virgules et astérisques
     function formatPortail(value) {
       if (!value) return "";
       const encoded = value.replace(/,/g, "%2C").replace(/\*/g, "%2A");
       return `<a href="tel:${encoded}">${value}</a>`;
     }
 
-    // Format RSS, affiche liens téléphoniques
+    // Affiche les numéros RSS si présents
     function formatRSS(value) {
       const tables = {
         "A": ["03 28 55 82 56", "03 28 55 82 57"],
@@ -264,7 +259,7 @@
       return "";
     }
 
-    // Affiche les détails du lieu sélectionné
+    // Affiche les détails d’un lieu sélectionné
     function showLieu(lieu) {
       const result = document.getElementById("result");
       document.getElementById("suggestions").innerHTML = "";
@@ -283,7 +278,7 @@
       `;
     }
 
-    // Écoute la saisie dans le champ recherche pour suggestions
+    // Gestion des suggestions au fil de la saisie
     document.getElementById("search").addEventListener("input", e => {
       const query = e.target.value.trim().toLowerCase();
       const suggestionsEl = document.getElementById("suggestions");
