@@ -71,6 +71,12 @@
       box-shadow: 0 4px 14px rgba(26,115,232,0.4);
     }
 
+    #counter {
+      margin: 0.8rem 0 0.5rem;
+      font-size: 14px;
+      color: #555;
+    }
+
     ul#suggestions {
       list-style: none;
       padding: 0;
@@ -173,15 +179,19 @@
   </div>
   <h1>🔍 Rechercher un lieu</h1>
   <input type="text" id="search" placeholder="Commencez à taper un nom…" autocomplete="off" />
+  <p id="counter">🔢 Recherches : chargement…</p>
   <ul id="suggestions"></ul>
   <div id="result"></div>
+
   <script>
     const jsonUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/nono-9f4a8b2c7d1e3f56.json";
     let lieux = [];
     let fuse;
+
     function normalize(str) {
       return str.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
     }
+
     function loadData() {
       fetch(jsonUrl)
         .then(res => res.json())
@@ -194,10 +204,23 @@
             ignoreLocation: true
           });
         })
-        .catch(err => {
-          alert("Erreur de chargement du JSON : " + err);
-        });
+        .catch(err => alert("Erreur de chargement du JSON : " + err));
     }
+
+    function incrementCounter() {
+      fetch("https://counterapi.dev/api/arnaudrecherchetest", { method: "POST" })
+        .catch(err => console.error("Erreur compteur :", err));
+    }
+
+    function displayCounter() {
+      fetch("https://counterapi.dev/api/arnaudrecherchetest")
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("counter").textContent = "🔢 Recherches : " + data.count;
+        })
+        .catch(err => console.error("Erreur affichage compteur :", err));
+    }
+
     document.getElementById("search").addEventListener("input", e => {
       const query = normalize(e.target.value.trim());
       const suggestionsEl = document.getElementById("suggestions");
@@ -206,7 +229,9 @@
       resultEl.innerHTML = "";
       resultEl.style.display = "none";
       if (!query || !fuse) return;
+
       let results = fuse.search(query).filter(r => r.score < 0.4).map(r => r.item);
+
       if (results.length === 0 || query.length <= 3) {
         const fallback = lieux.filter(lieu => normalize(lieu.nom).includes(query));
         const ids = new Set(results.map(l => l.nom));
@@ -214,6 +239,7 @@
           if (!ids.has(lieu.nom)) results.push(lieu);
         });
       }
+
       results.forEach(lieu => {
         const li = document.createElement("li");
         li.textContent = lieu.nom;
@@ -221,6 +247,7 @@
         suggestionsEl.appendChild(li);
       });
     });
+
     function formatContact(txt) {
       const phoneMatch = txt?.match(/(\+?\d[\d\s.-]{6,})/);
       if (phoneMatch) {
@@ -229,6 +256,7 @@
       }
       return txt || "";
     }
+
     function formatPortail(value) {
       if (!value) return "";
       const rawNumeric = value.replace(/\D/g, "");
@@ -236,6 +264,7 @@
       const encoded = value.replace(/,/g, "%2C").replace(/\*/g, "%2A");
       return `<a href="tel:${encoded}">${value}</a>`;
     }
+
     function formatRSS(value) {
       const tables = {
         "A": ["03 28 55 82 56", "03 28 55 82 57"],
@@ -255,7 +284,10 @@
       }
       return "";
     }
+
     function showLieu(lieu) {
+      incrementCounter();
+      displayCounter();
       const result = document.getElementById("result");
       document.getElementById("suggestions").innerHTML = "";
       result.style.display = "block";
@@ -268,10 +300,9 @@
         </div>
         <hr class="separator" />
       `;
+
       const blocs = [];
-      if (lieu.description) {
-        blocs.push(`<p>${lieu.description}</p>`);
-      }
+      if (lieu.description) blocs.push(`<p>${lieu.description}</p>`);
       if (lieu.pk && lieu.numero_ligne && lieu.lignes) {
         blocs.push(`<p><strong>🚄 PK ${lieu.pk}</strong> sur la ligne n°<strong>${lieu.numero_ligne}</strong> - ${lieu.lignes}</p>`);
       }
@@ -280,13 +311,16 @@
       if (lieu.contact) blocs.push(`<p><strong>👤 Contact :</strong> ${formatContact(lieu.contact)}</p>`);
       if (lieu.portail) blocs.push(`<p><strong>🚧 Portail :</strong> ${formatPortail(lieu.portail)}</p>`);
       html += blocs.join('<hr class="separator" />');
+
       html += `
         <hr class="separator" />
         <p>📍 Localiser les appareils du poste <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&usp=sharing" target="_blank" rel="noopener">ICI</a></p>
       `;
       result.innerHTML = html;
     }
+
     loadData();
+    displayCounter();
   </script>
 </body>
 </html>
