@@ -6,6 +6,7 @@
   <title>Recherche de lieux</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
   <style>
     body {
       font-family: 'Inter', sans-serif;
@@ -200,6 +201,8 @@
   </style>
 </head>
 <body>
+
+  <!-- Site créé par Arnaud -->
   <div id="train-container">
     <img id="train" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/train.gif" alt="Train animé" />
   </div>
@@ -212,18 +215,49 @@
   <script>
     const jsonUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/nono-9f4a8b2c7d1e3f56.json";
     let lieux = [];
+    let fuse;
+
+    function normalize(str) {
+      return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    }
 
     function loadData() {
       fetch(jsonUrl)
         .then(res => res.json())
         .then(data => {
           lieux = data;
-          console.log("Données chargées:", lieux);
+          fuse = new Fuse(lieux, {
+            keys: ['nom'],
+            includeScore: true,
+            threshold: 0.4,
+            ignoreLocation: true,
+            minMatchCharLength: 2
+          });
         })
         .catch(err => {
           alert("Erreur de chargement du JSON : " + err);
         });
     }
+
+    document.getElementById("search").addEventListener("input", e => {
+      const query = normalize(e.target.value.trim());
+      const suggestionsEl = document.getElementById("suggestions");
+      const resultEl = document.getElementById("result");
+      suggestionsEl.innerHTML = "";
+      resultEl.innerHTML = "";
+      resultEl.style.display = "none";
+
+      if (!query || !fuse) return;
+
+      const results = fuse.search(query).map(r => r.item);
+
+      results.forEach(lieu => {
+        const li = document.createElement("li");
+        li.textContent = lieu.nom;
+        li.onclick = () => showLieu(lieu);
+        suggestionsEl.appendChild(li);
+      });
+    });
 
     function formatContact(txt) {
       const phoneMatch = txt?.match(/(\+?\d[\d\s.-]{6,})/);
@@ -237,7 +271,9 @@
     function formatPortail(value) {
       if (!value) return "";
       const rawNumeric = value.replace(/\D/g, "");
-      if (rawNumeric.length < 6) return value;
+      if (rawNumeric.length < 6) {
+        return value;
+      }
       const encoded = value.replace(/,/g, "%2C").replace(/\*/g, "%2A");
       return `<a href="tel:${encoded}">${value}</a>`;
     }
@@ -270,7 +306,7 @@
       let html = `
         <h2>📍 ${lieu.nom}</h2>
         <div class="inline-links">
-          <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🗽️ Google Maps</a>
+          <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🗺️ Google Maps</a>
           <a href="https://maps.apple.com/?daddr=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🍎 Apple Plans</a>
           <a href="https://waze.com/ul?ll=${lieu.latitude},${lieu.longitude}&navigate=yes" target="_blank" rel="noopener">🚗 Waze</a>
         </div>
@@ -282,7 +318,7 @@
       if (lieu.description) blocs.push(`<p>${lieu.description}</p>`);
 
       if (lieu.pk && lieu.numero_ligne && lieu.lignes) {
-        blocs.push(`<p>🚄 PK <strong>${lieu.pk}</strong> sur la ligne n°<strong>${lieu.numero_ligne}</strong> - ${lieu.lignes}</p>`);
+        blocs.push(`<p><strong>🚄 PK ${lieu.pk}</strong> sur la ligne n°<strong>${lieu.numero_ligne}</strong> - ${lieu.lignes}</p>`);
       }
 
       const rss = formatRSS(lieu.rss);
@@ -299,29 +335,6 @@
 
       result.innerHTML = html;
     }
-
-    document.getElementById("search").addEventListener("input", e => {
-      const query = e.target.value.trim();
-      const suggestionsEl = document.getElementById("suggestions");
-      const resultEl = document.getElementById("result");
-      suggestionsEl.innerHTML = "";
-      resultEl.innerHTML = "";
-      resultEl.style.display = "none";
-
-      function normalize(str) {
-        return (str || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-      }
-
-      const q = normalize(query);
-      const filtered = lieux.filter(lieu => normalize(lieu.nom).includes(q));
-
-      filtered.forEach(lieu => {
-        const li = document.createElement("li");
-        li.textContent = lieu.nom;
-        li.onclick = () => showLieu(lieu);
-        suggestionsEl.appendChild(li);
-      });
-    });
 
     loadData();
   </script>
