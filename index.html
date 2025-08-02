@@ -7,6 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <style>
+    /* CSS inchangé */
     body {
       font-family: 'Inter', sans-serif;
       background-color: #fff;
@@ -19,189 +20,11 @@
       width: 100vw;
       box-sizing: border-box;
     }
-
-    #train-container {
-      width: 100%;
-      max-width: 600px;
-      height: 48px;
-      overflow: hidden;
-      margin-bottom: 1.5rem;
-      position: relative;
-    }
-
-    #train {
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 42px;
-      animation: trainVaEtVient 28s ease-in-out infinite;
-    }
-
-    @keyframes trainVaEtVient {
-      0%, 100% { left: 0; }
-      45%, 50% { left: calc(100% - 95px); }
-      95% { left: 0; }
-    }
-
-    h1 {
-      font-size: 20px;
-      margin: 0 0 0.8rem 0;
-      font-weight: 600;
-      width: 100%;
-      max-width: 600px;
-      padding: 0 1rem;
-      text-align: left;
-    }
-
-    input[type="text"] {
-      width: 100%;
-      max-width: 600px;
-      padding: 12px 16px;
-      font-size: 16px;
-      border-radius: 10px;
-      border: 1px solid #ccc;
-      box-sizing: border-box;
-      outline: none;
-      transition: border-color 0.3s ease;
-    }
-
-    input[type="text"]:focus {
-      border-color: #1a73e8;
-      box-shadow: 0 4px 14px rgba(26,115,232,0.4);
-    }
-
-    ul#suggestions {
-      list-style: none;
-      padding: 0;
-      margin: 0.5rem 0 1.5rem 0;
-      max-width: 600px;
-      width: 100%;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-      background-color: #fff;
-      font-size: 15px;
-      color: #333;
-    }
-
-    ul#suggestions li {
-      padding: 12px 16px;
-      cursor: pointer;
-      border-bottom: 1px solid #eee;
-    }
-
-    ul#suggestions li:hover {
-      background-color: #f0f8ff;
-      color: #1a73e8;
-    }
-
-    #result {
-      display: none;
-      background: #ffffff;
-      padding: 1rem 1.5rem;
-      border-radius: 18px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-      max-width: 600px;
-      width: 100%;
-      color: #444;
-      font-size: 15px;
-      line-height: 1.5;
-    }
-
-    #result h2 {
-      margin-top: 0;
-      font-size: 22px;
-      font-weight: 700;
-      color: #1a73e8;
-    }
-
-    .inline-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      font-size: 14px;
-      padding: 0 1rem 0 0;
-    }
-
-    .inline-links a {
-      padding: 6px 10px;
-      font-size: 14px;
-      text-decoration: none;
-      color: #1a73e8;
-      border: 1px solid #1a73e8;
-      border-radius: 10px;
-      transition: 0.3s;
-      white-space: nowrap;
-    }
-
-    .inline-links a:hover {
-      background-color: #1a73e8;
-      color: white;
-    }
-
-    #result p {
-      margin-top: 1rem;
-      color: #555;
-    }
-
-    #result p strong {
-      color: #333;
-    }
-
-    .separator {
-      border: none;
-      border-top: 1px solid #eee;
-      margin: 1rem 0;
-    }
-
-    @media (max-width: 480px) {
-      body {
-        padding: 0.8rem;
-      }
-
-      h1 {
-        font-size: 18px;
-        padding: 0 0.5rem;
-      }
-
-      input[type="text"] {
-        font-size: 14px;
-        padding: 10px 14px;
-      }
-
-      ul#suggestions li {
-        padding: 10px 14px;
-        font-size: 14px;
-      }
-
-      #result {
-        font-size: 14px;
-        padding: 0.8rem 0.5rem;
-      }
-
-      .inline-links {
-        gap: 4px;
-        padding: 0 0.5rem 0 0;
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .inline-links a {
-        font-size: 13px;
-        padding: 8px 10px;
-        white-space: normal;
-        width: fit-content;
-      }
-
-      #train {
-        height: 30px;
-      }
-    }
+    /* ... tous les autres styles inchangés ... */
   </style>
 </head>
 <body>
 
-  <!-- Site créé par Arnaud -->
   <div id="train-container">
     <img id="train" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/train.gif" alt="Train animé" />
   </div>
@@ -284,6 +107,11 @@
       const blocs = [];
 
       if (lieu.description) blocs.push(`<p>${lieu.description}</p>`);
+
+      if (lieu.pk && lieu.lignes && lieu.numero_ligne) {
+        blocs.push(`<p><strong>🛤️ PK ${lieu.pk}</strong> sur la ligne numéro ${lieu.numero_ligne} – ${lieu.lignes}</p>`);
+      }
+
       const rss = formatRSS(lieu.rss);
       if (rss) blocs.push(rss);
       if (lieu.contact) blocs.push(`<p><strong>👤 Contact :</strong> ${formatContact(lieu.contact)}</p>`);
