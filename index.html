@@ -269,7 +269,13 @@
         <hr class="separator" />
       `;
       const blocs = [];
-      if (lieu.description) blocs.push(`<p>${lieu.description}</p>`);
+      if (lieu.description) {
+        const descWithLinks = lieu.description.replace(
+          /(https?:\/\/[^\s]+)/g,
+          '<a href="$1" target="_blank" rel="noopener">ICI</a>'
+        );
+        blocs.push(`<p>${descWithLinks}</p>`);
+      }
       if (lieu.pk && lieu.numero_ligne && lieu.lignes) {
         blocs.push(`<p><strong>🚄 PK ${lieu.pk}</strong> sur la ligne n°<strong>${lieu.numero_ligne}</strong> - ${lieu.lignes}</p>`);
       }
