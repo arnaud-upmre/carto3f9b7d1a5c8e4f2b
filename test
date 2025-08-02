@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta name="robots" content="noindex, nofollow" />
+  <meta charset="UTF-8" />
+  <title>Recherche de lieux</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #fff;
+      padding: 1rem;
+      color: #333;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100vw;
+      box-sizing: border-box;
+    }
+
+    #train-container {
+      width: 100%;
+      max-width: 600px;
+      height: 48px;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    #train {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 42px;
+      animation: trainVaEtVient 28s ease-in-out infinite;
+    }
+
+    @keyframes trainVaEtVient {
+      0%, 100% { left: 0; }
+      45%, 50% { left: calc(100% - 95px); }
+      95% { left: 0; }
+    }
+
+    h1 {
+      font-size: 20px;
+      margin: 0 0 0.8rem 0;
+      font-weight: 600;
+      width: 100%;
+      max-width: 600px;
+      padding: 0 1rem;
+      text-align: left;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      max-width: 600px;
+      padding: 12px 16px;
+      font-size: 16px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+
+    input[type="text"]:focus {
+      border-color: #1a73e8;
+      box-shadow: 0 4px 14px rgba(26,115,232,0.4);
+    }
+
+    #counter {
+      margin: 0.8rem 0 0.5rem;
+      font-size: 14px;
+      color: #555;
+    }
+
+    ul#suggestions {
+      list-style: none;
+      padding: 0;
+      margin: 0.5rem 0 1.5rem 0;
+      max-width: 600px;
+      width: 100%;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+      background-color: #fff;
+      font-size: 15px;
+      color: #333;
+    }
+
+    ul#suggestions li {
+      padding: 12px 16px;
+      cursor: pointer;
+      border-bottom: 1px solid #eee;
+    }
+
+    ul#suggestions li:hover {
+      background-color: #f0f8ff;
+      color: #1a73e8;
+    }
+
+    #result {
+      display: none;
+      background: #ffffff;
+      padding: 1rem 1.5rem;
+      border-radius: 18px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      max-width: 600px;
+      width: 100%;
+      color: #444;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    #result h2 {
+      margin-top: 0;
+      font-size: 22px;
+      font-weight: 700;
+      color: #1a73e8;
+    }
+
+    .inline-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      font-size: 14px;
+      padding: 0 1rem 0 0;
+    }
+
+    .inline-links a {
+      padding: 6px 10px;
+      font-size: 14px;
+      text-decoration: none;
+      color: #1a73e8;
+      border: 1px solid #1a73e8;
+      border-radius: 10px;
+      transition: 0.3s;
+      white-space: nowrap;
+    }
+
+    .inline-links a:hover {
+      background-color: #1a73e8;
+      color: white;
+    }
+
+    #result p {
+      margin-top: 1rem;
+      color: #555;
+    }
+
+    #result p strong {
+      color: #333;
+    }
+
+    .separator {
+      border: none;
+      border-top: 1px solid #eee;
+      margin: 1rem 0;
+    }
+
+    @media (max-width: 480px) {
+      body { padding: 0.8rem; }
+      h1 { font-size: 18px; padding: 0 0.5rem; }
+      input[type="text"] { font-size: 14px; padding: 10px 14px; }
+      ul#suggestions li { padding: 10px 14px; font-size: 14px; }
+      #result { font-size: 14px; padding: 0.8rem 0.5rem; }
+      .inline-links { gap: 4px; padding: 0 0.5rem 0 0; flex-direction: column; align-items: flex-start; }
+      .inline-links a { font-size: 13px; padding: 8px 10px; white-space: normal; width: fit-content; }
+      #train { height: 30px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="train-container">
+    <img id="train" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/train.gif" alt="Train animé" />
+  </div>
+  <h1>🔍 Rechercher un lieu</h1>
+  <input type="text" id="search" placeholder="Commencez à taper un nom…" autocomplete="off" />
+  <p id="counter">🔢 Recherches : chargement…</p>
+  <ul id="suggestions"></ul>
+  <div id="result"></div>
+
+  <script>
+    const jsonUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/nono-9f4a8b2c7d1e3f56.json";
+    let lieux = [];
+    let fuse;
+
+    function normalize(str) {
+      return str.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+    }
+
+    function loadData() {
+      fetch(jsonUrl)
+        .then(res => res.json())
+        .then(data => {
+          lieux = data;
+          fuse = new Fuse(lieux, {
+            keys: ['nom'],
+            includeScore: true,
+            threshold: 0.4,
+            ignoreLocation: true
+          });
+        })
+        .catch(err => alert("Erreur de chargement du JSON : " + err));
+    }
+
+    function incrementCounter() {
+      fetch("https://counterapi.dev/api/arnaudrecherchetest", { method: "POST" })
+        .catch(err => console.error("Erreur compteur :", err));
+    }
+
+    function displayCounter() {
+      fetch("https://counterapi.dev/api/arnaudrecherchetest")
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("counter").textContent = "🔢 Recherches : " + data.count;
+        })
+        .catch(err => console.error("Erreur affichage compteur :", err));
+    }
+
+    document.getElementById("search").addEventListener("input", e => {
+      const query = normalize(e.target.value.trim());
+      const suggestionsEl = document.getElementById("suggestions");
+      const resultEl = document.getElementById("result");
+      suggestionsEl.innerHTML = "";
+      resultEl.innerHTML = "";
+      resultEl.style.display = "none";
+      if (!query || !fuse) return;
+
+      let results = fuse.search(query).filter(r => r.score < 0.4).map(r => r.item);
+
+      if (results.length === 0 || query.length <= 3) {
+        const fallback = lieux.filter(lieu => normalize(lieu.nom).includes(query));
+        const ids = new Set(results.map(l => l.nom));
+        fallback.forEach(lieu => {
+          if (!ids.has(lieu.nom)) results.push(lieu);
+        });
+      }
+
+      results.forEach(lieu => {
+        const li = document.createElement("li");
+        li.textContent = lieu.nom;
+        li.onclick = () => showLieu(lieu);
+        suggestionsEl.appendChild(li);
+      });
+    });
+
+    function formatContact(txt) {
+      const phoneMatch = txt?.match(/(\+?\d[\d\s.-]{6,})/);
+      if (phoneMatch) {
+        const raw = phoneMatch[1].replace(/[^\d+]/g, "");
+        return txt.replace(phoneMatch[1], `<a href="tel:${raw}">${phoneMatch[1]}</a>`);
+      }
+      return txt || "";
+    }
+
+    function formatPortail(value) {
+      if (!value) return "";
+      const rawNumeric = value.replace(/\D/g, "");
+      if (rawNumeric.length < 6) return value;
+      const encoded = value.replace(/,/g, "%2C").replace(/\*/g, "%2A");
+      return `<a href="tel:${encoded}">${value}</a>`;
+    }
+
+    function formatRSS(value) {
+      const tables = {
+        "A": ["03 28 55 82 56", "03 28 55 82 57"],
+        "B": ["03 28 55 82 58", "03 28 55 82 59"],
+        "C": ["03 28 55 82 53", "03 28 55 82 54"]
+      };
+      const trimmed = (value || "").trim().toUpperCase();
+      if (tables[trimmed]) {
+        const nums = tables[trimmed];
+        return `
+          <p><strong>📞 RSS Table ${trimmed === 'A' ? '1' : trimmed === 'B' ? '2' : '3'} :</strong></p>
+          <div class="inline-links">
+            <a href="tel:${nums[0].replace(/\D/g, '')}">${nums[0]}</a>
+            <a href="tel:${nums[1].replace(/\D/g, '')}">${nums[1]}</a>
+          </div>
+        `;
+      }
+      return "";
+    }
+
+    function showLieu(lieu) {
+      incrementCounter();
+      displayCounter();
+      const result = document.getElementById("result");
+      document.getElementById("suggestions").innerHTML = "";
+      result.style.display = "block";
+      let html = `
+        <h2>📍 ${lieu.nom}</h2>
+        <div class="inline-links">
+          <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🗺️ Google Maps</a>
+          <a href="https://maps.apple.com/?daddr=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🍎 Apple Plans</a>
+          <a href="https://waze.com/ul?ll=${lieu.latitude},${lieu.longitude}&navigate=yes" target="_blank" rel="noopener">🚗 Waze</a>
+        </div>
+        <hr class="separator" />
+      `;
+
+      const blocs = [];
+      if (lieu.description) blocs.push(`<p>${lieu.description}</p>`);
+      if (lieu.pk && lieu.numero_ligne && lieu.lignes) {
+        blocs.push(`<p><strong>🚄 PK ${lieu.pk}</strong> sur la ligne n°<strong>${lieu.numero_ligne}</strong> - ${lieu.lignes}</p>`);
+      }
+      const rss = formatRSS(lieu.rss);
+      if (rss) blocs.push(rss);
+      if (lieu.contact) blocs.push(`<p><strong>👤 Contact :</strong> ${formatContact(lieu.contact)}</p>`);
+      if (lieu.portail) blocs.push(`<p><strong>🚧 Portail :</strong> ${formatPortail(lieu.portail)}</p>`);
+      html += blocs.join('<hr class="separator" />');
+
+      html += `
+        <hr class="separator" />
+        <p>📍 Localiser les appareils du poste <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&usp=sharing" target="_blank" rel="noopener">ICI</a></p>
+      `;
+      result.innerHTML = html;
+    }
+
+    loadData();
+    displayCounter();
+  </script>
+</body>
+</html>
