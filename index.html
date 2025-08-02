@@ -71,6 +71,13 @@
       box-shadow: 0 4px 14px rgba(26,115,232,0.4);
     }
 
+    #counter {
+      font-size: 13px;
+      color: #666;
+      margin-top: 6px;
+      margin-bottom: 1rem;
+    }
+
     ul#suggestions {
       list-style: none;
       padding: 0;
@@ -173,15 +180,20 @@
   </div>
   <h1>🔍 Rechercher un lieu</h1>
   <input type="text" id="search" placeholder="Commencez à taper un nom…" autocomplete="off" />
+  <div id="counter">📍 Postes consultés : chargement…</div>
   <ul id="suggestions"></ul>
   <div id="result"></div>
+
   <script>
     const jsonUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/nono-9f4a8b2c7d1e3f56.json";
+    const compteurURL = "https://script.google.com/macros/s/AKfycbzUFaek89LYosR0FSw9gyxn2IZXlFlWXA_dIFIDwox-szE3DgH-l8IVbGfaoIgGK04h/exec";
     let lieux = [];
     let fuse;
+
     function normalize(str) {
       return str.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
     }
+
     function loadData() {
       fetch(jsonUrl)
         .then(res => res.json())
@@ -198,6 +210,23 @@
           alert("Erreur de chargement du JSON : " + err);
         });
     }
+
+    function updateCounter() {
+      fetch(compteurURL)
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("counter").textContent = `📍 Postes consultés : ${data.count}`;
+        })
+        .catch(() => {
+          document.getElementById("counter").textContent = "📍 Postes consultés : erreur";
+        });
+    }
+
+    function incrementCounter() {
+      fetch(compteurURL + "?increment=true")
+        .then(() => updateCounter());
+    }
+
     document.getElementById("search").addEventListener("input", e => {
       const query = normalize(e.target.value.trim());
       const suggestionsEl = document.getElementById("suggestions");
@@ -221,6 +250,7 @@
         suggestionsEl.appendChild(li);
       });
     });
+
     function formatContact(txt) {
       const phoneMatch = txt?.match(/(\+?\d[\d\s.-]{6,})/);
       if (phoneMatch) {
@@ -229,6 +259,7 @@
       }
       return txt || "";
     }
+
     function formatPortail(value) {
       if (!value) return "";
       const rawNumeric = value.replace(/\D/g, "");
@@ -236,6 +267,7 @@
       const encoded = value.replace(/,/g, "%2C").replace(/\*/g, "%2A");
       return `<a href="tel:${encoded}">${value}</a>`;
     }
+
     function formatRSS(value) {
       const tables = {
         "A": ["03 28 55 82 56", "03 28 55 82 57"],
@@ -255,23 +287,25 @@
       }
       return "";
     }
+
     function showLieu(lieu) {
       const result = document.getElementById("result");
       document.getElementById("suggestions").innerHTML = "";
       result.style.display = "block";
+      incrementCounter();
+
       let html = `
         <h2>📍 ${lieu.nom}</h2>
         <div class="inline-links">
-          <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🗺️ Google Maps</a>
-          <a href="https://maps.apple.com/?daddr=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🍎 Apple Plans</a>
-          <a href="https://waze.com/ul?ll=${lieu.latitude},${lieu.longitude}&navigate=yes" target="_blank" rel="noopener">🚗 Waze</a>
+          <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank">🗺️ Google Maps</a>
+          <a href="https://maps.apple.com/?daddr=${lieu.latitude},${lieu.longitude}" target="_blank">🍎 Apple Plans</a>
+          <a href="https://waze.com/ul?ll=${lieu.latitude},${lieu.longitude}&navigate=yes" target="_blank">🚗 Waze</a>
         </div>
         <hr class="separator" />
       `;
+
       const blocs = [];
-      if (lieu.description) {
-        blocs.push(`<p>${lieu.description}</p>`);
-      }
+      if (lieu.description) blocs.push(`<p>${lieu.description}</p>`);
       if (lieu.pk && lieu.numero_ligne && lieu.lignes) {
         blocs.push(`<p><strong>🚄 PK ${lieu.pk}</strong> sur la ligne n°<strong>${lieu.numero_ligne}</strong> - ${lieu.lignes}</p>`);
       }
@@ -279,14 +313,18 @@
       if (rss) blocs.push(rss);
       if (lieu.contact) blocs.push(`<p><strong>👤 Contact :</strong> ${formatContact(lieu.contact)}</p>`);
       if (lieu.portail) blocs.push(`<p><strong>🚧 Portail :</strong> ${formatPortail(lieu.portail)}</p>`);
+
       html += blocs.join('<hr class="separator" />');
       html += `
         <hr class="separator" />
-        <p>📍 Localiser les appareils du poste <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&usp=sharing" target="_blank" rel="noopener">ICI</a></p>
+        <p>📍 Localiser les appareils du poste <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&usp=sharing" target="_blank">ICI</a></p>
       `;
       result.innerHTML = html;
     }
+
     loadData();
+    updateCounter();
+    setInterval(updateCounter, 3000); // rafraîchissement auto toutes les 3s
   </script>
 </body>
 </html>
