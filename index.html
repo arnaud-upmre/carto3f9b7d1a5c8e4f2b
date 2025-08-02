@@ -190,7 +190,7 @@
           fuse = new Fuse(lieux, {
             keys: ['nom'],
             includeScore: true,
-            threshold: 0.5,
+            threshold: 0.4,
             ignoreLocation: true
           });
         })
@@ -206,7 +206,7 @@
       resultEl.innerHTML = "";
       resultEl.style.display = "none";
       if (!query || !fuse) return;
-      let results = fuse.search(query).map(r => r.item);
+      let results = fuse.search(query).filter(r => r.score < 0.4).map(r => r.item);
       if (results.length === 0 || query.length <= 3) {
         const fallback = lieux.filter(lieu => normalize(lieu.nom).includes(query));
         const ids = new Set(results.map(l => l.nom));
