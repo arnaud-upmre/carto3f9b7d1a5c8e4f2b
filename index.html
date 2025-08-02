@@ -285,10 +285,10 @@
 
       if (lieu.description) blocs.push(`<p>${lieu.description}</p>`);
 
-      // 🔧 Ajout demandé
-      if (lieu.pk && lieu.numero_ligne && lieu.lignes) {
-        blocs.push(`<p>🛤️ PK <strong>${lieu.pk}</strong> sur la ligne n°<strong>${lieu.numero_ligne}</strong> - ${lieu.lignes}</p>`);
-      }
+      // 🔧 Ajout des lignes
+     if (lieu.pk && lieu.numero_ligne && lieu.lignes) {
+  blocs.push(`<p><strong>🚄 PK ${lieu.pk}</strong> sur la ligne n°<strong>${lieu.numero_ligne}</strong> - ${lieu.lignes}</p>`);
+}
 
       const rss = formatRSS(lieu.rss);
       if (rss) blocs.push(rss);
