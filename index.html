@@ -8,6 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
 
   <style>
+    /* Ton CSS reste inchangé */
     body {
       font-family: 'Inter', sans-serif;
       background-color: #fff;
@@ -221,6 +222,7 @@
         .then(res => res.json())
         .then(data => {
           lieux = data;
+          console.log("Données chargées:", lieux);
         })
         .catch(err => {
           alert("Erreur de chargement du JSON : " + err);
