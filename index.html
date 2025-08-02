@@ -200,8 +200,6 @@
   </style>
 </head>
 <body>
-
-  <!-- Site créé par Arnaud -->
   <div id="train-container">
     <img id="train" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/train.gif" alt="Train animé" />
   </div>
@@ -239,9 +237,7 @@
     function formatPortail(value) {
       if (!value) return "";
       const rawNumeric = value.replace(/\D/g, "");
-      if (rawNumeric.length < 6) {
-        return value;
-      }
+      if (rawNumeric.length < 6) return value;
       const encoded = value.replace(/,/g, "%2C").replace(/\*/g, "%2A");
       return `<a href="tel:${encoded}">${value}</a>`;
     }
@@ -274,7 +270,7 @@
       let html = `
         <h2>📍 ${lieu.nom}</h2>
         <div class="inline-links">
-          <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🗺️ Google Maps</a>
+          <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🗽️ Google Maps</a>
           <a href="https://maps.apple.com/?daddr=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🍎 Apple Plans</a>
           <a href="https://waze.com/ul?ll=${lieu.latitude},${lieu.longitude}&navigate=yes" target="_blank" rel="noopener">🚗 Waze</a>
         </div>
@@ -285,10 +281,9 @@
 
       if (lieu.description) blocs.push(`<p>${lieu.description}</p>`);
 
-      // 🔧 Ajout des lignes
-     if (lieu.pk && lieu.numero_ligne && lieu.lignes) {
-  blocs.push(`<p><strong>🚄 PK ${lieu.pk}</strong> sur la ligne n°<strong>${lieu.numero_ligne}</strong> - ${lieu.lignes}</p>`);
-}
+      if (lieu.pk && lieu.numero_ligne && lieu.lignes) {
+        blocs.push(`<p>🚄 PK <strong>${lieu.pk}</strong> sur la ligne n°<strong>${lieu.numero_ligne}</strong> - ${lieu.lignes}</p>`);
+      }
 
       const rss = formatRSS(lieu.rss);
       if (rss) blocs.push(rss);
@@ -306,16 +301,20 @@
     }
 
     document.getElementById("search").addEventListener("input", e => {
-      const query = e.target.value.trim().toLowerCase();
+      const query = e.target.value.trim();
       const suggestionsEl = document.getElementById("suggestions");
       const resultEl = document.getElementById("result");
       suggestionsEl.innerHTML = "";
       resultEl.innerHTML = "";
       resultEl.style.display = "none";
 
-      if (!query) return;
+      function normalize(str) {
+        return (str || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+      }
 
-      const filtered = lieux.filter(l => l.nom.toLowerCase().startsWith(query));
+      const q = normalize(query);
+      const filtered = lieux.filter(lieu => normalize(lieu.nom).includes(q));
+
       filtered.forEach(lieu => {
         const li = document.createElement("li");
         li.textContent = lieu.nom;
