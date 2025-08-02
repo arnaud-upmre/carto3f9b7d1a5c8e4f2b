@@ -231,7 +231,7 @@
       const phoneMatch = txt?.match(/(\+?\d[\d\s.-]{6,})/);
       if (phoneMatch) {
         const raw = phoneMatch[1].replace(/[^\d+]/g, "");
-        return txt.replace(phoneMatch[1], <a href="tel:${raw}">${phoneMatch[1]}</a>);
+        return txt.replace(phoneMatch[1], `<a href="tel:${raw}">${phoneMatch[1]}</a>`);
       }
       return txt || "";
     }
@@ -239,7 +239,7 @@
     function formatPortail(value) {
       if (!value) return "";
       const encoded = value.replace(/,/g, "%2C").replace(/\*/g, "%2A");
-      return <a href="tel:${encoded}">${value}</a>;
+      return `<a href="tel:${encoded}">${value}</a>`;
     }
 
     function formatRSS(value) {
@@ -251,13 +251,13 @@
       const trimmed = (value || "").trim().toUpperCase();
       if (tables[trimmed]) {
         const nums = tables[trimmed];
-        return 
+        return `
           <p><strong>📞 RSS Table ${trimmed === 'A' ? '1' : trimmed === 'B' ? '2' : '3'} :</strong></p>
           <div class="inline-links">
             <a href="tel:${nums[0].replace(/\D/g, '')}">${nums[0]}</a>
             <a href="tel:${nums[1].replace(/\D/g, '')}">${nums[1]}</a>
           </div>
-        ;
+        `;
       }
       return "";
     }
@@ -267,7 +267,7 @@
       document.getElementById("suggestions").innerHTML = "";
       result.style.display = "block";
 
-      let html = 
+      let html = `
         <h2>📍 ${lieu.nom}</h2>
         <div class="inline-links">
           <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🗺️ Google Maps</a>
@@ -275,22 +275,22 @@
           <a href="https://waze.com/ul?ll=${lieu.latitude},${lieu.longitude}&navigate=yes" target="_blank" rel="noopener">🚗 Waze</a>
         </div>
         <hr class="separator" />
-      ;
+      `;
 
       const blocs = [];
 
-      if (lieu.description) blocs.push(<p>${lieu.description}</p>);
+      if (lieu.description) blocs.push(`<p>${lieu.description}</p>`);
       const rss = formatRSS(lieu.rss);
       if (rss) blocs.push(rss);
-      if (lieu.contact) blocs.push(<p><strong>👤 Contact :</strong> ${formatContact(lieu.contact)}</p>);
-      if (lieu.portail) blocs.push(<p><strong>🚧 Portail :</strong> ${formatPortail(lieu.portail)}</p>);
+      if (lieu.contact) blocs.push(`<p><strong>👤 Contact :</strong> ${formatContact(lieu.contact)}</p>`);
+      if (lieu.portail) blocs.push(`<p><strong>🚧 Portail :</strong> ${formatPortail(lieu.portail)}</p>`);
 
       html += blocs.join('<hr class="separator" />');
 
-      html += 
+      html += `
         <hr class="separator" />
         <p>📍 Localiser les appareils du poste <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&usp=sharing" target="_blank" rel="noopener">ICI</a></p>
-      ;
+      `;
 
       result.innerHTML = html;
     }
