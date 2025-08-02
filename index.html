@@ -1,87 +1,214 @@
-<img id="train" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8
-
-Voici le **fichier `index.html` complet**, mis à jour avec :
-
-- ✅ Lien GitHub pour l’image du train (`train.gif`)
-- ✅ Règles correctes pour le champ **Portail** (cliquable si `,`, `*`, ou ≥6 chiffres)
-- ✅ Nettoyé et prêt à être utilisé
-
----
-
-```html
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
   <meta name="robots" content="noindex, nofollow" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Carte des postes</title>
+  <meta charset="UTF-8" />
+  <title>Recherche de lieux</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+
   <style>
     body {
-      font-family: sans-serif;
-      margin: 20px;
-      background-color: #f5f5f5;
+      font-family: 'Inter', sans-serif;
+      background-color: #fff;
+      padding: 1rem;
+      color: #333;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100vw;
+      box-sizing: border-box;
     }
-    h1 {
-      font-size: 24px;
-      text-align: center;
-    }
-    #train {
-      display: block;
-      margin: 10px auto;
-      max-width: 100px;
-    }
-    #search {
-      display: block;
-      margin: 10px auto;
-      padding: 10px;
-      font-size: 16px;
+
+    #train-container {
       width: 100%;
-      max-width: 400px;
+      max-width: 600px;
+      height: 48px;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+      position: relative;
     }
-    ul {
+
+    #train {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 42px;
+      animation: trainVaEtVient 28s ease-in-out infinite;
+    }
+
+    @keyframes trainVaEtVient {
+      0%, 100% { left: 0; }
+      45%, 50% { left: calc(100% - 95px); }
+      95% { left: 0; }
+    }
+
+    h1 {
+      font-size: 20px;
+      margin: 0 0 0.8rem 0;
+      font-weight: 600;
+      width: 100%;
+      max-width: 600px;
+      padding: 0 1rem;
+      text-align: left;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      max-width: 600px;
+      padding: 12px 16px;
+      font-size: 16px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+
+    input[type="text"]:focus {
+      border-color: #1a73e8;
+      box-shadow: 0 4px 14px rgba(26,115,232,0.4);
+    }
+
+    ul#suggestions {
       list-style: none;
       padding: 0;
-      max-width: 400px;
-      margin: auto;
-    }
-    li {
-      background: #fff;
-      margin: 5px 0;
-      padding: 10px;
-      cursor: pointer;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-    }
-    li:hover {
-      background-color: #e0e0e0;
-    }
-    #result {
-      background: #fff;
+      margin: 0.5rem 0 1.5rem 0;
       max-width: 600px;
-      margin: 20px auto;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      display: none;
+      width: 100%;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+      background-color: #fff;
+      font-size: 15px;
+      color: #333;
     }
+
+    ul#suggestions li {
+      padding: 12px 16px;
+      cursor: pointer;
+      border-bottom: 1px solid #eee;
+    }
+
+    ul#suggestions li:hover {
+      background-color: #f0f8ff;
+      color: #1a73e8;
+    }
+
+    #result {
+      display: none;
+      background: #ffffff;
+      padding: 1rem 1.5rem;
+      border-radius: 18px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      max-width: 600px;
+      width: 100%;
+      color: #444;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    #result h2 {
+      margin-top: 0;
+      font-size: 22px;
+      font-weight: 700;
+      color: #1a73e8;
+    }
+
+    .inline-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      font-size: 14px;
+      padding: 0 1rem 0 0;
+    }
+
+    .inline-links a {
+      padding: 6px 10px;
+      font-size: 14px;
+      text-decoration: none;
+      color: #1a73e8;
+      border: 1px solid #1a73e8;
+      border-radius: 10px;
+      transition: 0.3s;
+      white-space: nowrap;
+    }
+
+    .inline-links a:hover {
+      background-color: #1a73e8;
+      color: white;
+    }
+
+    #result p {
+      margin-top: 1rem;
+      color: #555;
+    }
+
+    #result p strong {
+      color: #333;
+    }
+
     .separator {
       border: none;
-      border-top: 1px solid #ccc;
-      margin: 15px 0;
+      border-top: 1px solid #eee;
+      margin: 1rem 0;
     }
-    .inline-links a {
-      margin-right: 10px;
-      display: inline-block;
-      margin-bottom: 5px;
+
+    @media (max-width: 480px) {
+      body {
+        padding: 0.8rem;
+      }
+
+      h1 {
+        font-size: 18px;
+        padding: 0 0.5rem;
+      }
+
+      input[type="text"] {
+        font-size: 14px;
+        padding: 10px 14px;
+      }
+
+      ul#suggestions li {
+        padding: 10px 14px;
+        font-size: 14px;
+      }
+
+      #result {
+        font-size: 14px;
+        padding: 0.8rem 0.5rem;
+      }
+
+      .inline-links {
+        gap: 4px;
+        padding: 0 0.5rem 0 0;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .inline-links a {
+        font-size: 13px;
+        padding: 8px 10px;
+        white-space: normal;
+        width: fit-content;
+      }
+
+      #train {
+        height: 30px;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>Rechercher un poste</h1>
-  <img id="train" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/train.gif" alt="Train animé" />
-  <label for="search" style="display:none;">Rechercher un poste</label>
-  <input id="search" type="text" placeholder="Nom du poste..." />
+
+  <!-- Site créé par Arnaud Debaecker -->
+  <div id="train-container">
+    <img id="train" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/train.gif" alt="Train animé" />
+  </div>
+
+  <h1>🔍 Rechercher un lieu</h1>
+  <input type="text" id="search" placeholder="Commencez à taper un nom…" autocomplete="off" />
   <ul id="suggestions"></ul>
   <div id="result"></div>
 
@@ -111,16 +238,8 @@ Voici le **fichier `index.html` complet**, mis à jour avec :
 
     function formatPortail(value) {
       if (!value) return "";
-
-      const hasCommaOrAsterisk = /[,*]/.test(value);
-      const digitCount = (value.match(/\d/g) || []).length;
-
-      if (hasCommaOrAsterisk || digitCount >= 6) {
-        const encoded = value.replace(/,/g, "%2C").replace(/\*/g, "%2A");
-        return `<a href="tel:${encoded}">${value}</a>`;
-      }
-
-      return value;
+      const encoded = value.replace(/,/g, "%2C").replace(/\*/g, "%2A");
+      return `<a href="tel:${encoded}">${value}</a>`;
     }
 
     function formatRSS(value) {
