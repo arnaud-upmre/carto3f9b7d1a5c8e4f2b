@@ -1,0 +1,26 @@
+[
+  {
+    "nom": "I 629",
+    "type": "Interrupteur",
+    "poste": "Alleux SP",
+    "satellite": null,
+    "latitude": 50.90891,
+    "longitude": 1.80542
+  },
+  {
+    "nom": "TT 629",
+    "type": "Transformateur de tension",
+    "poste": "Alleux SP",
+    "satellite": "SAT1",
+    "latitude": 50.90910,
+    "longitude": 1.80590
+  },
+  {
+    "nom": "I 7105",
+    "type": "Interrupteur",
+    "poste": "Alleux SP",
+    "satellite": "SAT2",
+    "latitude": 50.90950,
+    "longitude": 1.80630
+  }
+]
