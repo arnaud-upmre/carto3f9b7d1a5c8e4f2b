@@ -1,13 +1,13 @@
 [
   {
-    "nom": "I 629",
+    "nom": "I 900",
     "type": "Interrupteur",
     "poste": "Alleux SP",
     "latitude": 50.90891,
     "longitude": 1.80542
   },
   {
-    "nom": "TT 629",
+    "nom": "TT 900",
     "type": "Transformateur de tension",
     "poste": "Alleux SP SAT1",
     "latitude": 50.90910,
