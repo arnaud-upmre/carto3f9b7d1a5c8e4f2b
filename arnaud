@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>🔧 À propos</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <style>
+    body {
+      font-family: 'Segoe UI', 'Inter', sans-serif;
+      background-color: #fdfdfd;
+      color: #333;
+      margin: 0;
+      padding: 1.5rem;
+      line-height: 1.6;
+      user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+    }
+
+    h1, h2, h3 {
+      margin-top: 1.5rem;
+      font-weight: 600;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+    }
+
+    h2 {
+      font-size: 1.4rem;
+      margin-top: 2rem;
+    }
+
+    p, li {
+      font-size: 1rem;
+    }
+
+    blockquote {
+      margin: 1rem 0;
+      padding: 0.8rem 1rem;
+      background: #f0f0f0;
+      border-left: 4px solid #ccc;
+      font-style: italic;
+    }
+
+    .divider {
+      border-top: 1px solid #ddd;
+      margin: 2rem 0;
+    }
+
+    .btn {
+      display: inline-block;
+      margin-top: 2rem;
+      padding: 0.75rem 1.5rem;
+      background-color: #0055cc;
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #0040a8;
+    }
+  </style>
+</head>
+<body oncontextmenu="return false;" ondragstart="return false;" oncopy="return false;">
+  <h1>🔧 À propos</h1>
+
+  <p>Tout a commencé par une carte sur Google MyMaps, créée pour référencer les accès routiers aux postes. Chaque agent disposait plus ou moins de points GPS, mais sans précision, sans suivi clair…</p>
+
+  <p>Cette première carte rendait déjà bien service, mais elle montrait vite ses limites :</p>
+  <ul>
+    <li>🔹 pas de recherche intelligente,</li>
+    <li>🔹 peu de possibilités collaboratives pour ajouter des points,</li>
+    <li>🔹 pas de gestion avancée des données terrain.</li>
+  </ul>
+
+  <blockquote>
+    “Le partage de connaissances et de ressources dans le monde professionnel est le fondement d’une collaboration fructueuse et de la croissance collective.”<br>– John C. Maxwell
+  </blockquote>
+
+  <p>C’est dans cet esprit qu’est née cette carte interactive : pour unifier les points existants et les partager à l’ensemble des collègues. Une première tentative de collaboration ouverte.</p>
+
+  <p>Petit à petit, le projet a évolué jusqu’à devenir une véritable application web, pensée pour une utilisation directe sur le terrain, depuis un smartphone.</p>
+
+  <p>Les fonctionnalités se sont enrichies au fil du temps :</p>
+  <ul>
+    <li>🔍 recherche intelligente,</li>
+    <li>🚘 intégration avec les applications de navigation,</li>
+    <li>📌 informations utiles,</li>
+    <li>📝 formulaire de contribution,</li>
+    <li>… et bien d’autres à venir.</li>
+  </ul>
+
+  <div class="divider"></div>
+
+  <h2>Mais pourquoi ?</h2>
+
+  <p>Parce qu’on en avait besoin. Surtout de nuit, en astreinte, seul, à chercher un accès ou un appareil dans l’urgence.</p>
+
+  <p>Aujourd’hui, plusieurs centaines de points sont déjà référencés…</p>
+
+  <p>🕒 👉 <strong>Plus de 60 heures de recherche et développement</strong> ont été nécessaires pour concevoir, corriger et optimiser cet outil.</p>
+
+  <h2>Et la suite ?</h2>
+
+  <p>Le projet ne s’arrête pas là.</p>
+  <p>🎯 <strong>L’objectif : construire une base fiable et exhaustive</strong>, poste par poste, appareil par appareil.</p>
+  <p>🔄 L’outil s’enrichit avec vos retours, vos ajouts, vos repérages terrain. Chaque contribution rend la carte plus utile, plus précise, plus efficace.</p>
+
+  <p>📩 <strong>Vous souhaitez contribuer ?</strong> Le formulaire est là pour ça.</p>
+
+  <br>
+  <p>Ferroviairement,<br><strong>Arnaud</strong></p>
+
+  <a href="index.html" class="btn">🔍 Faire une recherche</a>
+</body>
+</html>
