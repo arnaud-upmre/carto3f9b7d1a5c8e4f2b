@@ -217,7 +217,7 @@ fetch(jsonUrl).then(res => res.json()).then(data => {
 fetch(appareilsUrl).then(res => res.json()).then(data => {
   appareils = data;
   fuseAppareils = new Fuse(appareils, {
-    keys: ['appareil', 'poste'], includeScore: true, threshold: 0.4, ignoreLocation: true
+    keys: ['appareil', 'poste'], includeScore: true, threshold: 0.3, ignoreLocation: true
   });
 });
 
