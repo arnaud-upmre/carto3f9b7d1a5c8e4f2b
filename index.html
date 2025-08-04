@@ -301,7 +301,7 @@ document.getElementById("searchAppareil").addEventListener("input", e => {
     const ids = new Set(results.map(a => a.appareil));
     fallback.forEach(a => { if (!ids.has(a.appareil)) results.push(a); });
   }
-  results.forEach(app => {
+  results.reverse().forEach(app => {
     const li = document.createElement("li");
     li.textContent = `${app.appareil} (${app.poste})`;
     li.onclick = () => showAppareil(app);
