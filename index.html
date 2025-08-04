@@ -295,12 +295,23 @@ const query = normalize(e.target.value.trim());
   resultEl.innerHTML = "";
   resultEl.style.display = "none";
   if (!query || !fuseAppareils) return;
-  let results = fuseAppareils.search(query).filter(r => r.score < 0.4).map(r => r.item);
-  if (results.length === 0 || query.length <= 3) {
-    const fallback = appareils.filter(a => normalize(a.appareil).includes(query) || normalize(a.poste).includes(query));
-    const ids = new Set(results.map(a => a.appareil));
-    fallback.forEach(a => { if (!ids.has(a.appareil)) results.push(a); });
-  }
+let results = [];
+const match = e.target.value.trim().toLowerCase().match(/^(\S+)(?:\s+de)?\s+(.+)$/i);
+if (match) {
+  const type = match[1].toLowerCase();
+  const lieu = match[2].toLowerCase();
+
+  const résultats_ciblés = appareils.filter(app =>
+    normalize(app.appareil).startsWith(type) &&
+    normalize(app.poste).includes(lieu)
+  );
+
+  results = résultats_ciblés.length > 0
+    ? résultats_ciblés
+    : fuseAppareils.search(query).map(r => r.item);
+} else {
+  results = fuseAppareils.search(query).map(r => r.item);
+}
 results.reverse().forEach((app, index, array) => {
   const li = document.createElement("li");
   li.textContent = `${app.appareil} (${app.poste})`;
