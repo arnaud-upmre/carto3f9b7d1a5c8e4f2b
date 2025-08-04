@@ -301,7 +301,6 @@ const query = normalize(e.target.value.trim());
     const ids = new Set(results.map(a => a.appareil));
     fallback.forEach(a => { if (!ids.has(a.appareil)) results.push(a); });
   }
-  results = results.slice(0, 5); // max 5 résultats
 results.reverse().forEach((app, index, array) => {
   const li = document.createElement("li");
   li.textContent = `${app.appareil} (${app.poste})`;
@@ -350,6 +349,6 @@ setInterval(updateCounterAppareil, 3000);
 <p style="font-size: 13px; margin-top: 2rem;">
   🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration: none; color: #1a73e8;">À propos du projet</a>
 </p>
-<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - Version : V1.08</p>
+<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - Version : V1.09</p>
 </body>
 </html>
