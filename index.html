@@ -131,14 +131,6 @@
       background-color: #1a73e8;
       color: white;
     }
-    #result p {
-      margin-top: 1rem;
-      color: #555;
-      white-space: pre-line;
-    }
-    #result p strong {
-      color: #333;
-    }
     .separator {
       border: none;
       border-top: 1px solid #eee;
@@ -150,9 +142,6 @@
       input[type="text"] { font-size: 14px; padding: 10px 14px; }
       ul#suggestions li, ul#suggestionsAppareils li { padding: 10px 14px; font-size: 14px; }
       #result { font-size: 14px; padding: 0.8rem 0.5rem; }
-      .inline-links { gap: 4px; padding: 0 0.5rem 0 0; flex-direction: column; align-items: flex-start; }
-      .inline-links a { font-size: 13px; padding: 8px 10px; white-space: normal; width: fit-content; }
-      #train { height: 30px; }
     }
   </style>
 </head>
@@ -186,57 +175,157 @@ function normalize(str) {
   return str.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]/gi, "").toLowerCase();
 }
 
+function formatNomCompletLieu(obj) {
+  const base = `${obj.nom || ''} ${obj.type || ''} ${obj.SAT || ''}`.trim();
+  return obj.accès ? `${base} – accès ${obj.accès}` : base;
+}
+
+function formatNomCompletAppareil(obj) {
+  return formatNomCompletLieu(obj);
+}
+function formatNomComplet(obj) {
+  return `${obj.nom || ''} ${obj.type || ''}`.trim();
+}
 function formatRSS(table) {
   const tables = {
     "A": ["03 28 55 82 56", "03 28 55 82 57"],
     "B": ["03 28 55 82 58", "03 28 55 82 59"],
     "C": ["03 28 55 82 53", "03 28 55 82 54"]
   };
-
   const tableNum = { "A": "1", "B": "2", "C": "3" };
-
   if (!tables[table]) return `<p><strong>📞 RSS :</strong> ${table}</p>`;
-
-  const nums = tables[table].map(num =>
-    `<a href="tel:${num.replace(/\s+/g, '')}">${num}</a>`
-  ).join("");
-
-  return `
-    <p><strong>📞 RSS Table ${tableNum[table] || table} :</strong></p>
-    <div class="inline-links">${nums}</div>
-  `;
+  const nums = tables[table].map(num => `<a href="tel:${num.replace(/\s+/g, '')}">${num}</a>`).join("");
+  return `<p><strong>📞 RSS Table ${tableNum[table] || table} :</strong></p><div class="inline-links">${nums}</div>`;
 }
+function generateAppareilListHTML(currentLieu) {
+  const posteNomComplet = formatNomComplet(currentLieu);
+  const matchingApps = appareils.filter(app => app.nom === currentLieu.nom && app.type === currentLieu.type);
 
-fetch(jsonUrl).then(res => res.json()).then(data => {
-  lieux = data;
-  fuse = new Fuse(lieux, {
-    keys: ['nom'], includeScore: true, threshold: 0.4, ignoreLocation: true
+  if (matchingApps.length === 0) {
+    // ➜ Retourne uniquement le petit encadré, sans titre au-dessus
+    return `
+      <div style="background-color: #e6f0ff; border-radius: 12px; padding: 12px 16px; margin-top: 1.2rem; text-align: center; font-size: 15px;">
+        🤝 Appareil manquant ? 
+        <a href="formulaire.html" style="color: #1a73e8; text-decoration: none; font-weight: 600;">
+          Aidez-nous à l’ajouter.
+        </a>
+      </div>
+    `;
+  }
+
+  // S’il y a des appareils, on affiche le titre + la liste
+  let grouped = {};
+  matchingApps.forEach(app => {
+    const sat = app.SAT || 'Poste';
+    if (!grouped[sat]) grouped[sat] = [];
+    grouped[sat].push(app);
   });
-});
+
+  const isSAT = currentLieu.SAT && currentLieu.SAT !== "";
+  let html = `<p><strong>🧩 Appareils trouvés dans ce ${isSAT ? 'SAT' : 'poste'} :</strong></p>`;
+
+  for (const [sat, list] of Object.entries(grouped)) {
+    if (isSAT && sat !== currentLieu.SAT) continue;
+    if (!isSAT && sat === "Poste") html += `<p><strong>Poste :</strong> `;
+    else if (!isSAT) html += `<p><strong>${sat} :</strong> `;
+    else html += `<p>`;
+    html += list.map(app => `<a href="#" onclick='showAppareil(${JSON.stringify(app)})'>${app.appareil}</a>`).join(", ") + `</p>`;
+  }
+
+  html += `
+    <div style="background-color: #e6f0ff; border-radius: 12px; padding: 12px 16px; margin-top: 1.2rem; text-align: center; font-size: 15px;">
+      🤝 Appareil manquant ? 
+      <a href="formulaire.html" style="color: #1a73e8; text-decoration: none; font-weight: 600;">
+        Aidez-nous à l’ajouter.
+      </a>
+    </div>
+  `;
+
+  return html;
+}function generateAlias(appareil, nom, sat, type) {
+  const alias = new Set();
+  const norm = str => str.toLowerCase().trim();
+
+  const a = norm(appareil);
+  const n = norm(nom);
+  const s = norm(sat);
+  const t = norm(type);
+  const root = a.split(/[\s\-]/)[0];
+
+  alias.add(a);
+  alias.add(a.replace(/([a-z]+)(\d+)/, "$1 $2"));
+
+  alias.add(`${a} ${n}`);
+  alias.add(`${n} ${a}`);
+  alias.add(`${root} ${n}`);
+  alias.add(`${root} de ${n}`);
+
+  if (s) {
+    alias.add(`${a} ${n} ${s}`);
+    alias.add(`${n} ${s} ${a}`);
+    alias.add(`${root} ${n} ${s}`);
+    alias.add(`${root} de ${n} ${s}`);
+  }
+
+  // ✅ Ajoute l'alias type complet : ex. "lambersart prci"
+  alias.add(`${n} ${t}`);
+
+  return Array.from(alias);
+}
 
 fetch(appareilsUrl).then(res => res.json()).then(data => {
   appareils = data;
+
+  // Génère dynamiquement les alias
+  appareils.forEach(app => {
+   app.alias = generateAlias(app.appareil, app.nom, app.SAT, app.type);
+  });
+
   fuseAppareils = new Fuse(appareils, {
-    keys: ['appareil', 'poste'], includeScore: true, threshold: 0.5, ignoreLocation: true
+    keys: [
+      { name: 'appareil', weight: 0.5 },
+      { name: 'alias', weight: 0.9 },
+      { name: 'type', weight: 0.3 },
+      { name: 'nom', weight: 0.1 },
+      { name: 'SAT', weight: 0.1 }
+    ],
+    includeScore: true,
+    threshold: 0.3, // tu peux tester avec 0.2 si trop de bruit
+    ignoreLocation: true
   });
 });
+  fetch(jsonUrl).then(res => res.json()).then(data => {
+  lieux = data;
 
+fuse = new Fuse(lieux, {
+  keys: [
+    { name: "nom", weight: 0.5 },
+    { name: "type", weight: 0.3 },
+    { name: "SAT", weight: 0.2 },
+    {
+      name: "accès",
+      getFn: o => o.accès?.toString?.() || "",
+      weight: 0.1
+    }
+  ],
+  includeScore: true,
+  threshold: 0.3,
+  ignoreLocation: true
+});
+});
 function updateCounter() {
   fetch(compteurURL).then(res => res.json()).then(data => {
     document.getElementById("counter").textContent = `📍 Postes consultés : ${data.count}`;
   });
 }
-
 function incrementCounter() {
   fetch(compteurURL + "?increment=true").then(updateCounter);
 }
-
 function updateCounterAppareil() {
   fetch(compteurAppareilURL).then(res => res.json()).then(data => {
     document.getElementById("counterAppareil").textContent = `🔌 Appareils consultés : ${data.count}`;
   });
 }
-
 function incrementCounterAppareil() {
   fetch(compteurAppareilURL + "?increment=true").then(updateCounterAppareil);
 }
@@ -251,13 +340,18 @@ document.getElementById("search").addEventListener("input", e => {
   if (!query || !fuse) return;
   let results = fuse.search(query).filter(r => r.score < 0.4).map(r => r.item);
   if (results.length === 0 || query.length <= 3) {
-    const fallback = lieux.filter(l => normalize(l.nom).includes(query));
-    const ids = new Set(results.map(l => l.nom));
-    fallback.forEach(l => { if (!ids.has(l.nom)) results.push(l); });
+   const fallback = lieux.filter(l =>
+  normalize(l.nom).includes(query) ||
+  normalize(l.type).includes(query) ||
+  normalize(l.SAT || '').includes(query) ||
+  normalize(String(l.accès || '')).includes(query)
+);
+const ids = new Set(results.map(l => formatNomCompletLieu(l)));
+fallback.forEach(l => { if (!ids.has(formatNomCompletLieu(l))) results.push(l); });
   }
   results.forEach(lieu => {
     const li = document.createElement("li");
-    li.textContent = lieu.nom;
+    li.textContent = formatNomCompletLieu(lieu);
     li.onclick = () => showLieu(lieu);
     suggestionsEl.appendChild(li);
   });
@@ -268,13 +362,12 @@ function showLieu(lieu) {
   document.getElementById("suggestions").innerHTML = "";
   result.style.display = "block";
   incrementCounter();
-  let html = `<h2>📌 ${lieu.nom}</h2>
-  <div class="inline-links">
-    <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank">🗺️ Google Maps</a>
-    <a href="https://maps.apple.com/?daddr=${lieu.latitude},${lieu.longitude}" target="_blank">🍎 Apple Plans</a>
-    <a href="https://waze.com/ul?ll=${lieu.latitude},${lieu.longitude}&navigate=yes" target="_blank">🚗 Waze</a>
-  </div><hr class="separator" />`;
-
+let html = `<h2>📌 ${formatNomCompletLieu(lieu)}</h2>
+<div class="inline-links">
+  <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank">🗺️ Google Maps</a>
+  <a href="https://maps.apple.com/?daddr=${lieu.latitude},${lieu.longitude}" target="_blank">🍎 Apple Plans</a>
+  <a href="https://waze.com/ul?ll=${lieu.latitude},${lieu.longitude}&navigate=yes" target="_blank">🚗 Waze</a>
+</div><hr class="separator" />`;
   const blocs = [];
   if (lieu.description) blocs.push(`<p>${lieu.description}</p>`);
   if (lieu.pk && lieu.numero_ligne && lieu.lignes)
@@ -282,44 +375,63 @@ function showLieu(lieu) {
   if (lieu.rss) blocs.push(formatRSS(lieu.rss));
   if (lieu.contact) blocs.push(`<p><strong>👤 Contact :</strong> ${lieu.contact}</p>`);
   if (lieu.portail) blocs.push(`<p><strong>🚧 Portail :</strong> ${lieu.portail}</p>`);
-
   html += blocs.join('<hr class="separator" />');
+  html += '<hr class="separator" />' + generateAppareilListHTML(lieu);
   result.innerHTML = html;
 }
 
 document.getElementById("searchAppareil").addEventListener("input", e => {
-const query = normalize(e.target.value.trim());
+  const query = normalize(e.target.value.trim());
   const suggestionsEl = document.getElementById("suggestionsAppareils");
   const resultEl = document.getElementById("result");
   suggestionsEl.innerHTML = "";
   resultEl.innerHTML = "";
   resultEl.style.display = "none";
   if (!query || !fuseAppareils) return;
-let results = [];
-const match = e.target.value.trim().toLowerCase().match(/^(\S+)(?:\s+de)?\s+(.+)$/i);
-if (match) {
-  const type = match[1].toLowerCase();
-  const lieu = match[2].toLowerCase();
+let results = fuseAppareils.search(query, { limit: 50 }).map(r => r.item);
 
-  const résultats_ciblés = appareils.filter(app =>
-    normalize(app.appareil).startsWith(type) &&
-    normalize(app.poste).includes(lieu)
-  );
+// 🔁 Si on détecte un préfixe (tt, tc, etc.), on élargit à tout le JSON
+const prefixes = ["tt", "tc", "tsa", "i", "ia", "il", "ip", "imp", "s"];
+const matchPrefix = query.match(/^([a-z]{1,4})[\s\-]+(.+)/i);
 
-  results = résultats_ciblés.length > 0
-    ? résultats_ciblés
-    : fuseAppareils.search(query).map(r => r.item);
-} else {
-  results = fuseAppareils.search(query).map(r => r.item);
+if (matchPrefix) {
+  const prefix = matchPrefix[1].toLowerCase();
+  const lieu = matchPrefix[2].toLowerCase();
+
+  if (prefixes.includes(prefix)) {
+    // On cherche tous les appareils correspondants dans le JSON, pas que via Fuse
+    const complet = appareils.filter(app => {
+      const nomComplet = `${app.nom} ${app.SAT || ''}`.toLowerCase();
+      return (
+        app.appareil.toLowerCase().startsWith(prefix) &&
+        (nomComplet.includes(lieu) || normalize(nomComplet).includes(normalize(lieu)))
+      );
+    });
+
+    // Fusionne sans doublons
+    const ids = new Set(results.map(a => a.appareil));
+    complet.forEach(a => { if (!ids.has(a.appareil)) results.push(a); });
+
+    // Tri : ceux qui matchent mieux d’abord
+    results.sort((a, b) => {
+    const aMatch = a.appareil.toLowerCase().startsWith(prefix) && (`${a.nom} ${a.SAT || ''}`.toLowerCase().includes(lieu));
+const bMatch = b.appareil.toLowerCase().startsWith(prefix) && (`${b.nom} ${b.SAT || ''}`.toLowerCase().includes(lieu));
+      if (aMatch && !bMatch) return -1;
+      if (!aMatch && bMatch) return 1;
+      return 0;
+    });
+  }
 }
+
+// 🔄 Affichage des résultats
 results.reverse().forEach((app, index, array) => {
   const li = document.createElement("li");
-  li.textContent = `${app.appareil} (${app.poste})`;
+  li.textContent = `${app.appareil} (${app.nom}${app.type ? ' ' + app.type : ''}${app.SAT ? ' / ' + app.SAT : ''})`;
 
-  // Surligner le plus pertinent (dernier de la liste après reverse)
-  if (index === 0) {
-    li.style.backgroundColor = "#e6f0ff"; // fond bleu clair
-    li.style.fontWeight = "600";          // texte un peu plus gras
+  // Surligne le dernier (donc le plus pertinent après reverse)
+  if (index === array.length - 1) {
+    li.style.backgroundColor = "#e6f0ff";
+    li.style.fontWeight = "600";
   }
 
   li.onclick = () => showAppareil(app);
@@ -332,17 +444,18 @@ function showAppareil(app) {
   const result = document.getElementById("result");
   result.style.display = "block";
   document.getElementById("suggestionsAppareils").innerHTML = "";
-
-  let html = `<h2>🔌 ${app.appareil} (${app.poste})</h2>`;
+let html = `<h2>🔌 ${app.appareil} (${app.nom}${app.type ? ' ' + app.type : ''}${app.SAT ? ' / ' + app.SAT : ''})</h2>`;
   const blocs = [];
   if (app.description) blocs.push(`<p>${app.description}</p>`);
   blocs.push(`<p>📍 Localiser cet appareil sur la carte : <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&ll=${app.latitude},${app.longitude}&z=18" target="_blank">ICI</a></p>`);
-
-  const posteTrouvé = lieux.find(l => l.nom === app.poste);
+const posteTrouvé = lieux.find(l => 
+  normalize(l.nom) === normalize(app.nom) &&
+  normalize(l.type) === normalize(app.type) &&
+  normalize(l.SAT || "") === normalize(app.SAT || "")
+);
   if (posteTrouvé) {
-    blocs.push(`<p>🚗 Créer l'itinéraire en voiture : <a href="#" onclick="showLieu(lieux.find(l => l.nom === '${app.poste}'))">ICI</a></p>`);
+    blocs.push(`<p>🚗 Créer l'itinéraire en voiture : <a href="#" onclick='showLieu(${JSON.stringify(posteTrouvé)})'>ICI</a></p>`);
   }
-
   html += blocs.join('<hr class="separator" />');
   result.innerHTML = html;
 }
@@ -360,6 +473,6 @@ setInterval(updateCounterAppareil, 3000);
 <p style="font-size: 13px; margin-top: 2rem;">
   🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration: none; color: #1a73e8;">À propos du projet</a>
 </p>
-<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - Version : V1.11</p>
+<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.01a</p>
 </body>
 </html>
