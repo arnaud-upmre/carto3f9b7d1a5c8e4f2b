@@ -8,6 +8,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
   <style>
+    ul#suggestions:empty,
+ul#suggestionsAppareils:empty {
+  margin-bottom: 0;
+}
     body {
       font-family: 'Inter', sans-serif;
       background-color: #fff;
@@ -486,7 +490,7 @@ setInterval(updateCounterAppareil, 3000);
 
 <!-- Compteur contributions -->
 <div id="compteur-contrib" style="text-align:center; margin-top:8px; font-size:14px; color:#6b7280;">
-  🧮 Contributions enregistrées : <span id="compteur-valeur">chargement…</span>
+  📝 Contributions enregistrées : <span id="compteur-valeur">chargement…</span>
 </div>
 <script>
   const compteurContributionURL = "https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec";
@@ -507,6 +511,6 @@ setInterval(updateCounterAppareil, 3000);
 <p style="font-size: 13px; margin-top: 2rem;">
   🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration: none; color: #1a73e8;">À propos du projet</a>
 </p>
-<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.01.11</p>
+<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.03.11</p>
 </body>
 </html>
