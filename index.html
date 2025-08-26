@@ -256,9 +256,7 @@ function formatPortail(val) {
 
   if (phoneRegex.test(code)) {
     const cleaned = code.replace(/\s+/g, "");
-    content = `<div class="inline-links">
-                 <a href="tel:${cleaned}">${code}</a>
-               </div>`;
+    content = `<a href="tel:${cleaned}" class="inline-link">${code}</a>`;
   } else {
     content = code; // simple texte si pas numéro
   }
@@ -268,8 +266,8 @@ function formatPortail(val) {
     content += ` <a href="${video}" target="_blank" class="inline-link">▶️ Voir la vidéo</a>`;
   }
 
-  // ✅ Le titre et le contenu sont dans le même paragraphe
-  return `<p><strong>🚧 Portail :</strong></p>${content}`;
+  // ✅ Titre et contenu dans le même paragraphe
+  return `<p><strong>🚧 Portail :</strong> ${content}</p>`;
 }
   
 function normalize(str) {
@@ -608,6 +606,6 @@ setInterval(updateCounterAppareil, 3000);
 <p style="font-size: 13px; margin-top: 2rem;">
   🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration: none; color: #1a73e8;">À propos du projet</a>
 </p>
-<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.08.8</p>
+<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.08.9</p>
 </body>
 </html>
