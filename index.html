@@ -570,15 +570,16 @@ function showLieu(lieu) {
   if (lieu.contact) blocs.push(formatContact(lieu.contact));
   if (lieu.portail) blocs.push(formatPortail(lieu.portail));
 
-  // --- Ajoute séparateurs seulement si nécessaire ---
+  // --- Ajoute séparateurs uniquement entre blocs ---
   if (blocs.length > 0) {
     html += `<hr class="separator" />` +
             blocs.map((b,i)=> i===0 ? b : `<hr class="separator" />${b}`).join("");
   }
 
+  // --- Toujours un séparateur avant la zone appareils ---
   const appareilsHTML = generateAppareilListHTML(lieu);
   if (appareilsHTML) {
-    html += (blocs.length > 0 ? `<hr class="separator" />` : ``) + appareilsHTML;
+    html += `<hr class="separator" />${appareilsHTML}`;
   }
 
   result.innerHTML = html;
@@ -710,7 +711,7 @@ setInterval(updateCounterAppareil, 3000);
 <p style="font-size: 13px; margin-top: 2rem;">
   🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration: none; color: #1a73e8;">À propos du projet</a>
 </p>
-<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.08.22</p>
+<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.08.23</p>
   <script>
 (function(){
   // ===== Config =====
