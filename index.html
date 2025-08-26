@@ -241,19 +241,32 @@ function formatContact(val) {
 function formatPortail(val) {
   if (!val) return "";
 
-  // Regex stricte pour numéros FR + option séquence (, ; # * chiffres)
+  // Cherche une URL dans la chaîne
+  const urlRegex = /(https?:\/\/[^\s]+)/;
+  const urlMatch = val.match(urlRegex);
+  const video = urlMatch ? urlMatch[0] : null;
+
+  // Le "code" = tout ce qui n'est pas l'URL
+  const code = val.replace(urlRegex, "").trim();
+
+  // Regex stricte : numéros français 10 chiffres (avec ou sans espaces) + extensions DTMF
   const phoneRegex = /^(\d{10}|\d{2}(\s?\d{2}){4})([,\;\*#0-9]*)?$/;
 
-  if (phoneRegex.test(val)) {
-    const cleaned = val.replace(/\s+/g, "");
-    return `<p><strong>🚧 Portail :</strong></p>
-            <div class="inline-links">
-              <a href="tel:${cleaned}">${val}</a>
-            </div>`;
+  let content = "";
+
+  if (phoneRegex.test(code)) {
+    const cleaned = code.replace(/\s+/g, "");
+    content = `<a href="tel:${cleaned}" class="inline-link">${code}</a>`;
+  } else {
+    content = code; // simple texte si pas numéro
   }
 
-  // Sinon → texte brut
-  return `<p><strong>🚧 Portail :</strong> ${val}</p>`;
+  // Si une URL est trouvée → bouton "Voir la vidéo"
+  if (video) {
+    content += ` <a href="${video}" target="_blank" class="inline-link">▶️ Voir la vidéo</a>`;
+  }
+
+  return `<p><strong>🚧 Portail :</strong> ${content}</p>`;
 }
   
 function normalize(str) {
@@ -592,6 +605,6 @@ setInterval(updateCounterAppareil, 3000);
 <p style="font-size: 13px; margin-top: 2rem;">
   🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration: none; color: #1a73e8;">À propos du projet</a>
 </p>
-<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.08.4</p>
+<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.08.5</p>
 </body>
 </html>
