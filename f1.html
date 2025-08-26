@@ -1,358 +1,524 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width" />
-<meta name="robots" content="noindex, nofollow" />
-<title>🛤️ Ajouter ou mettre à jour un poste</title>
-<style>
-:root{
-  --bg:#f2f2f7;
-  --text:#1c1c1e;
-  --subtle:#6b7280;
-  --border:#d1d1d6;
-  --primary:#007aff;
-  --primary-hover:#0066d6;
-  --success:#34c759;
-  --danger:#ff3b30;
-  --radius:14px;
+  <meta name="robots" content="noindex, nofollow" />
+  <meta charset="UTF-8" />
+  <title>Recherche de lieux</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+  <style>
+    ul#suggestions:empty,
+ul#suggestionsAppareils:empty {
+  margin-bottom: 0;
 }
-body{
-  margin:0;
-  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  padding:20px;
-}
-.wrap{
-  max-width:640px;
-  margin:auto;
-  padding:0 8px;
-}
-h1{
-  font-size:18px;
-  font-weight:700;
-  margin-bottom:6px;
-  text-align:center;
-  line-height:1.2;
-}
-.subtitle{
-  text-align:center;
-  font-size:13px;
-  color:var(--subtle);
-  margin-bottom:20px;
-  line-height:1.2;
-}
-
-/* Segment control */
-.segment{
-  display:flex;
-  background:#fff;
-  border-radius:var(--radius);
-  border:1px solid var(--border);
-  overflow:hidden;
-}
-.segment input{display:none;}
-.segment label{
-  flex:1;
-  padding:12px 0;
-  text-align:center;
-  font-weight:600;
-  font-size:15px;
-  cursor:pointer;
-  transition:background .2s,color .2s;
-}
-.segment input:checked + label{
-  background:var(--primary);
-  color:#fff;
-}
-
-/* Form fields */
-form{
-  background:#fff;
-  border-radius:var(--radius);
-  border:1px solid var(--border);
-  padding:16px;
-  margin-top:16px;
-}
-.group{margin-top:14px;}
-label.field{
-  display:block;
-  font-weight:600;
-  margin-bottom:6px;
-}
-input[type="text"], textarea{
-  width:100%;
-  max-width:100%;
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  padding:12px;
-  font-size:16px;
-  outline:none;
-  box-sizing:border-box;
-}
-textarea{min-height:100px;resize:vertical;}
-input:focus, textarea:focus{
-  border-color:var(--primary);
-  box-shadow:0 0 0 3px rgba(0,122,255,.2);
-}
-.hint{
-  font-size:12px;
-  color:var(--subtle);
-  margin-top:4px;
-}
-
-/* Submit button */
-.actions{margin-top:18px;}
-button{
-  width:100%;
-  max-width:100%;
-  padding:14px;
-  font-size:16px;
-  font-weight:700;
-  color:#fff;
-  background:var(--primary);
-  border:none;
-  border-radius:var(--radius);
-  cursor:pointer;
-  box-sizing:border-box;
-}
-button:hover{background:var(--primary-hover);}
-button:disabled{opacity:.6;cursor:not-allowed;}
-
-/* Toast message */
-.toast{
-  display:none;
-  margin-top:12px;
-  padding:12px;
-  border-radius:var(--radius);
-  font-weight:600;
-  text-align:center;
-}
-.toast.show{display:block;}
-.toast.success{background:rgba(52,199,89,.15);color:var(--success);}
-.toast.error{background:rgba(255,59,48,.15);color:var(--danger);}
-
-.hidden{display:none;}
-.version{
-  text-align:center;
-  color:var(--subtle);
-  font-size:12px;
-  margin-top:16px;
-}
-
-/* Overlay */
-.overlay {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.6);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-.overlay-content {
-  background: #fff;
-  padding: 20px;
-  border-radius: var(--radius);
-  max-width: 300px;
-  text-align: center;
-}
-.overlay-content button {
-  margin-top: 12px;
-  padding: 10px 14px;
-  background: var(--primary);
-  color: #fff;
-  border: none;
-  border-radius: var(--radius);
-  cursor: pointer;
-}
-.overlay-content button:hover {
-  background: var(--primary-hover);
-}
-
-/* ===== Dark Mode ===== */
-@media (prefers-color-scheme: dark){
-  :root{
-    --bg:#1c1c1e;
-    --text:#f5f5f7;
-    --subtle:#a1a1aa;
-    --border:#2c2c2e;
-    --primary:#0a84ff;
-    --primary-hover:#0060df;
-    --success:#30d158;
-    --danger:#ff453a;
-  }
-  body{ background:var(--bg); color:var(--text); }
-  .segment{ background:#2c2c2e; border-color:var(--border); }
-  .segment label{ color:var(--text); }
-  form{ background:#2c2c2e; border-color:var(--border); }
-  input[type="text"], textarea{
-    background:#1c1c1e;
-    color:var(--text);
-    border-color:var(--border);
-  }
-  .hint{ color:var(--subtle); }
-  .toast.success{ background:rgba(48,209,88,.15); }
-  .toast.error{ background:rgba(255,69,58,.15); }
-  .overlay-content { background: #2c2c2e; color: var(--text); }
-}
-</style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #fff;
+      padding: 1rem;
+      color: #333;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100vw;
+      box-sizing: border-box;
+    }
+    #train-container {
+      width: 100%;
+      max-width: 600px;
+      height: 48px;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+    #train {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 42px;
+      animation: trainVaEtVient 28s ease-in-out infinite;
+    }
+    @keyframes trainVaEtVient {
+      0%, 100% { left: 0; }
+      45%, 50% { left: calc(100% - 95px); }
+      95% { left: 0; }
+    }
+    h1 {
+      font-size: 20px;
+      margin: 0 0 0.8rem 0;
+      font-weight: 600;
+      width: 100%;
+      max-width: 600px;
+      padding: 0 1rem;
+      text-align: left;
+    }
+    input[type="text"] {
+      width: 100%;
+      max-width: 600px;
+      padding: 12px 16px;
+      font-size: 16px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+    input[type="text"]:focus {
+      border-color: #1a73e8;
+      box-shadow: 0 4px 14px rgba(26,115,232,0.4);
+    }
+    #counter, #counterAppareil {
+      font-size: 13px;
+      color: #666;
+      margin-top: 6px;
+      margin-bottom: 1rem;
+    }
+    ul#suggestions, ul#suggestionsAppareils {
+      list-style: none;
+      padding: 0;
+      margin: 0.5rem 0 1.5rem 0;
+      max-width: 600px;
+      width: 100%;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+      background-color: #fff;
+      font-size: 15px;
+      color: #333;
+    }
+    ul#suggestions li, ul#suggestionsAppareils li {
+      padding: 12px 16px;
+      cursor: pointer;
+      border-bottom: 1px solid #eee;
+    }
+    ul#suggestions li:hover, ul#suggestionsAppareils li:hover {
+      background-color: #f0f8ff;
+      color: #1a73e8;
+    }
+    #result {
+      display: none;
+      background: #ffffff;
+      padding: 1rem 1.5rem;
+      border-radius: 18px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      max-width: 600px;
+      width: 100%;
+      color: #444;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    #result h2 {
+      margin-top: 0;
+      font-size: 22px;
+      font-weight: 700;
+      color: #1a73e8;
+    }
+    .inline-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      font-size: 14px;
+      padding: 0 1rem 0 0;
+    }
+    .inline-links a {
+      padding: 6px 10px;
+      font-size: 14px;
+      text-decoration: none;
+      color: #1a73e8;
+      border: 1px solid #1a73e8;
+      border-radius: 10px;
+      transition: 0.3s;
+      white-space: nowrap;
+    }
+    .inline-links a:hover {
+      background-color: #1a73e8;
+      color: white;
+    }
+    .separator {
+      border: none;
+      border-top: 1px solid #eee;
+      margin: 1rem 0;
+    }
+    @media (max-width: 480px) {
+      body { padding: 0.8rem; }
+      h1 { font-size: 18px; padding: 0 0.5rem; }
+      input[type="text"] { font-size: 14px; padding: 10px 14px; }
+      ul#suggestions li, ul#suggestionsAppareils li { padding: 10px 14px; font-size: 14px; }
+      #result { font-size: 14px; padding: 0.8rem 0.5rem; }
+    }
+  </style>
 </head>
 <body>
-<div class="wrap">
-  <h1>🛤️ Ajouter ou mettre à jour un poste</h1>
-  <div class="subtitle">Indiquez un nouveau poste ou mettez à jour un existant</div>
-
-  <!-- Segmented control -->
-  <div class="segment">
-    <input type="radio" name="type" id="opt-ajout" value="Ajout" checked>
-    <label for="opt-ajout">Ajout</label>
-    <input type="radio" name="type" id="opt-modif" value="Modification">
-    <label for="opt-modif">Modification</label>
+  <div id="train-container">
+    <img id="train" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/train.gif" alt="Train animé" />
   </div>
 
-  <form id="formulaire">
-    <!-- Honeypot -->
-    <input type="text" name="website" class="hidden" autocomplete="off" tabindex="-1">
+  <h1>🚘 Itinéraire et infos</h1>
+  <input type="text" id="search" placeholder="🔎 Entrer un poste pour trajet et détails" autocomplete="off" />
+  <div id="counter">📍 Postes consultés : chargement…</div>
+  <ul id="suggestions"></ul>
+  <div id="result"></div>
 
-    <!-- Demandeur -->
-    <div class="group">
-      <label class="field" for="demandeur">👤 Votre nom</label>
-      <input type="text" name="demandeur" id="demandeur" placeholder="Nom, prénom">
-    </div>
-
-    <!-- Bloc Ajout -->
-    <div id="tab-ajout">
-      <div class="group">
-        <label class="field" for="nom_poste">📍 Nom du poste</label>
-        <input type="text" name="nom_poste" id="nom_poste" placeholder="Alleux SP">
-      </div>
-      <div class="group">
-        <label class="field" for="coordonnees">🌍 Coordonnées / lien</label>
-        <input type="text" name="coordonnees" id="coordonnees" placeholder="50.123, 3.456 ou lien Google Maps">
-      </div>
-      <div class="group">
-        <label class="field" for="autre">📝 Remarques</label>
-        <textarea name="autre" id="autre" placeholder="Toute information utile, code portail, etc..."></textarea>
-      </div>
-    </div>
-
-    <!-- Bloc Modification -->
-    <div id="tab-modif" class="hidden">
-      <div class="group">
-        <label class="field" for="nom_modif">✏️ Poste à modifier</label>
-        <input type="text" name="nom_modif" id="nom_modif" placeholder="Hazebrouck SSPA">
-      </div>
-      <div class="group">
-        <label class="field" for="raison">❓ Raison</label>
-        <textarea name="raison" id="raison" placeholder="Erreur coordonnées, changement d'accès..."></textarea>
-      </div>
-    </div>
-
-    <div class="actions">
-      <button type="submit" id="submitBtn">✅ Envoyer</button>
-    </div>
-    <div id="toast" class="toast"></div>
-  </form>
-
-  <div class="version">Version 01.06_11</div>
-</div>
-
-<!-- Overlay -->
-<div class="overlay" id="overlay">
-  <div class="overlay-content">
-    <p>✅ Votre contribution a bien été enregistrée</p>
-    <button onclick="window.location.href='index.html'">🏠 Retour à l'accueil</button>
-    <button onclick="fermerOverlay()">➕ Nouvelle contribution</button>
-  </div>
-</div>
+  <h1 style="margin-top: 1.5rem; margin-bottom: 0.4rem;">⚡️ Rechercher un appareil</h1>
+  <ul id="suggestionsAppareils"></ul>
+  <input type="text" id="searchAppareil" placeholder="Ex : I 7105, TT 629, Guérite..." autocomplete="off" />
+  <div id="counterAppareil">🔌 Appareils consultés : chargement…</div>
+  
 
 <script>
-const rAjout = document.getElementById('opt-ajout');
-const rModif = document.getElementById('opt-modif');
-const tabAjout = document.getElementById('tab-ajout');
-const tabModif = document.getElementById('tab-modif');
-const form = document.getElementById('formulaire');
-const toast = document.getElementById('toast');
-const submitBtn = document.getElementById('submitBtn');
-const overlay = document.getElementById('overlay');
+const jsonUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/postes.json";
+const appareilsUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/appareils.json";
+const compteurURL = "https://script.google.com/macros/s/AKfycbzUFaek89LYosR0FSw9gyxn2IZXlFlWXA_dIFIDwox-szE3DgH-l8IVbGfaoIgGK04h/exec";
+const compteurAppareilURL = "https://script.google.com/macros/s/AKfycbwJIlvcfNYREJn1oPiVAhQqHACXXar8ZbRl6aChwYw4TFSAaMTFEHTT5X2T7BKLJ3gsJw/exec";
 
-/* >>> AJOUT compteur contributions <<< */
-const compteurContributionURL = "https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec";
-function incrementContribution(){
-  // on n'attend pas la réponse, on déclenche juste l’incrément côté Apps Script
-  fetch(compteurContributionURL + "?increment=true").catch(()=>{});
+let lieux = [], fuse;
+let appareils = [], fuseAppareils;
+
+  function formatPortail(val) {
+  if (!val) return "";
+  const cleaned = String(val).replace(/\s+/g, ""); // on retire seulement les espaces
+  return `<p><strong>🚧 Portail :</strong></p>
+          <div class="inline-links">
+            <a href="tel:${cleaned}">${val}</a>
+          </div>`;
 }
-/* >>> FIN AJOUT <<< */
+function normalize(str) {
+  return str.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]/gi, "").toLowerCase();
+}
 
-function setMode(mode){
-  form.querySelectorAll('[name]').forEach(el => el.removeAttribute('required'));
-  if(mode === 'Ajout'){
-    tabAjout.classList.remove('hidden');
-    tabModif.classList.add('hidden');
-    form.demandeur.required = true;
-    form.nom_poste.required = true;
-    form.coordonnees.required = true;
-  }else{
-    tabModif.classList.remove('hidden');
-    tabAjout.classList.add('hidden');
-    form.demandeur.required = true;
-    form.nom_modif.required = true;
-    form.raison.required = true;
+function formatNomCompletLieu(obj) {
+  const base = `${obj.nom || ''} ${obj.type || ''} ${obj.SAT || ''}`.trim();
+  return obj.accès ? `${base} – accès ${obj.accès}` : base;
+}
+
+function formatNomCompletAppareil(obj) {
+  return formatNomCompletLieu(obj);
+}
+function formatNomComplet(obj) {
+  return `${obj.nom || ''} ${obj.type || ''}`.trim();
+}
+function formatRSS(table) {
+  const tables = {
+    "A": ["03 28 55 82 56", "03 28 55 82 57"],
+    "B": ["03 28 55 82 58", "03 28 55 82 59"],
+    "C": ["03 28 55 82 53", "03 28 55 82 54"]
+  };
+  const tableNum = { "A": "1", "B": "2", "C": "3" };
+  if (!tables[table]) return `<p><strong>📞 RSS :</strong> ${table}</p>`;
+  const nums = tables[table].map(num => `<a href="tel:${num.replace(/\s+/g, '')}">${num}</a>`).join("");
+  return `<p><strong>📞 RSS Table ${tableNum[table] || table} :</strong></p><div class="inline-links">${nums}</div>`;
+}
+function generateAppareilListHTML(currentLieu) {
+  const posteNomComplet = formatNomComplet(currentLieu);
+  const matchingApps = appareils.filter(app => app.nom === currentLieu.nom && app.type === currentLieu.type);
+
+  if (matchingApps.length === 0) {
+    // ➜ Retourne uniquement le petit encadré, sans titre au-dessus
+    return `
+      <div style="background-color: #e6f0ff; border-radius: 12px; padding: 12px 16px; margin-top: 1.2rem; text-align: center; font-size: 15px;">
+        🤝 Appareil manquant ? 
+        <a href="formulaire.html" style="color: #1a73e8; text-decoration: none; font-weight: 600;">
+          Aidez-nous à l’ajouter.
+        </a>
+      </div>
+    `;
   }
-}
 
-rAjout.addEventListener('change', ()=>setMode('Ajout'));
-rModif.addEventListener('change', ()=>setMode('Modification'));
-setMode('Ajout');
+  // S’il y a des appareils, on affiche le titre + la liste
+  let grouped = {};
+  matchingApps.forEach(app => {
+    const sat = app.SAT || 'Poste';
+    if (!grouped[sat]) grouped[sat] = [];
+    grouped[sat].push(app);
+  });
 
-function showToast(msg, type){
-  toast.textContent = msg;
-  toast.className = 'toast show ' + type;
-}
+  const isSAT = currentLieu.SAT && currentLieu.SAT !== "";
+  let html = `<p><strong>🧩 Appareils trouvés dans ce ${isSAT ? 'SAT' : 'poste'} :</strong></p>`;
 
-function ouvrirOverlay(){
-  overlay.style.display = 'flex';
-}
-function fermerOverlay(){
-  overlay.style.display = 'none';
-}
-
-form.addEventListener('submit', async (e)=>{
-  e.preventDefault();
-  if(form.website.value) return;
-
-  submitBtn.disabled = true;
-  showToast('⏳ Envoi en cours…', 'info');
-
-  const fd = new FormData(form);
-  fd.set('type', rAjout.checked ? 'Ajout' : 'Modification');
-
-  try{
-    const res = await fetch("https://script.google.com/macros/s/AKfycbzJLm3bHvgGKuMx9v2JyW_Mx-qWoiS9VlEDgJzkrIvMSwQaDX-fpLiZhjRM3WW9jwZh_Q/exec", {
-      method:'POST', body:fd
-    });
-    const text = await res.text();
-    if(text.trim().toUpperCase() === 'OK'){
-      /* >>> AJOUT : incrément réel après succès <<< */
-      incrementContribution();
-      /* >>> FIN AJOUT <<< */
-
-      form.reset();
-      setMode('Ajout');
-      toast.textContent = '';
-      toast.className = 'toast';
-      ouvrirOverlay();
-    }else{
-      showToast('❌ Erreur lors de l’envoi', 'error');
-    }
-  }catch{
-    showToast('❌ Problème de connexion', 'error');
+  for (const [sat, list] of Object.entries(grouped)) {
+    if (isSAT && sat !== currentLieu.SAT) continue;
+    if (!isSAT && sat === "Poste") html += `<p><strong>Poste :</strong> `;
+    else if (!isSAT) html += `<p><strong>${sat} :</strong> `;
+    else html += `<p>`;
+    html += list.map(app => `<a href="#" onclick='showAppareil(${JSON.stringify(app)})'>${app.appareil}</a>`).join(", ") + `</p>`;
   }
-  submitBtn.disabled = false;
+
+  html += `
+    <div style="background-color: #e6f0ff; border-radius: 12px; padding: 12px 16px; margin-top: 1.2rem; text-align: center; font-size: 15px;">
+      🤝 Appareil manquant ? 
+      <a href="formulaire.html" style="color: #1a73e8; text-decoration: none; font-weight: 600;">
+        Aidez-nous à l’ajouter.
+      </a>
+    </div>
+  `;
+
+  return html;
+}function generateAlias(appareil, nom, sat, type) {
+  const alias = new Set();
+  const norm = str => str.toLowerCase().trim();
+
+  const a = norm(appareil);
+  const n = norm(nom);
+  const s = norm(sat);
+  const t = norm(type);
+  const root = a.split(/[\s\-]/)[0];
+
+  alias.add(a);
+  alias.add(a.replace(/([a-z]+)(\d+)/, "$1 $2"));
+
+  alias.add(`${a} ${n}`);
+  alias.add(`${n} ${a}`);
+  alias.add(`${root} ${n}`);
+  alias.add(`${root} de ${n}`);
+
+  if (s) {
+    alias.add(`${a} ${n} ${s}`);
+    alias.add(`${n} ${s} ${a}`);
+    alias.add(`${root} ${n} ${s}`);
+    alias.add(`${root} de ${n} ${s}`);
+  }
+
+  // ✅ Ajoute l'alias type complet : ex. "lambersart prci"
+  alias.add(`${n} ${t}`);
+
+  return Array.from(alias);
+}
+
+fetch(appareilsUrl).then(res => res.json()).then(data => {
+  appareils = data;
+
+  // Génère dynamiquement les alias
+  appareils.forEach(app => {
+   app.alias = generateAlias(app.appareil, app.nom, app.SAT, app.type);
+  });
+
+  fuseAppareils = new Fuse(appareils, {
+    keys: [
+      { name: 'appareil', weight: 0.5 },
+      { name: 'alias', weight: 0.9 },
+      { name: 'type', weight: 0.3 },
+      { name: 'nom', weight: 0.1 },
+      { name: 'SAT', weight: 0.1 }
+    ],
+    includeScore: true,
+    threshold: 0.3, // tu peux tester avec 0.2 si trop de bruit
+    ignoreLocation: true
+  });
 });
+  fetch(jsonUrl).then(res => res.json()).then(data => {
+  lieux = data;
+
+fuse = new Fuse(lieux, {
+  keys: [
+    { name: "nom", weight: 0.5 },
+    { name: "type", weight: 0.3 },
+    { name: "SAT", weight: 0.2 },
+    {
+      name: "accès",
+      getFn: o => o.accès?.toString?.() || "",
+      weight: 0.1
+    }
+  ],
+  includeScore: true,
+  threshold: 0.3,
+  ignoreLocation: true
+});
+});
+function updateCounter() {
+  fetch(compteurURL).then(res => res.json()).then(data => {
+    document.getElementById("counter").textContent = `📍 Postes consultés : ${data.count}`;
+  });
+}
+function incrementCounter() {
+  fetch(compteurURL + "?increment=true").then(updateCounter);
+}
+function updateCounterAppareil() {
+  fetch(compteurAppareilURL).then(res => res.json()).then(data => {
+    document.getElementById("counterAppareil").textContent = `🔌 Appareils consultés : ${data.count}`;
+  });
+}
+function incrementCounterAppareil() {
+  fetch(compteurAppareilURL + "?increment=true").then(updateCounterAppareil);
+}
+
+document.getElementById("search").addEventListener("input", e => {
+  const query = normalize(e.target.value.trim());
+  const suggestionsEl = document.getElementById("suggestions");
+  const resultEl = document.getElementById("result");
+  suggestionsEl.innerHTML = "";
+  resultEl.innerHTML = "";
+  resultEl.style.display = "none";
+  if (!query || !fuse) return;
+  let results = fuse.search(query).filter(r => r.score < 0.4).map(r => r.item);
+  if (results.length === 0 || query.length <= 3) {
+   const fallback = lieux.filter(l =>
+  normalize(l.nom).includes(query) ||
+  normalize(l.type).includes(query) ||
+  normalize(l.SAT || '').includes(query) ||
+  normalize(String(l.accès || '')).includes(query)
+);
+const ids = new Set(results.map(l => formatNomCompletLieu(l)));
+fallback.forEach(l => { if (!ids.has(formatNomCompletLieu(l))) results.push(l); });
+  }
+  results.forEach(lieu => {
+    const li = document.createElement("li");
+    li.textContent = formatNomCompletLieu(lieu);
+    li.onclick = () => showLieu(lieu);
+    suggestionsEl.appendChild(li);
+  });
+});
+
+function showLieu(lieu) {
+  const result = document.getElementById("result");
+  document.getElementById("suggestions").innerHTML = "";
+  result.style.display = "block";
+  incrementCounter();
+let html = `<h2>📌 ${formatNomCompletLieu(lieu)}</h2>
+<div class="inline-links">
+  <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank">🗺️ Google Maps</a>
+  <a href="https://maps.apple.com/?daddr=${lieu.latitude},${lieu.longitude}" target="_blank">🍎 Apple Plans</a>
+  <a href="https://waze.com/ul?ll=${lieu.latitude},${lieu.longitude}&navigate=yes" target="_blank">🚗 Waze</a>
+</div><hr class="separator" />`;
+  const blocs = [];
+  if (lieu.description) blocs.push(`<p>${lieu.description}</p>`);
+  if (lieu.pk && lieu.numero_ligne && lieu.lignes)
+    blocs.push(`<p><strong>🚄 PK ${lieu.pk}</strong> sur la ligne n°<strong>${lieu.numero_ligne}</strong> - ${lieu.lignes}</p>`);
+  if (lieu.rss) blocs.push(formatRSS(lieu.rss));
+  if (lieu.contact) blocs.push(`<p><strong>👤 Contact :</strong> ${lieu.contact}</p>`);
+  if (lieu.portail) blocs.push(formatPortail(lieu.portail));
+  html += blocs.join('<hr class="separator" />');
+  html += '<hr class="separator" />' + generateAppareilListHTML(lieu);
+  result.innerHTML = html;
+}
+
+document.getElementById("searchAppareil").addEventListener("input", e => {
+  const query = normalize(e.target.value.trim());
+  const suggestionsEl = document.getElementById("suggestionsAppareils");
+  const resultEl = document.getElementById("result");
+  suggestionsEl.innerHTML = "";
+  resultEl.innerHTML = "";
+  resultEl.style.display = "none";
+  if (!query || !fuseAppareils) return;
+let results = fuseAppareils.search(query, { limit: 50 }).map(r => r.item);
+
+// 🔁 Si on détecte un préfixe (tt, tc, etc.), on élargit à tout le JSON
+const prefixes = ["tt", "tc", "tsa", "i", "ia", "il", "ip", "imp", "s"];
+const matchPrefix = query.match(/^([a-z]{1,4})[\s\-]+(.+)/i);
+
+if (matchPrefix) {
+  const prefix = matchPrefix[1].toLowerCase();
+  const lieu = matchPrefix[2].toLowerCase();
+
+  if (prefixes.includes(prefix)) {
+    // On cherche tous les appareils correspondants dans le JSON, pas que via Fuse
+    const complet = appareils.filter(app => {
+      const nomComplet = `${app.nom} ${app.SAT || ''}`.toLowerCase();
+      return (
+        app.appareil.toLowerCase().startsWith(prefix) &&
+        (nomComplet.includes(lieu) || normalize(nomComplet).includes(normalize(lieu)))
+      );
+    });
+
+    // Fusionne sans doublons
+    const ids = new Set(results.map(a => a.appareil));
+    complet.forEach(a => { if (!ids.has(a.appareil)) results.push(a); });
+
+    // Tri : ceux qui matchent mieux d’abord
+    results.sort((a, b) => {
+    const aMatch = a.appareil.toLowerCase().startsWith(prefix) && (`${a.nom} ${a.SAT || ''}`.toLowerCase().includes(lieu));
+const bMatch = b.appareil.toLowerCase().startsWith(prefix) && (`${b.nom} ${b.SAT || ''}`.toLowerCase().includes(lieu));
+      if (aMatch && !bMatch) return -1;
+      if (!aMatch && bMatch) return 1;
+      return 0;
+    });
+  }
+}
+
+// 🔄 Affichage des résultats
+results.reverse().forEach((app, index, array) => {
+  const li = document.createElement("li");
+  li.textContent = `${app.appareil} (${app.nom}${app.type ? ' ' + app.type : ''}${app.SAT ? ' / ' + app.SAT : ''})`;
+
+  // Surligne le dernier (donc le plus pertinent après reverse)
+  if (index === array.length - 1) {
+    li.style.backgroundColor = "#e6f0ff";
+    li.style.fontWeight = "600";
+  }
+
+  li.onclick = () => showAppareil(app);
+  suggestionsEl.appendChild(li);
+});
+});
+
+function showAppareil(app) {
+  incrementCounterAppareil();
+  const result = document.getElementById("result");
+  result.style.display = "block";
+  document.getElementById("suggestionsAppareils").innerHTML = "";
+let html = `<h2>🔌 ${app.appareil} (${app.nom}${app.type ? ' ' + app.type : ''}${app.SAT ? ' / ' + app.SAT : ''})</h2>`;
+  const blocs = [];
+  if (app.description) blocs.push(`<p>${app.description}</p>`);
+  blocs.push(`<p>📍 Localiser cet appareil sur la carte : <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&ll=${app.latitude},${app.longitude}&z=18" target="_blank">ICI</a></p>`);
+// 1) On cherche d'abord un accès précis correspondant au code de l'appareil (ex. I18)
+const posteTrouvé = lieux.find(l => 
+  normalize(l.nom) === normalize(app.nom) &&
+  normalize(l.type) === normalize(app.type) &&
+  normalize(l.SAT || "") === normalize(app.SAT || "")
+);
+
+const accesTrouvé = lieux.find(l =>
+  normalize(l.nom) === normalize(app.nom) &&
+  normalize(l.type) === normalize(app.type) &&
+  normalize(l.SAT || "") === normalize(app.SAT || "") &&
+  normalize(String(l.accès || "")) === normalize(app.appareil)
+);
+
+// 2) Priorité à l'accès spécifique, sinon fallback poste
+const lieuCible = accesTrouvé || posteTrouvé;
+
+if (lieuCible) {
+  blocs.push(`<p>🚗 Créer l'itinéraire en voiture : <a href="#" onclick='showLieu(${JSON.stringify(lieuCible)})'>ICI</a></p>`);
+}
+
+  html += blocs.join('<hr class="separator" />');
+  result.innerHTML = html;
+}
+
+updateCounter();
+updateCounterAppareil();
+setInterval(updateCounter, 3000);
+setInterval(updateCounterAppareil, 3000);
 </script>
+  <div style="text-align:center; margin-top: 30px;">
+  <a href="formulaire.html" style="display: inline-block; background-color: #007BFF; color: white; padding: 12px 24px; font-size: 16px; border-radius: 12px; text-decoration: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: background-color 0.3s ease;">
+    ✍️ CONTRIBUEZ
+  </a>
+</div>
+
+<!-- Compteur contributions -->
+<div id="compteur-contrib" style="text-align:center; margin-top:8px; font-size:14px; color:#6b7280;">
+  📝 Contributions enregistrées : <span id="compteur-valeur">chargement…</span>
+</div>
+<script>
+  const compteurContributionURL = "https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec";
+  async function refreshContrib(){
+    try{
+      const r = await fetch(compteurContributionURL);
+      const data = await r.json();
+      document.getElementById("compteur-valeur").textContent =
+        (data && typeof data.count !== "undefined") ? data.count : "chargement…";
+    }catch(e){
+      document.getElementById("compteur-valeur").textContent = "chargement…";
+    }
+  }
+  refreshContrib();
+  setInterval(refreshContrib, 3000);
+</script>
+
+<p style="font-size: 13px; margin-top: 2rem;">
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration: none; color: #1a73e8;">À propos du projet</a>
+</p>
+<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.07.11</p>
 </body>
 </html>
