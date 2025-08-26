@@ -238,14 +238,24 @@ function formatContact(val) {
           <div class="inline-links">${boutons}</div>`;
 }
 
-  function formatPortail(val) {
+ function formatPortail(val) {
   if (!val) return "";
-  const cleaned = String(val).replace(/\s+/g, ""); // on retire seulement les espaces
-  return `<p><strong>🚧 Portail :</strong></p>
-          <div class="inline-links">
-            <a href="tel:${cleaned}">${val}</a>
-          </div>`;
+
+  // Regex stricte : numéros français 10 chiffres, avec ou sans espaces
+  const phoneRegex = /^(\d{10}|\d{2}(\s?\d{2}){4})$/;
+
+  if (phoneRegex.test(val)) {
+    const cleaned = val.replace(/\s+/g, "");
+    return `<p><strong>🚧 Portail :</strong></p>
+            <div class="inline-links">
+              <a href="tel:${cleaned}">${val}</a>
+            </div>`;
+  }
+
+  // Sinon → texte brut
+  return `<p><strong>🚧 Portail :</strong> ${val}</p>`;
 }
+  
 function normalize(str) {
   return str.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]/gi, "").toLowerCase();
 }
@@ -582,6 +592,6 @@ setInterval(updateCounterAppareil, 3000);
 <p style="font-size: 13px; margin-top: 2rem;">
   🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration: none; color: #1a73e8;">À propos du projet</a>
 </p>
-<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.08.2</p>
+<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.08.3</p>
 </body>
 </html>
