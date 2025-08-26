@@ -1,6 +1,29 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+  <style id="eale-intro-styles">
+  :root{--eale-intro-bg:#fff;--eale-intro-fg:#222}
+  @media (prefers-color-scheme: dark){
+    :root{--eale-intro-bg:#0b0b0b;--eale-intro-fg:#eee}
+  }
+  .eale-intro-overlay{
+    position:fixed; inset:0;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    background:var(--eale-intro-bg); color:var(--eale-intro-fg);
+    z-index:99999; user-select:none; touch-action:none;
+  }
+  .eale-intro-img{
+    width:min(42vw,180px); height:auto; object-fit:contain; pointer-events:none;
+    animation:eale-zoomIn 1.8s ease-out forwards;
+  }
+  .eale-intro-text{
+    position:fixed; bottom:12vh; left:50%; transform:translateX(-50%);
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size:0.95rem; font-style:italic; text-align:center; opacity:.95; max-width:90%;
+  }
+  @keyframes eale-zoomIn{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+  .eale-intro-hide{opacity:0; transition:opacity .35s ease}
+</style>
   <meta name="robots" content="noindex, nofollow" />
   <meta charset="UTF-8" />
   <title>Recherche de lieux</title>
@@ -221,31 +244,56 @@ function formatContact(val) {
   const matches = val.match(phoneRegex);
 
   if (!matches) {
-    // Aucun numéro → on affiche juste le texte brut
     return `<p><strong>👤 Contact :</strong> ${val}</p>`;
   }
 
-  // On garde le texte sans les numéros
   const texteSansNum = val.replace(phoneRegex, "").trim();
 
-  // On génère un bouton pour chaque numéro détecté
+  // ✅ on met inline-links en <span> avec display:inline-flex pour garder les rectangles
   const boutons = matches.map(num => {
     const cleaned = num.replace(/\s+/g, "");
-    return `<a href="tel:${cleaned}">${num}</a>`;
-  }).join("");
+    return `<span class="inline-links" style="display:inline-flex; margin-left:6px;">
+              <a href="tel:${cleaned}">${num}</a>
+            </span>`;
+  }).join(" ");
 
-  return `<p><strong>👤 Contact :</strong> ${texteSansNum}</p>
-          <div class="inline-links">${boutons}</div>`;
+  // ✅ tout dans le même <p> → reste sur une ligne
+  return `<p><strong>👤 Contact :</strong> ${texteSansNum} ${boutons}</p>`;
 }
 
-  function formatPortail(val) {
+function formatPortail(val) {
   if (!val) return "";
-  const cleaned = String(val).replace(/\s+/g, ""); // on retire seulement les espaces
-  return `<p><strong>🚧 Portail :</strong></p>
-          <div class="inline-links">
-            <a href="tel:${cleaned}">${val}</a>
-          </div>`;
+
+  // Cherche une URL dans la chaîne
+  const urlRegex = /(https?:\/\/[^\s]+)/;
+  const urlMatch = val.match(urlRegex);
+  const video = urlMatch ? urlMatch[0] : null;
+
+  // Le "code" = tout ce qui n'est pas l'URL
+  const code = val.replace(urlRegex, "").trim();
+
+  // Regex stricte : numéros français 10 chiffres (avec ou sans espaces) + extensions DTMF
+  const phoneRegex = /^(\d{10}|\d{2}(\s?\d{2}){4})([,\;\*#0-9]*)?$/;
+
+  let content = "";
+
+  if (phoneRegex.test(code)) {
+    const cleaned = code.replace(/\s+/g, "");
+    // ✅ on garde inline-links mais en <span>
+    content = `<span class="inline-links" style="display:inline-block; margin-left:6px;">
+                 <a href="tel:${cleaned}">${code}</a>
+               </span>`;
+  } else {
+    content = code;
+  }
+
+  if (video) {
+    content += ` <a href="${video}" target="_blank" class="inline-link">▶️ Voir la vidéo</a>`;
+  }
+
+  return `<p><strong>🚧 Portail :</strong> ${content}</p>`;
 }
+  
 function normalize(str) {
   return str.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]/gi, "").toLowerCase();
 }
@@ -582,6 +630,100 @@ setInterval(updateCounterAppareil, 3000);
 <p style="font-size: 13px; margin-top: 2rem;">
   🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration: none; color: #1a73e8;">À propos du projet</a>
 </p>
-<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.08.2</p>
+<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.08.14</p>
+  <script>
+(function(){
+  // ===== Config =====
+  var INTRO_DURATION_MS = 3000;             // Durée d’affichage (ms)
+  var STORAGE_KEY       = 'eale_intro_last_day'; // Clé de mémo 1/jour
+
+  // Date locale AAAA-MM-JJ (pas en UTC, évite les décalages)
+  function todayLocal(){
+    var d=new Date();
+    var y=d.getFullYear();
+    var m=String(d.getMonth()+1).padStart(2,'0');
+    var day=String(d.getDate()).padStart(2,'0');
+    return y+'-'+m+'-'+day;
+  }
+
+  // Afficher 1 fois par jour
+  function shouldShowIntro(){
+    try{
+      var last = localStorage.getItem(STORAGE_KEY);
+      var today = todayLocal();
+      if (last === today) return false;
+      localStorage.setItem(STORAGE_KEY, today);
+      return true;
+    }catch(e){ return true; } // si stockage bloqué, on affiche
+  }
+
+  function pickPhrase(){
+    var phrases = [
+      "Propulsé par Arnaud.",
+      "Une réalisation signée Arnaud.",
+      "Conçu et développé par Arnaud.",
+      "Réalisé avec soin par Arnaud.",
+      "Par Arnaud.",
+      "Fait par Arnaud.",
+      "Pensé par Arnaud.",
+      "Créé par Arnaud.",
+      "Une idée d’Arnaud.",
+      "Mis en place par Arnaud.",
+      "Lancé par Arnaud.",
+      "Conçu par Arnaud.",
+      "Mis en ligne par Arnaud.",
+      "Mis en route par Arnaud.",
+      "Fait maison par Arnaud.",
+      "Déclenché par Arnaud.",
+      "Organisé par Arnaud.",
+      "Initié par Arnaud.",
+      "Coordonné par Arnaud.",
+      "Centralisé par Arnaud.",
+      "Simplifié par Arnaud.",
+      "Regroupé par Arnaud.",
+      "Géré par Arnaud.",
+      "Compilé par Arnaud.",
+      "Activé par Arnaud.",
+      "Préparé par Arnaud.",
+      "Livré par Arnaud.",
+      "Assemblé par Arnaud.",
+      "Piloté par Arnaud.",
+      "Structuré par Arnaud.",
+      "Distribué par Arnaud.",
+      "Diffusé par Arnaud.",
+      "Guidé par Arnaud.",
+      "Connecté par Arnaud.",
+      "Rendu accessible par Arnaud.",
+      "Chargé par Arnaud.",
+      "Lien établi par Arnaud.",
+      "Interface pensée par Arnaud."
+    ];
+    return phrases[Math.floor(Math.random()*phrases.length)];
+  }
+
+  function mountIntro(){
+    var overlay = document.createElement('div');
+    overlay.className = 'eale-intro-overlay';
+    overlay.setAttribute('aria-hidden','true');
+    overlay.innerHTML =
+   '<img class="eale-intro-img" alt="Logo EALE" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/Logo%20EALE.png">' +
+      '<div class="eale-intro-text" id="eale-intro-text"></div>';
+    document.body.appendChild(overlay);
+    document.getElementById('eale-intro-text').textContent = pickPhrase();
+
+    setTimeout(function(){
+      overlay.classList.add('eale-intro-hide');
+      setTimeout(function(){ overlay.remove(); }, 380);
+    }, INTRO_DURATION_MS);
+  }
+
+  // Lance dès que le DOM est prêt
+  if (document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', function(){ if (shouldShowIntro()) mountIntro(); });
+  } else {
+    if (shouldShowIntro()) mountIntro();
+  }
+})();
+</script>
 </body>
 </html>
