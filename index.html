@@ -548,19 +548,21 @@ function showLieu(lieu) {
   result.style.display = "block";
   incrementCounter();
 
-let html = `<h2>📌 ${formatNomCompletLieu(lieu)}</h2>
-<p style="text-align:center; font-weight:600; margin:0.5rem 0;">🚙 Itinéraires disponibles :</p>
-<div class="inline-links" style="justify-content:center;">
-  <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank">🗺️ Google Maps</a>
-  <a href="https://maps.apple.com/?daddr=${lieu.latitude},${lieu.longitude}" target="_blank">🍎 Apple Plans</a>
-  <a href="https://waze.com/ul?ll=${lieu.latitude},${lieu.longitude}&navigate=yes" target="_blank">🚗 Waze</a>
-</div><hr class="separator" />`;
-
-  html += `<p>📍 Localiser cet accès sur la carte : 
-    <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&ll=${lieu.latitude},${lieu.longitude}&z=18" 
-       target="_blank">ICI</a>
-  </p>
+  let html = `<h2>
+    <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&ll=${lieu.latitude},${lieu.longitude}&z=18"
+       target="_blank"
+       style="color:inherit; text-decoration:none;">
+      📌 ${formatNomCompletLieu(lieu)}
+    </a>
+  </h2>
+  <p style="text-align:center; font-weight:600; margin:0.5rem 0;">🚙 Itinéraires disponibles :</p>
+  <div class="inline-links" style="justify-content:center;">
+    <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank">🗺️ Google Maps</a>
+    <a href="https://maps.apple.com/?daddr=${lieu.latitude},${lieu.longitude}" target="_blank">🍎 Apple Plans</a>
+    <a href="https://waze.com/ul?ll=${lieu.latitude},${lieu.longitude}&navigate=yes" target="_blank">🚗 Waze</a>
+  </div>
   <hr class="separator" />`;
+
   const blocs = [];
   if (lieu.description) blocs.push(`<p>${lieu.description}</p>`);
   if (lieu.pk && lieu.numero_ligne && lieu.lignes)
@@ -699,7 +701,7 @@ setInterval(updateCounterAppareil, 3000);
 <p style="font-size: 13px; margin-top: 2rem;">
   🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration: none; color: #1a73e8;">À propos du projet</a>
 </p>
-<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.08.19</p>
+<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.08.20</p>
   <script>
 (function(){
   // ===== Config =====
