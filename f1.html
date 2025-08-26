@@ -147,6 +147,42 @@ ul#suggestionsAppareils:empty {
       ul#suggestions li, ul#suggestionsAppareils li { padding: 10px 14px; font-size: 14px; }
       #result { font-size: 14px; padding: 0.8rem 0.5rem; }
     }
+    /* --- MODE SOMBRE AUTOMATIQUE --- */
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #121212;
+    color: #e5e5e5;
+  }
+
+  h1,
+  #result h2 {
+    color: #90caf9;
+  }
+
+  input[type="text"] {
+    background-color: #1e1e1e;
+    color: #e5e5e5;
+    border: 1px solid #555;
+  }
+
+  ul#suggestions,
+  ul#suggestionsAppareils,
+  #result {
+    background-color: #1e1e1e;
+    color: #e5e5e5;
+    box-shadow: 0 6px 15px rgba(255,255,255,0.05);
+  }
+
+  .inline-links a {
+    color: #90caf9;
+    border-color: #90caf9;
+  }
+
+  .inline-links a:hover {
+    background-color: #90caf9;
+    color: #121212;
+  }
+}
   </style>
 </head>
 <body>
