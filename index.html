@@ -147,6 +147,42 @@ ul#suggestionsAppareils:empty {
       ul#suggestions li, ul#suggestionsAppareils li { padding: 10px 14px; font-size: 14px; }
       #result { font-size: 14px; padding: 0.8rem 0.5rem; }
     }
+    /* --- MODE SOMBRE AUTOMATIQUE --- */
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #121212;
+    color: #e5e5e5;
+  }
+
+  h1,
+  #result h2 {
+    color: #90caf9;
+  }
+
+  input[type="text"] {
+    background-color: #1e1e1e;
+    color: #e5e5e5;
+    border: 1px solid #555;
+  }
+
+  ul#suggestions,
+  ul#suggestionsAppareils,
+  #result {
+    background-color: #1e1e1e;
+    color: #e5e5e5;
+    box-shadow: 0 6px 15px rgba(255,255,255,0.05);
+  }
+
+  .inline-links a {
+    color: #90caf9;
+    border-color: #90caf9;
+  }
+
+  .inline-links a:hover {
+    background-color: #90caf9;
+    color: #121212;
+  }
+}
   </style>
 </head>
 <body>
@@ -175,6 +211,41 @@ const compteurAppareilURL = "https://script.google.com/macros/s/AKfycbwJIlvcfNYR
 let lieux = [], fuse;
 let appareils = [], fuseAppareils;
 
+function formatContact(val) {
+  if (!val) return "";
+
+  // Regex qui détecte les numéros FR type 03 28 55 60 94 ou 0328556094
+  const phoneRegex = /\d{2}\s?\d{2}\s?\d{2}\s?\d{2}\s?\d{2}/g;
+
+  // On récupère tous les numéros
+  const matches = val.match(phoneRegex);
+
+  if (!matches) {
+    // Aucun numéro → on affiche juste le texte brut
+    return `<p><strong>👤 Contact :</strong> ${val}</p>`;
+  }
+
+  // On garde le texte sans les numéros
+  const texteSansNum = val.replace(phoneRegex, "").trim();
+
+  // On génère un bouton pour chaque numéro détecté
+  const boutons = matches.map(num => {
+    const cleaned = num.replace(/\s+/g, "");
+    return `<a href="tel:${cleaned}">${num}</a>`;
+  }).join("");
+
+  return `<p><strong>👤 Contact :</strong> ${texteSansNum}</p>
+          <div class="inline-links">${boutons}</div>`;
+}
+
+  function formatPortail(val) {
+  if (!val) return "";
+  const cleaned = String(val).replace(/\s+/g, ""); // on retire seulement les espaces
+  return `<p><strong>🚧 Portail :</strong></p>
+          <div class="inline-links">
+            <a href="tel:${cleaned}">${val}</a>
+          </div>`;
+}
 function normalize(str) {
   return str.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]/gi, "").toLowerCase();
 }
@@ -377,8 +448,8 @@ let html = `<h2>📌 ${formatNomCompletLieu(lieu)}</h2>
   if (lieu.pk && lieu.numero_ligne && lieu.lignes)
     blocs.push(`<p><strong>🚄 PK ${lieu.pk}</strong> sur la ligne n°<strong>${lieu.numero_ligne}</strong> - ${lieu.lignes}</p>`);
   if (lieu.rss) blocs.push(formatRSS(lieu.rss));
-  if (lieu.contact) blocs.push(`<p><strong>👤 Contact :</strong> ${lieu.contact}</p>`);
-  if (lieu.portail) blocs.push(`<p><strong>🚧 Portail :</strong> ${lieu.portail}</p>`);
+  if (lieu.contact) blocs.push(formatContact(lieu.contact));
+  if (lieu.portail) blocs.push(formatPortail(lieu.portail));
   html += blocs.join('<hr class="separator" />');
   html += '<hr class="separator" />' + generateAppareilListHTML(lieu);
   result.innerHTML = html;
@@ -511,6 +582,6 @@ setInterval(updateCounterAppareil, 3000);
 <p style="font-size: 13px; margin-top: 2rem;">
   🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration: none; color: #1a73e8;">À propos du projet</a>
 </p>
-<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.07.11</p>
+<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.08.2</p>
 </body>
 </html>
