@@ -23,6 +23,16 @@
   }
   @keyframes eale-zoomIn{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
   .eale-intro-hide{opacity:0; transition:opacity .35s ease}
+    /* surbrillance du meilleur résultat */
+li.best {
+  background-color: #e6f0ff;
+  font-weight: 600;
+}
+@media (prefers-color-scheme: dark){
+  li.best {
+    background-color: #1b2836; /* bleu foncé doux */
+  }
+}
 </style>
   <meta name="robots" content="noindex, nofollow" />
   <meta charset="UTF-8" />
@@ -205,6 +215,58 @@ ul#suggestionsAppareils:empty {
     background-color: #90caf9;
     color: #121212;
   }
+}/* === Liens : même couleur en normal / visited === */
+a { 
+  color:#1a73e8; 
+  text-decoration:none; 
+}
+a:visited { 
+  color:#1a73e8; 
+}
+
+/* Boutons-lien inline-links */
+.inline-links a,
+.inline-links a:visited { 
+  color:#1a73e8; 
+  border-color:#1a73e8; 
+}
+
+/* Encadré "Appareil manquant" */
+.missing-box {
+  background-color:#e6f0ff;
+  border-radius:12px;
+  padding:12px 16px;
+  margin-top:1.2rem;
+  text-align:center;
+  font-size:15px;
+}
+.missing-box a {
+  color:#1a73e8; 
+  font-weight:600;
+}
+
+/* --- Dark mode spécial liens et box --- */
+@media (prefers-color-scheme: dark){
+  a, a:visited { 
+    color:#90caf9; 
+  }
+  .inline-links a,
+  .inline-links a:visited { 
+    color:#90caf9; 
+    border-color:#90caf9; 
+  }
+  .inline-links a:hover { 
+    background-color:#90caf9; 
+    color:#121212; 
+  }
+
+  .missing-box {
+    background-color:#16202c;
+    border:1px solid #243447;
+  }
+  .missing-box a { 
+    color:#90caf9; 
+  }
 }
   </style>
   <meta name="color-scheme" content="light dark">
@@ -328,13 +390,11 @@ function generateAppareilListHTML(currentLieu) {
   const matchingApps = appareils.filter(app => app.nom === currentLieu.nom && app.type === currentLieu.type);
 
   if (matchingApps.length === 0) {
-    // ➜ Retourne uniquement le petit encadré, sans titre au-dessus
+    // ➜ Retourne uniquement le petit encadré
     return `
-      <div style="background-color: #e6f0ff; border-radius: 12px; padding: 12px 16px; margin-top: 1.2rem; text-align: center; font-size: 15px;">
+      <div class="missing-box">
         🤝 Appareil manquant ? 
-        <a href="formulaire.html" style="color: #1a73e8; text-decoration: none; font-weight: 600;">
-          Aidez-nous à l’ajouter.
-        </a>
+        <a href="formulaire.html">Aidez-nous à l’ajouter.</a>
       </div>
     `;
   }
@@ -359,16 +419,15 @@ function generateAppareilListHTML(currentLieu) {
   }
 
   html += `
-    <div style="background-color: #e6f0ff; border-radius: 12px; padding: 12px 16px; margin-top: 1.2rem; text-align: center; font-size: 15px;">
+    <div class="missing-box">
       🤝 Appareil manquant ? 
-      <a href="formulaire.html" style="color: #1a73e8; text-decoration: none; font-weight: 600;">
-        Aidez-nous à l’ajouter.
-      </a>
+      <a href="formulaire.html">Aidez-nous à l’ajouter.</a>
     </div>
   `;
 
   return html;
-}function generateAlias(appareil, nom, sat, type) {
+}
+  function generateAlias(appareil, nom, sat, type) {
   const alias = new Set();
   const norm = str => str.toLowerCase().trim();
 
@@ -556,8 +615,7 @@ results.reverse().forEach((app, index, array) => {
 
   // Surligne le dernier (donc le plus pertinent après reverse)
   if (index === array.length - 1) {
-    li.style.backgroundColor = "#e6f0ff";
-    li.style.fontWeight = "600";
+    li.classList.add("best");
   }
 
   li.onclick = () => showAppareil(app);
@@ -633,7 +691,7 @@ setInterval(updateCounterAppareil, 3000);
 <p style="font-size: 13px; margin-top: 2rem;">
   🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration: none; color: #1a73e8;">À propos du projet</a>
 </p>
-<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.08.14</p>
+<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.08.16</p>
   <script>
 (function(){
   // ===== Config =====
