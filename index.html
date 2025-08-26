@@ -1,6 +1,39 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+  <style id="eale-intro-styles">
+  :root{--eale-intro-bg:#fff;--eale-intro-fg:#222}
+  @media (prefers-color-scheme: dark){
+    :root{--eale-intro-bg:#0b0b0b;--eale-intro-fg:#eee}
+  }
+  .eale-intro-overlay{
+    position:fixed; inset:0;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    background:var(--eale-intro-bg); color:var(--eale-intro-fg);
+    z-index:99999; user-select:none; touch-action:none;
+  }
+  .eale-intro-img{
+    width:min(42vw,180px); height:auto; object-fit:contain; pointer-events:none;
+    animation:eale-zoomIn 1.8s ease-out forwards;
+  }
+  .eale-intro-text{
+    position:fixed; bottom:12vh; left:50%; transform:translateX(-50%);
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size:0.95rem; font-style:italic; text-align:center; opacity:.95; max-width:90%;
+  }
+  @keyframes eale-zoomIn{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+  .eale-intro-hide{opacity:0; transition:opacity .35s ease}
+    /* surbrillance du meilleur résultat */
+li.best {
+  background-color: #e6f0ff;
+  font-weight: 600;
+}
+@media (prefers-color-scheme: dark){
+  li.best {
+    background-color: #1b2836; /* bleu foncé doux */
+  }
+}
+</style>
   <meta name="robots" content="noindex, nofollow" />
   <meta charset="UTF-8" />
   <title>Recherche de lieux</title>
@@ -182,8 +215,63 @@ ul#suggestionsAppareils:empty {
     background-color: #90caf9;
     color: #121212;
   }
+}/* === Liens : même couleur en normal / visited === */
+a { 
+  color:#1a73e8; 
+  text-decoration:none; 
+}
+a:visited { 
+  color:#1a73e8; 
+}
+
+/* Boutons-lien inline-links */
+.inline-links a,
+.inline-links a:visited { 
+  color:#1a73e8; 
+  border-color:#1a73e8; 
+}
+
+/* Encadré "Appareil manquant" */
+.missing-box {
+  background-color:#e6f0ff;
+  border-radius:12px;
+  padding:12px 16px;
+  margin-top:1.2rem;
+  text-align:center;
+  font-size:15px;
+}
+.missing-box a {
+  color:#1a73e8; 
+  font-weight:600;
+}
+
+/* --- Dark mode spécial liens et box --- */
+@media (prefers-color-scheme: dark){
+  a, a:visited { 
+    color:#90caf9; 
+  }
+  .inline-links a,
+  .inline-links a:visited { 
+    color:#90caf9; 
+    border-color:#90caf9; 
+  }
+  .inline-links a:hover { 
+    background-color:#90caf9; 
+    color:#121212; 
+  }
+
+  .missing-box {
+    background-color:#16202c;
+    border:1px solid #243447;
+  }
+  .missing-box a { 
+    color:#90caf9; 
+  }
 }
   </style>
+  <meta name="color-scheme" content="light dark">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)"  content="#121212">
 </head>
 <body>
   <div id="train-container">
@@ -198,7 +286,7 @@ ul#suggestionsAppareils:empty {
 
   <h1 style="margin-top: 1.5rem; margin-bottom: 0.4rem;">⚡️ Rechercher un appareil</h1>
   <ul id="suggestionsAppareils"></ul>
-  <input type="text" id="searchAppareil" placeholder="Ex : I 7105, TT 629, Guérite..." autocomplete="off" />
+  <input type="text" id="searchAppareil" placeholder="Ex : I 7105, TT 629..." autocomplete="off" />
   <div id="counterAppareil">🔌 Appareils consultés : chargement…</div>
   
 
@@ -265,7 +353,7 @@ function formatPortail(val) {
   }
 
   if (video) {
-    content += ` <a href="${video}" target="_blank" class="inline-link">▶️ Voir la vidéo</a>`;
+    content += ` <a href="${video}" target="_blank" class="inline-link">▶️ Explication</a>`;
   }
 
   return `<p><strong>🚧 Portail :</strong> ${content}</p>`;
@@ -302,13 +390,11 @@ function generateAppareilListHTML(currentLieu) {
   const matchingApps = appareils.filter(app => app.nom === currentLieu.nom && app.type === currentLieu.type);
 
   if (matchingApps.length === 0) {
-    // ➜ Retourne uniquement le petit encadré, sans titre au-dessus
+    // ➜ Retourne uniquement le petit encadré
     return `
-      <div style="background-color: #e6f0ff; border-radius: 12px; padding: 12px 16px; margin-top: 1.2rem; text-align: center; font-size: 15px;">
+      <div class="missing-box">
         🤝 Appareil manquant ? 
-        <a href="formulaire.html" style="color: #1a73e8; text-decoration: none; font-weight: 600;">
-          Aidez-nous à l’ajouter.
-        </a>
+        <a href="formulaire.html">Aidez-nous à l’ajouter.</a>
       </div>
     `;
   }
@@ -333,16 +419,15 @@ function generateAppareilListHTML(currentLieu) {
   }
 
   html += `
-    <div style="background-color: #e6f0ff; border-radius: 12px; padding: 12px 16px; margin-top: 1.2rem; text-align: center; font-size: 15px;">
+    <div class="missing-box">
       🤝 Appareil manquant ? 
-      <a href="formulaire.html" style="color: #1a73e8; text-decoration: none; font-weight: 600;">
-        Aidez-nous à l’ajouter.
-      </a>
+      <a href="formulaire.html">Aidez-nous à l’ajouter.</a>
     </div>
   `;
 
   return html;
-}function generateAlias(appareil, nom, sat, type) {
+}
+  function generateAlias(appareil, nom, sat, type) {
   const alias = new Set();
   const norm = str => str.toLowerCase().trim();
 
@@ -530,8 +615,7 @@ results.reverse().forEach((app, index, array) => {
 
   // Surligne le dernier (donc le plus pertinent après reverse)
   if (index === array.length - 1) {
-    li.style.backgroundColor = "#e6f0ff";
-    li.style.fontWeight = "600";
+    li.classList.add("best");
   }
 
   li.onclick = () => showAppareil(app);
@@ -607,6 +691,93 @@ setInterval(updateCounterAppareil, 3000);
 <p style="font-size: 13px; margin-top: 2rem;">
   🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration: none; color: #1a73e8;">À propos du projet</a>
 </p>
-<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.08.13</p>
+<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.08.16</p>
+  <script>
+(function(){
+  // ===== Config =====
+  var INTRO_DURATION_MS = 3000;             // Durée d’affichage (ms)
+  var STORAGE_KEY       = 'eale_intro_last_day'; // Clé de mémo 1/jour
+
+  // Date locale AAAA-MM-JJ (pas en UTC, évite les décalages)
+  function todayLocal(){
+    var d=new Date();
+    var y=d.getFullYear();
+    var m=String(d.getMonth()+1).padStart(2,'0');
+    var day=String(d.getDate()).padStart(2,'0');
+    return y+'-'+m+'-'+day;
+  }
+
+  // Afficher 1 fois par jour
+  function shouldShowIntro(){
+    try{
+      var last = localStorage.getItem(STORAGE_KEY);
+      var today = todayLocal();
+      if (last === today) return false;
+      localStorage.setItem(STORAGE_KEY, today);
+      return true;
+    }catch(e){ return true; } // si stockage bloqué, on affiche
+  }
+
+  function pickPhrase(){
+    var phrases = [
+      "Propulsé par Arnaud.",
+      "Une réalisation signée Arnaud.",
+      "Conçu et développé par Arnaud.",
+      "Réalisé avec soin par Arnaud.",
+      "Par Arnaud.",
+      "Fait par Arnaud.",
+      "Pensé par Arnaud.",
+      "Créé par Arnaud.",
+      "Une idée d’Arnaud.",
+      "Mis en place par Arnaud.",
+      "Lancé par Arnaud.",
+      "Conçu par Arnaud.",
+      "Mis en ligne par Arnaud.",
+      "Mis en route par Arnaud.",
+      "Fait maison par Arnaud.",
+      "Déclenché par Arnaud.",
+      "Organisé par Arnaud.",
+      "Initié par Arnaud.",
+      "Coordonné par Arnaud.",
+      "Centralisé par Arnaud.",
+      "Simplifié par Arnaud.",
+      "Géré par Arnaud.",
+      "Compilé par Arnaud.",
+      "Préparé par Arnaud.",
+      "Piloté par Arnaud.",
+      "Structuré par Arnaud.",
+      "Distribué par Arnaud.",
+      "Diffusé par Arnaud.",
+      "Rendu accessible par Arnaud.",
+      "Chargé par Arnaud.",
+      "Interface pensée par Arnaud."
+    ];
+    return phrases[Math.floor(Math.random()*phrases.length)];
+  }
+
+  function mountIntro(){
+    var overlay = document.createElement('div');
+    overlay.className = 'eale-intro-overlay';
+    overlay.setAttribute('aria-hidden','true');
+    overlay.innerHTML =
+   '<img class="eale-intro-img" alt="Logo EALE" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/Logo%20EALE.png">' +
+      '<div class="eale-intro-text" id="eale-intro-text"></div>';
+    document.body.appendChild(overlay);
+    document.getElementById('eale-intro-text').textContent = pickPhrase();
+
+    setTimeout(function(){
+      overlay.classList.add('eale-intro-hide');
+      setTimeout(function(){ overlay.remove(); }, 380);
+    }, INTRO_DURATION_MS);
+  }
+
+  // Lance dès que le DOM est prêt
+  if (document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', function(){ if (shouldShowIntro()) mountIntro(); });
+  } else {
+    if (shouldShowIntro()) mountIntro();
+  }
+})();
+</script>
 </body>
 </html>
