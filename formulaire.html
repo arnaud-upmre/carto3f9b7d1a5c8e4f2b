@@ -120,6 +120,23 @@ button{
 button:hover{background:var(--primary-hover);}
 button:disabled{opacity:.6;cursor:not-allowed;}
 
+/* Retour bouton */
+.return-link{
+  display:inline-block;
+  width:100%;
+  margin-top:12px;
+  text-align:center;
+  background:var(--primary);
+  color:#fff;
+  font-weight:600;
+  font-size:16px;
+  padding:14px;
+  border-radius:var(--radius);
+  text-decoration:none;
+  box-sizing:border-box;
+}
+.return-link:hover{background:var(--primary-hover);}
+
 /* Toast message */
 .toast{
   display:none;
@@ -253,11 +270,13 @@ button:disabled{opacity:.6;cursor:not-allowed;}
 
     <div class="actions">
       <button type="submit" id="submitBtn">✅ Envoyer</button>
+      <!-- Nouveau bouton retour -->
+      <a href="index.html" class="return-link">🔎 Retourner à la recherche</a>
     </div>
     <div id="toast" class="toast"></div>
   </form>
 
-  <div class="version">Version 01.06_11</div>
+  <div class="version">Version 01.08_1</div>
 </div>
 
 <!-- Overlay -->
@@ -282,7 +301,6 @@ const overlay = document.getElementById('overlay');
 /* >>> AJOUT compteur contributions <<< */
 const compteurContributionURL = "https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec";
 function incrementContribution(){
-  // on n'attend pas la réponse, on déclenche juste l’incrément côté Apps Script
   fetch(compteurContributionURL + "?increment=true").catch(()=>{});
 }
 /* >>> FIN AJOUT <<< */
@@ -336,10 +354,7 @@ form.addEventListener('submit', async (e)=>{
     });
     const text = await res.text();
     if(text.trim().toUpperCase() === 'OK'){
-      /* >>> AJOUT : incrément réel après succès <<< */
       incrementContribution();
-      /* >>> FIN AJOUT <<< */
-
       form.reset();
       setMode('Ajout');
       toast.textContent = '';
