@@ -231,11 +231,11 @@ function formatContact(val) {
   // On génère un bouton pour chaque numéro détecté
   const boutons = matches.map(num => {
     const cleaned = num.replace(/\s+/g, "");
-    return `<a href="tel:${cleaned}">${num}</a>`;
-  }).join("");
+    return `<a href="tel:${cleaned}" class="inline-link">${num}</a>`;
+  }).join(" ");
 
-  return `<p><strong>👤 Contact :</strong> ${texteSansNum}</p>
-          <div class="inline-links">${boutons}</div>`;
+  // ✅ tout est dans le même <p>, donc reste sur une seule ligne
+  return `<p><strong>👤 Contact :</strong> ${texteSansNum} ${boutons}</p>`;
 }
 
 function formatPortail(val) {
@@ -607,6 +607,6 @@ setInterval(updateCounterAppareil, 3000);
 <p style="font-size: 13px; margin-top: 2rem;">
   🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration: none; color: #1a73e8;">À propos du projet</a>
 </p>
-<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.08.11</p>
+<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.08.12</p>
 </body>
 </html>
