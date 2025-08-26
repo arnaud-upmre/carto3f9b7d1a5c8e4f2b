@@ -584,7 +584,7 @@
     "type": "SSP",
     "SAT": "SAT2",
     "accès": "",
-    "appareil": "I7408",
+    "appareil": "S7239-7404",
     "latitude": 50.9420418,
     "longitude": 1.8485297,
     "description": ""
@@ -1772,7 +1772,7 @@
   {
     "nom": "Hauteville",
     "type": "SSPA",
-    "SAT": "",
+    "SAT": "SAT1",
     "accès": "",
     "appareil": "5772",
     "latitude": 50.7050668,
@@ -1782,7 +1782,7 @@
   {
     "nom": "Hauteville",
     "type": "SSPA",
-    "SAT": "",
+    "SAT": "SAT1",
     "accès": "",
     "appareil": "S5734-5772",
     "latitude": 50.7044635,
@@ -1802,7 +1802,7 @@
   {
     "nom": "Hauteville",
     "type": "SSPA",
-    "SAT": "",
+    "SAT": "SAT1",
     "accès": "",
     "appareil": "I5736",
     "latitude": 50.7045707,
@@ -1813,7 +1813,7 @@
     "nom": "Hauteville",
     "type": "SSPA",
     "SAT": "",
-    "accès": "",
+    "accès": "SAT1",
     "appareil": "I5737",
     "latitude": 50.7057357,
     "longitude": 1.6043009,
