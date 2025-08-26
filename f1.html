@@ -286,7 +286,7 @@ a:visited {
 
   <h1 style="margin-top: 1.5rem; margin-bottom: 0.4rem;">⚡️ Rechercher un appareil</h1>
   <ul id="suggestionsAppareils"></ul>
-  <input type="text" id="searchAppareil" placeholder="Ex : I 7105, TT 629, Guérite..." autocomplete="off" />
+  <input type="text" id="searchAppareil" placeholder="Ex : I 7105, TT 629..." autocomplete="off" />
   <div id="counterAppareil">🔌 Appareils consultés : chargement…</div>
   
 
@@ -353,7 +353,7 @@ function formatPortail(val) {
   }
 
   if (video) {
-    content += ` <a href="${video}" target="_blank" class="inline-link">▶️ Voir la vidéo</a>`;
+    content += ` <a href="${video}" target="_blank" class="inline-link">▶️ Explication</a>`;
   }
 
   return `<p><strong>🚧 Portail :</strong> ${content}</p>`;
