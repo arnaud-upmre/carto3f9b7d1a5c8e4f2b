@@ -175,6 +175,33 @@ const compteurAppareilURL = "https://script.google.com/macros/s/AKfycbwJIlvcfNYR
 let lieux = [], fuse;
 let appareils = [], fuseAppareils;
 
+function formatContact(val) {
+  if (!val) return "";
+
+  // Regex qui détecte les numéros FR type 03 28 55 60 94 ou 0328556094
+  const phoneRegex = /\d{2}\s?\d{2}\s?\d{2}\s?\d{2}\s?\d{2}/g;
+
+  // On récupère tous les numéros
+  const matches = val.match(phoneRegex);
+
+  if (!matches) {
+    // Aucun numéro → on affiche juste le texte brut
+    return `<p><strong>👤 Contact :</strong> ${val}</p>`;
+  }
+
+  // On garde le texte sans les numéros
+  const texteSansNum = val.replace(phoneRegex, "").trim();
+
+  // On génère un bouton pour chaque numéro détecté
+  const boutons = matches.map(num => {
+    const cleaned = num.replace(/\s+/g, "");
+    return `<a href="tel:${cleaned}">${num}</a>`;
+  }).join("");
+
+  return `<p><strong>👤 Contact :</strong> ${texteSansNum}</p>
+          <div class="inline-links">${boutons}</div>`;
+}
+
   function formatPortail(val) {
   if (!val) return "";
   const cleaned = String(val).replace(/\s+/g, ""); // on retire seulement les espaces
@@ -385,7 +412,7 @@ let html = `<h2>📌 ${formatNomCompletLieu(lieu)}</h2>
   if (lieu.pk && lieu.numero_ligne && lieu.lignes)
     blocs.push(`<p><strong>🚄 PK ${lieu.pk}</strong> sur la ligne n°<strong>${lieu.numero_ligne}</strong> - ${lieu.lignes}</p>`);
   if (lieu.rss) blocs.push(formatRSS(lieu.rss));
-  if (lieu.contact) blocs.push(`<p><strong>👤 Contact :</strong> ${lieu.contact}</p>`);
+  if (lieu.contact) blocs.push(formatContact(lieu.contact));
   if (lieu.portail) blocs.push(formatPortail(lieu.portail));
   html += blocs.join('<hr class="separator" />');
   html += '<hr class="separator" />' + generateAppareilListHTML(lieu);
@@ -519,6 +546,6 @@ setInterval(updateCounterAppareil, 3000);
 <p style="font-size: 13px; margin-top: 2rem;">
   🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration: none; color: #1a73e8;">À propos du projet</a>
 </p>
-<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.07.11</p>
+<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.08.1</p>
 </body>
 </html>
