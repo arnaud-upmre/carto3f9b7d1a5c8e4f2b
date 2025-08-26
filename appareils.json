@@ -3808,5 +3808,515 @@
     "latitude": 50.7393439,
     "longitude": 2.5005012,
     "description": ""
+  },
+  {
+    "nom": "Avion",
+    "type": "",
+    "SAT": "",
+    "accès": "",
+    "appareil": "208-16",
+    "latitude": 50.40392,
+    "longitude": 2.831717,
+    "description": "A manœuvrer pour les consignations C de Bailleul sir Berthoult"
+  },
+  {
+    "nom": "Avion",
+    "type": "",
+    "SAT": "",
+    "accès": "",
+    "appareil": "209-3",
+    "latitude": 50.40953,
+    "longitude": 2.835755,
+    "description": "A manœuvrer pour les consignations C de Bailleul sir Berthoult"
+  },
+  {
+    "nom": "Billy",
+    "type": "SP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "Alimentation",
+    "latitude": 50.41541,
+    "longitude": 2.9205,
+    "description": "Alimentation SE (guérite SE)"
+  },
+  {
+    "nom": "Billy",
+    "type": "SP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT",
+    "latitude": 50.41541,
+    "longitude": 2.919918,
+    "description": ""
+  },
+  {
+    "nom": "Billy",
+    "type": "SP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT",
+    "latitude": 50.41541,
+    "longitude": 2.919853,
+    "description": ""
+  },
+  {
+    "nom": "Billy",
+    "type": "SP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT",
+    "latitude": 50.41541,
+    "longitude": 2.919975,
+    "description": ""
+  },
+  {
+    "nom": "Billy",
+    "type": "SP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT",
+    "latitude": 50.41538,
+    "longitude": 2.920953,
+    "description": ""
+  },
+  {
+    "nom": "Billy",
+    "type": "SP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "IP1",
+    "latitude": 50.41541,
+    "longitude": 2.919725,
+    "description": ""
+  },
+  {
+    "nom": "Billy",
+    "type": "SP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "IP2",
+    "latitude": 50.4154,
+    "longitude": 2.920123,
+    "description": ""
+  },
+  {
+    "nom": "Billy",
+    "type": "SP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "IMP Verquigneul",
+    "latitude": 50.41541,
+    "longitude": 2.919792,
+    "description": ""
+  },
+  {
+    "nom": "Billy",
+    "type": "SP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "IMP Terres noires",
+    "latitude": 50.4154,
+    "longitude": 2.920204,
+    "description": ""
+  },
+  {
+    "nom": "Billy",
+    "type": "SP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "SM1",
+    "latitude": 50.41539,
+    "longitude": 2.920662,
+    "description": ""
+  },
+  {
+    "nom": "Billy",
+    "type": "SP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "SM2",
+    "latitude": 50.4153,
+    "longitude": 2.920661,
+    "description": ""
+  },
+  {
+    "nom": "Boisleux",
+    "type": "SSP",
+    "SAT": "SAT1",
+    "accès": "",
+    "appareil": "183-14",
+    "latitude": 50.21275,
+    "longitude": 2.769949,
+    "description": ""
+  },
+  {
+    "nom": "Boisleux",
+    "type": "SSP",
+    "SAT": "SAT2",
+    "accès": "",
+    "appareil": "I35",
+    "latitude": 50.20754,
+    "longitude": 2.774688,
+    "description": ""
+  },
+  {
+    "nom": "Boisleux",
+    "type": "SSP",
+    "SAT": "SAT2",
+    "accès": "",
+    "appareil": "IL2",
+    "latitude": 50.20684,
+    "longitude": 2.775846,
+    "description": ""
+  },
+  {
+    "nom": "Phalempin",
+    "type": "SP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "Alimentation",
+    "latitude": 50.52213,
+    "longitude": 3.022268,
+    "description": ""
+  },
+  {
+    "nom": "Roeux",
+    "type": "PRCI",
+    "SAT": "",
+    "accès": "",
+    "appareil": "I417",
+    "latitude": 50.30513,
+    "longitude": 2.889165,
+    "description": ""
+  },
+  {
+    "nom": "Roeux",
+    "type": "PRCI",
+    "SAT": "",
+    "accès": "",
+    "appareil": "I415",
+    "latitude": 50.30475,
+    "longitude": 2.888874,
+    "description": ""
+  },
+  {
+    "nom": "Roeux",
+    "type": "PRCI",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT415",
+    "latitude": 50.30469,
+    "longitude": 2.889168,
+    "description": ""
+  },
+  {
+    "nom": "Roeux",
+    "type": "PRCI",
+    "SAT": "",
+    "accès": "",
+    "appareil": "I408",
+    "latitude": 50.30788,
+    "longitude": 2.891624,
+    "description": ""
+  },
+  {
+    "nom": "Roeux",
+    "type": "PRCI",
+    "SAT": "",
+    "accès": "",
+    "appareil": "I421",
+    "latitude": 50.31118,
+    "longitude": 2.893553,
+    "description": ""
+  },
+  {
+    "nom": "Honnechy",
+    "type": "L",
+    "SAT": "",
+    "accès": "",
+    "appareil": "I90507",
+    "latitude": 50.06043,
+    "longitude": 3.468799,
+    "description": ""
+  },
+  {
+    "nom": "Honnechy",
+    "type": "L",
+    "SAT": "",
+    "accès": "",
+    "appareil": "183-09 bis",
+    "latitude": 50.06042,
+    "longitude": 3.468744,
+    "description": "Rechauffage"
+  },
+  {
+    "nom": "Honnechy",
+    "type": "L",
+    "SAT": "",
+    "accès": "",
+    "appareil": "I90503",
+    "latitude": 50.05968,
+    "longitude": 3.466246,
+    "description": ""
+  },
+  {
+    "nom": "Honnechy",
+    "type": "L",
+    "SAT": "",
+    "accès": "",
+    "appareil": "I90505",
+    "latitude": 50.05965,
+    "longitude": 3.466145,
+    "description": "Sur le même support que le TT"
+  },
+  {
+    "nom": "Honnechy",
+    "type": "L",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT90505",
+    "latitude": 50.05965,
+    "longitude": 3.466126,
+    "description": "Sur le même support que l'interrupteur"
+  },
+  {
+    "nom": "Sassegnies",
+    "type": "L",
+    "SAT": "",
+    "accès": "",
+    "appareil": "I2072",
+    "latitude": 50.18954,
+    "longitude": 3.825314,
+    "description": ""
+  },
+  {
+    "nom": "Sassegnies",
+    "type": "L",
+    "SAT": "",
+    "accès": "",
+    "appareil": "I2070",
+    "latitude": 50.18957,
+    "longitude": 3.825395,
+    "description": ""
+  },
+  {
+    "nom": "Sassegnies L",
+    "type": "L",
+    "SAT": "",
+    "accès": "",
+    "appareil": "I2068",
+    "latitude": 50.18963,
+    "longitude": 3.825555,
+    "description": ""
+  },
+  {
+    "nom": "Sassegnies",
+    "type": "L",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT2070",
+    "latitude": 50.18956,
+    "longitude": 3.825375,
+    "description": ""
+  },
+  {
+    "nom": "Sin le noble",
+    "type": "SSP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "I36507",
+    "latitude": 50.35835,
+    "longitude": 3.102092,
+    "description": ""
+  },
+  {
+    "nom": "Sin le noble",
+    "type": "SSP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "I36510",
+    "latitude": 50.35828,
+    "longitude": 3.102076,
+    "description": ""
+  },
+  {
+    "nom": "Somain",
+    "type": "A",
+    "SAT": "",
+    "accès": "",
+    "appareil": "IA + TT + TC",
+    "latitude": 50.35516,
+    "longitude": 3.261817,
+    "description": "FSK"
+  },
+  {
+    "nom": "Leval",
+    "type": "SP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "I2086",
+    "latitude": 50.18604,
+    "longitude": 3.835129,
+    "description": ""
+  },
+  {
+    "nom": "Leval",
+    "type": "SP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT2086",
+    "latitude": 50.18601,
+    "longitude": 3.83515,
+    "description": ""
+  },
+  {
+    "nom": "Leval",
+    "type": "SP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "I2082",
+    "latitude": 50.18705,
+    "longitude": 3.834158,
+    "description": ""
+  },
+  {
+    "nom": "Leval",
+    "type": "SP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "I2092",
+    "latitude": 50.18737,
+    "longitude": 3.833876,
+    "description": ""
+  },
+  {
+    "nom": "Leval",
+    "type": "SP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "I2083",
+    "latitude": 50.18744,
+    "longitude": 3.833802,
+    "description": ""
+  },
+  {
+    "nom": "Leval",
+    "type": "SP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT2084",
+    "latitude": 50.18742,
+    "longitude": 3.833817,
+    "description": ""
+  },
+  {
+    "nom": "Oignies",
+    "type": "PRCI",
+    "SAT": "",
+    "accès": "",
+    "appareil": "I446",
+    "latitude": 50.46622,
+    "longitude": 2.974352,
+    "description": ""
+  },
+  {
+    "nom": "Lille VR GP",
+    "type": "",
+    "SAT": "",
+    "accès": "",
+    "appareil": "IP GP",
+    "latitude": 50.62904,
+    "longitude": 3.084384,
+    "description": ""
+  },
+  {
+    "nom": "Lille Europe",
+    "type": "PRCI",
+    "SAT": "",
+    "accès": "",
+    "appareil": "I537",
+    "latitude": 50.62853,
+    "longitude": 3.084766,
+    "description": ""
+  },
+  {
+    "nom": "Lille Europe",
+    "type": "PRCI",
+    "SAT": "",
+    "accès": "",
+    "appareil": "I536",
+    "latitude": 50.62775,
+    "longitude": 3.085424,
+    "description": ""
+  },
+  {
+    "nom": "Lille Europe",
+    "type": "PRCI",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT5256",
+    "latitude": 50.62185,
+    "longitude": 3.091286,
+    "description": ""
+  },
+  {
+    "nom": "Lille Europe",
+    "type": "PRCI",
+    "SAT": "",
+    "accès": "",
+    "appareil": "I535",
+    "latitude": 50.61447,
+    "longitude": 3.099587,
+    "description": ""
+  },
+  {
+    "nom": "Lille Europe",
+    "type": "PRCI",
+    "SAT": "",
+    "accès": "",
+    "appareil": "I534",
+    "latitude": 50.61475,
+    "longitude": 3.099336,
+    "description": ""
+  },
+  {
+    "nom": "Lille Europe",
+    "type": "PRCI",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT360",
+    "latitude": 50.62896,
+    "longitude": 3.084765,
+    "description": ""
+  },
+  {
+    "nom": "Lille Europe",
+    "type": "PRCI",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT535",
+    "latitude": 50.6145,
+    "longitude": 3.099565,
+    "description": ""
+  },
+  {
+    "nom": "Lille Europe",
+    "type": "PRCI",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT534",
+    "latitude": 50.61476,
+    "longitude": 3.099324,
+    "description": ""
+  },
+  {
+    "nom": "Lille Europe",
+    "type": "PRCI",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT537",
+    "latitude": 50.62857,
+    "longitude": 3.084737,
+    "description": ""
   }
 ]
