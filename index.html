@@ -238,11 +238,11 @@ function formatContact(val) {
           <div class="inline-links">${boutons}</div>`;
 }
 
- function formatPortail(val) {
+function formatPortail(val) {
   if (!val) return "";
 
-  // Regex stricte : numéros français 10 chiffres, avec ou sans espaces
-  const phoneRegex = /^(\d{10}|\d{2}(\s?\d{2}){4})$/;
+  // Regex stricte pour numéros FR + option séquence (, ; # * chiffres)
+  const phoneRegex = /^(\d{10}|\d{2}(\s?\d{2}){4})([,\;\*#0-9]*)?$/;
 
   if (phoneRegex.test(val)) {
     const cleaned = val.replace(/\s+/g, "");
@@ -592,6 +592,6 @@ setInterval(updateCounterAppareil, 3000);
 <p style="font-size: 13px; margin-top: 2rem;">
   🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration: none; color: #1a73e8;">À propos du projet</a>
 </p>
-<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.08.3</p>
+<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.08.4</p>
 </body>
 </html>
