@@ -183,6 +183,19 @@
       if(!q || !fuse){ closePortal(); return; }
       const results = fuse.search(q, { limit: 20 }).map(r=>r.item);
       if(!results.length){ closePortal(); return; }
+      // 🔽 Réordonner : résultats qui commencent par la saisie en premier
+results.sort((a, b) => {
+  const queryLower = q.toLowerCase();
+  const aNom = (a.nom || '').toLowerCase();
+  const bNom = (b.nom || '').toLowerCase();
+
+  const aStarts = aNom.startsWith(queryLower);
+  const bStarts = bNom.startsWith(queryLower);
+
+  if (aStarts && !bStarts) return -1; // a en premier
+  if (!aStarts && bStarts) return 1;  // b en premier
+  return 0; // sinon garder l'ordre original de Fuse
+});
       const html = results.map(l=>(
         `<li data-lat="${l.latitude}" data-lng="${l.longitude}" data-label="${escapeHtml(l.nom)}">`+
         `${escapeHtml(l.nom)}${l.type?' '+escapeHtml(l.type):''}${l.SAT?' / '+escapeHtml(l.SAT):''}</li>`
