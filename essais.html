@@ -5,125 +5,139 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <meta name="robots" content="noindex, nofollow" />
   <title>🚆 Itinéraire entre deux postes</title>
-  <!-- Version visible -->
-  <meta name="version" content="trajet.html V0.2 (2025-08-27)" />
+  <meta name="version" content="trajet.html V0.4 (2025-08-27)" />
+
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
-  <!-- Fuse.js for search -->
+  <!-- Fuse.js (recherche) -->
   <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
-  <!-- Leaflet for map -->
+  <!-- Leaflet (carte) -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+
   <style>
+    /* Reset largeur pour éviter débordements iOS */
+    *, *::before, *::after { box-sizing: border-box; }
+
     :root{
-      --bg:#ffffff; --fg:#222; --muted:#666; --primary:#0f62fe; --card:#f5f7fa; --border:#e6e9ef;
+      --bg:#ffffff; --fg:#222; --muted:#666; --card:#f5f7fa; --border:#e6e9ef;
       --shadow: 0 6px 20px rgba(0,0,0,.08);
     }
     @media (prefers-color-scheme: dark){
-      :root{ --bg:#0b0b0b; --fg:#eee; --muted:#aaa; --primary:#6aa3ff; --card:#141414; --border:#222; --shadow: 0 8px 24px rgba(0,0,0,.4); }
+      :root{ --bg:#0b0b0b; --fg:#eee; --muted:#aaa; --card:#141414; --border:#222; --shadow: 0 8px 24px rgba(0,0,0,.4); }
     }
-    html,body{height:100%}
+
+    html, body { height: 100%; }
     body{
-      margin:0; font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell; background:var(--bg); color:var(--fg);
+      margin:0; font-family:'Inter', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell;
+      background:var(--bg); color:var(--fg);
       display:flex; flex-direction:column; min-height:100vh; -webkit-tap-highlight-color:transparent;
     }
-    header{
-      position:sticky; top:0; z-index:20; background:var(--bg); border-bottom:1px solid var(--border);
-    }
-    .hero{
-      display:flex; align-items:center; gap:.75rem; padding: .75rem 1rem;
-    }
+
+    /* En-tête */
+    header{ position:sticky; top:0; z-index:20; background:var(--bg); border-bottom:1px solid var(--border); }
+    .hero{ display:flex; align-items:center; gap:.75rem; padding:.75rem 1rem; }
     .hero img{ height:40px; width:auto; image-rendering:crisp-edges; }
     .hero .title{ font-weight:700; font-size:1.1rem; letter-spacing:.2px; }
+
     main{ flex:1; display:flex; flex-direction:column; gap:1rem; padding:1rem; }
 
+    /* Cartes/rectangles */
     .card{ background:var(--card); border:1px solid var(--border); border-radius:14px; box-shadow:var(--shadow); }
-    .card.pad{ padding:1rem; }
+    .card.pad{ padding:1rem; overflow:hidden; }
+    .sep{ height:1px; background:var(--border); margin:.25rem 0 .75rem; }
+    .hint{ color:var(--muted); font-size:.85rem; }
 
-    .search-grid{ display:grid; grid-template-columns:1fr; gap:.75rem; }
-    .field{
-      position:relative; display:flex; flex-direction:column; gap:.4rem;
-    }
+    /* Recherche */
+    .search-grid{ display:grid; grid-template-columns:1fr; gap:.9rem; }
+    .field{ position:relative; display:flex; flex-direction:column; gap:.4rem; }
     .label{ font-size:.9rem; color:var(--muted); display:flex; align-items:center; gap:.35rem; }
+
     .swap{
-      display:inline-flex; align-items:center; gap:.35rem; padding:.35rem .5rem; border-radius:999px; border:1px solid var(--border); background:transparent; color:var(--fg);
-      font-size:.85rem; cursor:pointer;
+      margin-left:.5rem; display:inline-flex; align-items:center; gap:.35rem;
+      padding:.35rem .6rem; border-radius:999px; border:1px solid var(--border);
+      background:transparent; color:var(--fg); font-size:.85rem; cursor:pointer;
     }
-    .swap:active{ transform:translateY(1px); }
+    .swap:active{ transform: translateY(1px); }
 
     input[type="text"]{
-      width:100%; padding:.85rem 1rem; border-radius:12px; border:1px solid var(--border); background:#fff; color:#222; outline:none; font-size:1rem;
+      -webkit-appearance:none; appearance:none; display:block; width:100%; max-width:100%; margin:0;
+      padding:.85rem 1rem; border-radius:12px; border:1px solid var(--border); background:#fff; color:#222; outline:none; font-size:1rem;
     }
-    @media (prefers-color-scheme: dark){ input[type="text"]{ background:#0f0f0f; color:#eee; border-color:#1b1b1b; } }
+    @media (prefers-color-scheme: dark){
+      input[type="text"]{ background:#0f0f0f; color:#eee; border-color:#1b1b1b; }
+    }
 
-    .suggest{ 
-      position:absolute; top:100%; left:0; right:0; background:var(--bg); border:1px solid var(--border); border-radius:12px; 
-      overflow:hidden; margin-top:.35rem; max-height:260px; overflow-y:auto; box-shadow:var(--shadow); display:none;
-      z-index:9999; /* ✅ Toujours au premier plan */
+    /* Suggestions */
+    .suggest{
+      position:absolute; top:100%; left:0; right:0; background:var(--bg); border:1px solid var(--border); border-radius:12px;
+      margin-top:.35rem; max-height:260px; overflow-y:auto; -webkit-overflow-scrolling:touch;
+      box-shadow:var(--shadow); display:none; z-index:10000;
     }
     .suggest ul{ list-style:none; margin:0; padding:0; }
     .suggest li{ padding:.7rem .9rem; border-bottom:1px solid var(--border); cursor:pointer; font-size:.98rem; }
     .suggest li:last-child{ border-bottom:none; }
-    .suggest li:hover{ background:rgba(15, 98, 254, .08); }
+    .suggest li:hover, .suggest li.active{ background:rgba(15, 98, 254, .08); }
 
+    /* KPIs */
     .kpis{ display:grid; grid-template-columns:1fr 1fr; gap:.5rem; }
     .kpi{ background:var(--bg); border:1px dashed var(--border); border-radius:10px; padding:.75rem; text-align:center; }
     .kpi .val{ font-weight:700; font-size:1.15rem; }
     .kpi .sub{ color:var(--muted); font-size:.8rem; }
 
-    .inline-links{ display:flex; flex-wrap:wrap; gap:.5rem; margin-top:.6rem; }
+    /* Liens externes */
+    .inline-links{ display:flex; flex-wrap:wrap; gap:.5rem; margin-top:.75rem; }
     .btn{
-      display:inline-flex; align-items:center; gap:.5rem; padding:.6rem .8rem; border-radius:999px; border:1px solid var(--border); background:#fff; color:#222; text-decoration:none; font-weight:600; font-size:.9rem;
+      display:inline-flex; align-items:center; gap:.5rem; padding:.6rem .8rem; border-radius:999px; border:1px solid var(--border);
+      background:#fff; color:#222; text-decoration:none; font-weight:600; font-size:.9rem;
     }
-    .btn span{ font-weight:700; }
     @media (prefers-color-scheme: dark){ .btn{ background:#0f0f0f; color:#eee; border-color:#1b1b1b; } }
 
+    /* Carte */
     #map{ width:100%; height:360px; border-radius:14px; border:1px solid var(--border); }
 
     footer{ padding:1rem; color:var(--muted); font-size:.85rem; text-align:center; }
-
-    .sep{ height:1px; background:var(--border); margin:.25rem 0 .75rem; }
   </style>
 </head>
 <body>
   <header>
     <div class="hero">
       <img src="carto3f9b7d1a5c8e4f2b/train.gif" alt="Animation train" />
-      <div>
-        <div class="title">Itinéraire entre deux postes</div>
-      </div>
+      <div><div class="title">Itinéraire entre deux postes</div></div>
     </div>
   </header>
 
   <main>
-    <!-- Bloc recherche -->
+    <!-- Recherche -->
     <section class="card pad">
       <div class="search-grid">
-        <div class="field">
-          <div class="label">📍 Départ — poste / SAT <button id="swapBtn" class="swap" title="Inverser"><span>⇅</span> Inverser</button></div>
+        <div class="field" id="fieldFrom">
+          <div class="label">📍 Départ
+            <button id="swapBtn" class="swap" title="Inverser"><span>⇅</span> Inverser</button>
+          </div>
           <input id="inputFrom" type="text" placeholder="Ex. ETAPLES" autocomplete="off" />
           <div class="suggest" id="suggestFrom"><ul></ul></div>
         </div>
-        <div class="field">
-          <div class="label">🎯 Arrivée — poste / SAT</div>
+        <div class="field" id="fieldTo">
+          <div class="label">🎯 Arrivée</div>
           <input id="inputTo" type="text" placeholder="Ex. RUMINGHEM" autocomplete="off" />
           <div class="suggest" id="suggestTo"><ul></ul></div>
         </div>
       </div>
     </section>
 
-    <!-- Résultats -->
+    <!-- Résumé -->
     <section class="card pad" id="resultCard" style="display:none">
       <div style="display:flex; align-items:center; justify-content:space-between; gap:.5rem; flex-wrap:wrap;">
         <div style="font-weight:700;">🛣️ Résumé du trajet</div>
-        <div class="hint" id="routeSource" title="Source du calcul">(données OSRM / OpenStreetMap)</div>
+        <div class="hint">(calcul via OSRM / OpenStreetMap)</div>
       </div>
       <div class="sep"></div>
       <div class="kpis">
         <div class="kpi"><div class="val" id="kpiDistance">—</div><div class="sub">Distance</div></div>
         <div class="kpi"><div class="val" id="kpiDuration">—</div><div class="sub">Temps estimé</div></div>
       </div>
-      <div class="inline-links" id="extLinks" style="margin-top:.75rem"></div>
+      <div class="inline-links" id="extLinks"></div>
     </section>
 
     <!-- Carte -->
@@ -136,30 +150,32 @@
       <div id="map" aria-label="Carte de l'itinéraire"></div>
     </section>
 
-    <!-- Retour à l'index -->
+    <!-- Retour -->
     <section class="card pad" style="text-align:center;">
-      <a href="index.html" class="btn">🔍 <span>Faire une recherche</span></a>
+      <a href="index.html" class="btn">🔍 Faire une recherche</a>
     </section>
   </main>
 
   <footer>
-    <div>trajet.html — <strong>V0.2</strong> — 27/08/2025</div>
+    <div>trajet.html — <strong>V0.4</strong> — 27/08/2025</div>
   </footer>
 
   <script>
   // ==============================
   // 🔧 Paramètres à adapter
   // ==============================
-  const LIEUX_JSON_URL = 'postes.json'; // ⬅️ Mets ton JSON réel
-  const DEFAULT_ZOOM = 9;
+  const LIEUX_JSON_URL = 'postes.json'; // ➜ Remplace par le chemin de ton JSON réel (nom, type, SAT, latitude, longitude)
 
+  // ==============================
+  // 🧠 État & utilitaires
+  // ==============================
   let lieux = [];
   let fuse = null;
 
-  const $ = s => document.querySelector(s);
+  const $  = s => document.querySelector(s);
 
-  function slugify(str){
-    return (str||'').normalize('NFD').replace(/\p{Diacritic}/gu,'').toLowerCase();
+  function escapeHtml(text){
+    return String(text ?? '').replace(/[&<>\"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[m]));
   }
   function formatDistance(m){
     if(!Number.isFinite(m)) return '—';
@@ -170,85 +186,108 @@
     if(!Number.isFinite(s)) return '—';
     const h = Math.floor(s/3600);
     const m = Math.round((s%3600)/60);
-    if(h <= 0) return m + ' min';
-    return h + ' h ' + String(m).padStart(2,'0') + ' min';
+    return h ? (h + ' h ' + String(m).padStart(2,'0') + ' min') : (m + ' min');
   }
-
   function renderSuggestionItem(item){
     const l = item.item;
     const type = l.type ? (' ' + l.type) : '';
-    const sat = l.SAT ? (' / ' + l.SAT) : '';
+    const sat  = l.SAT  ? (' / ' + l.SAT)  : '';
     return `<div style="font-weight:600;">${escapeHtml(l.nom)}${escapeHtml(type)}${escapeHtml(sat)}</div>`;
-  }
-  function escapeHtml(text){
-    return String(text ?? '').replace(/[&<>\"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;','\\'':'&#39;'}[m]));
   }
   function setInputSelection(input, lieu){
     input.value = `${lieu.nom}${lieu.type? ' ' + lieu.type : ''}${lieu.SAT ? ' / ' + lieu.SAT : ''}`;
-    input.dataset.lat = lieu.latitude;
-    input.dataset.lng = lieu.longitude;
-    input.dataset.id = slugify(lieu.nom + ' ' + (lieu.SAT||''));
+    input.dataset.lat = String(lieu.latitude);
+    input.dataset.lng = String(lieu.longitude);
+  }
+  function getPointFromInput(input){
+    const lat = Number(input.dataset.lat);
+    const lng = Number(input.dataset.lng);
+    if(!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
+    return { lat, lng, label: input.value.trim() };
   }
 
+  // ==============================
+  // 🔎 Autocomplete (avec navigation clavier)
+  // ==============================
   function attachAutocomplete(inputEl, suggestEl){
     const ul = suggestEl.querySelector('ul');
-    function close(){ suggestEl.style.display = 'none'; }
+    let lastResults = [];
+
     function open(){ suggestEl.style.display = 'block'; }
+    function close(){ suggestEl.style.display = 'none'; ul.innerHTML=''; lastResults = []; }
 
-    inputEl.addEventListener('input', () => {
-      const q = inputEl.value.trim();
-      if(!q){ ul.innerHTML=''; close(); return; }
-      const results = fuse.search(q, { limit: 20 });
-      ul.innerHTML = results.map(r => `<li data-idx="${r.refIndex}">${renderSuggestionItem(r)}</li>`).join('');
-      if(results.length) open(); else close();
-    });
+    function render(q){
+      if(!q){ close(); return; }
+      lastResults = fuse.search(q, { limit: 20 });
+      if(!lastResults.length){ close(); return; }
+      ul.innerHTML = lastResults.map(r => `<li data-idx="${r.refIndex}">${renderSuggestionItem(r)}</li>`).join('');
+      open();
+    }
 
-    inputEl.addEventListener('keydown', (e)=>{
+    inputEl.addEventListener('input', () => render(inputEl.value.trim()));
+    inputEl.addEventListener('focus', () => { if(inputEl.value.trim()) render(inputEl.value.trim()); });
+
+    // Gestion clavier (Enter valide la 1ère, flèches naviguent)
+    inputEl.addEventListener('keydown', (e) => {
+      const items = Array.from(ul.querySelectorAll('li'));
       if(e.key === 'Enter'){
-        const q = inputEl.value.trim();
-        const results = fuse.search(q, { limit: 1 });
-        if(results.length){
-          const l = results[0].item; setInputSelection(inputEl, l); close();
+        if(items.length){
+          const li = items.find(li => li.classList.contains('active')) || items[0];
+          const l = lieux[ Number(li.dataset.idx) ];
+          setInputSelection(inputEl, l); close();
           inputEl.dispatchEvent(new Event('selected'));
+          e.preventDefault();
         }
+      }else if(e.key === 'ArrowDown'){
         e.preventDefault();
-      }
-      if(e.key === 'Escape'){ close(); }
+        if(!items.length) return;
+        const i = items.findIndex(li => li.classList.contains('active'));
+        if(i >= 0){ items[i].classList.remove('active'); }
+        const next = items[ i >= 0 ? Math.min(i+1, items.length-1) : 0 ];
+        next.classList.add('active'); next.scrollIntoView({ block:'nearest' });
+      }else if(e.key === 'ArrowUp'){
+        e.preventDefault();
+        if(!items.length) return;
+        const i = items.findIndex(li => li.classList.contains('active'));
+        if(i > 0){ items[i].classList.remove('active'); items[i-1].classList.add('active'); items[i-1].scrollIntoView({ block:'nearest' }); }
+      }else if(e.key === 'Escape'){ close(); }
     });
 
-    ul.addEventListener('click', (e)=>{
+    ul.addEventListener('click', (e) => {
       const li = e.target.closest('li'); if(!li) return;
-      const idx = Number(li.getAttribute('data-idx'));
-      const l = lieux[idx];
+      const l = lieux[ Number(li.dataset.idx) ];
       setInputSelection(inputEl, l); close();
       inputEl.dispatchEvent(new Event('selected'));
     });
-    document.addEventListener('click', (e)=>{ if(!suggestEl.contains(e.target) && e.target !== inputEl) close(); });
+
+    document.addEventListener('click', (e) => { if(!suggestEl.contains(e.target) && e.target !== inputEl) close(); });
   }
 
+  // ==============================
+  // 🧭 Routage (OSRM public)
+  // ==============================
   async function fetchRoute(from, to){
     const url = `https://router.project-osrm.org/route/v1/driving/${from.lng},${from.lat};${to.lng},${to.lat}?overview=full&geometries=geojson&alternatives=false&steps=false`;
     const r = await fetch(url, { cache:'no-store' });
     if(!r.ok) throw new Error('OSRM indisponible');
     const data = await r.json();
     if(!data.routes || !data.routes.length) throw new Error('Aucun itinéraire');
-    const route = data.routes[0];
-    return { distance: route.distance, duration: route.duration, geometry: route.geometry };
+    return data.routes[0]; // { distance, duration, geometry }
   }
 
   function buildExternalLinks(from, to){
     const origin = `${from.lat},${from.lng}`;
-    const dest = `${to.lat},${to.lng}`;
-    const gmaps = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(dest)}&travelmode=driving`;
-    const apple = `https://maps.apple.com/?saddr=${encodeURIComponent(origin)}&daddr=${encodeURIComponent(dest)}&dirflg=d`;
-    const waze = `https://waze.com/ul?ll=${encodeURIComponent(dest)}&navigate=yes`;
+    const dest   = `${to.lat},${to.lng}`;
     return [
-      {href: gmaps, label:'Google Maps'},
-      {href: apple, label:'Apple Plans'},
-      {href: waze, label:'Waze'}
+      {href:`https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${dest}&travelmode=driving`, label:'Google Maps'},
+      {href:`https://maps.apple.com/?saddr=${origin}&daddr=${dest}&dirflg=d`, label:'Apple Plans'},
+      {href:`https://waze.com/ul?ll=${dest}&navigate=yes`, label:'Waze'}
     ];
   }
 
+  // ==============================
+  // 🗺️ Carte Leaflet
+  // ==============================
   let map, routeLayer, markersLayer;
   function ensureMap(){
     if(map) return map;
@@ -271,21 +310,26 @@
       bounds.extend(L.latLngBounds(coords));
     }
     map.fitBounds(bounds.pad(0.2), { animate:true });
-    setTimeout(()=> map.invalidateSize(), 150);
+    setTimeout(() => map.invalidateSize(), 150);
   }
 
+  // ==============================
+  // 🔁 Flux principal
+  // ==============================
   async function init(){
+    // Charger LIEUX
     try{
       const r = await fetch(LIEUX_JSON_URL, { cache:'no-store' });
       const raw = await r.json();
-      lieux = (Array.isArray(raw) ? raw : (raw.lieux || raw.data || [])).filter(Boolean).map(l => ({
+      // Normalisation souple
+      const arr = Array.isArray(raw) ? raw : (raw.lieux || raw.data || []);
+      lieux = arr.map(l => ({
         nom: l.nom || l.name || '',
         type: l.type || '',
-        SAT: l.SAT || l.sat || '',
-        latitude: Number(l.latitude ?? l.lat ?? l.y),
-        longitude: Number(l.longitude ?? l.lng ?? l.x),
-        acces: l['accès'] || l.acces || l.access || ''
-      })).filter(l => Number.isFinite(l.latitude) && Number.isFinite(l.longitude) && l.nom);
+        SAT:  l.SAT  || l.sat || '',
+        latitude:  Number(l.latitude ?? l.lat ?? l.y),
+        longitude: Number(l.longitude ?? l.lng ?? l.x)
+      })).filter(l => l.nom && Number.isFinite(l.latitude) && Number.isFinite(l.longitude));
 
       fuse = new Fuse(lieux, {
         includeScore: true,
@@ -293,8 +337,7 @@
         keys: [
           { name:'nom', weight:0.7 },
           { name:'type', weight:0.2 },
-          { name:'SAT', weight:0.4 },
-          { name:'acces', weight:0.1 }
+          { name:'SAT',  weight:0.4 }
         ]
       });
     }catch(err){
@@ -303,12 +346,61 @@
       return;
     }
 
+    // Autocomplete
     attachAutocomplete($('#inputFrom'), $('#suggestFrom'));
-    attachAutocomplete($('#inputTo'), $('#suggestTo'));
+    attachAutocomplete($('#inputTo'),   $('#suggestTo'));
 
+    // Sélection => calcule route
     $('#inputFrom').addEventListener('selected', onSelectionChange);
     $('#inputTo').addEventListener('selected', onSelectionChange);
 
+    // Bouton inverser
     $('#swapBtn').addEventListener('click', () => {
-      const a = $('#inputFrom').value; const b = $('#inputTo').value;
-      const alat = $('#inputFrom').dataset.lat; const blat = $('#inputTo').dataset
+      const from = $('#inputFrom'), to = $('#inputTo');
+      [from.value, to.value] = [to.value, from.value];
+      [from.dataset.lat, to.dataset.lat] = [to.dataset.lat, from.dataset.lat];
+      [from.dataset.lng, to.dataset.lng] = [to.dataset.lng, from.dataset.lng];
+      onSelectionChange();
+    });
+  }
+
+  function getPoints(){
+    const from = getPointFromInput($('#inputFrom'));
+    const to   = getPointFromInput($('#inputTo'));
+    return (from && to) ? { from, to } : null;
+  }
+
+  async function onSelectionChange(){
+    const pts = getPoints();
+    if(!pts) return;
+
+    $('#resultCard').style.display = 'block';
+    $('#mapCard').style.display    = 'block';
+    $('#kpiDistance').textContent  = '…';
+    $('#kpiDuration').textContent  = '…';
+    $('#extLinks').innerHTML       = '';
+
+    try{
+      const route = await fetchRoute(pts.from, pts.to);
+      $('#kpiDistance').textContent = formatDistance(route.distance);
+      $('#kpiDuration').textContent = formatDuration(route.duration);
+
+      const links = buildExternalLinks(pts.from, pts.to);
+      $('#extLinks').innerHTML = links.map(l => `<a class="btn" target="_blank" rel="noopener" href="${l.href}">🔗 ${l.label}</a>`).join('');
+
+      renderMap(pts.from, pts.to, route.geometry);
+    }catch(err){
+      console.error(err);
+      $('#kpiDistance').textContent = '—';
+      $('#kpiDuration').textContent = '—';
+      // Fallback : au moins proposer les liens extérieurs + carte avec repères
+      const links = buildExternalLinks(pts.from, pts.to);
+      $('#extLinks').innerHTML = links.map(l => `<a class="btn" target="_blank" rel="noopener" href="${l.href}">🔗 ${l.label}</a>`).join('');
+      renderMap(pts.from, pts.to, null);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
