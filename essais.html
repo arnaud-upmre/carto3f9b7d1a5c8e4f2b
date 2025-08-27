@@ -24,11 +24,11 @@
 
     #train-container{width:100%; max-width:600px; height:48px; overflow:hidden; margin-bottom:1.5rem; position:relative}
     #train{position:absolute; top:0; left:0; height:42px; animation:trainVaEtVient 28s ease-in-out infinite}
-  @keyframes trainVaEtVient {
-  0%, 100% { left: 0; }
-  45%, 50% { left: calc(100% - 130px); } /* ajuste ici */
-  95% { left: 0; }
-}
+    @keyframes trainVaEtVient {
+      0%, 100% { left: 0; }
+      45%, 50% { left: calc(100% - 130px); }
+      95% { left: 0; }
+    }
 
     h1{font-size:20px; margin:0 0 .8rem 0; font-weight:600; padding:0 1rem}
 
@@ -36,10 +36,10 @@
     @media (prefers-color-scheme: dark){ .card{border-color:#333; box-shadow:0 6px 15px rgba(255,255,255,.05)} }
     .card.pad{padding:1rem}
 
-    .label{font-size:.9rem; color:#666; margin:0 0 .35rem .15rem; display:flex; align-items:center; gap:.5rem}
+    .label{font-size:.9rem; color:#666; margin:0 0 .5rem .15rem; display:flex; align-items:center; gap:.5rem}
     @media (prefers-color-scheme: dark){ .label{color:#bdbdbd} }
-    .row{margin-bottom:.9rem}
-    @media (prefers-color-scheme: dark){ .swap{border-color:#444; color:#e5e5e5} }
+    .row{margin-bottom:1.4rem} /* plus d’espace */
+
     input[type="text"]{
       width:100%; max-width:600px; padding:12px 16px; font-size:16px; border-radius:10px;
       border:1px solid var(--border); outline:none; transition:border-color .3s ease, box-shadow .3s ease;
@@ -50,6 +50,24 @@
       input[type="text"]{background:#1e1e1e; color:#e5e5e5; border-color:#555}
       input[type="text"]:focus{box-shadow:0 4px 14px rgba(144,202,249,.25)}
     }
+
+    .swap {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      font-size: 20px; /* juste l’emoji 🔄 */
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+    .swap:hover {opacity:0.7}
+
+    /* Animation rotation */
+    @keyframes spinOnce {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+    .swap.spin { animation: spinOnce 0.6s ease; }
 
     .kpis{display:grid; grid-template-columns:1fr 1fr; gap:.75rem}
     .kpi{border:1px dashed #e6e6e6; border-radius:10px; text-align:center; padding:.75rem; background:var(--bg)}
@@ -62,14 +80,13 @@
     #map{width:100%; height:360px; border-radius:12px; border:1px solid #eee}
     @media (prefers-color-scheme: dark){ #map{border-color:#333} }
 
-    /* Suggestions en portal (jamais coupées) */
     .suggest-portal{
       position:fixed; left:0; top:0; width:0; height:auto; display:none; z-index:100000;
       background:var(--card); border:1px solid #eee; border-radius:12px; overflow:hidden;
       box-shadow:0 6px 15px rgba(0,0,0,.1);
     }
     @media (prefers-color-scheme: dark){ .suggest-portal{border-color:#333; box-shadow:0 6px 15px rgba(255,255,255,.05)} }
-    .suggest-portal ul{list-style:none; margin:0; padding:0; max-height:260px; overflow:auto; -webkit-overflow-scrolling:touch}
+    .suggest-portal ul{list-style:none; margin:0; padding:0; max-height:260px; overflow:auto}
     .suggest-portal li{padding:12px 16px; border-bottom:1px solid #eee; cursor:pointer; background:var(--card)}
     .suggest-portal li:last-child{border-bottom:none}
     .suggest-portal li:hover{background:#f0f8ff}
@@ -77,50 +94,6 @@
       .suggest-portal li{border-color:#2a2a2a}
       .suggest-portal li:hover{background:#1b2836}
     }
-
-    footer{color:#6b7280; font-size:10px; margin-top:2rem}
-    
-.swap {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 32px;
-  height: 32px;
-  border: 1px solid #ddd;
-  border-radius: 50%;
-  background: #f9f9f9;
-  cursor: pointer;
-  font-size: 16px;
-  line-height: 30px; /* centre verticalement l’emoji */
-  text-align: center;
-  transition: background 0.2s;
-}
-.swap:hover {
-  background: #e6f0ff;
-  color: var(--accent);
-}
-@media (prefers-color-scheme: dark){
-  .swap {
-    border-color: #444;
-    background: #1e1e1e;
-    color: #e5e5e5;
-  }
-  .swap:hover {
-    background: #2a3a50;
-    color: #90caf9;
-  }
-}
-@media (prefers-color-scheme: dark){
-  .swap{ border-color:#444; color:#e5e5e5; }
-}
-    /* Animation rotation */
-@keyframes spinOnce {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
-.swap.spin {
-  animation: spinOnce 0.6s ease;
-}
   </style>
 </head>
 <body>
@@ -132,19 +105,18 @@
     <h1>🚘 Itinéraire entre deux postes</h1>
 
     <!-- Recherche -->
-  <section class="card pad" style="margin-bottom:1rem; position:relative;">
-  <!-- Bouton en haut à droite du cadre -->
-  <button id="swapBtn" class="swap" title="Inverser">🔄</button>
+    <section class="card pad" style="margin-bottom:1rem; position:relative;">
+      <button id="swapBtn" class="swap" title="Inverser">🔄</button>
 
-  <div class="row">
-    <div class="label">📍 Départ</div>
-    <input id="inputFrom" type="text" ... />
-  </div>
-  <div class="row">
-    <div class="label">🎯 Arrivée</div>
-    <input id="inputTo" type="text" ... />
-  </div>
-</section>
+      <div class="row">
+        <div class="label">📍 Départ</div>
+        <input id="inputFrom" type="text" />
+      </div>
+      <div class="row">
+        <div class="label">🎯 Arrivée</div>
+        <input id="inputTo" type="text" />
+      </div>
+    </section>
 
     <!-- Résumé -->
     <section class="card pad" id="resultCard" style="display:none; margin-bottom:1rem;">
@@ -156,8 +128,6 @@
         <div class="kpi"><div class="val" id="kpiDistance">—</div><div>Distance</div></div>
         <div class="kpi"><div class="val" id="kpiDuration">—</div><div>Temps estimé</div></div>
       </div>
-
-      <!-- Nouveau sous-titre + boutons externes -->
       <div style="font-size:.95rem; font-weight:600; margin:.25rem 0 .5rem;">🔀 Voir d’autres itinéraires possibles :</div>
       <div class="inline-links" id="extLinks"></div>
     </section>
@@ -168,25 +138,22 @@
         <div style="font-weight:700">🗺️ Aperçu de l'itinéraire</div>
         <div style="font-size:.85rem; color:#666">Glisse/zoome pour explorer</div>
       </div>
-      <div id="map" aria-label="Carte de l'itinéraire"></div>
+      <div id="map"></div>
     </section>
 
     <!-- Retour -->
- <div style="text-align:center; margin-top: 1.5rem;">
-  <a href="index.html" class="btn">⬅️ Retour à l’accueil</a>
-</div>
+    <div style="text-align:center; margin-top: 1.5rem;">
+      <a href="index.html" class="btn">⬅️ Retour à l’accueil</a>
+    </div>
 
-    <!-- Portail suggestions -->
     <div id="suggestPortal" class="suggest-portal"><ul></ul></div>
-
   </div>
 
   <script>
-  const LIEUX_JSON_URL = 'postes.json'; // ➜ remplace par ton JSON si besoin
+  const LIEUX_JSON_URL = 'postes.json';
 
   let lieux=[], fuse;
   let map, routeLayer, markersLayer;
-
   const $ = s => document.querySelector(s);
   const portal = $('#suggestPortal');
   const portalUL = portal.querySelector('ul');
@@ -206,15 +173,6 @@
     portalOwner = input;
   }
   function closePortal(){ portal.style.display = 'none'; portalUL.innerHTML = ''; portalOwner = null; }
-  function repositionPortal(){
-    if(!portalOwner || portal.style.display==='none') return;
-    const r = portalOwner.getBoundingClientRect();
-    portal.style.left = r.left + 'px';
-    portal.style.top  = (r.bottom + 6) + 'px';
-    portal.style.width = r.width + 'px';
-  }
-  window.addEventListener('scroll', repositionPortal, true);
-  window.addEventListener('resize', repositionPortal);
 
   function setInputSelection(input, lat, lng, label){
     input.value = label;
@@ -229,26 +187,22 @@
       if(!q || !fuse){ closePortal(); return; }
       const results = fuse.search(q, { limit: 20 }).map(r=>r.item);
       if(!results.length){ closePortal(); return; }
-      // 🔽 Réordonner : résultats qui commencent par la saisie en premier
-results.sort((a, b) => {
-  const queryLower = q.toLowerCase();
-  const aNom = (a.nom || '').toLowerCase();
-  const bNom = (b.nom || '').toLowerCase();
-
-  const aStarts = aNom.startsWith(queryLower);
-  const bStarts = bNom.startsWith(queryLower);
-
-  if (aStarts && !bStarts) return -1; // a en premier
-  if (!aStarts && bStarts) return 1;  // b en premier
-  return 0; // sinon garder l'ordre original de Fuse
-});
+      results.sort((a, b) => {
+        const queryLower = q.toLowerCase();
+        const aNom = (a.nom || '').toLowerCase();
+        const bNom = (b.nom || '').toLowerCase();
+        const aStarts = aNom.startsWith(queryLower);
+        const bStarts = bNom.startsWith(queryLower);
+        if (aStarts && !bStarts) return -1;
+        if (!aStarts && bStarts) return 1;
+        return 0;
+      });
       const html = results.map(l=>(
         `<li data-lat="${l.latitude}" data-lng="${l.longitude}" data-label="${escapeHtml(l.nom)}">`+
         `${escapeHtml(l.nom)}${l.type?' '+escapeHtml(l.type):''}${l.SAT?' / '+escapeHtml(l.SAT):''}</li>`
       )).join('');
       openPortalFor(inputEl, html);
     });
-    inputEl.addEventListener('focus', ()=>{ if(inputEl.value.trim()) inputEl.dispatchEvent(new Event('input')); });
   }
 
   portalUL.addEventListener('click', (e)=>{
@@ -257,34 +211,22 @@ results.sort((a, b) => {
     closePortal();
   });
 
-  document.addEventListener('click', (e)=>{
-    if(portal.style.display==='none') return;
-    if(e.target===portal || portal.contains(e.target)) return;
-    if(e.target===portalOwner) return;
-    closePortal();
-  });
-
   async function fetchRoute(f,t){
     const url=`https://router.project-osrm.org/route/v1/driving/${f.lng},${f.lat};${t.lng},${t.lat}?overview=full&geometries=geojson&alternatives=false&steps=false`;
-    const r=await fetch(url,{cache:'no-store'}); if(!r.ok) throw new Error('OSRM');
+    const r=await fetch(url); if(!r.ok) throw new Error('OSRM');
     const d=await r.json(); if(!d.routes?.length) throw new Error('no route');
     return d.routes[0];
   }
 
-function buildExternalLinks(from, to){
-  const o = `${from.lat},${from.lng}`;
-  const d = `${to.lat},${to.lng}`;
-
-  const g = `https://www.google.com/maps/dir/?api=1&origin=${o}&destination=${d}&travelmode=driving`;
-  const a = `https://maps.apple.com/?saddr=${o}&daddr=${d}&dirflg=d`;
-  const wLive = `https://www.waze.com/live-map/directions?dir_first=no&from=ll.${o}&to=ll.${d}`;
-
-  return [
-    { href: g,      label: 'Google Maps' },
-    { href: a,      label: 'Apple Plans' },
-    { href: wLive,  label: 'Waze' } // ✅ Live Map avec choix des itinéraires
-  ];
-}
+  function buildExternalLinks(from, to){
+    const o = `${from.lat},${from.lng}`;
+    const d = `${to.lat},${to.lng}`;
+    return [
+      { href:`https://www.google.com/maps/dir/?api=1&origin=${o}&destination=${d}&travelmode=driving`, label:'Google Maps' },
+      { href:`https://maps.apple.com/?saddr=${o}&daddr=${d}&dirflg=d`, label:'Apple Plans' },
+      { href:`https://www.waze.com/live-map/directions?dir_first=no&from=ll.${o}&to=ll.${d}`, label:'Waze' }
+    ];
+  }
 
   function ensureMap(){
     if(map) return map;
@@ -301,7 +243,7 @@ function buildExternalLinks(from, to){
     L.marker([t.lat,t.lng]).addTo(markersLayer).bindPopup('Arrivée');
     const b=L.latLngBounds([[f.lat,f.lng],[t.lat,t.lng]]);
     if(geom?.coordinates?.length){ geom.coordinates.forEach(c=>b.extend([c[1],c[0]])); }
-    map.fitBounds(b.pad(0.2)); setTimeout(()=>map.invalidateSize(),150);
+    map.fitBounds(b.pad(0.2));
   }
 
   function getPointFromInput(input){
@@ -321,42 +263,31 @@ function buildExternalLinks(from, to){
       $('#kpiDuration').textContent=formatDuration(route.duration);
       $('#extLinks').innerHTML=buildExternalLinks(f,t).map(l=>`<a class="btn" target="_blank" rel="noopener" href="${l.href}">${l.label}</a>`).join('');
       renderMap(f,t,route.geometry);
-    }catch(e){
+    }catch{
       $('#kpiDistance').textContent='—'; $('#kpiDuration').textContent='—';
-      $('#extLinks').innerHTML=buildExternalLinks(f,t).map(l=>`<a class="btn" target="_blank" rel="noopener" href="${l.href}">${l.label}</a>`).join('');
-      renderMap(f,t,null);
     }
   }
 
   async function init(){
-    const r=await fetch(LIEUX_JSON_URL,{cache:'no-store'}); const raw=await r.json();
-    const arr=Array.isArray(raw)?raw:(raw.lieux||raw.data||[]);
-    lieux=arr.map(l=>({nom:l.nom||'',type:l.type||'',SAT:l.SAT||'',latitude:+(l.latitude??l.lat??l.y),longitude:+(l.longitude??l.lng??l.x)}))
-             .filter(l=>l.nom && Number.isFinite(l.latitude) && Number.isFinite(l.longitude));
-    fuse=new Fuse(lieux,{keys:[{name:'nom',weight:.5},{name:'type',weight:.3},{name:'SAT',weight:.2}],includeScore:true,threshold:.3,ignoreLocation:true});
-
+    const r=await fetch(LIEUX_JSON_URL); const raw=await r.json();
+    lieux=(Array.isArray(raw)?raw:(raw.lieux||raw.data||[])).map(l=>({
+      nom:l.nom||'',type:l.type||'',SAT:l.SAT||'',latitude:+(l.latitude),longitude:+(l.longitude)
+    })).filter(l=>l.nom && Number.isFinite(l.latitude) && Number.isFinite(l.longitude));
+    fuse=new Fuse(lieux,{keys:[{name:'nom',weight:.5},{name:'type',weight:.3},{name:'SAT',weight:.2}],threshold:.3});
     attachAutocomplete($('#inputFrom'));
     attachAutocomplete($('#inputTo'));
     $('#inputFrom').addEventListener('selected', onSelectionChange);
     $('#inputTo').addEventListener('selected', onSelectionChange);
-  $('#swapBtn').addEventListener('click', e=>{
-  const btn = e.currentTarget;
-
-  // ajoute la classe pour lancer l’animation
-  btn.classList.add('spin');
-
-  // retire la classe une fois l’animation finie pour pouvoir la rejouer
-  btn.addEventListener('animationend', ()=>btn.classList.remove('spin'), {once:true});
-
-  // inversion des champs
-  const a=$('#inputFrom'), b=$('#inputTo');
-  [a.value,b.value]=[b.value,a.value];
-  [a.dataset.lat,b.dataset.lat]=[b.dataset.lat,a.dataset.lat];
-  [a.dataset.lng,b.dataset.lng]=[b.dataset.lng,a.dataset.lng];
-  onSelectionChange();
-});
+    $('#swapBtn').addEventListener('click', e=>{
+      const btn=e.currentTarget; btn.classList.add('spin');
+      btn.addEventListener('animationend', ()=>btn.classList.remove('spin'), {once:true});
+      const a=$('#inputFrom'), b=$('#inputTo');
+      [a.value,b.value]=[b.value,a.value];
+      [a.dataset.lat,b.dataset.lat]=[b.dataset.lat,a.dataset.lat];
+      [a.dataset.lng,b.dataset.lng]=[b.dataset.lng,a.dataset.lng];
+      onSelectionChange();
+    });
   }
-
   document.addEventListener('DOMContentLoaded', init);
   </script>
 </body>
