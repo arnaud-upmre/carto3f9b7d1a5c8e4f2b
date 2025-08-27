@@ -133,7 +133,6 @@
     <!-- Portail suggestions -->
     <div id="suggestPortal" class="suggest-portal"><ul></ul></div>
 
-    <footer>Arnaud — trajet.html V0.7</footer>
   </div>
 
   <script>
@@ -213,14 +212,20 @@
     return d.routes[0];
   }
 
-  function buildExternalLinks(f,t){
-    const o=`${f.lat},${f.lng}`, d=`${t.lat},${t.lng}`;
-    return [
-      {href:`https://www.google.com/maps/dir/?api=1&origin=${o}&destination=${d}&travelmode=driving`,label:'Google Maps'},
-      {href:`https://maps.apple.com/?saddr=${o}&daddr=${d}&dirflg=d`,label:'Apple Plans'},
-      {href:`https://waze.com/ul?ll=${d}&navigate=yes`,label:'Waze'}
-    ];
-  }
+function buildExternalLinks(from, to){
+  const o = `${from.lat},${from.lng}`;
+  const d = `${to.lat},${to.lng}`;
+
+  const g = `https://www.google.com/maps/dir/?api=1&origin=${o}&destination=${d}&travelmode=driving`;
+  const a = `https://maps.apple.com/?saddr=${o}&daddr=${d}&dirflg=d`;
+  const wLive = `https://www.waze.com/live-map/directions?dir_first=no&from=ll.${o}&to=ll.${d}`;
+
+  return [
+    { href: g,      label: 'Google Maps' },
+    { href: a,      label: 'Apple Plans' },
+    { href: wLive,  label: 'Waze' } // ✅ Live Map avec choix des itinéraires
+  ];
+}
 
   function ensureMap(){
     if(map) return map;
