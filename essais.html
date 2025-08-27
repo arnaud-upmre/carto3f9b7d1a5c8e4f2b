@@ -80,6 +80,21 @@
     }
 
     footer{color:#6b7280; font-size:10px; margin-top:2rem}
+    
+    .swap{
+  position: absolute;   /* se positionne dans le cadre */
+  top: 10px;
+  right: 10px;
+  padding: .25rem .6rem;
+  border: 1px solid #ddd;
+  border-radius: 999px;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+@media (prefers-color-scheme: dark){
+  .swap{ border-color:#444; color:#e5e5e5; }
+}
   </style>
 </head>
 <body>
@@ -91,18 +106,19 @@
     <h1>🚘 Itinéraire entre deux postes</h1>
 
     <!-- Recherche -->
-    <section class="card pad" style="margin-bottom:1rem;">
-      <div class="row">
-        <div class="label">📍 Départ
-          <button id="swapBtn" class="swap" title="Inverser">⇅ Inverser</button>
-        </div>
-        <input id="inputFrom" type="text" placeholder="Ex. ETAPLES" autocomplete="off" />
-      </div>
-      <div class="row">
-        <div class="label">🎯 Arrivée</div>
-        <input id="inputTo" type="text" placeholder="Ex. RUMINGHEM" autocomplete="off" />
-      </div>
-    </section>
+  <section class="card pad" style="margin-bottom:1rem; position:relative;">
+  <!-- Bouton en haut à droite du cadre -->
+  <button id="swapBtn" class="swap" title="Inverser">⇅ Inverser</button>
+
+  <div class="row">
+    <div class="label">📍 Départ</div>
+    <input id="inputFrom" type="text" ... />
+  </div>
+  <div class="row">
+    <div class="label">🎯 Arrivée</div>
+    <input id="inputTo" type="text" ... />
+  </div>
+</section>
 
     <!-- Résumé -->
     <section class="card pad" id="resultCard" style="display:none; margin-bottom:1rem;">
