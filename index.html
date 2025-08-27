@@ -693,7 +693,7 @@ setInterval(updateCounterAppareil, 3000);
   <script>
 // 🔀 Sélection aléatoire d'un train parmi train1.gif ... trainN.gif
 document.addEventListener('DOMContentLoaded', () => {
-  const totalImages = 2; // ← ⚠️ Mets ici le nombre TOTAL d'images (train1.gif à trainN.gif)
+  const totalImages = 11; // ← ⚠️ Mets ici le nombre TOTAL d'images (train1.gif à trainN.gif)
   const n = Math.floor(Math.random() * totalImages) + 1; // nombre aléatoire entre 1 et totalImages
   const img = document.getElementById('train');
   img.src = `images/train${n}.gif`;
