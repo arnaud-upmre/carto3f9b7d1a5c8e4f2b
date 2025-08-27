@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>🚆 Itinéraire entre deux postes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box}
+    :root{--bg:#fff;--fg:#222;--muted:#666;--border:#ccc;--card:#fff;--accent:#1a73e8}
+    @media (prefers-color-scheme: dark){
+      :root{--bg:#121212;--fg:#e5e5e5;--muted:#aaa;--border:#555;--card:#1e1e1e;--accent:#90caf9}
+    }
+    body{
+      margin:0; background:var(--bg); color:var(--fg);
+      font-family:'Inter',system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+      display:flex; flex-direction:column; min-height:100vh; align-items:center; padding:1rem;
+    }
+    .wrap{width:100%; max-width:600px}
+
+    #train-container{width:100%; max-width:600px; height:48px; overflow:hidden; margin-bottom:1.5rem; position:relative}
+    #train{position:absolute; top:0; left:0; height:42px; animation:trainVaEtVient 28s ease-in-out infinite}
+    @keyframes trainVaEtVient {
+      0%, 100% { left: 0; }
+      45%, 50% { left: calc(100% - 140px); }
+      95% { left: 0; }
+    }
+
+    h1{font-size:20px; margin:0 0 .8rem 0; font-weight:600; padding:0 1rem}
+
+    .card{background:var(--card); border:1px solid #eee; border-radius:12px; box-shadow:0 8px 24px rgba(0,0,0,.08)}
+    @media (prefers-color-scheme: dark){ .card{border-color:#333; box-shadow:0 6px 15px rgba(255,255,255,.05)} }
+    .card.pad{padding:1rem}
+
+    .label{font-size:.9rem; color:#666; margin:0 0 .5rem .15rem; display:flex; align-items:center; gap:.5rem}
+    @media (prefers-color-scheme: dark){ .label{color:#bdbdbd} }
+    .row{margin-bottom:1.4rem} /* plus d’espace */
+
+    input[type="text"]{
+      width:100%; max-width:600px; padding:12px 16px; font-size:16px; border-radius:10px;
+      border:1px solid var(--border); outline:none; transition:border-color .3s ease, box-shadow .3s ease;
+      background:#fff; color:#333;
+    }
+    input[type="text"]:focus{border-color:var(--accent); box-shadow:0 4px 14px rgba(26,115,232,.4)}
+    @media (prefers-color-scheme: dark){
+      input[type="text"]{background:#1e1e1e; color:#e5e5e5; border-color:#555}
+      input[type="text"]:focus{box-shadow:0 4px 14px rgba(144,202,249,.25)}
+    }
+
+    .swap {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      font-size: 12px; /* juste l’emoji 🔄 */
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+    .swap:hover {opacity:0.7}
+
+    /* Animation rotation */
+    @keyframes spinOnce {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+    .swap.spin { animation: spinOnce 0.6s ease; }
+
+    .kpis{display:grid; grid-template-columns:1fr 1fr; gap:.75rem}
+    .kpi{border:1px dashed #e6e6e6; border-radius:10px; text-align:center; padding:.75rem; background:var(--bg)}
+    .kpi .val{font-weight:700; font-size:1.1rem}
+
+    .inline-links{display:flex; gap:.5rem; flex-wrap:wrap}
+    .btn{padding:.6rem .8rem; border:1px solid var(--accent); border-radius:10px; text-decoration:none; color:var(--accent); background:transparent; font-weight:600}
+    .btn:hover{background:var(--accent); color:#fff}
+
+    #map{width:100%; height:360px; border-radius:12px; border:1px solid #eee}
+    @media (prefers-color-scheme: dark){ #map{border-color:#333} }
+
+    .suggest-portal{
+      position:fixed; left:0; top:0; width:0; height:auto; display:none; z-index:100000;
+      background:var(--card); border:1px solid #eee; border-radius:12px; overflow:hidden;
+      box-shadow:0 6px 15px rgba(0,0,0,.1);
+    }
+    @media (prefers-color-scheme: dark){ .suggest-portal{border-color:#333; box-shadow:0 6px 15px rgba(255,255,255,.05)} }
+    .suggest-portal ul{list-style:none; margin:0; padding:0; max-height:260px; overflow:auto}
+    .suggest-portal li{padding:12px 16px; border-bottom:1px solid #eee; cursor:pointer; background:var(--card)}
+    .suggest-portal li:last-child{border-bottom:none}
+    .suggest-portal li:hover{background:#f0f8ff}
+    @media (prefers-color-scheme: dark){
+      .suggest-portal li{border-color:#2a2a2a}
+      .suggest-portal li:hover{background:#1b2836}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div id="train-container">
+<img id="train"
+     src="images/train1.gif"
+     alt="Train animé"
+     title="Clique pour changer de train"
+     style="cursor:pointer" />
+    </div>
+
+    <h1>🚘 Itinéraire entre deux postes</h1>
+
+    <!-- Recherche -->
+    <section class="card pad" style="margin-bottom:1rem; position:relative;">
+      <button id="swapBtn" class="swap" title="Inverser">🔄</button>
+
+      <div class="row">
+        <div class="label">📍 Départ</div>
+        <input id="inputFrom" type="text" placeholder="Ex: Etaples" />
+      </div>
+      <div class="row">
+        <div class="label">🎯 Arrivée</div>
+        <input id="inputTo" type="text" placeholder="Ex: Ruminghem" />
+      </div>
+    </section>
+
+    <!-- Résumé -->
+    <section class="card pad" id="resultCard" style="display:none; margin-bottom:1rem;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:.5rem;">
+        <div style="font-weight:700">🛣️ Résumé du trajet</div>
+        <div style="font-size:.85rem; color:#666">Temps et distance estimés</div>
+      </div>
+      <div class="kpis" style="margin:.6rem 0 1rem;">
+        <div class="kpi"><div class="val" id="kpiDistance">—</div><div>Distance</div></div>
+        <div class="kpi"><div class="val" id="kpiDuration">—</div><div>Temps estimé</div></div>
+      </div>
+      <div style="font-size:.95rem; font-weight:600; margin:.25rem 0 .5rem;">🔀 Voir d’autres itinéraires possibles :</div>
+      <div class="inline-links" id="extLinks"></div>
+    </section>
+
+    <!-- Carte -->
+    <section class="card pad" id="mapCard" style="display:none; margin-bottom:1rem;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:.5rem;">
+        <div style="font-weight:700">🗺️ Aperçu de l'itinéraire</div>
+        <div style="font-size:.85rem; color:#666">Glisse/zoome pour explorer</div>
+      </div>
+      <div id="map"></div>
+    </section>
+
+    <!-- Retour -->
+    <div style="text-align:center; margin-top: 1.5rem;">
+      <a href="index.html" class="btn">⬅️ Retour à l’accueil</a>
+    </div>
+
+    <div id="suggestPortal" class="suggest-portal"><ul></ul></div>
+  </div>
+
+  <script>
+  const LIEUX_JSON_URL = 'postes.json';
+
+  let lieux=[], fuse;
+  let map, routeLayer, markersLayer;
+  const $ = s => document.querySelector(s);
+  const portal = $('#suggestPortal');
+  const portalUL = portal.querySelector('ul');
+  let portalOwner = null;
+
+  function escapeHtml(t){return String(t??'').replace(/[&<>\"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+  function formatDistance(m){if(!Number.isFinite(m))return'—';return m<950?Math.round(m)+' m':(m/1000).toFixed(1).replace('.',',')+' km'}
+  function formatDuration(s){if(!Number.isFinite(s))return'—';const h=Math.floor(s/3600),m=Math.round((s%3600)/60);return h?`${h} h ${String(m).padStart(2,'0')} min`:`${m} min`}
+
+  function openPortalFor(input, html){
+    const r = input.getBoundingClientRect();
+    portal.style.left = r.left + 'px';
+    portal.style.top  = (r.bottom + 6) + 'px';
+    portal.style.width = r.width + 'px';
+    portalUL.innerHTML = html;
+    portal.style.display = 'block';
+    portalOwner = input;
+  }
+  function closePortal(){ portal.style.display = 'none'; portalUL.innerHTML = ''; portalOwner = null; }
+
+  function setInputSelection(input, lat, lng, label){
+    input.value = label;
+    input.dataset.lat = lat;
+    input.dataset.lng = lng;
+    input.dispatchEvent(new Event('selected'));
+  }
+
+  function attachAutocomplete(inputEl){
+    inputEl.addEventListener('input', ()=>{
+      const q = inputEl.value.trim();
+      if(!q || !fuse){ closePortal(); return; }
+      const results = fuse.search(q, { limit: 20 }).map(r=>r.item);
+      if(!results.length){ closePortal(); return; }
+      results.sort((a, b) => {
+        const queryLower = q.toLowerCase();
+        const aNom = (a.nom || '').toLowerCase();
+        const bNom = (b.nom || '').toLowerCase();
+        const aStarts = aNom.startsWith(queryLower);
+        const bStarts = bNom.startsWith(queryLower);
+        if (aStarts && !bStarts) return -1;
+        if (!aStarts && bStarts) return 1;
+        return 0;
+      });
+      const html = results.map(l=>(
+        `<li data-lat="${l.latitude}" data-lng="${l.longitude}" data-label="${escapeHtml(l.nom)}">`+
+        `${escapeHtml(l.nom)}${l.type?' '+escapeHtml(l.type):''}${l.SAT?' / '+escapeHtml(l.SAT):''}</li>`
+      )).join('');
+      openPortalFor(inputEl, html);
+    });
+  }
+
+  portalUL.addEventListener('click', (e)=>{
+    const li = e.target.closest('li'); if(!li || !portalOwner) return;
+    setInputSelection(portalOwner, li.dataset.lat, li.dataset.lng, li.dataset.label);
+    closePortal();
+  });
+
+  async function fetchRoute(f,t){
+    const url=`https://router.project-osrm.org/route/v1/driving/${f.lng},${f.lat};${t.lng},${t.lat}?overview=full&geometries=geojson&alternatives=false&steps=false`;
+    const r=await fetch(url); if(!r.ok) throw new Error('OSRM');
+    const d=await r.json(); if(!d.routes?.length) throw new Error('no route');
+    return d.routes[0];
+  }
+
+  function buildExternalLinks(from, to){
+    const o = `${from.lat},${from.lng}`;
+    const d = `${to.lat},${to.lng}`;
+    return [
+      { href:`https://www.google.com/maps/dir/?api=1&origin=${o}&destination=${d}&travelmode=driving`, label:'Google Maps' },
+      { href:`https://maps.apple.com/?saddr=${o}&daddr=${d}&dirflg=d`, label:'Apple Plans' },
+      { href:`https://www.waze.com/live-map/directions?dir_first=no&from=ll.${o}&to=ll.${d}`, label:'Waze' }
+    ];
+  }
+
+  function ensureMap(){
+    if(map) return map;
+    map=L.map('map',{zoomControl:true,scrollWheelZoom:true});
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap'}).addTo(map);
+    routeLayer=L.geoJSON(null,{style:{weight:5,opacity:.9}}).addTo(map);
+    markersLayer=L.layerGroup().addTo(map);
+    return map;
+  }
+  function renderMap(f,t,geom){
+    ensureMap(); routeLayer.clearLayers(); markersLayer.clearLayers();
+    if(geom) routeLayer.addData(geom);
+    L.marker([f.lat,f.lng]).addTo(markersLayer).bindPopup('Départ').openPopup();
+    L.marker([t.lat,t.lng]).addTo(markersLayer).bindPopup('Arrivée');
+    const b=L.latLngBounds([[f.lat,f.lng],[t.lat,t.lng]]);
+    if(geom?.coordinates?.length){ geom.coordinates.forEach(c=>b.extend([c[1],c[0]])); }
+    map.fitBounds(b.pad(0.2));
+  }
+
+  function getPointFromInput(input){
+    const lat=Number(input.dataset.lat), lng=Number(input.dataset.lng);
+    return (Number.isFinite(lat)&&Number.isFinite(lng))?{lat,lng,label:input.value.trim()}:null;
+  }
+
+  async function onSelectionChange(){
+    const f=getPointFromInput($('#inputFrom')), t=getPointFromInput($('#inputTo'));
+    if(!f||!t) return;
+    $('#resultCard').style.display='block';
+    $('#mapCard').style.display='block';
+    $('#kpiDistance').textContent='…'; $('#kpiDuration').textContent='…'; $('#extLinks').innerHTML='';
+    try{
+      const route=await fetchRoute(f,t);
+      $('#kpiDistance').textContent=formatDistance(route.distance);
+      $('#kpiDuration').textContent=formatDuration(route.duration);
+      $('#extLinks').innerHTML=buildExternalLinks(f,t).map(l=>`<a class="btn" target="_blank" rel="noopener" href="${l.href}">${l.label}</a>`).join('');
+      renderMap(f,t,route.geometry);
+    }catch{
+      $('#kpiDistance').textContent='—'; $('#kpiDuration').textContent='—';
+    }
+  }
+
+  async function init(){
+    const r=await fetch(LIEUX_JSON_URL); const raw=await r.json();
+    lieux=(Array.isArray(raw)?raw:(raw.lieux||raw.data||[])).map(l=>({
+      nom:l.nom||'',type:l.type||'',SAT:l.SAT||'',latitude:+(l.latitude),longitude:+(l.longitude)
+    })).filter(l=>l.nom && Number.isFinite(l.latitude) && Number.isFinite(l.longitude));
+    fuse=new Fuse(lieux,{keys:[{name:'nom',weight:.5},{name:'type',weight:.3},{name:'SAT',weight:.2}],threshold:.3});
+    attachAutocomplete($('#inputFrom'));
+    attachAutocomplete($('#inputTo'));
+    $('#inputFrom').addEventListener('selected', onSelectionChange);
+    $('#inputTo').addEventListener('selected', onSelectionChange);
+    $('#swapBtn').addEventListener('click', e=>{
+      const btn=e.currentTarget; btn.classList.add('spin');
+      btn.addEventListener('animationend', ()=>btn.classList.remove('spin'), {once:true});
+      const a=$('#inputFrom'), b=$('#inputTo');
+      [a.value,b.value]=[b.value,a.value];
+      [a.dataset.lat,b.dataset.lat]=[b.dataset.lat,a.dataset.lat];
+      [a.dataset.lng,b.dataset.lng]=[b.dataset.lng,a.dataset.lng];
+      onSelectionChange();
+    });
+  }
+  document.addEventListener('DOMContentLoaded', init);
+    // 🔀 Sélection aléatoire d'un train parmi train1.gif ... trainN.gif
+/* === Train aléatoire + changement au clic ===
+   Mets le nombre EXACT d'images => train1.gif ... trainN.gif */
+const TOTAL_TRAINS = 11; // ⬅️ change ce nombre selon tes fichiers
+
+const trainImg = document.getElementById('train');
+    // Fallback global si une image manque
+trainImg.onerror = () => { trainImg.src = 'images/train1.gif'; };
+let lastN = null;
+
+function pickRandomTrain() {
+  // Tire un nombre entre 1 et TOTAL_TRAINS, différent du précédent si possible
+  let n;
+  do {
+    n = Math.floor(Math.random() * TOTAL_TRAINS) + 1;
+  } while (TOTAL_TRAINS > 1 && n === lastN); // évite le même qu’avant
+  lastN = n;
+
+  trainImg.src = `images/train${n}.gif`;
+
+}
+
+// 1) Tirage au chargement
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', pickRandomTrain);
+} else {
+  pickRandomTrain();
+}
+
+// 2) Tirage au clic (sans recharger la page)
+trainImg.addEventListener('click', pickRandomTrain);
+  </script>
+</body>
+</html>
