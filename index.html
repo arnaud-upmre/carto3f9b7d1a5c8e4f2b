@@ -729,16 +729,13 @@ if (document.readyState === 'loading') {
 // 2) Tirage au clic (sans recharger la page)
 trainImg.addEventListener('click', pickRandomTrain);
   </script>
-  <div style="text-align:center; margin-top: 30px;">
-  <a href="formulaire.html" style="display: inline-block; background-color: #007BFF; color: white; padding: 12px 24px; font-size: 16px; border-radius: 12px; text-decoration: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: background-color 0.3s ease;">
-    ✍️ CONTRIBUEZ
+<div style="text-align:center; margin-top:30px;">
+  <a href="formulaire.html"
+     style="display:inline-block; background:#E8F2FF; color:#0B5ED7; padding:12px 24px; font-size:16px; border-radius:12px; text-decoration:none; box-shadow:0 4px 6px rgba(0,0,0,0.1); border:1px solid #BBD5FF; font-weight:600; transition:background-color .2s ease;">
+    ✍️ Contribution (<span id="compteur-valeur">chargement…</span>)
   </a>
 </div>
 
-<!-- Compteur contributions -->
-<div id="compteur-contrib" style="text-align:center; margin-top:8px; font-size:14px; color:#6b7280;">
-  📝 Contributions enregistrées : <span id="compteur-valeur">chargement…</span>
-</div>
 <script>
   const compteurContributionURL = "https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec";
   async function refreshContrib(){
@@ -754,10 +751,14 @@ trainImg.addEventListener('click', pickRandomTrain);
   refreshContrib();
   setInterval(refreshContrib, 3000);
 </script>
-<p style="font-size: 13px; margin-top: 2rem;">
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration: none; color: #1a73e8;">À propos</a>
-</p>
-<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.08.31</p>
+<div style="text-align:center; margin-top:2rem;">
+  <p style="font-size:13px; margin:0;">
+    🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration:none; color:#1a73e8;">À propos</a>
+  </p>
+  <p style="font-size:10px; color:#ccc; margin:0;">
+    Arnaud - V1.08.31
+  </p>
+</div>
   <script>
 (function(){
   // ===== Config =====
