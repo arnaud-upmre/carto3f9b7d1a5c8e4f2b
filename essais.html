@@ -291,7 +291,7 @@
   document.addEventListener('DOMContentLoaded', init);
     // 🔀 Sélection aléatoire d'un train parmi train1.gif ... trainN.gif
 document.addEventListener('DOMContentLoaded', () => {
-  const totalImages = 2; // ← METS ICI le NOMBRE TOTAL d'images (ex: 2 si train1 & train2)
+  const totalImages = 11; // ← METS ICI le NOMBRE TOTAL d'images (ex: 2 si train1 & train2)
   const n = Math.floor(Math.random() * totalImages) + 1; // 1..totalImages
   const img = document.getElementById('train');
   img.src = `images/train${n}.gif`;
