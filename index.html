@@ -275,7 +275,11 @@ a:visited {
 </head>
 <body>
   <div id="train-container">
-  <img id="train" src="images/train1.gif" alt="Train animé" />
+ <img id="train"
+     src="images/train1.gif"
+     alt="Train animé"
+     title="Clique pour changer de train"
+     style="cursor:pointer" />
   </div>
 
   <h1>🚘 Itinéraire et infos</h1>
@@ -690,18 +694,37 @@ updateCounter();
 updateCounterAppareil();
 setInterval(updateCounter, 3000);
 setInterval(updateCounterAppareil, 3000);
-  <script>
-// 🔀 Sélection aléatoire d'un train parmi train1.gif ... trainN.gif
-document.addEventListener('DOMContentLoaded', () => {
-  const totalImages = 11; // ← ⚠️ Mets ici le nombre TOTAL d'images (train1.gif à trainN.gif)
-  const n = Math.floor(Math.random() * totalImages) + 1; // nombre aléatoire entre 1 et totalImages
-  const img = document.getElementById('train');
-  img.src = `images/train${n}.gif`;
+  /* === Train aléatoire + changement au clic ===
+   Mets le nombre EXACT d'images => train1.gif ... trainN.gif */
+const TOTAL_TRAINS = 2; // ⬅️ change ce nombre selon tes fichiers
 
-  // (Optionnel) fallback si une image manque → train1.gif
-  img.onerror = () => { img.src = 'images/train1.gif'; };
-});
-</script>
+const trainImg = document.getElementById('train');
+let lastN = null;
+
+function pickRandomTrain() {
+  // Tire un nombre entre 1 et TOTAL_TRAINS, différent du précédent si possible
+  let n;
+  do {
+    n = Math.floor(Math.random() * TOTAL_TRAINS) + 1;
+  } while (TOTAL_TRAINS > 1 && n === lastN);
+  lastN = n;
+
+  trainImg.src = `images/train${n}.gif`;
+
+  // Fallback si l'image n'existe pas
+  trainImg.onerror = () => { trainImg.src = 'images/train1.gif'; };
+}
+
+// 1) Tirage au chargement
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', pickRandomTrain);
+} else {
+  pickRandomTrain();
+}
+
+// 2) Tirage au clic (sans recharger la page)
+trainImg.addEventListener('click', pickRandomTrain);
+  </script>
   <div style="text-align:center; margin-top: 30px;">
   <a href="formulaire.html" style="display: inline-block; background-color: #007BFF; color: white; padding: 12px 24px; font-size: 16px; border-radius: 12px; text-decoration: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: background-color 0.3s ease;">
     ✍️ CONTRIBUEZ
@@ -731,7 +754,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <p style="font-size: 13px; margin-top: 2rem;">
   🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration: none; color: #1a73e8;">À propos du projet</a>
 </p>
-<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.08.28</p>
+<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.08.29</p>
   <script>
 (function(){
   // ===== Config =====
