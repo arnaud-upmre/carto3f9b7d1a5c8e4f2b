@@ -99,7 +99,7 @@
 <body>
   <div class="wrap">
     <div id="train-container">
-<img id="train" src="images/train.gif" alt="Train animé" />
+<img id="train" src="images/train1.gif" alt="Train animé" />
     </div>
 
     <h1>🚘 Itinéraire entre deux postes</h1>
@@ -289,15 +289,16 @@
     });
   }
   document.addEventListener('DOMContentLoaded', init);
-      // Choix aléatoire du train (0 = train.gif, 1 = train1.gif)
-  const nbImages = 1; // nombre d’images numérotées (ici train1.gif)
-  const includeBase = true; // inclure aussi train.gif
+    // 🔀 Sélection aléatoire d'un train parmi train1.gif ... trainN.gif
+document.addEventListener('DOMContentLoaded', () => {
+  const totalImages = 2; // ← METS ICI le NOMBRE TOTAL d'images (ex: 2 si train1 & train2)
+  const n = Math.floor(Math.random() * totalImages) + 1; // 1..totalImages
+  const img = document.getElementById('train');
+  img.src = `images/train${n}.gif`;
 
-  const max = includeBase ? nbImages + 1 : nbImages;
-  let n = Math.floor(Math.random() * max);
-  const fileName = (includeBase && n === 0) ? "train.gif" : `train${n}.gif`;
-
-  document.getElementById("train").src = `images/${fileName}`;
+  // (Optionnel) si une image manque par erreur, on retombe sur train1.gif
+  img.onerror = () => { img.src = 'images/train1.gif'; };
+});
   </script>
 </body>
 </html>
