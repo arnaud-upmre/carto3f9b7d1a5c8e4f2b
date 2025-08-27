@@ -275,7 +275,7 @@ a:visited {
 </head>
 <body>
   <div id="train-container">
-    <img id="train" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/train.gif" alt="Train animé" />
+  <img id="train" src="images/train1.gif" alt="Train animé" />
   </div>
 
   <h1>🚘 Itinéraire et infos</h1>
@@ -690,6 +690,17 @@ updateCounter();
 updateCounterAppareil();
 setInterval(updateCounter, 3000);
 setInterval(updateCounterAppareil, 3000);
+  <script>
+// 🔀 Sélection aléatoire d'un train parmi train1.gif ... trainN.gif
+document.addEventListener('DOMContentLoaded', () => {
+  const totalImages = 2; // ← ⚠️ Mets ici le nombre TOTAL d'images (train1.gif à trainN.gif)
+  const n = Math.floor(Math.random() * totalImages) + 1; // nombre aléatoire entre 1 et totalImages
+  const img = document.getElementById('train');
+  img.src = `images/train${n}.gif`;
+
+  // (Optionnel) fallback si une image manque → train1.gif
+  img.onerror = () => { img.src = 'images/train1.gif'; };
+});
 </script>
   <div style="text-align:center; margin-top: 30px;">
   <a href="formulaire.html" style="display: inline-block; background-color: #007BFF; color: white; padding: 12px 24px; font-size: 16px; border-radius: 12px; text-decoration: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: background-color 0.3s ease;">
@@ -720,7 +731,7 @@ setInterval(updateCounterAppareil, 3000);
 <p style="font-size: 13px; margin-top: 2rem;">
   🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration: none; color: #1a73e8;">À propos du projet</a>
 </p>
-<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.08.27</p>
+<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.08.28</p>
   <script>
 (function(){
   // ===== Config =====
