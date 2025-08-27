@@ -24,7 +24,11 @@
 
     #train-container{width:100%; max-width:600px; height:48px; overflow:hidden; margin-bottom:1.5rem; position:relative}
     #train{position:absolute; top:0; left:0; height:42px; animation:trainVaEtVient 28s ease-in-out infinite}
-    @keyframes trainVaEtVient{0%,100%{left:0}45%,50%{left:calc(100% - 95px)}95%{left:0}}
+  @keyframes trainVaEtVient {
+  0%, 100% { left: 0; }
+  45%, 50% { left: calc(100% - 130px); } /* ajuste ici */
+  95% { left: 0; }
+}
 
     h1{font-size:20px; margin:0 0 .8rem 0; font-weight:600; padding:0 1rem}
 
