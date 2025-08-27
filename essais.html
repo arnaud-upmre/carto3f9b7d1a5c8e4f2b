@@ -39,7 +39,6 @@
     .label{font-size:.9rem; color:#666; margin:0 0 .35rem .15rem; display:flex; align-items:center; gap:.5rem}
     @media (prefers-color-scheme: dark){ .label{color:#bdbdbd} }
     .row{margin-bottom:.9rem}
-    .swap{padding:.25rem .6rem; border:1px solid #ddd; border-radius:999px; background:transparent; cursor:pointer}
     @media (prefers-color-scheme: dark){ .swap{border-color:#444; color:#e5e5e5} }
     input[type="text"]{
       width:100%; max-width:600px; padding:12px 16px; font-size:16px; border-radius:10px;
@@ -81,19 +80,46 @@
 
     footer{color:#6b7280; font-size:10px; margin-top:2rem}
     
-    .swap{
-  position: absolute;   /* se positionne dans le cadre */
-  top: 10px;
-  right: 10px;
-  padding: .25rem .6rem;
+.swap {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
   border: 1px solid #ddd;
-  border-radius: 999px;
-  background: transparent;
+  border-radius: 50%;
+  background: #f9f9f9;
   cursor: pointer;
-  font-size: 0.85rem;
+  font-size: 16px;
+  line-height: 30px; /* centre verticalement l’emoji */
+  text-align: center;
+  transition: background 0.2s;
+}
+.swap:hover {
+  background: #e6f0ff;
+  color: var(--accent);
+}
+@media (prefers-color-scheme: dark){
+  .swap {
+    border-color: #444;
+    background: #1e1e1e;
+    color: #e5e5e5;
+  }
+  .swap:hover {
+    background: #2a3a50;
+    color: #90caf9;
+  }
 }
 @media (prefers-color-scheme: dark){
   .swap{ border-color:#444; color:#e5e5e5; }
+}
+    /* Animation rotation */
+@keyframes spinOnce {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.swap.spin {
+  animation: spinOnce 0.6s ease;
 }
   </style>
 </head>
@@ -108,7 +134,7 @@
     <!-- Recherche -->
   <section class="card pad" style="margin-bottom:1rem; position:relative;">
   <!-- Bouton en haut à droite du cadre -->
-  <button id="swapBtn" class="swap" title="Inverser">⇅ Inverser</button>
+  <button id="swapBtn" class="swap" title="Inverser">🔄</button>
 
   <div class="row">
     <div class="label">📍 Départ</div>
@@ -313,13 +339,22 @@ function buildExternalLinks(from, to){
     attachAutocomplete($('#inputTo'));
     $('#inputFrom').addEventListener('selected', onSelectionChange);
     $('#inputTo').addEventListener('selected', onSelectionChange);
-    $('#swapBtn').addEventListener('click', ()=>{
-      const a=$('#inputFrom'), b=$('#inputTo');
-      [a.value,b.value]=[b.value,a.value];
-      [a.dataset.lat,b.dataset.lat]=[b.dataset.lat,a.dataset.lat];
-      [a.dataset.lng,b.dataset.lng]=[b.dataset.lng,a.dataset.lng];
-      onSelectionChange();
-    });
+  $('#swapBtn').addEventListener('click', e=>{
+  const btn = e.currentTarget;
+
+  // ajoute la classe pour lancer l’animation
+  btn.classList.add('spin');
+
+  // retire la classe une fois l’animation finie pour pouvoir la rejouer
+  btn.addEventListener('animationend', ()=>btn.classList.remove('spin'), {once:true});
+
+  // inversion des champs
+  const a=$('#inputFrom'), b=$('#inputTo');
+  [a.value,b.value]=[b.value,a.value];
+  [a.dataset.lat,b.dataset.lat]=[b.dataset.lat,a.dataset.lat];
+  [a.dataset.lng,b.dataset.lng]=[b.dataset.lng,a.dataset.lng];
+  onSelectionChange();
+});
   }
 
   document.addEventListener('DOMContentLoaded', init);
