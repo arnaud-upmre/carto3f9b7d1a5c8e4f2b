@@ -732,7 +732,7 @@ trainImg.addEventListener('click', pickRandomTrain);
 <div style="text-align:center; margin-top:30px;">
   <a href="formulaire.html"
      style="display:inline-block; background:#E8F2FF; color:#0B5ED7; padding:12px 24px; font-size:16px; border-radius:12px; text-decoration:none; box-shadow:0 4px 6px rgba(0,0,0,0.1); border:1px solid #BBD5FF; font-weight:600; transition:background-color .2s ease;">
-    ✍️ Contribution (<span id="compteur-valeur">chargement…</span>)
+    ✍️ Contribution <span id="compteur-valeur"></span>
   </a>
 </div>
 
@@ -742,10 +742,10 @@ trainImg.addEventListener('click', pickRandomTrain);
     try{
       const r = await fetch(compteurContributionURL);
       const data = await r.json();
-      document.getElementById("compteur-valeur").textContent =
-        (data && typeof data.count !== "undefined") ? data.count : "chargement…";
+    document.getElementById("compteur-valeur").textContent =
+  (data && typeof data.count !== "undefined") ? `(${data.count})` : "";
     }catch(e){
-      document.getElementById("compteur-valeur").textContent = "chargement…";
+     document.getElementById("compteur-valeur").textContent = "";
     }
   }
   refreshContrib();
@@ -756,7 +756,7 @@ trainImg.addEventListener('click', pickRandomTrain);
     🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration:none; color:#1a73e8;">À propos</a>
   </p>
   <p style="font-size:10px; color:#ccc; margin:0;">
-    Arnaud - V1.08.31
+    Arnaud - V1.08.32
   </p>
 </div>
   <script>
