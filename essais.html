@@ -99,7 +99,11 @@
 <body>
   <div class="wrap">
     <div id="train-container">
-<img id="train" src="images/train1.gif" alt="Train animé" />
+<img id="train"
+     src="images/train1.gif"
+     alt="Train animé"
+     title="Clique pour changer de train"
+     style="cursor:pointer" />
     </div>
 
     <h1>🚘 Itinéraire entre deux postes</h1>
@@ -290,15 +294,36 @@
   }
   document.addEventListener('DOMContentLoaded', init);
     // 🔀 Sélection aléatoire d'un train parmi train1.gif ... trainN.gif
-document.addEventListener('DOMContentLoaded', () => {
-  const totalImages = 11; // ← METS ICI le NOMBRE TOTAL d'images (ex: 2 si train1 & train2)
-  const n = Math.floor(Math.random() * totalImages) + 1; // 1..totalImages
-  const img = document.getElementById('train');
-  img.src = `images/train${n}.gif`;
+/* === Train aléatoire + changement au clic ===
+   Mets le nombre EXACT d'images => train1.gif ... trainN.gif */
+const TOTAL_TRAINS = 11; // ⬅️ change ce nombre selon tes fichiers
 
-  // (Optionnel) si une image manque par erreur, on retombe sur train1.gif
-  img.onerror = () => { img.src = 'images/train1.gif'; };
-});
+const trainImg = document.getElementById('train');
+    // Fallback global si une image manque
+trainImg.onerror = () => { trainImg.src = 'images/train1.gif'; };
+let lastN = null;
+
+function pickRandomTrain() {
+  // Tire un nombre entre 1 et TOTAL_TRAINS, différent du précédent si possible
+  let n;
+  do {
+    n = Math.floor(Math.random() * TOTAL_TRAINS) + 1;
+  } while (TOTAL_TRAINS > 1 && n === lastN); // évite le même qu’avant
+  lastN = n;
+
+  trainImg.src = `images/train${n}.gif`;
+
+}
+
+// 1) Tirage au chargement
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', pickRandomTrain);
+} else {
+  pickRandomTrain();
+}
+
+// 2) Tirage au clic (sans recharger la page)
+trainImg.addEventListener('click', pickRandomTrain);
   </script>
 </body>
 </html>
