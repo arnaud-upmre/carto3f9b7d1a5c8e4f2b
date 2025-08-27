@@ -6,14 +6,14 @@
   <meta name="robots" content="noindex, nofollow" />
   <title>🚆 Itinéraire entre deux postes</title>
   <!-- Version visible -->
-  <meta name="version" content="trajet.html V0.1 (2025-08-27)" />
+  <meta name="version" content="trajet.html V0.2 (2025-08-27)" />
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
   <!-- Fuse.js for search -->
   <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
   <!-- Leaflet for map -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <style>
     :root{
       --bg:#ffffff; --fg:#222; --muted:#666; --primary:#0f62fe; --card:#f5f7fa; --border:#e6e9ef;
@@ -56,7 +56,11 @@
     }
     @media (prefers-color-scheme: dark){ input[type="text"]{ background:#0f0f0f; color:#eee; border-color:#1b1b1b; } }
 
-    .suggest{ position:absolute; top:100%; left:0; right:0; background:var(--bg); border:1px solid var(--border); border-radius:12px; overflow:hidden; margin-top:.35rem; max-height:260px; overflow-y:auto; box-shadow:var(--shadow); display:none; }
+    .suggest{ 
+      position:absolute; top:100%; left:0; right:0; background:var(--bg); border:1px solid var(--border); border-radius:12px; 
+      overflow:hidden; margin-top:.35rem; max-height:260px; overflow-y:auto; box-shadow:var(--shadow); display:none;
+      z-index:9999; /* ✅ Toujours au premier plan */
+    }
     .suggest ul{ list-style:none; margin:0; padding:0; }
     .suggest li{ padding:.7rem .9rem; border-bottom:1px solid var(--border); cursor:pointer; font-size:.98rem; }
     .suggest li:last-child{ border-bottom:none; }
@@ -79,7 +83,6 @@
     footer{ padding:1rem; color:var(--muted); font-size:.85rem; text-align:center; }
 
     .sep{ height:1px; background:var(--border); margin:.25rem 0 .75rem; }
-    .hint{ color:var(--muted); font-size:.85rem; }
   </style>
 </head>
 <body>
@@ -88,7 +91,6 @@
       <img src="carto3f9b7d1a5c8e4f2b/train.gif" alt="Animation train" />
       <div>
         <div class="title">Itinéraire entre deux postes</div>
-        <div class="hint">Sélectionne un point de départ et une destination — on calcule la route, la distance et le temps 🚗</div>
       </div>
     </div>
   </header>
@@ -108,8 +110,6 @@
           <div class="suggest" id="suggestTo"><ul></ul></div>
         </div>
       </div>
-      <div class="sep"></div>
-      <div class="hint">Astuce : tape 3–4 lettres pour filtrer, puis touche <strong>Entrée</strong> pour valider la première suggestion.</div>
     </section>
 
     <!-- Résultats -->
@@ -136,51 +136,31 @@
       <div id="map" aria-label="Carte de l'itinéraire"></div>
     </section>
 
-    <!-- Conseils / Idées supplémentaires -->
-    <section class="card pad">
-      <div style="font-weight:700;">💡 Idées que l’on peut ajouter ensuite</div>
-      <div class="sep"></div>
-      <ul style="margin:0; padding-left:1rem; line-height:1.75;">
-        <li>Choix du mode : 🚗 voiture, 🚶‍♂️ à pied, 🚲 vélo (si utile sur le terrain).</li>
-        <li>Option “Éviter les péages” / “Éviter les autoroutes” (si le moteur OSRM/URL le permet sur ce tronçon).</li>
-        <li>Partage du trajet : génération d’un lien court <em>(Google Maps / Apple Plans / Waze)</em>.</li>
-        <li>Affichage des accès voiture stockés dans ton JSON si plusieurs accès existent pour un même poste.</li>
-        <li>Préremplissage via URL : <code>?from=Etaples&to=Ruminghem</code> pour appeler la page directement.</li>
-      </ul>
+    <!-- Retour à l'index -->
+    <section class="card pad" style="text-align:center;">
+      <a href="index.html" class="btn">🔍 <span>Faire une recherche</span></a>
     </section>
   </main>
 
   <footer>
-    <div>trajet.html — <strong>V0.1</strong> — 27/08/2025</div>
+    <div>trajet.html — <strong>V0.2</strong> — 27/08/2025</div>
   </footer>
 
   <script>
   // ==============================
   // 🔧 Paramètres à adapter
   // ==============================
-  // URL du JSON des LIEUX (postes) — pointe sur ton fichier principal.
-  // Doit contenir au minimum: { nom, type, SAT, latitude, longitude, accès? }
-  // Exemple actuel de structure de ligne (mémoire projet): nom, type, SAT, accès, latitude, longitude, ...
-  const LIEUX_JSON_URL = 'postes.json'; // ⬅️ Remplace par ton fichier réel (ex: carto/postes.json)
-
-  // Zoom par défaut quand on affiche la carte
+  const LIEUX_JSON_URL = 'postes.json'; // ⬅️ Mets ton JSON réel
   const DEFAULT_ZOOM = 9;
 
-  // ==============================
-  // 🧠 État & helpers
-  // ==============================
   let lieux = [];
   let fuse = null;
-  let selectedFrom = null;
-  let selectedTo = null;
 
   const $ = s => document.querySelector(s);
-  const $$ = s => document.querySelectorAll(s);
 
   function slugify(str){
     return (str||'').normalize('NFD').replace(/\p{Diacritic}/gu,'').toLowerCase();
   }
-
   function formatDistance(m){
     if(!Number.isFinite(m)) return '—';
     if(m < 950) return Math.round(m) + ' m';
@@ -198,16 +178,11 @@
     const l = item.item;
     const type = l.type ? (' ' + l.type) : '';
     const sat = l.SAT ? (' / ' + l.SAT) : '';
-    return `<div style="display:flex; flex-direction:column;">
-      <div style="font-weight:600;">${escapeHtml(l.nom)}${escapeHtml(type)}${escapeHtml(sat)}</div>
-      <div class="hint">${Number(l.latitude).toFixed(5)}, ${Number(l.longitude).toFixed(5)}</div>
-    </div>`;
+    return `<div style="font-weight:600;">${escapeHtml(l.nom)}${escapeHtml(type)}${escapeHtml(sat)}</div>`;
   }
-
   function escapeHtml(text){
-    return String(text ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[m]));
+    return String(text ?? '').replace(/[&<>\"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;','\\'':'&#39;'}[m]));
   }
-
   function setInputSelection(input, lieu){
     input.value = `${lieu.nom}${lieu.type? ' ' + lieu.type : ''}${lieu.SAT ? ' / ' + lieu.SAT : ''}`;
     input.dataset.lat = lieu.latitude;
@@ -217,7 +192,6 @@
 
   function attachAutocomplete(inputEl, suggestEl){
     const ul = suggestEl.querySelector('ul');
-
     function close(){ suggestEl.style.display = 'none'; }
     function open(){ suggestEl.style.display = 'block'; }
 
@@ -249,13 +223,9 @@
       setInputSelection(inputEl, l); close();
       inputEl.dispatchEvent(new Event('selected'));
     });
-
     document.addEventListener('click', (e)=>{ if(!suggestEl.contains(e.target) && e.target !== inputEl) close(); });
   }
 
-  // ==============================
-  // 🧭 Routage via OSRM
-  // ==============================
   async function fetchRoute(from, to){
     const url = `https://router.project-osrm.org/route/v1/driving/${from.lng},${from.lat};${to.lng},${to.lat}?overview=full&geometries=geojson&alternatives=false&steps=false`;
     const r = await fetch(url, { cache:'no-store' });
@@ -263,11 +233,7 @@
     const data = await r.json();
     if(!data.routes || !data.routes.length) throw new Error('Aucun itinéraire');
     const route = data.routes[0];
-    return {
-      distance: route.distance, // m
-      duration: route.duration, // s
-      geometry: route.geometry // GeoJSON LineString
-    };
+    return { distance: route.distance, duration: route.duration, geometry: route.geometry };
   }
 
   function buildExternalLinks(from, to){
@@ -283,9 +249,6 @@
     ];
   }
 
-  // ==============================
-  // 🗺️ Carte Leaflet
-  // ==============================
   let map, routeLayer, markersLayer;
   function ensureMap(){
     if(map) return map;
@@ -300,8 +263,8 @@
     routeLayer.clearLayers();
     markersLayer.clearLayers();
     if(geometry) routeLayer.addData(geometry);
-    const m1 = L.marker([from.lat, from.lng]).addTo(markersLayer).bindPopup('<b>Départ</b>').openPopup();
-    const m2 = L.marker([to.lat, to.lng]).addTo(markersLayer).bindPopup('<b>Arrivée</b>');
+    L.marker([from.lat, from.lng]).addTo(markersLayer).bindPopup('<b>Départ</b>').openPopup();
+    L.marker([to.lat, to.lng]).addTo(markersLayer).bindPopup('<b>Arrivée</b>');
     const bounds = L.latLngBounds([ [from.lat, from.lng], [to.lat, to.lng] ]);
     if(geometry && geometry.coordinates && geometry.coordinates.length){
       const coords = geometry.coordinates.map(c => [c[1], c[0]]);
@@ -311,15 +274,10 @@
     setTimeout(()=> map.invalidateSize(), 150);
   }
 
-  // ==============================
-  // 🧩 Flux principal
-  // ==============================
   async function init(){
-    // 1) Charger les lieux
     try{
       const r = await fetch(LIEUX_JSON_URL, { cache:'no-store' });
       const raw = await r.json();
-      // Normaliser en un tableau de lieux avec lat/lng numériques
       lieux = (Array.isArray(raw) ? raw : (raw.lieux || raw.data || [])).filter(Boolean).map(l => ({
         nom: l.nom || l.name || '',
         type: l.type || '',
@@ -341,85 +299,16 @@
       });
     }catch(err){
       console.error('Erreur chargement LIEUX', err);
-      alert('Impossible de charger la liste des postes. Vérifie LIEUX_JSON_URL.');
+      alert('Impossible de charger la liste des postes.');
       return;
     }
 
-    // 2) Autocomplete
     attachAutocomplete($('#inputFrom'), $('#suggestFrom'));
     attachAutocomplete($('#inputTo'), $('#suggestTo'));
 
-    // 3) Sélection événement
     $('#inputFrom').addEventListener('selected', onSelectionChange);
     $('#inputTo').addEventListener('selected', onSelectionChange);
 
-    // 4) Bouton inverser
     $('#swapBtn').addEventListener('click', () => {
       const a = $('#inputFrom').value; const b = $('#inputTo').value;
-      const alat = $('#inputFrom').dataset.lat; const blat = $('#inputTo').dataset.lat;
-      const alng = $('#inputFrom').dataset.lng; const blng = $('#inputTo').dataset.lng;
-      const aid = $('#inputFrom').dataset.id; const bid = $('#inputTo').dataset.id;
-      $('#inputFrom').value = b; $('#inputTo').value = a;
-      $('#inputFrom').dataset.lat = blat; $('#inputTo').dataset.lat = alat;
-      $('#inputFrom').dataset.lng = blng; $('#inputTo').dataset.lng = alng;
-      $('#inputFrom').dataset.id = bid;  $('#inputTo').dataset.id = aid;
-      onSelectionChange();
-    });
-
-    // 5) Préremplissage via URL (?from=...&to=...)
-    const url = new URL(location.href);
-    const fromQ = url.searchParams.get('from');
-    const toQ = url.searchParams.get('to');
-    if(fromQ){
-      const r = fuse.search(fromQ, { limit:1 }); if(r.length){ setInputSelection($('#inputFrom'), r[0].item); }
-    }
-    if(toQ){
-      const r = fuse.search(toQ, { limit:1 }); if(r.length){ setInputSelection($('#inputTo'), r[0].item); }
-    }
-    if(fromQ || toQ) onSelectionChange();
-  }
-
-  function getPointFromInput(input){
-    const lat = Number(input.dataset.lat);
-    const lng = Number(input.dataset.lng);
-    if(!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
-    return { lat, lng, label: input.value.trim() };
-  }
-
-  async function onSelectionChange(){
-    const from = getPointFromInput($('#inputFrom'));
-    const to   = getPointFromInput($('#inputTo'));
-    if(!from || !to){ return; }
-
-    $('#resultCard').style.display = 'block';
-    $('#mapCard').style.display = 'block';
-    $('#kpiDistance').textContent = 'Calcul…';
-    $('#kpiDuration').textContent = 'Calcul…';
-    $('#extLinks').innerHTML = '';
-
-    try{
-      const route = await fetchRoute(from, to);
-      $('#kpiDistance').textContent = formatDistance(route.distance);
-      $('#kpiDuration').textContent = formatDuration(route.duration);
-
-      // Liens externes
-      const links = buildExternalLinks(from, to);
-      $('#extLinks').innerHTML = links.map(l => `<a class="btn" target="_blank" rel="noopener" href="${l.href}">🔗 <span>${l.label}</span></a>`).join('');
-
-      // Carte
-      renderMap(from, to, route.geometry);
-    }catch(err){
-      console.error(err);
-      $('#kpiDistance').textContent = '—';
-      $('#kpiDuration').textContent = '—';
-      $('#extLinks').innerHTML = '<div class="hint">Le calcul automatique est indisponible. Utilise les liens ci-dessous :</div>' +
-        buildExternalLinks(from, to).map(l => `<a class="btn" target="_blank" rel="noopener" href="${l.href}">🔗 <span>${l.label}</span></a>`).join('');
-      renderMap(from, to, null);
-    }
-  }
-
-  // Lancement
-  document.addEventListener('DOMContentLoaded', init);
-  </script>
-</body>
-</html>
+      const alat = $('#inputFrom').dataset.lat; const blat = $('#inputTo').dataset
