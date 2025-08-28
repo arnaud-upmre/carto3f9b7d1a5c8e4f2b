@@ -43,10 +43,11 @@
       border-radius: 4px;
     }
 
+    /* Conteneur vertical */
     .container {
       display: flex;
-      flex-wrap: wrap;
-      gap: 1.5rem; /* ✅ espace uniforme entre rectangles */
+      flex-direction: column;
+      gap: 1.5rem; /* espace uniforme */
       max-width: 1000px;
       margin: auto;
     }
@@ -56,29 +57,11 @@
       border-radius: 0.6rem;
       box-shadow: 0 2px 8px rgba(0,0,0,0.05);
       padding: 2rem 1.5rem;
-      flex: 1 1 300px;
-      max-width: 1000px;
-      margin: auto; /* ✅ centré */
+      flex: 1 1 auto;
       box-sizing: border-box;
     }
 
-    /* pastilles stats */
-    .stats-box {
-      position: relative; /* ✅ pour placer la pastille R&D */
-    }
-    .badge-pill {
-      position: absolute;
-      top: 1rem;
-      right: 1.2rem;
-      background: #0055cc;
-      color: #fff;
-      padding: 0.5rem 0.9rem;
-      border-radius: 999px;
-      font-weight: 500;
-      font-size: 0.9rem;
-      white-space: nowrap;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
-    }
+    /* Bloc stats */
     .stats-content {
       display: flex;
       flex-wrap: wrap;
@@ -93,6 +76,24 @@
       font-weight: 500;
       font-size: 0.95rem;
       white-space: nowrap;
+    }
+
+    /* Badge R&D en conclusion */
+    .conclusion-card {
+      position: relative;
+    }
+    .badge-rd {
+      position: absolute;
+      top: 0.8rem;
+      right: 1rem;
+      background: #0055cc;
+      color: #fff;
+      padding: 0.3rem 0.7rem;
+      border-radius: 999px;
+      font-weight: 500;
+      font-size: 0.8rem; /* plus petit */
+      white-space: nowrap;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
     }
 
     .btn-box {
@@ -144,7 +145,7 @@
       blockquote { background: #2a2a2a; border-left: 4px solid #555; }
       .btn { background-color: #1976d2; }
       .btn:hover { background-color: #1565c0; }
-      .badge-pill, .stat-pill { box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+      .badge-rd, .stat-pill { box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
     }
   </style>
 </head>
@@ -197,20 +198,20 @@
       <p>🎯 L’idée est simple : avancer ensemble, et garder un outil clair, fiable et facile à utiliser sur le terrain.</p>
     </div>
 
-    <!-- Notre avancement avec pastille en haut à droite -->
+    <!-- Notre avancement -->
     <div class="stats-box" id="statsBox">
-      <span class="badge-pill">🕒 +60h R&D</span>
       <h2>🚀 Notre avancement</h2>
       <div class="stats-content" id="stats"></div>
     </div>
 
-    <!-- Conclusion -->
-    <div class="card">
+    <!-- Conclusion avec badge -->
+    <div class="card conclusion-card">
+      <span class="badge-rd">🕒 +60h R&D</span>
       <h2>✨ En conclusion</h2>
       <p>Ce projet me rappelle qu’il n’y a rien de plus gratifiant que de voir son travail servir aux autres.</p>
       <p>Au fond, une carte n’est qu’un outil. Mais c’est quand elle sert vraiment sur le terrain qu’elle prend tout son sens.</p>
       <p>Traitez les gens avec respect, faites un effort pour intégrer les nouveaux, partagez, soutenez, aidez-vous les uns les autres, célébrez + partagez joies / succès ensemble, soyez solidaires, saluez-vous et communiquez entre vous, créez des liens avec d’autres équipes, faites passer les informations sans relâche, soyez conscient, acceptez la pression, utilisez la concurrence de façon saine.</p>
-      <p>Ferroviairement,<br><strong>Arnaud Debaecker</strong></p>
+      <p>Ferroviairement,<br><strong>Arnaud</strong></p>
     </div>
   </div>
 
