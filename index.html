@@ -310,10 +310,7 @@ let appareils = [], fuseAppareils;
 function formatContact(val) {
   if (!val) return "";
 
-  // Regex qui détecte les numéros FR type 03 28 55 60 94 ou 0328556094
   const phoneRegex = /\d{2}\s?\d{2}\s?\d{2}\s?\d{2}\s?\d{2}/g;
-
-  // On récupère tous les numéros
   const matches = val.match(phoneRegex);
 
   if (!matches) {
@@ -503,7 +500,7 @@ fuse = new Fuse(lieux, {
   ],
   includeScore: true,
   threshold: 0.2,        // un peu plus permissif
-  distance: 100,         // accepte plus d’écarts
+  distance: 50,         // accepte plus d’écarts
   minMatchCharLength: 2, // évite les résultats absurdes sur 1 lettre
   ignoreLocation: true
 });
@@ -774,7 +771,7 @@ trainImg.addEventListener('click', pickRandomTrain);
     🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration:none; color:#1a73e8;">À propos</a>
   </p>
   <p style="font-size:10px; color:#ccc; margin:0;">
-    Arnaud - V1.08.34
+    Arnaud - V1.08.35
   </p>
 </div>
   <script>
