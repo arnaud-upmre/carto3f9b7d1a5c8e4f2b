@@ -30,7 +30,9 @@
       font-size: 1rem;
       margin-bottom: 0.6rem;
     }
-    ul { padding-left: 1.2rem; }
+    ul {
+      padding-left: 1.2rem;
+    }
     blockquote {
       margin: 1rem 0;
       padding: 0.8rem 1rem;
@@ -56,8 +58,9 @@
       max-width: 1000px;
       margin: 0.75rem auto;
       box-sizing: border-box;
-      position: relative;
     }
+
+    .card-future { position: relative; }
     .badge-pill {
       position: absolute;
       top: 0.8rem;
@@ -71,6 +74,7 @@
       white-space: nowrap;
       box-shadow: 0 2px 6px rgba(0,0,0,0.12);
     }
+
     .stats-content {
       display: flex;
       flex-wrap: wrap;
@@ -85,6 +89,7 @@
       font-size: 0.9rem;
       white-space: nowrap;
     }
+
     .btn-box {
       background: #fff;
       border-radius: 0.6rem 0.6rem 0 0;
@@ -120,6 +125,7 @@
       max-width: 200px;
     }
     .btn:hover { background-color: #0040a8; }
+
     @media (max-width: 480px) {
       .btn { flex: 1 1 100%; max-width: none; }
       body { padding-bottom: 9rem; }
@@ -142,46 +148,68 @@
   <h1>🔧 À propos</h1>
   
   <div class="container">
+    <!-- Intro -->
     <div class="card">
-      <!-- Bloc 1 – Intro -->
-      <p>Tout a commencé par quelques points GPS partagés entre collègues.  
-      C’était utile, mais vite limité… chacun avait sa façon de faire et rien n’était vraiment centralisé.</p>
-      <p>Nous n’avons pas tous la même facilité à nous orienter, et c’est normal. Mais avec des accès précis et partagés, c’est éviter les détours inutiles, mais aussi améliorer la sécurité pour chacun.</p>
-      <p>L’idée s’est imposée d’elle-même : mettre tout en commun.  
-      Et petit à petit, ce qui n’était au départ que quelques liens partagés est devenu une carte MyMaps, avant d’évoluer en un véritable outil collaboratif : cette webapp pensée pour simplifier la vie sur le terrain.</p>
+      <p>Au départ, on s’échangeait juste quelques points GPS entre collègues.<br>
+      C’était pratique, mais vite limité… chacun bricolait de son côté.</p>
+      <p>Alors l’idée est venue : <strong>mettre tout en commun</strong>.<br>
+      Et petit à petit, cette simple carte s’est transformée en un vrai outil collaboratif, pensé pour nous simplifier la vie au quotidien.</p>
       <blockquote>
         “Le partage de connaissances et de ressources dans le monde professionnel est le fondement d’une collaboration fructueuse et de la croissance collective.”<br>— John C. Maxwell
       </blockquote>
     </div>
     
+    <!-- Premier déclic -->
     <div class="card">
-      <!-- Bloc 2 – Le déclic -->
       <h2>🧐 Le déclic</h2>
-      <p>Une nuit d’astreinte, je découvre un poste pour la première fois.  
-      Pas d’indication, pas de plan… Je marche longtemps avant de trouver l’appareil.  
-      Et là, surprise : il y avait un portail juste à côté 😅.</p>
-      <p><strong>Ce soir-là, je me suis dit : « On peut éviter ça aux suivants. »</strong></p>
-      <p>Depuis, chaque point ajouté sert à ça : <strong>faire gagner du temps</strong>, éviter les galères, et rendre nos interventions plus simples et plus sûres.</p>
+      <p>Une nuit d’astreinte, je découvre un poste pour la première fois.<br>
+      Pas d’indication, pas de plan… je marche longtemps avant de trouver l’appareil.<br>
+      Et là, surprise : il y avait un portail juste à côté 😅</p>
+      <p>Ce soir-là, je me suis dit :<br><strong>« On peut éviter ça aux suivants. »</strong></p>
+      <p>Depuis, chaque point ajouté sert à ça : faire gagner du temps, éviter les galères, et rendre nos interventions plus simples et plus sûres.</p>
+    </div>
+
+    <!-- Une carte adoptée par tous -->
+    <div class="card">
+      <h2>📌 Une carte adoptée par tous</h2>
+      <p>La carte MyMaps a vite été adoptée : elle est devenue un outil du quotidien.<br>
+      Même les plus anciens, pourtant habitués au terrain, s’en servent 😃</p>
+      <p>Parce qu’au fond, ça arrive à tout le monde : on ne se souvient plus de la localisation exacte d’un appareil, ni de son environnement précis.<br>
+      Dans ces moments-là, la carte est vraiment utile.</p>
+      <p>C’est à ce moment-là que je me suis dit :<br>
+      <strong>cette carte MyMaps n’était qu’un point de départ, il fallait lui donner une nouvelle dimension.</strong></p>
+      <p>L’idée de créer une webapp s’est imposée : un outil plus souple, plus rapide, taillé sur mesure pour le terrain et pensé dès le départ pour être utilisé sur smartphone.</p>
     </div>
   </div>
 
+  <!-- Et la suite -->
   <div class="card card-future">
-    <!-- Bloc 3 – Et la suite ? -->
+    <div class="badge-pill">🕒 +60h R&D</div>
     <h2>🚀 Et la suite ?</h2>
-    <p>🚀 L’aventure continue !  
-    Grâce aux retours et aux repérages de chacun, la carte devient chaque jour plus précise et plus utile.</p>
-    <p>🎯 L’objectif : construire une base fiable, claire et accessible à tous.</p>
-    <p>Et surtout : préserver cet esprit d’entraide qui fait avancer tout le monde.</p>
+    <p>La carte évolue un peu plus chaque jour.<br>
+    Grâce aux partages de chacun, elle grandit et devient toujours plus utile.</p>
+    <p>🎯 L’idée est simple : avancer ensemble, et garder un outil clair, fiable et facile à utiliser sur le terrain.</p>
     <p>Ferroviairement,<br><strong>Arnaud</strong></p>
   </div>
 
-  <!-- Bloc 4 – Stats -->
+  <!-- Stats -->
   <div class="stats-box" id="statsBox">
-    <div class="badge-pill">⏱️ +60h R&D</div>
     <h2>🚀 Notre avancement</h2>
+    <p>Chaque point ajouté, c’est une victoire collective :</p>
     <div class="stats-content" id="stats"></div>
+    <div class="stats-content">
+      <span class="stat-pill">⏱️ +60h R&D</span>
+    </div>
   </div>
 
+  <!-- Conclusion -->
+  <div class="card">
+    <h2>✨ En conclusion</h2>
+    <p>Ce projet me rappelle qu’il n’y a rien de plus gratifiant que de voir son travail être utile.</p>
+    <p>Une carte, c’est des points sur un plan. Mais utilisée par tous, elle devient quelque chose d’utile, pour chacun de nous.</p>
+  </div>
+
+  <!-- Boutons -->
   <div class="btn-box">
     <div class="btn-container">
       <a href="index.html" class="btn">🔍 Recherche</a>
@@ -209,10 +237,9 @@
     fetchCounts();
   </script>
   <script>
-    // Bloque : clic droit, sélection, copier, couper, coller, glisser
-    ['contextmenu','selectstart','copy','cut','paste','dragstart'].forEach(evt => {
-      document.addEventListener(evt, e => e.preventDefault(), { passive: false });
-    });
+  ['contextmenu','selectstart','copy','cut','paste','dragstart'].forEach(evt => {
+    document.addEventListener(evt, e => e.preventDefault(), { passive: false });
+  });
   </script>
 </body>
 </html>
