@@ -23,7 +23,7 @@
     }
     h2 {
       font-size: 1.3rem;
-      margin-top: 1rem;
+      margin-top: 0;
       margin-bottom: 0.8rem;
     }
     p {
@@ -31,18 +31,22 @@
       margin-bottom: 1rem;
       text-align: justify;
     }
+    .mt-lg { margin-top: 1.25rem; }
+    .mt-xl { margin-top: 1.8rem; }
+
     blockquote {
-      margin: 2rem 0 0; /* ✅ citation plus basse */
+      margin: 1.8rem 0 0 0;
       padding: 1rem 1.2rem;
       background: #f0f0f0;
       border-left: 4px solid #ccc;
       font-style: italic;
       border-radius: 4px;
     }
+
     .container {
       display: flex;
       flex-wrap: wrap;
-      gap: 1rem;
+      gap: 1.5rem; /* ✅ espace uniforme entre rectangles */
       max-width: 1000px;
       margin: auto;
     }
@@ -54,13 +58,32 @@
       padding: 2rem 1.5rem;
       flex: 1 1 300px;
       max-width: 1000px;
-      margin: 1.5rem auto;
+      margin: auto; /* ✅ centré */
       box-sizing: border-box;
+    }
+
+    /* pastilles stats */
+    .stats-box {
+      position: relative; /* ✅ pour placer la pastille R&D */
+    }
+    .badge-pill {
+      position: absolute;
+      top: 1rem;
+      right: 1.2rem;
+      background: #0055cc;
+      color: #fff;
+      padding: 0.5rem 0.9rem;
+      border-radius: 999px;
+      font-weight: 500;
+      font-size: 0.9rem;
+      white-space: nowrap;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
     }
     .stats-content {
       display: flex;
       flex-wrap: wrap;
       gap: 0.7rem;
+      margin-top: 0.5rem;
     }
     .stat-pill {
       background: #0055cc;
@@ -71,6 +94,7 @@
       font-size: 0.95rem;
       white-space: nowrap;
     }
+
     .btn-box {
       background: #fff;
       border-radius: 0.6rem 0.6rem 0 0;
@@ -120,7 +144,7 @@
       blockquote { background: #2a2a2a; border-left: 4px solid #555; }
       .btn { background-color: #1976d2; }
       .btn:hover { background-color: #1565c0; }
-      .stat-pill { box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+      .badge-pill, .stat-pill { box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
     }
   </style>
 </head>
@@ -133,15 +157,17 @@
     <div class="card">
       <p>Au départ, on s’échangeait juste quelques points GPS entre collègues.<br>
       C’était pratique, mais vite limité… chacun bricolait de son côté.</p>
+
       <p>Alors l’idée est venue : <strong>mettre tout en commun</strong>.</p>
-      <br>
-      <p>Et petit à petit, cette simple carte s’est transformée en un vrai outil collaboratif, pensé pour nous simplifier la vie au quotidien.</p>
-      <blockquote>
+
+      <p class="mt-lg">Et petit à petit, cette simple carte s’est transformée en un vrai outil collaboratif, pensé pour nous simplifier la vie au quotidien.</p>
+
+      <blockquote class="mt-xl">
         “Le partage de connaissances et de ressources dans le monde professionnel est le fondement d’une collaboration fructueuse et de la croissance collective.”<br>— John C. Maxwell
       </blockquote>
     </div>
     
-    <!-- Premier déclic -->
+    <!-- Le déclic -->
     <div class="card">
       <h2>🧐 Le déclic</h2>
       <p>Une de mes premières nuits d’astreinte, je découvre un poste pour la première fois. <em>(Rodelinghem)</em><br>
@@ -162,32 +188,30 @@
       <strong>cette carte MyMaps n’était qu’un point de départ, il fallait lui donner une nouvelle dimension.</strong></p>
       <p>L’idée de créer une webapp s’est imposée : un outil plus souple, plus rapide, taillé sur mesure pour le terrain et pensé dès le départ pour être utilisé sur smartphone.</p>
     </div>
-  </div>
 
-  <!-- Et la suite -->
-  <div class="card">
-    <h2>🚀 Et la suite ?</h2>
-    <p>La carte évolue un peu plus chaque jour.<br>
-    Grâce aux partages de chacun, elle grandit et devient toujours plus utile.</p>
-    <p>🎯 L’idée est simple : avancer ensemble, et garder un outil clair, fiable et facile à utiliser sur le terrain.</p>
-  </div>
-
-  <!-- Stats -->
-  <div class="stats-box" id="statsBox">
-    <h2>🚀 Notre avancement</h2>
-    <div class="stats-content" id="stats"></div>
-    <div class="stats-content">
-      <span class="stat-pill">🕒 +60h R&D</span>
+    <!-- Et la suite -->
+    <div class="card">
+      <h2>🚀 Et la suite ?</h2>
+      <p>La carte évolue un peu plus chaque jour.<br>
+      Grâce aux partages de chacun, elle grandit et devient toujours plus utile.</p>
+      <p>🎯 L’idée est simple : avancer ensemble, et garder un outil clair, fiable et facile à utiliser sur le terrain.</p>
     </div>
-  </div>
 
-  <!-- Conclusion -->
-  <div class="card">
-    <h2>✨ En conclusion</h2>
-    <p>Ce projet me rappelle qu’il n’y a rien de plus gratifiant que de voir son travail servir aux autres.</p>
-    <p>Au fond, une carte n’est qu’un outil. Mais c’est quand elle sert vraiment sur le terrain qu’elle prend tout son sens.</p>
-    <p>Traitez les gens avec respect, faites un effort pour intégrer les nouveaux, partagez, soutenez, aidez-vous les uns les autres, célébrez + partagez joies / succès ensemble, soyez solidaires, saluez-vous et communiquez entre vous, créez des liens avec d’autres équipes, faites passer les informations sans relâche, soyez conscient, acceptez la pression, utilisez la concurrence de façon saine.</p>
-    <p>Ferroviairement,<br><strong>Arnaud</strong></p>
+    <!-- Notre avancement avec pastille en haut à droite -->
+    <div class="stats-box" id="statsBox">
+      <span class="badge-pill">🕒 +60h R&D</span>
+      <h2>🚀 Notre avancement</h2>
+      <div class="stats-content" id="stats"></div>
+    </div>
+
+    <!-- Conclusion -->
+    <div class="card">
+      <h2>✨ En conclusion</h2>
+      <p>Ce projet me rappelle qu’il n’y a rien de plus gratifiant que de voir son travail servir aux autres.</p>
+      <p>Au fond, une carte n’est qu’un outil. Mais c’est quand elle sert vraiment sur le terrain qu’elle prend tout son sens.</p>
+      <p>Traitez les gens avec respect, faites un effort pour intégrer les nouveaux, partagez, soutenez, aidez-vous les uns les autres, célébrez + partagez joies / succès ensemble, soyez solidaires, saluez-vous et communiquez entre vous, créez des liens avec d’autres équipes, faites passer les informations sans relâche, soyez conscient, acceptez la pression, utilisez la concurrence de façon saine.</p>
+      <p>Ferroviairement,<br><strong>Arnaud Debaecker</strong></p>
+    </div>
   </div>
 
   <!-- Boutons -->
@@ -218,9 +242,9 @@
     fetchCounts();
   </script>
   <script>
-  ['contextmenu','selectstart','copy','cut','paste','dragstart'].forEach(evt => {
-    document.addEventListener(evt, e => e.preventDefault(), { passive: false });
-  });
+    ['contextmenu','selectstart','copy','cut','paste','dragstart'].forEach(evt => {
+      document.addEventListener(evt, e => e.preventDefault(), { passive: false });
+    });
   </script>
 </body>
 </html>
