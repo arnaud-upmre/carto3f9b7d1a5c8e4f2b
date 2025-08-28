@@ -306,8 +306,7 @@ const compteurAppareilURL = "https://script.google.com/macros/s/AKfycbwJIlvcfNYR
 
 let lieux = [], fuse;
 let appareils = [], fuseAppareils;
-
-function formatContact(val) {
+  function formatContact(val) {
   if (!val) return "";
 
   const phoneRegex = /\d{2}\s?\d{2}\s?\d{2}\s?\d{2}\s?\d{2}/g;
@@ -319,16 +318,13 @@ function formatContact(val) {
 
   const texteSansNum = val.replace(phoneRegex, "").trim();
 
-  // ✅ on met inline-links en <span> avec display:inline-flex pour garder les rectangles
   const boutons = matches.map(num => {
     const cleaned = num.replace(/\s+/g, "");
-    return `<span class="inline-links" style="display:inline-flex; margin-left:6px;">
-              <a href="tel:${cleaned}">${num}</a>
-            </span>`;
-  }).join(" ");
+    return `<a href="tel:${cleaned}">${num}</a>`;
+  }).join("");
 
-  // ✅ tout dans le même <p> → reste sur une ligne
-  return `<p><strong>👤 Contact :</strong> ${texteSansNum} ${boutons}</p>`;
+  return `<p><strong>👤 Contact :</strong> ${texteSansNum}</p>
+          <div class="inline-links">${boutons}</div>`;
 }
 
 function formatPortail(val) {
@@ -771,7 +767,7 @@ trainImg.addEventListener('click', pickRandomTrain);
     🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration:none; color:#1a73e8;">À propos</a>
   </p>
   <p style="font-size:10px; color:#ccc; margin:0;">
-    Arnaud - V1.08.35
+    Arnaud - V1.08.36
   </p>
 </div>
   <script>
