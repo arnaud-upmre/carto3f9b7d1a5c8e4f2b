@@ -13,7 +13,7 @@
       margin: 0;
       padding: 1rem;
       padding-bottom: 7rem;
-      line-height: 1.6;
+      line-height: 1.8; /* ✅ interligne plus aéré */
       user-select: none;
     }
     h1 {
@@ -24,15 +24,16 @@
     h2 {
       font-size: 1.3rem;
       margin-top: 1rem;
-      margin-bottom: 0.6rem;
+      margin-bottom: 0.8rem;
     }
     p {
       font-size: 1rem;
-      margin-bottom: 0.6rem;
+      margin-bottom: 1rem; /* ✅ plus d’espace entre les paragraphes */
+      text-align: justify; /* ✅ texte justifié pour lisibilité */
     }
     blockquote {
-      margin: 1rem 0;
-      padding: 0.8rem 1rem;
+      margin: 1.2rem 0;
+      padding: 1rem 1.2rem;
       background: #f0f0f0;
       border-left: 4px solid #ccc;
       font-style: italic;
@@ -41,7 +42,7 @@
     .container {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.75rem;
+      gap: 1rem;
       max-width: 1000px;
       margin: auto;
     }
@@ -50,21 +51,21 @@
       background: #fff;
       border-radius: 0.6rem;
       box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-      padding: 1rem;
+      padding: 2rem 1.5rem; /* ✅ plus de padding vertical */
       flex: 1 1 300px;
       max-width: 1000px;
-      margin: 0.75rem auto;
+      margin: 1.5rem auto; /* ✅ plus d’espace entre les blocs */
       box-sizing: border-box;
     }
 
     .card-future { position: relative; }
     .badge-pill {
       position: absolute;
-      top: 0.8rem;
-      right: 1rem;
+      top: 1rem;
+      right: 1.2rem;
       background: #0055cc;
       color: #fff;
-      padding: 0.4rem 0.8rem;
+      padding: 0.5rem 0.9rem;
       border-radius: 999px;
       font-weight: 500;
       font-size: 0.9rem;
@@ -75,15 +76,15 @@
     .stats-content {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.5rem;
+      gap: 0.7rem;
     }
     .stat-pill {
       background: #0055cc;
       color: #fff;
-      padding: 0.4rem 0.8rem;
+      padding: 0.5rem 0.9rem;
       border-radius: 999px;
       font-weight: 500;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       white-space: nowrap;
     }
 
@@ -159,11 +160,11 @@
     <!-- Premier déclic -->
     <div class="card">
       <h2>🧐 Le déclic</h2>
-      <p>Une nuit d’astreinte, je découvre un poste pour la première fois.<br>
-      Pas d’indication, pas de plan… je marche longtemps avant de trouver l’appareil.<br>
-      Et là, surprise : il y avait un portail juste à côté 😅</p>
+      <p>Une de mes premières nuits d’astreinte, je découvre un poste pour la première fois. <em>(Rodelinghem)</em><br>
+      Peu d’indications, pas de consignes… je marche <s>plusieurs centaines</s> de mètres le long de la voie, dans le noir, avant de trouver l’appareil.<br>
+      Et là, surprise : il y avait un portail d’accès routier juste à côté de l’interrupteur 😅</p>
       <p>Ce soir-là, je me suis dit :<br><strong>« On peut éviter ça aux suivants. »</strong></p>
-      <p>Depuis, chaque point ajouté sert à ça : faire gagner du temps, éviter les galères, et rendre nos interventions plus simples et plus sûres.</p>
+      <p>Depuis, chaque point ajouté sert à ça : faire gagner du temps et rendre nos interventions plus simples et plus sûres.</p>
     </div>
 
     <!-- Une carte adoptée par tous -->
@@ -172,8 +173,8 @@
       <p>La carte MyMaps a vite été adoptée : elle est devenue un outil du quotidien.<br>
       Même les plus anciens, pourtant habitués au terrain, s’en servent 😃</p>
       <p>Parce qu’au fond, ça arrive à tout le monde : on ne se souvient plus de la localisation exacte d’un appareil, ni de son environnement précis.<br>
-      Dans ces moments-là, la carte est vraiment utile.</p>
-      <p>C’est à ce moment-là que je me suis dit :<br>
+      Dans ces situations, la carte est vraiment utile.</p>
+      <p>C’est là que je me suis dit :<br>
       <strong>cette carte MyMaps n’était qu’un point de départ, il fallait lui donner une nouvelle dimension.</strong></p>
       <p>L’idée de créer une webapp s’est imposée : un outil plus souple, plus rapide, taillé sur mesure pour le terrain et pensé dès le départ pour être utilisé sur smartphone.</p>
     </div>
