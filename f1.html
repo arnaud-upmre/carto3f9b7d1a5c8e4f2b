@@ -30,9 +30,7 @@
       font-size: 1rem;
       margin-bottom: 0.6rem;
     }
-    ul {
-      padding-left: 1.2rem;
-    }
+    ul { padding-left: 1.2rem; }
     blockquote {
       margin: 1rem 0;
       padding: 0.8rem 1rem;
@@ -44,7 +42,7 @@
     .container {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.75rem;
+      gap: 0.75rem; /* espace réduit de moitié */
       max-width: 1000px;
       margin: auto;
     }
@@ -56,10 +54,12 @@
       padding: 1rem;
       flex: 1 1 300px;
       max-width: 1000px;
-      margin: 0.75rem auto;
+      margin: 0.75rem auto; /* marge réduite de moitié */
       box-sizing: border-box;
+      position: relative;
     }
 
+    /* Carte "Et la suite ?" avec badge */
     .card-future { position: relative; }
     .badge-pill {
       position: absolute;
@@ -95,12 +95,12 @@
       border-radius: 0.6rem 0.6rem 0 0;
       box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
       padding: 1rem;
-      position: fixed;
+      position: fixed; /* ✅ Boutons fixes */
       bottom: 0;
       left: 0;
       right: 0;
       width: 100%;
-      max-width: 1000px;
+      max-width: 1000px; /* ✅ Alignement avec les blocs */
       margin: auto;
       box-sizing: border-box;
     }
@@ -149,41 +149,41 @@
   
   <div class="container">
     <div class="card">
-      <p>Au départ, on s’échangeait juste quelques points GPS entre collègues.<br>
-      C’était pratique, mais vite limité… chacun bricolait de son côté.</p>
-      <p>Alors l’idée est venue : <strong>mettre tout en commun</strong>.<br>
-      Et petit à petit, cette simple carte s’est transformée en un vrai outil collaboratif, pensé pour nous simplifier la vie au quotidien.</p>
+      <!-- Bloc 1 – Intro (avec nouveau paragraphe) -->
+      <p>Au départ, on s’échangeait juste quelques points GPS entre collègues. C’était pratique, mais vite limité… chacun bricolait de son côté.</p>
+      <p>On n’est pas tous égaux devant l’orientation : certains trouvent facilement, d’autres beaucoup moins.  
+      En créant une carte claire avec des accès GPS précis, on réduit non seulement les détours inutiles, mais on améliore aussi la <strong>sécurité routière</strong> de chacun lors de ses déplacements.</p>
+      <p>Alors l’idée est venue : <strong>mettre tout en commun</strong>. Et petit à petit, cette simple carte s’est transformée en un vrai outil collaboratif, pensé pour nous simplifier la vie au quotidien.</p>
       <blockquote>
         “Le partage de connaissances et de ressources dans le monde professionnel est le fondement d’une collaboration fructueuse et de la croissance collective.”<br>— John C. Maxwell
       </blockquote>
     </div>
     
     <div class="card">
+      <!-- Bloc 2 – Le déclic -->
       <h2>🧐 Le déclic</h2>
-      <p>Une nuit d’astreinte, je découvre un poste pour la première fois.<br>
-      Pas d’indication, pas de plan… je marche longtemps avant de trouver l’appareil.<br>
-      Et là, surprise : il y avait un portail juste à côté 😅</p>
-      <p>Ce soir-là, je me suis dit :<br><strong>« On peut éviter ça aux suivants. »</strong></p>
-      <p>Depuis, chaque point ajouté sert à ça : faire gagner du temps, éviter les galères, et rendre nos interventions plus simples et plus sûres.</p>
+      <p>Une nuit d’astreinte, je découvre un poste pour la première fois. Pas d’indication, pas de plan… Je marche longtemps avant de trouver l’appareil. Et là, surprise : il y avait un portail juste à côté 😅.</p>
+      <p><strong>Ce soir-là, je me suis dit : « On peut éviter ça aux suivants. »</strong></p>
+      <p>Depuis, chaque point ajouté sert à ça : <strong>faire gagner du temps</strong>, éviter les galères, et rendre nos interventions plus simples et plus sûres.</p>
     </div>
   </div>
 
   <div class="card card-future">
+    <!-- Bloc 3 – Et la suite ? -->
     <div class="badge-pill">🕒 +60h R&D</div>
     <h2>🚀 Et la suite ?</h2>
-    <p>🎯 L’objectif : construire une base fiable et exhaustive, poste par poste, appareil par appareil.</p>
-    <p>🔄 L’outil s’enrichit avec vos retours et repérages terrain. Chaque contribution rend l’outil plus utile et précis.</p>
-    <p>📩 Vous souhaitez contribuer ? Le formulaire est là pour ça.</p>
+    <p>L’aventure continue, et elle avance grâce à chacun d’entre nous. Chaque contribution rend la carte plus précise, plus utile, plus vivante.</p>
+    <p>🎯 L’objectif est clair : <strong>une base fiable</strong>, accessible à tous, et tournée vers le terrain.</p>
+    <p>Et surtout : garder cet <strong>esprit d’entraide</strong> qui fait toute la différence.</p>
     <p>Ferroviairement,<br><strong>Arnaud</strong></p>
   </div>
 
+  <!-- Bloc 4 – Stats -->
   <div class="stats-box" id="statsBox">
+    <div class="badge-pill">⏱️ +60h R&D</div>
     <h2>🚀 Notre avancement</h2>
     <p>Chaque point ajouté, c’est une victoire collective :</p>
     <div class="stats-content" id="stats"></div>
-    <div class="stats-content">
-      <span class="stat-pill">⏱️ +60h R&D</span>
-    </div>
   </div>
 
   <div class="btn-box">
@@ -213,9 +213,10 @@
     fetchCounts();
   </script>
   <script>
-  ['contextmenu','selectstart','copy','cut','paste','dragstart'].forEach(evt => {
-    document.addEventListener(evt, e => e.preventDefault(), { passive: false });
-  });
-</script>
+    // Bloque : clic droit, sélection, copier, couper, coller, glisser
+    ['contextmenu','selectstart','copy','cut','paste','dragstart'].forEach(evt => {
+      document.addEventListener(evt, e => e.preventDefault(), { passive: false });
+    });
+  </script>
 </body>
 </html>
