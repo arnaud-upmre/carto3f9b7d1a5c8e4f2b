@@ -13,7 +13,7 @@
       margin: 0;
       padding: 1rem;
       padding-bottom: 7rem;
-      line-height: 1.8; /* ✅ interligne plus aéré */
+      line-height: 1.8;
       user-select: none;
     }
     h1 {
@@ -28,11 +28,11 @@
     }
     p {
       font-size: 1rem;
-      margin-bottom: 1rem; /* ✅ plus d’espace entre les paragraphes */
-      text-align: justify; /* ✅ texte justifié pour lisibilité */
+      margin-bottom: 1rem;
+      text-align: justify;
     }
     blockquote {
-      margin: 1.2rem 0;
+      margin: 2rem 0 0; /* ✅ citation plus basse */
       padding: 1rem 1.2rem;
       background: #f0f0f0;
       border-left: 4px solid #ccc;
@@ -51,28 +51,12 @@
       background: #fff;
       border-radius: 0.6rem;
       box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-      padding: 2rem 1.5rem; /* ✅ plus de padding vertical */
+      padding: 2rem 1.5rem;
       flex: 1 1 300px;
       max-width: 1000px;
-      margin: 1.5rem auto; /* ✅ plus d’espace entre les blocs */
+      margin: 1.5rem auto;
       box-sizing: border-box;
     }
-
-    .card-future { position: relative; }
-    .badge-pill {
-      position: absolute;
-      top: 1rem;
-      right: 1.2rem;
-      background: #0055cc;
-      color: #fff;
-      padding: 0.5rem 0.9rem;
-      border-radius: 999px;
-      font-weight: 500;
-      font-size: 0.9rem;
-      white-space: nowrap;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
-    }
-
     .stats-content {
       display: flex;
       flex-wrap: wrap;
@@ -87,7 +71,6 @@
       font-size: 0.95rem;
       white-space: nowrap;
     }
-
     .btn-box {
       background: #fff;
       border-radius: 0.6rem 0.6rem 0 0;
@@ -137,7 +120,7 @@
       blockquote { background: #2a2a2a; border-left: 4px solid #555; }
       .btn { background-color: #1976d2; }
       .btn:hover { background-color: #1565c0; }
-      .badge-pill, .stat-pill { box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+      .stat-pill { box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
     }
   </style>
 </head>
@@ -150,8 +133,9 @@
     <div class="card">
       <p>Au départ, on s’échangeait juste quelques points GPS entre collègues.<br>
       C’était pratique, mais vite limité… chacun bricolait de son côté.</p>
-      <p>Alors l’idée est venue : <strong>mettre tout en commun</strong>.<br>
-      Et petit à petit, cette simple carte s’est transformée en un vrai outil collaboratif, pensé pour nous simplifier la vie au quotidien.</p>
+      <p>Alors l’idée est venue : <strong>mettre tout en commun</strong>.</p>
+      <br>
+      <p>Et petit à petit, cette simple carte s’est transformée en un vrai outil collaboratif, pensé pour nous simplifier la vie au quotidien.</p>
       <blockquote>
         “Le partage de connaissances et de ressources dans le monde professionnel est le fondement d’une collaboration fructueuse et de la croissance collective.”<br>— John C. Maxwell
       </blockquote>
@@ -161,15 +145,15 @@
     <div class="card">
       <h2>🧐 Le déclic</h2>
       <p>Une de mes premières nuits d’astreinte, je découvre un poste pour la première fois. <em>(Rodelinghem)</em><br>
-      Peu d’indications, pas de consignes… je marche <s>plusieurs centaines</s> de mètres le long de la voie, dans le noir, avant de trouver l’appareil.<br>
+      Peu d’indications, pas de consignes… je marche <s>plusieurs centaines de mètres</s> le long de la voie, dans le noir, avant de trouver l’appareil.<br>
       Et là, surprise : il y avait un portail d’accès routier juste à côté de l’interrupteur 😅</p>
       <p>Ce soir-là, je me suis dit :<br><strong>« On peut éviter ça aux suivants. »</strong></p>
       <p>Depuis, chaque point ajouté sert à ça : faire gagner du temps et rendre nos interventions plus simples et plus sûres.</p>
     </div>
 
-    <!-- Une carte adoptée par tous -->
+    <!-- Une carte adoptée -->
     <div class="card">
-      <h2>📌 Une carte adoptée par tous</h2>
+      <h2>📌 Une carte adoptée</h2>
       <p>La carte MyMaps a vite été adoptée : elle est devenue un outil du quotidien.<br>
       Même les plus anciens, pourtant habitués au terrain, s’en servent 😃</p>
       <p>Parce qu’au fond, ça arrive à tout le monde : on ne se souvient plus de la localisation exacte d’un appareil, ni de son environnement précis.<br>
@@ -181,8 +165,7 @@
   </div>
 
   <!-- Et la suite -->
-  <div class="card card-future">
-    <div class="badge-pill">🕒 +60h R&D</div>
+  <div class="card">
     <h2>🚀 Et la suite ?</h2>
     <p>La carte évolue un peu plus chaque jour.<br>
     Grâce aux partages de chacun, elle grandit et devient toujours plus utile.</p>
@@ -193,6 +176,9 @@
   <div class="stats-box" id="statsBox">
     <h2>🚀 Notre avancement</h2>
     <div class="stats-content" id="stats"></div>
+    <div class="stats-content">
+      <span class="stat-pill">🕒 +60h R&D</span>
+    </div>
   </div>
 
   <!-- Conclusion -->
