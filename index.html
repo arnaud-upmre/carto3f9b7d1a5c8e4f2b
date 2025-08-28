@@ -502,7 +502,9 @@ fuse = new Fuse(lieux, {
     }
   ],
   includeScore: true,
-  threshold: 0.3,
+  threshold: 0.4,        // un peu plus permissif
+  distance: 100,         // accepte plus d’écarts
+  minMatchCharLength: 2, // évite les résultats absurdes sur 1 lettre
   ignoreLocation: true
 });
 });
@@ -531,7 +533,7 @@ document.getElementById("search").addEventListener("input", e => {
   resultEl.innerHTML = "";
   resultEl.style.display = "none";
   if (!query || !fuse) return;
-  let results = fuse.search(query).filter(r => r.score < 0.4).map(r => r.item);
+let results = fuse.search(query).map(r => r.item);
   if (results.length === 0 || query.length <= 3) {
    const fallback = lieux.filter(l =>
   normalize(l.nom).includes(query) ||
@@ -756,7 +758,7 @@ trainImg.addEventListener('click', pickRandomTrain);
     🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration:none; color:#1a73e8;">À propos</a>
   </p>
   <p style="font-size:10px; color:#ccc; margin:0;">
-    Arnaud - V1.08.32
+    Arnaud - V1.08.33
   </p>
 </div>
   <script>
