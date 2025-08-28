@@ -42,7 +42,7 @@
     .container {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.75rem; /* espace réduit de moitié */
+      gap: 0.75rem;
       max-width: 1000px;
       margin: auto;
     }
@@ -54,13 +54,10 @@
       padding: 1rem;
       flex: 1 1 300px;
       max-width: 1000px;
-      margin: 0.75rem auto; /* marge réduite de moitié */
+      margin: 0.75rem auto;
       box-sizing: border-box;
       position: relative;
     }
-
-    /* Carte "Et la suite ?" avec badge */
-    .card-future { position: relative; }
     .badge-pill {
       position: absolute;
       top: 0.8rem;
@@ -74,7 +71,6 @@
       white-space: nowrap;
       box-shadow: 0 2px 6px rgba(0,0,0,0.12);
     }
-
     .stats-content {
       display: flex;
       flex-wrap: wrap;
@@ -89,18 +85,17 @@
       font-size: 0.9rem;
       white-space: nowrap;
     }
-
     .btn-box {
       background: #fff;
       border-radius: 0.6rem 0.6rem 0 0;
       box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
       padding: 1rem;
-      position: fixed; /* ✅ Boutons fixes */
+      position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
       width: 100%;
-      max-width: 1000px; /* ✅ Alignement avec les blocs */
+      max-width: 1000px;
       margin: auto;
       box-sizing: border-box;
     }
@@ -125,7 +120,6 @@
       max-width: 200px;
     }
     .btn:hover { background-color: #0040a8; }
-
     @media (max-width: 480px) {
       .btn { flex: 1 1 100%; max-width: none; }
       body { padding-bottom: 9rem; }
@@ -149,11 +143,12 @@
   
   <div class="container">
     <div class="card">
-      <!-- Bloc 1 – Intro (avec nouveau paragraphe) -->
-      <p>Au départ, on s’échangeait juste quelques points GPS entre collègues. C’était pratique, mais vite limité… chacun bricolait de son côté.</p>
-      <p>On n’est pas tous égaux devant l’orientation : certains trouvent facilement, d’autres beaucoup moins.  
-      En créant une carte claire avec des accès GPS précis, on réduit non seulement les détours inutiles, mais on améliore aussi la <strong>sécurité routière</strong> de chacun lors de ses déplacements.</p>
-      <p>Alors l’idée est venue : <strong>mettre tout en commun</strong>. Et petit à petit, cette simple carte s’est transformée en un vrai outil collaboratif, pensé pour nous simplifier la vie au quotidien.</p>
+      <!-- Bloc 1 – Intro -->
+      <p>Tout a commencé par quelques points GPS partagés entre collègues.  
+      C’était utile, mais vite limité… chacun avait sa façon de faire et rien n’était vraiment centralisé.</p>
+      <p>Nous n’avons pas tous la même facilité à nous orienter, et c’est normal. Mais avec des accès précis et partagés, c’est éviter les détours inutiles, mais aussi améliorer la sécurité pour chacun.</p>
+      <p>L’idée s’est imposée d’elle-même : mettre tout en commun.  
+      Et petit à petit, ce qui n’était au départ que quelques liens partagés est devenu une carte MyMaps, avant d’évoluer en un véritable outil collaboratif : cette webapp pensée pour simplifier la vie sur le terrain.</p>
       <blockquote>
         “Le partage de connaissances et de ressources dans le monde professionnel est le fondement d’une collaboration fructueuse et de la croissance collective.”<br>— John C. Maxwell
       </blockquote>
@@ -162,7 +157,9 @@
     <div class="card">
       <!-- Bloc 2 – Le déclic -->
       <h2>🧐 Le déclic</h2>
-      <p>Une nuit d’astreinte, je découvre un poste pour la première fois. Pas d’indication, pas de plan… Je marche longtemps avant de trouver l’appareil. Et là, surprise : il y avait un portail juste à côté 😅.</p>
+      <p>Une nuit d’astreinte, je découvre un poste pour la première fois.  
+      Pas d’indication, pas de plan… Je marche longtemps avant de trouver l’appareil.  
+      Et là, surprise : il y avait un portail juste à côté 😅.</p>
       <p><strong>Ce soir-là, je me suis dit : « On peut éviter ça aux suivants. »</strong></p>
       <p>Depuis, chaque point ajouté sert à ça : <strong>faire gagner du temps</strong>, éviter les galères, et rendre nos interventions plus simples et plus sûres.</p>
     </div>
@@ -170,11 +167,11 @@
 
   <div class="card card-future">
     <!-- Bloc 3 – Et la suite ? -->
-    <div class="badge-pill">🕒 +60h R&D</div>
     <h2>🚀 Et la suite ?</h2>
-    <p>L’aventure continue, et elle avance grâce à chacun d’entre nous. Chaque contribution rend la carte plus précise, plus utile, plus vivante.</p>
-    <p>🎯 L’objectif est clair : <strong>une base fiable</strong>, accessible à tous, et tournée vers le terrain.</p>
-    <p>Et surtout : garder cet <strong>esprit d’entraide</strong> qui fait toute la différence.</p>
+    <p>🚀 L’aventure continue !  
+    Grâce aux retours et aux repérages de chacun, la carte devient chaque jour plus précise et plus utile.</p>
+    <p>🎯 L’objectif : construire une base fiable, claire et accessible à tous.</p>
+    <p>Et surtout : préserver cet esprit d’entraide qui fait avancer tout le monde.</p>
     <p>Ferroviairement,<br><strong>Arnaud</strong></p>
   </div>
 
@@ -182,7 +179,6 @@
   <div class="stats-box" id="statsBox">
     <div class="badge-pill">⏱️ +60h R&D</div>
     <h2>🚀 Notre avancement</h2>
-    <p>Chaque point ajouté, c’est une victoire collective :</p>
     <div class="stats-content" id="stats"></div>
   </div>
 
