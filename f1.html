@@ -44,7 +44,7 @@
     .container {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.75rem; /* espace réduit de moitié */
+      gap: 0.75rem;
       max-width: 1000px;
       margin: auto;
     }
@@ -56,11 +56,10 @@
       padding: 1rem;
       flex: 1 1 300px;
       max-width: 1000px;
-      margin: 0.75rem auto; /* marge réduite de moitié */
+      margin: 0.75rem auto;
       box-sizing: border-box;
     }
 
-    /* Carte "Et la suite ?" avec badge */
     .card-future { position: relative; }
     .badge-pill {
       position: absolute;
@@ -96,12 +95,12 @@
       border-radius: 0.6rem 0.6rem 0 0;
       box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
       padding: 1rem;
-      position: fixed; /* ✅ Boutons fixes */
+      position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
       width: 100%;
-      max-width: 1000px; /* ✅ Alignement avec les blocs */
+      max-width: 1000px;
       margin: auto;
       box-sizing: border-box;
     }
@@ -150,25 +149,22 @@
   
   <div class="container">
     <div class="card">
-      <p>Tout a commencé lorsqu’un collègue a créé un compte Google pour y enregistrer quelques points GPS. Il m’a ensuite partagé cet accès.</p>
-      <p>Au début, ça dépannait. On échangeait les points entre nous, comme on pouvait… mais sans réelle organisation.</p>
-      <p>C’est là que j’ai commencé à créer une carte sur Google MyMaps, pour référencer proprement les accès routiers aux postes et poser les bases d’un outil plus unifié.</p>
-      <p>Cette première carte rendait déjà bien service, mais elle montrait vite ses limites :</p>
-      <ul><p>➡️ pas de recherche intelligente, peu de possibilités collaboratives pour ajouter des points...</p></ul>
+      <p>Au départ, on s’échangeait juste quelques points GPS entre collègues.<br>
+      C’était pratique, mais vite limité… chacun bricolait de son côté.</p>
+      <p>Alors l’idée est venue : <strong>mettre tout en commun</strong>.<br>
+      Et petit à petit, cette simple carte s’est transformée en un vrai outil collaboratif, pensé pour nous simplifier la vie au quotidien.</p>
       <blockquote>
         “Le partage de connaissances et de ressources dans le monde professionnel est le fondement d’une collaboration fructueuse et de la croissance collective.”<br>— John C. Maxwell
       </blockquote>
-      <p>L’idée a naturellement émergé : <strong>mettre en commun les infos de chacun</strong>, pour créer une base utile à tous, claire et partagée.</p>
-      <p>Ce qui n’était au départ qu’une simple carte MyMaps s’est transformé en une véritable application web, taillée pour le terrain et pensée dès le départ pour être utilisée sur smartphone.</p>
     </div>
     
     <div class="card">
       <h2>🧐 Le déclic</h2>
-      <p>Une nuit d’astreinte, l’une de mes toutes premières sorties 😁, j’ai dû intervenir sur un appareil en panne au PRCI de Rodelinghem.<br>
-      Je découvrais ce poste pour la toute première fois.<br>
-      Je n’avais aucune consigne de sécurité, aucun document, rien pour localiser précisément l’appareil.<br>
-      Une fois sur place, j’ai dû marcher plusieurs centaines de mètres… pour rejoindre l’appareil… et découvrir qu’il y avait un portail juste à côté 😅</p>
-      <p><strong>Ce soir-là, je me suis dit : «Plus jamais ça.»</strong></p>
+      <p>Une nuit d’astreinte, je découvre un poste pour la première fois.<br>
+      Pas d’indication, pas de plan… je marche longtemps avant de trouver l’appareil.<br>
+      Et là, surprise : il y avait un portail juste à côté 😅</p>
+      <p>Ce soir-là, je me suis dit :<br><strong>« On peut éviter ça aux suivants. »</strong></p>
+      <p>Depuis, chaque point ajouté sert à ça : faire gagner du temps, éviter les galères, et rendre nos interventions plus simples et plus sûres.</p>
     </div>
   </div>
 
@@ -217,7 +213,6 @@
     fetchCounts();
   </script>
   <script>
-  // Bloque : clic droit, sélection, copier, couper, coller, glisser
   ['contextmenu','selectstart','copy','cut','paste','dragstart'].forEach(evt => {
     document.addEventListener(evt, e => e.preventDefault(), { passive: false });
   });
