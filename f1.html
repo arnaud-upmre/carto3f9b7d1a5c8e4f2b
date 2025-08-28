@@ -1,787 +1,226 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <style id="eale-intro-styles">
-  :root{--eale-intro-bg:#fff;--eale-intro-fg:#222}
-  @media (prefers-color-scheme: dark){
-    :root{--eale-intro-bg:#0b0b0b;--eale-intro-fg:#eee}
-  }
-  .eale-intro-overlay{
-    position:fixed; inset:0;
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    background:var(--eale-intro-bg); color:var(--eale-intro-fg);
-    z-index:99999; user-select:none; touch-action:none;
-  }
-  .eale-intro-img{
-    width:min(42vw,180px); height:auto; object-fit:contain; pointer-events:none;
-    animation:eale-zoomIn 1.8s ease-out forwards;
-  }
-  .eale-intro-text{
-    position:fixed; bottom:12vh; left:50%; transform:translateX(-50%);
-    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-    font-size:0.95rem; font-style:italic; text-align:center; opacity:.95; max-width:90%;
-  }
-  @keyframes eale-zoomIn{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
-  .eale-intro-hide{opacity:0; transition:opacity .35s ease}
-    /* surbrillance du meilleur résultat */
-li.best {
-  background-color: #e6f0ff;
-  font-weight: 600;
-}
-@media (prefers-color-scheme: dark){
-  li.best {
-    background-color: #1b2836; /* bleu foncé doux */
-  }
-}
-</style>
-  <meta name="robots" content="noindex, nofollow" />
   <meta charset="UTF-8" />
-  <title>Recherche de lieux</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+  <title>🔧 À propos</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
   <style>
-    ul#suggestions:empty,
-ul#suggestionsAppareils:empty {
-  margin-bottom: 0;
-}
     body {
-      font-family: 'Inter', sans-serif;
-      background-color: #fff;
-      padding: 1rem;
+      font-family: 'Segoe UI', 'Inter', sans-serif;
+      background-color: #f5f5f5;
       color: #333;
       margin: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 100vw;
-      box-sizing: border-box;
-    }
-    #train-container {
-      width: 100%;
-      max-width: 600px;
-      height: 48px;
-      overflow: hidden;
-      margin-bottom: 1.5rem;
-      position: relative;
-    }
-    #train {
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 42px;
-      animation: trainVaEtVient 28s ease-in-out infinite;
-    }
-    @keyframes trainVaEtVient {
-      0%, 100% { left: 0; }
-      45%, 50% { left: calc(100% - 95px); }
-      95% { left: 0; }
+      padding: 1rem;
+      padding-bottom: 7rem;
+      line-height: 1.6;
+      user-select: none;
     }
     h1 {
-      font-size: 20px;
-      margin: 0 0 0.8rem 0;
-      font-weight: 600;
-      width: 100%;
-      max-width: 600px;
-      padding: 0 1rem;
-      text-align: left;
+      font-size: 1.6rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
     }
-    input[type="text"] {
-      width: 100%;
-      max-width: 600px;
-      padding: 12px 16px;
-      font-size: 16px;
-      border-radius: 10px;
-      border: 1px solid #ccc;
-      box-sizing: border-box;
-      outline: none;
-      transition: border-color 0.3s ease;
+    h2 {
+      font-size: 1.3rem;
+      margin-top: 1rem;
+      margin-bottom: 0.6rem;
     }
-    input[type="text"]:focus {
-      border-color: #1a73e8;
-      box-shadow: 0 4px 14px rgba(26,115,232,0.4);
+    p, li {
+      font-size: 1rem;
+      margin-bottom: 0.6rem;
     }
-    #counter, #counterAppareil {
-      font-size: 13px;
-      color: #666;
-      margin-top: 6px;
-      margin-bottom: 1rem;
+    ul {
+      padding-left: 1.2rem;
     }
-    ul#suggestions, ul#suggestionsAppareils {
-      list-style: none;
-      padding: 0;
-      margin: 0.5rem 0 1.5rem 0;
-      max-width: 600px;
-      width: 100%;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-      background-color: #fff;
-      font-size: 15px;
-      color: #333;
+    blockquote {
+      margin: 1rem 0;
+      padding: 0.8rem 1rem;
+      background: #f0f0f0;
+      border-left: 4px solid #ccc;
+      font-style: italic;
+      border-radius: 4px;
     }
-    ul#suggestions li, ul#suggestionsAppareils li {
-      padding: 12px 16px;
-      cursor: pointer;
-      border-bottom: 1px solid #eee;
-    }
-    ul#suggestions li:hover, ul#suggestionsAppareils li:hover {
-      background-color: #f0f8ff;
-      color: #1a73e8;
-    }
-    #result {
-      display: none;
-      background: #ffffff;
-      padding: 1rem 1.5rem;
-      border-radius: 18px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-      max-width: 600px;
-      width: 100%;
-      color: #444;
-      font-size: 15px;
-      line-height: 1.5;
-    }
-    #result h2 {
-      margin-top: 0;
-      font-size: 22px;
-      font-weight: 700;
-      color: #1a73e8;
-    }
-    .inline-links {
+    .container {
       display: flex;
       flex-wrap: wrap;
-      gap: 6px;
-      font-size: 14px;
-      padding: 0 1rem 0 0;
+      gap: 0.75rem; /* espace réduit de moitié */
+      max-width: 1000px;
+      margin: auto;
     }
-    .inline-links a {
-      padding: 6px 10px;
-      font-size: 14px;
-      text-decoration: none;
-      color: #1a73e8;
-      border: 1px solid #1a73e8;
-      border-radius: 10px;
-      transition: 0.3s;
+    .card,
+    .stats-box {
+      background: #fff;
+      border-radius: 0.6rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      padding: 1rem;
+      flex: 1 1 300px;
+      max-width: 1000px;
+      margin: 0.75rem auto; /* marge réduite de moitié */
+      box-sizing: border-box;
+    }
+
+    /* Carte "Et la suite ?" avec badge */
+    .card-future { position: relative; }
+    .badge-pill {
+      position: absolute;
+      top: 0.8rem;
+      right: 1rem;
+      background: #0055cc;
+      color: #fff;
+      padding: 0.4rem 0.8rem;
+      border-radius: 999px;
+      font-weight: 500;
+      font-size: 0.9rem;
+      white-space: nowrap;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+    }
+
+    .stats-content {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .stat-pill {
+      background: #0055cc;
+      color: #fff;
+      padding: 0.4rem 0.8rem;
+      border-radius: 999px;
+      font-weight: 500;
+      font-size: 0.9rem;
       white-space: nowrap;
     }
-    .inline-links a:hover {
-      background-color: #1a73e8;
+
+    .btn-box {
+      background: #fff;
+      border-radius: 0.6rem 0.6rem 0 0;
+      box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
+      padding: 1rem;
+      position: fixed; /* ✅ Boutons fixes */
+      bottom: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      max-width: 1000px; /* ✅ Alignement avec les blocs */
+      margin: auto;
+      box-sizing: border-box;
+    }
+    .btn-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      justify-content: center;
+    }
+    .btn {
+      flex: 1 1 calc(50% - 0.6rem);
+      text-align: center;
+      padding: 0.8rem;
+      background-color: #0055cc;
       color: white;
+      border-radius: 0.5rem;
+      font-size: 0.95rem;
+      text-decoration: none;
+      font-weight: 500;
+      transition: background-color 0.3s ease;
+      white-space: nowrap;
+      max-width: 200px;
     }
-    .separator {
-      border: none;
-      border-top: 1px solid #eee;
-      margin: 1rem 0;
-    }
+    .btn:hover { background-color: #0040a8; }
+
     @media (max-width: 480px) {
-      body { padding: 0.8rem; }
-      h1 { font-size: 18px; padding: 0 0.5rem; }
-      input[type="text"] { font-size: 14px; padding: 10px 14px; }
-      ul#suggestions li, ul#suggestionsAppareils li { padding: 10px 14px; font-size: 14px; }
-      #result { font-size: 14px; padding: 0.8rem 0.5rem; }
+      .btn { flex: 1 1 100%; max-width: none; }
+      body { padding-bottom: 9rem; }
     }
-    /* --- MODE SOMBRE AUTOMATIQUE --- */
-@media (prefers-color-scheme: dark) {
-  body {
-    background-color: #121212;
-    color: #e5e5e5;
-  }
-
-  h1,
-  #result h2 {
-    color: #90caf9;
-  }
-
-  input[type="text"] {
-    background-color: #1e1e1e;
-    color: #e5e5e5;
-    border: 1px solid #555;
-  }
-
-  ul#suggestions,
-  ul#suggestionsAppareils,
-  #result {
-    background-color: #1e1e1e;
-    color: #e5e5e5;
-    box-shadow: 0 6px 15px rgba(255,255,255,0.05);
-  }
-
-  .inline-links a {
-    color: #90caf9;
-    border-color: #90caf9;
-  }
-
-  .inline-links a:hover {
-    background-color: #90caf9;
-    color: #121212;
-  }
-}/* === Liens : même couleur en normal / visited === */
-a { 
-  color:#1a73e8; 
-  text-decoration:none; 
-}
-a:visited { 
-  color:#1a73e8; 
-}
-
-/* Boutons-lien inline-links */
-.inline-links a,
-.inline-links a:visited { 
-  color:#1a73e8; 
-  border-color:#1a73e8; 
-}
-
-/* Encadré "Appareil manquant" */
-.missing-box {
-  background-color:#e6f0ff;
-  border-radius:12px;
-  padding:12px 16px;
-  margin-top:1.2rem;
-  text-align:center;
-  font-size:15px;
-}
-.missing-box a {
-  color:#1a73e8; 
-  font-weight:600;
-}
-
-/* --- Dark mode spécial liens et box --- */
-@media (prefers-color-scheme: dark){
-  a, a:visited { 
-    color:#90caf9; 
-  }
-  .inline-links a,
-  .inline-links a:visited { 
-    color:#90caf9; 
-    border-color:#90caf9; 
-  }
-  .inline-links a:hover { 
-    background-color:#90caf9; 
-    color:#121212; 
-  }
-
-  .missing-box {
-    background-color:#16202c;
-    border:1px solid #243447;
-  }
-  .missing-box a { 
-    color:#90caf9; 
-  }
-}
+    @media (prefers-color-scheme: dark) {
+      body { background-color: #121212; color: #e0e0e0; }
+      .card, .stats-box, .btn-box {
+        background: #1e1e1e;
+        box-shadow: 0 2px 8px rgba(255,255,255,0.05);
+      }
+      blockquote { background: #2a2a2a; border-left: 4px solid #555; }
+      .btn { background-color: #1976d2; }
+      .btn:hover { background-color: #1565c0; }
+      .badge-pill, .stat-pill { box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+    }
   </style>
-  <meta name="color-scheme" content="light dark">
-<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
-<meta name="theme-color" media="(prefers-color-scheme: dark)"  content="#121212">
 </head>
 <body>
-  <div id="train-container">
-    <img id="train" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/train.gif" alt="Train animé" />
+  
+  <h1>🔧 À propos</h1>
+  
+  <div class="container">
+    <div class="card">
+      <p>Tout a commencé lorsqu’un collègue a créé un compte Google pour y enregistrer quelques points GPS. Il m’a ensuite partagé cet accès.</p>
+      <p>Au début, ça dépannait. On échangeait les points entre nous, comme on pouvait… mais sans réelle organisation.</p>
+      <p>C’est là que j’ai commencé à créer une carte sur Google MyMaps, pour référencer proprement les accès routiers aux postes et poser les bases d’un outil plus unifié.</p>
+      <p>Cette première carte rendait déjà bien service, mais elle montrait vite ses limites :</p>
+      <ul><p>➡️ pas de recherche intelligente, peu de possibilités collaboratives pour ajouter des points...</p></ul>
+      <blockquote>
+        “Le partage de connaissances et de ressources dans le monde professionnel est le fondement d’une collaboration fructueuse et de la croissance collective.”<br>— John C. Maxwell
+      </blockquote>
+      <p>L’idée a naturellement émergé : <strong>mettre en commun les infos de chacun</strong>, pour créer une base utile à tous, claire et partagée.</p>
+      <p>Ce qui n’était au départ qu’une simple carte MyMaps s’est transformé en une véritable application web, taillée pour le terrain et pensée dès le départ pour être utilisée sur smartphone.</p>
+    </div>
+    
+    <div class="card">
+      <h2>🧐 Le déclic</h2>
+      <p>Une nuit d’astreinte, l’une de mes toutes premières sorties 😁, j’ai dû intervenir sur un appareil en panne au PRCI de Rodelinghem.<br>
+      Je découvrais ce poste pour la toute première fois.<br>
+      Je n’avais aucune consigne de sécurité, aucun document, rien pour localiser précisément l’appareil.<br>
+      Une fois sur place, j’ai dû marcher plusieurs centaines de mètres… pour rejoindre l’appareil… et découvrir qu’il y avait un portail juste à côté 😅</p>
+      <p><strong>Ce soir-là, je me suis dit : «Plus jamais ça.»</strong></p>
+    </div>
   </div>
 
-  <h1>🚘 Itinéraire et infos</h1>
-  <input type="text" id="search" placeholder="🔎 Entrer un poste pour trajet et détails" autocomplete="off" />
-  <div id="counter">📍 Postes consultés : chargement…</div>
-  <ul id="suggestions"></ul>
-  <div id="result"></div>
+  <div class="card card-future">
+    <div class="badge-pill">🕒 +60h R&D</div>
+    <h2>🚀 Et la suite ?</h2>
+    <p>🎯 L’objectif : construire une base fiable et exhaustive, poste par poste, appareil par appareil.</p>
+    <p>🔄 L’outil s’enrichit avec vos retours et repérages terrain. Chaque contribution rend l’outil plus utile et précis.</p>
+    <p>📩 Vous souhaitez contribuer ? Le formulaire est là pour ça.</p>
+    <p>Ferroviairement,<br><strong>Arnaud</strong></p>
+  </div>
 
-  <h1 style="margin-top: 1.5rem; margin-bottom: 0.4rem;">⚡️ Rechercher un appareil</h1>
-  <ul id="suggestionsAppareils"></ul>
-  <input type="text" id="searchAppareil" placeholder="Ex : I 7105, TT 629..." autocomplete="off" />
-  <div id="counterAppareil">🔌 Appareils consultés : chargement…</div>
-  
-
-<script>
-const jsonUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/postes.json";
-const appareilsUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/appareils.json";
-const compteurURL = "https://script.google.com/macros/s/AKfycbzUFaek89LYosR0FSw9gyxn2IZXlFlWXA_dIFIDwox-szE3DgH-l8IVbGfaoIgGK04h/exec";
-const compteurAppareilURL = "https://script.google.com/macros/s/AKfycbwJIlvcfNYREJn1oPiVAhQqHACXXar8ZbRl6aChwYw4TFSAaMTFEHTT5X2T7BKLJ3gsJw/exec";
-
-let lieux = [], fuse;
-let appareils = [], fuseAppareils;
-
-function formatContact(val) {
-  if (!val) return "";
-
-  // Regex qui détecte les numéros FR type 03 28 55 60 94 ou 0328556094
-  const phoneRegex = /\d{2}\s?\d{2}\s?\d{2}\s?\d{2}\s?\d{2}/g;
-
-  // On récupère tous les numéros
-  const matches = val.match(phoneRegex);
-
-  if (!matches) {
-    return `<p><strong>👤 Contact :</strong> ${val}</p>`;
-  }
-
-  const texteSansNum = val.replace(phoneRegex, "").trim();
-
-  // ✅ on met inline-links en <span> avec display:inline-flex pour garder les rectangles
-  const boutons = matches.map(num => {
-    const cleaned = num.replace(/\s+/g, "");
-    return `<span class="inline-links" style="display:inline-flex; margin-left:6px;">
-              <a href="tel:${cleaned}">${num}</a>
-            </span>`;
-  }).join(" ");
-
-  // ✅ tout dans le même <p> → reste sur une ligne
-  return `<p><strong>👤 Contact :</strong> ${texteSansNum} ${boutons}</p>`;
-}
-
-function formatPortail(val) {
-  if (!val) return "";
-
-  // Cherche une URL dans la chaîne
-  const urlRegex = /(https?:\/\/[^\s]+)/;
-  const urlMatch = val.match(urlRegex);
-  const video = urlMatch ? urlMatch[0] : null;
-
-  // Le "code" = tout ce qui n'est pas l'URL
-  const code = val.replace(urlRegex, "").trim();
-
-  // Regex stricte : numéros français 10 chiffres (avec ou sans espaces) + extensions DTMF
-  const phoneRegex = /^(\d{10}|\d{2}(\s?\d{2}){4})([,\;\*#0-9]*)?$/;
-
-  let content = "";
-
-  if (phoneRegex.test(code)) {
-    const cleaned = code.replace(/\s+/g, "");
-    // ✅ on garde inline-links mais en <span>
-    content = `<span class="inline-links" style="display:inline-block; margin-left:6px;">
-                 <a href="tel:${cleaned}">${code}</a>
-               </span>`;
-  } else {
-    content = code;
-  }
-
-  if (video) {
-    content += ` <a href="${video}" target="_blank" class="inline-link">▶️ Explication</a>`;
-  }
-
-  return `<p><strong>🚧 Portail :</strong> ${content}</p>`;
-}
-  
-function normalize(str) {
-  return str.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]/gi, "").toLowerCase();
-}
-
-function formatNomCompletLieu(obj) {
-  const base = `${obj.nom || ''} ${obj.type || ''} ${obj.SAT || ''}`.trim();
-  return obj.accès ? `${base} – accès ${obj.accès}` : base;
-}
-
-function formatNomCompletAppareil(obj) {
-  return formatNomCompletLieu(obj);
-}
-function formatNomComplet(obj) {
-  return `${obj.nom || ''} ${obj.type || ''}`.trim();
-}
-function formatRSS(table) {
-  const tables = {
-    "A": ["03 28 55 82 56", "03 28 55 82 57"],
-    "B": ["03 28 55 82 58", "03 28 55 82 59"],
-    "C": ["03 28 55 82 53", "03 28 55 82 54"]
-  };
-  const tableNum = { "A": "1", "B": "2", "C": "3" };
-  if (!tables[table]) return `<p><strong>📞 RSS :</strong> ${table}</p>`;
-  const nums = tables[table].map(num => `<a href="tel:${num.replace(/\s+/g, '')}">${num}</a>`).join("");
-  return `<p><strong>📞 RSS Table ${tableNum[table] || table} :</strong></p><div class="inline-links">${nums}</div>`;
-}
-function generateAppareilListHTML(currentLieu) {
-  const posteNomComplet = formatNomComplet(currentLieu);
-  const matchingApps = appareils.filter(app => app.nom === currentLieu.nom && app.type === currentLieu.type);
-
-  if (matchingApps.length === 0) {
-    // ➜ Retourne uniquement le petit encadré
-    return `
-      <div class="missing-box">
-        🤝 Appareil manquant ? 
-        <a href="formulaire.html">Aidez-nous à l’ajouter.</a>
-      </div>
-    `;
-  }
-
-  // S’il y a des appareils, on affiche le titre + la liste
-  let grouped = {};
-  matchingApps.forEach(app => {
-    const sat = app.SAT || 'Poste';
-    if (!grouped[sat]) grouped[sat] = [];
-    grouped[sat].push(app);
-  });
-
-  const isSAT = currentLieu.SAT && currentLieu.SAT !== "";
-  let html = `<p><strong>🧩 Appareils trouvés dans ce ${isSAT ? 'SAT' : 'poste'} :</strong></p>`;
-
-  for (const [sat, list] of Object.entries(grouped)) {
-    if (isSAT && sat !== currentLieu.SAT) continue;
-    if (!isSAT && sat === "Poste") html += `<p><strong>Poste :</strong> `;
-    else if (!isSAT) html += `<p><strong>${sat} :</strong> `;
-    else html += `<p>`;
-    html += list.map(app => `<a href="#" onclick='showAppareil(${JSON.stringify(app)})'>${app.appareil}</a>`).join(", ") + `</p>`;
-  }
-
-  html += `
-    <div class="missing-box">
-      🤝 Appareil manquant ? 
-      <a href="formulaire.html">Aidez-nous à l’ajouter.</a>
+  <div class="stats-box" id="statsBox">
+    <h2>🚀 Notre avancement</h2>
+    <p>Chaque point ajouté, c’est une victoire collective :</p>
+    <div class="stats-content" id="stats"></div>
+    <div class="stats-content">
+      <span class="stat-pill">⏱️ +60h R&D</span>
     </div>
-  `;
+  </div>
 
-  return html;
-}
-  function generateAlias(appareil, nom, sat, type) {
-  const alias = new Set();
-  const norm = str => str.toLowerCase().trim();
-
-  const a = norm(appareil);
-  const n = norm(nom);
-  const s = norm(sat);
-  const t = norm(type);
-  const root = a.split(/[\s\-]/)[0];
-
-  alias.add(a);
-  alias.add(a.replace(/([a-z]+)(\d+)/, "$1 $2"));
-
-  alias.add(`${a} ${n}`);
-  alias.add(`${n} ${a}`);
-  alias.add(`${root} ${n}`);
-  alias.add(`${root} de ${n}`);
-
-  if (s) {
-    alias.add(`${a} ${n} ${s}`);
-    alias.add(`${n} ${s} ${a}`);
-    alias.add(`${root} ${n} ${s}`);
-    alias.add(`${root} de ${n} ${s}`);
-  }
-
-  // ✅ Ajoute l'alias type complet : ex. "lambersart prci"
-  alias.add(`${n} ${t}`);
-
-  return Array.from(alias);
-}
-
-fetch(appareilsUrl).then(res => res.json()).then(data => {
-  appareils = data;
-
-  // Génère dynamiquement les alias
-  appareils.forEach(app => {
-   app.alias = generateAlias(app.appareil, app.nom, app.SAT, app.type);
-  });
-
-  fuseAppareils = new Fuse(appareils, {
-    keys: [
-      { name: 'appareil', weight: 0.5 },
-      { name: 'alias', weight: 0.9 },
-      { name: 'type', weight: 0.3 },
-      { name: 'nom', weight: 0.1 },
-      { name: 'SAT', weight: 0.1 }
-    ],
-    includeScore: true,
-    threshold: 0.3, // tu peux tester avec 0.2 si trop de bruit
-    ignoreLocation: true
-  });
-});
-  fetch(jsonUrl).then(res => res.json()).then(data => {
-  lieux = data;
-
-fuse = new Fuse(lieux, {
-  keys: [
-    { name: "nom", weight: 0.5 },
-    { name: "type", weight: 0.3 },
-    { name: "SAT", weight: 0.2 },
-    {
-      name: "accès",
-      getFn: o => o.accès?.toString?.() || "",
-      weight: 0.1
-    }
-  ],
-  includeScore: true,
-  threshold: 0.3,
-  ignoreLocation: true
-});
-});
-function updateCounter() {
-  fetch(compteurURL).then(res => res.json()).then(data => {
-    document.getElementById("counter").textContent = `📍 Postes consultés : ${data.count}`;
-  });
-}
-function incrementCounter() {
-  fetch(compteurURL + "?increment=true").then(updateCounter);
-}
-function updateCounterAppareil() {
-  fetch(compteurAppareilURL).then(res => res.json()).then(data => {
-    document.getElementById("counterAppareil").textContent = `🔌 Appareils consultés : ${data.count}`;
-  });
-}
-function incrementCounterAppareil() {
-  fetch(compteurAppareilURL + "?increment=true").then(updateCounterAppareil);
-}
-
-document.getElementById("search").addEventListener("input", e => {
-  const query = normalize(e.target.value.trim());
-  const suggestionsEl = document.getElementById("suggestions");
-  const resultEl = document.getElementById("result");
-  suggestionsEl.innerHTML = "";
-  resultEl.innerHTML = "";
-  resultEl.style.display = "none";
-  if (!query || !fuse) return;
-  let results = fuse.search(query).filter(r => r.score < 0.4).map(r => r.item);
-  if (results.length === 0 || query.length <= 3) {
-   const fallback = lieux.filter(l =>
-  normalize(l.nom).includes(query) ||
-  normalize(l.type).includes(query) ||
-  normalize(l.SAT || '').includes(query) ||
-  normalize(String(l.accès || '')).includes(query)
-);
-const ids = new Set(results.map(l => formatNomCompletLieu(l)));
-fallback.forEach(l => { if (!ids.has(formatNomCompletLieu(l))) results.push(l); });
-  }
-  results.forEach(lieu => {
-    const li = document.createElement("li");
-    li.textContent = formatNomCompletLieu(lieu);
-    li.onclick = () => showLieu(lieu);
-    suggestionsEl.appendChild(li);
-  });
-});
-
-function showLieu(lieu) {
-  const result = document.getElementById("result");
-  document.getElementById("suggestions").innerHTML = "";
-  result.style.display = "block";
-  incrementCounter();
-let html = `<h2>📌 ${formatNomCompletLieu(lieu)}</h2>
-<div class="inline-links">
-  <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank">🗺️ Google Maps</a>
-  <a href="https://maps.apple.com/?daddr=${lieu.latitude},${lieu.longitude}" target="_blank">🍎 Apple Plans</a>
-  <a href="https://waze.com/ul?ll=${lieu.latitude},${lieu.longitude}&navigate=yes" target="_blank">🚗 Waze</a>
-</div><hr class="separator" />`;
-  const blocs = [];
-  if (lieu.description) blocs.push(`<p>${lieu.description}</p>`);
-  if (lieu.pk && lieu.numero_ligne && lieu.lignes)
-    blocs.push(`<p><strong>🚄 PK ${lieu.pk}</strong> sur la ligne n°<strong>${lieu.numero_ligne}</strong> - ${lieu.lignes}</p>`);
-  if (lieu.rss) blocs.push(formatRSS(lieu.rss));
-  if (lieu.contact) blocs.push(formatContact(lieu.contact));
-  if (lieu.portail) blocs.push(formatPortail(lieu.portail));
-  html += blocs.join('<hr class="separator" />');
-  html += '<hr class="separator" />' + generateAppareilListHTML(lieu);
-  result.innerHTML = html;
-}
-
-document.getElementById("searchAppareil").addEventListener("input", e => {
-  const query = normalize(e.target.value.trim());
-  const suggestionsEl = document.getElementById("suggestionsAppareils");
-  const resultEl = document.getElementById("result");
-  suggestionsEl.innerHTML = "";
-  resultEl.innerHTML = "";
-  resultEl.style.display = "none";
-  if (!query || !fuseAppareils) return;
-let results = fuseAppareils.search(query, { limit: 50 }).map(r => r.item);
-
-// 🔁 Si on détecte un préfixe (tt, tc, etc.), on élargit à tout le JSON
-const prefixes = ["tt", "tc", "tsa", "i", "ia", "il", "ip", "imp", "s"];
-const matchPrefix = query.match(/^([a-z]{1,4})[\s\-]+(.+)/i);
-
-if (matchPrefix) {
-  const prefix = matchPrefix[1].toLowerCase();
-  const lieu = matchPrefix[2].toLowerCase();
-
-  if (prefixes.includes(prefix)) {
-    // On cherche tous les appareils correspondants dans le JSON, pas que via Fuse
-    const complet = appareils.filter(app => {
-      const nomComplet = `${app.nom} ${app.SAT || ''}`.toLowerCase();
-      return (
-        app.appareil.toLowerCase().startsWith(prefix) &&
-        (nomComplet.includes(lieu) || normalize(nomComplet).includes(normalize(lieu)))
-      );
-    });
-
-    // Fusionne sans doublons
-    const ids = new Set(results.map(a => a.appareil));
-    complet.forEach(a => { if (!ids.has(a.appareil)) results.push(a); });
-
-    // Tri : ceux qui matchent mieux d’abord
-    results.sort((a, b) => {
-    const aMatch = a.appareil.toLowerCase().startsWith(prefix) && (`${a.nom} ${a.SAT || ''}`.toLowerCase().includes(lieu));
-const bMatch = b.appareil.toLowerCase().startsWith(prefix) && (`${b.nom} ${b.SAT || ''}`.toLowerCase().includes(lieu));
-      if (aMatch && !bMatch) return -1;
-      if (!aMatch && bMatch) return 1;
-      return 0;
-    });
-  }
-}
-
-// 🔄 Affichage des résultats
-results.reverse().forEach((app, index, array) => {
-  const li = document.createElement("li");
-  li.textContent = `${app.appareil} (${app.nom}${app.type ? ' ' + app.type : ''}${app.SAT ? ' / ' + app.SAT : ''})`;
-
-  // Surligne le dernier (donc le plus pertinent après reverse)
-  if (index === array.length - 1) {
-    li.classList.add("best");
-  }
-
-  li.onclick = () => showAppareil(app);
-  suggestionsEl.appendChild(li);
-});
-});
-
-function showAppareil(app) {
-  incrementCounterAppareil();
-  const result = document.getElementById("result");
-  result.style.display = "block";
-  document.getElementById("suggestionsAppareils").innerHTML = "";
-let html = `<h2>🔌 ${app.appareil} (${app.nom}${app.type ? ' ' + app.type : ''}${app.SAT ? ' / ' + app.SAT : ''})</h2>`;
-  const blocs = [];
-  if (app.description) blocs.push(`<p>${app.description}</p>`);
-  blocs.push(`<p>📍 Localiser cet appareil sur la carte : <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&ll=${app.latitude},${app.longitude}&z=18" target="_blank">ICI</a></p>`);
-// 1) On cherche d'abord un accès précis correspondant au code de l'appareil (ex. I18)
-const posteTrouvé = lieux.find(l => 
-  normalize(l.nom) === normalize(app.nom) &&
-  normalize(l.type) === normalize(app.type) &&
-  normalize(l.SAT || "") === normalize(app.SAT || "")
-);
-
-const accesTrouvé = lieux.find(l =>
-  normalize(l.nom) === normalize(app.nom) &&
-  normalize(l.type) === normalize(app.type) &&
-  normalize(l.SAT || "") === normalize(app.SAT || "") &&
-  normalize(String(l.accès || "")) === normalize(app.appareil)
-);
-
-// 2) Priorité à l'accès spécifique, sinon fallback poste
-const lieuCible = accesTrouvé || posteTrouvé;
-
-if (lieuCible) {
-  blocs.push(`<p>🚗 Créer l'itinéraire en voiture : <a href="#" onclick='showLieu(${JSON.stringify(lieuCible)})'>ICI</a></p>`);
-}
-
-  html += blocs.join('<hr class="separator" />');
-  result.innerHTML = html;
-}
-
-updateCounter();
-updateCounterAppareil();
-setInterval(updateCounter, 3000);
-setInterval(updateCounterAppareil, 3000);
-</script>
-  <div style="text-align:center; margin-top: 30px;">
-  <a href="formulaire.html" style="display: inline-block; background-color: #007BFF; color: white; padding: 12px 24px; font-size: 16px; border-radius: 12px; text-decoration: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: background-color 0.3s ease;">
-    ✍️ CONTRIBUEZ
-  </a>
-</div>
-
-<!-- Compteur contributions -->
-<div id="compteur-contrib" style="text-align:center; margin-top:8px; font-size:14px; color:#6b7280;">
-  📝 Contributions enregistrées : <span id="compteur-valeur">chargement…</span>
-</div>
-<script>
-  const compteurContributionURL = "https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec";
-  async function refreshContrib(){
-    try{
-      const r = await fetch(compteurContributionURL);
-      const data = await r.json();
-      document.getElementById("compteur-valeur").textContent =
-        (data && typeof data.count !== "undefined") ? data.count : "chargement…";
-    }catch(e){
-      document.getElementById("compteur-valeur").textContent = "chargement…";
-    }
-  }
-  refreshContrib();
-  setInterval(refreshContrib, 3000);
-</script>
-
-<p style="font-size: 13px; margin-top: 2rem;">
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration: none; color: #1a73e8;">À propos du projet</a>
-</p>
-<p style="font-size: 10px; color: #ccc; margin-top: 3rem;">Arnaud - V1.08.16</p>
+  <div class="btn-box">
+    <div class="btn-container">
+      <a href="index.html" class="btn">🔍 Recherche</a>
+      <a href="formulaire.html" class="btn">📌 Contribuer</a>
+    </div>
+  </div>
+  
   <script>
-(function(){
-  // ===== Config =====
-  var INTRO_DURATION_MS = 3000;             // Durée d’affichage (ms)
-  var STORAGE_KEY       = 'eale_intro_last_day'; // Clé de mémo 1/jour
-
-  // Date locale AAAA-MM-JJ (pas en UTC, évite les décalages)
-  function todayLocal(){
-    var d=new Date();
-    var y=d.getFullYear();
-    var m=String(d.getMonth()+1).padStart(2,'0');
-    var day=String(d.getDate()).padStart(2,'0');
-    return y+'-'+m+'-'+day;
-  }
-
-  // Afficher 1 fois par jour
-  function shouldShowIntro(){
-    try{
-      var last = localStorage.getItem(STORAGE_KEY);
-      var today = todayLocal();
-      if (last === today) return false;
-      localStorage.setItem(STORAGE_KEY, today);
-      return true;
-    }catch(e){ return true; } // si stockage bloqué, on affiche
-  }
-
-  function pickPhrase(){
-    var phrases = [
-      "Propulsé par Arnaud.",
-      "Une réalisation signée Arnaud.",
-      "Conçu et développé par Arnaud.",
-      "Réalisé avec soin par Arnaud.",
-      "Par Arnaud.",
-      "Fait par Arnaud.",
-      "Pensé par Arnaud.",
-      "Créé par Arnaud.",
-      "Une idée d’Arnaud.",
-      "Mis en place par Arnaud.",
-      "Lancé par Arnaud.",
-      "Conçu par Arnaud.",
-      "Mis en ligne par Arnaud.",
-      "Mis en route par Arnaud.",
-      "Fait maison par Arnaud.",
-      "Déclenché par Arnaud.",
-      "Organisé par Arnaud.",
-      "Initié par Arnaud.",
-      "Coordonné par Arnaud.",
-      "Centralisé par Arnaud.",
-      "Simplifié par Arnaud.",
-      "Regroupé par Arnaud.",
-      "Géré par Arnaud.",
-      "Compilé par Arnaud.",
-      "Activé par Arnaud.",
-      "Préparé par Arnaud.",
-      "Livré par Arnaud.",
-      "Assemblé par Arnaud.",
-      "Piloté par Arnaud.",
-      "Structuré par Arnaud.",
-      "Distribué par Arnaud.",
-      "Diffusé par Arnaud.",
-      "Rendu accessible par Arnaud.",
-      "Chargé par Arnaud.",
-      "Interface pensée par Arnaud."
-    ];
-    return phrases[Math.floor(Math.random()*phrases.length)];
-  }
-
-  function mountIntro(){
-    var overlay = document.createElement('div');
-    overlay.className = 'eale-intro-overlay';
-    overlay.setAttribute('aria-hidden','true');
-    overlay.innerHTML =
-   '<img class="eale-intro-img" alt="Logo EALE" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/Logo%20EALE.png">' +
-      '<div class="eale-intro-text" id="eale-intro-text"></div>';
-    document.body.appendChild(overlay);
-    document.getElementById('eale-intro-text').textContent = pickPhrase();
-
-    setTimeout(function(){
-      overlay.classList.add('eale-intro-hide');
-      setTimeout(function(){ overlay.remove(); }, 380);
-    }, INTRO_DURATION_MS);
-  }
-
-  // Lance dès que le DOM est prêt
-  if (document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', function(){ if (shouldShowIntro()) mountIntro(); });
-  } else {
-    if (shouldShowIntro()) mountIntro();
-  }
-})();
+    async function fetchCounts() {
+      try {
+        const [lieuxRes, appareilsRes] = await Promise.all([
+          fetch('https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/postes.json'),
+          fetch('https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/appareils.json')
+        ]);
+        const lieux = await lieuxRes.json();
+        const appareils = await appareilsRes.json();
+        document.getElementById('stats').innerHTML = `
+          <span class="stat-pill">📍 ${lieux.length} accès routiers</span>
+          <span class="stat-pill">⚡ ${appareils.length} appareils</span>
+        `;
+      } catch (error) {
+        console.error("Erreur chargement JSON :", error);
+      }
+    }
+    fetchCounts();
+  </script>
+  <script>
+  // Bloque : clic droit, sélection, copier, couper, coller, glisser
+  ['contextmenu','selectstart','copy','cut','paste','dragstart'].forEach(evt => {
+    document.addEventListener(evt, e => e.preventDefault(), { passive: false });
+  });
 </script>
 </body>
 </html>
