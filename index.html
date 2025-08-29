@@ -772,25 +772,40 @@ results.forEach(it => {
 });
 // -------- TRI AVANCÉ ----------
 results.sort((a, b) => {
-  const normalizeLabel = x =>
-    x.category === "poste"
-      ? `${x.nom || ""} ${x.type || ""} ${x.SAT || ""}`.trim()
-      : `${x.appareil} (${x.nom}${x.type ? " " + x.type : ""}${x.SAT ? " / " + x.SAT : ""})`;
+  const q = query.toLowerCase();
+  const aNom = normalize(a.nom || "");
+  const bNom = normalize(b.nom || "");
 
-  // --- priorité : accès routier d'abord ---
+  // --- priorité 0 : le nom qui COMMENCE par la requête ---
+  const aStarts = aNom.startsWith(q);
+  const bStarts = bNom.startsWith(q);
+  if (aStarts && !bStarts) return -1;
+  if (bStarts && !aStarts) return 1;
+
+  // --- priorité 1 : correspondance exacte ---
+  const aExact = aNom === q;
+  const bExact = bNom === q;
+  if (aExact && !bExact) return -1;
+  if (bExact && !aExact) return 1;
+
+  // --- priorité 2 : accès routier d'abord ---
   const aIsAcces = !!a.accès;
   const bIsAcces = !!b.accès;
   if (aIsAcces && !bIsAcces) return -1;
   if (bIsAcces && !aIsAcces) return 1;
 
-  // --- ensuite : postes et SAT complets ---
+  // --- priorité 3 : postes avant appareils ---
   if (a.category === "poste" && b.category !== "poste") return -1;
   if (b.category === "poste" && a.category !== "poste") return 1;
 
-  // --- enfin : tri alphabétique pour stabilité ---
-  return normalizeLabel(a).localeCompare(normalizeLabel(b), "fr", { sensitivity: "base" });
-});
+  // --- priorité 4 : tri alphabétique stable ---
+  const label = x =>
+    x.category === "poste"
+      ? `${x.nom || ""} ${x.type || ""} ${x.SAT || ""}`.trim()
+      : `${x.appareil} (${x.nom}${x.type ? " " + x.type : ""}${x.SAT ? " / " + x.SAT : ""})`;
 
+  return label(a).localeCompare(label(b), "fr", { sensitivity: "base" });
+});
 // -------- FIN TRI AVANCÉ ----------
 
 // Affichage des lignes (meilleur tout en haut)
@@ -1038,7 +1053,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.12</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.13</span>
 </div>
 
 <script>
