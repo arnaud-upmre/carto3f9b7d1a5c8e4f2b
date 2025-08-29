@@ -56,7 +56,6 @@ ul#suggestionsAppareils:empty {
       align-items: center;
       width: 100vw;
       box-sizing: border-box;
-      padding-bottom: 60px; /* ✅ réserve la place du footer fixe */
     }
     #train-container {
       width: 100%;
@@ -950,7 +949,7 @@ function showNearby(position) {
     🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a>
   </p>
   <p style="font-size:10px; margin:0;">
-    Arnaud - V1.02
+    Arnaud - V1.03
   </p>
 </div>
   <script>
@@ -1039,6 +1038,16 @@ function showNearby(position) {
     if (shouldShowIntro()) mountIntro();
   }
 })();
+</script>
+  <script>
+  function ajusterFooterPadding() {
+    const footer = document.getElementById("about-footer");
+    if (footer) {
+      document.body.style.paddingBottom = footer.offsetHeight + "px";
+    }
+  }
+  window.addEventListener("load", ajusterFooterPadding);
+  window.addEventListener("resize", ajusterFooterPadding);
 </script>
 </body>
 </html>
