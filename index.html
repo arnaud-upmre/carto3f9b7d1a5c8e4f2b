@@ -831,24 +831,34 @@ function showNearby(position) {
   const proches = distances.sort((a,b) => a.distance - b.distance).slice(0,10);
 
   // --- Affichage texte classique ---
-  const container = document.getElementById("proximite");
-  let html = `<h3>📍 Les 10 plus proches :</h3><ul>`;
+const container = document.getElementById("proximite");
+container.innerHTML = `<h3>📍 Les 10 plus proches :</h3><ul></ul>`;
+const ul = container.querySelector("ul");
 
-  proches.forEach(p => {
-    const icon = p.category === "poste" ? "🚙" : "💡";
-    const label = p.category === "poste" ? labelPoste(p) : labelAppareil(p);
+proches.forEach(p => {
+  const icon = p.category === "poste" ? "🚙" : "💡";
+  const label = p.category === "poste" ? labelPoste(p) : labelAppareil(p);
 
-    // chaque ligne cliquable
-    html += `<li>
-      <a href="#" onclick="event.preventDefault(); ${p.category === 'poste' ? `showLieu(${JSON.stringify(p)})` : `showAppareil(${JSON.stringify(p)})`}" 
-         style="text-decoration:none; color:inherit; cursor:pointer;">
-        ${icon} <b>${label}</b> – ${km(p.distance)} km
-      </a>
-    </li>`;
+  const li = document.createElement("li");
+  const a = document.createElement("a");
+  a.href = "#";
+  a.style.textDecoration = "none";
+  a.style.color = "inherit";
+  a.style.cursor = "pointer";
+  a.innerHTML = `${icon} <b>${label}</b> – ${km(p.distance)} km`;
+
+  a.addEventListener("click", ev => {
+    ev.preventDefault();
+    if (p.category === "poste") {
+      showLieu(p);
+    } else {
+      showAppareil(p);
+    }
   });
 
-  html += `</ul>`;
-  container.innerHTML = html;
+  li.appendChild(a);
+  ul.appendChild(li);
+});
 }
   
   </script>
