@@ -248,9 +248,13 @@ a:visited {
 #about-footer {
   width: 100%;
   text-align: center;
-  margin: 2.5rem 0 0 0;  /* un peu plus d’espace au-dessus */
   padding: 8px 0;
   font-size: 13px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  background: #121212; /* sera écrasé par le mode clair/sombre */
+  z-index: 10;
 }
 
 .footer-version {
@@ -267,8 +271,8 @@ html, body {
 body > *:not(#about-footer) {
   flex-shrink: 0;
 }
-#about-footer {
-  margin-top: auto; /* pousse en bas si peu de contenu */
+    body {
+  padding-bottom: 60px; /* espace réservé au footer */
 }
 
 /* Variante claire / sombre pour lisibilité */
@@ -989,7 +993,7 @@ function showNearby(position) {
   setInterval(refreshContrib, 3000);
 </script>
 <div id="about-footer">
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.06</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.07</span>
 </div>
 
 <script>
