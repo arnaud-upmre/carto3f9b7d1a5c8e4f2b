@@ -245,16 +245,14 @@ a:visited {
   font-weight:600;
 }
     
-/* Sur PC (grand écran), fixe le bloc en bas */
 #about-footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
+  position: relative;   /* ✅ plus de fixed */
+  bottom: auto;
+  left: auto;
   width: 100%;
   text-align: center;
-  margin: 0;
+  margin-top: 3rem;     /* ✅ espace au-dessus */
   padding: 8px 0;
-  background: transparent;
 }
 
 /* Variante claire / sombre pour lisibilité */
@@ -296,6 +294,37 @@ a:visited {
     color:#90caf9; 
   }
 }
+    /* Style des boutons */
+.btn-primary {
+  margin: 8px 0;
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 1px solid #1a73e8;
+  background: #f5f9ff;   /* clair */
+  color: #1a73e8;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 15px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.btn-primary:hover {
+  background: #1a73e8;
+  color: #fff;
+}
+
+/* 🌙 Mode sombre */
+@media (prefers-color-scheme: dark) {
+  .btn-primary {
+    background: #1e1e1e;   /* gris très foncé */
+    color: #90caf9;        /* bleu clair */
+    border: 1px solid #90caf9;
+  }
+  .btn-primary:hover {
+    background: #90caf9;
+    color: #121212;
+  }
+}
   </style>
   <meta name="color-scheme" content="light dark">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
@@ -325,7 +354,7 @@ a:visited {
 </div>
 
 <!-- Bouton localiser -->
-<button id="btn-localiser" style="margin:8px 0; padding:10px 16px; border-radius:10px; border:1px solid #1a73e8; background:#f5f9ff; color:#1a73e8; font-weight:600; cursor:pointer;">
+<button id="btn-localiser" class="btn-primary">
   📍 Me localiser (10 plus proches)
 </button>
 <div id="proximite" style="margin-top:1rem; font-size:14px;"></div>
@@ -923,9 +952,8 @@ function showNearby(position) {
 }
   </script>
 <div style="text-align:center; margin-top:30px;">
-<a href="formulaire.html"
-     style="display:inline-block; background:#f5f9ff; color:#1a73e8; padding:12px 24px; font-size:16px; border-radius:12px; text-decoration:none; border:1px solid #1a73e8; font-weight:600; transition:background-color .2s ease;">
-    ✍️ Contribution <span id="compteur-valeur"></span>
+<a href="formulaire.html" class="btn-primary">
+  ✍️ Contribution <span id="compteur-valeur"></span>
 </a>
 </div>
 
@@ -949,7 +977,7 @@ function showNearby(position) {
     🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a>
   </p>
   <p style="font-size:10px; margin:0;">
-    Arnaud - V1.03
+    Arnaud - V1.04
   </p>
 </div>
   <script>
