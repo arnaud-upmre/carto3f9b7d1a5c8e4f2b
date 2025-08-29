@@ -983,14 +983,20 @@ function showNearby(position) {
   refreshContrib();
   setInterval(refreshContrib, 3000);
 </script>
-<div id="about-footer">
-  <p style="font-size:13px; margin:0;">
-    🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a>
-  </p>
-  <p style="font-size:10px; margin:0;">
-    Arnaud - V1.05
-  </p>
+<div id="about-footer" style="font-size:12px; margin:0; padding:6px 0; text-align:center;">
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span style="color:#999;">Arnaud V1.05</span>
 </div>
+
+<script>
+  function ajusterEspaceFooter() {
+    const footer = document.getElementById("about-footer");
+    if (footer) {
+      document.body.style.paddingBottom = (footer.offsetHeight + 20) + "px"; 
+    }
+  }
+  window.addEventListener("load", ajusterEspaceFooter);
+  window.addEventListener("resize", ajusterEspaceFooter);
+</script>
   <script>
 (function(){
   // ===== Config =====
