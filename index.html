@@ -834,10 +834,19 @@ let html = `<h2>
     normalize(String(l.accès || "")) === normalize(app.appareil)
   );
 
-  const lieuCible = accesTrouvé || posteTrouvé;
-  if (lieuCible) {
-    blocs.push(`<p>🚗 Créer l'itinéraire en voiture : <a href="#" onclick='showLieu(${JSON.stringify(lieuCible)})'>ICI</a></p>`);
-  }
+const lieuCible = accesTrouvé || posteTrouvé;
+if (lieuCible) {
+  blocs.push(`
+    <div style="margin:1.8rem 0; text-align:center;">
+      <a href="#" onclick='showLieu(${JSON.stringify(lieuCible)})'
+         role="button"
+         aria-label="Ouvrir la fiche poste et créer l’itinéraire en voiture"
+         style="display:inline-block; padding:10px 16px; border-radius:12px; border:1px solid #1a73e8; text-decoration:none; font-weight:600; color:#1a73e8;">
+        🚗 Infos & itinéraire : <strong>ICI</strong>
+      </a>
+    </div>
+  `);
+}
 
   // --- Ajoute séparateurs uniquement entre blocs ---
   if (blocs.length > 0) {
@@ -1012,7 +1021,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.11</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1</span>
 </div>
 
 <script>
