@@ -772,13 +772,13 @@ results.forEach(it => {
 });
 // -------- TRI AVANCÉ ----------
 results.sort((a, b) => {
-  const getPriority = item => {
-    if (item.type === "SP" || item.type === "SAT") return 1; // Postes et SAT
-    if (item.appareil) return 2;                             // Appareils
-    if (item.accès && item.accès.trim() !== "") return 3;    // Accès
+  const getPriority = obj => {
+    if (obj.type === "SP" || obj.type === "SAT") return 1; // Postes et SAT
+    if (obj.appareil) return 2;                            // Appareils
+    if (obj.accès && obj.accès.trim() !== "") return 3;   // Accès
     return 4;
   };
-  return getPriority(a) - getPriority(b); // ✅ compare directement les objets
+  return getPriority(a.item) - getPriority(b.item); // ✅ compare les vrais objets
 });
 // -------- FIN TRI AVANCÉ ----------
 
@@ -1028,7 +1028,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.16</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.17</span>
 </div>
 
 <script>
