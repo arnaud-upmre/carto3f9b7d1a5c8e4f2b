@@ -263,11 +263,16 @@ a:visited {
 /* Si la page est très courte, pousse le footer en bas */
 html, body {
   height: 100%;
+  margin: 0;
   display: flex;
   flex-direction: column;
 }
-body > *:not(#about-footer) {
-  flex-shrink: 0;
+
+main {
+  flex: 1; /* pousse le footer vers le bas */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 /* Variante claire / sombre pour lisibilité */
@@ -345,7 +350,7 @@ body > *:not(#about-footer) {
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
 <meta name="theme-color" media="(prefers-color-scheme: dark)"  content="#121212">
 </head>
-<body>
+<body> <main>
   <div id="train-container">
  <img id="train"
      src="images/train1.gif"
@@ -362,6 +367,7 @@ body > *:not(#about-footer) {
 <input type="text" id="search" placeholder="Entrer un poste ou un appareil" autocomplete="off" />
 <ul id="suggestions"></ul>
 <div id="result"></div>
+
 <!-- Compteurs côte à côte -->
 <div id="counters" style="font-size:13px; color:#666; margin-top:6px; margin-bottom:4rem;">
   Nombre recherche : 📍 <span id="counterPostes">0</span> &nbsp; | &nbsp; 
@@ -986,22 +992,13 @@ function showNearby(position) {
   }
   refreshContrib();
   setInterval(refreshContrib, 3000);
-</script>
+</script> </main>
 <div id="about-footer">
+
   🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.07</span>
 </div>
 
 <script>
-  function ajusterEspaceFooter() {
-    const footer = document.getElementById("about-footer");
-    if (footer) {
-      document.body.style.paddingBottom = (footer.offsetHeight + 20) + "px"; 
-    }
-  }
-  window.addEventListener("load", ajusterEspaceFooter);
-  window.addEventListener("resize", ajusterEspaceFooter);
-</script>
-  <script>
 (function(){
   // ===== Config =====
   var INTRO_DURATION_MS = 3000;             // Durée d’affichage (ms)
