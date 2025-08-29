@@ -300,16 +300,6 @@ a:visited {
 <button id="btn-localiser" style="margin:8px 0; padding:8px 14px; border-radius:8px; border:1px solid #1a73e8; background:#e8f0fe; color:#1a73e8; cursor:pointer;">
   📍 Me localiser (10 plus proches)
 </button>
-
-<!-- Bloc fallback manuel (affiché uniquement sur mobile) -->
-<div id="fallback-localisation" style="margin-top:10px; display:none;">
-  <input id="manual-lat" type="text" placeholder="Latitude" style="width:140px; margin-right:6px;">
-  <input id="manual-lon" type="text" placeholder="Longitude" style="width:140px; margin-right:6px;">
-  <button id="btn-manual" style="padding:6px 10px; border-radius:8px; border:1px solid #1a73e8; background:#fff;">
-    Utiliser ces coordonnées
-  </button>
-</div>
-
 <div id="proximite" style="margin-top:1rem; font-size:14px;"></div>
   <script>
 const jsonUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/postes.json";
@@ -794,6 +784,14 @@ function getDistance(lat1, lon1, lat2, lon2) {
   return R * c; // distance en km
 }
 
+    // Masquer le bouton sur PC, afficher uniquement sur mobile
+function isMobile() {
+  return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+}
+
+if (!isMobile()) {
+  document.getElementById("btn-localiser").style.display = "none";
+}
 // === Bouton "Me localiser" ===
 document.getElementById("btn-localiser").addEventListener("click", () => {
   if (navigator.geolocation) {
@@ -815,24 +813,7 @@ document.getElementById("btn-localiser").addEventListener("click", () => {
     alert("La géolocalisation n’est pas supportée.");
   }
 });
-// === Fallback manuel (affiché uniquement sur mobile) ===
-function isMobile() {
-  return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-}
 
-if (isMobile()) {
-  document.getElementById("fallback-localisation").style.display = "block";
-}
-
-document.getElementById("btn-manual").addEventListener("click", () => {
-  const lat = parseFloat(document.getElementById("manual-lat").value);
-  const lon = parseFloat(document.getElementById("manual-lon").value);
-  if (isFinite(lat) && isFinite(lon)) {
-    showNearby({ coords: { latitude: lat, longitude: lon } });
-  } else {
-    alert("⚠️ Merci de renseigner une latitude et longitude valides.");
-  }
-});
 // === Affiche les 10 plus proches (postes + appareils) ===
 function showNearby(position) {
   const lat = position.coords.latitude;
@@ -918,7 +899,7 @@ function showNearby(position) {
     🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration:none; color:#1a73e8;">À propos</a>
   </p>
   <p style="font-size:10px; color:#ccc; margin:0;">
-    Arnaud - V1.01
+    Arnaud - V1.02
   </p>
 </div>
   <script>
