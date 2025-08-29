@@ -743,32 +743,16 @@ document.getElementById("search").addEventListener("input", e => {
   if (!query || query.length < 2 || !fuseMix) return;
 
   // Récupère les résultats bruts
-  let results = fuseMix.search(query).map(r => r.item);
+let results = fuseMix.search(query).map(r => r.item);
 
-  // Priorité aux résultats qui commencent par la requête
-results.sort((a,b) => {
-  const na = normalize(a.nom || a.appareil || "");
-  const nb = normalize(b.nom || b.appareil || "");
-  const q  = query.toLowerCase();
-  const aStarts = na.startsWith(q);
-  const bStarts = nb.startsWith(q);
-  if (aStarts && !bStarts) return -1;
-  if (!aStarts && bStarts) return 1;
-  return 0;
-});
+// 🔎 Séparation immédiate
+let appareilsTrouvés = results.filter(r => r.category === "appareil");
+let orderedResults = [];
 
-  // --- Définition des groupes ---
-  const postesSansAcces = results.filter(r => r.category === "poste" && !r.accès);
-  const postesAvecAcces = results.filter(r => r.category === "poste" && !!r.accès);
-  const appareilsTrouvés = results.filter(r => r.category === "appareil");
-
-  let orderedResults = [];
-
-  if (appareilsTrouvés.length > 0) {
-  // Cas 1 : la requête correspond à des appareils
+if (appareilsTrouvés.length > 0) {
+  // Cas 1 : recherche appareil → appareil d’abord
   orderedResults = [...appareilsTrouvés];
 
-  // Vérifie le poste parent et le SAT
   const postesParents = new Set();
   appareilsTrouvés.forEach(app => {
     const posteParent = lieux.find(l => normalize(l.nom) === normalize(app.nom));
@@ -783,14 +767,16 @@ results.sort((a,b) => {
     }
   });
 
-  // Ajoute les postes parents et SAT après l’appareil
   postesParents.forEach(p => orderedResults.push(p));
 
-} else if (postesSansAcces.length > 0 || postesAvecAcces.length > 0) {
-  // Cas 2 : la requête correspond à un poste
+} else {
+  // Cas 2 : recherche poste
+  const postesSansAcces = results.filter(r => r.category === "poste" && !r.accès);
+  const postesAvecAcces = results.filter(r => r.category === "poste" && !!r.accès);
+
   orderedResults = [...postesSansAcces, ...postesAvecAcces];
 
-  // Ajoute les appareils liés si le poste est trouvé
+  // Ajoute les appareils liés si on tape un poste
   appareils.forEach(app => {
     if (
       normalize(app.nom).includes(query) ||
@@ -801,7 +787,6 @@ results.sort((a,b) => {
     }
   });
 }
-
   // --- Affichage final ---
   orderedResults.forEach((item, idx) => {
     const li = document.createElement("li");
@@ -1059,7 +1044,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.15A</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.15B</span>
 </div>
 
 <script>
