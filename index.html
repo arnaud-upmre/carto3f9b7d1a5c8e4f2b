@@ -776,6 +776,15 @@ results.sort((a, b) => {
   const aNom = normalize(a.nom || "");
   const bNom = normalize(b.nom || "");
 
+  // --- priorité 1bis : si la requête est un numéro, l’appareil correspondant passe AVANT les postes ---
+  const isNumeric = /^\d+$/.test(q);
+  if (isNumeric) {
+    const aIsAppareilMatch = a.category === "appareil" && normalize(a.appareil || "") === q;
+    const bIsAppareilMatch = b.category === "appareil" && normalize(b.appareil || "") === q;
+    if (aIsAppareilMatch && !bIsAppareilMatch) return -1;
+    if (bIsAppareilMatch && !aIsAppareilMatch) return 1;
+  }
+
   // --- priorité 0 : le nom qui COMMENCE par la requête ---
   const aStarts = aNom.startsWith(q);
   const bStarts = bNom.startsWith(q);
@@ -788,21 +797,29 @@ results.sort((a, b) => {
   if (aExact && !bExact) return -1;
   if (bExact && !aExact) return 1;
 
-  // --- priorité 2 : postes simples avant tout ---
-  const aIsPoste = a.category === "poste" && !a.accès;
-  const bIsPoste = b.category === "poste" && !b.accès;
-  if (aIsPoste && !bIsPoste) return -1;
-  if (bIsPoste && !aIsPoste) return 1;
+  // === Cas spécial si la requête est NUMÉRIQUE ===
+  if (isNumeric) {
+    // 👉 Les appareils passent toujours avant les postes
+    if (a.category === "appareil" && b.category !== "appareil") return -1;
+    if (b.category === "appareil" && a.category !== "appareil") return 1;
+  } else {
+    // === Cas normal (requête texte) ===
+    // --- priorité 2 : postes simples avant tout ---
+    const aIsPoste = a.category === "poste" && !a.accès;
+    const bIsPoste = b.category === "poste" && !b.accès;
+    if (aIsPoste && !bIsPoste) return -1;
+    if (bIsPoste && !aIsPoste) return 1;
 
-  // --- priorité 3 : postes avec accès ensuite ---
-  const aIsAcces = a.category === "poste" && !!a.accès;
-  const bIsAcces = b.category === "poste" && !!b.accès;
-  if (aIsAcces && !bIsAcces) return -1;
-  if (bIsAcces && !aIsAcces) return 1;
+    // --- priorité 3 : postes avec accès ensuite ---
+    const aIsAcces = a.category === "poste" && !!a.accès;
+    const bIsAcces = b.category === "poste" && !!b.accès;
+    if (aIsAcces && !bIsAcces) return -1;
+    if (bIsAcces && !aIsAcces) return 1;
 
-  // --- priorité 4 : appareils en dernier ---
-  if (a.category === "appareil" && b.category !== "appareil") return 1;
-  if (b.category === "appareil" && a.category !== "appareil") return -1;
+    // --- priorité 4 : appareils en dernier ---
+    if (a.category === "appareil" && b.category !== "appareil") return 1;
+    if (b.category === "appareil" && a.category !== "appareil") return -1;
+  }
 
   // --- priorité 5 : tri alphabétique stable ---
   const label = x =>
@@ -812,27 +829,8 @@ results.sort((a, b) => {
 
   return label(a).localeCompare(label(b), "fr", { sensitivity: "base" });
 });
+// -------- fin TRI AVANCÉ ----------
   
-// Affichage des lignes (meilleur tout en haut)
-suggestionsEl.innerHTML = "";
-results.forEach((item, idx) => {
-  const li = document.createElement("li");
-  if (idx === 0) li.classList.add("best"); // ⭐ surbrillance du meilleur
-
-  if (item.category === "poste") {
-    const base = `${item.nom || ""} ${item.type || ""} ${item.SAT || ""}`.trim();
-    const label = item.accès ? `${base} – accès ${item.accès}` : base;
-    li.textContent = `🚙 ${label}`;
-    li.onclick = () => showLieu(item);
-  } else {
-    li.textContent = `💡 ${item.appareil} (${item.nom}${item.type ? " " + item.type : ""}${item.SAT ? " / " + item.SAT : ""})`;
-    li.onclick = () => showAppareil(item);
-  }
-
-  suggestionsEl.appendChild(li);
-});
-});
-  // -------- fin TRI AVANCÉ ----------
 function showAppareil(app) {
   incrementCounterAppareil();
   const result = document.getElementById("result");
@@ -1058,7 +1056,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.13a</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.16a</span>
 </div>
 
 <script>
