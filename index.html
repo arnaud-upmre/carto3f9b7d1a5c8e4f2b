@@ -832,7 +832,7 @@ function showNearby(position) {
 
   // --- Affichage texte classique ---
   const container = document.getElementById("proximite");
-  container.innerHTML = `<h3>📍 Les 10 plus proches :</h3><ul style="list-style:none; padding:0; margin:0;"></ul>`;
+  container.innerHTML = `<h3>📍 Les 10 plus proches :</h3><ul style="margin:0; padding-left:20px;"></ul>`;
   const ul = container.querySelector("ul");
 
   proches.forEach(p => {
@@ -840,7 +840,7 @@ function showNearby(position) {
     const label = p.category === "poste" ? labelPoste(p) : labelAppareil(p);
 
     const li = document.createElement("li");
-    li.style.margin = "8px 0"; // ✅ espace vertical entre lignes
+    li.style.margin = "15px 0"; // ✅ espace plus grand entre chaque élément
 
     const a = document.createElement("a");
     a.href = "#";
