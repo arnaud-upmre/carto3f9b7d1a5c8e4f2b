@@ -244,7 +244,35 @@ a:visited {
   color:#1a73e8; 
   font-weight:600;
 }
+    
+/* Sur PC (grand écran), fixe le bloc en bas */
+#about-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  margin: 0;
+  padding: 8px 0;
+  background: transparent;
+}
 
+/* Variante claire / sombre pour lisibilité */
+@media (prefers-color-scheme: light) {
+  #about-footer {
+    background: #fff;
+    color: #333;
+    border-top: 1px solid #ddd;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  #about-footer {
+    background: #121212;
+    color: #aaa;
+    border-top: 1px solid #333;
+  }
+}
 /* --- Dark mode spécial liens et box --- */
 @media (prefers-color-scheme: dark){
   a, a:visited { 
@@ -916,12 +944,12 @@ function showNearby(position) {
   refreshContrib();
   setInterval(refreshContrib, 3000);
 </script>
-<div style="text-align:center; margin-top:8rem; margin-bottom:1rem;">
+<div id="about-footer">
   <p style="font-size:13px; margin:0;">
-    🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration:none; color:#1a73e8;">À propos</a>
+    🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a>
   </p>
-  <p style="font-size:10px; color:#ccc; margin:0;">
-    Arnaud - V1.03
+  <p style="font-size:10px; margin:0;">
+    Arnaud - V1.02
   </p>
 </div>
   <script>
