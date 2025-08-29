@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width" />
 <meta name="robots" content="noindex, nofollow" />
-<title>🛤️ Ajouter ou mettre à jour un poste</title>
+<title>🛤️ Ajouter ou mettre à jour un poste / appareil</title>
 <style>
 :root{
   --bg:#f2f2f7;
@@ -219,8 +219,8 @@ button:disabled{opacity:.6;cursor:not-allowed;}
 </head>
 <body>
 <div class="wrap">
-  <h1>🛤️ Ajouter ou mettre à jour un poste</h1>
-  <div class="subtitle">Indiquez un nouveau poste ou mettez à jour un existant</div>
+ <h1>🛤️ Ajouter ou mettre à jour un poste / appareil</h1>
+  <div class="subtitle">Indiquez un nouveau poste ou appareil, ou mettez à jour un existant</div>
 
   <!-- Segmented control -->
   <div class="segment">
@@ -243,8 +243,8 @@ button:disabled{opacity:.6;cursor:not-allowed;}
     <!-- Bloc Ajout -->
     <div id="tab-ajout">
       <div class="group">
-        <label class="field" for="nom_poste">📍 Nom du poste</label>
-        <input type="text" name="nom_poste" id="nom_poste" placeholder="Alleux SP">
+<label class="field" for="nom_modif">✏️ Poste ou appareil à modifier</label>
+<input type="text" name="nom_modif" id="nom_modif" placeholder="Exemple : Hazebrouck SSPA ou TT5425">
       </div>
       <div class="group">
         <label class="field" for="coordonnees">🌍 Coordonnées / lien</label>
@@ -275,8 +275,6 @@ button:disabled{opacity:.6;cursor:not-allowed;}
     </div>
     <div id="toast" class="toast"></div>
   </form>
-
-  <div class="version">Version 01.08_1</div>
 </div>
 
 <!-- Overlay -->
