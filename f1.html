@@ -641,6 +641,11 @@ results.forEach(item => {
 function showAppareil(app) {
   incrementCounterAppareil();
   const result = document.getElementById("result");
+  const suggestionsEl = document.getElementById("suggestions");
+  
+  // On efface la liste pour ne garder que le bloc détail
+  suggestionsEl.innerHTML = "";
+  
   result.style.display = "block";
 
   let html = `<h2>
@@ -807,7 +812,7 @@ let icon = p.category === "poste" ? "🚙" : "💡";
     🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration:none; color:#1a73e8;">À propos</a>
   </p>
   <p style="font-size:10px; color:#ccc; margin:0;">
-    Arnaud - V1.08.37
+    Arnaud - V1.08.38
   </p>
 </div>
   <script>
