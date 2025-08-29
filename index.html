@@ -784,7 +784,9 @@ results.sort((a, b) => {
 
 // Affichage des lignes (meilleur tout en haut)
 suggestionsEl.innerHTML = "";
-results.forEach((item, idx) => {
+results.forEach((res, idx) => {
+  const item = res.item; // ✅ on extrait le vrai objet depuis Fuse
+
   const li = document.createElement("li");
   if (idx === 0) li.classList.add("best"); // ⭐ surbrillance du meilleur
 
@@ -799,7 +801,6 @@ results.forEach((item, idx) => {
   }
 
   suggestionsEl.appendChild(li);
-});
 });
   
 function showAppareil(app) {
@@ -1027,7 +1028,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.15</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.16</span>
 </div>
 
 <script>
