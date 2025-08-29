@@ -816,6 +816,13 @@ function showNearby(position) {
     return;
   }
 
+  // utilitaires d'affichage
+  const km = d => d.toFixed(2).replace(".", ","); // format FR
+  const labelPoste = p =>
+    `${p.nom || ""}${p.type ? " " + p.type : ""}${p.SAT ? " " + p.SAT : ""}`.trim();
+  const labelAppareil = p =>
+    `${p.appareil} (${p.nom}${p.type ? " " + p.type : ""}${p.SAT ? " / " + p.SAT : ""})`;
+
   const distances = allItems.map(it => ({
     ...it,
     distance: getDistance(lat, lon, it.latitude, it.longitude)
@@ -823,17 +830,25 @@ function showNearby(position) {
 
   const proches = distances.sort((a,b) => a.distance - b.distance).slice(0,10);
 
+  // --- Affichage texte classique ---
   const container = document.getElementById("proximite");
-  container.innerHTML = `
-    <h3>📍 Les 10 plus proches :</h3>
-    <ul>
-      ${proches.map(p => {
-let icon = p.category === "poste" ? "🚙" : "💡";
-        let label = p.category === "poste" ? p.nom : p.appareil;
-        return `<li>${icon} <b>${label}</b> – ${p.distance.toFixed(2)} km</li>`;
-      }).join("")}
-    </ul>
-  `;
+  let html = `<h3>📍 Les 10 plus proches :</h3><ul>`;
+
+  proches.forEach(p => {
+    const icon = p.category === "poste" ? "🚙" : "💡";
+    const label = p.category === "poste" ? labelPoste(p) : labelAppareil(p);
+
+    // chaque ligne cliquable
+    html += `<li>
+      <a href="#" onclick="event.preventDefault(); ${p.category === 'poste' ? `showLieu(${JSON.stringify(p)})` : `showAppareil(${JSON.stringify(p)})`}" 
+         style="text-decoration:none; color:inherit; cursor:pointer;">
+        ${icon} <b>${label}</b> – ${km(p.distance)} km
+      </a>
+    </li>`;
+  });
+
+  html += `</ul>`;
+  container.innerHTML = html;
 }
   
   </script>
@@ -864,7 +879,7 @@ let icon = p.category === "poste" ? "🚙" : "💡";
     🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration:none; color:#1a73e8;">À propos</a>
   </p>
   <p style="font-size:10px; color:#ccc; margin:0;">
-    Arnaud - V1.08.40a
+    Arnaud - V1.08.41a
   </p>
 </div>
   <script>
