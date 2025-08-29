@@ -758,11 +758,12 @@ if (prefixWord) {
   // Sépare préfixe et autres mots
   const otherWords = lowerWords.filter(w => w !== prefixWord);
 
-  results = results.filter(item => {
-    const appareilOk = item.appareil && item.appareil.toLowerCase().startsWith(prefixWord);
-    const nomOk = otherWords.every(w => normalize(item.nom || "").includes(w));
-    return appareilOk && nomOk;
-  });
+results = results.filter(res => {
+  const it = res.item;
+  const appareilOk = it.appareil && it.appareil.toLowerCase().startsWith(prefixWord);
+  const nomOk = otherWords.every(w => normalize(it.nom || "").includes(w));
+  return appareilOk && nomOk;
+});
 }
 // -------- Fin filtre spécial --------
 // Boost si la requête correspond exactement à un alias
@@ -1028,7 +1029,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.17</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.17a</span>
 </div>
 
 <script>
