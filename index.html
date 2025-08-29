@@ -630,13 +630,17 @@ function showLieu(lieu) {
   result.style.display = "block";
   incrementCounter();
 
-  let html = `<h2>
-    <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&ll=${lieu.latitude},${lieu.longitude}&z=19"
-       target="_blank"
-       style="color:inherit; text-decoration:none;">
-      📌 ${formatNomCompletLieu(lieu)}
-    </a>
-  </h2>
+let html = `<h2>
+  <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&ll=${lieu.latitude},${lieu.longitude}&z=19"
+     target="_blank"
+     style="color:inherit; text-decoration:none;">
+    📌 ${formatNomCompletLieu(lieu)}
+    <span style="font-weight:400; font-size:13px; margin-left:6px; color:#666;">
+      (📍 repérer l’accès)
+    </span>
+  </a>
+</h2>`;
+  
   <p style="text-align:center; font-weight:600; margin:0.5rem 0;">🚙 Itinéraires disponibles :</p>
   <div class="inline-links" style="justify-content:center;">
     <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank">🗺️ Google Maps</a>
@@ -802,13 +806,16 @@ function showAppareil(app) {
   
   result.style.display = "block";
 
-  let html = `<h2>
-    <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&ll=${app.latitude},${app.longitude}&z=19"
-       target="_blank"
-       style="color:inherit; text-decoration:none;">
-      🔌 ${app.appareil} (${app.nom}${app.type ? ' ' + app.type : ''}${app.SAT ? ' / ' + app.SAT : ''})
-    </a>
-  </h2>`;
+let html = `<h2>
+  <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&ll=${app.latitude},${app.longitude}&z=19"
+     target="_blank"
+     style="color:inherit; text-decoration:none;">
+    🔌 ${app.appareil} (${app.nom}${app.type ? ' ' + app.type : ''}${app.SAT ? ' / ' + app.SAT : ''})
+    <span style="font-weight:400; font-size:13px; margin-left:6px; color:#666;">
+      (📍 repérer l’appareil)
+    </span>
+  </a>
+</h2>`;
 
   const blocs = [];
   if (app.description) blocs.push(`<p>${app.description}</p>`);
@@ -1005,7 +1012,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.10</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.11</span>
 </div>
 
 <script>
