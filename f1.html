@@ -289,7 +289,8 @@ a:visited {
 </h1>
 <h1>🔎 Recherche</h1>
 <input type="text" id="search" placeholder="Entrer un poste ou un appareil" autocomplete="off" />
-
+<ul id="suggestions"></ul>
+<div id="result"></div>
 <!-- Compteurs côte à côte -->
 <div id="counters" style="font-size:13px; color:#666; margin-top:6px; margin-bottom:1rem;">
   📍 Postes consultés : <span id="counterPostes">chargement…</span> &nbsp; | &nbsp; 
@@ -301,9 +302,6 @@ a:visited {
   📍 Me localiser (10 plus proches)
 </button>
 <div id="proximite" style="margin-top:1rem; font-size:14px;"></div>
-
-<ul id="suggestions"></ul>
-<div id="result"></div>
 <script>
 const jsonUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/postes.json";
 const appareilsUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/appareils.json";
@@ -717,9 +715,20 @@ function getDistance(lat1, lon1, lat2, lon2) {
 // === Bouton "Me localiser" ===
 document.getElementById("btn-localiser").addEventListener("click", () => {
   if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(showNearby, () => {
-      alert("Impossible de récupérer la position.");
-    });
+    navigator.geolocation.getCurrentPosition(
+      showNearby,
+      (error) => {
+        if (error.code === error.PERMISSION_DENIED) {
+          alert("❌ Autorisation refusée pour la géolocalisation.");
+        } else if (error.code === error.POSITION_UNAVAILABLE) {
+          alert("⚠️ Position indisponible (pas de GPS ou réseau).");
+        } else if (error.code === error.TIMEOUT) {
+          alert("⌛ La demande de localisation a expiré.");
+        } else {
+          alert("❌ Erreur inconnue de géolocalisation.");
+        }
+      }
+    );
   } else {
     alert("La géolocalisation n’est pas supportée.");
   }
@@ -747,7 +756,7 @@ function showNearby(position) {
     <h3>📍 Les 10 plus proches :</h3>
     <ul>
       ${proches.map(p => {
-        let icon = p.category === "poste" ? (p.accès ? "🚙" : "🏠") : "💡";
+let icon = p.category === "poste" ? "🚙" : "💡";
         let label = p.category === "poste" ? p.nom : p.appareil;
         return `<li>${icon} <b>${label}</b> – ${p.distance.toFixed(2)} km</li>`;
       }).join("")}
