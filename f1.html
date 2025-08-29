@@ -600,7 +600,7 @@ Promise.all([
   });
 });
 
-  document.getElementById("search").addEventListener("input", e => {
+document.getElementById("search").addEventListener("input", e => {
   const query = normalize(e.target.value.trim());
   const suggestionsEl = document.getElementById("suggestions");
   const resultEl = document.getElementById("result");
@@ -617,20 +617,26 @@ Promise.all([
   let results = fuseMix.search(query).map(r => r.item);
 
   // -------- TRI AVANCÉ ----------
-  // Priorités :
-  // 0) Postes dont le 1er mot commence par la requête (ex: "bethune ...")
-  // 1) Appareils liés à ce lieu (nom de poste commence par la requête OU libellé appareil commence par la requête)
-  // 2) Autres Postes
-  // 3) Autres Appareils
-  const firstToken = s => (s || "").split(/\s+/)[0] || "";
+  const queryWords = query.split(/\s+/); // on découpe la recherche en mots
 
   results.sort((a, b) => {
     const aNom = normalize(a.nom || "");
     const bNom = normalize(b.nom || "");
-    const aTok = firstToken(aNom);
-    const bTok = firstToken(bNom);
+    const aTok = (aNom.split(/\s+/)[0]) || "";
+    const bTok = (bNom.split(/\s+/)[0]) || "";
     const aApp = normalize(a.appareil || "");
     const bApp = normalize(b.appareil || "");
+
+    const aWords = aNom.split(/\s+/);
+    const bWords = bNom.split(/\s+/);
+
+    // Vérifie si TOUS les mots de la requête sont trouvés dans le nom
+    const aFullMatch = queryWords.every(qw => aWords.some(w => w.startsWith(qw)));
+    const bFullMatch = queryWords.every(qw => bWords.some(w => w.startsWith(qw)));
+
+    // Si un poste matche tous les mots → priorité absolue
+    if (aFullMatch && !bFullMatch) return -1;
+    if (bFullMatch && !aFullMatch) return 1;
 
     const aStartsNom = aNom.startsWith(query);
     const bStartsNom = bNom.startsWith(query);
@@ -650,14 +656,14 @@ Promise.all([
     const bb = bucket(b, bStartsNom, bStartsTok, bStartsApp);
     if (ba !== bb) return ba - bb;
 
-    // Postes qui commencent pareil : rapprocher la longueur du 1er mot à la requête
+    // Postes qui commencent pareil : rapprochement par longueur du premier mot
     if (ba === 0) {
       const diffA = Math.abs(aTok.length - query.length);
       const diffB = Math.abs(bTok.length - query.length);
       if (diffA !== diffB) return diffA - diffB;
     }
 
-    // Tiebreaker doux : ordre alpha sur l’étiquette visible
+    // Tiebreaker final : ordre alpha doux
     const label = (x) =>
       x.category === "poste"
         ? `${x.nom || ""} ${x.type || ""} ${x.SAT || ""}`.trim()
@@ -858,7 +864,7 @@ let icon = p.category === "poste" ? "🚙" : "💡";
     🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration:none; color:#1a73e8;">À propos</a>
   </p>
   <p style="font-size:10px; color:#ccc; margin:0;">
-    Arnaud - V1.08.39
+    Arnaud - V1.08.40a
   </p>
 </div>
   <script>
