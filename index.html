@@ -759,20 +759,6 @@ results.sort((a, b) => {
   if (a.__directAliasHit && !b.__directAliasHit) return -1;
   if (b.__directAliasHit && !a.__directAliasHit) return 1;
 
-  // 1) si appareil ou alias commence directement par la requête -> priorité
-  const startsWithQuery = (it) => {
-    const q = query.toLowerCase();
-    if ((it.appareil || "").toLowerCase().startsWith(q)) return true;
-    if (Array.isArray(it.alias)) {
-      return it.alias.some(al => al.toLowerCase().startsWith(q));
-    }
-    return false;
-  };
-  const aStartsAlias = startsWithQuery(a);
-  const bStartsAlias = startsWithQuery(b);
-  if (aStartsAlias && !bStartsAlias) return -1;
-  if (bStartsAlias && !aStartsAlias) return 1;
-
   const aNom = normalize(a.nom || "");
   const bNom = normalize(b.nom || "");
   const aTok = (aNom.split(/\s+/)[0]) || "";
@@ -820,9 +806,6 @@ results.sort((a, b) => {
       : `${x.appareil} (${x.nom}${x.type ? " " + x.type : ""}${x.SAT ? " / " + x.SAT : ""})`;
   return label(a).localeCompare(label(b), "fr", { sensitivity: "base" });
 });
-
-// ✅ Force à avoir le meilleur résultat en haut
-results.reverse();
 // -------- FIN TRI AVANCÉ ----------
 // Affichage des lignes (meilleur tout en haut)
 suggestionsEl.innerHTML = "";
@@ -1069,7 +1052,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.07</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.08</span>
 </div>
 
 <script>
