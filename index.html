@@ -63,7 +63,7 @@ body {
       max-width: 600px;
       height: 48px;
       overflow: hidden;
-      margin-bottom: 1.5rem;
+      margin-bottom: 3rem;
       position: relative;
     }
     #train {
@@ -980,23 +980,30 @@ function showNearby(position) {
 </div>
 
 <script>
-  const compteurContributionURL = "https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec";
-  async function refreshContrib(){
-    try{
-      const r = await fetch(compteurContributionURL);
-      const data = await r.json();
-    document.getElementById("compteur-valeur").textContent =
-  (data && typeof data.count !== "undefined") ? `(${data.count})` : "";
-    }catch(e){
-     document.getElementById("compteur-valeur").textContent = "";
-    }
+const compteurContributionURL = "https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec";
+
+function updateContrib() {
+  // 1) Lecture du cache
+  const cached = localStorage.getItem("counterContrib");
+  if (cached) {
+    document.getElementById("compteur-valeur").textContent = `(${cached})`;
   }
-  refreshContrib();
-  setInterval(refreshContrib, 3000);
+
+  // 2) Mise à jour depuis le serveur
+  fetch(compteurContributionURL).then(r => r.json()).then(data => {
+    if (data && typeof data.count !== "undefined") {
+      document.getElementById("compteur-valeur").textContent = `(${data.count})`;
+      localStorage.setItem("counterContrib", data.count); // ✅ sauvegarde en cache
+    }
+  }).catch(() => {});
+}
+
+updateContrib();
+setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.09</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.10</span>
 </div>
 
 <script>
