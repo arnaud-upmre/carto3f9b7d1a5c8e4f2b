@@ -764,48 +764,43 @@ results.sort((a,b) => {
 
   let orderedResults = [];
 
-  if (postesSansAcces.length > 0 || postesAvecAcces.length > 0) {
-    // Cas 1 : la requête correspond à un poste
-    orderedResults = [...postesSansAcces, ...postesAvecAcces];
+  if (appareilsTrouvés.length > 0) {
+  // Cas 1 : la requête correspond à des appareils
+  orderedResults = [...appareilsTrouvés];
 
-// Ajoute les appareils liés si le poste est trouvé
-appareils.forEach(app => {
-  if (
-    normalize(app.nom).includes(query) ||
-    normalize(app.appareil || "").includes(query) ||
-    (Array.isArray(app.alias) && app.alias.some(a => normalize(a).includes(query)))
-  ) {
-    orderedResults.push(app);
-  }
-});
-    
-  } else if (appareilsTrouvés.length > 0) {
-    // Cas 2 : la requête correspond uniquement à des appareils
-    orderedResults = [...appareilsTrouvés];
+  // Vérifie le poste parent et le SAT
+  const postesParents = new Set();
+  appareilsTrouvés.forEach(app => {
+    const posteParent = lieux.find(l => normalize(l.nom) === normalize(app.nom));
+    if (posteParent) postesParents.add(posteParent);
 
-    // Vérifie le poste parent
-    const postesParents = new Set();
-    appareilsTrouvés.forEach(app => {
-      const posteParent = lieux.find(l => normalize(l.nom) === normalize(app.nom));
-      if (posteParent) postesParents.add(posteParent);
+    if (app.SAT) {
+      const satAcces = lieux.find(l =>
+        normalize(l.nom) === normalize(app.nom) &&
+        normalize(l.SAT || "") === normalize(app.SAT || "")
+      );
+      if (satAcces) postesParents.add(satAcces);
+    }
+  });
 
-      // Vérifie aussi le SAT
-      if (app.SAT) {
-        const satAcces = lieux.find(l =>
-          normalize(l.nom) === normalize(app.nom) &&
-          normalize(l.SAT || "") === normalize(app.SAT || "")
-        );
-        if (satAcces) postesParents.add(satAcces);
-      }
-    });
+  // Ajoute les postes parents et SAT après l’appareil
+  postesParents.forEach(p => orderedResults.push(p));
 
-    // Ajoute les postes parents et SAT à la fin
-    postesParents.forEach(p => {
-      if (!orderedResults.some(r => r.nom === p.nom && r.type === p.type)) {
-        orderedResults.push(p);
-      }
-    });
-  }
+} else if (postesSansAcces.length > 0 || postesAvecAcces.length > 0) {
+  // Cas 2 : la requête correspond à un poste
+  orderedResults = [...postesSansAcces, ...postesAvecAcces];
+
+  // Ajoute les appareils liés si le poste est trouvé
+  appareils.forEach(app => {
+    if (
+      normalize(app.nom).includes(query) ||
+      normalize(app.appareil || "").includes(query) ||
+      (Array.isArray(app.alias) && app.alias.some(a => normalize(a).includes(query)))
+    ) {
+      orderedResults.push(app);
+    }
+  });
+}
 
   // --- Affichage final ---
   orderedResults.forEach((item, idx) => {
@@ -1064,7 +1059,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.15</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.15A</span>
 </div>
 
 <script>
