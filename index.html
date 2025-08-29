@@ -287,17 +287,20 @@ a:visited {
     Itinéraire et infos
   </a>
 </h1>
-  <input type="text" id="search" placeholder="🔎 Entrer un poste pour trajet et détails" autocomplete="off" />
-  <div id="counter">📍 Postes consultés : chargement…</div>
-  <ul id="suggestions"></ul>
-  <div id="result"></div>
+<input type="text" id="search" placeholder="Entrer un poste ou un appareil" autocomplete="off" />
+<ul id="suggestions"></ul>
+<div id="result"></div>
+<!-- Compteurs côte à côte -->
+<div id="counters" style="font-size:13px; color:#666; margin-top:6px; margin-bottom:1rem;">
+  📍 Postes consultés : <span id="counterPostes">chargement…</span> &nbsp; | &nbsp; 
+  💡 Appareils consultés : <span id="counterAppareils">chargement…</span>
+</div>
 
-  <h1 style="margin-top: 1.5rem; margin-bottom: 0.4rem;">⚡️ Rechercher un appareil</h1>
-  <ul id="suggestionsAppareils"></ul>
-  <input type="text" id="searchAppareil" placeholder="Ex : I 7105, TT 629..." autocomplete="off" />
-  <div id="counterAppareil">🔌 Appareils consultés : chargement…</div>
-  
-
+<!-- Bouton localiser -->
+<button id="btn-localiser" style="margin:8px 0; padding:8px 14px; border-radius:8px; border:1px solid #1a73e8; background:#e8f0fe; color:#1a73e8; cursor:pointer;">
+  📍 Me localiser (10 plus proches)
+</button>
+<div id="proximite" style="margin-top:1rem; font-size:14px;"></div>
 <script>
 const jsonUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/postes.json";
 const appareilsUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/appareils.json";
@@ -501,65 +504,25 @@ fuse = new Fuse(lieux, {
   ignoreLocation: true
 });
 });
-function updateCounter() {
+
+  function updateCounter() {
   fetch(compteurURL).then(res => res.json()).then(data => {
-    document.getElementById("counter").textContent = `📍 Postes consultés : ${data.count}`;
+    document.getElementById("counterPostes").textContent = data.count;
   });
 }
 function incrementCounter() {
   fetch(compteurURL + "?increment=true").then(updateCounter);
 }
+
 function updateCounterAppareil() {
   fetch(compteurAppareilURL).then(res => res.json()).then(data => {
-    document.getElementById("counterAppareil").textContent = `🔌 Appareils consultés : ${data.count}`;
+    document.getElementById("counterAppareils").textContent = data.count;
   });
 }
 function incrementCounterAppareil() {
   fetch(compteurAppareilURL + "?increment=true").then(updateCounterAppareil);
 }
 
-document.getElementById("search").addEventListener("input", e => {
-  const query = normalize(e.target.value.trim());
-  const suggestionsEl = document.getElementById("suggestions");
-  const resultEl = document.getElementById("result");
-  suggestionsEl.innerHTML = "";
-  resultEl.innerHTML = "";
-  resultEl.style.display = "none";
-  if (!query || !fuse) return;
-
-  // Recherche principale avec Fuse
-  let results = fuse.search(query).map(r => r.item);
-
-  // Fallback si besoin
-  if (results.length === 0 || query.length <= 3) {
-    const fallback = lieux.filter(l =>
-      normalize(l.nom).includes(query) ||
-      normalize(l.type).includes(query) ||
-      normalize(l.SAT || '').includes(query) ||
-      normalize(String(l.accès || '')).includes(query)
-    );
-    const ids = new Set(results.map(l => formatNomCompletLieu(l)));
-    fallback.forEach(l => { if (!ids.has(formatNomCompletLieu(l))) results.push(l); });
-  }
-
-  // 🔥 Tri personnalisé : priorité aux noms qui commencent par la requête
-  results.sort((a, b) => {
-    const queryLower = query.toLowerCase();
-    const aStarts = normalize(a.nom).startsWith(queryLower);
-    const bStarts = normalize(b.nom).startsWith(queryLower);
-    if (aStarts && !bStarts) return -1;
-    if (!aStarts && bStarts) return 1;
-    return 0; // sinon garder l'ordre de Fuse
-  });
-
-  // Affichage des résultats
-  results.forEach(lieu => {
-    const li = document.createElement("li");
-    li.textContent = formatNomCompletLieu(lieu);
-    li.onclick = () => showLieu(lieu);
-    suggestionsEl.appendChild(li);
-  });
-});
 function showLieu(lieu) {
   const result = document.getElementById("result");
   document.getElementById("suggestions").innerHTML = "";
@@ -602,70 +565,140 @@ function showLieu(lieu) {
 
   result.innerHTML = html;
 }
-  
-document.getElementById("searchAppareil").addEventListener("input", e => {
+
+  let allItems = [], fuseMix;
+
+// Charger postes + appareils
+Promise.all([
+  fetch(jsonUrl).then(r => r.json()),
+  fetch(appareilsUrl).then(r => r.json())
+]).then(([postes, apps]) => {
+  lieux = postes;
+  appareils = apps;
+
+  // On tag chaque objet pour savoir s’il vient de postes.json ou appareils.json
+  const postesTagged = postes.map(p => ({ ...p, category: "poste" }));
+  const appsTagged = apps.map(a => ({ ...a, category: "appareil" }));
+
+  allItems = [...postesTagged, ...appsTagged];
+
+  // Moteur Fuse.js mixte
+  fuseMix = new Fuse(allItems, {
+    keys: [
+      { name: "nom", weight: 0.5 },
+      { name: "type", weight: 0.3 },
+      { name: "SAT", weight: 0.2 },
+      { name: "appareil", weight: 0.5 },
+      { name: "alias", weight: 0.4 },
+      { name: "accès", getFn: o => o.accès?.toString?.() || "", weight: 0.2 }
+    ],
+    includeScore: true,
+    threshold: 0.2,           // ✅ plus strict (meilleur tri)
+    distance: 50,             // ✅ tolérance modérée
+    minMatchCharLength: 2,    // ✅ évite les résultats absurdes sur 1 caractère
+    ignoreLocation: true
+  });
+});
+
+document.getElementById("search").addEventListener("input", e => {
   const query = normalize(e.target.value.trim());
-  const suggestionsEl = document.getElementById("suggestionsAppareils");
+  const suggestionsEl = document.getElementById("suggestions");
   const resultEl = document.getElementById("result");
+
+  // Nettoyage affichage
   suggestionsEl.innerHTML = "";
   resultEl.innerHTML = "";
   resultEl.style.display = "none";
-  if (!query || !fuseAppareils) return;
-let results = fuseAppareils.search(query, { limit: 50 }).map(r => r.item);
 
-// 🔁 Si on détecte un préfixe (tt, tc, etc.), on élargit à tout le JSON
-const prefixes = ["tt", "tc", "tsa", "i", "ia", "il", "ip", "imp", "s"];
-const matchPrefix = query.match(/^([a-z]{1,4})[\s\-]+(.+)/i);
+  // N'affiche qu'à partir de 2 lettres
+  if (!query || query.length < 2 || !fuseMix) return;
 
-if (matchPrefix) {
-  const prefix = matchPrefix[1].toLowerCase();
-  const lieu = matchPrefix[2].toLowerCase();
+  // Résultats bruts
+  let results = fuseMix.search(query).map(r => r.item);
 
-  if (prefixes.includes(prefix)) {
-    // On cherche tous les appareils correspondants dans le JSON, pas que via Fuse
-    const complet = appareils.filter(app => {
-      const nomComplet = `${app.nom} ${app.SAT || ''}`.toLowerCase();
-      return (
-        app.appareil.toLowerCase().startsWith(prefix) &&
-        (nomComplet.includes(lieu) || normalize(nomComplet).includes(normalize(lieu)))
-      );
-    });
+  // -------- TRI AVANCÉ ----------
+  const queryWords = query.split(/\s+/); // on découpe la recherche en mots
 
-    // Fusionne sans doublons
-    const ids = new Set(results.map(a => a.appareil));
-    complet.forEach(a => { if (!ids.has(a.appareil)) results.push(a); });
+  results.sort((a, b) => {
+    const aNom = normalize(a.nom || "");
+    const bNom = normalize(b.nom || "");
+    const aTok = (aNom.split(/\s+/)[0]) || "";
+    const bTok = (bNom.split(/\s+/)[0]) || "";
+    const aApp = normalize(a.appareil || "");
+    const bApp = normalize(b.appareil || "");
 
-    // Tri : ceux qui matchent mieux d’abord
-    results.sort((a, b) => {
-    const aMatch = a.appareil.toLowerCase().startsWith(prefix) && (`${a.nom} ${a.SAT || ''}`.toLowerCase().includes(lieu));
-const bMatch = b.appareil.toLowerCase().startsWith(prefix) && (`${b.nom} ${b.SAT || ''}`.toLowerCase().includes(lieu));
-      if (aMatch && !bMatch) return -1;
-      if (!aMatch && bMatch) return 1;
-      return 0;
-    });
-  }
-}
+    const aWords = aNom.split(/\s+/);
+    const bWords = bNom.split(/\s+/);
 
-// 🔄 Affichage des résultats
-results.reverse().forEach((app, index, array) => {
-  const li = document.createElement("li");
-  li.textContent = `${app.appareil} (${app.nom}${app.type ? ' ' + app.type : ''}${app.SAT ? ' / ' + app.SAT : ''})`;
+    // Vérifie si TOUS les mots de la requête sont trouvés dans le nom
+    const aFullMatch = queryWords.every(qw => aWords.some(w => w.startsWith(qw)));
+    const bFullMatch = queryWords.every(qw => bWords.some(w => w.startsWith(qw)));
 
-  // Surligne le dernier (donc le plus pertinent après reverse)
-  if (index === array.length - 1) {
-    li.classList.add("best");
-  }
+    // Si un poste matche tous les mots → priorité absolue
+    if (aFullMatch && !bFullMatch) return -1;
+    if (bFullMatch && !aFullMatch) return 1;
 
-  li.onclick = () => showAppareil(app);
-  suggestionsEl.appendChild(li);
+    const aStartsNom = aNom.startsWith(query);
+    const bStartsNom = bNom.startsWith(query);
+    const aStartsTok = aTok.startsWith(query);
+    const bStartsTok = bTok.startsWith(query);
+    const aStartsApp = aApp.startsWith(query);
+    const bStartsApp = bApp.startsWith(query);
+
+    const bucket = (x, startsNom, startsTok, startsApp) => {
+      if (x.category === "poste" && (startsTok || startsNom)) return 0;
+      if (x.category === "appareil" && (startsNom || startsApp)) return 1;
+      if (x.category === "poste") return 2;
+      return 3;
+    };
+
+    const ba = bucket(a, aStartsNom, aStartsTok, aStartsApp);
+    const bb = bucket(b, bStartsNom, bStartsTok, bStartsApp);
+    if (ba !== bb) return ba - bb;
+
+    // Postes qui commencent pareil : rapprochement par longueur du premier mot
+    if (ba === 0) {
+      const diffA = Math.abs(aTok.length - query.length);
+      const diffB = Math.abs(bTok.length - query.length);
+      if (diffA !== diffB) return diffA - diffB;
+    }
+
+    // Tiebreaker final : ordre alpha doux
+    const label = (x) =>
+      x.category === "poste"
+        ? `${x.nom || ""} ${x.type || ""} ${x.SAT || ""}`.trim()
+        : `${x.appareil} (${x.nom}${x.type ? " " + x.type : ""}${x.SAT ? " / " + x.SAT : ""})`;
+    return label(a).localeCompare(label(b), "fr", { sensitivity: "base" });
+  });
+  // -------- FIN TRI AVANCÉ ----------
+
+  // Affichage des lignes
+  results.forEach(item => {
+    const li = document.createElement("li");
+
+    if (item.category === "poste") {
+      // Postes = accès → voiture
+      li.textContent = `🚙 ${item.nom || ""} ${item.type || ""} ${item.SAT || ""}`.trim();
+      li.onclick = () => showLieu(item);
+    } else {
+      // Appareils → libellé détaillé
+      li.textContent = `💡 ${item.appareil} (${item.nom}${item.type ? " " + item.type : ""}${item.SAT ? " / " + item.SAT : ""})`;
+      li.onclick = () => showAppareil(item);
+    }
+
+    suggestionsEl.appendChild(li);
+  });
 });
-});
-
+  
 function showAppareil(app) {
   incrementCounterAppareil();
   const result = document.getElementById("result");
+  const suggestionsEl = document.getElementById("suggestions");
+  
+  // On efface la liste pour ne garder que le bloc détail
+  suggestionsEl.innerHTML = "";
+  
   result.style.display = "block";
-  document.getElementById("suggestionsAppareils").innerHTML = "";
 
   let html = `<h2>
     <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&ll=${app.latitude},${app.longitude}&z=19"
@@ -739,6 +772,70 @@ if (document.readyState === 'loading') {
 
 // 2) Tirage au clic (sans recharger la page)
 trainImg.addEventListener('click', pickRandomTrain);
+// === Calcul de distance (Haversine) ===
+function getDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371; // rayon Terre en km
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLon/2) * Math.sin(dLon/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  return R * c; // distance en km
+}
+
+// === Bouton "Me localiser" ===
+document.getElementById("btn-localiser").addEventListener("click", () => {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      showNearby,
+      (error) => {
+        if (error.code === error.PERMISSION_DENIED) {
+          alert("❌ Autorisation refusée pour la géolocalisation.");
+        } else if (error.code === error.POSITION_UNAVAILABLE) {
+          alert("⚠️ Position indisponible (pas de GPS ou réseau).");
+        } else if (error.code === error.TIMEOUT) {
+          alert("⌛ La demande de localisation a expiré.");
+        } else {
+          alert("❌ Erreur inconnue de géolocalisation.");
+        }
+      }
+    );
+  } else {
+    alert("La géolocalisation n’est pas supportée.");
+  }
+});
+
+// === Affiche les 10 plus proches (postes + appareils) ===
+function showNearby(position) {
+  const lat = position.coords.latitude;
+  const lon = position.coords.longitude;
+
+  if (!allItems || allItems.length === 0) {
+    alert("Les données ne sont pas encore chargées.");
+    return;
+  }
+
+  const distances = allItems.map(it => ({
+    ...it,
+    distance: getDistance(lat, lon, it.latitude, it.longitude)
+  }));
+
+  const proches = distances.sort((a,b) => a.distance - b.distance).slice(0,10);
+
+  const container = document.getElementById("proximite");
+  container.innerHTML = `
+    <h3>📍 Les 10 plus proches :</h3>
+    <ul>
+      ${proches.map(p => {
+let icon = p.category === "poste" ? "🚙" : "💡";
+        let label = p.category === "poste" ? p.nom : p.appareil;
+        return `<li>${icon} <b>${label}</b> – ${p.distance.toFixed(2)} km</li>`;
+      }).join("")}
+    </ul>
+  `;
+}
+  
   </script>
 <div style="text-align:center; margin-top:30px;">
   <a href="formulaire.html"
@@ -767,7 +864,7 @@ trainImg.addEventListener('click', pickRandomTrain);
     🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration:none; color:#1a73e8;">À propos</a>
   </p>
   <p style="font-size:10px; color:#ccc; margin:0;">
-    Arnaud - V1.08.36
+    Arnaud - V1.08.40a
   </p>
 </div>
   <script>
