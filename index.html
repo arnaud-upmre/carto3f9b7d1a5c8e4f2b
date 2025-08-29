@@ -788,17 +788,23 @@ results.sort((a, b) => {
   if (aExact && !bExact) return -1;
   if (bExact && !aExact) return 1;
 
-  // --- priorité 2 : accès routier d'abord ---
-  const aIsAcces = !!a.accès;
-  const bIsAcces = !!b.accès;
+  // --- priorité 2 : postes simples avant tout ---
+  const aIsPoste = a.category === "poste" && !a.accès;
+  const bIsPoste = b.category === "poste" && !b.accès;
+  if (aIsPoste && !bIsPoste) return -1;
+  if (bIsPoste && !aIsPoste) return 1;
+
+  // --- priorité 3 : postes avec accès ensuite ---
+  const aIsAcces = a.category === "poste" && !!a.accès;
+  const bIsAcces = b.category === "poste" && !!b.accès;
   if (aIsAcces && !bIsAcces) return -1;
   if (bIsAcces && !aIsAcces) return 1;
 
-  // --- priorité 3 : postes avant appareils ---
-  if (a.category === "poste" && b.category !== "poste") return -1;
-  if (b.category === "poste" && a.category !== "poste") return 1;
+  // --- priorité 4 : appareils en dernier ---
+  if (a.category === "appareil" && b.category !== "appareil") return 1;
+  if (b.category === "appareil" && a.category !== "appareil") return -1;
 
-  // --- priorité 4 : tri alphabétique stable ---
+  // --- priorité 5 : tri alphabétique stable ---
   const label = x =>
     x.category === "poste"
       ? `${x.nom || ""} ${x.type || ""} ${x.SAT || ""}`.trim()
@@ -806,8 +812,7 @@ results.sort((a, b) => {
 
   return label(a).localeCompare(label(b), "fr", { sensitivity: "base" });
 });
-// -------- FIN TRI AVANCÉ ----------
-
+  
 // Affichage des lignes (meilleur tout en haut)
 suggestionsEl.innerHTML = "";
 results.forEach((item, idx) => {
@@ -827,7 +832,7 @@ results.forEach((item, idx) => {
   suggestionsEl.appendChild(li);
 });
 });
-  
+  // -------- fin TRI AVANCÉ ----------
 function showAppareil(app) {
   incrementCounterAppareil();
   const result = document.getElementById("result");
