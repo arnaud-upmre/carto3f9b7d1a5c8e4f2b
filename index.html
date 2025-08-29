@@ -783,16 +783,16 @@ results.sort((a, b) => {
   if (aIsAcces && !bIsAcces) return -1;
   if (bIsAcces && !aIsAcces) return 1;
 
-  // --- ensuite : postes avant appareils ---
+  // --- ensuite : postes et SAT complets ---
   if (a.category === "poste" && b.category !== "poste") return -1;
   if (b.category === "poste" && a.category !== "poste") return 1;
 
   // --- enfin : tri alphabétique pour stabilité ---
   return normalizeLabel(a).localeCompare(normalizeLabel(b), "fr", { sensitivity: "base" });
 });
+
 // -------- FIN TRI AVANCÉ ----------
-  // ✅ Inverse la liste pour mettre le plus pertinent en haut
-results.reverse();
+
 // Affichage des lignes (meilleur tout en haut)
 suggestionsEl.innerHTML = "";
 results.forEach((item, idx) => {
