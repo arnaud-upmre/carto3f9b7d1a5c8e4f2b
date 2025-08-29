@@ -1,252 +1,877 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <title>🔧 À propos</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style id="eale-intro-styles">
+  :root{--eale-intro-bg:#fff;--eale-intro-fg:#222}
+  @media (prefers-color-scheme: dark){
+    :root{--eale-intro-bg:#0b0b0b;--eale-intro-fg:#eee}
+  }
+  .eale-intro-overlay{
+    position:fixed; inset:0;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    background:var(--eale-intro-bg); color:var(--eale-intro-fg);
+    z-index:99999; user-select:none; touch-action:none;
+  }
+  .eale-intro-img{
+    width:min(42vw,180px); height:auto; object-fit:contain; pointer-events:none;
+    animation:eale-zoomIn 1.8s ease-out forwards;
+  }
+  .eale-intro-text{
+    position:fixed; bottom:12vh; left:50%; transform:translateX(-50%);
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size:0.95rem; font-style:italic; text-align:center; opacity:.95; max-width:90%;
+  }
+  @keyframes eale-zoomIn{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+  .eale-intro-hide{opacity:0; transition:opacity .35s ease}
+    /* surbrillance du meilleur résultat */
+li.best {
+  background-color: #e6f0ff;
+  font-weight: 600;
+}
+@media (prefers-color-scheme: dark){
+  li.best {
+    background-color: #1b2836; /* bleu foncé doux */
+  }
+}
+</style>
   <meta name="robots" content="noindex, nofollow" />
+  <meta charset="UTF-8" />
+  <title>Recherche de lieux</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
   <style>
+    ul#suggestions:empty,
+ul#suggestionsAppareils:empty {
+  margin-bottom: 0;
+}
     body {
-      font-family: 'Segoe UI', 'Inter', sans-serif;
-      background-color: #f5f5f5;
+      font-family: 'Inter', sans-serif;
+      background-color: #fff;
+      padding: 1rem;
       color: #333;
       margin: 0;
-      padding: 1rem;
-      padding-bottom: 7rem;
-      line-height: 1.8;
-      user-select: none;
-    }
-    h1 {
-      font-size: 1.6rem;
-      text-align: center;
-      margin-bottom: 1.5rem;
-    }
-    h2 {
-      font-size: 1.3rem;
-      margin-top: 0;
-      margin-bottom: 0.8rem;
-    }
-    p {
-      font-size: 1rem;
-      margin-bottom: 1rem;
-      text-align: justify;
-    }
-    .mt-lg { margin-top: 1.25rem; }
-    .mt-xl { margin-top: 1.8rem; }
-
-    blockquote {
-      margin: 1.8rem 0 0 0;
-      padding: 1rem 1.2rem;
-      background: #f0f0f0;
-      border-left: 4px solid #ccc;
-      font-style: italic;
-      border-radius: 4px;
-    }
-
-    /* Conteneur vertical */
-    .container {
       display: flex;
       flex-direction: column;
-      gap: 1.5rem; /* espace uniforme */
-      max-width: 1000px;
-      margin: auto;
-    }
-    .card,
-    .stats-box {
-      background: #fff;
-      border-radius: 0.6rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-      padding: 2rem 1.5rem;
-      flex: 1 1 auto;
+      align-items: center;
+      width: 100vw;
       box-sizing: border-box;
     }
-
-    /* Bloc stats */
-    .stats-content {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.7rem;
-      margin-top: 0.5rem;
-    }
-    .stat-pill {
-      background: #0055cc;
-      color: #fff;
-      padding: 0.5rem 0.9rem;
-      border-radius: 999px;
-      font-weight: 500;
-      font-size: 0.95rem;
-      white-space: nowrap;
-    }
-
-    /* Badge R&D en conclusion */
-    .conclusion-card {
+    #train-container {
+      width: 100%;
+      max-width: 600px;
+      height: 48px;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
       position: relative;
     }
-    .badge-rd {
+    #train {
       position: absolute;
-      top: 0.8rem;
-      right: 1rem;
-      background: #0055cc;
-      color: #fff;
-      padding: 0.3rem 0.7rem;
-      border-radius: 999px;
-      font-weight: 500;
-      font-size: 0.8rem; /* plus petit */
-      white-space: nowrap;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
-    }
-
-    .btn-box {
-      background: #fff;
-      border-radius: 0.6rem 0.6rem 0 0;
-      box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
-      padding: 1rem;
-      position: fixed;
-      bottom: 0;
+      top: 0;
       left: 0;
-      right: 0;
-      width: 100%;
-      max-width: 1000px;
-      margin: auto;
-      box-sizing: border-box;
+      height: 42px;
+      animation: trainVaEtVient 28s ease-in-out infinite;
     }
-    .btn-container {
+    @keyframes trainVaEtVient {
+      0%, 100% { left: 0; }
+      45%, 50% { left: calc(100% - 140px); }
+      95% { left: 0; }
+    }
+    h1 {
+      font-size: 20px;
+      margin: 0 0 0.8rem 0;
+      font-weight: 600;
+      width: 100%;
+      max-width: 600px;
+      padding: 0 1rem;
+      text-align: left;
+    }
+    input[type="text"] {
+      width: 100%;
+      max-width: 600px;
+      padding: 12px 16px;
+      font-size: 16px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+    input[type="text"]:focus {
+      border-color: #1a73e8;
+      box-shadow: 0 4px 14px rgba(26,115,232,0.4);
+    }
+    #counter, #counterAppareil {
+      font-size: 13px;
+      color: #666;
+      margin-top: 6px;
+      margin-bottom: 1rem;
+    }
+    ul#suggestions, ul#suggestionsAppareils {
+      list-style: none;
+      padding: 0;
+      margin: 0.5rem 0 1.5rem 0;
+      max-width: 600px;
+      width: 100%;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+      background-color: #fff;
+      font-size: 15px;
+      color: #333;
+    }
+    ul#suggestions li, ul#suggestionsAppareils li {
+      padding: 12px 16px;
+      cursor: pointer;
+      border-bottom: 1px solid #eee;
+    }
+    ul#suggestions li:hover, ul#suggestionsAppareils li:hover {
+      background-color: #f0f8ff;
+      color: #1a73e8;
+    }
+    #result {
+      display: none;
+      background: #ffffff;
+      padding: 1rem 1.5rem;
+      border-radius: 18px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      max-width: 600px;
+      width: 100%;
+      color: #444;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    #result h2 {
+      margin-top: 0;
+      font-size: 22px;
+      font-weight: 700;
+      color: #1a73e8;
+    }
+    .inline-links {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.6rem;
-      justify-content: center;
+      gap: 6px;
+      font-size: 14px;
+      padding: 0 1rem 0 0;
     }
-    .btn {
-      flex: 1 1 calc(50% - 0.6rem);
-      text-align: center;
-      padding: 0.8rem;
-      background-color: #0055cc;
-      color: white;
-      border-radius: 0.5rem;
-      font-size: 0.95rem;
+    .inline-links a {
+      padding: 6px 10px;
+      font-size: 14px;
       text-decoration: none;
-      font-weight: 500;
-      transition: background-color 0.3s ease;
+      color: #1a73e8;
+      border: 1px solid #1a73e8;
+      border-radius: 10px;
+      transition: 0.3s;
       white-space: nowrap;
-      max-width: 200px;
     }
-    .btn:hover { background-color: #0040a8; }
-
+    .inline-links a:hover {
+      background-color: #1a73e8;
+      color: white;
+    }
+    .separator {
+      border: none;
+      border-top: 1px solid #eee;
+      margin: 1rem 0;
+    }
     @media (max-width: 480px) {
-      .btn { flex: 1 1 100%; max-width: none; }
-      body { padding-bottom: 9rem; }
+      body { padding: 0.8rem; }
+      h1 { font-size: 18px; padding: 0 0.5rem; }
+      input[type="text"] { font-size: 14px; padding: 10px 14px; }
+      ul#suggestions li, ul#suggestionsAppareils li { padding: 10px 14px; font-size: 14px; }
+      #result { font-size: 14px; padding: 0.8rem 0.5rem; }
     }
-    @media (prefers-color-scheme: dark) {
-      body { background-color: #121212; color: #e0e0e0; }
-      .card, .stats-box, .btn-box {
-        background: #1e1e1e;
-        box-shadow: 0 2px 8px rgba(255,255,255,0.05);
-      }
-      blockquote { background: #2a2a2a; border-left: 4px solid #555; }
-      .btn { background-color: #1976d2; }
-      .btn:hover { background-color: #1565c0; }
-      .badge-rd, .stat-pill { box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
-    }
+    /* --- MODE SOMBRE AUTOMATIQUE --- */
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #121212;
+    color: #e5e5e5;
+  }
+
+  h1,
+  #result h2 {
+    color: #90caf9;
+  }
+
+  input[type="text"] {
+    background-color: #1e1e1e;
+    color: #e5e5e5;
+    border: 1px solid #555;
+  }
+
+  ul#suggestions,
+  ul#suggestionsAppareils,
+  #result {
+    background-color: #1e1e1e;
+    color: #e5e5e5;
+    box-shadow: 0 6px 15px rgba(255,255,255,0.05);
+  }
+
+  .inline-links a {
+    color: #90caf9;
+    border-color: #90caf9;
+  }
+
+  .inline-links a:hover {
+    background-color: #90caf9;
+    color: #121212;
+  }
+}/* === Liens : même couleur en normal / visited === */
+a { 
+  color:#1a73e8; 
+  text-decoration:none; 
+}
+a:visited { 
+  color:#1a73e8; 
+}
+
+/* Boutons-lien inline-links */
+.inline-links a,
+.inline-links a:visited { 
+  color:#1a73e8; 
+  border-color:#1a73e8; 
+}
+
+/* Encadré "Appareil manquant" */
+.missing-box {
+  background-color:#e6f0ff;
+  border-radius:12px;
+  padding:12px 16px;
+  margin-top:1.2rem;
+  text-align:center;
+  font-size:15px;
+}
+.missing-box a {
+  color:#1a73e8; 
+  font-weight:600;
+}
+
+/* --- Dark mode spécial liens et box --- */
+@media (prefers-color-scheme: dark){
+  a, a:visited { 
+    color:#90caf9; 
+  }
+  .inline-links a,
+  .inline-links a:visited { 
+    color:#90caf9; 
+    border-color:#90caf9; 
+  }
+  .inline-links a:hover { 
+    background-color:#90caf9; 
+    color:#121212; 
+  }
+
+  .missing-box {
+    background-color:#16202c;
+    border:1px solid #243447;
+  }
+  .missing-box a { 
+    color:#90caf9; 
+  }
+}
   </style>
+  <meta name="color-scheme" content="light dark">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)"  content="#121212">
 </head>
 <body>
-  
-  <h1>🔧 À propos</h1>
-  
-  <div class="container">
-    <!-- Intro -->
-    <div class="card">
-      <p>Au départ, on s’échangeait juste quelques points GPS entre collègues.<br>
-      C’était pratique, mais vite limité… chacun bricolait de son côté.</p>
+  <div id="train-container">
+ <img id="train"
+     src="images/train1.gif"
+     alt="Train animé"
+     title="Clique pour changer de train"
+     style="cursor:pointer" />
+  </div>
 
-      <p>Alors l’idée est venue : <strong>mettre tout en commun</strong>.</p>
+<h1>
+  🚘 <a href="itineraire.html" style="color:inherit; text-decoration:none;">
+    Itinéraire et infos
+  </a>
+</h1>
+<h1>🔎 Recherche</h1>
+<input type="text" id="search" placeholder="Entrer un poste ou un appareil" autocomplete="off" />
 
-      <p class="mt-lg">Et petit à petit, cette simple carte s’est transformée en un vrai outil collaboratif, pensé pour nous simplifier la vie au quotidien.</p>
-
-      <blockquote class="mt-xl">
-        “Le partage de connaissances et de ressources dans le monde professionnel est le fondement d’une collaboration fructueuse et de la croissance collective.”<br>— John C. Maxwell
-      </blockquote>
-    </div>
-    
- <!-- Le déclic -->
-<div class="card">
-  <h2>🧐 Le déclic</h2>
-  <p>Une de mes premières nuits d’astreinte, j’ai dû intervenir pour la première fois au poste de Rodelinghem.<br>
-  Peu d’indications, aucune consigne… j’ai marché <s>plusieurs centaines de mètres</s> le long de la voie, dans le noir, avant de trouver l’appareil.<br>
-  Et là, surprise : il y avait un portail d’accès routier juste à côté de l’interrupteur 😅</p>
-  <p>Ce soir-là, je me suis dit :<br>
-  « On peut éviter ça aux suivants. »</p>
-  <p>Depuis, chaque point ajouté sert à ça : faire gagner du temps et rendre nos interventions plus simples et plus sûres.</p>
+<!-- Compteurs côte à côte -->
+<div id="counters" style="font-size:13px; color:#666; margin-top:6px; margin-bottom:1rem;">
+  📍 Postes consultés : <span id="counterPostes">chargement…</span> &nbsp; | &nbsp; 
+  💡 Appareils consultés : <span id="counterAppareils">chargement…</span>
 </div>
 
-    <!-- Une carte adoptée -->
-    <div class="card">
-      <h2>📌 Une carte adoptée</h2>
-      <p>La carte MyMaps a vite été adoptée : elle est devenue un outil du quotidien.<br>
-      Même les plus anciens, pourtant habitués au terrain, s’en servent 😃</p>
-      <p>Parce qu’au fond, ça arrive à tout le monde : on ne se souvient plus de la localisation exacte d’un appareil, ni de son environnement précis.<br>
-      Dans ces situations, la carte est vraiment utile.</p>
-      <p>C’est là que je me suis dit :<br>
-      <strong>cette carte MyMaps n’était qu’un point de départ, il fallait lui donner une nouvelle dimension.</strong></p>
-      <p>L’idée de créer une webapp s’est imposée : un outil plus souple, plus rapide, taillé sur mesure pour le terrain et pensé dès le départ pour être utilisé sur smartphone.</p>
-    </div>
+<!-- Bouton localiser -->
+<button id="btn-localiser" style="margin:8px 0; padding:8px 14px; border-radius:8px; border:1px solid #1a73e8; background:#e8f0fe; color:#1a73e8; cursor:pointer;">
+  📍 Me localiser (10 plus proches)
+</button>
+<div id="proximite" style="margin-top:1rem; font-size:14px;"></div>
 
-    <!-- Et la suite -->
-    <div class="card">
-      <h2>🚀 Et la suite ?</h2>
-      <p>La carte évolue un peu plus chaque jour.<br>
-      Grâce aux partages de chacun, elle grandit et devient toujours plus utile.</p>
-      <p>🎯 L’idée est simple : avancer ensemble, et garder un outil clair, fiable et facile à utiliser sur le terrain.</p>
-    </div>
+<ul id="suggestions"></ul>
+<div id="result"></div>
+<script>
+const jsonUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/postes.json";
+const appareilsUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/appareils.json";
+const compteurURL = "https://script.google.com/macros/s/AKfycbzUFaek89LYosR0FSw9gyxn2IZXlFlWXA_dIFIDwox-szE3DgH-l8IVbGfaoIgGK04h/exec";
+const compteurAppareilURL = "https://script.google.com/macros/s/AKfycbwJIlvcfNYREJn1oPiVAhQqHACXXar8ZbRl6aChwYw4TFSAaMTFEHTT5X2T7BKLJ3gsJw/exec";
 
-    <!-- Notre avancement -->
-    <div class="stats-box" id="statsBox">
-      <h2>🚀 Notre avancement</h2>
-      <div class="stats-content" id="stats"></div>
-    </div>
+let lieux = [], fuse;
+let appareils = [], fuseAppareils;
+  function formatContact(val) {
+  if (!val) return "";
 
-    <!-- Conclusion avec badge -->
-    <div class="card conclusion-card">
-      <span class="badge-rd">🕒 +60h R&D</span>
-      <h2>✨ En conclusion</h2>
-      <p>Ce projet me rappelle qu’il n’y a rien de plus gratifiant que de voir son travail servir aux autres.</p>
-      <p>Au fond, une carte n’est qu’un outil. Mais c’est quand elle sert vraiment sur le terrain qu’elle prend tout son sens.</p>
-      <p>Traitez les gens avec respect, faites un effort pour intégrer les nouveaux, partagez, soutenez, aidez-vous les uns les autres, célébrez + partagez joies / succès ensemble, soyez solidaires, saluez-vous et communiquez entre vous, créez des liens avec d’autres équipes, faites passer les informations sans relâche, soyez conscient, acceptez la pression, utilisez la concurrence de façon saine.</p>
-      <p>Ferroviairement,<br><strong>Arnaud</strong></p>
-    </div>
-  </div>
+  const phoneRegex = /\d{2}\s?\d{2}\s?\d{2}\s?\d{2}\s?\d{2}/g;
+  const matches = val.match(phoneRegex);
 
-  <!-- Boutons -->
-  <div class="btn-box">
-    <div class="btn-container">
-      <a href="index.html" class="btn">🔍 Recherche</a>
-      <a href="formulaire.html" class="btn">📌 Contribuer</a>
-    </div>
-  </div>
+  if (!matches) {
+    return `<p><strong>👤 Contact :</strong> ${val}</p>`;
+  }
+
+  const texteSansNum = val.replace(phoneRegex, "").trim();
+
+  const boutons = matches.map(num => {
+    const cleaned = num.replace(/\s+/g, "");
+    return `<a href="tel:${cleaned}">${num}</a>`;
+  }).join("");
+
+  return `<p><strong>👤 Contact :</strong> ${texteSansNum}</p>
+          <div class="inline-links">${boutons}</div>`;
+}
+
+function formatPortail(val) {
+  if (!val) return "";
+
+  // Cherche une URL dans la chaîne
+  const urlRegex = /(https?:\/\/[^\s]+)/;
+  const urlMatch = val.match(urlRegex);
+  const video = urlMatch ? urlMatch[0] : null;
+
+  // Le "code" = tout ce qui n'est pas l'URL
+  const code = val.replace(urlRegex, "").trim();
+
+  // Regex stricte : numéros français 10 chiffres (avec ou sans espaces) + extensions DTMF
+  const phoneRegex = /^(\d{10}|\d{2}(\s?\d{2}){4})([,\;\*#0-9]*)?$/;
+
+  let content = "";
+
+  if (phoneRegex.test(code)) {
+    const cleaned = code.replace(/\s+/g, "");
+    // ✅ on garde inline-links mais en <span>
+    content = `<span class="inline-links" style="display:inline-block; margin-left:6px;">
+                 <a href="tel:${cleaned}">${code}</a>
+               </span>`;
+  } else {
+    content = code;
+  }
+
+  if (video) {
+    content += ` <a href="${video}" target="_blank" class="inline-link">▶️ Explication</a>`;
+  }
+
+  return `<p><strong>🚧 Portail :</strong> ${content}</p>`;
+}
   
-  <script>
-    async function fetchCounts() {
-      try {
-        const [lieuxRes, appareilsRes] = await Promise.all([
-          fetch('https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/postes.json'),
-          fetch('https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/appareils.json')
-        ]);
-        const lieux = await lieuxRes.json();
-        const appareils = await appareilsRes.json();
-        document.getElementById('stats').innerHTML = `
-          <span class="stat-pill">📍 ${lieux.length} accès routiers</span>
-          <span class="stat-pill">⚡ ${appareils.length} appareils</span>
-        `;
-      } catch (error) {
-        console.error("Erreur chargement JSON :", error);
-      }
+function normalize(str) {
+  return str.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]/gi, "").toLowerCase();
+}
+
+function formatNomCompletLieu(obj) {
+  const base = `${obj.nom || ''} ${obj.type || ''} ${obj.SAT || ''}`.trim();
+  return obj.accès ? `${base} – accès ${obj.accès}` : base;
+}
+
+function formatNomCompletAppareil(obj) {
+  return formatNomCompletLieu(obj);
+}
+function formatNomComplet(obj) {
+  return `${obj.nom || ''} ${obj.type || ''}`.trim();
+}
+function formatRSS(table) {
+  const tables = {
+    "A": ["03 28 55 82 56", "03 28 55 82 57"],
+    "B": ["03 28 55 82 58", "03 28 55 82 59"],
+    "C": ["03 28 55 82 53", "03 28 55 82 54"]
+  };
+  const tableNum = { "A": "1", "B": "2", "C": "3" };
+  if (!tables[table]) return `<p><strong>📞 RSS :</strong> ${table}</p>`;
+  const nums = tables[table].map(num => `<a href="tel:${num.replace(/\s+/g, '')}">${num}</a>`).join("");
+  return `<p><strong>📞 RSS Table ${tableNum[table] || table} :</strong></p><div class="inline-links">${nums}</div>`;
+}
+function generateAppareilListHTML(currentLieu) {
+  const posteNomComplet = formatNomComplet(currentLieu);
+  const matchingApps = appareils.filter(app => app.nom === currentLieu.nom && app.type === currentLieu.type);
+
+  if (matchingApps.length === 0) {
+    // ➜ Retourne uniquement le petit encadré
+    return `
+      <div class="missing-box">
+        🤝 Appareil manquant ? 
+        <a href="formulaire.html">Aidez-nous à l’ajouter.</a>
+      </div>
+    `;
+  }
+
+  // S’il y a des appareils, on affiche le titre + la liste
+  let grouped = {};
+  matchingApps.forEach(app => {
+    const sat = app.SAT || 'Poste';
+    if (!grouped[sat]) grouped[sat] = [];
+    grouped[sat].push(app);
+  });
+
+  const isSAT = currentLieu.SAT && currentLieu.SAT !== "";
+  let html = `<p><strong>🧩 Appareils trouvés dans ce ${isSAT ? 'SAT' : 'poste'} :</strong></p>`;
+
+  for (const [sat, list] of Object.entries(grouped)) {
+    if (isSAT && sat !== currentLieu.SAT) continue;
+    if (!isSAT && sat === "Poste") html += `<p><strong>Poste :</strong> `;
+    else if (!isSAT) html += `<p><strong>${sat} :</strong> `;
+    else html += `<p>`;
+    html += list.map(app => `<a href="#" onclick='showAppareil(${JSON.stringify(app)})'>${app.appareil}</a>`).join(", ") + `</p>`;
+  }
+
+  html += `
+    <div class="missing-box">
+      🤝 Appareil manquant ? 
+      <a href="formulaire.html">Aidez-nous à l’ajouter.</a>
+    </div>
+  `;
+
+  return html;
+}
+  function generateAlias(appareil, nom, sat, type) {
+  const alias = new Set();
+  const norm = str => str.toLowerCase().trim();
+
+  const a = norm(appareil);
+  const n = norm(nom);
+  const s = norm(sat);
+  const t = norm(type);
+  const root = a.split(/[\s\-]/)[0];
+
+  alias.add(a);
+  alias.add(a.replace(/([a-z]+)(\d+)/, "$1 $2"));
+
+  alias.add(`${a} ${n}`);
+  alias.add(`${n} ${a}`);
+  alias.add(`${root} ${n}`);
+  alias.add(`${root} de ${n}`);
+
+  if (s) {
+    alias.add(`${a} ${n} ${s}`);
+    alias.add(`${n} ${s} ${a}`);
+    alias.add(`${root} ${n} ${s}`);
+    alias.add(`${root} de ${n} ${s}`);
+  }
+
+  // ✅ Ajoute l'alias type complet : ex. "lambersart prci"
+  alias.add(`${n} ${t}`);
+
+  return Array.from(alias);
+}
+
+fetch(appareilsUrl).then(res => res.json()).then(data => {
+  appareils = data;
+
+  // Génère dynamiquement les alias
+  appareils.forEach(app => {
+   app.alias = generateAlias(app.appareil, app.nom, app.SAT, app.type);
+  });
+
+  fuseAppareils = new Fuse(appareils, {
+    keys: [
+      { name: 'appareil', weight: 0.5 },
+      { name: 'alias', weight: 0.9 },
+      { name: 'type', weight: 0.3 },
+      { name: 'nom', weight: 0.1 },
+      { name: 'SAT', weight: 0.1 }
+    ],
+    includeScore: true,
+    threshold: 0.3, // tu peux tester avec 0.2 si trop de bruit
+    ignoreLocation: true
+  });
+});
+  fetch(jsonUrl).then(res => res.json()).then(data => {
+  lieux = data;
+
+fuse = new Fuse(lieux, {
+  keys: [
+    { name: "nom", weight: 0.5 },
+    { name: "type", weight: 0.3 },
+    { name: "SAT", weight: 0.2 },
+    {
+      name: "accès",
+      getFn: o => o.accès?.toString?.() || "",
+      weight: 0.1
     }
-    fetchCounts();
-  </script>
-  <script>
-    ['contextmenu','selectstart','copy','cut','paste','dragstart'].forEach(evt => {
-      document.addEventListener(evt, e => e.preventDefault(), { passive: false });
+  ],
+  includeScore: true,
+  threshold: 0.2,        // un peu plus permissif
+  distance: 50,         // accepte plus d’écarts
+  minMatchCharLength: 2, // évite les résultats absurdes sur 1 lettre
+  ignoreLocation: true
+});
+});
+
+  function updateCounter() {
+  fetch(compteurURL).then(res => res.json()).then(data => {
+    document.getElementById("counterPostes").textContent = data.count;
+  });
+}
+function incrementCounter() {
+  fetch(compteurURL + "?increment=true").then(updateCounter);
+}
+
+function updateCounterAppareil() {
+  fetch(compteurAppareilURL).then(res => res.json()).then(data => {
+    document.getElementById("counterAppareils").textContent = data.count;
+  });
+}
+function incrementCounterAppareil() {
+  fetch(compteurAppareilURL + "?increment=true").then(updateCounterAppareil);
+}
+
+function showLieu(lieu) {
+  const result = document.getElementById("result");
+  document.getElementById("suggestions").innerHTML = "";
+  result.style.display = "block";
+  incrementCounter();
+
+  let html = `<h2>
+    <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&ll=${lieu.latitude},${lieu.longitude}&z=19"
+       target="_blank"
+       style="color:inherit; text-decoration:none;">
+      📌 ${formatNomCompletLieu(lieu)}
+    </a>
+  </h2>
+  <p style="text-align:center; font-weight:600; margin:0.5rem 0;">🚙 Itinéraires disponibles :</p>
+  <div class="inline-links" style="justify-content:center;">
+    <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank">🗺️ Google Maps</a>
+    <a href="https://maps.apple.com/?daddr=${lieu.latitude},${lieu.longitude}" target="_blank">🍎 Apple Plans</a>
+    <a href="https://waze.com/ul?ll=${lieu.latitude},${lieu.longitude}&navigate=yes" target="_blank">🚗 Waze</a>
+  </div>`;
+
+  const blocs = [];
+  if (lieu.description) blocs.push(`<p>${lieu.description}</p>`);
+  if (lieu.pk && lieu.numero_ligne && lieu.lignes)
+    blocs.push(`<p><strong>🚄 PK ${lieu.pk}</strong> sur la ligne n°<strong>${lieu.numero_ligne}</strong> - ${lieu.lignes}</p>`);
+  if (lieu.rss) blocs.push(formatRSS(lieu.rss));
+  if (lieu.contact) blocs.push(formatContact(lieu.contact));
+  if (lieu.portail) blocs.push(formatPortail(lieu.portail));
+
+  // --- Ajoute séparateurs uniquement entre blocs ---
+  if (blocs.length > 0) {
+    html += `<hr class="separator" />` +
+            blocs.map((b,i)=> i===0 ? b : `<hr class="separator" />${b}`).join("");
+  }
+
+  // --- Toujours un séparateur avant la zone appareils ---
+  const appareilsHTML = generateAppareilListHTML(lieu);
+  if (appareilsHTML) {
+    html += `<hr class="separator" />${appareilsHTML}`;
+  }
+
+  result.innerHTML = html;
+}
+
+  let allItems = [], fuseMix;
+
+// Charger postes + appareils
+Promise.all([
+  fetch(jsonUrl).then(r => r.json()),
+  fetch(appareilsUrl).then(r => r.json())
+]).then(([postes, apps]) => {
+  lieux = postes;
+  appareils = apps;
+
+  // On tag chaque objet pour savoir s’il vient de postes.json ou appareils.json
+  const postesTagged = postes.map(p => ({ ...p, category: "poste" }));
+  const appsTagged = apps.map(a => ({ ...a, category: "appareil" }));
+
+  allItems = [...postesTagged, ...appsTagged];
+
+  // Moteur Fuse.js mixte
+  fuseMix = new Fuse(allItems, {
+    keys: [
+      { name: "nom", weight: 0.5 },
+      { name: "type", weight: 0.3 },
+      { name: "SAT", weight: 0.2 },
+      { name: "appareil", weight: 0.5 },
+      { name: "alias", weight: 0.4 },
+      { name: "accès", getFn: o => o.accès?.toString?.() || "", weight: 0.2 }
+    ],
+    includeScore: true,
+    threshold: 0.2,           // ✅ plus strict (meilleur tri)
+    distance: 50,             // ✅ tolérance modérée
+    minMatchCharLength: 2,    // ✅ évite les résultats absurdes sur 1 caractère
+    ignoreLocation: true
+  });
+});
+
+// === Recherche mixte ===
+document.getElementById("search").addEventListener("input", e => {
+  const query = normalize(e.target.value.trim());
+  const suggestionsEl = document.getElementById("suggestions");
+  const resultEl = document.getElementById("result");
+  suggestionsEl.innerHTML = "";
+  resultEl.innerHTML = "";
+  resultEl.style.display = "none";
+  if (!query || !fuseMix) return;
+
+  let results = fuseMix.search(query).map(r => r.item);
+
+  results.forEach(item => {
+    const li = document.createElement("li");
+    // Choix du pictogramme selon le type
+    let icon = item.category === "poste" ? (item.accès ? "🚙" : "🏠") : "💡";
+    li.textContent = `${icon} ${item.nom || item.appareil} ${item.type || ""} ${item.SAT || ""}`;
+    li.onclick = () => item.category === "poste" ? showLieu(item) : showAppareil(item);
+    suggestionsEl.appendChild(li);
+  });
+});
+function showAppareil(app) {
+  incrementCounterAppareil();
+  const result = document.getElementById("result");
+  result.style.display = "block";
+  document.getElementById("suggestionsAppareils").innerHTML = "";
+
+  let html = `<h2>
+    <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&ll=${app.latitude},${app.longitude}&z=19"
+       target="_blank"
+       style="color:inherit; text-decoration:none;">
+      🔌 ${app.appareil} (${app.nom}${app.type ? ' ' + app.type : ''}${app.SAT ? ' / ' + app.SAT : ''})
+    </a>
+  </h2>`;
+
+  const blocs = [];
+  if (app.description) blocs.push(`<p>${app.description}</p>`);
+
+  // Cherche le poste correspondant pour l’itinéraire voiture
+  const posteTrouvé = lieux.find(l => 
+    normalize(l.nom) === normalize(app.nom) &&
+    normalize(l.type) === normalize(app.type) &&
+    normalize(l.SAT || "") === normalize(app.SAT || "")
+  );
+
+  const accesTrouvé = lieux.find(l =>
+    normalize(l.nom) === normalize(app.nom) &&
+    normalize(l.type) === normalize(app.type) &&
+    normalize(l.SAT || "") === normalize(app.SAT || "") &&
+    normalize(String(l.accès || "")) === normalize(app.appareil)
+  );
+
+  const lieuCible = accesTrouvé || posteTrouvé;
+  if (lieuCible) {
+    blocs.push(`<p>🚗 Créer l'itinéraire en voiture : <a href="#" onclick='showLieu(${JSON.stringify(lieuCible)})'>ICI</a></p>`);
+  }
+
+  // --- Ajoute séparateurs uniquement entre blocs ---
+  if (blocs.length > 0) {
+    html += blocs.map((b,i)=> i===0 ? b : `<hr class="separator" />${b}`).join("");
+  }
+
+  result.innerHTML = html;
+}
+
+updateCounter();
+updateCounterAppareil();
+setInterval(updateCounter, 3000);
+setInterval(updateCounterAppareil, 3000);
+  /* === Train aléatoire + changement au clic ===
+   Mets le nombre EXACT d'images => train1.gif ... trainN.gif */
+const TOTAL_TRAINS = 11; // ⬅️ change ce nombre selon tes fichiers
+
+const trainImg = document.getElementById('train');
+  // Fallback global si une image manque
+trainImg.onerror = () => { trainImg.src = 'images/train1.gif'; };
+let lastN = null;
+
+function pickRandomTrain() {
+  // Tire un nombre entre 1 et TOTAL_TRAINS, différent du précédent si possible
+  let n;
+  do {
+    n = Math.floor(Math.random() * TOTAL_TRAINS) + 1;
+  } while (TOTAL_TRAINS > 1 && n === lastN);
+  lastN = n;
+
+  trainImg.src = `images/train${n}.gif`;
+
+}
+
+// 1) Tirage au chargement
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', pickRandomTrain);
+} else {
+  pickRandomTrain();
+}
+
+// 2) Tirage au clic (sans recharger la page)
+trainImg.addEventListener('click', pickRandomTrain);
+// === Calcul de distance (Haversine) ===
+function getDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371; // rayon Terre en km
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLon/2) * Math.sin(dLon/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  return R * c; // distance en km
+}
+
+// === Bouton "Me localiser" ===
+document.getElementById("btn-localiser").addEventListener("click", () => {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showNearby, () => {
+      alert("Impossible de récupérer la position.");
     });
+  } else {
+    alert("La géolocalisation n’est pas supportée.");
+  }
+});
+
+// === Affiche les 10 plus proches (postes + appareils) ===
+function showNearby(position) {
+  const lat = position.coords.latitude;
+  const lon = position.coords.longitude;
+
+  if (!allItems || allItems.length === 0) {
+    alert("Les données ne sont pas encore chargées.");
+    return;
+  }
+
+  const distances = allItems.map(it => ({
+    ...it,
+    distance: getDistance(lat, lon, it.latitude, it.longitude)
+  }));
+
+  const proches = distances.sort((a,b) => a.distance - b.distance).slice(0,10);
+
+  const container = document.getElementById("proximite");
+  container.innerHTML = `
+    <h3>📍 Les 10 plus proches :</h3>
+    <ul>
+      ${proches.map(p => {
+        let icon = p.category === "poste" ? (p.accès ? "🚙" : "🏠") : "💡";
+        let label = p.category === "poste" ? p.nom : p.appareil;
+        return `<li>${icon} <b>${label}</b> – ${p.distance.toFixed(2)} km</li>`;
+      }).join("")}
+    </ul>
+  `;
+}
+  
   </script>
+<div style="text-align:center; margin-top:30px;">
+  <a href="formulaire.html"
+     style="display:inline-block; background:#E8F2FF; color:#0B5ED7; padding:12px 24px; font-size:16px; border-radius:12px; text-decoration:none; box-shadow:0 4px 6px rgba(0,0,0,0.1); border:1px solid #BBD5FF; font-weight:600; transition:background-color .2s ease;">
+    ✍️ Contribution <span id="compteur-valeur"></span>
+  </a>
+</div>
+
+<script>
+  const compteurContributionURL = "https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec";
+  async function refreshContrib(){
+    try{
+      const r = await fetch(compteurContributionURL);
+      const data = await r.json();
+    document.getElementById("compteur-valeur").textContent =
+  (data && typeof data.count !== "undefined") ? `(${data.count})` : "";
+    }catch(e){
+     document.getElementById("compteur-valeur").textContent = "";
+    }
+  }
+  refreshContrib();
+  setInterval(refreshContrib, 3000);
+</script>
+<div style="text-align:center; margin-top:8rem; margin-bottom:1rem;">
+  <p style="font-size:13px; margin:0;">
+    🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration:none; color:#1a73e8;">À propos</a>
+  </p>
+  <p style="font-size:10px; color:#ccc; margin:0;">
+    Arnaud - V1.08.36
+  </p>
+</div>
+  <script>
+(function(){
+  // ===== Config =====
+  var INTRO_DURATION_MS = 3000;             // Durée d’affichage (ms)
+  var STORAGE_KEY       = 'eale_intro_last_day'; // Clé de mémo 1/jour
+
+  // Date locale AAAA-MM-JJ (pas en UTC, évite les décalages)
+  function todayLocal(){
+    var d=new Date();
+    var y=d.getFullYear();
+    var m=String(d.getMonth()+1).padStart(2,'0');
+    var day=String(d.getDate()).padStart(2,'0');
+    return y+'-'+m+'-'+day;
+  }
+
+  // Afficher 1 fois par jour
+  function shouldShowIntro(){
+    try{
+      var last = localStorage.getItem(STORAGE_KEY);
+      var today = todayLocal();
+      if (last === today) return false;
+      localStorage.setItem(STORAGE_KEY, today);
+      return true;
+    }catch(e){ return true; } // si stockage bloqué, on affiche
+  }
+
+  function pickPhrase(){
+    var phrases = [
+      "Propulsé par Arnaud.",
+      "Une réalisation signée Arnaud.",
+      "Conçu et développé par Arnaud.",
+      "Réalisé avec soin par Arnaud.",
+      "Par Arnaud.",
+      "Fait par Arnaud.",
+      "Pensé par Arnaud.",
+      "Créé par Arnaud.",
+      "Une idée d’Arnaud.",
+      "Mis en place par Arnaud.",
+      "Lancé par Arnaud.",
+      "Conçu par Arnaud.",
+      "Mis en ligne par Arnaud.",
+      "Mis en route par Arnaud.",
+      "Fait maison par Arnaud.",
+      "Déclenché par Arnaud.",
+      "Organisé par Arnaud.",
+      "Initié par Arnaud.",
+      "Coordonné par Arnaud.",
+      "Centralisé par Arnaud.",
+      "Simplifié par Arnaud.",
+      "Géré par Arnaud.",
+      "Compilé par Arnaud.",
+      "Préparé par Arnaud.",
+      "Piloté par Arnaud.",
+      "Structuré par Arnaud.",
+      "Distribué par Arnaud.",
+      "Diffusé par Arnaud.",
+      "Rendu accessible par Arnaud.",
+      "Chargé par Arnaud.",
+      "Interface pensée par Arnaud."
+    ];
+    return phrases[Math.floor(Math.random()*phrases.length)];
+  }
+
+  function mountIntro(){
+    var overlay = document.createElement('div');
+    overlay.className = 'eale-intro-overlay';
+    overlay.setAttribute('aria-hidden','true');
+    overlay.innerHTML =
+   '<img class="eale-intro-img" alt="Logo EALE" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/Logo%20EALE.png">' +
+      '<div class="eale-intro-text" id="eale-intro-text"></div>';
+    document.body.appendChild(overlay);
+    document.getElementById('eale-intro-text').textContent = pickPhrase();
+
+    setTimeout(function(){
+      overlay.classList.add('eale-intro-hide');
+      setTimeout(function(){ overlay.remove(); }, 380);
+    }, INTRO_DURATION_MS);
+  }
+
+  // Lance dès que le DOM est prêt
+  if (document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', function(){ if (shouldShowIntro()) mountIntro(); });
+  } else {
+    if (shouldShowIntro()) mountIntro();
+  }
+})();
+</script>
 </body>
 </html>
