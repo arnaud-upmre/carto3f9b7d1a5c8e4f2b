@@ -772,56 +772,23 @@ results.forEach(it => {
 });
 // -------- TRI AVANCÉ ----------
 results.sort((a, b) => {
-  // 0) alias exact en priorité
-  if (a.__directAliasHit && !b.__directAliasHit) return -1;
-  if (b.__directAliasHit && !a.__directAliasHit) return 1;
-
-  const aNom = normalize(a.nom || "");
-  const bNom = normalize(b.nom || "");
-  const aTok = (aNom.split(/\s+/)[0]) || "";
-  const bTok = (bNom.split(/\s+/)[0]) || "";
-  const aApp = normalize(a.appareil || "");
-  const bApp = normalize(b.appareil || "");
-
-  const aWords = aNom.split(/\s+/);
-  const bWords = bNom.split(/\s+/);
-
-  // Vérifie si TOUS les mots de la requête sont trouvés dans le nom
-  const aFullMatch = queryWords.every(qw => aWords.some(w => w.startsWith(qw)));
-  const bFullMatch = queryWords.every(qw => bWords.some(w => w.startsWith(qw)));
-
-  if (aFullMatch && !bFullMatch) return -1;
-  if (bFullMatch && !aFullMatch) return 1;
-
-  const aStartsNom = aNom.startsWith(query);
-  const bStartsNom = bNom.startsWith(query);
-  const aStartsTok = aTok.startsWith(query);
-  const bStartsTok = bTok.startsWith(query);
-  const aStartsApp = aApp.startsWith(query);
-  const bStartsApp = bApp.startsWith(query);
-
-  const bucket = (x, startsNom, startsTok, startsApp) => {
-    if (x.category === "poste" && (startsTok || startsNom)) return 0;
-    if (x.category === "appareil" && (startsNom || startsApp)) return 1;
-    if (x.category === "poste") return 2;
-    return 3;
-  };
-
-  const ba = bucket(a, aStartsNom, aStartsTok, aStartsApp);
-  const bb = bucket(b, bStartsNom, bStartsTok, bStartsApp);
-  if (ba !== bb) return ba - bb;
-
-  if (ba === 0) {
-    const diffA = Math.abs(aTok.length - query.length);
-    const diffB = Math.abs(bTok.length - query.length);
-    if (diffA !== diffB) return diffA - diffB;
-  }
-
-  const label = (x) =>
+  const normalizeLabel = x =>
     x.category === "poste"
       ? `${x.nom || ""} ${x.type || ""} ${x.SAT || ""}`.trim()
       : `${x.appareil} (${x.nom}${x.type ? " " + x.type : ""}${x.SAT ? " / " + x.SAT : ""})`;
-  return label(a).localeCompare(label(b), "fr", { sensitivity: "base" });
+
+  // --- priorité : accès routier d'abord ---
+  const aIsAcces = !!a.accès;
+  const bIsAcces = !!b.accès;
+  if (aIsAcces && !bIsAcces) return -1;
+  if (bIsAcces && !aIsAcces) return 1;
+
+  // --- ensuite : postes avant appareils ---
+  if (a.category === "poste" && b.category !== "poste") return -1;
+  if (b.category === "poste" && a.category !== "poste") return 1;
+
+  // --- enfin : tri alphabétique pour stabilité ---
+  return normalizeLabel(a).localeCompare(normalizeLabel(b), "fr", { sensitivity: "base" });
 });
 // -------- FIN TRI AVANCÉ ----------
   // ✅ Inverse la liste pour mettre le plus pertinent en haut
@@ -1071,7 +1038,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.11</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.12</span>
 </div>
 
 <script>
