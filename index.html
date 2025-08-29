@@ -639,14 +639,14 @@ let html = `<h2>
       (📍 repérer l’accès)
     </span>
   </a>
-</h2>`;
-  
-  <p style="text-align:center; font-weight:600; margin:0.5rem 0;">🚙 Itinéraires disponibles :</p>
-  <div class="inline-links" style="justify-content:center;">
-    <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank">🗺️ Google Maps</a>
-    <a href="https://maps.apple.com/?daddr=${lieu.latitude},${lieu.longitude}" target="_blank">🍎 Apple Plans</a>
-    <a href="https://waze.com/ul?ll=${lieu.latitude},${lieu.longitude}&navigate=yes" target="_blank">🚗 Waze</a>
-  </div>`;
+</h2>
+
+<p style="text-align:center; font-weight:600; margin:0.5rem 0;">🚙 Itinéraires disponibles :</p>
+<div class="inline-links" style="justify-content:center;">
+  <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank">🗺️ Google Maps</a>
+  <a href="https://maps.apple.com/?daddr=${lieu.latitude},${lieu.longitude}" target="_blank">🍎 Apple Plans</a>
+  <a href="https://waze.com/ul?ll=${lieu.latitude},${lieu.longitude}&navigate=yes" target="_blank">🚗 Waze</a>
+</div>`;
 
   const blocs = [];
   if (lieu.description) blocs.push(`<p>${lieu.description}</p>`);
