@@ -684,7 +684,7 @@
     "type": "SSP",
     "SAT": "",
     "accès": "",
-    "appareil": "TT Dannes-Etaples V1",
+    "appareil": "TT5623 Dannes Etaples V1",
     "latitude": 50.5777278,
     "longitude": 1.6146811,
     "description": ""
@@ -694,7 +694,7 @@
     "type": "SSP",
     "SAT": "",
     "accès": "",
-    "appareil": "TT Dannes-Etaples V2",
+    "appareil": "TT5624 Dannes Etaples V2",
     "latitude": 50.5782072,
     "longitude": 1.6146677,
     "description": ""
@@ -704,7 +704,7 @@
     "type": "SSP",
     "SAT": "",
     "accès": "",
-    "appareil": "TT Pont de Briques-Dannes V1",
+    "appareil": "TT5621 Pont de Briques Dannes V1",
     "latitude": 50.5786952,
     "longitude": 1.6146556,
     "description": ""
@@ -3224,7 +3224,7 @@
     "type": "SSP",
     "SAT": "",
     "accès": "",
-    "appareil": "TT Etaples Rang du Fliers V2",
+    "appareil": "TT5636 Etaples Rang V2",
     "latitude": 50.4162942,
     "longitude": 1.6484238,
     "description": ""
@@ -3234,7 +3234,7 @@
     "type": "SSP",
     "SAT": "",
     "accès": "",
-    "appareil": "TT Etaples Rang V1",
+    "appareil": "TT5631 Etaples Rang V1",
     "latitude": 50.4162806,
     "longitude": 1.648116,
     "description": ""
