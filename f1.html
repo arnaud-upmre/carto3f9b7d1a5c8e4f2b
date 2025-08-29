@@ -637,11 +637,11 @@ results.forEach(item => {
   suggestionsEl.appendChild(li);
 });
 });
+  
 function showAppareil(app) {
   incrementCounterAppareil();
   const result = document.getElementById("result");
   result.style.display = "block";
-  document.getElementById("suggestionsAppareils").innerHTML = "";
 
   let html = `<h2>
     <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&ll=${app.latitude},${app.longitude}&z=19"
@@ -807,7 +807,7 @@ let icon = p.category === "poste" ? "🚙" : "💡";
     🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html" style="text-decoration:none; color:#1a73e8;">À propos</a>
   </p>
   <p style="font-size:10px; color:#ccc; margin:0;">
-    Arnaud - V1.08.36
+    Arnaud - V1.08.37
   </p>
 </div>
   <script>
