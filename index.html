@@ -807,6 +807,8 @@ results.sort((a, b) => {
   return label(a).localeCompare(label(b), "fr", { sensitivity: "base" });
 });
 // -------- FIN TRI AVANCÉ ----------
+  // ✅ Inverse la liste pour mettre le plus pertinent en haut
+results.reverse();
 // Affichage des lignes (meilleur tout en haut)
 suggestionsEl.innerHTML = "";
 results.forEach((item, idx) => {
@@ -1052,7 +1054,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.08</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.09</span>
 </div>
 
 <script>
