@@ -443,7 +443,13 @@ function formatPortail(val) {
 }
   
 function normalize(str) {
-  return str.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]/gi, "").toLowerCase();
+  return str
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")     // supprime accents
+    .replace(/[^a-z0-9\s]/gi, "") // conserve les espaces !
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, " ");    // réduit multiples espaces en un seul
 }
 
 function formatNomCompletLieu(obj) {
@@ -1031,7 +1037,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.03</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.04</span>
 </div>
 
 <script>
