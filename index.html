@@ -514,27 +514,31 @@ function generateAlias(appareil, nom, sat, posteType) {
   const alias = new Set();
   const norm = str => (str || "").toLowerCase().trim();
 
-  const a = norm(appareil); // ex. "tt7109"
-  const n = norm(nom);      // ex. "etaples"
-  const s = norm(sat);      // ex. "sat1"
-  const t = norm(posteType);// ex. "sp"
+  const a = norm(appareil); // ex. "tt5631"
+  const n = norm(nom);      // ex. "etaples rang"
+  const s = norm(sat);      // ex. "v1"
+  const t = norm(posteType);// ex. "ssp"
 
-  const root = a.split(/[\s\-]/)[0]; // ex. "tt7109" → "tt7109"
+  // Sépare lettres et chiffres
+  const match = a.match(/^([a-z]+)(\d+)?$/i);
+  const letters = match ? match[1].toLowerCase() : a; // ex. "tt"
+  const root = a.split(/[\s\-]/)[0]; // ex. "tt5631"
 
   // --- alias de base ---
-  alias.add(a);
-  alias.add(a.replace(/([a-z]+)(\d+)/, "$1 $2")); // ex. "tt 7109"
+  alias.add(a);                       // tt5631
+  alias.add(a.replace(/([a-z]+)(\d+)/, "$1 $2")); // tt 5631
+  alias.add(letters);                 // tt (uniquement les lettres)
 
   // --- combinaisons appareil + nom ---
   if (n) {
-    alias.add(`${a} ${n}`);       // tt7109 etaples
-    alias.add(`${n} ${a}`);       // etaples tt7109
-    alias.add(`${root} ${n}`);    // tt etaples
-    alias.add(`${n} ${root}`);    // etaples tt
-
-    // 🔑 Ajout versions forcées en majuscules
-    alias.add(`${root.toUpperCase()} ${n}`); // TT Etaples
-    alias.add(`${n} ${root.toUpperCase()}`); // Etaples TT
+    alias.add(`${a} ${n}`);            // tt5631 etaples
+    alias.add(`${n} ${a}`);            // etaples tt5631
+    alias.add(`${root} ${n}`);         // tt5631 etaples
+    alias.add(`${n} ${root}`);         // etaples tt5631
+    alias.add(`${letters} ${n}`);      // tt etaples
+    alias.add(`${n} ${letters}`);      // etaples tt
+    alias.add(`${letters.toUpperCase()} ${n}`); // TT Etaples
+    alias.add(`${n} ${letters.toUpperCase()}`); // Etaples TT
   }
 
   // --- combinaisons appareil + SAT ---
@@ -544,10 +548,12 @@ function generateAlias(appareil, nom, sat, posteType) {
     if (n) {
       alias.add(`${a} ${n} ${s}`);
       alias.add(`${n} ${s} ${a}`);
+      alias.add(`${letters} ${n} ${s}`);
+      alias.add(`${n} ${s} ${letters}`);
     }
   }
 
-  // --- combinaisons avec type de poste (utile pour "SP Etaples") ---
+  // --- combinaisons avec type de poste ---
   if (t && n) {
     alias.add(`${n} ${t}`);
     alias.add(`${t} ${n}`);
@@ -1025,7 +1031,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.02</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.03</span>
 </div>
 
 <script>
