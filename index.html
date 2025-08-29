@@ -699,13 +699,13 @@ Promise.all([
   fuseAppareils = new Fuse(appareils, {
     keys: [
       { name: 'appareil', weight: 0.5 },
-      { name: 'alias', weight: 0.9 },
+      { name: 'alias', weight: 0.6 },
       { name: 'type', weight: 0.3 },
       { name: 'nom', weight: 0.1 },
       { name: 'SAT', weight: 0.1 }
     ],
     includeScore: true,
-    threshold: 0.3,
+    threshold: 0.28,
     ignoreLocation: true
   });
 
@@ -720,11 +720,11 @@ Promise.all([
       { name: "type", weight: 0.3 },
       { name: "SAT", weight: 0.2 },
       { name: "appareil", weight: 0.5 },
-      { name: "alias", weight: 0.4 },
+      { name: "alias", weight: 0.6 },
       { name: "accès", getFn: o => o.accès?.toString?.() || "", weight: 0.2 }
     ],
     includeScore: true,
-    threshold: 0.2,
+    threshold: 0.25,
     distance: 50,
     minMatchCharLength: 2,
     ignoreLocation: true
@@ -746,80 +746,85 @@ document.getElementById("search").addEventListener("input", e => {
 
   // Résultats bruts
   let results = fuseMix.search(query).map(r => r.item);
+// Boost si la requête correspond exactement à un alias
+results.forEach(it => {
+  const aliases = Array.isArray(it.alias) ? it.alias : [];
+  it.__directAliasHit = aliases.some(a => normalize(a) === query);
+});
+// -------- TRI AVANCÉ ----------
+const queryWords = query.split(/\s+/); // on découpe la recherche en mots
 
-  // -------- TRI AVANCÉ ----------
-  const queryWords = query.split(/\s+/); // on découpe la recherche en mots
+results.sort((a, b) => {
+  // 0) alias exact en priorité
+  if (a.__directAliasHit && !b.__directAliasHit) return -1;
+  if (b.__directAliasHit && !a.__directAliasHit) return 1;
 
-  results.sort((a, b) => {
-    const aNom = normalize(a.nom || "");
-    const bNom = normalize(b.nom || "");
-    const aTok = (aNom.split(/\s+/)[0]) || "";
-    const bTok = (bNom.split(/\s+/)[0]) || "";
-    const aApp = normalize(a.appareil || "");
-    const bApp = normalize(b.appareil || "");
+  const aNom = normalize(a.nom || "");
+  const bNom = normalize(b.nom || "");
+  const aTok = (aNom.split(/\s+/)[0]) || "";
+  const bTok = (bNom.split(/\s+/)[0]) || "";
+  const aApp = normalize(a.appareil || "");
+  const bApp = normalize(b.appareil || "");
 
-    const aWords = aNom.split(/\s+/);
-    const bWords = bNom.split(/\s+/);
+  const aWords = aNom.split(/\s+/);
+  const bWords = bNom.split(/\s+/);
 
-    // Vérifie si TOUS les mots de la requête sont trouvés dans le nom
-    const aFullMatch = queryWords.every(qw => aWords.some(w => w.startsWith(qw)));
-    const bFullMatch = queryWords.every(qw => bWords.some(w => w.startsWith(qw)));
+  // Vérifie si TOUS les mots de la requête sont trouvés dans le nom
+  const aFullMatch = queryWords.every(qw => aWords.some(w => w.startsWith(qw)));
+  const bFullMatch = queryWords.every(qw => bWords.some(w => w.startsWith(qw)));
 
-    // Si un poste matche tous les mots → priorité absolue
-    if (aFullMatch && !bFullMatch) return -1;
-    if (bFullMatch && !aFullMatch) return 1;
+  if (aFullMatch && !bFullMatch) return -1;
+  if (bFullMatch && !aFullMatch) return 1;
 
-    const aStartsNom = aNom.startsWith(query);
-    const bStartsNom = bNom.startsWith(query);
-    const aStartsTok = aTok.startsWith(query);
-    const bStartsTok = bTok.startsWith(query);
-    const aStartsApp = aApp.startsWith(query);
-    const bStartsApp = bApp.startsWith(query);
+  const aStartsNom = aNom.startsWith(query);
+  const bStartsNom = bNom.startsWith(query);
+  const aStartsTok = aTok.startsWith(query);
+  const bStartsTok = bTok.startsWith(query);
+  const aStartsApp = aApp.startsWith(query);
+  const bStartsApp = bApp.startsWith(query);
 
-    const bucket = (x, startsNom, startsTok, startsApp) => {
-      if (x.category === "poste" && (startsTok || startsNom)) return 0;
-      if (x.category === "appareil" && (startsNom || startsApp)) return 1;
-      if (x.category === "poste") return 2;
-      return 3;
-    };
+  const bucket = (x, startsNom, startsTok, startsApp) => {
+    if (x.category === "poste" && (startsTok || startsNom)) return 0;
+    if (x.category === "appareil" && (startsNom || startsApp)) return 1;
+    if (x.category === "poste") return 2;
+    return 3;
+  };
 
-    const ba = bucket(a, aStartsNom, aStartsTok, aStartsApp);
-    const bb = bucket(b, bStartsNom, bStartsTok, bStartsApp);
-    if (ba !== bb) return ba - bb;
+  const ba = bucket(a, aStartsNom, aStartsTok, aStartsApp);
+  const bb = bucket(b, bStartsNom, bStartsTok, bStartsApp);
+  if (ba !== bb) return ba - bb;
 
-    // Postes qui commencent pareil : rapprochement par longueur du premier mot
-    if (ba === 0) {
-      const diffA = Math.abs(aTok.length - query.length);
-      const diffB = Math.abs(bTok.length - query.length);
-      if (diffA !== diffB) return diffA - diffB;
-    }
+  if (ba === 0) {
+    const diffA = Math.abs(aTok.length - query.length);
+    const diffB = Math.abs(bTok.length - query.length);
+    if (diffA !== diffB) return diffA - diffB;
+  }
 
-    // Tiebreaker final : ordre alpha doux
-    const label = (x) =>
-      x.category === "poste"
-        ? `${x.nom || ""} ${x.type || ""} ${x.SAT || ""}`.trim()
-        : `${x.appareil} (${x.nom}${x.type ? " " + x.type : ""}${x.SAT ? " / " + x.SAT : ""})`;
-    return label(a).localeCompare(label(b), "fr", { sensitivity: "base" });
-  });
-  // -------- FIN TRI AVANCÉ ----------
+  const label = (x) =>
+    x.category === "poste"
+      ? `${x.nom || ""} ${x.type || ""} ${x.SAT || ""}`.trim()
+      : `${x.appareil} (${x.nom}${x.type ? " " + x.type : ""}${x.SAT ? " / " + x.SAT : ""})`;
+  return label(a).localeCompare(label(b), "fr", { sensitivity: "base" });
+});
+// -------- FIN TRI AVANCÉ ----------
+// Affichage des lignes (meilleur tout en haut)
+suggestionsEl.innerHTML = "";
+results.forEach((item, idx) => {
+  const li = document.createElement("li");
+  if (idx === 0) li.classList.add("best"); // ⭐ surbrillance du meilleur
 
-  // Affichage des lignes
-  results.forEach(item => {
-    const li = document.createElement("li");
+  if (item.category === "poste") {
+    const base = `${item.nom || ""} ${item.type || ""} ${item.SAT || ""}`.trim();
+    const label = item.accès ? `${base} – accès ${item.accès}` : base;
+    li.textContent = `🚙 ${label}`;
+    li.onclick = () => showLieu(item);
+  } else {
+    li.textContent = `💡 ${item.appareil} (${item.nom}${item.type ? " " + item.type : ""}${item.SAT ? " / " + item.SAT : ""})`;
+    li.onclick = () => showAppareil(item);
+  }
 
-if (item.category === "poste") {
-  const base = `${item.nom || ""} ${item.type || ""} ${item.SAT || ""}`.trim();
-  const label = item.accès ? `${base} – accès ${item.accès}` : base;
-  li.textContent = `🚙 ${label}`;
-  li.onclick = () => showLieu(item);
-} else {
-  // Appareils → libellé détaillé
-  li.textContent = `💡 ${item.appareil} (${item.nom}${item.type ? " " + item.type : ""}${item.SAT ? " / " + item.SAT : ""})`;
-  li.onclick = () => showAppareil(item);
-}
-
-    suggestionsEl.appendChild(li);
-  });
+  suggestionsEl.appendChild(li);
+});
 });
   
 function showAppareil(app) {
@@ -1047,7 +1052,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.04</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.06</span>
 </div>
 
 <script>
