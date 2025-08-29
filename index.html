@@ -772,39 +772,16 @@ results.forEach(it => {
 });
 // -------- TRI AVANCÉ ----------
 results.sort((a, b) => {
-  const q = query.toLowerCase();
-  const aNom = normalize(a.nom || "");
-  const bNom = normalize(b.nom || "");
-
-  // --- priorité 0 : le nom qui COMMENCE par la requête ---
-  const aStarts = aNom.startsWith(q);
-  const bStarts = bNom.startsWith(q);
-  if (aStarts && !bStarts) return -1;
-  if (bStarts && !aStarts) return 1;
-
-  // --- priorité 1 : correspondance exacte ---
-  const aExact = aNom === q;
-  const bExact = bNom === q;
-  if (aExact && !bExact) return -1;
-  if (bExact && !aExact) return 1;
-
-  // --- priorité 2 : accès routier d'abord ---
-  const aIsAcces = !!a.accès;
-  const bIsAcces = !!b.accès;
-  if (aIsAcces && !bIsAcces) return -1;
-  if (bIsAcces && !aIsAcces) return 1;
-
-  // --- priorité 3 : postes avant appareils ---
-  if (a.category === "poste" && b.category !== "poste") return -1;
-  if (b.category === "poste" && a.category !== "poste") return 1;
-
-  // --- priorité 4 : tri alphabétique stable ---
-  const label = x =>
-    x.category === "poste"
-      ? `${x.nom || ""} ${x.type || ""} ${x.SAT || ""}`.trim()
-      : `${x.appareil} (${x.nom}${x.type ? " " + x.type : ""}${x.SAT ? " / " + x.SAT : ""})`;
-
-  return label(a).localeCompare(label(b), "fr", { sensitivity: "base" });
+  const getPriority = item => {
+    // Postes et SAT en premier
+    if (item.item.type === "SP" || item.item.type === "SAT") return 1;
+    // Appareils en deuxième
+    if (item.item.appareil) return 2;
+    // Accès en dernier
+    if (item.item.accès && item.item.accès.trim() !== "") return 3;
+    return 4;
+  };
+  return getPriority(a) - getPriority(b);
 });
 // -------- FIN TRI AVANCÉ ----------
 
@@ -1053,7 +1030,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.13</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.14</span>
 </div>
 
 <script>
