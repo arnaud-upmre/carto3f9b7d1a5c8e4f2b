@@ -541,48 +541,6 @@ function generateAppareilListHTML(currentLieu) {
   return Array.from(alias);
 }
 
-fetch(appareilsUrl).then(res => res.json()).then(data => {
-  appareils = data;
-
-  // Génère dynamiquement les alias
-  appareils.forEach(app => {
-   app.alias = generateAlias(app.appareil, app.nom, app.SAT, app.type);
-  });
-
-  fuseAppareils = new Fuse(appareils, {
-    keys: [
-      { name: 'appareil', weight: 0.5 },
-      { name: 'alias', weight: 0.9 },
-      { name: 'type', weight: 0.3 },
-      { name: 'nom', weight: 0.1 },
-      { name: 'SAT', weight: 0.1 }
-    ],
-    includeScore: true,
-    threshold: 0.3, // tu peux tester avec 0.2 si trop de bruit
-    ignoreLocation: true
-  });
-});
-  fetch(jsonUrl).then(res => res.json()).then(data => {
-  lieux = data;
-
-fuse = new Fuse(lieux, {
-  keys: [
-    { name: "nom", weight: 0.5 },
-    { name: "type", weight: 0.3 },
-    { name: "SAT", weight: 0.2 },
-    {
-      name: "accès",
-      getFn: o => o.accès?.toString?.() || "",
-      weight: 0.1
-    }
-  ],
-  includeScore: true,
-  threshold: 0.2,        // un peu plus permissif
-  distance: 50,         // accepte plus d’écarts
-  minMatchCharLength: 2, // évite les résultats absurdes sur 1 lettre
-  ignoreLocation: true
-});
-});
 
  function updateCounter() {
   // 1) Affiche d'abord le cache si dispo
@@ -681,13 +639,45 @@ Promise.all([
   lieux = postes;
   appareils = apps;
 
-  // On tag chaque objet pour savoir s’il vient de postes.json ou appareils.json
-  const postesTagged = postes.map(p => ({ ...p, category: "poste" }));
-  const appsTagged = apps.map(a => ({ ...a, category: "appareil" }));
+  // Génère dynamiquement les alias pour les appareils
+  appareils.forEach(app => {
+    app.alias = generateAlias(app.appareil, app.nom, app.SAT, app.type);
+  });
 
+  // --- FUSE pour les postes ---
+  fuse = new Fuse(lieux, {
+    keys: [
+      { name: "nom", weight: 0.5 },
+      { name: "type", weight: 0.3 },
+      { name: "SAT", weight: 0.2 },
+      { name: "accès", getFn: o => o.accès?.toString?.() || "", weight: 0.1 }
+    ],
+    includeScore: true,
+    threshold: 0.2,
+    distance: 50,
+    minMatchCharLength: 2,
+    ignoreLocation: true
+  });
+
+  // --- FUSE pour les appareils ---
+  fuseAppareils = new Fuse(appareils, {
+    keys: [
+      { name: 'appareil', weight: 0.5 },
+      { name: 'alias', weight: 0.9 },
+      { name: 'type', weight: 0.3 },
+      { name: 'nom', weight: 0.1 },
+      { name: 'SAT', weight: 0.1 }
+    ],
+    includeScore: true,
+    threshold: 0.3,
+    ignoreLocation: true
+  });
+
+  // --- FUSE mixte (postes + appareils) ---
+  const postesTagged = postes.map(p => ({ ...p, category: "poste" }));
+  const appsTagged   = apps.map(a => ({ ...a, category: "appareil" }));
   allItems = [...postesTagged, ...appsTagged];
 
-  // Moteur Fuse.js mixte
   fuseMix = new Fuse(allItems, {
     keys: [
       { name: "nom", weight: 0.5 },
@@ -698,9 +688,9 @@ Promise.all([
       { name: "accès", getFn: o => o.accès?.toString?.() || "", weight: 0.2 }
     ],
     includeScore: true,
-    threshold: 0.2,           // ✅ plus strict (meilleur tri)
-    distance: 50,             // ✅ tolérance modérée
-    minMatchCharLength: 2,    // ✅ évite les résultats absurdes sur 1 caractère
+    threshold: 0.2,
+    distance: 50,
+    minMatchCharLength: 2,
     ignoreLocation: true
   });
 });
