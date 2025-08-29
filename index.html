@@ -745,6 +745,18 @@ document.getElementById("search").addEventListener("input", e => {
   // Récupère les résultats bruts
   let results = fuseMix.search(query).map(r => r.item);
 
+  // Priorité aux résultats qui commencent par la requête
+results.sort((a,b) => {
+  const na = normalize(a.nom || a.appareil || "");
+  const nb = normalize(b.nom || b.appareil || "");
+  const q  = query.toLowerCase();
+  const aStarts = na.startsWith(q);
+  const bStarts = nb.startsWith(q);
+  if (aStarts && !bStarts) return -1;
+  if (!aStarts && bStarts) return 1;
+  return 0;
+});
+
   // --- Définition des groupes ---
   const postesSansAcces = results.filter(r => r.category === "poste" && !r.accès);
   const postesAvecAcces = results.filter(r => r.category === "poste" && !!r.accès);
@@ -756,12 +768,17 @@ document.getElementById("search").addEventListener("input", e => {
     // Cas 1 : la requête correspond à un poste
     orderedResults = [...postesSansAcces, ...postesAvecAcces];
 
-    // Ajoute les appareils liés si le poste est trouvé
-    appareils.forEach(app => {
-      if (normalize(app.nom).includes(query)) {
-        orderedResults.push(app);
-      }
-    });
+// Ajoute les appareils liés si le poste est trouvé
+appareils.forEach(app => {
+  if (
+    normalize(app.nom).includes(query) ||
+    normalize(app.appareil || "").includes(query) ||
+    (Array.isArray(app.alias) && app.alias.some(a => normalize(a).includes(query)))
+  ) {
+    orderedResults.push(app);
+  }
+});
+    
   } else if (appareilsTrouvés.length > 0) {
     // Cas 2 : la requête correspond uniquement à des appareils
     orderedResults = [...appareilsTrouvés];
@@ -1047,7 +1064,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.14a</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.15</span>
 </div>
 
 <script>
