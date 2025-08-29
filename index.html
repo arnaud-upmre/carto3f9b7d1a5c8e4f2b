@@ -730,6 +730,7 @@ Promise.all([
     ignoreLocation: true
   });
 });
+
 document.getElementById("search").addEventListener("input", e => {
   const query = normalize(e.target.value.trim());
   const suggestionsEl = document.getElementById("suggestions");
@@ -740,72 +741,92 @@ document.getElementById("search").addEventListener("input", e => {
   resultEl.innerHTML = "";
   resultEl.style.display = "none";
 
+  // N'affiche qu'à partir de 2 lettres
   if (!query || query.length < 2 || !fuseMix) return;
 
-  // Récupère les résultats bruts
+  // Résultats bruts
 let results = fuseMix.search(query).map(r => r.item);
 
-// 🔎 Séparation immédiate
-let appareilsTrouvés = results.filter(r => r.category === "appareil");
-let orderedResults = [];
+// -------- Filtre spécial préfixe appareils --------
+const queryWords = query.split(/\s+/);
+const prefixes = ["tt","i","tc","tsa","il","ip","imp","s"];
+const lowerWords = queryWords.map(w => w.toLowerCase());
 
-if (appareilsTrouvés.length > 0) {
-  // Cas 1 : recherche appareil → appareil d’abord
-  orderedResults = [...appareilsTrouvés];
+const prefixWord = lowerWords.find(w => prefixes.includes(w));
 
-  const postesParents = new Set();
-  appareilsTrouvés.forEach(app => {
-    const posteParent = lieux.find(l => normalize(l.nom) === normalize(app.nom));
-    if (posteParent) postesParents.add(posteParent);
+if (prefixWord) {
+  // Sépare préfixe et autres mots
+  const otherWords = lowerWords.filter(w => w !== prefixWord);
 
-    if (app.SAT) {
-      const satAcces = lieux.find(l =>
-        normalize(l.nom) === normalize(app.nom) &&
-        normalize(l.SAT || "") === normalize(app.SAT || "")
-      );
-      if (satAcces) postesParents.add(satAcces);
-    }
-  });
-
-  postesParents.forEach(p => orderedResults.push(p));
-
-} else {
-  // Cas 2 : recherche poste
-  const postesSansAcces = results.filter(r => r.category === "poste" && !r.accès);
-  const postesAvecAcces = results.filter(r => r.category === "poste" && !!r.accès);
-
-  orderedResults = [...postesSansAcces, ...postesAvecAcces];
-
-  // Ajoute les appareils liés si on tape un poste
-  appareils.forEach(app => {
-    if (
-      normalize(app.nom).includes(query) ||
-      normalize(app.appareil || "").includes(query) ||
-      (Array.isArray(app.alias) && app.alias.some(a => normalize(a).includes(query)))
-    ) {
-      orderedResults.push(app);
-    }
+  results = results.filter(item => {
+    const appareilOk = item.appareil && item.appareil.toLowerCase().startsWith(prefixWord);
+    const nomOk = otherWords.every(w => normalize(item.nom || "").includes(w));
+    return appareilOk && nomOk;
   });
 }
-  // --- Affichage final ---
-  orderedResults.forEach((item, idx) => {
-    const li = document.createElement("li");
-    if (idx === 0) li.classList.add("best");
-
-    if (item.category === "poste") {
-      const base = `${item.nom || ""} ${item.type || ""} ${item.SAT || ""}`.trim();
-      const label = item.accès ? `${base} – accès ${item.accès}` : base;
-      li.textContent = `🚙 ${label}`;
-      li.onclick = () => showLieu(item);
-    } else {
-      li.textContent = `💡 ${item.appareil} (${item.nom}${item.type ? " " + item.type : ""}${item.SAT ? " / " + item.SAT : ""})`;
-      li.onclick = () => showAppareil(item);
-    }
-
-    suggestionsEl.appendChild(li);
-  });
+// -------- Fin filtre spécial --------
+// Boost si la requête correspond exactement à un alias
+results.forEach(it => {
+  const aliases = Array.isArray(it.alias) ? it.alias : [];
+  it.__directAliasHit = aliases.some(a => normalize(a) === query);
 });
+// -------- TRI AVANCÉ ----------
+results.sort((a, b) => {
+  const q = query.toLowerCase();
+  const aNom = normalize(a.nom || "");
+  const bNom = normalize(b.nom || "");
 
+  // --- priorité 0 : le nom qui COMMENCE par la requête ---
+  const aStarts = aNom.startsWith(q);
+  const bStarts = bNom.startsWith(q);
+  if (aStarts && !bStarts) return -1;
+  if (bStarts && !aStarts) return 1;
+
+  // --- priorité 1 : correspondance exacte ---
+  const aExact = aNom === q;
+  const bExact = bNom === q;
+  if (aExact && !bExact) return -1;
+  if (bExact && !aExact) return 1;
+
+  // --- priorité 2 : accès routier d'abord ---
+  const aIsAcces = !!a.accès;
+  const bIsAcces = !!b.accès;
+  if (aIsAcces && !bIsAcces) return -1;
+  if (bIsAcces && !aIsAcces) return 1;
+
+  // --- priorité 3 : postes avant appareils ---
+  if (a.category === "poste" && b.category !== "poste") return -1;
+  if (b.category === "poste" && a.category !== "poste") return 1;
+
+  // --- priorité 4 : tri alphabétique stable ---
+  const label = x =>
+    x.category === "poste"
+      ? `${x.nom || ""} ${x.type || ""} ${x.SAT || ""}`.trim()
+      : `${x.appareil} (${x.nom}${x.type ? " " + x.type : ""}${x.SAT ? " / " + x.SAT : ""})`;
+
+  return label(a).localeCompare(label(b), "fr", { sensitivity: "base" });
+});
+// -------- FIN TRI AVANCÉ ----------
+
+// Affichage des lignes (meilleur tout en haut)
+suggestionsEl.innerHTML = "";
+results.forEach((item, idx) => {
+  const li = document.createElement("li");
+  if (idx === 0) li.classList.add("best"); // ⭐ surbrillance du meilleur
+
+  if (item.category === "poste") {
+    const base = `${item.nom || ""} ${item.type || ""} ${item.SAT || ""}`.trim();
+    const label = item.accès ? `${base} – accès ${item.accès}` : base;
+    li.textContent = `🚙 ${label}`;
+    li.onclick = () => showLieu(item);
+  } else {
+    li.textContent = `💡 ${item.appareil} (${item.nom}${item.type ? " " + item.type : ""}${item.SAT ? " / " + item.SAT : ""})`;
+    li.onclick = () => showAppareil(item);
+  }
+
+  suggestionsEl.appendChild(li);
+});
+});
   
 function showAppareil(app) {
   incrementCounterAppareil();
@@ -814,62 +835,50 @@ function showAppareil(app) {
   
   // On efface la liste pour ne garder que le bloc détail
   suggestionsEl.innerHTML = "";
+  
   result.style.display = "block";
 
-  // --- Affichage titre appareil ---
-  let html = `<h2>
-    <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&ll=${app.latitude},${app.longitude}&z=19"
-       target="_blank"
-       style="color:inherit; text-decoration:none;">
-      🔌 ${app.appareil} (${app.nom}${app.type ? ' ' + app.type : ''}${app.SAT ? ' / ' + app.SAT : ''})
-      <span style="font-weight:400; font-size:13px; margin-left:6px; color:#666;">
-        (📍 repérer l’appareil)
-      </span>
-    </a>
-  </h2>`;
+let html = `<h2>
+  <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&ll=${app.latitude},${app.longitude}&z=19"
+     target="_blank"
+     style="color:inherit; text-decoration:none;">
+    🔌 ${app.appareil} (${app.nom}${app.type ? ' ' + app.type : ''}${app.SAT ? ' / ' + app.SAT : ''})
+    <span style="font-weight:400; font-size:13px; margin-left:6px; color:#666;">
+      (📍 repérer l’appareil)
+    </span>
+  </a>
+</h2>`;
 
   const blocs = [];
   if (app.description) blocs.push(`<p>${app.description}</p>`);
 
-  // --- Cherche le poste parent ---
-  const posteParent = lieux.find(l => normalize(l.nom) === normalize(app.nom) && normalize(l.type) === normalize(app.type));
+  // Cherche le poste correspondant pour l’itinéraire voiture
+  const posteTrouvé = lieux.find(l => 
+    normalize(l.nom) === normalize(app.nom) &&
+    normalize(l.type) === normalize(app.type) &&
+    normalize(l.SAT || "") === normalize(app.SAT || "")
+  );
 
-  // --- Cherche accès SAT si appareil dans un SAT ---
-  let accesSAT = null;
-  if (app.SAT) {
-    accesSAT = lieux.find(l =>
-      normalize(l.nom) === normalize(app.nom) &&
-      normalize(l.SAT || "") === normalize(app.SAT || "") &&
-      l.accès
-    );
-  }
+  const accesTrouvé = lieux.find(l =>
+    normalize(l.nom) === normalize(app.nom) &&
+    normalize(l.type) === normalize(app.type) &&
+    normalize(l.SAT || "") === normalize(app.SAT || "") &&
+    normalize(String(l.accès || "")) === normalize(app.appareil)
+  );
 
-  // --- Ajoute les boutons de suggestion ---
-  if (posteParent) {
-    blocs.push(`
-      <div style="margin:1.8rem 0; text-align:center;">
-        <a href="#" onclick='showLieu(${JSON.stringify(posteParent)})'
-           role="button"
-           aria-label="Ouvrir la fiche poste et créer l’itinéraire en voiture"
-           style="display:inline-block; padding:10px 16px; border-radius:12px; border:1px solid #1a73e8; text-decoration:none; font-weight:600; color:#1a73e8;">
-          🚗 Poste parent : <strong>${posteParent.nom} ${posteParent.type || ""} ${posteParent.SAT || ""}</strong>
-        </a>
-      </div>
-    `);
-  }
-
-  if (accesSAT) {
-    blocs.push(`
-      <div style="margin:1.2rem 0; text-align:center;">
-        <a href="#" onclick='showLieu(${JSON.stringify(accesSAT)})'
-           role="button"
-           aria-label="Ouvrir la fiche accès SAT"
-           style="display:inline-block; padding:10px 16px; border-radius:12px; border:1px solid #1a73e8; text-decoration:none; font-weight:600; color:#1a73e8;">
-          🚪 Accès ${accesSAT.SAT} : <strong>${accesSAT.accès}</strong>
-        </a>
-      </div>
-    `);
-  }
+const lieuCible = accesTrouvé || posteTrouvé;
+if (lieuCible) {
+  blocs.push(`
+    <div style="margin:1.8rem 0; text-align:center;">
+      <a href="#" onclick='showLieu(${JSON.stringify(lieuCible)})'
+         role="button"
+         aria-label="Ouvrir la fiche poste et créer l’itinéraire en voiture"
+         style="display:inline-block; padding:10px 16px; border-radius:12px; border:1px solid #1a73e8; text-decoration:none; font-weight:600; color:#1a73e8;">
+        🚗 Infos & itinéraire : <strong>ICI</strong>
+      </a>
+    </div>
+  `);
+}
 
   // --- Ajoute séparateurs uniquement entre blocs ---
   if (blocs.length > 0) {
@@ -1044,7 +1053,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.15B</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.13a</span>
 </div>
 
 <script>
