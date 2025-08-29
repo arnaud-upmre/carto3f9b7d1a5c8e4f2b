@@ -248,9 +248,14 @@ a:visited {
 #about-footer {
   width: 100%;
   text-align: center;
-  margin: 2rem 0 0 0;
+  margin: 2.5rem 0 0 0;  /* un peu plus d’espace au-dessus */
   padding: 8px 0;
-  background: transparent;
+  font-size: 13px;
+}
+
+.footer-version {
+  color: #999; /* gris clair comme avant */
+  font-size: 11px;
 }
 
 /* Si la page est très courte, pousse le footer en bas */
@@ -359,7 +364,7 @@ body > *:not(#about-footer) {
 <ul id="suggestions"></ul>
 <div id="result"></div>
 <!-- Compteurs côte à côte -->
-<div id="counters" style="font-size:13px; color:#666; margin-top:6px; margin-bottom:2.2rem;">
+<div id="counters" style="font-size:13px; color:#666; margin-top:6px; margin-bottom:4rem;">
   Nombre recherche : 📍 <span id="counterPostes">0</span> &nbsp; | &nbsp; 
   💡 <span id="counterAppareils">0</span>
 </div>
@@ -983,8 +988,8 @@ function showNearby(position) {
   refreshContrib();
   setInterval(refreshContrib, 3000);
 </script>
-<div id="about-footer" style="font-size:12px; margin:0; padding:6px 0; text-align:center;">
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span style="color:#999;">Arnaud V1.05</span>
+<div id="about-footer">
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.06</span>
 </div>
 
 <script>
