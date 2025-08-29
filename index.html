@@ -774,11 +774,11 @@ results.forEach(it => {
 results.sort((a, b) => {
   const getPriority = item => {
     // Postes et SAT en premier
-    if (item.item.type === "SP" || item.item.type === "SAT") return 1;
+    if (item.type === "SP" || item.type === "SAT") return 1;
     // Appareils en deuxième
-    if (item.item.appareil) return 2;
+    if (item.appareil) return 2;
     // Accès en dernier
-    if (item.item.accès && item.item.accès.trim() !== "") return 3;
+    if (item.accès && item.accès.trim() !== "") return 3;
     return 4;
   };
   return getPriority(a) - getPriority(b);
