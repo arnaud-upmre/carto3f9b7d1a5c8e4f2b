@@ -745,7 +745,26 @@ document.getElementById("search").addEventListener("input", e => {
   if (!query || query.length < 2 || !fuseMix) return;
 
   // Résultats bruts
-  let results = fuseMix.search(query).map(r => r.item);
+let results = fuseMix.search(query).map(r => r.item);
+
+// -------- Filtre spécial préfixe appareils --------
+const queryWords = query.split(/\s+/);
+const prefixes = ["tt","i","tc","tsa","il","ip","imp","s"];
+const lowerWords = queryWords.map(w => w.toLowerCase());
+
+const prefixWord = lowerWords.find(w => prefixes.includes(w));
+
+if (prefixWord) {
+  // Sépare préfixe et autres mots
+  const otherWords = lowerWords.filter(w => w !== prefixWord);
+
+  results = results.filter(item => {
+    const appareilOk = item.appareil && item.appareil.toLowerCase().startsWith(prefixWord);
+    const nomOk = otherWords.every(w => normalize(item.nom || "").includes(w));
+    return appareilOk && nomOk;
+  });
+}
+// -------- Fin filtre spécial --------
 // Boost si la requête correspond exactement à un alias
 results.forEach(it => {
   const aliases = Array.isArray(it.alias) ? it.alias : [];
@@ -1054,7 +1073,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.09</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.10</span>
 </div>
 
 <script>
