@@ -928,8 +928,9 @@ function showNearby(position) {
 
   // utilitaires d'affichage
   const km = d => d.toFixed(2).replace(".", ","); // format FR
-  const labelPoste = p =>
-    `${p.nom || ""}${p.type ? " " + p.type : ""}${p.SAT ? " " + p.SAT : ""}`.trim();
+ const labelPoste = p =>
+  (`${p.nom || ""}${p.type ? " " + p.type : ""}${p.SAT ? " " + p.SAT : ""}`.trim()) +
+  (p.accès ? ` – accès ${p.accès}` : "");
   const labelAppareil = p =>
     `${p.appareil} (${p.nom}${p.type ? " " + p.type : ""}${p.SAT ? " / " + p.SAT : ""})`;
 
