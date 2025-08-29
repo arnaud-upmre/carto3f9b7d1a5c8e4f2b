@@ -510,7 +510,7 @@ function generateAppareilListHTML(currentLieu) {
 
   return html;
 }
-  function generateAlias(appareil, nom, sat, posteType) {
+function generateAlias(appareil, nom, sat, posteType) {
   const alias = new Set();
   const norm = str => (str || "").toLowerCase().trim();
 
@@ -527,10 +527,14 @@ function generateAppareilListHTML(currentLieu) {
 
   // --- combinaisons appareil + nom ---
   if (n) {
-    alias.add(`${a} ${n}`);
-    alias.add(`${n} ${a}`);
-    alias.add(`${root} ${n}`);
-    alias.add(`${n} ${root}`);
+    alias.add(`${a} ${n}`);       // tt7109 etaples
+    alias.add(`${n} ${a}`);       // etaples tt7109
+    alias.add(`${root} ${n}`);    // tt etaples
+    alias.add(`${n} ${root}`);    // etaples tt
+
+    // 🔑 Ajout versions forcées en majuscules
+    alias.add(`${root.toUpperCase()} ${n}`); // TT Etaples
+    alias.add(`${n} ${root.toUpperCase()}`); // Etaples TT
   }
 
   // --- combinaisons appareil + SAT ---
@@ -1021,7 +1025,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.01</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.02</span>
 </div>
 
 <script>
