@@ -777,15 +777,16 @@ document.getElementById("search").addEventListener("input", e => {
   results.forEach(item => {
     const li = document.createElement("li");
 
-    if (item.category === "poste") {
-      // Postes = accès → voiture
-      li.textContent = `🚙 ${item.nom || ""} ${item.type || ""} ${item.SAT || ""}`.trim();
-      li.onclick = () => showLieu(item);
-    } else {
-      // Appareils → libellé détaillé
-      li.textContent = `💡 ${item.appareil} (${item.nom}${item.type ? " " + item.type : ""}${item.SAT ? " / " + item.SAT : ""})`;
-      li.onclick = () => showAppareil(item);
-    }
+if (item.category === "poste") {
+  const base = `${item.nom || ""} ${item.type || ""} ${item.SAT || ""}`.trim();
+  const label = item.accès ? `${base} – accès ${item.accès}` : base;
+  li.textContent = `🚙 ${label}`;
+  li.onclick = () => showLieu(item);
+} else {
+  // Appareils → libellé détaillé
+  li.textContent = `💡 ${item.appareil} (${item.nom}${item.type ? " " + item.type : ""}${item.SAT ? " / " + item.SAT : ""})`;
+  li.onclick = () => showAppareil(item);
+}
 
     suggestionsEl.appendChild(li);
   });
