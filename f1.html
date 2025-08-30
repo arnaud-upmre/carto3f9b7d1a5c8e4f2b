@@ -841,13 +841,10 @@ function showAppareil(app) {
     🔌 ${app.appareil} (${app.nom}${app.type ? ' ' + app.type : ''}${app.SAT ? ' / ' + app.SAT : ''})
   </h2>
 
-  <div class="inline-links" style="justify-content:center; margin-top:6px; margin-bottom:1.5rem;">
-    <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&ll=${app.latitude},${app.longitude}&z=19" target="_blank">🛰️ Vue satellite</a>
-  </div>`;
+  <div class="inline-links" style="justify-content:center; margin-top:10px; margin-bottom:1.5rem;"> 
+    <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&ll=${app.latitude},${app.longitude}&z=19" target="_blank">🛰️ Vue satellite</a>`;
 
-  const blocs = [];
-  if (app.description) blocs.push(`<p>${app.description}</p>`);
-
+  // 🔗 ajoute le bouton itinéraire si un poste correspondant est trouvé
   const posteTrouvé = lieux.find(l => 
     normalize(l.nom) === normalize(app.nom) &&
     normalize(l.type) === normalize(app.type) &&
@@ -863,13 +860,15 @@ function showAppareil(app) {
 
   const lieuCible = accesTrouvé || posteTrouvé;
   if (lieuCible) {
-    blocs.push(`
-      <p style="text-align:center; font-weight:600; margin:1.5rem 0 0.5rem 0;">🚗 Infos & itinéraire :</p>
-      <div class="inline-links" style="justify-content:center;">
-        <a href="#" onclick='showLieu(${JSON.stringify(lieuCible)})'>ICI</a>
-      </div>
-    `);
+    html += `
+      <a href="#" onclick='showLieu(${JSON.stringify(lieuCible)})'>🚗 Infos & itinéraire</a>
+    `;
   }
+
+  html += `</div>`;
+
+  const blocs = [];
+  if (app.description) blocs.push(`<p>${app.description}</p>`);
 
   if (blocs.length > 0) {
     html += blocs.map((b,i)=> i===0 ? b : `<hr class="separator" />${b}`).join("");
@@ -1043,7 +1042,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.04</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.05</span>
 </div>
 
 <script>
