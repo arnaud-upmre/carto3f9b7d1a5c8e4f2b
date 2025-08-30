@@ -652,9 +652,9 @@ let html = `<h2>
   <a href="${urlMyMapsPoste}" target="_blank" class="titre-lien">📍 ${formatNomCompletLieu(lieu)}</a>
 </h2>
 
-<h3 style="text-align:center; margin:.6rem 0 .4rem; font-weight:600;">🛣️ Repérer l’accès</h3>
-<div class="inline-links" style="justify-content:center; margin-top:4px; margin-bottom:1.2rem;">
-<a href="https://www.google.com/maps/d/viewer?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&ll=${lieu.latitude},${lieu.longitude}&z=19" target="_blank">🛰️ Vue satellite</a>
+<p style="text-align:center; font-weight:600; margin:1.5rem 0 0.5rem 0;">🛣️ Repérer l’accès :</p>
+<div class="inline-links" style="justify-content:center;">
+  <a href="${myMapsViewer(lieu.latitude, lieu.longitude, 19)}" target="_blank">🛰️ Vue satellite</a>
   <a href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lieu.latitude},${lieu.longitude}" target="_blank">👁️ Street View</a>
 </div>
 
