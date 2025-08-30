@@ -774,21 +774,6 @@ document.getElementById("search").addEventListener("input", e => {
   // Résultats bruts
 let results = fuseMix.search(query).map(r => r.item);
 
-  // --- Priorité aux correspondances exactes (ex: 7216, I7216, I 7216) ---
-const cleanedQuery = query.replace(/\s+/g, "").toLowerCase();
-
-const exactAppareil = appareils.find(app => {
-  const base = app.appareil.replace(/\s+/g, "").toLowerCase();
-  const aliases = (app.alias || []).map(a => a.replace(/\s+/g, "").toLowerCase());
-  return base === cleanedQuery || aliases.includes(cleanedQuery);
-});
-
-if (exactAppareil) {
-  const tagged = { ...exactAppareil, category: "appareil" };
-  // Mets l’appareil exact en premier, supprime les doublons
-  results = [tagged, ...results.filter(r => r.appareil !== exactAppareil.appareil)];
-}
-
 // -------- Filtre spécial préfixe appareils --------
 const queryWords = query.split(/\s+/);
 const prefixes = ["tt","i","tc","tsa","il","ip","imp","s"];
@@ -815,64 +800,70 @@ results.forEach(it => {
 // -------- TRI AVANCÉ ----------
 results.sort((a, b) => {
   const q = query.toLowerCase();
-  const aNom = normalize(a.nom || "");
-  const bNom = normalize(b.nom || "");
 
-  // --- priorité 0 : le nom qui COMMENCE par la requête ---
+  // Normalisations utiles
+  const norm = s => (s || "").toString().toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").trim().replace(/\s+/g, " ");
+  const id = x => (x.appareil || "").toString().replace(/\s+/g, "").toLowerCase();     // ex: "i7216"
+  const idDigits = x => id(x).replace(/\D/g, "");                                       // ex: "7216"
+
+  // Utilise la cleanedQuery définie plus haut
+  const qId = cleanedQuery;             // ex: "i7216" ou "7216"
+  const qDigits = cleanedQuery.replace(/\D/g, "");
+
+  // --- priorité -2 : correspondance EXACTE sur l'identifiant d'appareil (avec ou sans lettre) ---
+  const aExactId = a.category === "appareil" && (id(a) === qId || (qDigits && idDigits(a) === qDigits));
+  const bExactId = b.category === "appareil" && (id(b) === qId || (qDigits && idDigits(b) === qDigits));
+  if (aExactId && !bExactId) return -1;
+  if (bExactId && !aExactId) return 1;
+
+  // --- priorité -1 : correspondance EXACTE sur un alias normalisé ---
+  const aliasHit = (x) => Array.isArray(x.alias) && x.alias
+      .map(s => s.replace(/\s+/g, "").toLowerCase())
+      .some(s => s === qId || (qDigits && s.replace(/\D/g, "") === qDigits));
+  const aAlias = a.category === "appareil" && aliasHit(a);
+  const bAlias = b.category === "appareil" && aliasHit(b);
+  if (aAlias && !bAlias) return -1;
+  if (bAlias && !aAlias) return 1;
+
+  // --- le reste comme avant ---
+  const aNom = norm(a.nom || "");
+  const bNom = norm(b.nom || "");
+
+  // 0 : le nom qui COMMENCE par la requête
   const aStarts = aNom.startsWith(q);
   const bStarts = bNom.startsWith(q);
   if (aStarts && !bStarts) return -1;
   if (bStarts && !aStarts) return 1;
 
-  // --- priorité 1 : correspondance exacte ---
+  // 1 : correspondance exacte sur le nom
   const aExact = aNom === q;
   const bExact = bNom === q;
   if (aExact && !bExact) return -1;
   if (bExact && !aExact) return 1;
 
-  // --- priorité 2 : postes simples avant tout ---
+  // 2 : postes simples avant tout
   const aIsPoste = a.category === "poste" && !a.accès;
   const bIsPoste = b.category === "poste" && !b.accès;
   if (aIsPoste && !bIsPoste) return -1;
   if (bIsPoste && !aIsPoste) return 1;
 
-  // --- priorité 3 : postes avec accès ensuite ---
+  // 3 : postes avec accès ensuite
   const aIsAcces = a.category === "poste" && !!a.accès;
   const bIsAcces = b.category === "poste" && !!b.accès;
   if (aIsAcces && !bIsAcces) return -1;
   if (bIsAcces && !aIsAcces) return 1;
 
-  // --- priorité 4 : appareils en dernier ---
+  // 4 : appareils en dernier vis-à-vis des postes
   if (a.category === "appareil" && b.category !== "appareil") return 1;
   if (b.category === "appareil" && a.category !== "appareil") return -1;
 
-  // --- priorité 5 : tri alphabétique stable ---
+  // 5 : tri alphabétique stable
   const label = x =>
     x.category === "poste"
       ? `${x.nom || ""} ${x.type || ""} ${x.SAT || ""}`.trim()
       : `${x.appareil} (${x.nom}${x.type ? " " + x.type : ""}${x.SAT ? " / " + x.SAT : ""})`;
 
   return label(a).localeCompare(label(b), "fr", { sensitivity: "base" });
-});
-  
-// Affichage des lignes (meilleur tout en haut)
-suggestionsEl.innerHTML = "";
-results.forEach((item, idx) => {
-  const li = document.createElement("li");
-  if (idx === 0) li.classList.add("best"); // ⭐ surbrillance du meilleur
-
-  if (item.category === "poste") {
-    const base = `${item.nom || ""} ${item.type || ""} ${item.SAT || ""}`.trim();
-    const label = item.accès ? `${base} – accès ${item.accès}` : base;
-    li.textContent = `🚙 ${label}`;
-    li.onclick = () => showLieu(item);
-  } else {
-    li.textContent = `💡 ${item.appareil} (${item.nom}${item.type ? " " + item.type : ""}${item.SAT ? " / " + item.SAT : ""})`;
-    li.onclick = () => showAppareil(item);
-  }
-
-  suggestionsEl.appendChild(li);
-});
 });
   // -------- fin TRI AVANCÉ ----------
 function showAppareil(app) {
@@ -1116,7 +1107,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.11</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.12</span>
 </div>
 
 <script>
