@@ -774,6 +774,21 @@ document.getElementById("search").addEventListener("input", e => {
   // Résultats bruts
 let results = fuseMix.search(query).map(r => r.item);
 
+  // --- Priorité aux correspondances exactes (ex: 7216, I7216, I 7216) ---
+const cleanedQuery = query.replace(/\s+/g, "").toLowerCase();
+
+const exactAppareil = appareils.find(app => {
+  const base = app.appareil.replace(/\s+/g, "").toLowerCase();
+  const aliases = (app.alias || []).map(a => a.replace(/\s+/g, "").toLowerCase());
+  return base === cleanedQuery || aliases.includes(cleanedQuery);
+});
+
+if (exactAppareil) {
+  const tagged = { ...exactAppareil, category: "appareil" };
+  // Mets l’appareil exact en premier, supprime les doublons
+  results = [tagged, ...results.filter(r => r.appareil !== exactAppareil.appareil)];
+}
+
 // -------- Filtre spécial préfixe appareils --------
 const queryWords = query.split(/\s+/);
 const prefixes = ["tt","i","tc","tsa","il","ip","imp","s"];
@@ -1101,7 +1116,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.10</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.11</span>
 </div>
 
 <script>
