@@ -771,20 +771,10 @@ document.getElementById("search").addEventListener("input", e => {
   // N'affiche qu'à partir de 2 lettres
   if (!query || query.length < 2 || !fuseMix) return;
 
-// 🔄 Fallback exact AVANT Fuse
-const qNorm = normalize(query);
-const exactMatches = allItems.filter(item =>
-  normalize(item.appareil || "") === qNorm ||
-  normalize(item.nom || "") === qNorm
-);
+  // Résultats bruts
+let results = fuseMix.search(query).map(r => r.item);
+  const cleanedQuery = query.replace(/\s+/g, "").toLowerCase();
 
-let results;
-if (exactMatches.length > 0) {
-  results = exactMatches; // 👈 on saute Fuse, priorité à l’exact
-} else {
-  results = fuseMix.search(query).map(r => r.item);
-}
-const cleanedQuery = query.replace(/\s+/g, "").toLowerCase();
 // -------- Filtre spécial préfixe appareils --------
 const queryWords = query.split(/\s+/);
 const prefixes = ["tt","i","tc","tsa","il","ip","imp","s"];
@@ -1146,7 +1136,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.23</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.16</span>
 </div>
 
 <script>
