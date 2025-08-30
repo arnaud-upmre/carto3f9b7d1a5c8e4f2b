@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Redirection…</title>
+  <script>
+    const target = new URLSearchParams(window.location.search).get("u");
+    if (target) {
+      window.location.replace(target); // redirection immédiate
+    } else {
+      document.write("❌ Pas d’URL fournie.");
+    }
+  </script>
+</head>
+<body>
+  Redirection en cours…
+</body>
+</html>
