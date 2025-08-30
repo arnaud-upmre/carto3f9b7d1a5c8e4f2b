@@ -867,6 +867,22 @@ results.sort((a, b) => {
   return label(a).localeCompare(label(b), "fr", { sensitivity: "base" });
 });
   // -------- fin TRI AVANCÉ ----------
+// --- Affichage des résultats ---
+results.forEach((item, i) => {
+  const li = document.createElement("li");
+  li.textContent = (item.category === "poste")
+    ? formatNomCompletLieu(item)
+    : `${item.appareil} (${item.nom}${item.type ? ' ' + item.type : ''}${item.SAT ? ' / ' + item.SAT : ''})`;
+
+  if (i === 0) li.classList.add("best");
+
+  li.onclick = () => {
+    if (item.category === "poste") showLieu(item);
+    else showAppareil(item);
+  };
+
+  suggestionsEl.appendChild(li);
+});
 
 // ✅ ici on ferme correctement l’event listener
 });
@@ -1113,7 +1129,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.13</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.14</span>
 </div>
 
 <script>
