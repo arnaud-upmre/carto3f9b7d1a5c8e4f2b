@@ -12,7 +12,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Abscon",
@@ -27,7 +29,9 @@
     "portail": "",
     "lignes": "BUSIGNY à SOMAIN",
     "numero_ligne": 250000,
-    "pk": "230,460"
+    "pk": "230,460",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Achiet",
@@ -42,7 +46,9 @@
     "portail": "",
     "lignes": "PARIS-NORD à LILLE",
     "numero_ligne": 272000,
-    "pk": "174,750"
+    "pk": "174,750",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Alleux",
@@ -57,7 +63,9 @@
     "portail": "",
     "lignes": "FRETIN à FRÉTHUN (LGV) ",
     "numero_ligne": 216000,
-    "pk": "114,400"
+    "pk": "114,400",
+    "poste_latitude": "50.91461",
+    "poste_longitude": "1.7986428"
   },
   {
     "nom": "Alleux",
@@ -72,7 +80,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.910937",
+    "poste_longitude": "1.805222"
   },
   {
     "nom": "Alleux",
@@ -87,7 +97,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.9136001",
+    "poste_longitude": "1.8016643"
   },
   {
     "nom": "Alleux",
@@ -102,7 +114,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.9127259",
+    "poste_longitude": "1.8037726"
   },
   {
     "nom": "Amiens (Équipe)",
@@ -117,7 +131,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Armentières",
@@ -132,7 +148,9 @@
     "portail": "",
     "lignes": "LILLE à LES FONTINETTES",
     "numero_ligne": 295000,
-    "pk": "20,240"
+    "pk": "20,240",
+    "poste_latitude": "50.6804814",
+    "poste_longitude": "2.8756749"
   },
   {
     "nom": "Arneke",
@@ -147,7 +165,9 @@
     "portail": "",
     "lignes": "ARRAS à DUNKERQUE",
     "numero_ligne": 301000,
-    "pk": "280,901"
+    "pk": "280,901",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Arques",
@@ -162,7 +182,9 @@
     "portail": "",
     "lignes": "LILLE à LES FONTINETTES",
     "numero_ligne": 295000,
-    "pk": "62,755"
+    "pk": "62,755",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "A2000",
@@ -177,7 +199,9 @@
     "portail": "0328557549,7623*",
     "lignes": "FIVES à ABBEVILLE",
     "numero_ligne": 289000,
-    "pk": "2,150"
+    "pk": "2,150",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Lens",
@@ -192,7 +216,9 @@
     "portail": "",
     "lignes": "LENS à OSTRICOURT",
     "numero_ligne": "",
-    "pk": "284000"
+    "pk": "284000",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Audruicq",
@@ -207,7 +233,9 @@
     "portail": "",
     "lignes": "LILLE à LES FONTINETTES",
     "numero_ligne": 295000,
-    "pk": "85,166"
+    "pk": "85,166",
+    "poste_latitude": "50.8720082",
+    "poste_longitude": "2.1010619"
   },
   {
     "nom": "Bailleul Sir Bethoult",
@@ -222,7 +250,9 @@
     "portail": "",
     "lignes": "ARRAS à DUNKERQUE",
     "numero_ligne": 301000,
-    "pk": "200,290"
+    "pk": "200,290",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Baisieux",
@@ -237,7 +267,9 @@
     "portail": "",
     "lignes": "FIVES à BAISIEUX",
     "numero_ligne": 269000,
-    "pk": "14,602"
+    "pk": "14,602",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Berlaimont",
@@ -252,7 +284,9 @@
     "portail": "",
     "lignes": "FIVES à HIRSON ",
     "numero_ligne": 267000,
-    "pk": "77,312"
+    "pk": "77,312",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Bethune",
@@ -267,7 +301,9 @@
     "portail": "",
     "lignes": "ARRAS à DUNKERQUE",
     "numero_ligne": 301000,
-    "pk": "229,908"
+    "pk": "229,908",
+    "poste_latitude": "50.5202459",
+    "poste_longitude": "2.6425767"
   },
   {
     "nom": "Bethune",
@@ -282,7 +318,9 @@
     "portail": "",
     "lignes": "ARRAS à DUNKERQUE",
     "numero_ligne": 301000,
-    "pk": "230,760"
+    "pk": "230,760",
+    "poste_latitude": "50.5247694",
+    "poste_longitude": "2.6299574"
   },
   {
     "nom": "Bethune SUD",
@@ -297,7 +335,9 @@
     "portail": "",
     "lignes": "FIVES à ABBEVILLE",
     "numero_ligne": 289000,
-    "pk": "289000"
+    "pk": "289000",
+    "poste_latitude": "50.5191381",
+    "poste_longitude": "2.645906"
   },
   {
     "nom": "Beugnâtre",
@@ -312,7 +352,9 @@
     "portail": "",
     "lignes": "GONESSE à LILLE-FRONTIERE (LGV)",
     "numero_ligne": 226000,
-    "pk": "143,321"
+    "pk": "143,321",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Beuvry",
@@ -327,7 +369,9 @@
     "portail": "",
     "lignes": "FIVES à ABBEVILLE",
     "numero_ligne": 289000,
-    "pk": "35,465"
+    "pk": "35,465",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Bif coulogne",
@@ -342,7 +386,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.9347788",
+    "poste_longitude": "1.8581175"
   },
   {
     "nom": "Bif Coupvent",
@@ -357,7 +403,9 @@
     "portail": "",
     "lignes": "COUDEKERQUE-BRANCHE à LES FONTINETTES",
     "numero_ligne": 304000,
-    "pk": "14,900"
+    "pk": "14,900",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Bif puyt houck",
@@ -372,7 +420,9 @@
     "portail": "",
     "lignes": "COUDEKERQUE-BRANCHE à LES FONTINETTES",
     "numero_ligne": 304000,
-    "pk": "10,400"
+    "pk": "10,400",
+    "poste_latitude": "50.9928108",
+    "poste_longitude": "2.2622015"
   },
   {
     "nom": "Billy",
@@ -387,7 +437,9 @@
     "portail": "",
     "lignes": "LENS à OSTRICOURT",
     "numero_ligne": 284000,
-    "pk": "215,547"
+    "pk": "215,547",
+    "poste_latitude": "50.4154166",
+    "poste_longitude": "2.9200598"
   },
   {
     "nom": "Boisleux",
@@ -402,7 +454,9 @@
     "portail": "",
     "lignes": "PARIS-NORD à LILLE",
     "numero_ligne": 272000,
-    "pk": "183,080"
+    "pk": "183,080",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Boisleux",
@@ -417,7 +471,9 @@
     "portail": "",
     "lignes": "PARIS-NORD à LILLE",
     "numero_ligne": 272000,
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.2129054",
+    "poste_longitude": "2.7700311"
   },
   {
     "nom": "Boisleux",
@@ -432,7 +488,9 @@
     "portail": "",
     "lignes": "PARIS-NORD à LILLE",
     "numero_ligne": 272000,
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.2129054",
+    "poste_longitude": "2.7700311"
   },
   {
     "nom": "Boisleux",
@@ -447,7 +505,9 @@
     "portail": "",
     "lignes": "PARIS-NORD à LILLE",
     "numero_ligne": 272000,
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.2067159",
+    "poste_longitude": "2.7760539"
   },
   {
     "nom": "Bollaert",
@@ -462,7 +522,9 @@
     "portail": "",
     "lignes": "ARRAS à DUNKERQUE",
     "numero_ligne": 301000,
-    "pk": "211,700"
+    "pk": "211,700",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Botiaux",
@@ -477,7 +539,9 @@
     "portail": "",
     "lignes": "GONESSE à LILLE-FRONTIERE (LGV)",
     "numero_ligne": 226000,
-    "pk": "183,687"
+    "pk": "183,687",
+    "poste_latitude": "50.4808258",
+    "poste_longitude": "2.9805721"
   },
   {
     "nom": "Bourbourg",
@@ -492,7 +556,9 @@
     "portail": "",
     "lignes": "COUDEKERQUE-BRANCHE à LES FONTINETTES",
     "numero_ligne": 304000,
-    "pk": "18,450"
+    "pk": "18,450",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Brearde",
@@ -507,7 +573,9 @@
     "portail": "",
     "lignes": "FRETIN à FRÉTHUN (LGV)",
     "numero_ligne": 216000,
-    "pk": "53,547"
+    "pk": "53,547",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Broxeele",
@@ -522,7 +590,9 @@
     "portail": "",
     "lignes": "FRETIN à FRÉTHUN (LGV)",
     "numero_ligne": 216000,
-    "pk": "68,359"
+    "pk": "68,359",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Busigny",
@@ -537,7 +607,9 @@
     "portail": "",
     "lignes": "CREIL à JEUMONT",
     "numero_ligne": 242000,
-    "pk": "182,251"
+    "pk": "182,251",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Caffiers",
@@ -552,7 +624,9 @@
     "portail": "",
     "lignes": "BOULOGNE-VILLE à CALAIS MARITIME",
     "numero_ligne": 314000,
-    "pk": "277,710"
+    "pk": "277,710",
+    "poste_latitude": "50.8459206",
+    "poste_longitude": "1.8130708"
   },
   {
     "nom": "Caffiers",
@@ -567,7 +641,9 @@
     "portail": "",
     "lignes": "BOULOGNE-VILLE à CALAIS MARITIME",
     "numero_ligne": 314000,
-    "pk": "277,710"
+    "pk": "277,710",
+    "poste_latitude": "50.8506654",
+    "poste_longitude": "1.8113066"
   },
   {
     "nom": "Caffiers",
@@ -582,7 +658,9 @@
     "portail": "",
     "lignes": "BOULOGNE-VILLE à CALAIS MARITIME",
     "numero_ligne": 314000,
-    "pk": "277,710"
+    "pk": "277,710",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Cassel",
@@ -597,8 +675,10 @@
     "portail": "",
     "lignes": "FRETIN à FRÉTHUN (LGV) ",
     "numero_ligne": 216000,
-    "pk": "59,146"
-  },  
+    "pk": "59,146",
+    "poste_latitude": "50.7804883",
+    "poste_longitude": "2.4730762"
+  },
   {
     "nom": "Cassel",
     "type": "S",
@@ -612,7 +692,9 @@
     "portail": "",
     "lignes": "FRETIN à FRÉTHUN (LGV) ",
     "numero_ligne": 216000,
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.7779977",
+    "poste_longitude": "2.475778"
   },
   {
     "nom": "Cassel",
@@ -627,7 +709,9 @@
     "portail": "",
     "lignes": "FRETIN à FRÉTHUN (LGV) ",
     "numero_ligne": 216000,
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.7831982",
+    "poste_longitude": "2.4697211"
   },
   {
     "nom": "Coquelles",
@@ -642,7 +726,9 @@
     "portail": "",
     "lignes": "BOULOGNE-VILLE à CALAIS MARITIME",
     "numero_ligne": "314000",
-    "pk": "290,475"
+    "pk": "290,475",
+    "poste_latitude": "50.9263379",
+    "poste_longitude": "1.8340766"
   },
   {
     "nom": "Coquelles",
@@ -657,7 +743,9 @@
     "portail": "",
     "lignes": "BOULOGNE-VILLE à CALAIS MARITIME",
     "numero_ligne": "314000",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.9229094",
+    "poste_longitude": "1.8265219"
   },
   {
     "nom": "Coquelles",
@@ -672,7 +760,9 @@
     "portail": "",
     "lignes": "BOULOGNE-VILLE à CALAIS MARITIME",
     "numero_ligne": "314000",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.9242639",
+    "poste_longitude": "1.8291523"
   },
   {
     "nom": "Coquelles",
@@ -687,7 +777,9 @@
     "portail": "",
     "lignes": "BOULOGNE-VILLE à CALAIS MARITIME",
     "numero_ligne": "314000",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.9266608",
+    "poste_longitude": "1.833571"
   },
   {
     "nom": "Coquelles",
@@ -702,7 +794,9 @@
     "portail": "",
     "lignes": "BOULOGNE-VILLE à CALAIS MARITIME",
     "numero_ligne": "314000",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.9286998",
+    "poste_longitude": "1.8373747"
   },
   {
     "nom": "Coquelles",
@@ -717,7 +811,9 @@
     "portail": "",
     "lignes": "BOULOGNE-VILLE à CALAIS MARITIME",
     "numero_ligne": "314000",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.9274108",
+    "poste_longitude": "1.836196"
   },
   {
     "nom": "Coudekerque",
@@ -732,7 +828,9 @@
     "portail": "",
     "lignes": "ARRAS à DUNKERQUE",
     "numero_ligne": "301000",
-    "pk": "300,521"
+    "pk": "300,521",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Coudekerque",
@@ -747,7 +845,9 @@
     "portail": "",
     "lignes": "ARRAS à DUNKERQUE",
     "numero_ligne": "301000",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Coudekerque",
@@ -762,7 +862,9 @@
     "portail": "",
     "lignes": "ARRAS à DUNKERQUE",
     "numero_ligne": "301000",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "51.0065412",
+    "poste_longitude": "2.37997"
   },
   {
     "nom": "Coulogne",
@@ -777,7 +879,9 @@
     "portail": "",
     "lignes": "LILLE à LES FONTINETTES",
     "numero_ligne": "295000",
-    "pk": "103,900"
+    "pk": "103,900",
+    "poste_latitude": "50.9346815",
+    "poste_longitude": "1.8582382"
   },
   {
     "nom": "Coulogne",
@@ -792,7 +896,9 @@
     "portail": "",
     "lignes": "LILLE à LES FONTINETTES",
     "numero_ligne": "295000",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.9346815",
+    "poste_longitude": "1.8582382"
   },
   {
     "nom": "Coulogne",
@@ -807,7 +913,9 @@
     "portail": "",
     "lignes": "LILLE à LES FONTINETTES",
     "numero_ligne": "295000",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.9346815",
+    "poste_longitude": "1.8582382"
   },
   {
     "nom": "Coulogne",
@@ -822,7 +930,9 @@
     "portail": "",
     "lignes": "LILLE à LES FONTINETTES",
     "numero_ligne": "295000",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Coulogne",
@@ -837,7 +947,9 @@
     "portail": "",
     "lignes": "LILLE à LES FONTINETTES",
     "numero_ligne": "295000",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.9357924",
+    "poste_longitude": "1.8496275"
   },
   {
     "nom": "Coulogne",
@@ -852,7 +964,9 @@
     "portail": "",
     "lignes": "LILLE à LES FONTINETTES",
     "numero_ligne": "295000",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.935167",
+    "poste_longitude": "1.8494559"
   },
   {
     "nom": "Coulogne",
@@ -867,7 +981,9 @@
     "portail": "",
     "lignes": "LILLE à LES FONTINETTES",
     "numero_ligne": "295000",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.936077",
+    "poste_longitude": "1.8544386"
   },
   {
     "nom": "Curie",
@@ -882,7 +998,9 @@
     "portail": "",
     "lignes": "LILLE à LES FONTINETTES",
     "numero_ligne": "295000",
-    "pk": "104,810 "
+    "pk": "104,810 ",
+    "poste_latitude": "50.9406155",
+    "poste_longitude": "1.8501469"
   },
   {
     "nom": "Curie",
@@ -897,7 +1015,9 @@
     "portail": "",
     "lignes": "LILLE à LES FONTINETTES",
     "numero_ligne": "295000",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.9420114",
+    "poste_longitude": "1.8480671"
   },
   {
     "nom": "Curie",
@@ -912,7 +1032,9 @@
     "portail": "",
     "lignes": "LILLE à LES FONTINETTES",
     "numero_ligne": "295000",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.9415922",
+    "poste_longitude": "1.8490988"
   },
   {
     "nom": "Curie",
@@ -927,7 +1049,9 @@
     "portail": "",
     "lignes": "LILLE à LES FONTINETTES",
     "numero_ligne": "295000",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.9424372",
+    "poste_longitude": "1.84732"
   },
   {
     "nom": "Curie",
@@ -942,7 +1066,9 @@
     "portail": "",
     "lignes": "LILLE à LES FONTINETTES",
     "numero_ligne": "295000",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.9457199",
+    "poste_longitude": "1.8411439"
   },
   {
     "nom": "Dannes",
@@ -957,7 +1083,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.579339",
+    "poste_longitude": "1.6145822"
   },
   {
     "nom": "Delivrance",
@@ -972,7 +1100,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Denain",
@@ -987,7 +1117,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.3334085",
+    "poste_longitude": "3.4148316"
   },
   {
     "nom": "Don Sainghin",
@@ -1002,7 +1134,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.5526596",
+    "poste_longitude": "2.9156441"
   },
   {
     "nom": "Don Sainghin",
@@ -1017,7 +1151,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.5491543",
+    "poste_longitude": "2.9083832"
   },
   {
     "nom": "Don Sainghin",
@@ -1032,7 +1168,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.5473607",
+    "poste_longitude": "2.9059613"
   },
   {
     "nom": "Don Sainghin",
@@ -1047,7 +1185,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.5537713",
+    "poste_longitude": "2.9180516"
   },
   {
     "nom": "Douai",
@@ -1062,7 +1202,9 @@
     "portail": "Accès par carmillon",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.3743867",
+    "poste_longitude": "3.0904274"
   },
   {
     "nom": "Dunkerque",
@@ -1077,7 +1219,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Erquinghem",
@@ -1092,7 +1236,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Esquelbecq",
@@ -1107,7 +1253,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Etaples",
@@ -1122,7 +1270,9 @@
     "portail": "",
     "lignes": "LONGUEAU à BOULOGNE-VILLE",
     "numero_ligne": "311000",
-    "pk": "226,900"
+    "pk": "226,900",
+    "poste_latitude": "50.5197701",
+    "poste_longitude": "1.6365417"
   },
   {
     "nom": "Etaples",
@@ -1137,7 +1287,9 @@
     "portail": "",
     "lignes": "LONGUEAU à BOULOGNE-VILLE",
     "numero_ligne": "311000",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.5069278",
+    "poste_longitude": "1.6444343"
   },
   {
     "nom": "Etaples",
@@ -1152,7 +1304,9 @@
     "portail": "",
     "lignes": "LONGUEAU à BOULOGNE-VILLE",
     "numero_ligne": "311000",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.5121415",
+    "poste_longitude": "1.644521"
   },
   {
     "nom": "Etinchelle",
@@ -1167,7 +1321,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Fampoux",
@@ -1182,7 +1338,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Fives",
@@ -1197,7 +1355,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.6215949",
+    "poste_longitude": "3.0908137"
   },
   {
     "nom": "Fives",
@@ -1212,7 +1372,9 @@
     "portail": "4141",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.6215949",
+    "poste_longitude": "3.0908137"
   },
   {
     "nom": "Fives",
@@ -1227,7 +1389,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.6187456",
+    "poste_longitude": "3.0913776"
   },
   {
     "nom": "Fives",
@@ -1242,7 +1406,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.6238498",
+    "poste_longitude": "3.0887834"
   },
   {
     "nom": "Fives",
@@ -1257,7 +1423,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.6260044",
+    "poste_longitude": "3.0865176"
   },
   {
     "nom": "Fives",
@@ -1272,7 +1440,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.6218485",
+    "poste_longitude": "3.110761"
   },
   {
     "nom": "Fives",
@@ -1287,7 +1457,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.6111406",
+    "poste_longitude": "3.1017956"
   },
   {
     "nom": "Fives",
@@ -1302,7 +1474,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.6111406",
+    "poste_longitude": "3.1017956"
   },
   {
     "nom": "Fives",
@@ -1317,7 +1491,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Flamengrie",
@@ -1332,7 +1508,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Fouilloy",
@@ -1347,7 +1525,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Fourmies",
@@ -1362,7 +1542,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Gannes",
@@ -1377,7 +1559,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Grande Synthe IA2",
@@ -1392,7 +1576,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Gravelines",
@@ -1407,7 +1593,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.9786499",
+    "poste_longitude": "2.1225921"
   },
   {
     "nom": "Gravelines",
@@ -1422,7 +1610,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.978107",
+    "poste_longitude": "2.1302745"
   },
   {
     "nom": "Gravelines",
@@ -1437,7 +1627,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.9788961",
+    "poste_longitude": "2.1201756"
   },
   {
     "nom": "Gravelines",
@@ -1452,7 +1644,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.9774895",
+    "poste_longitude": "2.1060996"
   },
   {
     "nom": "Guines",
@@ -1467,7 +1661,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Harponlieu",
@@ -1482,7 +1678,9 @@
     "portail": "",
     "lignes": "PARIS-NORD à LILLE",
     "numero_ligne": 272000.0,
-    "pk": "228,600"
+    "pk": "228,600",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Haute Loge",
@@ -1497,7 +1695,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Hauteville",
@@ -1512,7 +1712,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Hauteville",
@@ -1527,7 +1729,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.7064902",
+    "poste_longitude": "1.6043048"
   },
   {
     "nom": "Hauteville",
@@ -1542,7 +1746,9 @@
     "portail": "5962",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.7129492",
+    "poste_longitude": "1.6082651"
   },
   {
     "nom": "Hauteville",
@@ -1557,7 +1763,9 @@
     "portail": "5962",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.717426",
+    "poste_longitude": "1.6124626"
   },
   {
     "nom": "Hautmont",
@@ -1572,7 +1780,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Hazebrouck",
@@ -1587,7 +1797,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.7178733",
+    "poste_longitude": "2.5520348"
   },
   {
     "nom": "Hellu",
@@ -1602,7 +1814,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.6025713",
+    "poste_longitude": "3.1139317"
   },
   {
     "nom": "Hirson",
@@ -1617,7 +1831,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Hondeghem",
@@ -1632,7 +1848,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Hondeghem",
@@ -1647,7 +1865,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Hondeghem",
@@ -1662,7 +1882,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Hondeghem",
@@ -1677,7 +1899,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Hondeghem",
@@ -1692,7 +1916,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Hondeghem",
@@ -1707,7 +1933,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Honnechy",
@@ -1722,7 +1950,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Justice",
@@ -1737,7 +1967,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.6112819",
+    "poste_longitude": "3.0817305"
   },
   {
     "nom": "Justice",
@@ -1752,7 +1984,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.6159866",
+    "poste_longitude": "3.0623705"
   },
   {
     "nom": "Justice",
@@ -1767,7 +2001,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.611115",
+    "poste_longitude": "3.0824434"
   },
   {
     "nom": "La madeleine",
@@ -1782,7 +2018,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.6605998",
+    "poste_longitude": "3.0697984"
   },
   {
     "nom": "La madeleine",
@@ -1797,7 +2035,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "La madeleine",
@@ -1812,7 +2052,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.6606965",
+    "poste_longitude": "3.0584348"
   },
   {
     "nom": "La Tortue",
@@ -1827,7 +2069,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Lambersart",
@@ -1842,7 +2086,9 @@
     "portail": "4242#",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.6595295",
+    "poste_longitude": "3.0238654"
   },
   {
     "nom": "Lambersart",
@@ -1857,7 +2103,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Lambersart",
@@ -1872,7 +2120,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Lambersart",
@@ -1887,7 +2137,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Lambersart",
@@ -1902,7 +2154,9 @@
     "portail": "4242#",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.6596897",
+    "poste_longitude": "3.0233049"
   },
   {
     "nom": "Lambersart",
@@ -1917,7 +2171,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.6568967",
+    "poste_longitude": "3.0328341"
   },
   {
     "nom": "Lambersart",
@@ -1932,7 +2188,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.6620902",
+    "poste_longitude": "3.0138328"
   },
   {
     "nom": "Lamotte",
@@ -1947,7 +2205,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Le Riez",
@@ -1962,7 +2222,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.540345",
+    "poste_longitude": "3.0488602"
   },
   {
     "nom": "Leet",
@@ -1977,7 +2239,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Lens",
@@ -1992,7 +2256,9 @@
     "portail": "2025",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Lens",
@@ -2007,7 +2273,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Lesquin",
@@ -2022,7 +2290,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.6011174",
+    "poste_longitude": "3.1099532"
   },
   {
     "nom": "Lesquin",
@@ -2037,7 +2307,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.6011174",
+    "poste_longitude": "3.1099532"
   },
   {
     "nom": "Lesquin",
@@ -2052,7 +2324,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.6011174",
+    "poste_longitude": "3.1099532"
   },
   {
     "nom": "Lesquin",
@@ -2067,7 +2341,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.6011174",
+    "poste_longitude": "3.1099532"
   },
   {
     "nom": "Lesquin",
@@ -2082,7 +2358,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Leval",
@@ -2097,7 +2375,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Lille Europe",
@@ -2112,7 +2392,9 @@
     "portail": "4141",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Lille Gare",
@@ -2127,7 +2409,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Lille Gare",
@@ -2142,7 +2426,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Lille Sud",
@@ -2157,7 +2443,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.6167162",
+    "poste_longitude": "3.0547913"
   },
   {
     "nom": "Lille VR GP",
@@ -2172,7 +2460,9 @@
     "portail": "4141",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Lillers",
@@ -2187,7 +2477,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Lion dor",
@@ -2202,7 +2494,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Lion dor",
@@ -2217,7 +2511,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Lion dor",
@@ -2232,7 +2528,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Lion dor",
@@ -2247,7 +2545,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Loison",
@@ -2262,7 +2562,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Lomme",
@@ -2277,7 +2579,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.6524609",
+    "poste_longitude": "3.0199253"
   },
   {
     "nom": "Lomme",
@@ -2292,7 +2596,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.6544009",
+    "poste_longitude": "3.0235102"
   },
   {
     "nom": "Maing",
@@ -2307,7 +2613,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Maison Rouge",
@@ -2322,7 +2630,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Marquise",
@@ -2337,7 +2647,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.8057342",
+    "poste_longitude": "1.7280862"
   },
   {
     "nom": "Marquise",
@@ -2352,7 +2664,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.8055248",
+    "poste_longitude": "1.7380236"
   },
   {
     "nom": "Marquise",
@@ -2367,7 +2681,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.806745",
+    "poste_longitude": "1.7426714"
   },
   {
     "nom": "Mercatel",
@@ -2382,7 +2698,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Mercatel",
@@ -2397,7 +2715,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Moulin",
@@ -2412,7 +2732,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Moulin",
@@ -2427,7 +2749,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.8991214",
+    "poste_longitude": "1.8133972"
   },
   {
     "nom": "Moulin",
@@ -2442,7 +2766,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.8991214",
+    "poste_longitude": "1.8133972"
   },
   {
     "nom": "Moulin",
@@ -2457,7 +2783,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.8873848",
+    "poste_longitude": "1.819481"
   },
   {
     "nom": "Moulin",
@@ -2472,7 +2800,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.8889835",
+    "poste_longitude": "1.81373"
   },
   {
     "nom": "Moulin",
@@ -2487,7 +2817,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.8873848",
+    "poste_longitude": "1.819481"
   },
   {
     "nom": "Moulin",
@@ -2502,7 +2834,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.8915667",
+    "poste_longitude": "1.8178309"
   },
   {
     "nom": "Moulin",
@@ -2517,7 +2851,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.8794477",
+    "poste_longitude": "1.8227985"
   },
   {
     "nom": "Nortkerque",
@@ -2532,7 +2868,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Noyelles",
@@ -2547,7 +2885,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Oignies",
@@ -2562,7 +2902,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Orchies",
@@ -2577,7 +2919,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Ostricourt",
@@ -2592,7 +2936,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Pays Blanc",
@@ -2607,7 +2953,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.9083245",
+    "poste_longitude": "1.8065524"
   },
   {
     "nom": "Pays Blanc",
@@ -2622,7 +2970,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.9040357",
+    "poste_longitude": "1.8097648"
   },
   {
     "nom": "Pays Blanc",
@@ -2637,7 +2987,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.9069445",
+    "poste_longitude": "1.8086409"
   },
   {
     "nom": "Pays Blanc",
@@ -2652,7 +3004,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.9104076",
+    "poste_longitude": "1.805976"
   },
   {
     "nom": "PE3 Bif Coupvent",
@@ -2667,7 +3021,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "PE4 Pondéreux",
@@ -2682,7 +3038,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.9931754",
+    "poste_longitude": "2.2758878"
   },
   {
     "nom": "PE5 Mardyck",
@@ -2697,7 +3055,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.9930676",
+    "poste_longitude": "2.2612684"
   },
   {
     "nom": "PE5 Mardyck",
@@ -2712,7 +3072,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.9930676",
+    "poste_longitude": "2.2612684"
   },
   {
     "nom": "Phalempin",
@@ -2727,7 +3089,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.5242462",
+    "poste_longitude": "3.0229981"
   },
   {
     "nom": "Pont de briques",
@@ -2742,7 +3106,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "PRCI 41",
@@ -2757,7 +3123,9 @@
     "portail": "4141",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Puyt Houck",
@@ -2772,7 +3140,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.9932135",
+    "poste_longitude": "2.2758493"
   },
   {
     "nom": "Quévy",
@@ -2787,7 +3157,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.3398621",
+    "poste_longitude": "3.9095434"
   },
   {
     "nom": "Quilleval",
@@ -2802,7 +3174,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Quilleval",
@@ -2817,7 +3191,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Rang",
@@ -2832,7 +3208,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.4163991",
+    "poste_longitude": "1.6480278"
   },
   {
     "nom": "Riviere",
@@ -2847,7 +3225,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.9317909",
+    "poste_longitude": "1.8451904"
   },
   {
     "nom": "Riviere",
@@ -2862,7 +3242,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Riviere",
@@ -2877,7 +3259,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.9317909",
+    "poste_longitude": "1.8451904"
   },
   {
     "nom": "Rodelinghem",
@@ -2892,7 +3276,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.8262393",
+    "poste_longitude": "1.9289311"
   },
   {
     "nom": "Rodelinghem",
@@ -2907,7 +3293,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.8262393",
+    "poste_longitude": "1.9289311"
   },
   {
     "nom": "Rodelinghem",
@@ -2922,7 +3310,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.8262393",
+    "poste_longitude": "1.9289311"
   },
   {
     "nom": "Rodelinghem",
@@ -2937,7 +3327,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.8262393",
+    "poste_longitude": "1.9289311"
   },
   {
     "nom": "Roeux",
@@ -2952,7 +3344,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Roeux",
@@ -2967,7 +3361,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Ronchin",
@@ -2982,7 +3378,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Ronchin",
@@ -2997,7 +3395,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.6125749",
+    "poste_longitude": "3.089374"
   },
   {
     "nom": "Roubaix",
@@ -3012,7 +3412,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.710521",
+    "poste_longitude": "3.1626948"
   },
   {
     "nom": "Rue verte",
@@ -3027,7 +3429,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.9144202",
+    "poste_longitude": "1.8116308"
   },
   {
     "nom": "Rue verte",
@@ -3042,7 +3446,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.9137055",
+    "poste_longitude": "1.8101758"
   },
   {
     "nom": "Rue verte",
@@ -3057,7 +3463,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.9138959",
+    "poste_longitude": "1.8111583"
   },
   {
     "nom": "Rue verte",
@@ -3072,7 +3480,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.9154433",
+    "poste_longitude": "1.8141352"
   },
   {
     "nom": "Rue verte",
@@ -3087,7 +3497,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.9167565",
+    "poste_longitude": "1.8162583"
   },
   {
     "nom": "Rue verte",
@@ -3102,7 +3514,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.9169776",
+    "poste_longitude": "1.8161042"
   },
   {
     "nom": "Rumes",
@@ -3117,7 +3531,9 @@
     "portail": "",
     "lignes": "GONESSE à LILLE-FRONTIERE (LGV)",
     "numero_ligne": 226000.0,
-    "pk": "2,535"
+    "pk": "2,535",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Ruminghem",
@@ -3132,7 +3548,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Saint Eloi",
@@ -3147,7 +3565,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.3567803",
+    "poste_longitude": "3.0837506"
   },
   {
     "nom": "Saint Eloi",
@@ -3162,7 +3582,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Saint Omer",
@@ -3177,7 +3599,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.7558154",
+    "poste_longitude": "2.2620473"
   },
   {
     "nom": "Saint Omer",
@@ -3192,7 +3616,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.7508005",
+    "poste_longitude": "2.27643"
   },
   {
     "nom": "Saint Omer",
@@ -3207,7 +3633,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.7518093",
+    "poste_longitude": "2.272768"
   },
   {
     "nom": "Saint Omer",
@@ -3222,7 +3650,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.7580464",
+    "poste_longitude": "2.2580918"
   },
   {
     "nom": "Saint Sauveur",
@@ -3237,7 +3667,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.6149781",
+    "poste_longitude": "3.0897629"
   },
   {
     "nom": "Saint Sauveur",
@@ -3252,7 +3684,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Sassegnies",
@@ -3267,7 +3701,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Seclin",
@@ -3282,7 +3718,9 @@
     "portail": "Accès par carmillon",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Avion",
@@ -3297,7 +3735,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Avion",
@@ -3312,7 +3752,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Sin le noble",
@@ -3327,7 +3769,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Somain",
@@ -3342,7 +3786,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.3551676",
+    "poste_longitude": "3.26171"
   },
   {
     "nom": "Steenwerck",
@@ -3357,7 +3803,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Strazeele",
@@ -3372,7 +3820,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Strazeele",
@@ -3387,7 +3837,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.7082171",
+    "poste_longitude": "2.6726565"
   },
   {
     "nom": "Strazeele",
@@ -3402,7 +3854,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.7086308",
+    "poste_longitude": "2.6828771"
   },
   {
     "nom": "Tergnier",
@@ -3417,7 +3871,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Terres Noires",
@@ -3432,7 +3888,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Thiennes",
@@ -3447,7 +3905,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Tourcoing",
@@ -3462,7 +3922,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.7185346",
+    "poste_longitude": "3.1778003"
   },
   {
     "nom": "Tourcoing Frontière",
@@ -3477,7 +3939,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "50.7213464",
+    "poste_longitude": "3.1943516"
   },
   {
     "nom": "Tricat",
@@ -3492,7 +3956,9 @@
     "portail": "",
     "lignes": "BOULOGNE-VILLE à CALAIS MARITIME",
     "numero_ligne": 314000.0,
-    "pk": "284,612"
+    "pk": "284,612",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Valenciennes (Équipe)",
@@ -3507,7 +3973,9 @@
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
-    "pk": ""
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Valenciennes",
@@ -3522,7 +3990,9 @@
     "portail": "Code: 594   https://photos.app.goo.gl/eMkW3ziyviHTHgin9",
     "lignes": "FIVES à HIRSON",
     "numero_ligne": 267000.0,
-    "pk": "45,854"
+    "pk": "45,854",
+    "poste_latitude": "50.3753064",
+    "poste_longitude": "3.523896"
   },
   {
     "nom": "Valenciennes",
@@ -3537,7 +4007,9 @@
     "portail": "",
     "lignes": "FIVES à HIRSON",
     "numero_ligne": 267000.0,
-    "pk": "45,854"
+    "pk": "45,854",
+    "poste_latitude": "50.3753064",
+    "poste_longitude": "3.523896"
   },
   {
     "nom": "Verquigneul",
@@ -3552,7 +4024,9 @@
     "portail": "",
     "lignes": "ARRAS à DUNKERQUE",
     "numero_ligne": 301000.0,
-    "pk": "226,556"
+    "pk": "226,556",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Volk Veld",
@@ -3567,7 +4041,9 @@
     "portail": "",
     "lignes": "ARRAS à DUNKERQUE",
     "numero_ligne": 301000.0,
-    "pk": "267,650"
+    "pk": "267,650",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Wancourp",
@@ -3582,7 +4058,9 @@
     "portail": "",
     "lignes": "GONESSE à LILLE-FRONTIERE (LGV)",
     "numero_ligne": 226000.0,
-    "pk": "153,586"
+    "pk": "153,586",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Wannehain",
@@ -3597,7 +4075,9 @@
     "portail": "",
     "lignes": "GONESSE à LILLE-FRONTIERE (LGV)",
     "numero_ligne": 226000.0,
-    "pk": "208,699"
+    "pk": "208,699",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Wattignies",
@@ -3612,7 +4092,9 @@
     "portail": "",
     "lignes": "PARIS-NORD à LILLE",
     "numero_ligne": 272000.0,
-    "pk": "244,860"
+    "pk": "244,860",
+    "poste_latitude": "50.5945631",
+    "poste_longitude": "3.062718"
   },
   {
     "nom": "Wattignies",
@@ -3627,7 +4109,9 @@
     "portail": "",
     "lignes": "PARIS-NORD à LILLE",
     "numero_ligne": 272000.0,
-    "pk": "244,860"
+    "pk": "244,860",
+    "poste_latitude": "50.5945631",
+    "poste_longitude": "3.062718"
   },
   {
     "nom": "Yeuse",
@@ -3642,6 +4126,8 @@
     "portail": "",
     "lignes": "FRETIN à FRÉTHUN (LGV)",
     "numero_ligne": 216000.0,
-    "pk": "96,683"
+    "pk": "96,683",
+    "poste_latitude": "",
+    "poste_longitude": ""
   }
 ]
