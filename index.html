@@ -651,7 +651,7 @@ const _lonPoste = (lieu.poste_longitude ?? "").toString();
 const usePoste = _latPoste !== "" && _lonPoste !== "";
 const targetLat = usePoste ? _latPoste : lieu.latitude;
 const targetLon = usePoste ? _lonPoste : lieu.longitude;
-const urlMyMapsPoste = `https://www.google.com/maps/d/viewer?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&ll=${targetLat},${targetLon}&z=18`;
+const urlMyMapsPoste = myMapsViewer(targetLat, targetLon, 18);
 
 let html = `<h2>
   <a href="${urlMyMapsPoste}" target="_blank" class="titre-lien">📍 ${formatNomCompletLieu(lieu)}</a>
@@ -1100,7 +1100,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.05</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.06</span>
 </div>
 
 <script>
