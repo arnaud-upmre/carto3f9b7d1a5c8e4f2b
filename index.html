@@ -400,6 +400,12 @@ const compteurAppareilURL = "https://script.google.com/macros/s/AKfycbwJIlvcfNYR
 let lieux = [], fuse;
 let appareils = [], fuseAppareils;
 
+    // ✅ Ajoute ce bloc ici :
+function myMapsViewer(lat, lon, z = 19) {
+  const mid = "1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r"; // ID de ta carte MyMaps
+  return `https://www.google.com/maps/d/viewer?mid=${mid}&ll=${lat},${lon}&z=${z}`;
+}
+    
 // Pagination proximité
 let proximiteIndex = 0;
 const PROX_STEP = 10;
@@ -654,7 +660,7 @@ let html = `<h2>
 
 <p style="text-align:center; font-weight:600; margin:1.5rem 0 0.5rem 0;">🛣️ Repérer l’accès :</p>
 <div class="inline-links" style="justify-content:center;">
-<a href="https://www.google.com/maps/d/viewer?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&ll=${lieu.latitude},${lieu.longitude}&z=19" target="_blank">🛰️ Vue satellite</a>
+  <a href="${myMapsViewer(lieu.latitude, lieu.longitude, 19)}" target="_blank">🛰️ Vue satellite</a>
   <a href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lieu.latitude},${lieu.longitude}" target="_blank">👁️ Street View</a>
 </div>
 
@@ -867,7 +873,7 @@ function showAppareil(app) {
   </h2>
 
   <div class="inline-links" style="justify-content:center; margin-top:10px; margin-bottom:1.5rem;"> 
-<a href="https://www.google.com/maps/d/viewer?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&ll=${app.latitude},${app.longitude}&z=19" target="_blank">🛰️ Vue satellite</a>`;
+<a href="${myMapsViewer(app.latitude, app.longitude, 19)}" target="_blank">🛰️ Vue satellite</a>`;
 
   // 🔗 ajoute le bouton itinéraire si un poste correspondant est trouvé
   const posteTrouvé = lieux.find(l => 
@@ -1095,7 +1101,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.02</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.03</span>
 </div>
 
 <script>
