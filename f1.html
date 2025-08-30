@@ -624,29 +624,21 @@ function showLieu(lieu) {
   result.style.display = "block";
   incrementCounter();
 
-let html = `<h2 style="text-align:center;">
-  📌 ${formatNomCompletLieu(lieu)}
-</h2>
-<div style="text-align:center; font-weight:400; font-size:13px; color:#666; margin-top:-4px; margin-bottom:1rem;">
-  <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&ll=${lieu.latitude},${lieu.longitude}&z=19"
-     target="_blank"
-     style="text-decoration:none; font-size:13px; color:#666;">
-    🛰️ vue satellite
-  </a>
-   | 
-  <a href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lieu.latitude},${lieu.longitude}"
-     target="_blank"
-     style="text-decoration:none; font-size:13px; color:#666;">
-    👁️ Street View
-  </a>
-</div>
+  let html = `<h2>
+    📌 ${formatNomCompletLieu(lieu)}
+  </h2>
 
-<p style="text-align:center; font-weight:600; margin:1rem 0 0.5rem 0;">🚙 Itinéraires disponibles :</p>
-<div class="inline-links" style="justify-content:center;">
-  <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank">🗺️ Google Maps</a>
-  <a href="https://maps.apple.com/?daddr=${lieu.latitude},${lieu.longitude}" target="_blank">🍎 Apple Plans</a>
-  <a href="https://waze.com/ul?ll=${lieu.latitude},${lieu.longitude}&navigate=yes" target="_blank">🚗 Waze</a>
-</div>`;
+  <div class="inline-links" style="justify-content:center; margin-top:6px; margin-bottom:1.5rem;">
+    <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&ll=${lieu.latitude},${lieu.longitude}&z=19" target="_blank">🛰️ Vue satellite</a>
+    <a href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lieu.latitude},${lieu.longitude}" target="_blank">👁️ Street View</a>
+  </div>
+
+  <p style="text-align:center; font-weight:600; margin:1.5rem 0 0.5rem 0;">🚙 Itinéraires disponibles :</p>
+  <div class="inline-links" style="justify-content:center;">
+    <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank">🗺️ Google Maps</a>
+    <a href="https://maps.apple.com/?daddr=${lieu.latitude},${lieu.longitude}" target="_blank">🍎 Apple Plans</a>
+    <a href="https://waze.com/ul?ll=${lieu.latitude},${lieu.longitude}&navigate=yes" target="_blank">🚗 Waze</a>
+  </div>`;
 
   const blocs = [];
   if (lieu.description) blocs.push(`<p>${lieu.description}</p>`);
@@ -656,13 +648,11 @@ let html = `<h2 style="text-align:center;">
   if (lieu.contact) blocs.push(formatContact(lieu.contact));
   if (lieu.portail) blocs.push(formatPortail(lieu.portail));
 
-  // --- Ajoute séparateurs uniquement entre blocs ---
   if (blocs.length > 0) {
     html += `<hr class="separator" />` +
             blocs.map((b,i)=> i===0 ? b : `<hr class="separator" />${b}`).join("");
   }
 
-  // --- Toujours un séparateur avant la zone appareils ---
   const appareilsHTML = generateAppareilListHTML(lieu);
   if (appareilsHTML) {
     html += `<hr class="separator" />${appareilsHTML}`;
@@ -847,15 +837,12 @@ function showAppareil(app) {
   suggestionsEl.innerHTML = "";
   result.style.display = "block";
 
-  let html = `<h2 style="text-align:center;">
+  let html = `<h2>
     🔌 ${app.appareil} (${app.nom}${app.type ? ' ' + app.type : ''}${app.SAT ? ' / ' + app.SAT : ''})
   </h2>
-  <div style="text-align:center; font-weight:400; font-size:13px; color:#666; margin-top:-4px; margin-bottom:1rem;">
-    <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&ll=${app.latitude},${app.longitude}&z=19"
-       target="_blank"
-       style="text-decoration:none; font-size:13px; color:#666;">
-      🛰️ vue satellite
-    </a>
+
+  <div class="inline-links" style="justify-content:center; margin-top:6px; margin-bottom:1.5rem;">
+    <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&ll=${app.latitude},${app.longitude}&z=19" target="_blank">🛰️ Vue satellite</a>
   </div>`;
 
   const blocs = [];
@@ -877,13 +864,9 @@ function showAppareil(app) {
   const lieuCible = accesTrouvé || posteTrouvé;
   if (lieuCible) {
     blocs.push(`
-      <div style="margin:1.8rem 0; text-align:center;">
-        <a href="#" onclick='showLieu(${JSON.stringify(lieuCible)})'
-           role="button"
-           aria-label="Ouvrir la fiche poste et créer l’itinéraire en voiture"
-           style="display:inline-block; padding:10px 16px; border-radius:12px; border:1px solid #1a73e8; text-decoration:none; font-weight:600; color:#1a73e8;">
-          🚗 Infos & itinéraire : <strong>ICI</strong>
-        </a>
+      <p style="text-align:center; font-weight:600; margin:1.5rem 0 0.5rem 0;">🚗 Infos & itinéraire :</p>
+      <div class="inline-links" style="justify-content:center;">
+        <a href="#" onclick='showLieu(${JSON.stringify(lieuCible)})'>ICI</a>
       </div>
     `);
   }
@@ -1060,7 +1043,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.03</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.04</span>
 </div>
 
 <script>
