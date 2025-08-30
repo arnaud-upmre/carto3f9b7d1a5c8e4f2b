@@ -654,7 +654,9 @@ const targetLat = usePoste ? _latPoste : lieu.latitude;
 const targetLon = usePoste ? _lonPoste : lieu.longitude;
 const urlMyMapsPoste = myMapsViewer(targetLat, targetLon, 18);
 
-let html = `<h2><a href="${urlMyMapsPoste}" target="_blank" rel="noopener noreferrer" class="titre-lien">📍 ${formatNomCompletLieu(lieu)}</a>
+let html = `<h2><a href="#" data-href="${urlMyMapsPoste}" onclick="window.open(this.dataset.href,'_blank')" class="titre-lien">
+  📍 ${formatNomCompletLieu(lieu)}
+</a>
 </h2>
 
 <p style="text-align:center; font-weight:600; margin:1.5rem 0 0.5rem 0;">🛣️ Repérer l’accès :</p>
@@ -1100,7 +1102,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.08</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.09</span>
 </div>
 
 <script>
