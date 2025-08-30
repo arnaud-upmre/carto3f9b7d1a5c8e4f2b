@@ -377,9 +377,12 @@ main {
 
 <!-- Bouton localiser -->
 <button id="btn-localiser" class="btn-primary">
-  📍 Me localiser (10 plus proches)
+  📍 À proximité
 </button>
 <div id="proximite" style="margin-top:1rem; font-size:14px;"></div>
+<div id="proximite-actions" style="text-align:center; margin:10px 0;">
+  <button id="voir-plus" class="btn-primary" style="display:none;">➕ Voir plus</button>
+</div>
   <script>
 const jsonUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/postes.json";
 const appareilsUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/appareils.json";
@@ -388,6 +391,11 @@ const compteurAppareilURL = "https://script.google.com/macros/s/AKfycbwJIlvcfNYR
 
 let lieux = [], fuse;
 let appareils = [], fuseAppareils;
+
+// Pagination proximité
+let proximiteIndex = 0;
+const PROX_STEP = 10;
+let proximiteSorted = [];
   function formatContact(val) {
   if (!val) return "";
 
@@ -922,7 +930,16 @@ function getDistance(lat1, lon1, lat2, lon2) {
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
   return R * c; // distance en km
 }
+// --- Utilitaires d'affichage pour la proximité ---
+const km = d => d.toFixed(2).replace(".", ","); // format FR
 
+const labelPoste = p =>
+  (`${p.nom || ""}${p.type ? " " + p.type : ""}${p.SAT ? " " + p.SAT : ""}`.trim()) +
+  (p.accès ? ` – accès ${p.accès}` : "");
+
+const labelAppareil = p =>
+  `${p.appareil} (${p.nom}${p.type ? " " + p.type : ""}${p.SAT ? " / " + p.SAT : ""})`;
+    
     // Masquer le bouton sur PC, afficher uniquement sur mobile
 function isMobile() {
   return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
@@ -953,42 +970,20 @@ document.getElementById("btn-localiser").addEventListener("click", () => {
   }
 });
 
-// === Affiche les 10 plus proches (postes + appareils) ===
-function showNearby(position) {
-  const lat = position.coords.latitude;
-  const lon = position.coords.longitude;
-
-  if (!allItems || allItems.length === 0) {
-    alert("Les données ne sont pas encore chargées.");
-    return;
-  }
-
-  // utilitaires d'affichage
-  const km = d => d.toFixed(2).replace(".", ","); // format FR
- const labelPoste = p =>
-  (`${p.nom || ""}${p.type ? " " + p.type : ""}${p.SAT ? " " + p.SAT : ""}`.trim()) +
-  (p.accès ? ` – accès ${p.accès}` : "");
-  const labelAppareil = p =>
-    `${p.appareil} (${p.nom}${p.type ? " " + p.type : ""}${p.SAT ? " / " + p.SAT : ""})`;
-
-  const distances = allItems.map(it => ({
-    ...it,
-    distance: getDistance(lat, lon, it.latitude, it.longitude)
-  }));
-
-  const proches = distances.sort((a,b) => a.distance - b.distance).slice(0,10);
-
-  // --- Affichage texte classique ---
+    // Affiche la page suivante de résultats (+10)
+function renderProximitePage() {
   const container = document.getElementById("proximite");
-  container.innerHTML = `<h3>📍 Les 10 plus proches :</h3><ul style="margin:0; padding-left:20px;"></ul>`;
   const ul = container.querySelector("ul");
+  const btnVoirPlus = document.getElementById("voir-plus");
 
-  proches.forEach(p => {
+  const slice = proximiteSorted.slice(proximiteIndex, proximiteIndex + PROX_STEP);
+
+  slice.forEach(p => {
     const icon = p.category === "poste" ? "🚙" : "💡";
     const label = p.category === "poste" ? labelPoste(p) : labelAppareil(p);
 
     const li = document.createElement("li");
-    li.style.margin = "15px 0"; // ✅ espace plus grand entre chaque élément
+    li.style.margin = "15px 0";
 
     const a = document.createElement("a");
     a.href = "#";
@@ -999,7 +994,9 @@ function showNearby(position) {
 
     a.addEventListener("click", ev => {
       ev.preventDefault();
-      container.innerHTML = ""; // ✅ efface la liste des proches
+      // Nettoie la zone proximité et masque "Voir plus"
+      container.innerHTML = "";
+      btnVoirPlus.style.display = "none";
       if (p.category === "poste") {
         showLieu(p);
       } else {
@@ -1010,7 +1007,46 @@ function showNearby(position) {
     li.appendChild(a);
     ul.appendChild(li);
   });
+
+  proximiteIndex += slice.length;
+
+  // Affiche / masque le bouton "Voir plus"
+  if (proximiteIndex < proximiteSorted.length) {
+    btnVoirPlus.style.display = "inline-block";
+  } else {
+    btnVoirPlus.style.display = "none";
+  }
 }
+
+// === À proximité avec pagination par 10 ===
+function showNearby(position) {
+  const lat = position.coords.latitude;
+  const lon = position.coords.longitude;
+
+  if (!allItems || allItems.length === 0) {
+    alert("Les données ne sont pas encore chargées.");
+    return;
+  }
+
+  // Calcule & trie toute la liste une fois
+  proximiteSorted = allItems
+    .map(it => ({ ...it, distance: getDistance(lat, lon, it.latitude, it.longitude) }))
+    .sort((a, b) => a.distance - b.distance);
+
+  proximiteIndex = 0;
+
+  // Prépare le conteneur
+  const container = document.getElementById("proximite");
+  container.innerHTML = `<h3>📍 À proximité :</h3><ul style="margin:0; padding-left:20px;"></ul>`;
+
+  // Branche le bouton "Voir plus"
+  const btnVoirPlus = document.getElementById("voir-plus");
+  btnVoirPlus.onclick = renderProximitePage;
+
+  // Affiche la première page (10)
+  renderProximitePage();
+}
+
   </script>
 <div style="text-align:center; margin-top:30px;">
 <a href="formulaire.html" class="btn-primary">
@@ -1042,7 +1078,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.05</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.01a</span>
 </div>
 
 <script>
