@@ -867,12 +867,19 @@ results.sort((a, b) => {
   return label(a).localeCompare(label(b), "fr", { sensitivity: "base" });
 });
   // -------- fin TRI AVANCÉ ----------
-// --- Affichage des résultats ---
-results.forEach((item, i) => {
-  const li = document.createElement("li");
-  li.textContent = (item.category === "poste")
+// --- Affichage des résultats (avec icônes) ---
+suggestionsEl.innerHTML = "";
+
+const labelFor = (item) =>
+  (item.category === "poste")
     ? formatNomCompletLieu(item)
     : `${item.appareil} (${item.nom}${item.type ? ' ' + item.type : ''}${item.SAT ? ' / ' + item.SAT : ''})`;
+
+results.forEach((item, i) => {
+  const li = document.createElement("li");
+  const icon = (item.category === "poste") ? "🚙" : "💡"; // 🚙 = voiture bleue
+
+  li.innerHTML = `${icon} <b>${labelFor(item)}</b>`;
 
   if (i === 0) li.classList.add("best");
 
@@ -1129,7 +1136,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.14</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.15</span>
 </div>
 
 <script>
