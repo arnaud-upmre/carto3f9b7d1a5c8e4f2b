@@ -879,7 +879,7 @@ results.forEach((item, i) => {
   const li = document.createElement("li");
   const icon = (item.category === "poste") ? "🚙" : "💡"; // 🚙 = voiture bleue
 
-  li.innerHTML = `${icon} <b>${labelFor(item)}</b>`;
+  li.innerHTML = `${icon} ${labelFor(item)}`;
 
   if (i === 0) li.classList.add("best");
 
@@ -1048,7 +1048,7 @@ function renderProximitePage() {
     a.style.textDecoration = "none";
     a.style.color = "inherit";
     a.style.cursor = "pointer";
-    a.innerHTML = `${icon} <b>${label}</b> – ${km(p.distance)} km`;
+  a.innerHTML = `${icon} ${label} – ${km(p.distance)} km`;
 
     a.addEventListener("click", ev => {
       ev.preventDefault();
@@ -1136,7 +1136,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.15</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.16</span>
 </div>
 
 <script>
