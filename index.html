@@ -867,6 +867,11 @@ results.sort((a, b) => {
   return label(a).localeCompare(label(b), "fr", { sensitivity: "base" });
 });
   // -------- fin TRI AVANCÉ ----------
+
+// ✅ ici on ferme correctement l’event listener
+});
+
+// maintenant seulement on déclare la fonction
 function showAppareil(app) {
   incrementCounterAppareil();
   const result = document.getElementById("result");
@@ -1108,7 +1113,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.12a</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.13</span>
 </div>
 
 <script>
