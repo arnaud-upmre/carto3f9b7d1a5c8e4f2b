@@ -773,6 +773,7 @@ document.getElementById("search").addEventListener("input", e => {
 
   // Résultats bruts
 let results = fuseMix.search(query).map(r => r.item);
+  const cleanedQuery = query.replace(/\s+/g, "").toLowerCase();
 
 // -------- Filtre spécial préfixe appareils --------
 const queryWords = query.split(/\s+/);
@@ -1107,7 +1108,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.12</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.12a</span>
 </div>
 
 <script>
