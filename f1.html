@@ -624,31 +624,29 @@ function showLieu(lieu) {
   result.style.display = "block";
   incrementCounter();
 
-  let html = `<h2>
-    📌 ${formatNomCompletLieu(lieu)}
-    <span style="font-weight:400; font-size:13px; margin-left:6px; color:#666;">
-      (
-        <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&ll=${lieu.latitude},${lieu.longitude}&z=19"
-           target="_blank"
-           style="text-decoration:none; font-size:13px; color:#666;">
-          🛰️ vue satellite
-        </a>
-        |
-        <a href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lieu.latitude},${lieu.longitude}"
-           target="_blank"
-           style="text-decoration:none; font-size:13px; color:#666;">
-          👁️ Street View
-        </a>
-      )
-    </span>
-  </h2>
+let html = `<h2 style="text-align:center;">
+  📌 ${formatNomCompletLieu(lieu)}
+</h2>
+<div style="text-align:center; font-weight:400; font-size:13px; color:#666; margin-top:-4px; margin-bottom:1rem;">
+  <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&ll=${lieu.latitude},${lieu.longitude}&z=19"
+     target="_blank"
+     style="text-decoration:none; font-size:13px; color:#666;">
+    🛰️ vue satellite
+  </a>
+   | 
+  <a href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lieu.latitude},${lieu.longitude}"
+     target="_blank"
+     style="text-decoration:none; font-size:13px; color:#666;">
+    👁️ Street View
+  </a>
+</div>
 
-  <p style="text-align:center; font-weight:600; margin:0.5rem 0;">🚙 Itinéraires disponibles :</p>
-  <div class="inline-links" style="justify-content:center;">
-    <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank">🗺️ Google Maps</a>
-    <a href="https://maps.apple.com/?daddr=${lieu.latitude},${lieu.longitude}" target="_blank">🍎 Apple Plans</a>
-    <a href="https://waze.com/ul?ll=${lieu.latitude},${lieu.longitude}&navigate=yes" target="_blank">🚗 Waze</a>
-  </div>`;
+<p style="text-align:center; font-weight:600; margin:1rem 0 0.5rem 0;">🚙 Itinéraires disponibles :</p>
+<div class="inline-links" style="justify-content:center;">
+  <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank">🗺️ Google Maps</a>
+  <a href="https://maps.apple.com/?daddr=${lieu.latitude},${lieu.longitude}" target="_blank">🍎 Apple Plans</a>
+  <a href="https://waze.com/ul?ll=${lieu.latitude},${lieu.longitude}&navigate=yes" target="_blank">🚗 Waze</a>
+</div>`;
 
   const blocs = [];
   if (lieu.description) blocs.push(`<p>${lieu.description}</p>`);
@@ -845,22 +843,20 @@ function showAppareil(app) {
   incrementCounterAppareil();
   const result = document.getElementById("result");
   const suggestionsEl = document.getElementById("suggestions");
-  
+
   suggestionsEl.innerHTML = "";
   result.style.display = "block";
 
-  let html = `<h2>
+  let html = `<h2 style="text-align:center;">
     🔌 ${app.appareil} (${app.nom}${app.type ? ' ' + app.type : ''}${app.SAT ? ' / ' + app.SAT : ''})
-    <span style="font-weight:400; font-size:13px; margin-left:6px; color:#666;">
-      (
-        <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&ll=${app.latitude},${app.longitude}&z=19"
-           target="_blank"
-           style="text-decoration:none; font-size:13px; color:#666;">
-          🛰️ vue satellite
-        </a>
-      )
-    </span>
-  </h2>`;
+  </h2>
+  <div style="text-align:center; font-weight:400; font-size:13px; color:#666; margin-top:-4px; margin-bottom:1rem;">
+    <a href="https://www.google.com/maps/d/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&ll=${app.latitude},${app.longitude}&z=19"
+       target="_blank"
+       style="text-decoration:none; font-size:13px; color:#666;">
+      🛰️ vue satellite
+    </a>
+  </div>`;
 
   const blocs = [];
   if (app.description) blocs.push(`<p>${app.description}</p>`);
@@ -1064,7 +1060,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.02</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.03</span>
 </div>
 
 <script>
