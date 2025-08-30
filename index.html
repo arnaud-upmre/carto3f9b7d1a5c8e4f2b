@@ -402,7 +402,8 @@ let appareils = [], fuseAppareils;
 
 function myMapsViewer(lat, lon, z = 19) {
   const mid = "1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r"; // ID de ta carte MyMaps
-  return `https://www.google.com/maps/d/u/0/edit?mid=${mid}&ll=${lat},${lon}&z=${z}`;
+  const baseUrl = `https://www.google.com/maps/d/u/0/edit?mid=${mid}&ll=${lat},${lon}&z=${z}`;
+  return `https://www.google.com/url?q=${encodeURIComponent(baseUrl)}`;
 }
     
 // Pagination proximité
@@ -1100,7 +1101,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.06</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.07</span>
 </div>
 
 <script>
