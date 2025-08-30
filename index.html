@@ -775,13 +775,19 @@ document.getElementById("search").addEventListener("input", e => {
 let results = fuseMix.search(query).map(r => r.item);
   const cleanedQuery = query.replace(/\s+/g, "").toLowerCase();
 
-  // 🔄 Fallback exact si Fuse ne trouve rien
-if (results.length === 0) {
-  const qNorm = normalize(query);
-  results = allItems.filter(item =>
-    (item.appareil && normalize(item.appareil) === qNorm) ||
-    (item.nom && normalize(item.nom) === qNorm)
-  );
+// 🔄 Fallback exact si Fuse ne donne pas une correspondance stricte
+const qNorm = normalize(query);
+const exactMatches = allItems.filter(item =>
+  (item.appareil && normalize(item.appareil) === qNorm) ||
+  (item.nom && normalize(item.nom) === qNorm)
+);
+
+if (exactMatches.length > 0) {
+  // On met l'exact en tête et on supprime les doublons
+  results = [...exactMatches, ...results.filter(r =>
+    !(r.appareil && normalize(r.appareil) === qNorm) &&
+    !(r.nom && normalize(r.nom) === qNorm)
+  )];
 }
 // -------- Filtre spécial préfixe appareils --------
 const queryWords = query.split(/\s+/);
@@ -1144,7 +1150,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.18</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.19</span>
 </div>
 
 <script>
