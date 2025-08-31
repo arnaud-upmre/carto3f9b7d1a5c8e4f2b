@@ -179,6 +179,13 @@ li.best {
     background-color: #1b2836; /* bleu foncé doux */
   }
 }
+    @media (prefers-color-scheme: dark) {
+  #result {
+    background: #1e1e1e;   /* gris foncé au lieu de blanc */
+    color: #e5e5e5;        /* texte clair */
+    box-shadow: 0 8px 24px rgba(255,255,255,0.05); /* ombre douce */
+  }
+}
     /* --- MODE SOMBRE AUTOMATIQUE --- */
 @media (prefers-color-scheme: dark) {
   body {
