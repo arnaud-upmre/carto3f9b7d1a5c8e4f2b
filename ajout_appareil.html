@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>➕ Ajouter un appareil</title>
 
-  <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 
@@ -104,7 +103,7 @@
     </form>
   </div>
 
-  <!-- Récap -->
+  <!-- Recap -->
   <div class="overlay" id="ovrRecap">
     <div class="dialog">
       <h3>Récapitulatif</h3>
@@ -185,12 +184,30 @@
       if(navigator.geolocation)navigator.geolocation.getCurrentPosition(p=>ensureMap(p.coords.latitude,p.coords.longitude));
     }
 
+    // Validation helper
+    function isValidLatLon(lat,lon){
+      return !isNaN(parseFloat(lat)) && !isNaN(parseFloat(lon));
+    }
+    function isValidUrl(str){
+      return /^https?:\/\/.+/i.test(str);
+    }
+
     // Form submit
     $("formAppareil").onsubmit=e=>{
       e.preventDefault();
       let item={demandeur:$("demandeur").value.trim(),poste:$("poste").value.trim(),appareil:$("appareil").value.trim(),infos:$("infos").value.trim()};
-      if($("presentValue").value==="oui"){item.method="geoloc";item.latitude=$("lat").value;item.longitude=$("lon").value;}
-      else{item.method="lien";item.lien=$("lien").value;}
+      if(!item.demandeur||!item.poste||!item.appareil){alert("Merci de remplir Demandeur, Poste et Appareil.");return;}
+
+      if($("presentValue").value==="oui"){
+        if(!isValidLatLon($("lat").value,$("lon").value)){alert("Merci d’indiquer des coordonnées valides.");return;}
+        item.method="geoloc";item.latitude=$("lat").value;item.longitude=$("lon").value;
+      }else if($("presentValue").value==="non"){
+        if(!isValidUrl($("lien").value)){alert("Merci de coller un lien Google Maps valide.");return;}
+        item.method="lien";item.lien=$("lien").value;
+      }else{
+        alert("Merci de choisir Oui ou Non pour la présence devant l’appareil.");return;
+      }
+
       if(editIndex!==null){contributions[editIndex]=item;editIndex=null;}else{contributions.push(item);}
       updateRecap();$("ovrRecap").style.display="flex";
     };
