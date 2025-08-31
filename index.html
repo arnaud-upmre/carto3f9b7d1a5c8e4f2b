@@ -594,8 +594,9 @@ function generateAlias(appareil, nom, sat, posteType) {
     alias.add(`${n} ${t}`);
     alias.add(`${t} ${n}`);
   }
-  
-  return Array.from(alias); // ✅ important
+
+  console.log("Alias générés pour", appareil, ":", Array.from(alias)); // DEBUG
+  return Array.from(alias);
 }
 
  function updateCounter() {
@@ -691,6 +692,8 @@ let html = `<h2><a href="#" data-href="${urlMyMapsPoste}" onclick="window.open(t
   result.innerHTML = html;
 }
 
+  let allItems = [], fuseMix;
+
 // Charger postes + appareils
 Promise.all([
   fetch(jsonUrl).then(r => r.json()),
@@ -722,22 +725,38 @@ Promise.all([
   // --- FUSE pour les appareils ---
   fuseAppareils = new Fuse(appareils, {
     keys: [
-      { name: 'appareil', weight: 0.9 },
-      { name: 'alias', weight: 0.7 },
-      { name: 'type', weight: 0 },
-      { name: 'nom', weight: 0.6 },
-      { name: 'SAT', weight: 0 }
+      { name: 'appareil', weight: 0.5 },
+      { name: 'alias', weight: 0.6 },
+      { name: 'type', weight: 0.3 },
+      { name: 'nom', weight: 0.1 },
+      { name: 'SAT', weight: 0.1 }
     ],
     includeScore: true,
-    threshold: 0.30,
+    threshold: 0.28,
     ignoreLocation: true
   });
-    // Reconstitue allItems pour la proximité
+
+  // --- FUSE mixte (postes + appareils) ---
   const postesTagged = postes.map(p => ({ ...p, category: "poste" }));
   const appsTagged   = apps.map(a => ({ ...a, category: "appareil" }));
   allItems = [...postesTagged, ...appsTagged];
+
+  fuseMix = new Fuse(allItems, {
+    keys: [
+      { name: "nom", weight: 0.5 },
+      { name: "type", weight: 0.3 },
+      { name: "SAT", weight: 0.2 },
+      { name: "appareil", weight: 0.5 },
+      { name: "alias", weight: 0.6 },
+      { name: "accès", getFn: o => o.accès?.toString?.() || "", weight: 0.2 }
+    ],
+    includeScore: true,
+    threshold: 0.25,
+    distance: 50,
+    minMatchCharLength: 2,
+    ignoreLocation: true
+  });
 });
-    
 
 document.getElementById("search").addEventListener("input", e => {
   const query = normalize(e.target.value.trim());
@@ -749,65 +768,109 @@ document.getElementById("search").addEventListener("input", e => {
   resultEl.innerHTML = "";
   resultEl.style.display = "none";
 
-  if (!query || query.length < 2 || !fuse || !fuseAppareils) return;
+  // N'affiche qu'à partir de 2 lettres
+  if (!query || query.length < 2 || !fuseMix) return;
 
-  // 🔎 Recherche séparée
-  let posteResults = fuse.search(query).map(r => ({ ...r.item, category: "poste" }));
-  let appareilResults = fuseAppareils.search(query).map(r => ({ ...r.item, category: "appareil" }));
+  // Résultats bruts
+let results = fuseMix.search(query).map(r => r.item);
+  const cleanedQuery = query.replace(/\s+/g, "").toLowerCase();
 
-  // Fusion
-  let results = [...posteResults, ...appareilResults];
+// -------- Filtre spécial préfixe appareils --------
+const queryWords = query.split(/\s+/);
+const prefixes = ["tt","i","tc","tsa","il","ip","imp","s"];
+const lowerWords = queryWords.map(w => w.toLowerCase());
 
-  // -------- TRI --------
-  results.sort((a, b) => {
-    const norm = s => (s || "").toLowerCase();
+const prefixWord = lowerWords.find(w => prefixes.includes(w));
 
-    // 1 : postes simples avant tout
-    const aIsPoste = a.category === "poste" && !a.accès;
-    const bIsPoste = b.category === "poste" && !b.accès;
-    if (aIsPoste && !bIsPoste) return -1;
-    if (bIsPoste && !aIsPoste) return 1;
+if (prefixWord) {
+  // Sépare préfixe et autres mots
+  const otherWords = lowerWords.filter(w => w !== prefixWord);
 
-    // 2 : postes avec accès ensuite
-    const aIsAcces = a.category === "poste" && !!a.accès;
-    const bIsAcces = b.category === "poste" && !!b.accès;
-    if (aIsAcces && !bIsAcces) return -1;
-    if (bIsAcces && !aIsAcces) return 1;
-
-    // 3 : appareils en dernier
-    if (a.category === "appareil" && b.category !== "appareil") return 1;
-    if (b.category === "appareil" && a.category !== "appareil") return -1;
-
-    // 4 : tri alphabétique stable
-    const label = x =>
-      x.category === "poste"
-        ? `${x.nom || ""} ${x.type || ""} ${x.SAT || ""}`.trim()
-        : `${x.appareil} (${x.nom}${x.type ? " " + x.type : ""}${x.SAT ? " / " + x.SAT : ""})`;
-
-    return label(a).localeCompare(label(b), "fr", { sensitivity: "base" });
+  results = results.filter(item => {
+    const appareilOk = item.appareil && item.appareil.toLowerCase().startsWith(prefixWord);
+    const nomOk = otherWords.every(w => normalize(item.nom || "").includes(w));
+    return appareilOk && nomOk;
   });
-  // -------- fin TRI --------
-
-  // --- Affichage des résultats ---
-  results.forEach((item, i) => {
-    const li = document.createElement("li");
-    const icon = (item.category === "poste") ? "🚙" : "💡";
-    const label = (item.category === "poste")
-      ? formatNomCompletLieu(item)
-      : `${item.appareil} (${item.nom}${item.type ? ' ' + item.type : ''}${item.SAT ? ' / ' + item.SAT : ''})`;
-
-    li.innerHTML = `${icon} ${label}`;
-    if (i === 0) li.classList.add("best");
-
-    li.onclick = () => {
-      if (item.category === "poste") showLieu(item);
-      else showAppareil(item);
-    };
-
-    suggestionsEl.appendChild(li);
-  });
+}
+// -------- Fin filtre spécial --------
+// Boost si la requête correspond exactement à un alias
+results.forEach(it => {
+  const aliases = Array.isArray(it.alias) ? it.alias : [];
+  it.__directAliasHit = aliases.some(a => normalize(a) === query);
 });
-    
+// -------- TRI AVANCÉ ----------
+results.sort((a, b) => {
+  const q = query.toLowerCase();
+
+  // Normalisations utiles
+  const norm = s => (s || "").toString().toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").trim().replace(/\s+/g, " ");
+  const id = x => (x.appareil || "").toString().replace(/\s+/g, "").toLowerCase();     // ex: "i7216"
+  const idDigits = x => id(x).replace(/\D/g, "");                                       // ex: "7216"
+
+  // Utilise la cleanedQuery définie plus haut
+  const qId = cleanedQuery;             // ex: "i7216" ou "7216"
+  const qDigits = cleanedQuery.replace(/\D/g, "");
+
+  // --- priorité -2 : correspondance EXACTE sur l'identifiant d'appareil (avec ou sans lettre) ---
+  const aExactId = a.category === "appareil" && (id(a) === qId || (qDigits && idDigits(a) === qDigits));
+  const bExactId = b.category === "appareil" && (id(b) === qId || (qDigits && idDigits(b) === qDigits));
+  if (aExactId && !bExactId) return -1;
+  if (bExactId && !aExactId) return 1;
+
+  // --- priorité -1 : correspondance EXACTE sur un alias normalisé ---
+  const aliasHit = (x) => Array.isArray(x.alias) && x.alias
+      .map(s => s.replace(/\s+/g, "").toLowerCase())
+      .some(s => s === qId || (qDigits && s.replace(/\D/g, "") === qDigits));
+  const aAlias = a.category === "appareil" && aliasHit(a);
+  const bAlias = b.category === "appareil" && aliasHit(b);
+  if (aAlias && !bAlias) return -1;
+  if (bAlias && !aAlias) return 1;
+
+  // --- le reste comme avant ---
+  const aNom = norm(a.nom || "");
+  const bNom = norm(b.nom || "");
+
+  // 0 : le nom qui COMMENCE par la requête
+  const aStarts = aNom.startsWith(q);
+  const bStarts = bNom.startsWith(q);
+  if (aStarts && !bStarts) return -1;
+  if (bStarts && !aStarts) return 1;
+
+  // 1 : correspondance exacte sur le nom
+  const aExact = aNom === q;
+  const bExact = bNom === q;
+  if (aExact && !bExact) return -1;
+  if (bExact && !aExact) return 1;
+
+  // 2 : postes simples avant tout
+  const aIsPoste = a.category === "poste" && !a.accès;
+  const bIsPoste = b.category === "poste" && !b.accès;
+  if (aIsPoste && !bIsPoste) return -1;
+  if (bIsPoste && !aIsPoste) return 1;
+
+  // 3 : postes avec accès ensuite
+  const aIsAcces = a.category === "poste" && !!a.accès;
+  const bIsAcces = b.category === "poste" && !!b.accès;
+  if (aIsAcces && !bIsAcces) return -1;
+  if (bIsAcces && !aIsAcces) return 1;
+
+  // 4 : appareils en dernier vis-à-vis des postes
+  if (a.category === "appareil" && b.category !== "appareil") return 1;
+  if (b.category === "appareil" && a.category !== "appareil") return -1;
+
+  // 5 : tri alphabétique stable
+  const label = x =>
+    x.category === "poste"
+      ? `${x.nom || ""} ${x.type || ""} ${x.SAT || ""}`.trim()
+      : `${x.appareil} (${x.nom}${x.type ? " " + x.type : ""}${x.SAT ? " / " + x.SAT : ""})`;
+
+  return label(a).localeCompare(label(b), "fr", { sensitivity: "base" });
+});
+  // -------- fin TRI AVANCÉ ----------
+
+// ✅ ici on ferme correctement l’event listener
+});
+
 // maintenant seulement on déclare la fonction
 function showAppareil(app) {
   incrementCounterAppareil();
@@ -962,7 +1025,7 @@ function renderProximitePage() {
     a.style.textDecoration = "none";
     a.style.color = "inherit";
     a.style.cursor = "pointer";
-  a.innerHTML = `${icon} ${label} – ${km(p.distance)} km`;
+    a.innerHTML = `${icon} <b>${label}</b> – ${km(p.distance)} km`;
 
     a.addEventListener("click", ev => {
       ev.preventDefault();
@@ -1050,7 +1113,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.22</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.13</span>
 </div>
 
 <script>
