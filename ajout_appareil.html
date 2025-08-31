@@ -17,8 +17,7 @@
     }
     body{font-family:Inter,system-ui;background:var(--bg);color:var(--fg);margin:0;padding:20px}
     form{max-width:600px;margin:auto;background:var(--card);padding:18px;border-radius:14px;box-shadow:0 3px 8px rgba(0,0,0,.2)}
-    h2{text-align:center;margin-bottom:10px}
-    #compteur{text-align:center;margin-bottom:15px;font-weight:600}
+    h2{text-align:center;margin-bottom:15px}
     label{display:block;margin-top:12px;font-weight:600}
     input,textarea{
       width:100%;padding:10px;margin-top:6px;border:1px solid var(--border);
@@ -48,7 +47,6 @@
 </head>
 <body>
   <h2>➕ Ajouter un appareil</h2>
-  <div id="compteur">🔧 Déjà <span id="compteur-valeur">...</span> contributions enregistrées</div>
 
   <form id="appareilForm">
     <label>Demandeur</label>
@@ -93,7 +91,6 @@
   <div id="popup"><div id="popupMsg">Envoi en cours...</div></div>
 
   <script>
-    const compteurURL = "TON_SCRIPT_URL"; // ⚠️ Remplacer par ton Apps Script compteur
     const mapDiv = document.getElementById("map");
     const popup = document.getElementById("popup");
     const popupMsg = document.getElementById("popupMsg");
@@ -150,25 +147,12 @@
     document.getElementById("appareilForm").addEventListener("submit", e=>{
       e.preventDefault();
       showPopup("Envoi en cours...");
-      // ⚠️ Ici à remplacer par l'appel fetch() vers ton Apps Script
+      // ⚠️ Ici tu connecteras le fetch() vers ton Apps Script
       setTimeout(()=>{
         popupMsg.textContent = "✅ Merci, votre contribution sera prise en compte sous 48h (jours ouvrés).";
         setTimeout(()=>hidePopup(), 3000);
       },1500);
     });
-
-    // compteur contributions
-    async function refreshCompteur(){
-      try{
-        const r = await fetch(compteurURL);
-        const data = await r.json();
-        document.getElementById("compteur-valeur").textContent =
-          (data && typeof data.count !== "undefined") ? data.count : "—";
-      }catch(e){
-        document.getElementById("compteur-valeur").textContent = "—";
-      }
-    }
-    refreshCompteur();
   </script>
 </body>
 </html>
