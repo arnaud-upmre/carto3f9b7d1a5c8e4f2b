@@ -653,8 +653,9 @@ const targetLat = usePoste ? _latPoste : lieu.latitude;
 const targetLon = usePoste ? _lonPoste : lieu.longitude;
 const urlMyMapsPoste = myMapsViewer(targetLat, targetLon, 18);
 
-let html = `<h2>
-  <a href="${urlMyMapsPoste}" target="_blank" class="titre-lien">📍 ${formatNomCompletLieu(lieu)}</a>
+let html = `<h2><a href="#" data-href="${urlMyMapsPoste}" onclick="window.open(this.dataset.href,'_blank')" class="titre-lien">
+  📍 ${formatNomCompletLieu(lieu)}
+</a>
 </h2>
 
 <p style="text-align:center; font-weight:600; margin:1.5rem 0 0.5rem 0;">🛣️ Repérer l’accès :</p>
@@ -772,6 +773,7 @@ document.getElementById("search").addEventListener("input", e => {
 
   // Résultats bruts
 let results = fuseMix.search(query).map(r => r.item);
+  const cleanedQuery = query.replace(/\s+/g, "").toLowerCase();
 
 // -------- Filtre spécial préfixe appareils --------
 const queryWords = query.split(/\s+/);
@@ -797,39 +799,38 @@ results.forEach(it => {
   it.__directAliasHit = aliases.some(a => normalize(a) === query);
 });
 // -------- TRI AVANCÉ ----------
-const cleanedQuery = query.replace(/\s+/g, "").toLowerCase(); // "i7216" ou "7216"
-const qDigits = cleanedQuery.replace(/\D/g, "");              // "7216"
-
 results.sort((a, b) => {
-  const norm = s => (s || "").toString()
-    .toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "")
-    .trim().replace(/\s+/g, " ");
+  const q = query.toLowerCase();
 
-  // helpers ID appareil
-  const id      = x => (x.appareil || "").toString().replace(/\s+/g, "").toLowerCase(); // "i7216"
-  const idDigits= x => id(x).replace(/\D/g, "");                                         // "7216"
+  // Normalisations utiles
+  const norm = s => (s || "").toString().toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").trim().replace(/\s+/g, " ");
+  const id = x => (x.appareil || "").toString().replace(/\s+/g, "").toLowerCase();     // ex: "i7216"
+  const idDigits = x => id(x).replace(/\D/g, "");                                       // ex: "7216"
 
-  // PRIORITÉ -2 : identifiant exact d'appareil (avec lettres OU seulement les chiffres)
-  const aExactId = a.category === "appareil" && (id(a) === cleanedQuery || (qDigits && idDigits(a) === qDigits));
-  const bExactId = b.category === "appareil" && (id(b) === cleanedQuery || (qDigits && idDigits(b) === qDigits));
+  // Utilise la cleanedQuery définie plus haut
+  const qId = cleanedQuery;             // ex: "i7216" ou "7216"
+  const qDigits = cleanedQuery.replace(/\D/g, "");
+
+  // --- priorité -2 : correspondance EXACTE sur l'identifiant d'appareil (avec ou sans lettre) ---
+  const aExactId = a.category === "appareil" && (id(a) === qId || (qDigits && idDigits(a) === qDigits));
+  const bExactId = b.category === "appareil" && (id(b) === qId || (qDigits && idDigits(b) === qDigits));
   if (aExactId && !bExactId) return -1;
   if (bExactId && !aExactId) return 1;
 
-  // PRIORITÉ -1 : alias exact (ex. "I 7216") après normalisation
+  // --- priorité -1 : correspondance EXACTE sur un alias normalisé ---
   const aliasHit = (x) => Array.isArray(x.alias) && x.alias
-    .map(s => s.replace(/\s+/g, "").toLowerCase())
-    .some(s => s === cleanedQuery || (qDigits && s.replace(/\D/g, "") === qDigits));
+      .map(s => s.replace(/\s+/g, "").toLowerCase())
+      .some(s => s === qId || (qDigits && s.replace(/\D/g, "") === qDigits));
   const aAlias = a.category === "appareil" && aliasHit(a);
   const bAlias = b.category === "appareil" && aliasHit(b);
   if (aAlias && !bAlias) return -1;
   if (bAlias && !aAlias) return 1;
 
-  // --- tri existant ---
-  const q = query.toLowerCase();
+  // --- le reste comme avant ---
   const aNom = norm(a.nom || "");
   const bNom = norm(b.nom || "");
 
-  // 0 : nom qui commence par la requête
+  // 0 : le nom qui COMMENCE par la requête
   const aStarts = aNom.startsWith(q);
   const bStarts = bNom.startsWith(q);
   if (aStarts && !bStarts) return -1;
@@ -857,14 +858,43 @@ results.sort((a, b) => {
   if (a.category === "appareil" && b.category !== "appareil") return 1;
   if (b.category === "appareil" && a.category !== "appareil") return -1;
 
-  // 5 : alpha stable
+  // 5 : tri alphabétique stable
   const label = x =>
     x.category === "poste"
       ? `${x.nom || ""} ${x.type || ""} ${x.SAT || ""}`.trim()
       : `${x.appareil} (${x.nom}${x.type ? " " + x.type : ""}${x.SAT ? " / " + x.SAT : ""})`;
+
   return label(a).localeCompare(label(b), "fr", { sensitivity: "base" });
 });
   // -------- fin TRI AVANCÉ ----------
+// --- Affichage des résultats (avec icônes) ---
+suggestionsEl.innerHTML = "";
+
+const labelFor = (item) =>
+  (item.category === "poste")
+    ? formatNomCompletLieu(item)
+    : `${item.appareil} (${item.nom}${item.type ? ' ' + item.type : ''}${item.SAT ? ' / ' + item.SAT : ''})`;
+
+results.forEach((item, i) => {
+  const li = document.createElement("li");
+  const icon = (item.category === "poste") ? "🚙" : "💡"; // 🚙 = voiture bleue
+
+  li.innerHTML = `${icon} ${labelFor(item)}`;
+
+  if (i === 0) li.classList.add("best");
+
+  li.onclick = () => {
+    if (item.category === "poste") showLieu(item);
+    else showAppareil(item);
+  };
+
+  suggestionsEl.appendChild(li);
+});
+
+// ✅ ici on ferme correctement l’event listener
+});
+
+// maintenant seulement on déclare la fonction
 function showAppareil(app) {
   incrementCounterAppareil();
   const result = document.getElementById("result");
@@ -1018,7 +1048,7 @@ function renderProximitePage() {
     a.style.textDecoration = "none";
     a.style.color = "inherit";
     a.style.cursor = "pointer";
-    a.innerHTML = `${icon} <b>${label}</b> – ${km(p.distance)} km`;
+  a.innerHTML = `${icon} ${label} – ${km(p.distance)} km`;
 
     a.addEventListener("click", ev => {
       ev.preventDefault();
@@ -1106,7 +1136,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.16</span>
 </div>
 
 <script>
