@@ -397,8 +397,7 @@ const appareilsUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d
 const compteurURL = "https://script.google.com/macros/s/AKfycbzUFaek89LYosR0FSw9gyxn2IZXlFlWXA_dIFIDwox-szE3DgH-l8IVbGfaoIgGK04h/exec";
 const compteurAppareilURL = "https://script.google.com/macros/s/AKfycbwJIlvcfNYREJn1oPiVAhQqHACXXar8ZbRl6aChwYw4TFSAaMTFEHTT5X2T7BKLJ3gsJw/exec";
 
-let lieux = [], fuse;
-let appareils = [], fuseAppareils;
+let lieux = [], appareils = [];
 
 function myMapsViewer(lat, lon, z = 19) {
   const mid = "1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r"; // ID de ta carte MyMaps
@@ -707,34 +706,6 @@ Promise.all([
     app.alias = generateAlias(app.appareil, app.nom, app.SAT, app.type);
   });
 
-  // --- FUSE pour les postes ---
-  fuse = new Fuse(lieux, {
-    keys: [
-      { name: "nom", weight: 0.5 },
-      { name: "type", weight: 0.3 },
-      { name: "SAT", weight: 0.2 },
-      { name: "accès", getFn: o => o.accès?.toString?.() || "", weight: 0.1 }
-    ],
-    includeScore: true,
-    threshold: 0.2,
-    distance: 50,
-    minMatchCharLength: 2,
-    ignoreLocation: true
-  });
-
-  // --- FUSE pour les appareils ---
-  fuseAppareils = new Fuse(appareils, {
-    keys: [
-      { name: 'appareil', weight: 0.5 },
-      { name: 'alias', weight: 0.6 },
-      { name: 'type', weight: 0.3 },
-      { name: 'nom', weight: 0.1 },
-      { name: 'SAT', weight: 0.1 }
-    ],
-    includeScore: true,
-    threshold: 0.28,
-    ignoreLocation: true
-  });
 
   // --- FUSE mixte (postes + appareils) ---
   const postesTagged = postes.map(p => ({ ...p, category: "poste" }));
@@ -743,15 +714,15 @@ Promise.all([
 
   fuseMix = new Fuse(allItems, {
     keys: [
-      { name: "nom", weight: 0.5 },
-      { name: "type", weight: 0.3 },
+      { name: "nom", weight: 0.8 },
+      { name: "type", weight: 0.2 },
       { name: "SAT", weight: 0.2 },
-      { name: "appareil", weight: 0.5 },
-      { name: "alias", weight: 0.6 },
+      { name: "appareil", weight: 0.6 },
+      { name: "alias", weight: 0.7 },
       { name: "accès", getFn: o => o.accès?.toString?.() || "", weight: 0.2 }
     ],
     includeScore: true,
-    threshold: 0.25,
+    threshold: 0.30,
     distance: 50,
     minMatchCharLength: 2,
     ignoreLocation: true
@@ -1136,7 +1107,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.01</span>
 </div>
 
 <script>
