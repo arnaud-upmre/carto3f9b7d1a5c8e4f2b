@@ -39,6 +39,15 @@
     font-size: 13.5px;
   }
 }
+    /* Supprime l’espace vertical quand il n’y a aucune suggestion */
+ul#suggestions:empty {
+  margin: 0;
+  padding: 0;
+}
+    /* Marges compactes quand il y a des suggestions */
+ul#suggestions:not(:empty){
+  margin: .4rem 0 .6rem 0;
+}
 
 </style>
   <meta name="robots" content="noindex, nofollow" />
@@ -69,6 +78,11 @@ body {
       margin-bottom: 3rem;
       position: relative;
     }
+    /* Réduit l’espace sous le train sur petits écrans */
+@media (max-width: 600px){
+  #train-container { margin-bottom: .8rem; }
+  h1 { margin-bottom: .4rem; }
+}
     #train {
       position: absolute;
       top: 0;
@@ -110,7 +124,7 @@ input[type="text"] {
     #result {
       display: none;
       background: #ffffff;
-      padding: 1rem 1.5rem;
+      padding: 1rem 1.1rem;
       border-radius: 18px;
       box-shadow: 0 8px 24px rgba(0,0,0,0.12);
       max-width: 600px;
@@ -149,7 +163,7 @@ input[type="text"] {
     .separator {
       border: none;
       border-top: 1px solid #eee;
-      margin: 1rem 0;
+      margin: .8rem 0;
     }
 
     /* Style de la liste de suggestions */
@@ -372,7 +386,7 @@ main {
 </h1>
 <input type="text" id="search" placeholder="Entrer un poste ou un appareil" autocomplete="off" />
   <!-- Compteurs côte à côte -->
-<div id="counters" style="font-size:13px; color:#666; margin-top:6px; margin-bottom:4rem;">
+<div id="counters" style="font-size:13px; color:#666; margin-top:6px; margin-bottom:.6rem;">
   Nombre recherche : 📍 <span id="counterPostes">0</span> &nbsp; | &nbsp; 
   💡 <span id="counterAppareils">0</span>
 </div>
@@ -1113,7 +1127,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.01</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.100</span>
 </div>
 
 <script>
