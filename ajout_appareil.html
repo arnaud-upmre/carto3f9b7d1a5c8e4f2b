@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+  <title>➕ Ajouter un appareil</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <style>
+    :root {
+      --bg:#f9f9f9; --fg:#222; --card:#fff; --accent:#0066cc; --border:#ccc;
+    }
+    @media (prefers-color-scheme: dark){
+      :root {
+        --bg:#0b0b0b; --fg:#eee; --card:#1a1a1a; --accent:#3399ff; --border:#444;
+      }
+    }
+    body{font-family:Inter,system-ui;background:var(--bg);color:var(--fg);margin:0;padding:20px}
+    form{max-width:600px;margin:auto;background:var(--card);padding:18px;border-radius:14px;box-shadow:0 3px 8px rgba(0,0,0,.2)}
+    h2{text-align:center;margin-bottom:10px}
+    #compteur{text-align:center;margin-bottom:15px;font-weight:600}
+    label{display:block;margin-top:12px;font-weight:600}
+    input,textarea{
+      width:100%;padding:10px;margin-top:6px;border:1px solid var(--border);
+      border-radius:8px;font-size:15px;background:var(--card);color:var(--fg)
+    }
+    textarea{resize:vertical;min-height:60px}
+    #map{height:250px;margin-top:12px;display:none;border-radius:10px;overflow:hidden}
+    .pill-group{display:flex;gap:10px;margin-top:8px}
+    .pill{flex:1;text-align:center;padding:10px;border:1px solid var(--border);
+      border-radius:20px;cursor:pointer;user-select:none;transition:.2s}
+    .pill.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+    .btn-row{display:flex;gap:12px;margin-top:18px}
+    .btn-row button{flex:1;padding:12px;font-size:16px;border:none;border-radius:10px;cursor:pointer}
+    .btn-send{background:var(--accent);color:#fff}
+    .btn-send:hover{opacity:0.9}
+    .btn-back{background:#ccc;color:#222}
+    .btn-back:hover{background:#bbb}
+    #popup{
+      position:fixed;inset:0;display:none;align-items:center;justify-content:center;
+      background:rgba(0,0,0,.6);z-index:1000
+    }
+    #popup div{
+      background:var(--card);color:var(--fg);padding:20px 25px;border-radius:12px;
+      box-shadow:0 4px 10px rgba(0,0,0,.4);text-align:center;font-size:16px;max-width:280px
+    }
+  </style>
+</head>
+<body>
+  <h2>➕ Ajouter un appareil</h2>
+  <div id="compteur">🔧 Déjà <span id="compteur-valeur">...</span> contributions enregistrées</div>
+
+  <form id="appareilForm">
+    <label>Demandeur</label>
+    <input type="text" name="demandeur" required>
+
+    <label>Poste (lié)</label>
+    <input type="text" name="poste" value="Alleux SP" readonly>
+
+    <label>Nom de l’appareil</label>
+    <input type="text" name="appareil" placeholder="Ex : I7112" required>
+
+    <label>Êtes-vous devant l’appareil ?</label>
+    <div class="pill-group">
+      <div class="pill" id="pill-oui" data-value="oui">Oui</div>
+      <div class="pill" id="pill-non" data-value="non">Non</div>
+    </div>
+    <input type="hidden" name="present" id="presentValue">
+
+    <div id="map"></div>
+
+    <div id="coordsFields" style="display:none;">
+      <label>Latitude</label>
+      <input type="text" id="lat" name="latitude">
+      <label>Longitude</label>
+      <input type="text" id="lon" name="longitude">
+    </div>
+
+    <div id="lienField" style="display:none;">
+      <label>Coller le lien Google Maps</label>
+      <input type="url" name="lien">
+    </div>
+
+    <label>Infos libres</label>
+    <textarea name="infos" placeholder="Notes utiles, accès difficile, état de l’appareil…"></textarea>
+
+    <div class="btn-row">
+      <button type="submit" class="btn-send">📩 Envoyer</button>
+      <button type="button" class="btn-back" onclick="window.location.href='index.html'">⬅️ Retour à l’accueil</button>
+    </div>
+  </form>
+
+  <div id="popup"><div id="popupMsg">Envoi en cours...</div></div>
+
+  <script>
+    const compteurURL = "TON_SCRIPT_URL"; // ⚠️ Remplacer par ton Apps Script compteur
+    const mapDiv = document.getElementById("map");
+    const popup = document.getElementById("popup");
+    const popupMsg = document.getElementById("popupMsg");
+    let map, marker;
+
+    function showPopup(msg){
+      popupMsg.textContent = msg;
+      popup.style.display = "flex";
+    }
+    function hidePopup(){ popup.style.display = "none"; }
+
+    // pills
+    const pills = document.querySelectorAll(".pill");
+    pills.forEach(p=>{
+      p.addEventListener("click", ()=>{
+        pills.forEach(x=>x.classList.remove("active"));
+        p.classList.add("active");
+        document.getElementById("presentValue").value = p.dataset.value;
+        if(p.dataset.value==="oui"){
+          mapDiv.style.display="block";
+          document.getElementById("coordsFields").style.display="block";
+          document.getElementById("lienField").style.display="none";
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(pos=>{
+              initMap(pos.coords.latitude, pos.coords.longitude);
+            }, ()=>alert("Impossible d’obtenir votre position."), {enableHighAccuracy:true});
+          }
+        }else{
+          mapDiv.style.display="none";
+          document.getElementById("coordsFields").style.display="none";
+          document.getElementById("lienField").style.display="block";
+        }
+      });
+    });
+
+    function initMap(lat, lon){
+      document.getElementById("lat").value = lat.toFixed(6);
+      document.getElementById("lon").value = lon.toFixed(6);
+      if(!map){
+        map = L.map("map").setView([lat, lon], 18);
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {attribution:"© OpenStreetMap"}).addTo(map);
+        marker = L.marker([lat, lon], {draggable:true}).addTo(map);
+        marker.on("dragend", e=>{
+          const pos = e.target.getLatLng();
+          document.getElementById("lat").value = pos.lat.toFixed(6);
+          document.getElementById("lon").value = pos.lng.toFixed(6);
+        });
+      }else{
+        map.setView([lat, lon], 18);
+        marker.setLatLng([lat, lon]);
+      }
+    }
+
+    document.getElementById("appareilForm").addEventListener("submit", e=>{
+      e.preventDefault();
+      showPopup("Envoi en cours...");
+      // ⚠️ Ici à remplacer par l'appel fetch() vers ton Apps Script
+      setTimeout(()=>{
+        popupMsg.textContent = "✅ Merci, votre contribution sera prise en compte sous 48h (jours ouvrés).";
+        setTimeout(()=>hidePopup(), 3000);
+      },1500);
+    });
+
+    // compteur contributions
+    async function refreshCompteur(){
+      try{
+        const r = await fetch(compteurURL);
+        const data = await r.json();
+        document.getElementById("compteur-valeur").textContent =
+          (data && typeof data.count !== "undefined") ? data.count : "—";
+      }catch(e){
+        document.getElementById("compteur-valeur").textContent = "—";
+      }
+    }
+    refreshCompteur();
+  </script>
+</body>
+</html>
