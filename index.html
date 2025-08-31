@@ -594,6 +594,9 @@ function generateAlias(appareil, nom, sat, posteType) {
     alias.add(`${n} ${t}`);
     alias.add(`${t} ${n}`);
   }
+  
+  return Array.from(alias); // ✅ important
+}
 
  function updateCounter() {
   // 1) Affiche d'abord le cache si dispo
@@ -1047,7 +1050,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.21</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.22</span>
 </div>
 
 <script>
