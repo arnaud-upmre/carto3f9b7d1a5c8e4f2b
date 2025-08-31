@@ -139,6 +139,27 @@ input[type="text"] {
       font-weight: 700;
       color: #1a73e8;
     }
+
+    /* ——— Uniformiser exactement la largeur avec le champ ——— */
+#search,
+#suggestions,
+#result,
+#counters {
+  width: 100%;
+  max-width: 600px;     /* même limite partout */
+}
+
+/* Les paddings ne doivent PAS élargir visuellement le bloc */
+#suggestions,
+#result {
+  box-sizing: border-box;
+}
+
+/* Optionnel : même « bordure » visuelle que le champ */
+#result {
+  border: 1px solid transparent; /* évite les micro-décalages sur mobile */
+}
+    
     .inline-links {
       display: flex;
       flex-wrap: wrap;
@@ -1129,7 +1150,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.01</span>
 </div>
 
 <script>
