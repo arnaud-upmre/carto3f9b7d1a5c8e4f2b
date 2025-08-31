@@ -27,7 +27,11 @@
       width:100%;padding:10px;font-size:16px;margin-top:6px;
       border:1px solid var(--border);border-radius:10px;background:var(--card);color:var(--fg)
     }
-    textarea{resize:vertical;min-height:72px}
+    textarea{
+      min-height:72px;
+      resize:none;       /* empêche le triangle iOS */
+      overflow:auto;     /* scroll interne si besoin */
+    }
     .pill-group{display:flex;gap:10px;margin-top:8px}
     .pill{flex:1;text-align:center;padding:10px;border:1px solid var(--border);border-radius:999px;cursor:pointer}
     .pill.active{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
@@ -155,7 +159,6 @@
       else{setPill("non");$("lien").value=d.lien;}
     }
 
-    // Pills
     $("pill-oui").onclick=()=>setPill("oui");
     $("pill-non").onclick=()=>setPill("non");
     function setPill(v){
@@ -166,7 +169,6 @@
       else{toggle($("mapWrap"),0);toggle($("coordsFields"),0);toggle($("lienField"),1);}
     }
 
-    // Map
     function ensureMap(lat,lon){
       if(!map){
         map=L.map("map").setView([lat,lon],18);
@@ -184,15 +186,9 @@
       if(navigator.geolocation)navigator.geolocation.getCurrentPosition(p=>ensureMap(p.coords.latitude,p.coords.longitude));
     }
 
-    // Validation helper
-    function isValidLatLon(lat,lon){
-      return !isNaN(parseFloat(lat)) && !isNaN(parseFloat(lon));
-    }
-    function isValidUrl(str){
-      return /^https?:\/\/.+/i.test(str);
-    }
+    function isValidLatLon(lat,lon){return !isNaN(parseFloat(lat)) && !isNaN(parseFloat(lon));}
+    function isValidUrl(str){return /^https?:\/\/.+/i.test(str);}
 
-    // Form submit
     $("formAppareil").onsubmit=e=>{
       e.preventDefault();
       let item={demandeur:$("demandeur").value.trim(),poste:$("poste").value.trim(),appareil:$("appareil").value.trim(),infos:$("infos").value.trim()};
@@ -204,9 +200,7 @@
       }else if($("presentValue").value==="non"){
         if(!isValidUrl($("lien").value)){alert("Merci de coller un lien Google Maps valide.");return;}
         item.method="lien";item.lien=$("lien").value;
-      }else{
-        alert("Merci de choisir Oui ou Non pour la présence devant l’appareil.");return;
-      }
+      }else{alert("Merci de choisir Oui ou Non pour la présence devant l’appareil.");return;}
 
       if(editIndex!==null){contributions[editIndex]=item;editIndex=null;}else{contributions.push(item);}
       updateRecap();$("ovrRecap").style.display="flex";
