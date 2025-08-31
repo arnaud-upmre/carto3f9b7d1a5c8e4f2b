@@ -2,34 +2,34 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>➕ Ajouter un appareil</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <style>
+    *,*::before,*::after{box-sizing:border-box}
     :root {
       --bg:#f9f9f9; --fg:#222; --card:#fff; --accent:#0066cc; --border:#ccc;
     }
     @media (prefers-color-scheme: dark){
-      :root {
-        --bg:#0b0b0b; --fg:#eee; --card:#1a1a1a; --accent:#3399ff; --border:#444;
-      }
+      :root {--bg:#0b0b0b;--fg:#eee;--card:#1a1a1a;--accent:#3399ff;--border:#444;}
     }
     body{font-family:Inter,system-ui;background:var(--bg);color:var(--fg);margin:0;padding:20px}
-    form{max-width:600px;margin:auto;background:var(--card);padding:18px;border-radius:14px;box-shadow:0 3px 8px rgba(0,0,0,.2)}
+    form{max-width:600px;margin:auto;background:var(--card);padding:18px;border-radius:14px;
+         box-shadow:0 3px 8px rgba(0,0,0,.2)}
     h2{text-align:center;margin-bottom:15px}
     label{display:block;margin-top:12px;font-weight:600}
     input,textarea{
-      width:100%;padding:10px;margin-top:6px;border:1px solid var(--border);
-      border-radius:8px;font-size:15px;background:var(--card);color:var(--fg)
+      width:100%;padding:12px;font-size:16px;margin-top:6px;border:1px solid var(--border);
+      border-radius:8px;background:var(--card);color:var(--fg);-webkit-appearance:none
     }
     textarea{resize:vertical;min-height:60px}
-    #map{height:250px;margin-top:12px;display:none;border-radius:10px;overflow:hidden}
-    .pill-group{display:flex;gap:10px;margin-top:8px}
-    .pill{flex:1;text-align:center;padding:10px;border:1px solid var(--border);
-      border-radius:20px;cursor:pointer;user-select:none;transition:.2s}
+    #map{height:35vh;margin-top:12px;display:none;border-radius:10px;overflow:hidden}
+    .pill-group{display:flex;gap:10px;margin-top:8px;flex-wrap:wrap}
+    .pill{flex:1;text-align:center;padding:12px;font-size:16px;border:1px solid var(--border);
+      border-radius:20px;cursor:pointer;user-select:none;transition:.2s;min-width:44%}
     .pill.active{background:var(--accent);color:#fff;border-color:var(--accent)}
-    .btn-row{display:flex;gap:12px;margin-top:18px}
+    .btn-row{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap}
     .btn-row button{flex:1;padding:12px;font-size:16px;border:none;border-radius:10px;cursor:pointer}
     .btn-send{background:var(--accent);color:#fff}
     .btn-send:hover{opacity:0.9}
@@ -41,8 +41,13 @@
     }
     #popup div{
       background:var(--card);color:var(--fg);padding:20px 25px;border-radius:12px;
-      box-shadow:0 4px 10px rgba(0,0,0,.4);text-align:center;font-size:16px;max-width:280px
+      box-shadow:0 4px 10px rgba(0,0,0,.4);text-align:center;font-size:16px;max-width:320px
     }
+    #recap{max-width:600px;margin:20px auto;background:var(--card);padding:15px;
+           border-radius:12px;box-shadow:0 3px 8px rgba(0,0,0,.2);display:none}
+    #recap h3{text-align:center;margin-top:0}
+    .app-item{border-bottom:1px solid var(--border);padding:8px 0;font-size:15px}
+    .app-item:last-child{border-bottom:none}
   </style>
 </head>
 <body>
@@ -50,13 +55,13 @@
 
   <form id="appareilForm">
     <label>Demandeur</label>
-    <input type="text" name="demandeur" required>
+    <input type="text" name="demandeur" id="demandeur" required>
 
     <label>Poste (lié)</label>
-    <input type="text" name="poste" value="Alleux SP" readonly>
+    <input type="text" name="poste" id="poste" value="Alleux SP" readonly>
 
     <label>Nom de l’appareil</label>
-    <input type="text" name="appareil" placeholder="Ex : I7112" required>
+    <input type="text" name="appareil" id="appareil" placeholder="Ex : I7112" required>
 
     <label>Êtes-vous devant l’appareil ?</label>
     <div class="pill-group">
@@ -76,17 +81,26 @@
 
     <div id="lienField" style="display:none;">
       <label>Coller le lien Google Maps</label>
-      <input type="url" name="lien">
+      <input type="url" name="lien" id="lien">
     </div>
 
     <label>Infos libres</label>
-    <textarea name="infos" placeholder="Notes utiles, accès difficile, état de l’appareil…"></textarea>
+    <textarea name="infos" id="infos" placeholder="Notes utiles, accès difficile, état de l’appareil…"></textarea>
 
     <div class="btn-row">
-      <button type="submit" class="btn-send">📩 Envoyer</button>
+      <button type="submit" class="btn-send">📩 Ajouter</button>
       <button type="button" class="btn-back" onclick="window.location.href='index.html'">⬅️ Retour à l’accueil</button>
     </div>
   </form>
+
+  <div id="recap">
+    <h3>📋 Récapitulatif des appareils ajoutés</h3>
+    <div id="recap-list"></div>
+    <div class="btn-row">
+      <button type="button" class="btn-send" id="sendMail">📧 Envoyer par e-mail</button>
+      <button type="button" class="btn-back" id="sendServer">☁️ Envoyer au serveur</button>
+    </div>
+  </div>
 
   <div id="popup"><div id="popupMsg">Envoi en cours...</div></div>
 
@@ -94,13 +108,13 @@
     const mapDiv = document.getElementById("map");
     const popup = document.getElementById("popup");
     const popupMsg = document.getElementById("popupMsg");
+    const recap = document.getElementById("recap");
+    const recapList = document.getElementById("recap-list");
     let map, marker;
+    let appareils = [];
 
-    function showPopup(msg){
-      popupMsg.textContent = msg;
-      popup.style.display = "flex";
-    }
-    function hidePopup(){ popup.style.display = "none"; }
+    function showPopup(msg){popupMsg.textContent = msg;popup.style.display="flex";}
+    function hidePopup(){popup.style.display="none";}
 
     // pills
     const pills = document.querySelectorAll(".pill");
@@ -131,7 +145,9 @@
       document.getElementById("lon").value = lon.toFixed(6);
       if(!map){
         map = L.map("map").setView([lat, lon], 18);
-        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {attribution:"© OpenStreetMap"}).addTo(map);
+        L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
+          attribution: "Tiles © Esri"
+        }).addTo(map);
         marker = L.marker([lat, lon], {draggable:true}).addTo(map);
         marker.on("dragend", e=>{
           const pos = e.target.getLatLng();
@@ -144,14 +160,87 @@
       }
     }
 
+    // form submit
     document.getElementById("appareilForm").addEventListener("submit", e=>{
       e.preventDefault();
+      const demandeur = document.getElementById("demandeur").value.trim();
+      const poste = document.getElementById("poste").value.trim();
+      const appareil = document.getElementById("appareil").value.trim();
+      const present = document.getElementById("presentValue").value;
+      const lat = document.getElementById("lat").value.trim();
+      const lon = document.getElementById("lon").value.trim();
+      const lien = document.getElementById("lien").value.trim();
+      const infos = document.getElementById("infos").value.trim();
+
+      if(!appareil){alert("Veuillez saisir le nom de l’appareil");return;}
+
+      let loc = "";
+      let methode = "";
+      if(present==="oui"){loc = lat+","+lon;methode="Géolocalisation";}
+      else if(lien){loc = lien;methode="Lien Google Maps";}
+      else{alert("Veuillez fournir la localisation.");return;}
+
+      appareils.push({demandeur, poste, appareil, loc, methode, infos});
+
+      // clear only appareil & localisation fields for multi-ajout
+      document.getElementById("appareil").value="";
+      document.getElementById("lat").value="";
+      document.getElementById("lon").value="";
+      document.getElementById("lien").value="";
+      document.getElementById("infos").value="";
+      pills.forEach(x=>x.classList.remove("active"));
+      document.getElementById("presentValue").value="";
+
+      // ask to add more or finalize
+      if(confirm("✅ Appareil ajouté. Voulez-vous en ajouter un autre ?")){
+        return; // reste sur le formulaire
+      } else {
+        showRecap();
+      }
+    });
+
+    function showRecap(){
+      document.getElementById("appareilForm").style.display="none";
+      recap.style.display="block";
+      recapList.innerHTML="";
+      appareils.forEach((a,i)=>{
+        recapList.innerHTML+=`<div class="app-item">
+        <b>Appareil ${i+1} :</b> ${a.appareil}<br>
+        Localisation : ${a.loc}<br>
+        Méthode : ${a.methode}<br>
+        Infos : ${a.infos||"-"}
+        </div>`;
+      });
+    }
+
+    // envoyer par email
+    document.getElementById("sendMail").addEventListener("click", ()=>{
+      if(appareils.length===0)return;
+      const demandeur = appareils[0].demandeur;
+      const poste = appareils[0].poste;
+      let corps = `Demandeur : ${demandeur}\nPoste : ${poste}\nNombre d’appareils ajoutés : ${appareils.length}\n\n`;
+      appareils.forEach((a,i)=>{
+        corps+=`─────────────────────────────\nAppareil ${i+1} :\n• Nom : ${a.appareil}\n• Localisation : ${a.loc}\n• Méthode : ${a.methode}\n• Infos : ${a.infos||"-"}\n`;
+      });
+      const subject = `Ajout d’appareil – Poste ${poste} (${appareils.length})`;
+      window.location.href=`mailto:arnaud.debaecker@sncf.fr?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(corps)}`;
+    });
+
+    // envoyer au serveur
+    document.getElementById("sendServer").addEventListener("click", ()=>{
       showPopup("Envoi en cours...");
-      // ⚠️ Ici tu connecteras le fetch() vers ton Apps Script
-      setTimeout(()=>{
-        popupMsg.textContent = "✅ Merci, votre contribution sera prise en compte sous 48h (jours ouvrés).";
-        setTimeout(()=>hidePopup(), 3000);
-      },1500);
+      // ⚠️ remplacer l’URL par ton Apps Script
+      fetch("TON_SCRIPT_URL", {
+        method:"POST",
+        body: JSON.stringify(appareils),
+        headers:{"Content-Type":"application/json"}
+      }).then(r=>r.json()).then(data=>{
+        popupMsg.textContent="✅ Merci, vos contributions ont été transmises.";
+        setTimeout(()=>hidePopup(),3000);
+      }).catch(err=>{
+        popupMsg.textContent="❌ Erreur d’envoi. Réessayez.";
+        setTimeout(()=>hidePopup(),3000);
+      });
     });
   </script>
 </body>
