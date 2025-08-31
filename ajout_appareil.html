@@ -4,244 +4,224 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>➕ Ajouter un appareil</title>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+
   <style>
-    *,*::before,*::after{box-sizing:border-box}
-    :root {
-      --bg:#f9f9f9; --fg:#222; --card:#fff; --accent:#0066cc; --border:#ccc;
+    :root{
+      --bg:#f7f7f8; --fg:#202124; --card:#fff; --muted:#6a6f76;
+      --border:#d0d7de; --accent:#0b6cff; --accent-ink:#fff;
     }
     @media (prefers-color-scheme: dark){
-      :root {--bg:#0b0b0b;--fg:#eee;--card:#1a1a1a;--accent:#3399ff;--border:#444;}
+      :root{
+        --bg:#0b0b0b; --fg:#eceff1; --card:#141414; --muted:#9aa0a6;
+        --border:#2a2a2a; --accent:#5aa3ff; --accent-ink:#081018;
+      }
     }
-    body{font-family:Inter,system-ui;background:var(--bg);color:var(--fg);margin:0;padding:20px}
-    form{max-width:600px;margin:auto;background:var(--card);padding:18px;border-radius:14px;
-         box-shadow:0 3px 8px rgba(0,0,0,.2)}
-    h2{text-align:center;margin-bottom:15px}
+    body{font-family:Inter,system-ui;background:var(--bg);color:var(--fg);margin:0;padding:16px}
+    h2{text-align:center;margin-bottom:12px}
+    .card{max-width:640px;margin:auto;background:var(--card);padding:16px;border-radius:14px;box-shadow:0 2px 6px rgba(0,0,0,.15)}
     label{display:block;margin-top:12px;font-weight:600}
     input,textarea{
-      width:100%;padding:12px;font-size:16px;margin-top:6px;border:1px solid var(--border);
-      border-radius:8px;background:var(--card);color:var(--fg);-webkit-appearance:none
+      width:100%;padding:10px;font-size:16px;margin-top:6px;
+      border:1px solid var(--border);border-radius:10px;background:var(--card);color:var(--fg)
     }
-    textarea{resize:vertical;min-height:60px}
-    #map{height:35vh;margin-top:12px;display:none;border-radius:10px;overflow:hidden}
-    .pill-group{display:flex;gap:10px;margin-top:8px;flex-wrap:wrap}
-    .pill{flex:1;text-align:center;padding:12px;font-size:16px;border:1px solid var(--border);
-      border-radius:20px;cursor:pointer;user-select:none;transition:.2s;min-width:44%}
-    .pill.active{background:var(--accent);color:#fff;border-color:var(--accent)}
-    .btn-row{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap}
-    .btn-row button{flex:1;padding:12px;font-size:16px;border:none;border-radius:10px;cursor:pointer}
-    .btn-send{background:var(--accent);color:#fff}
-    .btn-send:hover{opacity:0.9}
-    .btn-back{background:#ccc;color:#222}
-    .btn-back:hover{background:#bbb}
-    #popup{
-      position:fixed;inset:0;display:none;align-items:center;justify-content:center;
-      background:rgba(0,0,0,.6);z-index:1000
-    }
-    #popup div{
-      background:var(--card);color:var(--fg);padding:20px 25px;border-radius:12px;
-      box-shadow:0 4px 10px rgba(0,0,0,.4);text-align:center;font-size:16px;max-width:320px
-    }
-    #recap{max-width:600px;margin:20px auto;background:var(--card);padding:15px;
-           border-radius:12px;box-shadow:0 3px 8px rgba(0,0,0,.2);display:none}
-    #recap h3{text-align:center;margin-top:0}
-    .app-item{border-bottom:1px solid var(--border);padding:8px 0;font-size:15px}
-    .app-item:last-child{border-bottom:none}
+    textarea{resize:vertical;min-height:72px}
+    .pill-group{display:flex;gap:10px;margin-top:8px}
+    .pill{flex:1;text-align:center;padding:10px;border:1px solid var(--border);border-radius:999px;cursor:pointer}
+    .pill.active{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+    #map{height:40vh;min-height:260px}
+    .map-wrap{display:none;margin-top:12px;border-radius:10px;overflow:hidden;border:1px solid var(--border)}
+    .map-toolbar{display:flex;gap:8px;padding:6px;background:var(--card)}
+    .map-toolbar button{flex:1;padding:8px;border-radius:8px;border:1px solid var(--border);cursor:pointer}
+    .btn-row{display:flex;gap:12px;margin-top:18px}
+    .btn{flex:1;padding:12px;font-size:16px;border:none;border-radius:10px;cursor:pointer}
+    .btn.primary{background:var(--accent);color:var(--accent-ink)}
+    .btn.secondary{background:#ccc}
+    @media(prefers-color-scheme:dark){.btn.secondary{background:#2a2f36;color:#eee}}
+    .overlay{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.6);z-index:1000;padding:16px}
+    .dialog{background:var(--card);padding:16px;border-radius:12px;max-width:600px;width:100%}
+    .dialog h3{margin-top:0}
+    .list{margin:10px 0;padding:0;list-style:none}
+    .list li{border:1px solid var(--border);border-radius:8px;padding:8px;margin-bottom:8px;background:var(--card)}
+    .list strong{display:block}
+    .actions{display:flex;gap:6px;margin-top:6px}
+    .actions button{flex:1;padding:6px;font-size:14px;border-radius:8px;border:none;cursor:pointer}
+    .actions .edit{background:#ffd54f}
+    .actions .del{background:#ef5350;color:#fff}
   </style>
 </head>
 <body>
   <h2>➕ Ajouter un appareil</h2>
 
-  <form id="appareilForm">
-    <label>Demandeur</label>
-    <input type="text" name="demandeur" id="demandeur" required>
+  <div class="card">
+    <form id="formAppareil">
+      <label>Demandeur</label>
+      <input id="demandeur" required>
 
-    <label>Poste (lié)</label>
-    <input type="text" name="poste" id="poste" value="Alleux SP" readonly>
+      <label>Poste (lié)</label>
+      <input id="poste" value="Alleux SP" readonly>
 
-    <label>Nom de l’appareil</label>
-    <input type="text" name="appareil" id="appareil" placeholder="Ex : I7112" required>
+      <label>Nom de l’appareil</label>
+      <input id="appareil" placeholder="Ex : I7112" required>
 
-    <label>Êtes-vous devant l’appareil ?</label>
-    <div class="pill-group">
-      <div class="pill" id="pill-oui" data-value="oui">Oui</div>
-      <div class="pill" id="pill-non" data-value="non">Non</div>
-    </div>
-    <input type="hidden" name="present" id="presentValue">
+      <label>Êtes-vous devant l’appareil ?</label>
+      <div class="pill-group">
+        <div class="pill" id="pill-oui" data-value="oui">Oui</div>
+        <div class="pill" id="pill-non" data-value="non">Non</div>
+      </div>
+      <input type="hidden" id="presentValue">
 
-    <div id="map"></div>
+      <div class="map-wrap" id="mapWrap">
+        <div id="map"></div>
+        <div class="map-toolbar">
+          <button type="button" id="btnRecenter">📍 Recentrer</button>
+          <button type="button" id="btnToggle">🗺️ Plan</button>
+        </div>
+      </div>
 
-    <div id="coordsFields" style="display:none;">
-      <label>Latitude</label>
-      <input type="text" id="lat" name="latitude">
-      <label>Longitude</label>
-      <input type="text" id="lon" name="longitude">
-    </div>
+      <div id="coordsFields" style="display:none;">
+        <label>Latitude</label>
+        <input id="lat">
+        <label>Longitude</label>
+        <input id="lon">
+      </div>
 
-    <div id="lienField" style="display:none;">
-      <label>Coller le lien Google Maps</label>
-      <input type="url" name="lien" id="lien">
-    </div>
+      <div id="lienField" style="display:none;">
+        <label>Lien Google Maps</label>
+        <input id="lien" type="url" placeholder="https://maps.app.goo.gl/…">
+      </div>
 
-    <label>Infos libres</label>
-    <textarea name="infos" id="infos" placeholder="Notes utiles, accès difficile, état de l’appareil…"></textarea>
+      <label>Infos libres</label>
+      <textarea id="infos" placeholder="Notes utiles : lien Google Maps, accès, repère visuel…"></textarea>
 
-    <div class="btn-row">
-      <button type="submit" class="btn-send">📩 Ajouter</button>
-      <button type="button" class="btn-back" onclick="window.location.href='index.html'">⬅️ Retour à l’accueil</button>
-    </div>
-  </form>
+      <div class="btn-row">
+        <button type="submit" class="btn primary">📩 Envoyer</button>
+        <button type="button" class="btn secondary" onclick="location.href='index.html'">⬅️ Accueil</button>
+      </div>
+    </form>
+  </div>
 
-  <div id="recap">
-    <h3>📋 Récapitulatif des appareils ajoutés</h3>
-    <div id="recap-list"></div>
-    <div class="btn-row">
-      <button type="button" class="btn-send" id="sendMail">📧 Envoyer par e-mail</button>
-      <button type="button" class="btn-back" id="sendServer">☁️ Envoyer au serveur</button>
+  <!-- Récap -->
+  <div class="overlay" id="ovrRecap">
+    <div class="dialog">
+      <h3>Récapitulatif</h3>
+      <ul class="list" id="listRecap"></ul>
+      <div class="btn-row">
+        <button id="btnAddMore" class="btn secondary">➕ Ajouter un autre</button>
+        <button id="btnFinish" class="btn primary">Terminer</button>
+      </div>
     </div>
   </div>
 
-  <div id="popup"><div id="popupMsg">Envoi en cours...</div></div>
+  <!-- Choix envoi -->
+  <div class="overlay" id="ovrFinal">
+    <div class="dialog">
+      <h3>Envoi final</h3>
+      <p>Choisis le mode d’envoi :</p>
+      <div class="btn-row">
+        <button id="btnMail" class="btn secondary">✉️ E-mail</button>
+        <button id="btnServer" class="btn primary">🚀 Serveur</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Merci -->
+  <div class="overlay" id="ovrThanks">
+    <div class="dialog">
+      <h3>✅ Merci</h3>
+      <p>Vos contributions seront traitées sous 48h (jours ouvrés).</p>
+      <div class="btn-row">
+        <button class="btn primary" onclick="location.href='index.html'">⬅️ Accueil</button>
+      </div>
+    </div>
+  </div>
 
   <script>
-    const mapDiv = document.getElementById("map");
-    const popup = document.getElementById("popup");
-    const popupMsg = document.getElementById("popupMsg");
-    const recap = document.getElementById("recap");
-    const recapList = document.getElementById("recap-list");
-    let map, marker;
-    let appareils = [];
+    const DEST_EMAIL = "arnaud.debaecker@sncf.fr";
+    const SERVER_URL = "YOUR_APPS_SCRIPT_URL";
 
-    function showPopup(msg){popupMsg.textContent = msg;popup.style.display="flex";}
-    function hidePopup(){popup.style.display="none";}
+    let map, marker, esri, osm, sat=true;
+    let contributions = [];
+    let editIndex = null;
 
-    // pills
-    const pills = document.querySelectorAll(".pill");
-    pills.forEach(p=>{
-      p.addEventListener("click", ()=>{
-        pills.forEach(x=>x.classList.remove("active"));
-        p.classList.add("active");
-        document.getElementById("presentValue").value = p.dataset.value;
-        if(p.dataset.value==="oui"){
-          mapDiv.style.display="block";
-          document.getElementById("coordsFields").style.display="block";
-          document.getElementById("lienField").style.display="none";
-          if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(pos=>{
-              initMap(pos.coords.latitude, pos.coords.longitude);
-            }, ()=>alert("Impossible d’obtenir votre position."), {enableHighAccuracy:true});
-          }
-        }else{
-          mapDiv.style.display="none";
-          document.getElementById("coordsFields").style.display="none";
-          document.getElementById("lienField").style.display="block";
-        }
-      });
-    });
+    function $(id){return document.getElementById(id);}
+    function toggle(el,show){el.style.display=show?"block":"none";}
+    function fillForm(d){
+      $("appareil").value=d.appareil||"";
+      $("infos").value=d.infos||"";
+      if(d.method==="geoloc"){setPill("oui");$("lat").value=d.latitude;$("lon").value=d.longitude;}
+      else{setPill("non");$("lien").value=d.lien;}
+    }
 
-    function initMap(lat, lon){
-      document.getElementById("lat").value = lat.toFixed(6);
-      document.getElementById("lon").value = lon.toFixed(6);
+    // Pills
+    $("pill-oui").onclick=()=>setPill("oui");
+    $("pill-non").onclick=()=>setPill("non");
+    function setPill(v){
+      $("presentValue").value=v;
+      $("pill-oui").classList.toggle("active",v==="oui");
+      $("pill-non").classList.toggle("active",v==="non");
+      if(v==="oui"){toggle($("mapWrap"),1);toggle($("coordsFields"),1);toggle($("lienField"),0);startLoc();}
+      else{toggle($("mapWrap"),0);toggle($("coordsFields"),0);toggle($("lienField"),1);}
+    }
+
+    // Map
+    function ensureMap(lat,lon){
       if(!map){
-        map = L.map("map").setView([lat, lon], 18);
-        L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
-          attribution: "Tiles © Esri"
-        }).addTo(map);
-        marker = L.marker([lat, lon], {draggable:true}).addTo(map);
-        marker.on("dragend", e=>{
-          const pos = e.target.getLatLng();
-          document.getElementById("lat").value = pos.lat.toFixed(6);
-          document.getElementById("lon").value = pos.lng.toFixed(6);
-        });
-      }else{
-        map.setView([lat, lon], 18);
-        marker.setLatLng([lat, lon]);
+        map=L.map("map").setView([lat,lon],18);
+        esri=L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",{attribution:"Esri"}).addTo(map);
+        osm=L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{attribution:"OSM"});
+        marker=L.marker([lat,lon],{draggable:true}).addTo(map);
+        marker.on("dragend",()=>{let p=marker.getLatLng();$("lat").value=p.lat.toFixed(6);$("lon").value=p.lng.toFixed(6);});
+        $("btnToggle").onclick=()=>{sat=!sat;if(sat){map.removeLayer(osm);esri.addTo(map);$("btnToggle").textContent="🗺️ Plan";}else{map.removeLayer(esri);osm.addTo(map);$("btnToggle").textContent="🛰️ Satellite";}};
+        $("btnRecenter").onclick=startLoc;
       }
+      marker.setLatLng([lat,lon]);map.setView([lat,lon],18);
+      $("lat").value=lat.toFixed(6);$("lon").value=lon.toFixed(6);
+    }
+    function startLoc(){
+      if(navigator.geolocation)navigator.geolocation.getCurrentPosition(p=>ensureMap(p.coords.latitude,p.coords.longitude));
     }
 
-    // form submit
-    document.getElementById("appareilForm").addEventListener("submit", e=>{
+    // Form submit
+    $("formAppareil").onsubmit=e=>{
       e.preventDefault();
-      const demandeur = document.getElementById("demandeur").value.trim();
-      const poste = document.getElementById("poste").value.trim();
-      const appareil = document.getElementById("appareil").value.trim();
-      const present = document.getElementById("presentValue").value;
-      const lat = document.getElementById("lat").value.trim();
-      const lon = document.getElementById("lon").value.trim();
-      const lien = document.getElementById("lien").value.trim();
-      const infos = document.getElementById("infos").value.trim();
+      let item={demandeur:$("demandeur").value.trim(),poste:$("poste").value.trim(),appareil:$("appareil").value.trim(),infos:$("infos").value.trim()};
+      if($("presentValue").value==="oui"){item.method="geoloc";item.latitude=$("lat").value;item.longitude=$("lon").value;}
+      else{item.method="lien";item.lien=$("lien").value;}
+      if(editIndex!==null){contributions[editIndex]=item;editIndex=null;}else{contributions.push(item);}
+      updateRecap();$("ovrRecap").style.display="flex";
+    };
 
-      if(!appareil){alert("Veuillez saisir le nom de l’appareil");return;}
-
-      let loc = "";
-      let methode = "";
-      if(present==="oui"){loc = lat+","+lon;methode="Géolocalisation";}
-      else if(lien){loc = lien;methode="Lien Google Maps";}
-      else{alert("Veuillez fournir la localisation.");return;}
-
-      appareils.push({demandeur, poste, appareil, loc, methode, infos});
-
-      // clear only appareil & localisation fields for multi-ajout
-      document.getElementById("appareil").value="";
-      document.getElementById("lat").value="";
-      document.getElementById("lon").value="";
-      document.getElementById("lien").value="";
-      document.getElementById("infos").value="";
-      pills.forEach(x=>x.classList.remove("active"));
-      document.getElementById("presentValue").value="";
-
-      // ask to add more or finalize
-      if(confirm("✅ Appareil ajouté. Voulez-vous en ajouter un autre ?")){
-        return; // reste sur le formulaire
-      } else {
-        showRecap();
-      }
-    });
-
-    function showRecap(){
-      document.getElementById("appareilForm").style.display="none";
-      recap.style.display="block";
-      recapList.innerHTML="";
-      appareils.forEach((a,i)=>{
-        recapList.innerHTML+=`<div class="app-item">
-        <b>Appareil ${i+1} :</b> ${a.appareil}<br>
-        Localisation : ${a.loc}<br>
-        Méthode : ${a.methode}<br>
-        Infos : ${a.infos||"-"}
-        </div>`;
+    function updateRecap(){
+      let ul=$("listRecap");ul.innerHTML="";
+      contributions.forEach((c,i)=>{
+        let li=document.createElement("li");
+        li.innerHTML=`<strong>${c.appareil}</strong><div>${c.method==="geoloc"?c.latitude+","+c.longitude:c.lien}</div><div class="actions"><button class="edit">✏️ Modifier</button><button class="del">🗑️ Supprimer</button></div>`;
+        li.querySelector(".edit").onclick=()=>{editIndex=i;fillForm(c);$("ovrRecap").style.display="none";};
+        li.querySelector(".del").onclick=()=>{contributions.splice(i,1);updateRecap();};
+        ul.appendChild(li);
       });
     }
 
-    // envoyer par email
-    document.getElementById("sendMail").addEventListener("click", ()=>{
-      if(appareils.length===0)return;
-      const demandeur = appareils[0].demandeur;
-      const poste = appareils[0].poste;
-      let corps = `Demandeur : ${demandeur}\nPoste : ${poste}\nNombre d’appareils ajoutés : ${appareils.length}\n\n`;
-      appareils.forEach((a,i)=>{
-        corps+=`─────────────────────────────\nAppareil ${i+1} :\n• Nom : ${a.appareil}\n• Localisation : ${a.loc}\n• Méthode : ${a.methode}\n• Infos : ${a.infos||"-"}\n`;
-      });
-      const subject = `Ajout d’appareil – Poste ${poste} (${appareils.length})`;
-      window.location.href=`mailto:arnaud.debaecker@sncf.fr?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(corps)}`;
-    });
+    $("btnAddMore").onclick=()=>{$("ovrRecap").style.display="none";$("formAppareil").reset();};
+    $("btnFinish").onclick=()=>{$("ovrRecap").style.display="none";$("ovrFinal").style.display="flex";};
 
-    // envoyer au serveur
-    document.getElementById("sendServer").addEventListener("click", ()=>{
-      showPopup("Envoi en cours...");
-      // ⚠️ remplacer l’URL par ton Apps Script
-      fetch("TON_SCRIPT_URL", {
-        method:"POST",
-        body: JSON.stringify(appareils),
-        headers:{"Content-Type":"application/json"}
-      }).then(r=>r.json()).then(data=>{
-        popupMsg.textContent="✅ Merci, vos contributions ont été transmises.";
-        setTimeout(()=>hidePopup(),3000);
-      }).catch(err=>{
-        popupMsg.textContent="❌ Erreur d’envoi. Réessayez.";
-        setTimeout(()=>hidePopup(),3000);
-      });
-    });
+    $("btnMail").onclick=()=>{
+      let subj=`Ajout d’appareil – Poste ${$("poste").value} (${contributions.length})`;
+      let body=contributions.map((c,i)=>`#${i+1} ${c.appareil} – ${c.method==="geoloc"?c.latitude+","+c.longitude:c.lien} – ${c.infos||""}`).join("\n");
+      location.href=`mailto:${DEST_EMAIL}?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(body)}`;
+      $("ovrFinal").style.display="none";$("ovrThanks").style.display="flex";
+    };
+
+    $("btnServer").onclick=async()=>{
+      try{
+        await fetch(SERVER_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({poste:$("poste").value,demandeur:$("demandeur").value,items:contributions})});
+        $("ovrFinal").style.display="none";$("ovrThanks").style.display="flex";
+      }catch{alert("Erreur serveur");}
+    };
   </script>
 </body>
 </html>
