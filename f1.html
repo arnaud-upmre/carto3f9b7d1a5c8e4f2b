@@ -2,339 +2,122 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <meta name="robots" content="noindex, nofollow" />
-  <title>🗺️ Formulaire de contribution à la carte GPS</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+  <title>➕ Ajouter un appareil</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <style>
-    :root{
-      --bg:#fff; --fg:#222; --muted:#6b7280; --accent:#1e90ff; --card:#fff; --border:#e5e7eb; --ok:#10b981; --warn:#f59e0b; --err:#ef4444;
-    }
-    @media (prefers-color-scheme: dark){
-      :root{
-        --bg:#0b0b0b; --fg:#eee; --muted:#9ca3af; --accent:#469cff; --card:#141414; --border:#1f2937;
-      }
-    }
-    *{box-sizing:border-box}
-    html,body{margin:0; padding:0; background:var(--bg); color:var(--fg); font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
-    .wrap{max-width:760px; margin:16px auto 28px; padding:0 12px}
-    h1{font-size:1.25rem; margin:6px 0 14px}
-    .version{font-size:.8rem; color:var(--muted)}
-    .card{background:var(--card); border:1px solid var(--border); border-radius:14px; padding:14px}
-    .row{display:flex; gap:10px; flex-wrap:wrap}
-    .inline-link, button[type=submit]{
-      border:1px solid var(--accent); color:var(--accent); background:transparent;
-      padding:10px 14px; border-radius:12px; font-size:.95rem; cursor:pointer;
-    }
-    .inline-link:hover{opacity:.9}
-    button[type=submit]{background:var(--accent); color:#fff; border-color:var(--accent)}
-    fieldset{border:none; padding:0; margin:0}
-    legend{font-weight:600; margin-bottom:8px}
-    label{display:block; font-size:.95rem; margin:10px 0 6px}
-    input[type=text], input[type=tel], input[type=email], textarea{
-      width:100%; padding:12px 12px; border:1px solid var(--border); background:transparent;
-      color:var(--fg); border-radius:10px; font-size:1rem
-    }
-    textarea{min-height:110px; resize:vertical}
-    .hint{color:var(--muted); font-size:.85rem}
-    .hidden{display:none !important}
-    .sep{height:1px; background:var(--border); margin:14px 0}
-    .banner{background:#0f172a0a; border:1px dashed var(--border); padding:10px 12px; border-radius:10px; font-size:.95rem}
-    .ok{color:var(--ok)} .warn{color:var(--warn)} .err{color:var(--err)}
-    .footer-note{margin-top:16px; font-size:.83rem; color:var(--muted)}
+    body{font-family:Inter,system-ui;background:#f9f9f9;margin:0;padding:20px}
+    form{max-width:600px;margin:auto;background:#fff;padding:15px;border-radius:12px;box-shadow:0 2px 6px rgba(0,0,0,.15)}
+    label{display:block;margin-top:12px;font-weight:600}
+    input,select,textarea{width:100%;padding:8px;margin-top:4px;border:1px solid #ccc;border-radius:6px;font-size:15px}
+    textarea{resize:vertical;min-height:60px}
+    .radio-group{margin:8px 0}
+    #map{height:250px;margin-top:10px;display:none;border-radius:8px}
+    button{margin-top:16px;padding:10px 16px;font-size:16px;border:none;border-radius:8px;cursor:pointer;background:#0066cc;color:white}
+    button:hover{background:#004a99}
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="row" style="align-items:center; justify-content:space-between">
-      <h1>🗺️ Formulaire de contribution à la carte GPS</h1>
-      <div class="version">Formulaire – V1.09.01</div>
+  <h2>➕ Ajouter un appareil</h2>
+  <form id="appareilForm">
+    <label>Demandeur</label>
+    <input type="text" name="demandeur" required>
+
+    <label>Poste (lié)</label>
+    <input type="text" name="poste" value="Alleux SP" readonly>
+
+    <label>Sélection SAT ou Poste</label>
+    <select name="sat">
+      <option value="Poste">Poste</option>
+      <option value="SAT1">SAT1</option>
+      <option value="SAT2">SAT2</option>
+      <option value="SAT3">SAT3</option>
+    </select>
+
+    <label>Nom de l’appareil</label>
+    <input type="text" name="appareil" placeholder="Ex : I7112" required>
+
+    <label>Êtes-vous devant l’appareil ?</label>
+    <div class="radio-group">
+      <input type="radio" name="present" value="oui" id="present-oui">
+      <label for="present-oui">Oui</label>
+      <input type="radio" name="present" value="non" id="present-non">
+      <label for="present-non">Non</label>
     </div>
 
-    <!-- Bandeau de contexte (rempli par URL ?mode=...) -->
-    <div id="ctxBanner" class="banner hidden"></div>
+    <div id="map"></div>
 
-    <div class="card" style="margin-top:14px">
-      <form id="contribForm" novalidate>
-        <!-- Type de demande -->
-        <fieldset>
-          <legend>Type de demande</legend>
-          <div class="row">
-            <label><input type="radio" name="type_demande" value="Ajout" checked> Ajout</label>
-            <label><input type="radio" name="type_demande" value="Modification"> Modification</label>
-          </div>
-          <div class="hint">Le type peut être forcé automatiquement si vous avez cliqué depuis une fiche.</div>
-        </fieldset>
-
-        <div class="sep"></div>
-
-        <!-- Identité -->
-        <fieldset>
-          <legend>Qui envoie la demande ?</legend>
-          <label for="demandeur">Demandeur</label>
-          <input id="demandeur" name="demandeur" type="text" placeholder="Nom, équipe, tél. (facultatif mais utile)" />
-        </fieldset>
-
-        <div class="sep"></div>
-
-        <!-- Bloc AJOUT -->
-        <fieldset id="blocAjout">
-          <legend>Ajout</legend>
-
-          <label for="nom_poste">Nom du poste</label>
-          <input id="nom_poste" name="nom_poste" type="text" placeholder="Ex. Alleux SP, Etaples SSP…" />
-
-          <label for="coordonnees_ou_lien_gps">Coordonnées ou lien GPS</label>
-          <input id="coordonnees_ou_lien_gps" name="coordonnees_ou_lien_gps" type="text" placeholder="50.91461, 1.79864 ou un lien Maps/MyMaps" />
-
-          <label for="autre">Autre (détails utiles)</label>
-          <textarea id="autre" name="autre" placeholder="Ex. Type d’appareil, SAT, accès, consignes, photo/lien, etc."></textarea>
-
-          <div class="hint">Astuce : collez simplement un lien (Google/Apple/Waze/MyMaps) ou les coordonnées décimales.</div>
-        </fieldset>
-
-        <!-- Bloc MODIFICATION -->
-        <fieldset id="blocModif" class="hidden">
-          <legend>Modification</legend>
-
-          <label for="nom_poste_a_modifier">Nom du poste à modifier</label>
-          <input id="nom_poste_a_modifier" name="nom_poste_a_modifier" type="text" placeholder="Ex. Alleux SP SAT1…" />
-
-          <label for="raison_modification">Raison de la modification</label>
-          <textarea id="raison_modification" name="raison_modification" placeholder="Décrivez précisément l’erreur constatée ou le changement à effectuer."></textarea>
-        </fieldset>
-
-        <div class="sep"></div>
-
-        <!-- Métadonnées (remplies automatiquement si présentes) -->
-        <fieldset>
-          <legend>Infos techniques (auto-remplies)</legend>
-
-          <div class="row">
-            <div style="flex:1 1 140px">
-              <label for="lat">Latitude</label>
-              <input id="lat" name="lat" type="text" inputmode="decimal" placeholder="ex. 50.91461" />
-            </div>
-            <div style="flex:1 1 140px">
-              <label for="lon">Longitude</label>
-              <input id="lon" name="lon" type="text" inputmode="decimal" placeholder="ex. 1.79864" />
-            </div>
-          </div>
-
-          <label for="pk">PK (si connu)</label>
-          <input id="pk" name="pk" type="text" placeholder="ex. 114,400" />
-
-          <label for="lignes">Ligne(s)</label>
-          <input id="lignes" name="lignes" type="text" placeholder="ex. FRETIN à FRÉTHUN (LGV)" />
-
-          <label for="numero_ligne">N° de ligne</label>
-          <input id="numero_ligne" name="numero_ligne" type="text" placeholder="ex. 216000" />
-        </fieldset>
-
-        <!-- Champs techniques cachés -->
-        <input type="hidden" id="contexte" name="contexte" value="">
-        <input type="hidden" id="url_source" name="url_source" value="">
-        <input type="text" id="robot_check" name="robot_check" class="hidden" autocomplete="off" tabindex="-1" aria-hidden="true">
-
-        <div class="sep"></div>
-
-        <div class="row" style="justify-content:space-between; align-items:center">
-          <button type="button" class="inline-link" id="btnReset">Réinitialiser</button>
-          <button type="submit" id="btnSubmit">Envoyer</button>
-        </div>
-
-        <div id="formMsg" class="footer-note" role="status" aria-live="polite"></div>
-      </form>
+    <div id="coordsFields" style="display:none;">
+      <label>Latitude</label>
+      <input type="text" id="lat" name="latitude">
+      <label>Longitude</label>
+      <input type="text" id="lon" name="longitude">
     </div>
 
-    <p class="footer-note">
-      En envoyant, vous acceptez que ces informations soient utilisées pour améliorer la carte et puissent être contactées pour précision si besoin.
-    </p>
-  </div>
+    <div id="lienField" style="display:none;">
+      <label>Coller le lien Google Maps</label>
+      <input type="url" name="lien">
+    </div>
+
+    <label>Infos libres</label>
+    <textarea name="infos" placeholder="Notes utiles, accès difficile, état de l’appareil…"></textarea>
+
+    <label>Photo (optionnelle)</label>
+    <input type="file" name="photo" accept="image/*" capture="environment">
+
+    <button type="submit">📩 Envoyer</button>
+  </form>
 
   <script>
-    // ====== CONFIG ======
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzJLm3bHvgGKuMx9v2JyW_Mx-qWoiS9VlEDgJzkrIvMSwQaDX-fpLiZhjRM3WW9jwZh_Q/exec"; // (mémoire #45)
-    // ====================
+    const mapDiv = document.getElementById("map");
+    let map, marker;
 
-    // Elements
-    const f = document.getElementById("contribForm");
-    const msg = document.getElementById("formMsg");
-    const ctxBanner = document.getElementById("ctxBanner");
-    const blocAjout = document.getElementById("blocAjout");
-    const blocModif = document.getElementById("blocModif");
-    const btnReset = document.getElementById("btnReset");
-    const btnSubmit = document.getElementById("btnSubmit");
-
-    // Utilitaires
-    const $ = id => document.getElementById(id);
-    const set = (id, v) => { const el = $(id); if(el!=null && v!=null && v!=="") el.value = String(v); };
-    const show = el => el.classList.remove("hidden");
-    const hide = el => el.classList.add("hidden");
-    const params = new URLSearchParams(location.search);
-
-    // Basculer l’UI selon type demande
-    function updateMode(){
-      const type = (new FormData(f).get("type_demande")) || "Ajout";
-      if(type === "Modification"){ hide(blocAjout); show(blocModif); }
-      else { show(blocAjout); hide(blocModif); }
-    }
-    f.addEventListener("change", e => {
-      if(e.target && e.target.name === "type_demande"){ updateMode(); }
+    document.getElementById("present-oui").addEventListener("change", () => {
+      mapDiv.style.display = "block";
+      document.getElementById("coordsFields").style.display = "block";
+      document.getElementById("lienField").style.display = "none";
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(pos => {
+          const lat = pos.coords.latitude;
+          const lon = pos.coords.longitude;
+          initMap(lat, lon);
+        }, () => {
+          alert("Impossible d’obtenir votre position, entrez manuellement.");
+        }, {enableHighAccuracy:true});
+      }
     });
 
-    // Pré-remplissage via URL
-    function applyPrefillFromURL(){
-      const mode = params.get("mode"); // "signalement" | "ajout_appareil" | null
-      const contexte = params.get("contexte") || (mode === "ajout_appareil" ? "appareil" : "poste");
-      $("contexte").value = contexte;
-      $("url_source").value = document.referrer || location.origin;
+    document.getElementById("present-non").addEventListener("change", () => {
+      mapDiv.style.display = "none";
+      document.getElementById("coordsFields").style.display = "none";
+      document.getElementById("lienField").style.display = "block";
+    });
 
-      // Champs communs utiles
-      set("lat", params.get("lat"));
-      set("lon", params.get("lon"));
-      set("pk", params.get("pk"));
-      set("lignes", params.get("lignes"));
-      set("numero_ligne", params.get("numero_ligne"));
-
-      if(mode === "signalement"){
-        // Forcer "Modification"
-        f.querySelector('input[name="type_demande"][value="Modification"]').checked = true;
-        updateMode();
-
-        const nomComplet = [params.get("nom"), params.get("type"), params.get("sat")].filter(Boolean).join(" ");
-        set("nom_poste_a_modifier", nomComplet);
-
-        const bloc = [];
-        if(params.get("type")) bloc.push(`Type: ${params.get("type")}`);
-        if(params.get("sat")) bloc.push(`SAT: ${params.get("sat")}`);
-        if(params.get("pk")) bloc.push(`PK: ${params.get("pk")}`);
-        if(params.get("lignes")) bloc.push(`Lignes: ${params.get("lignes")}`);
-        if(params.get("numero_ligne")) bloc.push(`N° ligne: ${params.get("numero_ligne")}`);
-        if(params.get("lat") || params.get("lon")) bloc.push(`GPS: ${params.get("lat")||""}, ${params.get("lon")||""}`);
-
-        const modele = `Erreur constatée sur la fiche.\n${bloc.join("\n")}\n\nDétail de l’erreur : `;
-        set("raison_modification", modele);
-
-        ctxBanner.textContent = `Contexte détecté : signalement d’erreur pour « ${nomComplet || "poste"} ».`;
-        show(ctxBanner);
-      }
-      else if(mode === "ajout_appareil"){
-        // Forcer "Ajout"
-        f.querySelector('input[name="type_demande"][value="Ajout"]').checked = true;
-        updateMode();
-
-        const nomPoste = [params.get("poste_nom") || params.get("nom"), params.get("poste_type") || params.get("type"), params.get("poste_sat") || params.get("sat")].filter(Boolean).join(" ");
-        set("nom_poste", nomPoste);
-
-        // Pré-remplir coordonnées si on les a
-        const hasGps = !!(params.get("lat") || params.get("lon"));
-        if(hasGps){
-          const lat = params.get("lat") || "";
-          const lon = params.get("lon") || "";
-          set("coordonnees_ou_lien_gps", `${lat}, ${lon}`);
-        }
-
-        // Pré-remplir "Autre" avec un petit modèle d’appareil
-        const appareil = params.get("appareil") || "";
-        const typeApp = params.get("appareil_type") || "";
-        const satInfo = params.get("sat") || params.get("poste_sat") || "";
-        const template =
-`Appareil à ajouter : ${appareil}
-Type : ${typeApp}
-SAT : ${satInfo}
-Observations : `;
-        set("autre", template);
-
-        ctxBanner.textContent = `Contexte détecté : ajout d’un appareil lié à « ${nomPoste || "poste"} ».`;
-        show(ctxBanner);
-      } else {
-        // Pas de mode → garder silencieux
-        hide(ctxBanner);
-      }
-
-      // Si le paramètre nom/nom_poste est passé sans mode, on le pose quand même côté Ajout
-      if(params.get("nom") && !params.get("poste_nom")){
-        set("nom_poste", params.get("nom"));
+    function initMap(lat, lon){
+      document.getElementById("lat").value = lat.toFixed(6);
+      document.getElementById("lon").value = lon.toFixed(6);
+      if(!map){
+        map = L.map("map").setView([lat, lon], 18);
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          attribution: "© OpenStreetMap"
+        }).addTo(map);
+        marker = L.marker([lat, lon], {draggable:true}).addTo(map);
+        marker.on("dragend", e=>{
+          const pos = e.target.getLatLng();
+          document.getElementById("lat").value = pos.lat.toFixed(6);
+          document.getElementById("lon").value = pos.lng.toFixed(6);
+        });
+      }else{
+        map.setView([lat, lon], 18);
+        marker.setLatLng([lat, lon]);
       }
     }
 
-    // Validation minimale
-    function validate(){
-      const fd = new FormData(f);
-      const type = fd.get("type_demande");
-      function val(id){ return (($(id)?.value||"").trim()); }
-
-      if(type === "Ajout"){
-        if(!val("nom_poste")) return "Veuillez indiquer le nom du poste.";
-        if(!val("coordonnees_ou_lien_gps") && !(val("lat") && val("lon"))){
-          return "Indiquez les coordonnées (champ ‘Coordonnées ou lien GPS’ ou les champs Latitude/Longitude).";
-        }
-      } else {
-        if(!val("nom_poste_a_modifier")) return "Veuillez indiquer le poste à modifier.";
-        if(!val("raison_modification")) return "Veuillez préciser la raison de la modification.";
-      }
-      if(val("robot_check")) return "Vérification anti-robot non valide.";
-      return null;
-    }
-
-    // Soumission (POST url-encoded → Apps Script)
-    f.addEventListener("submit", async (e)=>{
+    document.getElementById("appareilForm").addEventListener("submit", e=>{
       e.preventDefault();
-      msg.textContent = "";
-      const error = validate();
-      if(error){
-        msg.innerHTML = "⛔ " + error;
-        msg.classList.add("err");
-        return;
-      }
-      btnSubmit.disabled = true; btnSubmit.textContent = "Envoi…";
-
-      try{
-        const fd = new FormData(f);
-
-        // Petite normalisation : si ‘lat, lon’ renseigné dans le champ libre, on ventile.
-        const libre = (fd.get("coordonnees_ou_lien_gps")||"").trim();
-        const m = libre.match(/(-?\d+(?:[.,]\d+)?)\s*[,; ]\s*(-?\d+(?:[.,]\d+)?)/);
-        if(m && !fd.get("lat") && !fd.get("lon")){
-          fd.set("lat", m[1].replace(",", "."));
-          fd.set("lon", m[2].replace(",", "."));
-        }
-
-        // Ajout d’un champ version
-        fd.set("form_version", "V1.09.01");
-
-        // Envoi application/x-www-form-urlencoded (compatible doPost(e).parameter)
-        const body = new URLSearchParams();
-        for (const [k,v] of fd.entries()){ body.append(k, v); }
-
-        const r = await fetch(SCRIPT_URL, { method:"POST", body, headers:{ "Content-Type":"application/x-www-form-urlencoded;charset=utf-8" }});
-        const ok = r.ok;
-        let text = "";
-        try{ text = await r.text(); }catch(_){}
-        if(!ok) throw new Error("Réponse serveur non valide");
-
-        msg.classList.remove("err");
-        msg.innerHTML = "✅ Merci ! Votre contribution a bien été envoyée. Vous pouvez fermer cette page.";
-        f.reset(); updateMode();  // revient sur ‘Ajout’ par défaut
-      }catch(err){
-        console.error(err);
-        msg.classList.add("err");
-        msg.innerHTML = "⛔ Échec de l’envoi. Réessayez dans un instant.";
-      }finally{
-        btnSubmit.disabled = false; btnSubmit.textContent = "Envoyer";
-      }
+      alert("Formulaire soumis (exemple) – à connecter à ton Google Sheets ensuite.");
     });
-
-    // Réinitialiser
-    btnReset.addEventListener("click", ()=>{
-      f.reset(); updateMode();
-      hide(ctxBanner); msg.textContent = ""; msg.classList.remove("err");
-    });
-
-    // Init
-    updateMode();
-    applyPrefillFromURL();
   </script>
 </body>
 </html>
