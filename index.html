@@ -24,6 +24,22 @@
   @keyframes eale-zoomIn{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
   .eale-intro-hide{opacity:0; transition:opacity .35s ease}
 
+    /* ——— Pills itinéraires : forcer une seule ligne ——— */
+.inline-links.pills-3{
+  flex-wrap: nowrap;          /* pas de retour à la ligne */
+  justify-content: center;
+  gap: 8px;
+}
+.inline-links.pills-3 a{      /* léger resserrage pour petits écrans */
+  padding: 6px 10px;
+}
+@media (max-width: 390px){
+  .inline-links.pills-3 a{
+    padding: 6px 8px;         /* encore un peu plus compact sur iPhone petit */
+    font-size: 13.5px;
+  }
+}
+
 </style>
   <meta name="robots" content="noindex, nofollow" />
   <meta charset="UTF-8" />
@@ -355,14 +371,15 @@ main {
   </a>
 </h1>
 <input type="text" id="search" placeholder="Entrer un poste ou un appareil" autocomplete="off" />
-<ul id="suggestions"></ul>
-<div id="result"></div>
-
-<!-- Compteurs côte à côte -->
+  <!-- Compteurs côte à côte -->
 <div id="counters" style="font-size:13px; color:#666; margin-top:6px; margin-bottom:4rem;">
   Nombre recherche : 📍 <span id="counterPostes">0</span> &nbsp; | &nbsp; 
   💡 <span id="counterAppareils">0</span>
 </div>
+<ul id="suggestions"></ul>
+<div id="result"></div>
+
+
 
 <!-- Bouton localiser -->
 <button id="btn-localiser" class="btn-primary">
@@ -437,7 +454,7 @@ function formatPortail(val) {
   }
 
   if (video) {
-    content += ` <a href="${video}" target="_blank" class="inline-link">▶️ Explication</a>`;
+content += ` <a href="${video}" target="_blank" rel="noopener" class="inline-link">▶️ Explication</a>`;
   }
 
   return `<p><strong>🚧 Portail :</strong> ${content}</p>`;
@@ -473,53 +490,66 @@ function formatRSS(table) {
   return `<p><strong>📞 RSS Table ${tableNum[table] || table} :</strong></p><div class="inline-links">${nums}</div>`;
 }
 function generateAppareilListHTML(currentLieu) {
-  const posteNomComplet = formatNomComplet(currentLieu);
-  const matchingApps = appareils.filter(app => app.nom === currentLieu.nom && app.type === currentLieu.type);
+  const matchingApps = appareils.filter(app => 
+    app.nom  === currentLieu.nom  &&
+    app.type === currentLieu.type
+  );
 
-  if (matchingApps.length === 0) {
-    // ➜ Retourne uniquement le petit encadré
+  const isSAT = currentLieu.SAT && currentLieu.SAT !== "";
+
+  // ✅ Si on est dans un SAT, on ne compte que les appareils de CE SAT
+  const matchingAppsForScope = isSAT
+    ? matchingApps.filter(app => (app.SAT || "") === currentLieu.SAT)
+    : matchingApps;
+
+  // Aucun appareil trouvé dans le scope (SAT précis ou poste entier)
+  if (matchingAppsForScope.length === 0) {
     return `
       <div class="missing-box">
-        🤝 Appareil manquant ? 
+        🤝 Appareil manquant ?
         <a href="formulaire.html">Aidez-nous à l’ajouter.</a>
       </div>
     `;
   }
 
-  // S’il y a des appareils, on affiche le titre + la liste
+  // Il y a au moins un appareil dans le scope → titre + liste
   let grouped = {};
-  matchingApps.forEach(app => {
+  matchingAppsForScope.forEach(app => {
     const sat = app.SAT || 'Poste';
     if (!grouped[sat]) grouped[sat] = [];
     grouped[sat].push(app);
   });
 
-  const isSAT = currentLieu.SAT && currentLieu.SAT !== "";
   let html = `<p><strong>🧩 Appareils trouvés dans ce ${isSAT ? 'SAT' : 'poste'} :</strong></p>`;
 
   for (const [sat, list] of Object.entries(grouped)) {
-    if (isSAT && sat !== currentLieu.SAT) continue;
-    if (!isSAT && sat === "Poste") html += `<p><strong>Poste :</strong> `;
-    else if (!isSAT) html += `<p><strong>${sat} :</strong> `;
-    else html += `<p>`;
-    html += list.map(app => `<a href="#" onclick='showAppareil(${JSON.stringify(app)})'>${app.appareil}</a>`).join(", ") + `</p>`;
+    if (!isSAT) {
+      html += `<p><strong>${sat === "Poste" ? "Poste" : sat} :</strong> `;
+    } else {
+      html += `<p>`;
+    }
+    html += list
+      .map(app => `<a href="#" onclick='showAppareil(${JSON.stringify(app)})'>${app.appareil}</a>`)
+      .join(", ") + `</p>`;
   }
 
+  // Carte bleue toujours présente en dessous
   html += `
     <div class="missing-box">
-      🤝 Appareil manquant ? 
+      🤝 Appareil manquant ?
       <a href="formulaire.html">Aidez-nous à l’ajouter.</a>
     </div>
   `;
 
   return html;
 }
+    
 function generateAlias(appareil, nom, sat, posteType) {
   const alias = new Set();
   const norm = str => (str || "").toLowerCase().trim();
 
-  const a = norm(appareil); // ex. "tt5631"
-  const n = norm(nom);      // ex. "etaples rang v1"
+  const a = norm(appareil); 
+  const n = norm(nom);    
   const s = norm(sat);
   const t = norm(posteType);
 
@@ -628,22 +658,22 @@ const targetLat = usePoste ? _latPoste : lieu.latitude;
 const targetLon = usePoste ? _lonPoste : lieu.longitude;
 const urlMyMapsPoste = myMapsViewer(targetLat, targetLon, 18);
 
-let html = `<h2><a href="#" data-href="${urlMyMapsPoste}" onclick="window.open(this.dataset.href,'_blank')" class="titre-lien">
+let html = `<h2><a href="#" data-href="${urlMyMapsPoste}" onclick="window.open(this.dataset.href,'_blank','noopener')" class="titre-lien">
   📍 ${formatNomCompletLieu(lieu)}
 </a>
 </h2>
 
 <p style="text-align:center; font-weight:600; margin:1.5rem 0 0.5rem 0;">🛣️ Repérer l’accès :</p>
-<div class="inline-links" style="justify-content:center;">
-  <a href="${myMapsViewer(lieu.latitude, lieu.longitude, 19)}" target="_blank">🛰️ Vue satellite</a>
-  <a href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lieu.latitude},${lieu.longitude}" target="_blank">👁️ Street View</a>
+<div class="inline-links pills-3" style="justify-content:center;">
+  <a href="${myMapsViewer(lieu.latitude, lieu.longitude, 19)}" target="_blank" rel="noopener">🛰️ Vue satellite</a>
+  <a href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">👁️ Street View</a>
 </div>
 
   <p style="text-align:center; font-weight:600; margin:1.5rem 0 0.5rem 0;">🚙 Itinéraires disponibles :</p>
-  <div class="inline-links" style="justify-content:center;">
-    <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank">🗺️ Google Maps</a>
-    <a href="https://maps.apple.com/?daddr=${lieu.latitude},${lieu.longitude}" target="_blank">🍎 Apple Plans</a>
-    <a href="https://waze.com/ul?ll=${lieu.latitude},${lieu.longitude}&navigate=yes" target="_blank">🚗 Waze</a>
+<div class="inline-links pills-3" style="justify-content:center;">
+   <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🗺️ Google Maps</a>
+   <a href="https://maps.apple.com/?daddr=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🍎 Apple Plans</a>
+   <a href="https://waze.com/ul?ll=${lieu.latitude},${lieu.longitude}&navigate=yes" target="_blank" rel="noopener">🚗 Waze</a>
   </div>`;
 
   const blocs = [];
@@ -855,7 +885,7 @@ function showAppareil(app) {
   </h2>
 
   <div class="inline-links" style="justify-content:center; margin-top:10px; margin-bottom:1.5rem;"> 
-<a href="${myMapsViewer(app.latitude, app.longitude, 19)}" target="_blank">🛰️ Vue satellite</a>`;
+<a href="${myMapsViewer(app.latitude, app.longitude, 19)}" target="_blank" rel="noopener">🛰️ Vue satellite</a>`;
 
   // 🔗 ajoute le bouton itinéraire si un poste correspondant est trouvé
   const posteTrouvé = lieux.find(l => 
@@ -1083,7 +1113,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.01</span>
 </div>
 
 <script>
