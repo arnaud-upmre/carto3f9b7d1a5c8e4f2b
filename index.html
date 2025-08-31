@@ -797,66 +797,72 @@ results.forEach(it => {
   it.__directAliasHit = aliases.some(a => normalize(a) === query);
 });
 // -------- TRI AVANCÉ ----------
-results.sort((a, b) => {
-  const q = query.toLowerCase();
-  const aNom = normalize(a.nom || "");
-  const bNom = normalize(b.nom || "");
+const cleanedQuery = query.replace(/\s+/g, "").toLowerCase(); // "i7216" ou "7216"
+const qDigits = cleanedQuery.replace(/\D/g, "");              // "7216"
 
-  // --- priorité 0 : le nom qui COMMENCE par la requête ---
+results.sort((a, b) => {
+  const norm = s => (s || "").toString()
+    .toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "")
+    .trim().replace(/\s+/g, " ");
+
+  // helpers ID appareil
+  const id      = x => (x.appareil || "").toString().replace(/\s+/g, "").toLowerCase(); // "i7216"
+  const idDigits= x => id(x).replace(/\D/g, "");                                         // "7216"
+
+  // PRIORITÉ -2 : identifiant exact d'appareil (avec lettres OU seulement les chiffres)
+  const aExactId = a.category === "appareil" && (id(a) === cleanedQuery || (qDigits && idDigits(a) === qDigits));
+  const bExactId = b.category === "appareil" && (id(b) === cleanedQuery || (qDigits && idDigits(b) === qDigits));
+  if (aExactId && !bExactId) return -1;
+  if (bExactId && !aExactId) return 1;
+
+  // PRIORITÉ -1 : alias exact (ex. "I 7216") après normalisation
+  const aliasHit = (x) => Array.isArray(x.alias) && x.alias
+    .map(s => s.replace(/\s+/g, "").toLowerCase())
+    .some(s => s === cleanedQuery || (qDigits && s.replace(/\D/g, "") === qDigits));
+  const aAlias = a.category === "appareil" && aliasHit(a);
+  const bAlias = b.category === "appareil" && aliasHit(b);
+  if (aAlias && !bAlias) return -1;
+  if (bAlias && !aAlias) return 1;
+
+  // --- tri existant ---
+  const q = query.toLowerCase();
+  const aNom = norm(a.nom || "");
+  const bNom = norm(b.nom || "");
+
+  // 0 : nom qui commence par la requête
   const aStarts = aNom.startsWith(q);
   const bStarts = bNom.startsWith(q);
   if (aStarts && !bStarts) return -1;
   if (bStarts && !aStarts) return 1;
 
-  // --- priorité 1 : correspondance exacte ---
+  // 1 : correspondance exacte sur le nom
   const aExact = aNom === q;
   const bExact = bNom === q;
   if (aExact && !bExact) return -1;
   if (bExact && !aExact) return 1;
 
-  // --- priorité 2 : postes simples avant tout ---
+  // 2 : postes simples avant tout
   const aIsPoste = a.category === "poste" && !a.accès;
   const bIsPoste = b.category === "poste" && !b.accès;
   if (aIsPoste && !bIsPoste) return -1;
   if (bIsPoste && !aIsPoste) return 1;
 
-  // --- priorité 3 : postes avec accès ensuite ---
+  // 3 : postes avec accès ensuite
   const aIsAcces = a.category === "poste" && !!a.accès;
   const bIsAcces = b.category === "poste" && !!b.accès;
   if (aIsAcces && !bIsAcces) return -1;
   if (bIsAcces && !aIsAcces) return 1;
 
-  // --- priorité 4 : appareils en dernier ---
+  // 4 : appareils en dernier vis-à-vis des postes
   if (a.category === "appareil" && b.category !== "appareil") return 1;
   if (b.category === "appareil" && a.category !== "appareil") return -1;
 
-  // --- priorité 5 : tri alphabétique stable ---
+  // 5 : alpha stable
   const label = x =>
     x.category === "poste"
       ? `${x.nom || ""} ${x.type || ""} ${x.SAT || ""}`.trim()
       : `${x.appareil} (${x.nom}${x.type ? " " + x.type : ""}${x.SAT ? " / " + x.SAT : ""})`;
-
   return label(a).localeCompare(label(b), "fr", { sensitivity: "base" });
-});
-  
-// Affichage des lignes (meilleur tout en haut)
-suggestionsEl.innerHTML = "";
-results.forEach((item, idx) => {
-  const li = document.createElement("li");
-  if (idx === 0) li.classList.add("best"); // ⭐ surbrillance du meilleur
-
-  if (item.category === "poste") {
-    const base = `${item.nom || ""} ${item.type || ""} ${item.SAT || ""}`.trim();
-    const label = item.accès ? `${base} – accès ${item.accès}` : base;
-    li.textContent = `🚙 ${label}`;
-    li.onclick = () => showLieu(item);
-  } else {
-    li.textContent = `💡 ${item.appareil} (${item.nom}${item.type ? " " + item.type : ""}${item.SAT ? " / " + item.SAT : ""})`;
-    li.onclick = () => showAppareil(item);
-  }
-
-  suggestionsEl.appendChild(li);
-});
 });
   // -------- fin TRI AVANCÉ ----------
 function showAppareil(app) {
@@ -1100,7 +1106,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.06</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1</span>
 </div>
 
 <script>
