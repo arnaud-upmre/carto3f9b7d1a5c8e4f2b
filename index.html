@@ -170,7 +170,7 @@ input[type="text"] {
 ul#suggestions {
   list-style: none;
   padding: 0;
-  margin: 0.5rem 0 1.5rem 0;
+  margin: 0 0 0.5rem 0;
   max-width: 600px;
   width: 100%;
   border-radius: 12px;
@@ -353,6 +353,7 @@ main {
   color: #fff;
 }
 
+    
 /* 🌙 Mode sombre */
 @media (prefers-color-scheme: dark) {
   .btn-primary {
@@ -365,6 +366,7 @@ main {
     color: #121212;
   }
 }
+    #btn-localiser { margin-top: 2rem; }  /* plus d’espace au-dessus */
   </style>
   <meta name="color-scheme" content="light dark">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
@@ -385,12 +387,12 @@ main {
   </a>
 </h1>
 <input type="text" id="search" placeholder="Entrer un poste ou un appareil" autocomplete="off" />
-  <!-- Compteurs côte à côte -->
+<ul id="suggestions"></ul>
+<!-- ✅ Compteurs déplacés sous la liste -->
 <div id="counters" style="font-size:13px; color:#666; margin-top:6px; margin-bottom:.6rem;">
   Nombre recherche : 📍 <span id="counterPostes">0</span> &nbsp; | &nbsp; 
   💡 <span id="counterAppareils">0</span>
 </div>
-<ul id="suggestions"></ul>
 <div id="result"></div>
 
 
@@ -1127,7 +1129,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.100</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.200</span>
 </div>
 
 <script>
