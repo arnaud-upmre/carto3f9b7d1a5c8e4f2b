@@ -1039,13 +1039,23 @@ function showAppareil(app) {
     normalize(l.SAT || "") === normalize(app.SAT || "")
   );
 
-  // 🔗 Cherche un accès correspondant (corrigé : compare avec app.accès)
-  const accesTrouvé = lieux.find(l =>
-    normalize(l.nom) === normalize(app.nom) &&
-    normalize(l.type) === normalize(app.type) &&
-    normalize(l.SAT || "") === normalize(app.SAT || "") &&
-    normalize(String(l.accès || "")) === normalize(app.accès || "")
-  );
+  // 🔗 Cherche un accès correspondant (compare avec app.accès puis app.appareil)
+  const accesTrouvé = lieux.find(l => {
+    const sameBase = normalize(l.nom) === normalize(app.nom)
+      && normalize(l.type) === normalize(app.type)
+      && normalize(l.SAT || "") === normalize(app.SAT || "");
+    if (!sameBase) return false;
+
+    const accLieu = normalize(String(l.accès || ""));
+    const accFromApp = normalize(String(app.accès || ""));
+    const accFromId  = normalize(String(app.appareil || ""));
+
+    // 1) Priorité: app.accès (cas Haute Loge "sectionneur" ou Hondeghem si présent)
+    if (accFromApp && accLieu === accFromApp) return true;
+
+    // 2) Fallback: accès == code appareil (cas Hondeghem "I608")
+    return accLieu === accFromId;
+  });
 
   const lieuCible = accesTrouvé || posteTrouvé;
   if (lieuCible) {
@@ -1250,7 +1260,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.01</span>
 </div>
 
 <script>
