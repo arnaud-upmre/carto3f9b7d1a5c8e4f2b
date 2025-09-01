@@ -519,6 +519,21 @@ function normalize(str) {
     .replace(/\s+/g, " ");    // réduit multiples espaces en un seul
 }
 
+    // Normalisation spéciale pour comparer les noms de postes sans tenir compte du type
+function normalizeNomPoste(name) {
+  if (!name) return "";
+  return name
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")       // supprime accents
+    .toLowerCase()
+    .trim()
+    
+    // supprime les suffixes en fin de nom (SP, SSP, PRCI, etc.)
+    .replace(/\b(?:a|p|sp|ssp|sspa|l|l-a|prci|lgv|ss|sst)\b$/i, "")
+    .trim();
+}
+
+    
 // Requête qui ressemble à un APPAREIL ? (préfixe connu ou présence de chiffres)
 function isAppareilLike(raw){
   if(!raw) return false;
@@ -960,9 +975,11 @@ results.forEach((item, i) => {
 
 // ➕ Ajouter seulement si aucun résultat n’est un match exact
 if (rawQuery.length >= 3) {
+  const queryNorm = normalizeNomPoste(rawQuery);
+
   const exactMatch = results.some(item => {
     if (item.category === "poste") {
-      return normalize(formatNomCompletLieu(item)) === normalize(rawQuery);
+      return normalizeNomPoste(item.nom) === queryNorm;
     } else {
       return normalize(item.appareil || "") === normalize(rawQuery);
     }
@@ -970,6 +987,13 @@ if (rawQuery.length >= 3) {
 
   if (!exactMatch) {
     const liAdd = document.createElement("li");
+      // Vérifie si un poste ou appareil existe déjà (après normalisation)
+  const queryNorm = normalizeNomPoste(rawQuery);
+  const posteExiste = lieux.some(l => normalizeNomPoste(l.nom) === queryNorm);
+  const appareilExiste = appareils.some(a => normalize(a.appareil) === normalize(rawQuery));
+
+  // Si un match exact existe déjà → on ne propose pas l’ajout
+  if (posteExiste || appareilExiste) return;
     liAdd.style.fontStyle = "italic";
 
     if (isAppareilLike(rawQuery)) {
@@ -1226,7 +1250,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.01</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.02</span>
 </div>
 
 <script>
