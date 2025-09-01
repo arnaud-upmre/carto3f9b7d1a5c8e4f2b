@@ -154,6 +154,11 @@
   </div>
 
   <script>
+      // --- Préremplissage depuis l'URL (?nom=...)
+  (function () {
+    const q = new URLSearchParams(location.search).get("nom");
+    if (q) document.getElementById("nomPoste").value = q;  // reste éditable
+  })();
     const DEST_EMAIL = "arnaud.debaecker@sncf.fr";
     const COUNTER_URL = "https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec";
 
