@@ -182,14 +182,29 @@
     function startLocDevice(){if(navigator.geolocation)navigator.geolocation.getCurrentPosition(p=>{if(!mapDevice)ensureMap("mapDevice","btnToggleDevice","btnRecenterDevice",p.coords.latitude,p.coords.longitude);});}
     function startLocAccess(){if(navigator.geolocation)navigator.geolocation.getCurrentPosition(p=>{if(!mapAccess)ensureMap("mapAccess","btnToggleAccess","btnRecenterAccess",p.coords.latitude,p.coords.longitude);});}
 
-    // Submit
+    // Submit (validations harmonisées)
     $("formAppareil").onsubmit=e=>{
       e.preventDefault();
       let demandeur=$("demandeur").value.trim();
       let poste=$("poste").value.trim();
       let appareil=$("appareil").value.trim();
       let infos=$("infos").value.trim();
-      if(!demandeur||!poste||!appareil){alert("⚠️ Merci de renseigner tous les champs obligatoires.");return;}
+      if(!demandeur||!poste||!appareil){
+        alert("⚠️ Merci de renseigner tous les champs obligatoires.");
+        return;
+      }
+
+      // Q1 obligatoire : géolocaliser OU fournir un lien
+      if(!$("presentValue").value){
+        alert("⚠️ Merci d’indiquer si vous souhaitez géolocaliser l’appareil ou fournir un lien.");
+        return;
+      }
+
+      // Q2 obligatoire : accès spécifique Oui / Non
+      if(!$("accessValue").value){
+        alert("⚠️ Merci d’indiquer si l’appareil a son propre accès (Oui / Non).");
+        return;
+      }
 
       let coordAppareil="",coordAcces="";
       if($("presentValue").value==="oui"){
@@ -199,7 +214,7 @@
       }else if($("presentValue").value==="non"){
         if(!isValidUrl($("lien").value)){alert("⚠️ Merci de fournir un lien valide.");return;}
         coordAppareil=$("lien").value;
-      }else{alert("⚠️ Merci d’indiquer si vous souhaitez géolocaliser l’appareil ou fournir un lien.");return;}
+      }
 
       if($("accessValue").value==="oui"){
         let la=sanitizeCoord($("latAccess").value),lo=sanitizeCoord($("lonAccess").value);
