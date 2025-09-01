@@ -1039,7 +1039,7 @@ if (rawQuery.length >= 3) {
       };
     }
 
-    suggestionsEl.appendChild(liAdd);
+    suggestionsEl.insertBefore(liAdd, suggestionsEl.firstChild);
   }
 }
 
