@@ -958,24 +958,34 @@ results.forEach((item, i) => {
   suggestionsEl.appendChild(li);
 });
 
-// ➕ Ajout systématique en bas de liste
+// ➕ Ajouter seulement si aucun résultat n’est un match exact
 if (rawQuery.length >= 3) {
-  const liAdd = document.createElement("li");
-  liAdd.style.fontStyle = "italic";
+  const exactMatch = results.some(item => {
+    if (item.category === "poste") {
+      return normalize(formatNomCompletLieu(item)) === normalize(rawQuery);
+    } else {
+      return normalize(item.appareil || "") === normalize(rawQuery);
+    }
+  });
 
-  if (isAppareilLike(rawQuery)) {
-    liAdd.textContent = `➕ Ajouter cet appareil « ${rawQuery} »`;
-    liAdd.onclick = () => {
-      location.href = `ajout_appareil.html?appareil=${encodeURIComponent(rawQuery)}`;
-    };
-  } else if (isPosteLike(rawQuery)) {
-    liAdd.textContent = `➕ Ajouter ce poste « ${rawQuery} »`;
-    liAdd.onclick = () => {
-      location.href = `ajout_postes.html?nom=${encodeURIComponent(rawQuery)}`;
-    };
+  if (!exactMatch) {
+    const liAdd = document.createElement("li");
+    liAdd.style.fontStyle = "italic";
+
+    if (isAppareilLike(rawQuery)) {
+      liAdd.textContent = `➕ Ajouter cet appareil « ${rawQuery} »`;
+      liAdd.onclick = () => {
+        location.href = `ajout_appareil.html?appareil=${encodeURIComponent(rawQuery)}`;
+      };
+    } else if (isPosteLike(rawQuery)) {
+      liAdd.textContent = `➕ Ajouter ce poste « ${rawQuery} »`;
+      liAdd.onclick = () => {
+        location.href = `ajout_postes.html?nom=${encodeURIComponent(rawQuery)}`;
+      };
+    }
+
+    suggestionsEl.appendChild(liAdd);
   }
-
-  suggestionsEl.appendChild(liAdd);
 }
 
   
@@ -1216,7 +1226,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.01</span>
 </div>
 
 <script>
