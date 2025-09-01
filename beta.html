@@ -664,9 +664,13 @@ if (/^(i|ia|il|ip|imp)/i.test(a)) {
   // --- alias automatiques pour les transformateurs ---
 if (/^(tt|tc|tsa)/i.test(a)) {
   alias.add("transformateur");
+  alias.add("transfo");                        // ✅ abréviation
   alias.add(`transformateur ${a}`);
-  if (n) alias.add(`transformateur ${n}`);
-}
+  alias.add(`transfo ${a}`);                   // ✅ variante abrégée
+  if (n) {
+    alias.add(`transformateur ${n}`);
+    alias.add(`transfo ${n}`);                 // ✅ abréviation + nom
+  }
 
 // --- alias automatiques pour les sectionneurs ---
 if (/^s?\d+$/i.test(a) || /^sm/i.test(a) || /^st/i.test(a)) {   // ex: "5068", "S5068", "SM123", "ST45"
