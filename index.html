@@ -544,7 +544,7 @@ function generateAppareilListHTML(currentLieu) {
     return `
       <div class="missing-box">
         🤝 Appareil manquant ?
-        <a href="ajout_appareil.html">Aidez-nous à l’ajouter.</a>
+       <a href="ajout_appareil.html?poste=${encodeURIComponent(formatNomCompletLieu(currentLieu))}">Aidez-nous à l’ajouter.</a>
       </div>
     `;
   }
@@ -574,7 +574,7 @@ function generateAppareilListHTML(currentLieu) {
   html += `
     <div class="missing-box">
       🤝 Appareil manquant ?
-      <a href="ajout_appareil.html">Aidez-nous à l’ajouter.</a>
+      <a href="ajout_appareil.html?poste=${encodeURIComponent(formatNomCompletLieu(currentLieu))}">Aidez-nous à l’ajouter.</a>
     </div>
   `;
 
