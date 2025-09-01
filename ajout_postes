@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+  />
+  <title>➕ Ajouter un poste</title>
+
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+
+  <style>
+    *,*::before,*::after{box-sizing:border-box}
+    html{-webkit-text-size-adjust:100%}
+    body{
+      margin:0; padding:16px;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background:var(--bg); color:var(--fg);
+    }
+    :root{
+      --bg:#f7f7f8; --fg:#202124; --card:#fff; --border:#d0d7de;
+      --accent:#0b6cff; --accent-ink:#fff; --muted:#666;
+    }
+    @media(prefers-color-scheme:dark){
+      :root{
+        --bg:#0b0b0b; --fg:#eceff1; --card:#141414; --border:#2a2a2a;
+        --accent:#5aa3ff; --accent-ink:#081018; --muted:#999;
+      }
+    }
+    h2{text-align:center;margin:0 0 12px}
+    .card{max-width:640px;margin:auto;background:var(--card);padding:16px;
+      border-radius:14px;box-shadow:0 2px 6px rgba(0,0,0,.15)}
+    label{display:block;margin-top:12px;font-weight:600}
+    input,textarea{
+      width:100%;padding:12px;font-size:16px;margin-top:6px;
+      border:1px solid var(--border);border-radius:10px;
+      background:var(--card);color:var(--fg);min-height:44px
+    }
+    textarea{min-height:96px;resize:none;overflow:auto}
+    .hint{font-size:13px;color:var(--muted);margin-top:4px}
+    .pill-group{display:flex;gap:10px;margin-top:8px}
+    .pill{flex:1;text-align:center;padding:12px;border:1px solid var(--border);
+      border-radius:999px;cursor:pointer;user-select:none}
+    .pill.active{background:var(--accent);color:var(--accent-ink)}
+    .map-wrap{display:none;margin-top:12px;border:1px solid var(--border);
+      border-radius:10px;overflow:hidden}
+    #mapDevice{height:300px;width:100%}
+    .map-toolbar{display:flex;gap:8px;padding:6px;background:var(--card)}
+    .map-toolbar button{flex:1;padding:8px;border-radius:8px;border:1px solid var(--border);cursor:pointer}
+    .btn-row{display:flex;gap:12px;margin-top:18px}
+    .btn{flex:1;padding:12px;font-size:16px;border:none;border-radius:10px;cursor:pointer}
+    .btn.primary{background:var(--accent);color:var(--accent-ink)}
+    .btn.secondary{background:#ccc}
+    @media(prefers-color-scheme:dark){.btn.secondary{background:#2a2f36;color:#eee}}
+  </style>
+</head>
+<body>
+  <h2>➕ Ajouter un poste</h2>
+
+  <div class="card">
+    <form id="formPoste">
+      <label>Votre nom</label>
+      <input id="demandeur" required>
+
+      <label>Nom du poste</label>
+      <input id="nomPoste" placeholder="Ex : Alleux SP" required>
+
+      <label>Type (obligatoire)</label>
+      <input id="typePoste" placeholder="Ex : SP, SSP, PRCI, L…" required>
+      <div class="hint">Saisir librement le sigle (sera mis en MAJUSCULES).</div>
+
+      <label>Voulez-vous géolocaliser le poste ?</label>
+      <div class="pill-group">
+        <div class="pill" id="pill-oui" data-value="oui">Oui</div>
+        <div class="pill" id="pill-non" data-value="non">Non</div>
+      </div>
+      <input type="hidden" id="presentValue">
+
+      <!-- Carte si oui -->
+      <div class="map-wrap" id="mapDeviceWrap">
+        <div id="mapDevice"></div>
+        <div class="map-toolbar">
+          <button type="button" id="btnRecenterDevice">📍 Recentrer</button>
+          <button type="button" id="btnToggleDevice">🗺️ Plan</button>
+        </div>
+      </div>
+      <div id="coordsDevice" style="display:none;">
+        <label>Latitude du poste</label>
+        <input id="latDevice" inputmode="decimal">
+        <label>Longitude du poste</label>
+        <input id="lonDevice" inputmode="decimal">
+      </div>
+
+      <!-- Lien si non -->
+      <div id="lienField" style="display:none;">
+        <label>Coller le lien Google Maps</label>
+        <input id="lien" type="url" placeholder="https://maps.app.goo.gl/…">
+        <div class="hint">Vous pouvez saisir soit <code>lat, lon</code>, soit coller un lien Google Maps.</div>
+      </div>
+
+      <label>PK (optionnel)</label>
+      <input id="pk" placeholder="Ex : 114.100">
+
+      <label>Numéro de ligne (optionnel)</label>
+      <input id="numeroLigne" placeholder="Ex : 216000" inputmode="numeric">
+
+      <label>Description / notes utiles</label>
+      <textarea id="notes" placeholder="Code portail (si partageable), accès Carmillon, repère visuel, proximité gare…"></textarea>
+
+      <div class="btn-row">
+        <button type="submit" class="btn primary">📩 Envoyer la contribution</button>
+        <button type="button" class="btn secondary" onclick="location.href='index.html'">⬅️ Retour à l’accueil</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const DEST_EMAIL = "arnaud.debaecker@sncf.fr";
+    const COUNTER_URL = "https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec";
+
+    let mapDevice, markerDevice, esri, osm, sat = true;
+
+    function $(id){return document.getElementById(id);}
+    function toggle(el,show){el.style.display = show ? "block" : "none";}
+    function sanitizeCoord(v){return (v||"").toString().replace(",",".").trim();}
+    function isValidLatLon(lat,lon){
+      const la=parseFloat(lat), lo=parseFloat(lon);
+      return !isNaN(la) && !isNaN(lo) && la>=-90 && la<=90 && lo>=-180 && lo<=180;
+    }
+    function isValidUrl(str){return /^https?:\/\/.+/i.test((str||"").trim());}
+
+    // Pills géolocalisation
+    $("pill-oui").onclick = () => setPill("oui");
+    $("pill-non").onclick = () => setPill("non");
+    function setPill(v){
+      $("presentValue").value = v;
+      $("pill-oui").classList.toggle("active", v==="oui");
+      $("pill-non").classList.toggle("active", v==="non");
+      if(v==="oui"){
+        toggle($("mapDeviceWrap"), true);
+        toggle($("coordsDevice"), true);
+        toggle($("lienField"), false);
+        startLocDevice();
+      }else if(v==="non"){
+        toggle($("mapDeviceWrap"), false);
+        toggle($("coordsDevice"), false);
+        toggle($("lienField"), true);
+      }else{
+        toggle($("mapDeviceWrap"), false);
+        toggle($("coordsDevice"), false);
+        toggle($("lienField"), false);
+      }
+    }
+
+    // Map
+    function ensureMap(mapId, btnToggle, btnRecenter, lat, lon){
+      const map = L.map(mapId).setView([lat, lon], 18);
+      esri = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}").addTo(map);
+      osm  = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png");
+      const marker = L.marker([lat,lon], {draggable:true}).addTo(map);
+
+      marker.on("dragend", ()=>{
+        const p = marker.getLatLng();
+        $("latDevice").value = p.lat;
+        $("lonDevice").value = p.lng;
+      });
+
+      $(btnToggle).onclick = ()=>{
+        sat = !sat;
+        if(sat){
+          map.removeLayer(osm); esri.addTo(map);
+          $(btnToggle).textContent = "🗺️ Plan";
+        }else{
+          map.removeLayer(esri); osm.addTo(map);
+          $(btnToggle).textContent = "🛰️ Satellite";
+        }
+      };
+
+      $(btnRecenter).onclick = ()=>{
+        if(navigator.geolocation){
+          navigator.geolocation.getCurrentPosition(p=>{
+            const la=p.coords.latitude, lo=p.coords.longitude;
+            map.setView([la,lo], 18);
+            marker.setLatLng([la,lo]);
+            $("latDevice").value = la;
+            $("lonDevice").value = lo;
+          });
+        }
+      };
+
+      mapDevice = map;
+      markerDevice = marker;
+    }
+
+    function startLocDevice(){
+      if(mapDevice) return;
+      if(navigator.geolocation){
+        navigator.geolocation.getCurrentPosition(p=>{
+          ensureMap("mapDevice", "btnToggleDevice", "btnRecenterDevice", p.coords.latitude, p.coords.longitude);
+          $("latDevice").value = p.coords.latitude;
+          $("lonDevice").value = p.coords.longitude;
+        }, ()=>{
+          // fallback Lille (si refus)
+          ensureMap("mapDevice", "btnToggleDevice", "btnRecenterDevice", 50.62925, 3.057256);
+        });
+      }else{
+        ensureMap("mapDevice", "btnToggleDevice", "btnRecenterDevice", 50.62925, 3.057256);
+      }
+    }
+
+    // Submit
+    $("formPoste").onsubmit = (e)=>{
+      e.preventDefault();
+
+      const demandeur = $("demandeur").value.trim();
+      const nomPoste  = $("nomPoste").value.trim();
+      const typePoste = $("typePoste").value.trim().toUpperCase();
+      const notes     = $("notes").value.trim();
+      const pk        = $("pk").value.trim();
+      const numeroLigne = $("numeroLigne").value.trim();
+
+      if(!demandeur || !nomPoste || !typePoste){
+        alert("⚠️ Merci de renseigner votre nom, le nom du poste et le type.");
+        return;
+      }
+
+      if(!$("presentValue").value){
+        alert("⚠️ Merci d’indiquer si vous souhaitez géolocaliser le poste ou fournir un lien.");
+        return;
+      }
+
+      let localisation = ""; // soit "lat,lon" soit URL
+      if($("presentValue").value === "oui"){
+        const la = sanitizeCoord($("latDevice").value);
+        const lo = sanitizeCoord($("lonDevice").value);
+        if(!isValidLatLon(la,lo)){
+          alert("⚠️ Les coordonnées GPS du poste ne sont pas valides.");
+          return;
+        }
+        localisation = `${la},${lo}`;
+      }else{
+        const lien = $("lien").value.trim();
+        if(!isValidUrl(lien)){
+          alert("⚠️ Merci de fournir un lien Google Maps valide.");
+          return;
+        }
+        localisation = lien;
+      }
+
+      // Construction email
+      const subject = `Contribution : ajout d’un poste — ${nomPoste}`;
+      let body  = `Bonjour Arnaud,%0D%0A%0D%0A${encodeURIComponent(demandeur)} propose l’ajout du poste suivant :%0D%0A%0D%0A`;
+      body += `Nom du poste : ${encodeURIComponent(nomPoste)}%0D%0A`;
+      body += `Type : ${encodeURIComponent(typePoste)}%0D%0A`;
+      body += `Localisation : ${encodeURIComponent(localisation)}%0D%0A`;
+      if(pk) body += `PK : ${encodeURIComponent(pk)}%0D%0A`;
+      if(numeroLigne) body += `Numéro de ligne : ${encodeURIComponent(numeroLigne)}%0D%0A`;
+      body += `Notes : ${encodeURIComponent(notes)}%0D%0A%0D%0A`;
+      body += `Cordialement,%0D%0A${encodeURIComponent(demandeur)}`;
+
+      // Envoi mail via mailto
+      location.href = `mailto:${DEST_EMAIL}?subject=${encodeURIComponent(subject)}&body=${body}`;
+
+      // Incrément compteur contributions
+      fetch(COUNTER_URL + "?increment=true").catch(()=>{});
+
+      alert("L’e-mail de contribution est généré, vérifiez et envoyez-le.");
+      $("formPoste").reset();
+      setPill("");
+    };
+  </script>
+</body>
+</html>
