@@ -354,9 +354,19 @@ if (demandeur) {
       // Incrément compteur contributions
       fetch(COUNTER_URL+"?increment=true").catch(()=>{});
 
-      alert("L’e-mail de contribution est généré, vérifiez et envoyez-le.");
-      $("formAppareil").reset();
-      setPill("");setAccess("");
+alert("L’e-mail de contribution est généré, vérifiez et envoyez-le.");
+
+// Sauvegarde le nom avant reset
+const savedName = demandeur;
+
+// Reset complet du formulaire
+$("formAppareil").reset();
+setPill("");setAccess("");
+
+// Réinjecte le nom sauvegardé
+if (savedName) {
+  $("demandeur").value = savedName;
+}
     };
   </script>
 </body>
