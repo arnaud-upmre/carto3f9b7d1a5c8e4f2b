@@ -219,46 +219,51 @@
       }
     }
 
-    // ——— Cartes
-    function ensureMap(mapId, btnToggle, btnRecenter, lat, lon, kind){
-      const map = L.map(mapId).setView([lat, lon], 18);
-      const esri = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}").addTo(map);
-      const osm  = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png");
-      const marker = L.marker([lat,lon], {draggable:true}).addTo(map);
+// ——— Cartes
+function ensureMap(mapId, btnToggle, btnRecenter, lat, lon, kind){
+  const map = L.map(mapId).setView([lat, lon], 18);
 
-      marker.on("dragend", ()=>{
-        const p = marker.getLatLng();
-        if(kind==="access"){ $("latAccess").value=p.lat; $("lonAccess").value=p.lng; }
-        else{ $("latPoste").value=p.lat; $("lonPoste").value=p.lng; }
-      });
+  const esri = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}");
+  const osm  = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png");
 
-      $(btnToggle).onclick = ()=>{
-        if(kind==="access"){
-          satA=!satA;
-          if(satA){ map.removeLayer(osm); esri.addTo(map); $(btnToggle).textContent="🗺️ Plan"; }
-          else{ map.removeLayer(esri); osm.addTo(map); $(btnToggle).textContent="🛰️ Satellite"; }
-        }else{
-          satP=!satP;
-          if(satP){ map.removeLayer(osm); esri.addTo(map); $(btnToggle).textContent="🗺️ Plan"; }
-          else{ map.removeLayer(esri); osm.addTo(map); $(btnToggle).textContent="🛰️ Satellite"; }
-        }
-      };
+  // Par défaut on démarre en satellite
+  esri.addTo(map);
 
-      $(btnRecenter).onclick = ()=>{
-        if(navigator.geolocation){
-          navigator.geolocation.getCurrentPosition(p=>{
-            const la=p.coords.latitude, lo=p.coords.longitude;
-            map.setView([la,lo],18);
-            marker.setLatLng([la,lo]);
-            if(kind==="access"){ $("latAccess").value=la; $("lonAccess").value=lo; }
-            else{ $("latPoste").value=la; $("lonPoste").value=lo; }
-          });
-        }
-      };
+  const marker = L.marker([lat,lon], {draggable:true}).addTo(map);
 
-      if(kind==="access"){ mapAccess=map; markerAccess=marker; esriA=esri; osmA=osm; }
-      else{ mapPoste=map; markerPoste=marker; esriP=esri; osmP=osm; }
+  marker.on("dragend", ()=>{
+    const p = marker.getLatLng();
+    if(kind==="access"){ $("latAccess").value=p.lat; $("lonAccess").value=p.lng; }
+    else{ $("latPoste").value=p.lat; $("lonPoste").value=p.lng; }
+  });
+
+  // Chaque carte garde son propre état plan/satellite
+  let isSat = true;
+  $(btnToggle).onclick = ()=>{
+    isSat = !isSat;
+    if(isSat){
+      map.removeLayer(osm); esri.addTo(map);
+      $(btnToggle).textContent="🗺️ Plan";
+    }else{
+      map.removeLayer(esri); osm.addTo(map);
+      $(btnToggle).textContent="🛰️ Satellite";
     }
+  };
+
+  $(btnRecenter).onclick = ()=>{
+    if(navigator.geolocation){
+      navigator.geolocation.getCurrentPosition(p=>{
+        map.setView([p.coords.latitude,p.coords.longitude],18);
+        marker.setLatLng([p.coords.latitude,p.coords.longitude]);
+        if(kind==="access"){ $("latAccess").value=p.coords.latitude; $("lonAccess").value=p.coords.longitude; }
+        else{ $("latPoste").value=p.coords.latitude; $("lonPoste").value=p.coords.longitude; }
+      });
+    }
+  };
+
+  if(kind==="access"){ mapAccess=map; markerAccess=marker; }
+  else{ mapPoste=map; markerPoste=marker; }
+}
 
     function startLocAccess(){
       if(mapAccess) return;
