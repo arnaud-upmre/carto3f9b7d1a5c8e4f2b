@@ -1272,26 +1272,6 @@ function showNearby(position) {
   renderProximitePage();
 }
 
-const compteurContributionURL = "https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec";
-
-function updateContrib() {
-  // 1) Lecture du cache
-  const cached = localStorage.getItem("counterContrib");
-  if (cached) {
-    document.getElementById("compteur-valeur").textContent = `(${cached})`;
-  }
-
-  // 2) Mise à jour depuis le serveur
-  fetch(compteurContributionURL).then(r => r.json()).then(data => {
-    if (data && typeof data.count !== "undefined") {
-      document.getElementById("compteur-valeur").textContent = `(${data.count})`;
-      localStorage.setItem("counterContrib", data.count); // ✅ sauvegarde en cache
-    }
-  }).catch(() => {});
-}
-
-updateContrib();
-setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
