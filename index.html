@@ -1020,7 +1020,6 @@ if (rawQuery.length >= 3) {
   if (!exactMatch) {
     const liAdd = document.createElement("li");
       // Vérifie si un poste ou appareil existe déjà (après normalisation)
-  const queryNorm = normalizeNomPoste(rawQuery);
   const posteExiste = lieux.some(l => normalizeNomPoste(l.nom) === queryNorm);
   const appareilExiste = appareils.some(a => normalize(a.appareil) === normalize(rawQuery));
 
