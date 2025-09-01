@@ -1699,6 +1699,23 @@
     "poste_latitude": "",
     "poste_longitude": ""
   },
+    {
+    "nom": "Haute Loge",
+    "type": "SSP",
+    "SAT": "",
+    "accès": "sectionneur",
+    "latitude": 50.7285,
+    "longitude": 2.51927,
+    "description": "",
+    "rss": "A",
+    "contact": "",
+    "portail": "",
+    "lignes": "",
+    "numero_ligne": "",
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
+  },
   {
     "nom": "Hauteville",
     "type": "SSPA",
