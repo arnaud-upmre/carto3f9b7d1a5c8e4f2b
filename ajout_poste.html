@@ -159,6 +159,13 @@
     const q = new URLSearchParams(location.search).get("nom");
     if (q) document.getElementById("nomPoste").value = q;  // reste éditable
   })();
+    // --- Préremplissage du nom du demandeur depuis le localStorage ---
+(function prefillName() {
+  const savedName = localStorage.getItem("nom_demandeur");
+  if (savedName) {
+    document.getElementById("demandeur").value = savedName;
+  }
+})();
     const DEST_EMAIL = "arnaud.debaecker@sncf.fr";
     const COUNTER_URL = "https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec";
 
@@ -298,6 +305,9 @@ function ensureMap(mapId, btnToggle, btnRecenter, lat, lon, kind){
       e.preventDefault();
 
       const demandeur   = $("demandeur").value.trim();
+      if (demandeur) {
+  localStorage.setItem("nom_demandeur", demandeur);
+}
       const nomPoste    = $("nomPoste").value.trim();
       const typePoste   = $("typePoste").value.trim().toUpperCase();
       const satellite   = $("satellite").value.trim().toUpperCase();
@@ -372,10 +382,20 @@ function ensureMap(mapId, btnToggle, btnRecenter, lat, lon, kind){
       // Incrément compteur contributions (identique)
       fetch(COUNTER_URL + "?increment=true").catch(()=>{});
 
-      alert("L’e-mail de contribution est généré, vérifiez et envoyez-le.");
-      $("formPoste").reset();
-      setAccess("");
-      setPoste("");
+  alert("L’e-mail de contribution est généré, vérifiez et envoyez-le.");
+
+// Sauvegarde le nom avant reset
+const savedName = demandeur;
+
+// Reset complet du formulaire
+$("formPoste").reset();
+setAccess("");
+setPoste("");
+
+// Réinjecte le nom sauvegardé
+if (savedName) {
+  $("demandeur").value = savedName;
+}
     };
   </script>
 </body>
