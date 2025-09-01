@@ -640,9 +640,9 @@ function generateAlias(appareil, nom, sat, posteType) {
   const root = a.split(/[\s\-]/)[0]; // ex. "tt5631"
 
   // --- alias de base ---
-  alias.add(a);                       // tt5631
+  alias.add(a);                                // tt5631
   alias.add(a.replace(/([a-z]+)(\d+)/, "$1 $2")); // tt 5631
-  alias.add(letters);                 // tt
+  alias.add(letters);                          // tt
 
   // --- combinaisons appareil + nom complet ---
   if (n) {
@@ -654,34 +654,36 @@ function generateAlias(appareil, nom, sat, posteType) {
     alias.add(`${n} ${letters}`);
   }
 
-// --- alias automatiques pour les interrupteurs ---
-if (/^(i|ia|il|ip|imp)/i.test(a)) {
-  alias.add("interrupteur");
-  alias.add("inter");                       // ✅ abréviation
-  alias.add(`interrupteur ${a}`);
-  alias.add(`inter ${a}`);                  // ✅ abréviation + code
-  if (n) {
-    alias.add(`interrupteur ${n}`);
-    alias.add(`inter ${n}`);                // ✅ abréviation + nom du poste
+  // --- alias automatiques pour les interrupteurs ---
+  if (/^(i|ia|il|ip|imp)/i.test(a)) {
+    alias.add("interrupteur");
+    alias.add("inter");                       // ✅ abréviation
+    alias.add(`interrupteur ${a}`);
+    alias.add(`inter ${a}`);                  // ✅ abréviation + code
+    if (n) {
+      alias.add(`interrupteur ${n}`);
+      alias.add(`inter ${n}`);                // ✅ abréviation + nom du poste
+    }
   }
 
   // --- alias automatiques pour les transformateurs ---
-if (/^(tt|tc|tsa)/i.test(a)) {
-  alias.add("transformateur");
-  alias.add("transfo");                        // ✅ abréviation
-  alias.add(`transformateur ${a}`);
-  alias.add(`transfo ${a}`);                   // ✅ variante abrégée
-  if (n) {
-    alias.add(`transformateur ${n}`);
-    alias.add(`transfo ${n}`);                 // ✅ abréviation + nom
+  if (/^(tt|tc|tsa)/i.test(a)) {
+    alias.add("transformateur");
+    alias.add("transfo");                        // ✅ abréviation
+    alias.add(`transformateur ${a}`);
+    alias.add(`transfo ${a}`);                   // ✅ variante abrégée
+    if (n) {
+      alias.add(`transformateur ${n}`);
+      alias.add(`transfo ${n}`);                 // ✅ abréviation + nom
+    }
   }
 
-// --- alias automatiques pour les sectionneurs ---
-if (/^s?\d+$/i.test(a) || /^sm/i.test(a) || /^st/i.test(a)) {   // ex: "5068", "S5068", "SM123", "ST45"
-  alias.add("sectionneur");
-  alias.add(`sectionneur ${a}`);
-  if (n) alias.add(`sectionneur ${n}`);
-}
+  // --- alias automatiques pour les sectionneurs ---
+  if (/^s?\d+$/i.test(a) || /^sm/i.test(a) || /^st/i.test(a)) {   // ex: "5068", "S5068", "SM123", "ST45"
+    alias.add("sectionneur");
+    alias.add(`sectionneur ${a}`);
+    if (n) alias.add(`sectionneur ${n}`);
+  }
 
   // --- combinaisons appareil + chaque mot du nom ---
   if (n) {
@@ -711,7 +713,8 @@ if (/^s?\d+$/i.test(a) || /^sm/i.test(a) || /^st/i.test(a)) {   // ex: "5068", "
     alias.add(`${n} ${t}`);
     alias.add(`${t} ${n}`);
   }
-   return Array.from(alias);
+
+  return Array.from(alias);
 } // ← ferme bien generateAlias
 
  function updateCounter() {
