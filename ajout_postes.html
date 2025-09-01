@@ -47,7 +47,7 @@
     .pill.active{background:var(--accent);color:var(--accent-ink)}
     .map-wrap{display:none;margin-top:12px;border:1px solid var(--border);
       border-radius:10px;overflow:hidden}
-    #mapDevice{height:300px;width:100%}
+    #mapAccess,#mapPoste{height:300px;width:100%}
     .map-toolbar{display:flex;gap:8px;padding:6px;background:var(--card)}
     .map-toolbar button{flex:1;padding:8px;border-radius:8px;border:1px solid var(--border);cursor:pointer}
     .btn-row{display:flex;gap:12px;margin-top:18px}
@@ -66,49 +66,78 @@
       <input id="demandeur" required>
 
       <label>Nom du poste</label>
-      <input id="nomPoste" placeholder="Ex : Alleux SP" required>
+      <input id="nomPoste" placeholder="Ex : Cambrai" required>
 
-      <label>Type (obligatoire)</label>
-      <input id="typePoste" placeholder="Ex : SP, SSP, PRCI, L…" required>
-      <div class="hint">Saisir librement le sigle (sera mis en MAJUSCULES).</div>
+      <label>Type</label>
+      <input id="typePoste" placeholder="Ex : SP, SSP, PRCI, L…">
+      <div class="hint">Saisir librement le sigle (sera mis en MAJUSCULES si renseigné).</div>
 
-      <label>Voulez-vous géolocaliser le poste ?</label>
+      <!-- ACCÈS (prioritaire / obligatoire d'une manière ou d'une autre) -->
+      <label>Souhaitez-vous géolocaliser l’accès ?</label>
       <div class="pill-group">
-        <div class="pill" id="pill-oui" data-value="oui">Oui</div>
-        <div class="pill" id="pill-non" data-value="non">Non</div>
+        <div class="pill" id="pill-acc-oui" data-value="oui">Oui</div>
+        <div class="pill" id="pill-acc-non" data-value="non">Non</div>
       </div>
-      <input type="hidden" id="presentValue">
+      <input type="hidden" id="presentAccess">
 
-      <!-- Carte si oui -->
-      <div class="map-wrap" id="mapDeviceWrap">
-        <div id="mapDevice"></div>
+      <!-- Carte accès si oui -->
+      <div class="map-wrap" id="mapAccessWrap">
+        <div id="mapAccess"></div>
         <div class="map-toolbar">
-          <button type="button" id="btnRecenterDevice">📍 Recentrer</button>
-          <button type="button" id="btnToggleDevice">🗺️ Plan</button>
+          <button type="button" id="btnRecenterAccess">📍 Recentrer</button>
+          <button type="button" id="btnToggleAccess">🗺️ Plan</button>
         </div>
       </div>
-      <div id="coordsDevice" style="display:none;">
-        <label>Latitude du poste</label>
-        <input id="latDevice" inputmode="decimal">
-        <label>Longitude du poste</label>
-        <input id="lonDevice" inputmode="decimal">
+      <div id="coordsAccess" style="display:none;">
+        <label>Latitude accès</label>
+        <input id="latAccess" inputmode="decimal">
+        <label>Longitude accès</label>
+        <input id="lonAccess" inputmode="decimal">
       </div>
 
-      <!-- Lien si non -->
-      <div id="lienField" style="display:none;">
-        <label>Coller le lien Google Maps</label>
-        <input id="lien" type="url" placeholder="https://maps.app.goo.gl/…">
-        <div class="hint">Vous pouvez saisir soit <code>lat, lon</code>, soit coller un lien Google Maps.</div>
+      <!-- Lien accès si non -->
+      <div id="lienAccessField" style="display:none;">
+        <label>Coller le lien Google Maps de l’accès</label>
+        <input id="lienAccess" type="url" placeholder="https://maps.app.goo.gl/…">
+        <div class="hint">Vous pouvez saisir “lat, lon” ou coller un lien Google Maps.</div>
       </div>
 
-      <label>PK (optionnel)</label>
-      <input id="pk" placeholder="Ex : 114.100">
+      <!-- POSTE / GUÉRITE (facultatif) -->
+      <label>Souhaitez-vous géolocaliser le poste / guérite ?</label>
+      <div class="pill-group">
+        <div class="pill" id="pill-pos-oui" data-value="oui">Oui</div>
+        <div class="pill" id="pill-pos-non" data-value="non">Non</div>
+      </div>
+      <input type="hidden" id="presentPoste">
 
-      <label>Numéro de ligne (optionnel)</label>
-      <input id="numeroLigne" placeholder="Ex : 216000" inputmode="numeric">
+      <!-- Carte poste si oui -->
+      <div class="map-wrap" id="mapPosteWrap">
+        <div id="mapPoste"></div>
+        <div class="map-toolbar">
+          <button type="button" id="btnRecenterPoste">📍 Recentrer</button>
+          <button type="button" id="btnTogglePoste">🗺️ Plan</button>
+        </div>
+      </div>
+      <div id="coordsPoste" style="display:none;">
+        <label>Latitude poste / guérite</label>
+        <input id="latPoste" inputmode="decimal">
+        <label>Longitude poste / guérite</label>
+        <input id="lonPoste" inputmode="decimal">
+      </div>
+
+      <!-- Lien poste si non (optionnel) -->
+      <div id="lienPosteField" style="display:none;">
+        <label>Coller le lien Google Maps du poste / guérite (optionnel)</label>
+        <input id="lienPoste" type="url" placeholder="https://maps.app.goo.gl/…">
+        <div class="hint">Vous pouvez laisser ce champ vide.</div>
+      </div>
+
+      <!-- PK + Ligne fusionnés -->
+      <label>PK / Numéro de ligne (optionnel)</label>
+      <input id="pkLigne" placeholder="Ex : PK 114.100 – Ligne 216000">
 
       <label>Description / notes utiles</label>
-      <textarea id="notes" placeholder="Code portail (si partageable), accès Carmillon, repère visuel, proximité gare…"></textarea>
+      <textarea id="notes" placeholder="Code portail, accès Carmillon, repère visuel, proximité gare…"></textarea>
 
       <div class="btn-row">
         <button type="submit" class="btn primary">📩 Envoyer la contribution</button>
@@ -121,7 +150,7 @@
     const DEST_EMAIL = "arnaud.debaecker@sncf.fr";
     const COUNTER_URL = "https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec";
 
-    let mapDevice, markerDevice, esri, osm, sat = true;
+    let mapAccess, mapPoste, markerAccess, markerPoste, esriA, osmA, esriP, osmP, satA=true, satP=true;
 
     function $(id){return document.getElementById(id);}
     function toggle(el,show){el.style.display = show ? "block" : "none";}
@@ -132,50 +161,74 @@
     }
     function isValidUrl(str){return /^https?:\/\/.+/i.test((str||"").trim());}
 
-    // Pills géolocalisation
-    $("pill-oui").onclick = () => setPill("oui");
-    $("pill-non").onclick = () => setPill("non");
-    function setPill(v){
-      $("presentValue").value = v;
-      $("pill-oui").classList.toggle("active", v==="oui");
-      $("pill-non").classList.toggle("active", v==="non");
+    // ——— Pills ACCÈS
+    $("pill-acc-oui").onclick = () => setAccess("oui");
+    $("pill-acc-non").onclick = () => setAccess("non");
+    function setAccess(v){
+      $("presentAccess").value = v;
+      $("pill-acc-oui").classList.toggle("active", v==="oui");
+      $("pill-acc-non").classList.toggle("active", v==="non");
       if(v==="oui"){
-        toggle($("mapDeviceWrap"), true);
-        toggle($("coordsDevice"), true);
-        toggle($("lienField"), false);
-        startLocDevice();
+        toggle($("mapAccessWrap"), true);
+        toggle($("coordsAccess"), true);
+        toggle($("lienAccessField"), false);
+        startLocAccess();
       }else if(v==="non"){
-        toggle($("mapDeviceWrap"), false);
-        toggle($("coordsDevice"), false);
-        toggle($("lienField"), true);
+        toggle($("mapAccessWrap"), false);
+        toggle($("coordsAccess"), false);
+        toggle($("lienAccessField"), true);
       }else{
-        toggle($("mapDeviceWrap"), false);
-        toggle($("coordsDevice"), false);
-        toggle($("lienField"), false);
+        toggle($("mapAccessWrap"), false);
+        toggle($("coordsAccess"), false);
+        toggle($("lienAccessField"), false);
       }
     }
 
-    // Map
-    function ensureMap(mapId, btnToggle, btnRecenter, lat, lon){
+    // ——— Pills POSTE (facultatif)
+    $("pill-pos-oui").onclick = () => setPoste("oui");
+    $("pill-pos-non").onclick = () => setPoste("non");
+    function setPoste(v){
+      $("presentPoste").value = v;
+      $("pill-pos-oui").classList.toggle("active", v==="oui");
+      $("pill-pos-non").classList.toggle("active", v==="non");
+      if(v==="oui"){
+        toggle($("mapPosteWrap"), true);
+        toggle($("coordsPoste"), true);
+        toggle($("lienPosteField"), false);
+        startLocPoste();
+      }else if(v==="non"){
+        toggle($("mapPosteWrap"), false);
+        toggle($("coordsPoste"), false);
+        toggle($("lienPosteField"), true);
+      }else{
+        toggle($("mapPosteWrap"), false);
+        toggle($("coordsPoste"), false);
+        toggle($("lienPosteField"), false);
+      }
+    }
+
+    // ——— Cartes
+    function ensureMap(mapId, btnToggle, btnRecenter, lat, lon, kind){
       const map = L.map(mapId).setView([lat, lon], 18);
-      esri = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}").addTo(map);
-      osm  = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png");
+      const esri = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}").addTo(map);
+      const osm  = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png");
       const marker = L.marker([lat,lon], {draggable:true}).addTo(map);
 
       marker.on("dragend", ()=>{
         const p = marker.getLatLng();
-        $("latDevice").value = p.lat;
-        $("lonDevice").value = p.lng;
+        if(kind==="access"){ $("latAccess").value=p.lat; $("lonAccess").value=p.lng; }
+        else{ $("latPoste").value=p.lat; $("lonPoste").value=p.lng; }
       });
 
       $(btnToggle).onclick = ()=>{
-        sat = !sat;
-        if(sat){
-          map.removeLayer(osm); esri.addTo(map);
-          $(btnToggle).textContent = "🗺️ Plan";
+        if(kind==="access"){
+          satA=!satA;
+          if(satA){ map.removeLayer(osm); esri.addTo(map); $(btnToggle).textContent="🗺️ Plan"; }
+          else{ map.removeLayer(esri); osm.addTo(map); $(btnToggle).textContent="🛰️ Satellite"; }
         }else{
-          map.removeLayer(esri); osm.addTo(map);
-          $(btnToggle).textContent = "🛰️ Satellite";
+          satP=!satP;
+          if(satP){ map.removeLayer(osm); esri.addTo(map); $(btnToggle).textContent="🗺️ Plan"; }
+          else{ map.removeLayer(esri); osm.addTo(map); $(btnToggle).textContent="🛰️ Satellite"; }
         }
       };
 
@@ -183,93 +236,128 @@
         if(navigator.geolocation){
           navigator.geolocation.getCurrentPosition(p=>{
             const la=p.coords.latitude, lo=p.coords.longitude;
-            map.setView([la,lo], 18);
+            map.setView([la,lo],18);
             marker.setLatLng([la,lo]);
-            $("latDevice").value = la;
-            $("lonDevice").value = lo;
+            if(kind==="access"){ $("latAccess").value=la; $("lonAccess").value=lo; }
+            else{ $("latPoste").value=la; $("lonPoste").value=lo; }
           });
         }
       };
 
-      mapDevice = map;
-      markerDevice = marker;
+      if(kind==="access"){ mapAccess=map; markerAccess=marker; esriA=esri; osmA=osm; }
+      else{ mapPoste=map; markerPoste=marker; esriP=esri; osmP=osm; }
     }
 
-    function startLocDevice(){
-      if(mapDevice) return;
+    function startLocAccess(){
+      if(mapAccess) return;
       if(navigator.geolocation){
         navigator.geolocation.getCurrentPosition(p=>{
-          ensureMap("mapDevice", "btnToggleDevice", "btnRecenterDevice", p.coords.latitude, p.coords.longitude);
-          $("latDevice").value = p.coords.latitude;
-          $("lonDevice").value = p.coords.longitude;
+          ensureMap("mapAccess","btnToggleAccess","btnRecenterAccess", p.coords.latitude, p.coords.longitude, "access");
+          $("latAccess").value=p.coords.latitude; $("lonAccess").value=p.coords.longitude;
         }, ()=>{
-          // fallback Lille (si refus)
-          ensureMap("mapDevice", "btnToggleDevice", "btnRecenterDevice", 50.62925, 3.057256);
+          ensureMap("mapAccess","btnToggleAccess","btnRecenterAccess", 50.62925, 3.057256, "access");
         });
       }else{
-        ensureMap("mapDevice", "btnToggleDevice", "btnRecenterDevice", 50.62925, 3.057256);
+        ensureMap("mapAccess","btnToggleAccess","btnRecenterAccess", 50.62925, 3.057256, "access");
       }
     }
 
-    // Submit
+    function startLocPoste(){
+      if(mapPoste) return;
+      if(navigator.geolocation){
+        navigator.geolocation.getCurrentPosition(p=>{
+          ensureMap("mapPoste","btnTogglePoste","btnRecenterPoste", p.coords.latitude, p.coords.longitude, "poste");
+          $("latPoste").value=p.coords.latitude; $("lonPoste").value=p.coords.longitude;
+        }, ()=>{
+          ensureMap("mapPoste","btnTogglePoste","btnRecenterPoste", 50.62925, 3.057256, "poste");
+        });
+      }else{
+        ensureMap("mapPoste","btnTogglePoste","btnRecenterPoste", 50.62925, 3.057256, "poste");
+      }
+    }
+
+    // ——— Submit
     $("formPoste").onsubmit = (e)=>{
       e.preventDefault();
 
       const demandeur = $("demandeur").value.trim();
       const nomPoste  = $("nomPoste").value.trim();
-      const typePoste = $("typePoste").value.trim().toUpperCase();
+      const typePosteRaw = $("typePoste").value.trim();
+      const typePoste = typePosteRaw ? typePosteRaw.toUpperCase() : "";
+      const pkLigne   = $("pkLigne").value.trim();
       const notes     = $("notes").value.trim();
-      const pk        = $("pk").value.trim();
-      const numeroLigne = $("numeroLigne").value.trim();
 
-      if(!demandeur || !nomPoste || !typePoste){
-        alert("⚠️ Merci de renseigner votre nom, le nom du poste et le type.");
+      if(!demandeur || !nomPoste){
+        alert("⚠️ Merci de renseigner votre nom et le nom du poste.");
         return;
       }
 
-      if(!$("presentValue").value){
-        alert("⚠️ Merci d’indiquer si vous souhaitez géolocaliser le poste ou fournir un lien.");
+      // ACCÈS : choix obligatoire + donnée obligatoire (coords OU lien)
+      if(!$("presentAccess").value){
+        alert("⚠️ Merci d’indiquer si vous souhaitez géolocaliser l’accès (Oui / Non).");
         return;
       }
 
-      let localisation = ""; // soit "lat,lon" soit URL
-      if($("presentValue").value === "oui"){
-        const la = sanitizeCoord($("latDevice").value);
-        const lo = sanitizeCoord($("lonDevice").value);
+      let accesStr = "";
+      if($("presentAccess").value === "oui"){
+        const la = sanitizeCoord($("latAccess").value);
+        const lo = sanitizeCoord($("lonAccess").value);
         if(!isValidLatLon(la,lo)){
-          alert("⚠️ Les coordonnées GPS du poste ne sont pas valides.");
+          alert("⚠️ Les coordonnées de l’accès ne sont pas valides.");
           return;
         }
-        localisation = `${la},${lo}`;
-      }else{
-        const lien = $("lien").value.trim();
-        if(!isValidUrl(lien)){
-          alert("⚠️ Merci de fournir un lien Google Maps valide.");
+        accesStr = `${la},${lo}`;
+      }else{ // non
+        const lienA = $("lienAccess").value.trim();
+        if(!isValidUrl(lienA)){
+          alert("⚠️ Merci de fournir un lien Google Maps valide pour l’accès.");
           return;
         }
-        localisation = lien;
+        accesStr = lienA;
       }
 
-      // Construction email
+      // POSTE / GUÉRITE : facultatif
+      let posteStr = "";
+      if($("presentPoste").value === "oui"){
+        const laP = sanitizeCoord($("latPoste").value);
+        const loP = sanitizeCoord($("lonPoste").value);
+        if(!isValidLatLon(laP,loP)){
+          alert("⚠️ Les coordonnées du poste / de la guérite ne sont pas valides.");
+          return;
+        }
+        posteStr = `${laP},${loP}`;
+      }else if($("presentPoste").value === "non"){
+        const lienP = $("lienPoste").value.trim();
+        if(lienP){ // optionnel : s'il est rempli, on le vérifie
+          if(!isValidUrl(lienP)){
+            alert("⚠️ Le lien Google Maps du poste / de la guérite n’est pas valide.");
+            return;
+          }
+          posteStr = lienP;
+        }
+      }
+
+      // Email
       const subject = `Contribution : ajout d’un poste — ${nomPoste}`;
       let body  = `Bonjour Arnaud,%0D%0A%0D%0A${encodeURIComponent(demandeur)} propose l’ajout du poste suivant :%0D%0A%0D%0A`;
       body += `Nom du poste : ${encodeURIComponent(nomPoste)}%0D%0A`;
-      body += `Type : ${encodeURIComponent(typePoste)}%0D%0A`;
-      body += `Localisation : ${encodeURIComponent(localisation)}%0D%0A`;
-      if(pk) body += `PK : ${encodeURIComponent(pk)}%0D%0A`;
-      if(numeroLigne) body += `Numéro de ligne : ${encodeURIComponent(numeroLigne)}%0D%0A`;
-      body += `Notes : ${encodeURIComponent(notes)}%0D%0A%0D%0A`;
-      body += `Cordialement,%0D%0A${encodeURIComponent(demandeur)}`;
+      if(typePoste) body += `Type : ${encodeURIComponent(typePoste)}%0D%0A`;
+      body += `Accès : ${encodeURIComponent(accesStr)}%0D%0A`;
+      if(posteStr) body += `Poste / guérite : ${encodeURIComponent(posteStr)}%0D%0A`;
+      if(pkLigne) body += `PK / Ligne : ${encodeURIComponent(pkLigne)}%0D%0A`;
+      if(notes) body += `Notes : ${encodeURIComponent(notes)}%0D%0A`;
+      body += `%0D%0ACordialement,%0D%0A${encodeURIComponent(demandeur)}`;
 
       // Envoi mail via mailto
       location.href = `mailto:${DEST_EMAIL}?subject=${encodeURIComponent(subject)}&body=${body}`;
 
-      // Incrément compteur contributions
+      // Incrément compteur contributions (identique)
       fetch(COUNTER_URL + "?increment=true").catch(()=>{});
 
       alert("L’e-mail de contribution est généré, vérifiez et envoyez-le.");
       $("formPoste").reset();
-      setPill("");
+      setAccess("");
+      setPoste("");
     };
   </script>
 </body>
