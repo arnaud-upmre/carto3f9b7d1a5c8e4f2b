@@ -654,12 +654,16 @@ function generateAlias(appareil, nom, sat, posteType) {
     alias.add(`${n} ${letters}`);
   }
 
-  // --- alias automatiques pour les interrupteurs ---
+// --- alias automatiques pour les interrupteurs ---
 if (/^(i|ia|il|ip|imp)/i.test(a)) {
   alias.add("interrupteur");
+  alias.add("inter");                       // ✅ abréviation
   alias.add(`interrupteur ${a}`);
-  if (n) alias.add(`interrupteur ${n}`);
-}
+  alias.add(`inter ${a}`);                  // ✅ abréviation + code
+  if (n) {
+    alias.add(`interrupteur ${n}`);
+    alias.add(`inter ${n}`);                // ✅ abréviation + nom du poste
+  }
 
   // --- alias automatiques pour les transformateurs ---
 if (/^(tt|tc|tsa)/i.test(a)) {
