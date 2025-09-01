@@ -24,21 +24,30 @@
   @keyframes eale-zoomIn{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
   .eale-intro-hide{opacity:0; transition:opacity .35s ease}
 
-    /* ——— Pills itinéraires : forcer une seule ligne ——— */
+ /* Pills itinéraires : centrage + wrap sur petits écrans */
 .inline-links.pills-3{
-  flex-wrap: nowrap;          /* pas de retour à la ligne */
+  flex-wrap: wrap;
   justify-content: center;
+  text-align: center;  /* centre les lignes quand ça passe à la ligne */
   gap: 8px;
 }
-.inline-links.pills-3 a{      /* léger resserrage pour petits écrans */
+.inline-links.pills-3 a{
   padding: 6px 10px;
 }
+
+/* Force une seule ligne dès qu’il y a la place */
+@media (min-width: 420px){
+  .inline-links.pills-3{ flex-wrap: nowrap; }
+}
+
+/* Ultra compact sur écrans ≤ 390px */
 @media (max-width: 390px){
   .inline-links.pills-3 a{
-    padding: 6px 8px;         /* encore un peu plus compact sur iPhone petit */
+    padding: 6px 8px;
     font-size: 13.5px;
   }
 }
+    
     /* Supprime l’espace vertical quand il n’y a aucune suggestion */
 ul#suggestions:empty {
   margin: 0;
@@ -701,13 +710,13 @@ let html = `<h2><a href="#" data-href="${urlMyMapsPoste}" onclick="window.open(t
 </h2>
 
 <p style="text-align:center; font-weight:600; margin:1.5rem 0 0.5rem 0;">🛣️ Repérer l’accès :</p>
-<div class="inline-links pills-3" style="justify-content:center;">
+<div class="inline-links pills-3">
   <a href="${myMapsViewer(lieu.latitude, lieu.longitude, 19)}" target="_blank" rel="noopener">🛰️ Vue satellite</a>
   <a href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">👁️ Street View</a>
 </div>
 
   <p style="text-align:center; font-weight:600; margin:1.5rem 0 0.5rem 0;">🚙 Itinéraires disponibles :</p>
-<div class="inline-links pills-3" style="justify-content:center;">
+<div class="inline-links pills-3">
    <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🗺️ Google Maps</a>
    <a href="https://maps.apple.com/?daddr=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🍎 Apple Plans</a>
    <a href="https://waze.com/ul?ll=${lieu.latitude},${lieu.longitude}&navigate=yes" target="_blank" rel="noopener">🚗 Waze</a>
@@ -921,7 +930,7 @@ function showAppareil(app) {
     🔌 ${app.appareil} (${app.nom}${app.type ? ' ' + app.type : ''}${app.SAT ? ' / ' + app.SAT : ''})
   </h2>
 
-  <div class="inline-links" style="justify-content:center; margin-top:10px; margin-bottom:1.5rem;"> 
+<div class="inline-links pills-3" style="margin-top:10px; margin-bottom:1.5rem;">
 <a href="${myMapsViewer(app.latitude, app.longitude, 19)}" target="_blank" rel="noopener">🛰️ Vue satellite</a>`;
 
   // 🔗 ajoute le bouton itinéraire si un poste correspondant est trouvé
@@ -1142,7 +1151,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.01</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.02</span>
 </div>
 
 <script>
