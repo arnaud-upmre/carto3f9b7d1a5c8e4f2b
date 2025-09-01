@@ -519,6 +519,38 @@ function normalize(str) {
     .replace(/\s+/g, " ");    // réduit multiples espaces en un seul
 }
 
+    // Normalisation spéciale pour comparer les noms de postes sans tenir compte du type
+function normalizeNomPoste(name) {
+  if (!name) return "";
+  return name
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")       // supprime accents
+    .toLowerCase()
+    .trim()
+    
+    // supprime les suffixes en fin de nom (SP, SSP, PRCI, etc.)
+    .replace(/\b(?:a|p|sp|ssp|sspa|l|l-a|prci|lgv|ss|sst)\b$/i, "")
+    .trim();
+}
+
+    
+// Requête qui ressemble à un APPAREIL ? (préfixe connu ou présence de chiffres)
+function isAppareilLike(raw){
+  if(!raw) return false;
+  const s = raw.trim().toLowerCase();
+  const prefixes = ["tt","i","tc","tsa","il","ip","imp","s"]; // mêmes que ton filtre
+  const first = s.split(/\s+/)[0];
+  const hasDigits = /\d/.test(s);
+  return prefixes.includes(first) || hasDigits;
+}
+
+// Requête qui ressemble à un POSTE ? (≥3 caractères et pas « appareil-like »)
+function isPosteLike(raw){
+  if(!raw) return false;
+  const s = raw.trim();
+  return s.length >= 3 && !isAppareilLike(s);
+}
+
 function formatNomCompletLieu(obj) {
   const base = `${obj.nom || ''} ${obj.type || ''} ${obj.SAT || ''}`.trim();
   return obj.accès ? `${base} – accès ${obj.accès}` : base;
@@ -893,6 +925,30 @@ results.sort((a, b) => {
   return label(a).localeCompare(label(b), "fr", { sensitivity: "base" });
 });
   // -------- fin TRI AVANCÉ ----------
+  // ——— 0 résultat : proposer l’ajout ———
+const rawQuery = e.target.value.trim();  // on garde tel quel pour l’affichage + préremplissage
+if (results.length === 0 && rawQuery.length >= 3) {
+  const li = document.createElement("li");
+  li.style.fontStyle = "italic"; // léger pour signaler que c'est une action spéciale
+
+  if (isAppareilLike(rawQuery)) {
+    li.textContent = `➕ Ajouter cet appareil « ${rawQuery} »`;
+    li.onclick = () => {
+      location.href = `ajout_appareil.html?appareil=${encodeURIComponent(rawQuery)}`;
+    };
+  } else if (isPosteLike(rawQuery)) {
+    li.textContent = `➕ Ajouter ce poste « ${rawQuery} »`;
+    li.onclick = () => {
+      location.href = `ajout_poste.html?nom=${encodeURIComponent(rawQuery)}`;
+    };
+  } else {
+    // Trop court / bruit → on ne propose rien
+    return;
+  }
+
+  suggestionsEl.appendChild(li);
+  return; // on s'arrête ici : pas d’autres lignes à afficher
+}
 // --- Affichage des résultats (avec icônes) ---
 suggestionsEl.innerHTML = "";
 
@@ -917,6 +973,46 @@ results.forEach((item, i) => {
   suggestionsEl.appendChild(li);
 });
 
+// ➕ Ajouter seulement si aucun résultat n’est un match exact
+if (rawQuery.length >= 3) {
+  const queryNorm = normalizeNomPoste(rawQuery);
+
+  const exactMatch = results.some(item => {
+    if (item.category === "poste") {
+      return normalizeNomPoste(item.nom) === queryNorm;
+    } else {
+      return normalize(item.appareil || "") === normalize(rawQuery);
+    }
+  });
+
+  if (!exactMatch) {
+    const liAdd = document.createElement("li");
+      // Vérifie si un poste ou appareil existe déjà (après normalisation)
+  const queryNorm = normalizeNomPoste(rawQuery);
+  const posteExiste = lieux.some(l => normalizeNomPoste(l.nom) === queryNorm);
+  const appareilExiste = appareils.some(a => normalize(a.appareil) === normalize(rawQuery));
+
+  // Si un match exact existe déjà → on ne propose pas l’ajout
+  if (posteExiste || appareilExiste) return;
+    liAdd.style.fontStyle = "italic";
+
+    if (isAppareilLike(rawQuery)) {
+      liAdd.textContent = `➕ Ajouter cet appareil « ${rawQuery} »`;
+      liAdd.onclick = () => {
+        location.href = `ajout_appareil.html?appareil=${encodeURIComponent(rawQuery)}`;
+      };
+    } else if (isPosteLike(rawQuery)) {
+      liAdd.textContent = `➕ Ajouter ce poste « ${rawQuery} »`;
+      liAdd.onclick = () => {
+        location.href = `ajout_poste.html?nom=${encodeURIComponent(rawQuery)}`;
+      };
+    }
+
+    suggestionsEl.appendChild(liAdd);
+  }
+}
+
+  
 // ✅ ici on ferme correctement l’event listener
 });
 
