@@ -426,13 +426,9 @@ main {
   Nombre recherche : 📍 <span id="counterPostes">0</span> &nbsp; | &nbsp; 
   💡 <span id="counterAppareils">0</span>
 </div>
-  <!-- Bloc infos du jour -->
-<div id="infos-jour" style="text-align:center; margin-top:2.5rem; font-size:14px; line-height:1.6;">
-  <div id="saint"></div>
-  <div id="rail-event"></div>
-  <div id="stats-globales" style="margin-top:0.8rem; font-weight:500;"></div>
-</div>
 <div id="result"></div>
+
+
 
 <!-- Bouton localiser -->
 <button id="btn-localiser" class="btn-primary">
@@ -1272,6 +1268,26 @@ function showNearby(position) {
   renderProximitePage();
 }
 
+const compteurContributionURL = "https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec";
+
+function updateContrib() {
+  // 1) Lecture du cache
+  const cached = localStorage.getItem("counterContrib");
+  if (cached) {
+    document.getElementById("compteur-valeur").textContent = `(${cached})`;
+  }
+
+  // 2) Mise à jour depuis le serveur
+  fetch(compteurContributionURL).then(r => r.json()).then(data => {
+    if (data && typeof data.count !== "undefined") {
+      document.getElementById("compteur-valeur").textContent = `(${data.count})`;
+      localStorage.setItem("counterContrib", data.count); // ✅ sauvegarde en cache
+    }
+  }).catch(() => {});
+}
+
+updateContrib();
+setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
@@ -1364,103 +1380,6 @@ function showNearby(position) {
     if (shouldShowIntro()) mountIntro();
   }
 })();
-
-  // === Bloc infos du jour ===
-
-// Petite liste locale des fêtes (extrait simplifié, à compléter)
-const saints = {
-  "09-01": "Saint Gilles",
-  "09-02": "Sainte Ingrid",
-  "09-03": "Saint Grégoire",
-  // ... tu complètes au besoin
-};
-
-function todayKey() {
-  const d = new Date();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const j = String(d.getDate()).padStart(2, "0");
-  return m + "-" + j;
-}
-
-function updateSaint() {
-  const saint = saints[todayKey()];
-  if (saint) {
-    document.getElementById("saint").textContent = "🎉 Aujourd’hui, on fête la " + saint;
-  }
-}
-
-// === Événement ferroviaire via Wikipédia ===
-const HAZE = { lat: 50.723, lon: 2.538 }; // Hazebrouck
-function getDistanceKm(lat1, lon1, lat2, lon2) {
-  const R = 6371;
-  const dLat = (lat2-lat1)*Math.PI/180;
-  const dLon = (lon2-lon1)*Math.PI/180;
-  const a = Math.sin(dLat/2)**2 +
-            Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180) *
-            Math.sin(dLon/2)**2;
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-}
-
-async function updateRailEvent() {
-  const key = "railEvent-" + todayKey();
-  const cached = localStorage.getItem(key);
-  if (cached) {
-    document.getElementById("rail-event").innerHTML = cached;
-    return;
-  }
-
-  const mois = new Date().toLocaleString("fr-FR",{month:"long"});
-  const jour = new Date().getDate();
-  const title = jour + " " + mois + " dans les chemins de fer";
-
-  try {
-    const url = "https://fr.wikipedia.org/api/rest_v1/page/summary/" + encodeURIComponent(title);
-    const res = await fetch(url);
-    if (!res.ok) return;
-    const data = await res.json();
-
-    if (data.extract) {
-      const extrait = data.extract.split("\n")[0]; // première phrase
-
-      const d = new Date();
-      const day = d.getDate();
-      const moisAbbr = ["janv.","févr.","mars","avr.","mai","juin","juil.","août","sept.","oct.","nov.","déc."];
-      const jourTxt = (day === 1 ? "1er" : day);
-      const dateJour = `${jourTxt} ${moisAbbr[d.getMonth()]}`;
-
-      const html = `🚆 ${dateJour} — ${extrait}`;
-      document.getElementById("rail-event").innerHTML = html;
-      localStorage.setItem(key, html); // cache
-    }
-  } catch(e) {
-    // ne rien afficher si erreur
-  }
-}
-
-// === Stats globales (postes + appareils + contributions) ===
-async function updateStats() {
-  try {
-    const [pRes, aRes] = await Promise.all([
-      fetch(jsonUrl).then(r=>r.json()),
-      fetch(appareilsUrl).then(r=>r.json())
-    ]);
-    const postesCount = pRes.length;
-    const appareilsCount = aRes.length;
-
-    const contribCached = localStorage.getItem("counterContrib") || "?";
-
-    document.getElementById("stats-globales").textContent =
-      `📍 ${postesCount} postes   ⚡ ${appareilsCount} appareils   🙏 Merci ! déjà ${contribCached} contributions`;
-  } catch(e) {
-    // en cas d'erreur → rien
-  }
-}
-
-// === Lancement ===
-updateSaint();
-updateRailEvent();
-updateStats();
-  
 </script>
 </body>
 </html>
