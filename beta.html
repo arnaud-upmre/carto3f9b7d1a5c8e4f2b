@@ -924,7 +924,7 @@ if (results.length === 0 && rawQuery.length >= 3) {
   } else if (isPosteLike(rawQuery)) {
     li.textContent = `➕ Ajouter ce poste « ${rawQuery} »`;
     li.onclick = () => {
-      location.href = `ajout_poste.html?nom=${encodeURIComponent(rawQuery)}`;
+      location.href = `ajout_postes.html?nom=${encodeURIComponent(rawQuery)}`;
     };
   } else {
     // Trop court / bruit → on ne propose rien
