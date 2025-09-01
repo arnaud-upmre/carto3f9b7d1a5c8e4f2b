@@ -76,8 +76,8 @@
       <label>Type</label>
       <input id="typePoste" placeholder="Ex : SP, SSP, PRCI, L…">
 
-      <label>Satellite</label>
-      <input id="satellite" placeholder="Ex : SAT1">
+      <label>SAT associé (optionnel)</label>
+<input id="sat" placeholder="Si SAT, précisez, ex : SAT1, SAT2…">
 
       <!-- ACCÈS (prioritaire / obligatoire d'une manière ou d'une autre) -->
 <label>Souhaitez-vous géolocaliser l’accès ?</label>
@@ -310,7 +310,7 @@ function ensureMap(mapId, btnToggle, btnRecenter, lat, lon, kind){
 }
       const nomPoste    = $("nomPoste").value.trim();
       const typePoste   = $("typePoste").value.trim().toUpperCase();
-      const satellite   = $("satellite").value.trim().toUpperCase();
+     const satellite   = $("sat").value.trim().toUpperCase();
       const pkLigne     = $("pkLigne").value.trim();
       const notes       = $("notes").value.trim();
 
