@@ -65,7 +65,7 @@
       <input id="demandeur" required>
 
       <label>Poste associé</label>
-      <input id="poste" value="Alleux SP" readonly>
+      <input id="poste" readonly>
 
       <label>Nom de l’appareil</label>
       <input id="appareil" placeholder="Ex : I7112" required>
@@ -132,6 +132,16 @@
 
   <script>
     const DEST_EMAIL = "arnaud.debaecker@sncf.fr";
+    // Préremplir "Poste associé" depuis l'URL ou le cache
+(function prefillPoste(){
+  const params = new URLSearchParams(location.search);
+  const fromUrl = params.get("poste");
+  const fromCache = localStorage.getItem("poste_selectionne");
+  const val = fromUrl || fromCache || "";
+  if (val) document.getElementById("poste").value = val;
+
+  if (fromUrl) localStorage.setItem("poste_selectionne", fromUrl);
+})();
     const COUNTER_URL = "https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec";
 
     let mapDevice,mapAccess,markerDevice,markerAccess,esri,osm,sat=true;
