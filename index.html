@@ -544,7 +544,7 @@ function generateAppareilListHTML(currentLieu) {
     return `
       <div class="missing-box">
         🤝 Appareil manquant ?
-        <a href="formulaire.html">Aidez-nous à l’ajouter.</a>
+        <a href="ajout_appareil.html">Aidez-nous à l’ajouter.</a>
       </div>
     `;
   }
@@ -574,7 +574,7 @@ function generateAppareilListHTML(currentLieu) {
   html += `
     <div class="missing-box">
       🤝 Appareil manquant ?
-      <a href="formulaire.html">Aidez-nous à l’ajouter.</a>
+      <a href="ajout_appareil.html">Aidez-nous à l’ajouter.</a>
     </div>
   `;
 
@@ -1119,14 +1119,6 @@ function showNearby(position) {
   renderProximitePage();
 }
 
-  </script>
-<div style="text-align:center; margin-top:30px;">
-<a href="formulaire.html" class="btn-primary">
-  ✍️ Contribution <span id="compteur-valeur"></span>
-</a>
-</div>
-
-<script>
 const compteurContributionURL = "https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec";
 
 function updateContrib() {
