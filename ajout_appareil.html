@@ -177,6 +177,13 @@
   if (appareil) $("appareil").value = appareil;
 })();
 
+    // --- Préremplissage du nom du demandeur ---
+(function prefillName() {
+  const savedName = localStorage.getItem("nom_demandeur");
+  if (savedName) {
+    document.getElementById("demandeur").value = savedName;
+  }
+})();
     const COUNTER_URL = "https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec";
 
     let mapDevice, mapAccess, markerDevice, markerAccess;
@@ -284,6 +291,10 @@
     $("formAppareil").onsubmit=e=>{
       e.preventDefault();
       let demandeur=$("demandeur").value.trim();
+      // Sauvegarde du nom pour la prochaine fois
+if (demandeur) {
+  localStorage.setItem("nom_demandeur", demandeur);
+}
       let poste=$("poste").value.trim();
       let appareil=$("appareil").value.trim();
       let infos=$("infos").value.trim();
