@@ -6,7 +6,7 @@
     name="viewport"
     content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
   />
-  <title>➕ Ajouter un appareil — VForm 2025-09-01</title>
+  <title>➕ Déclarer un nouvel appareil — VForm 2025-09-01</title>
 
   <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
@@ -57,20 +57,20 @@
   </style>
 </head>
 <body>
-  <h2>➕ Ajouter un appareil</h2>
+  <h2>➕ Déclarer un nouvel appareil</h2>
 
   <div class="card">
     <form id="formAppareil">
-      <label>Demandeur</label>
+      <label>Votre nom</label>
       <input id="demandeur" required>
 
-      <label>Poste (lié)</label>
+      <label>Poste associé</label>
       <input id="poste" value="Alleux SP" readonly>
 
       <label>Nom de l’appareil</label>
       <input id="appareil" placeholder="Ex : I7112" required>
 
-      <label>Êtes-vous devant l’appareil ?</label>
+      <label>Voulez-vous géolocaliser l’appareil ?</label>
       <div class="pill-group">
         <div class="pill" id="pill-oui" data-value="oui">Oui</div>
         <div class="pill" id="pill-non" data-value="non">Non</div>
@@ -86,23 +86,23 @@
         </div>
       </div>
       <div id="coordsDevice" style="display:none;">
-        <label>Latitude</label>
+        <label>Latitude de l’appareil</label>
         <input id="latDevice">
-        <label>Longitude</label>
+        <label>Longitude de l’appareil</label>
         <input id="lonDevice">
       </div>
 
       <!-- Lien si non -->
       <div id="lienField" style="display:none;">
-        <label>Lien Google Maps</label>
+        <label>Coller le lien Google Maps</label>
         <input id="lien" type="url" placeholder="https://maps.app.goo.gl/…">
       </div>
 
       <!-- Accès spécifique -->
-      <label>Y a-t-il un accès spécifique ?</label>
+      <label>L’appareil a-t-il son propre accès ?</label>
       <div class="pill-group">
-        <div class="pill" id="pill-acces-non" data-value="non">Non</div>
         <div class="pill" id="pill-acces-oui" data-value="oui">Oui</div>
+        <div class="pill" id="pill-acces-non" data-value="non">Non</div>
       </div>
       <input type="hidden" id="accessValue">
 
@@ -120,12 +120,12 @@
         <input id="lonAccess">
       </div>
 
-      <label>Infos utiles</label>
-      <textarea id="infos" placeholder="Notes utiles : repère visuel, consignes…"></textarea>
+      <label>Notes complémentaires</label>
+      <textarea id="infos" placeholder="Indiquer un repère visuel, accès routier, portail…"></textarea>
 
       <div class="btn-row">
-        <button type="submit" class="btn primary">📩 Envoyer</button>
-        <button type="button" class="btn secondary" onclick="location.href='index.html'">⬅️ Accueil</button>
+        <button type="submit" class="btn primary">📩 Envoyer la contribution</button>
+        <button type="button" class="btn secondary" onclick="location.href='index.html'">⬅️ Retour à l’accueil</button>
       </div>
     </form>
   </div>
@@ -189,31 +189,32 @@
       let poste=$("poste").value.trim();
       let appareil=$("appareil").value.trim();
       let infos=$("infos").value.trim();
-      if(!demandeur||!poste||!appareil){alert("Merci de remplir tous les champs obligatoires.");return;}
+      if(!demandeur||!poste||!appareil){alert("⚠️ Merci de renseigner tous les champs obligatoires.");return;}
 
       let coordAppareil="",coordAcces="";
       if($("presentValue").value==="oui"){
         let la=sanitizeCoord($("latDevice").value),lo=sanitizeCoord($("lonDevice").value);
-        if(!isValidLatLon(la,lo)){alert("Coordonnées appareil invalides.");return;}
+        if(!isValidLatLon(la,lo)){alert("⚠️ Les coordonnées GPS de l’appareil ne sont pas valides.");return;}
         coordAppareil=la+","+lo;
       }else if($("presentValue").value==="non"){
-        if(!isValidUrl($("lien").value)){alert("Merci de fournir un lien valide.");return;}
+        if(!isValidUrl($("lien").value)){alert("⚠️ Merci de fournir un lien valide.");return;}
         coordAppareil=$("lien").value;
-      }else{alert("Merci d’indiquer si vous êtes devant l’appareil.");return;}
+      }else{alert("⚠️ Merci d’indiquer si vous souhaitez géolocaliser l’appareil ou fournir un lien.");return;}
 
       if($("accessValue").value==="oui"){
         let la=sanitizeCoord($("latAccess").value),lo=sanitizeCoord($("lonAccess").value);
-        if(!isValidLatLon(la,lo)){alert("Coordonnées accès invalides.");return;}
+        if(!isValidLatLon(la,lo)){alert("⚠️ Merci de renseigner les coordonnées GPS de l’accès.");return;}
         coordAcces=la+","+lo;
       }
 
-      let subject=`Ajout d'un appareil au poste de : ${poste}`;
-      let body=`Bonjour Arnaud,%0D%0A%0D%0A${demandeur} souhaite ajouter l'appareil suivant :%0D%0A%0D%0A`
+      let subject=`Contribution : ajout d’un appareil au poste de ${poste}`;
+      let body=`Bonjour Arnaud,%0D%0A%0D%0A${demandeur} propose l’ajout de l’appareil suivant :%0D%0A%0D%0A`
         +`Poste : ${poste}%0D%0A`
         +`Appareil : ${appareil}%0D%0A`
-        +`Coordonnées de l’appareil : ${coordAppareil}%0D%0A`
+        +`Localisation : ${coordAppareil}%0D%0A`
         +(coordAcces?`Accès spécifique : ${coordAcces}%0D%0A`:"")
-        +`Infos utiles : ${infos}`;
+        +`Notes : ${infos}%0D%0A%0D%0A`
+        +`Cordialement,%0D%0A${demandeur}`;
 
       // Envoi mail
       location.href=`mailto:${DEST_EMAIL}?subject=${encodeURIComponent(subject)}&body=${body}`;
@@ -221,7 +222,7 @@
       // Incrément compteur contributions
       fetch(COUNTER_URL+"?increment=true").catch(()=>{});
 
-      alert("Merci ! Votre contribution a été transmise.");
+      alert("L’e-mail de contribution est généré, vérifiez et envoyez-le.");
       $("formAppareil").reset();
       setPill("");setAccess("");
     };
