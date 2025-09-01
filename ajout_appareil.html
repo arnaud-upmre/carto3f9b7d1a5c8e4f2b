@@ -139,25 +139,39 @@
 
   <script>
     const DEST_EMAIL = "arnaud.debaecker@sncf.fr";
-    // Préremplir "Poste associé" depuis l'URL ou le cache
-(function prefillPoste(){
-  const params = new URLSearchParams(location.search);
+// Préremplir uniquement selon l'origine (poste OU appareil)
+(function prefillFromURL(){
+  const $ = (id)=>document.getElementById(id);
+  const params   = new URLSearchParams(location.search);
+  const appareil = params.get("appareil");
+  const poste    = params.get("poste");
 
-  // 1) Préremplir le champ "appareil" ?appareil=...
-  const appareilFromUrl = params.get("appareil");
-  if (appareilFromUrl) document.getElementById("appareil").value = appareilFromUrl; // reste éditable
+  // 1) Si on vient depuis la fiche d’un poste → on affiche et on mémorise
+  if (poste) {
+    $("poste").value = poste;
+    try { localStorage.setItem("poste_selectionne", poste); } catch(e){}
+  }
+  // 2) Si on vient depuis une recherche d’appareil → on NE préremplit PAS le poste
+  //    et on nettoie le cache pour éviter d'afficher un vieux poste
+  else if (appareil) {
+    $("appareil").value = appareil;
+    try { localStorage.removeItem("poste_selectionne"); } catch(e){}
+  }
+  // 3) Accès direct à la page → on peut réutiliser le dernier poste du cache
+  else {
+    try {
+      const cached = localStorage.getItem("poste_selectionne");
+      if (cached) $("poste").value = cached;
+    } catch(e){}
+  }
 
-  // 2) Préremplir (et mémoriser) "Poste associé" ?poste=...
-  const fromUrl   = params.get("poste");
-  const fromCache = localStorage.getItem("poste_selectionne");
-  const val = fromUrl || fromCache || "";
-  if (val) document.getElementById("poste").value = val;
-
-  if (fromUrl) localStorage.setItem("poste_selectionne", fromUrl);
+  // Toujours préremplir l’appareil si présent dans l’URL (cas 1 + 2)
+  if (appareil) $("appareil").value = appareil;
 })();
+
     const COUNTER_URL = "https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec";
 
-    let mapDevice,mapAccess,markerDevice,markerAccess,esri,osm,sat=true;
+    let mapDevice, mapAccess, markerDevice, markerAccess;
 
     function $(id){return document.getElementById(id);}
     function toggle(el,show){el.style.display=show?"block":"none";}
