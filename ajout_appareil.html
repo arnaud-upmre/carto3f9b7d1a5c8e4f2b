@@ -72,6 +72,9 @@
       <label>Poste associé</label>
       <input id="poste">
 
+      <label>SAT associé (optionnel)</label>
+<input id="sat" placeholder="Précisez si l’appareil appartient à un SAT, ex : SAT1, SAT2…">
+
       <label>Nom de l’appareil</label>
       <input id="appareil" placeholder="Ex : I7112" required>
 
@@ -126,6 +129,11 @@
         <label>Longitude accès</label>
         <input id="lonAccess">
       </div>
+      <div id="lienAccessField" style="display:none;">
+  <label>Lien Google Maps de l’accès (optionnel)</label>
+  <input id="lienAccess" type="url" placeholder="https://maps.app.goo.gl/…">
+  <div class="hint">Si vous indiquez « Oui » : complétez soit les coordonnées GPS de l’accès, soit un lien Google Maps valide.</div>
+</div>
 
       <label>Notes complémentaires</label>
       <textarea id="infos" placeholder="Indiquez un repère ou une info utile (accès, portail, etc.)"></textarea>
@@ -197,12 +205,20 @@
     $("pill-acces-oui").onclick=()=>setAccess("oui");
     $("pill-acces-non").onclick=()=>setAccess("non");
     function setAccess(v){
-      $("accessValue").value=v;
-      $("pill-acces-oui").classList.toggle("active",v==="oui");
-      $("pill-acces-non").classList.toggle("active",v==="non");
-      if(v==="oui"){toggle($("mapAccessWrap"),1);toggle($("coordsAccess"),1);startLocAccess();}
-      else{toggle($("mapAccessWrap"),0);toggle($("coordsAccess"),0);}
-    }
+  $("accessValue").value=v;
+  $("pill-acces-oui").classList.toggle("active",v==="oui");
+  $("pill-acces-non").classList.toggle("active",v==="non");
+  if(v==="oui"){
+    toggle($("mapAccessWrap"),1);
+    toggle($("coordsAccess"),1);
+    toggle($("lienAccessField"),1);
+    startLocAccess();
+  } else {
+    toggle($("mapAccessWrap"),0);
+    toggle($("coordsAccess"),0);
+    toggle($("lienAccessField"),0);
+  }
+}
 
     // Maps
      // Maps
@@ -298,15 +314,23 @@
         coordAppareil=$("lien").value;
       }
 
-      if($("accessValue").value==="oui"){
-        let la=sanitizeCoord($("latAccess").value),lo=sanitizeCoord($("lonAccess").value);
-        if(!isValidLatLon(la,lo)){alert("⚠️ Merci de renseigner les coordonnées GPS de l’accès.");return;}
-        coordAcces=la+","+lo;
-      }
+     if($("accessValue").value==="oui"){
+  let la=sanitizeCoord($("latAccess").value),lo=sanitizeCoord($("lonAccess").value);
+  let lienAcces=$("lienAccess").value.trim();
+  if(isValidLatLon(la,lo)){
+    coordAcces=la+","+lo;
+  } else if(isValidUrl(lienAcces)){
+    coordAcces=lienAcces;
+  } else {
+    alert("⚠️ Merci de renseigner soit les coordonnées GPS de l’accès, soit un lien Google Maps valide.");
+    return;
+  }
+}
 
       let subject=`Contribution : ajout d’un appareil au poste de ${poste}`;
       let body=`Bonjour Arnaud,%0D%0A%0D%0A${demandeur} propose l’ajout de l’appareil suivant :%0D%0A%0D%0A`
         +`Poste : ${poste}%0D%0A`
+        +`SAT : ${$("sat").value.trim()}%0D%0A`
         +`Appareil : ${appareil}%0D%0A`
         +`Localisation : ${coordAppareil}%0D%0A`
         +(coordAcces?`Accès spécifique : ${coordAcces}%0D%0A`:"")
