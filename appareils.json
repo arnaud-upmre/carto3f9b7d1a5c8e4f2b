@@ -1733,8 +1733,8 @@
     "nom": "Haute Loge",
     "type": "SSP",
     "SAT": "",
-    "accès": "",
-    "appareil": "sectionneur",
+    "accès": "sectionneur",
+    "appareil": "265-32A",
     "latitude": 50.7283472,
     "longitude": 2.5192149,
     "description": "Non entrenu par l’EMRE"
@@ -1743,8 +1743,8 @@
     "nom": "Haute Loge",
     "type": "SSP",
     "SAT": "",
-    "accès": "",
-    "appareil": "sectionneur",
+    "accès": "sectionneur",
+    "appareil": "265-42",
     "latitude": 50.728786,
     "longitude": 2.5170251,
     "description": "Non entrenu par l’EMRE"
@@ -1753,8 +1753,8 @@
     "nom": "Haute Loge",
     "type": "SSP",
     "SAT": "",
-    "accès": "",
-    "appareil": "sectionneur",
+    "accès": "sectionneur",
+    "appareil": "S36-128",
     "latitude": 50.728287,
     "longitude": 2.5196011,
     "description": "Non entrenu par l’EMRE"
@@ -1763,8 +1763,8 @@
     "nom": "Haute Loge",
     "type": "SSP",
     "SAT": "",
-    "accès": "",
-    "appareil": "sectionneur",
+    "accès": "sectionneur",
+    "appareil": "265-35",
     "latitude": 50.7284411,
     "longitude": 2.5180603,
     "description": "Non entrenu par l’EMRE"
