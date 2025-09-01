@@ -939,7 +939,7 @@ if (results.length === 0 && rawQuery.length >= 3) {
   } else if (isPosteLike(rawQuery)) {
     li.textContent = `➕ Ajouter ce poste « ${rawQuery} »`;
     li.onclick = () => {
-      location.href = `ajout_postes.html?nom=${encodeURIComponent(rawQuery)}`;
+      location.href = `ajout_poste.html?nom=${encodeURIComponent(rawQuery)}`;
     };
   } else {
     // Trop court / bruit → on ne propose rien
@@ -1004,7 +1004,7 @@ if (rawQuery.length >= 3) {
     } else if (isPosteLike(rawQuery)) {
       liAdd.textContent = `➕ Ajouter ce poste « ${rawQuery} »`;
       liAdd.onclick = () => {
-        location.href = `ajout_postes.html?nom=${encodeURIComponent(rawQuery)}`;
+        location.href = `ajout_poste.html?nom=${encodeURIComponent(rawQuery)}`;
       };
     }
 
@@ -1032,18 +1032,19 @@ function showAppareil(app) {
 <div class="inline-links pills-3" style="margin-top:10px; margin-bottom:1.5rem;">
 <a href="${myMapsViewer(app.latitude, app.longitude, 19)}" target="_blank" rel="noopener">🛰️ Vue satellite</a>`;
 
-  // 🔗 ajoute le bouton itinéraire si un poste correspondant est trouvé
+  // 🔗 Cherche le poste correspondant
   const posteTrouvé = lieux.find(l => 
     normalize(l.nom) === normalize(app.nom) &&
     normalize(l.type) === normalize(app.type) &&
     normalize(l.SAT || "") === normalize(app.SAT || "")
   );
 
+  // 🔗 Cherche un accès correspondant (corrigé : compare avec app.accès)
   const accesTrouvé = lieux.find(l =>
     normalize(l.nom) === normalize(app.nom) &&
     normalize(l.type) === normalize(app.type) &&
     normalize(l.SAT || "") === normalize(app.SAT || "") &&
-    normalize(String(l.accès || "")) === normalize(app.appareil)
+    normalize(String(l.accès || "")) === normalize(app.accès || "")
   );
 
   const lieuCible = accesTrouvé || posteTrouvé;
@@ -1064,8 +1065,7 @@ function showAppareil(app) {
 
   result.innerHTML = html;
 }
-
-updateCounter();
+    updateCounter();
 updateCounterAppareil();
 setInterval(updateCounter, 3000);
 setInterval(updateCounterAppareil, 3000);
@@ -1250,7 +1250,7 @@ setInterval(updateContrib, 3000);
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.02</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1</span>
 </div>
 
 <script>
