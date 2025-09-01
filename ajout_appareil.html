@@ -12,7 +12,12 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 
-  <style>
+  <style>.hint {
+  font-size: 12px;
+  color: #999;
+  font-style: italic;
+  margin: 2px 0 6px;
+}
     *,*::before,*::after{box-sizing:border-box}
     html{-webkit-text-size-adjust:100%}
     body{
@@ -70,11 +75,12 @@
       <label>Nom de l’appareil</label>
       <input id="appareil" placeholder="Ex : I7112" required>
 
-      <label>Voulez-vous géolocaliser l’appareil ?</label>
-      <div class="pill-group">
-        <div class="pill" id="pill-oui" data-value="oui">Oui</div>
-        <div class="pill" id="pill-non" data-value="non">Non</div>
-      </div>
+     <label>Voulez-vous géolocaliser l’appareil ?</label>
+<div class="hint">Déplacez le curseur pour ajuster la position de l’appareil.</div>
+<div class="pill-group">
+  <div class="pill" id="pill-oui" data-value="oui">Oui</div>
+  <div class="pill" id="pill-non" data-value="non">Non</div>
+</div>
       <input type="hidden" id="presentValue">
 
       <!-- Carte si oui -->
