@@ -40,7 +40,6 @@
       background:var(--card);color:var(--fg);min-height:44px
     }
     textarea{min-height:96px;resize:none;overflow:auto}
-    .hint{font-size:13px;color:var(--muted);margin-top:4px}
     .pill-group{display:flex;gap:10px;margin-top:8px}
     .pill{flex:1;text-align:center;padding:12px;border:1px solid var(--border);
       border-radius:999px;cursor:pointer;user-select:none}
@@ -70,7 +69,9 @@
 
       <label>Type</label>
       <input id="typePoste" placeholder="Ex : SP, SSP, PRCI, L…">
-      <div class="hint">Saisir librement le sigle (sera mis en MAJUSCULES si renseigné).</div>
+
+      <label>Satellite</label>
+      <input id="satellite" placeholder="Ex : SAT1">
 
       <!-- ACCÈS (prioritaire / obligatoire d'une manière ou d'une autre) -->
       <label>Souhaitez-vous géolocaliser l’accès ?</label>
@@ -99,7 +100,6 @@
       <div id="lienAccessField" style="display:none;">
         <label>Coller le lien Google Maps de l’accès</label>
         <input id="lienAccess" type="url" placeholder="https://maps.app.goo.gl/…">
-        <div class="hint">Vous pouvez saisir “lat, lon” ou coller un lien Google Maps.</div>
       </div>
 
       <!-- POSTE / GUÉRITE (facultatif) -->
@@ -129,7 +129,6 @@
       <div id="lienPosteField" style="display:none;">
         <label>Coller le lien Google Maps du poste / guérite (optionnel)</label>
         <input id="lienPoste" type="url" placeholder="https://maps.app.goo.gl/…">
-        <div class="hint">Vous pouvez laisser ce champ vide.</div>
       </div>
 
       <!-- PK + Ligne fusionnés -->
@@ -280,12 +279,12 @@
     $("formPoste").onsubmit = (e)=>{
       e.preventDefault();
 
-      const demandeur = $("demandeur").value.trim();
-      const nomPoste  = $("nomPoste").value.trim();
-      const typePosteRaw = $("typePoste").value.trim();
-      const typePoste = typePosteRaw ? typePosteRaw.toUpperCase() : "";
-      const pkLigne   = $("pkLigne").value.trim();
-      const notes     = $("notes").value.trim();
+      const demandeur   = $("demandeur").value.trim();
+      const nomPoste    = $("nomPoste").value.trim();
+      const typePoste   = $("typePoste").value.trim().toUpperCase();
+      const satellite   = $("satellite").value.trim().toUpperCase();
+      const pkLigne     = $("pkLigne").value.trim();
+      const notes       = $("notes").value.trim();
 
       if(!demandeur || !nomPoste){
         alert("⚠️ Merci de renseigner votre nom et le nom du poste.");
@@ -342,6 +341,7 @@
       let body  = `Bonjour Arnaud,%0D%0A%0D%0A${encodeURIComponent(demandeur)} propose l’ajout du poste suivant :%0D%0A%0D%0A`;
       body += `Nom du poste : ${encodeURIComponent(nomPoste)}%0D%0A`;
       if(typePoste) body += `Type : ${encodeURIComponent(typePoste)}%0D%0A`;
+      if(satellite) body += `Satellite : ${encodeURIComponent(satellite)}%0D%0A`;
       body += `Accès : ${encodeURIComponent(accesStr)}%0D%0A`;
       if(posteStr) body += `Poste / guérite : ${encodeURIComponent(posteStr)}%0D%0A`;
       if(pkLigne) body += `PK / Ligne : ${encodeURIComponent(pkLigne)}%0D%0A`;
