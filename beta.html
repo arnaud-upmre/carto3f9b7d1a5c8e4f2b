@@ -223,16 +223,20 @@ label + .hint,
 .hint + textarea {
   margin-top: 2px !important; /* juste un petit souffle si tu veux */
 }
-    /* Latitude + Longitude côte à côte */
+   /* Latitude + Longitude côte à côte */
 .coord-row {
   display: flex;
-  gap: 12px; /* espace horizontal entre les 2 champs */
+  flex-direction: row;   /* toujours sur une ligne */
+  gap: 12px;             /* espace horizontal entre les champs */
+  width: 100%;           /* occupe toute la largeur de la card */
+  box-sizing: border-box; /* évite tout dépassement */
 }
 
 .coord-row > div {
-  flex: 1; /* chaque champ prend la moitié */
+  flex: 1;               /* chaque champ prend 50% */
   display: flex;
   flex-direction: column;
+  min-width: 0;          /* permet de rester dans le cadre sans déborder */
 }
    
   </style>
