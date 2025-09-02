@@ -231,13 +231,14 @@
      // Maps
     function ensureMap(mapId,btnToggle,btnRecenter,lat,lon){
       let map,marker;
-      map = L.map(mapId).setView([lat,lon],18);
-      setTimeout(() => map.invalidateSize(), 300);
-      const esri = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}");
-      const osm  = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png");
+    map = L.map(mapId).setView([50.72454, 2.54311], 18);  // Hazebrouck par défaut, zoom plus doux
+setTimeout(() => map.invalidateSize(), 300);
 
-      // Par défaut on démarre en satellite
-      esri.addTo(map);
+const esri = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}");
+const osm  = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png");
+
+// Par défaut on démarre en OSM (plan rapide)
+osm.addTo(map);
 
       marker = L.marker([lat,lon],{draggable:true}).addTo(map);
 
@@ -284,9 +285,40 @@
       if(mapId==="mapDevice"){ mapDevice=map; markerDevice=marker; }
       else{ mapAccess=map; markerAccess=marker; }
     }
-    function startLocDevice(){if(navigator.geolocation)navigator.geolocation.getCurrentPosition(p=>{if(!mapDevice)ensureMap("mapDevice","btnToggleDevice","btnRecenterDevice",p.coords.latitude,p.coords.longitude);});}
-    function startLocAccess(){if(navigator.geolocation)navigator.geolocation.getCurrentPosition(p=>{if(!mapAccess)ensureMap("mapAccess","btnToggleAccess","btnRecenterAccess",p.coords.latitude,p.coords.longitude);});}
 
+function startLocDevice(){
+  // Crée immédiatement la carte sur Hazebrouck si pas déjà affichée
+  if(!mapDevice){
+    ensureMap("mapDevice","btnToggleDevice","btnRecenterDevice",50.72454,2.54311);
+  }
+
+  // Puis recadre quand le GPS répond
+  if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(p=>{
+      mapDevice.setView([p.coords.latitude,p.coords.longitude],18);
+      markerDevice.setLatLng([p.coords.latitude,p.coords.longitude]);
+      $("latDevice").value = p.coords.latitude;
+      $("lonDevice").value = p.coords.longitude;
+    });
+  }
+}
+    
+    function startLocAccess(){
+  // Crée immédiatement la carte sur Hazebrouck si pas déjà affichée
+  if(!mapAccess){
+    ensureMap("mapAccess","btnToggleAccess","btnRecenterAccess",50.72454,2.54311);
+  }
+
+  // Puis recadre quand le GPS répond
+  if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(p=>{
+      mapAccess.setView([p.coords.latitude,p.coords.longitude],18);
+      markerAccess.setLatLng([p.coords.latitude,p.coords.longitude]);
+      $("latAccess").value = p.coords.latitude;
+      $("lonAccess").value = p.coords.longitude;
+    });
+  }
+}
     // Submit (validations harmonisées)
     $("formAppareil").onsubmit=e=>{
       e.preventDefault();
