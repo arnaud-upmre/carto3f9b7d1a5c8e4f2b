@@ -223,6 +223,20 @@ label + .hint,
 .hint + textarea {
   margin-top: 2px !important; /* juste un petit souffle si tu veux */
 }
+    /* Latitude + Longitude côte à côte */
+.coord-row {
+  display: flex;
+  gap: 12px; /* espace horizontal entre les 2 champs */
+}
+
+.coord-row > div {
+  flex: 1; /* chaque champ prend la moitié */
+  display: flex;
+  flex-direction: column;
+}
+    @media (max-width: 520px) {
+  .coord-row { flex-direction: column; gap: 8px; }
+}
   </style>
 </head>
 <body>
@@ -258,12 +272,16 @@ label + .hint,
     <button type="button" id="btnToggleDevice">🗺️ Plan</button>
   </div>
 </div>
-      <div id="coordsDevice" style="display:none;">
-        <label>Latitude de l’appareil</label>
-        <input id="latDevice">
-        <label>Longitude de l’appareil</label>
-        <input id="lonDevice">
-      </div>
+   <div id="coordsDevice" style="display:none;" class="coord-row">
+  <div>
+    <label>Latitude</label>
+    <input id="latDevice">
+  </div>
+  <div>
+    <label>Longitude</label>
+    <input id="lonDevice">
+  </div>
+</div>
 
       <!-- Lien si non -->
       <div id="lienField" style="display:none;">
@@ -289,17 +307,22 @@ label + .hint,
   </div>
 </div>
       
-      <div id="coordsAccess" style="display:none;">
-        <label>Latitude accès</label>
-        <input id="latAccess">
-        <label>Longitude accès</label>
-        <input id="lonAccess">
-      </div>
-      <div id="lienAccessField" style="display:none;">
-        <label>Lien Google Maps de l’accès (optionnel)</label>
-        <input id="lienAccess" type="url" placeholder="https://maps.app.goo.gl/…">
-        <div class="hint">Si vous indiquez « Oui » : complétez soit les coordonnées GPS de l’accès, soit un lien Google Maps valide.</div>
-      </div>
+ <div id="coordsAccess" style="display:none;" class="coord-row">
+  <div>
+    <label>Latitude</label>
+    <input id="latAccess">
+  </div>
+  <div>
+    <label>Longitude</label>
+    <input id="lonAccess">
+  </div>
+</div> <!-- ✅ fermeture manquante ajoutée ici -->
+
+<div id="lienAccessField" style="display:none;">
+  <label>Lien Google Maps de l’accès (optionnel)</label>
+  <input id="lienAccess" type="url" placeholder="https://maps.app.goo.gl/…">
+  <div class="hint">Si vous indiquez « Oui » : complétez soit les coordonnées GPS de l’accès, soit un lien Google Maps valide.</div>
+</div>
 
       <label>Notes complémentaires</label>
       <textarea id="infos" placeholder="Indiquez un repère ou une info utile (accès, portail, etc.)"></textarea>
