@@ -197,6 +197,59 @@
     }
    function isValidUrl(str){return /^https?:\/\/.+/i.test((str||"").trim());}
 
+    // ▼▼▼ AJOUTS POUR AMÉLIORATION LOCALISATION ▼▼▼
+    const HAZE = [50.72454, 2.54311];
+    let lastFix = null;
+    let GEO_BLOCKED = false;
+    const GEO_OPTS = { enableHighAccuracy: true, timeout: 7000, maximumAge: 15000 };
+
+    function setMapTo(map, marker, lat, lon, kind){
+      if(!map || !marker) return;
+      map.setView([lat, lon], 18);
+      marker.setLatLng([lat, lon]);
+      if(kind === "device"){ $("latDevice").value = lat; $("lonDevice").value = lon; }
+      else if(kind === "access"){ $("latAccess").value = lat; $("lonAccess").value = lon; }
+    }
+
+    function applyFix(lat, lon){
+      lastFix = { lat, lon, ts: Date.now() };
+      if(mapDevice && markerDevice) setMapTo(mapDevice, markerDevice, lat, lon, "device");
+      if(mapAccess && markerAccess) setMapTo(mapAccess, markerAccess, lat, lon, "access");
+    }
+
+    function onGeoDenied(target){
+      GEO_BLOCKED = true;
+      if(target === "device"){
+        $("presentValue").value = "non";
+        $("pill-oui").classList.remove("active");
+        $("pill-non").classList.add("active");
+        toggle($("mapDeviceWrap"), 0);
+        toggle($("coordsDevice"), 0);
+        toggle($("lienField"), 1);
+        alert("La géolocalisation est refusée. Renseignez un lien Google Maps.");
+      } else if(target === "access"){
+        $("accessValue").value = "non";
+        $("pill-acces-oui").classList.remove("active");
+        $("pill-acces-non").classList.add("active");
+        toggle($("mapAccessWrap"), 0);
+        toggle($("coordsAccess"), 0);
+        toggle($("lienAccessField"), 1);
+        alert("La géolocalisation est refusée. Renseignez un lien Google Maps pour l’accès.");
+      }
+    }
+
+    // Pré-récupération de la position au chargement
+    document.addEventListener("DOMContentLoaded", () => {
+      if(navigator.geolocation){
+        navigator.geolocation.getCurrentPosition(
+          p => applyFix(p.coords.latitude, p.coords.longitude),
+          err => { if(err && err.code === 1) { GEO_BLOCKED = true; } },
+          GEO_OPTS
+        );
+      }
+    });
+    // ▲▲▲ FIN AJOUTS ▲▲▲
+
     // Pills appareil
     $("pill-oui").onclick=()=>setPill("oui");
     $("pill-non").onclick=()=>setPill("non");
@@ -204,7 +257,10 @@
       $("presentValue").value=v;
       $("pill-oui").classList.toggle("active",v==="oui");
       $("pill-non").classList.toggle("active",v==="non");
-      if(v==="oui"){toggle($("mapDeviceWrap"),1);toggle($("coordsDevice"),1);toggle($("lienField"),0);startLocDevice();}
+      if(v==="oui"){
+        if(GEO_BLOCKED){ onGeoDenied("device"); return; }
+        toggle($("mapDeviceWrap"),1);toggle($("coordsDevice"),1);toggle($("lienField"),0);startLocDevice();
+      }
       else{toggle($("mapDeviceWrap"),0);toggle($("coordsDevice"),0);toggle($("lienField"),1);}
     }
 
@@ -216,6 +272,7 @@
   $("pill-acces-oui").classList.toggle("active",v==="oui");
   $("pill-acces-non").classList.toggle("active",v==="non");
   if(v==="oui"){
+    if(GEO_BLOCKED){ onGeoDenied("access"); return; }
     toggle($("mapAccessWrap"),1);
     toggle($("coordsAccess"),1);
     toggle($("lienAccessField"),1);
@@ -244,7 +301,10 @@ osm.addTo(map);
 let isSat = false;
 $(btnToggle).textContent = "🛰️ Satellite"; // bouton propose de passer en satellite
 
-      marker = L.marker([lat,lon],{draggable:true}).addTo(map);
+      // point de départ : dernier fix si dispo, sinon paramètres passés
+      const startLat = (lastFix ? lastFix.lat : lat);
+      const startLon = (lastFix ? lastFix.lon : lon);
+      marker = L.marker([startLat,startLon],{draggable:true}).addTo(map);
 
       marker.on("dragend",()=>{
         let p=marker.getLatLng();
@@ -273,18 +333,26 @@ $(btnToggle).textContent = "🛰️ Satellite"; // bouton propose de passer en s
 };
 
       $(btnRecenter).onclick=()=>{
+        if(GEO_BLOCKED){
+          const target = (mapId === "mapDevice") ? "device" : "access";
+          onGeoDenied(target);
+          return;
+        }
+        // 1) applique immédiatement le dernier fix si présent
+        if (lastFix){
+          const isDevice = (mapId === "mapDevice");
+          const mapRef    = isDevice ? mapDevice   : mapAccess;
+          const markerRef = isDevice ? markerDevice: markerAccess;
+          const kind      = isDevice ? "device"    : "access";
+          setMapTo(mapRef, markerRef, lastFix.lat, lastFix.lon, kind);
+        }
+        // 2) demande une position plus fraîche en arrière-plan
         if(navigator.geolocation){
-          navigator.geolocation.getCurrentPosition(p=>{
-            map.setView([p.coords.latitude,p.coords.longitude],18);
-            marker.setLatLng([p.coords.latitude,p.coords.longitude]);
-            if(mapId==="mapDevice"){
-              $("latDevice").value=p.coords.latitude;
-              $("lonDevice").value=p.coords.longitude;
-            } else {
-              $("latAccess").value=p.coords.latitude;
-              $("lonAccess").value=p.coords.longitude;
-            }
-          });
+          navigator.geolocation.getCurrentPosition(
+            p => applyFix(p.coords.latitude,p.coords.longitude),
+            err => { if(err && err.code === 1){ const t=(mapId==="mapDevice")?"device":"access"; onGeoDenied(t); } },
+            GEO_OPTS
+          );
         }
       };
 
@@ -293,36 +361,42 @@ $(btnToggle).textContent = "🛰️ Satellite"; // bouton propose de passer en s
     }
 
 function startLocDevice(){
+  if(GEO_BLOCKED){ onGeoDenied("device"); return; }
   // Crée immédiatement la carte sur Hazebrouck si pas déjà affichée
   if(!mapDevice){
     ensureMap("mapDevice","btnToggleDevice","btnRecenterDevice",50.72454,2.54311);
   }
 
+  // Applique une position déjà connue si dispo
+  if(lastFix) setMapTo(mapDevice, markerDevice, lastFix.lat, lastFix.lon, "device");
+
   // Puis recadre quand le GPS répond
   if(navigator.geolocation){
-    navigator.geolocation.getCurrentPosition(p=>{
-      mapDevice.setView([p.coords.latitude,p.coords.longitude],18);
-      markerDevice.setLatLng([p.coords.latitude,p.coords.longitude]);
-      $("latDevice").value = p.coords.latitude;
-      $("lonDevice").value = p.coords.longitude;
-    });
+    navigator.geolocation.getCurrentPosition(
+      p=>applyFix(p.coords.latitude,p.coords.longitude),
+      err=>{ if(err && err.code===1) onGeoDenied("device"); },
+      GEO_OPTS
+    );
   }
 }
     
     function startLocAccess(){
+  if(GEO_BLOCKED){ onGeoDenied("access"); return; }
   // Crée immédiatement la carte sur Hazebrouck si pas déjà affichée
   if(!mapAccess){
     ensureMap("mapAccess","btnToggleAccess","btnRecenterAccess",50.72454,2.54311);
   }
 
+  // Applique une position déjà connue si dispo
+  if(lastFix) setMapTo(mapAccess, markerAccess, lastFix.lat, lastFix.lon, "access");
+
   // Puis recadre quand le GPS répond
   if(navigator.geolocation){
-    navigator.geolocation.getCurrentPosition(p=>{
-      mapAccess.setView([p.coords.latitude,p.coords.longitude],18);
-      markerAccess.setLatLng([p.coords.latitude,p.coords.longitude]);
-      $("latAccess").value = p.coords.latitude;
-      $("lonAccess").value = p.coords.longitude;
-    });
+    navigator.geolocation.getCurrentPosition(
+      p=>applyFix(p.coords.latitude,p.coords.longitude),
+      err=>{ if(err && err.code===1) onGeoDenied("access"); },
+      GEO_OPTS
+    );
   }
 }
     // Submit (validations harmonisées)
