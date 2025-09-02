@@ -249,21 +249,23 @@ label {
       </div>
 
       <!-- Accès spécifique -->
-      <label>📍L’appareil a un accès distinct ?</label>
-      <div class="hint">Déplacez le curseur pour ajuster la position de l’accès.</div>
-      <div class="pill-group">
-        <div class="pill" id="pill-acces-oui" data-value="oui">Oui</div>
-        <div class="pill" id="pill-acces-non" data-value="non">Non</div>
-      </div>
-      <input type="hidden" id="accessValue">
+<label>📍L’appareil a un accès distinct ?</label>
 
-      <div class="map-wrap" id="mapAccessWrap">
-        <div id="mapAccess"></div>
-        <div class="map-toolbar">
-          <button type="button" id="btnRecenterAccess">📍 Localiser</button>
-          <button type="button" id="btnToggleAccess">🗺️ Plan</button>
-        </div>
-      </div>
+<div class="pill-group">
+  <div class="pill" id="pill-acces-oui" data-value="oui">Oui</div>
+  <div class="pill" id="pill-acces-non" data-value="non">Non</div>
+</div>
+<input type="hidden" id="accessValue">
+
+<div class="map-wrap" id="mapAccessWrap">
+  <div id="hintAccess" class="hint">Déplacez le curseur pour ajuster la position de l’accès.</div>
+  <div id="mapAccess"></div>
+  <div class="map-toolbar">
+    <button type="button" id="btnRecenterAccess">📍 Localiser</button>
+    <button type="button" id="btnToggleAccess">🗺️ Plan</button>
+  </div>
+</div>
+      
       <div id="coordsAccess" style="display:none;">
         <label>Latitude accès</label>
         <input id="latAccess">
@@ -380,25 +382,26 @@ label {
       }
     });
 
-    $("pill-oui").onclick=()=>setPill("oui");
-    $("pill-non").onclick=()=>setPill("non");
- function setPill(v){
-  $("presentValue").value = v;
-  $("pill-oui").classList.toggle("active", v === "oui");
-  $("pill-non").classList.toggle("active", v === "non");
+$("pill-acces-oui").onclick=()=>setAccess("oui");
+$("pill-acces-non").onclick=()=>setAccess("non");
+
+function setAccess(v){
+  $("accessValue").value = v;
+  $("pill-acces-oui").classList.toggle("active", v === "oui");
+  $("pill-acces-non").classList.toggle("active", v === "non");
 
   if (v === "oui") {
-    if (GEO_BLOCKED){ onGeoDenied("device"); return; }
-    toggle($("mapDeviceWrap"), 1);
-    $("hintDevice").style.display = "block";   // <-- afficher le texte
-    toggle($("coordsDevice"), 1);
-    toggle($("lienField"), 0);
-    startLocDevice();
+    if (GEO_BLOCKED){ onGeoDenied("access"); return; }
+    toggle($("mapAccessWrap"), 1);
+    $("hintAccess").style.display = "block";   // ✅ affiche le texte
+    toggle($("coordsAccess"), 1);
+    toggle($("lienAccessField"), 0);
+    startLocAccess();
   } else {
-    toggle($("mapDeviceWrap"), 0);
-    $("hintDevice").style.display = "none";    // <-- cacher le texte
-    toggle($("coordsDevice"), 0);
-    toggle($("lienField"), 1);
+    toggle($("mapAccessWrap"), 0);
+    $("hintAccess").style.display = "none";    // ✅ cache le texte
+    toggle($("coordsAccess"), 0);
+    toggle($("lienAccessField"), 1);
   }
 }
 
