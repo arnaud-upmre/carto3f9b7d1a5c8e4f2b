@@ -13,69 +13,179 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 
   <style>
+    /* ======= Tes styles existants ======= */
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 18px; /* espace vertical entre les champs */
+    }
+
+    .hint {
+      font-size: 12px;
+      color: #999;
+      font-style: italic;
+      margin: 2px 0 6px;
+    }
     *,*::before,*::after{box-sizing:border-box}
     html{-webkit-text-size-adjust:100%}
     body{
       margin:0; padding:16px;
-      font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Arial, sans-serif;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial;
       background:var(--bg); color:var(--fg);
-      line-height:1.4;
     }
     :root{
       --bg:#f7f7f8; --fg:#202124; --card:#fff; --border:#d0d7de;
-      --accent:#007aff; --accent-ink:#fff; --muted:#666; --error:#e53935;
+      --accent:#0b6cff; --accent-ink:#fff; --muted:#666;
     }
     @media(prefers-color-scheme:dark){
       :root{
         --bg:#0b0b0b; --fg:#eceff1; --card:#141414; --border:#2a2a2a;
-        --accent:#5aa3ff; --accent-ink:#081018; --muted:#999; --error:#ff6b6b;
+        --accent:#5aa3ff; --accent-ink:#081018; --muted:#999;
       }
     }
-
-    h2{text-align:center;font-size:22px;margin:0 0 20px}
-    .section-title{font-size:15px;font-weight:600;margin:24px 0 8px;color:var(--muted)}
-    .card{max-width:640px;margin:auto;background:var(--card);padding:20px;
-      border-radius:16px;box-shadow:0 2px 6px rgba(0,0,0,.08)}
-    form{display:flex;flex-direction:column;gap:20px}
-
-    label{display:block;font-size:15px;font-weight:600;margin-bottom:6px}
-    input,textarea{
-      width:100%;padding:14px;font-size:16px;
-      border:1.5px solid var(--border);border-radius:12px;
-      background:var(--card);color:var(--fg);min-height:48px;
-      transition:border .2s, background .2s;
+    h2{text-align:center;margin:0 0 12px}
+    .card{max-width:640px;margin:auto;background:var(--card);padding:16px;
+      border-radius:14px;box-shadow:0 2px 6px rgba(0,0,0,.15)}
+    label {
+      display: block;
+      margin-bottom: 0px;
+      margin-top: 0;
+      font-weight: 600;
     }
-    input:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px rgba(0,122,255,.15)}
+    input,textarea {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      margin-top: 0;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--card);
+      color: var(--fg);
+      min-height: 44px;
+    }
     textarea{min-height:96px;resize:none;overflow:auto}
-    ::placeholder{color:var(--muted);opacity:.8}
-
-    .hint{font-size:13px;color:var(--muted);margin-top:2px}
-    .pill-group{display:flex;border:1.5px solid var(--border);border-radius:12px;overflow:hidden}
-    .pill{flex:1;text-align:center;padding:12px;font-size:15px;cursor:pointer;background:var(--card);color:var(--fg)}
-    .pill.active{background:var(--accent);color:var(--accent-ink);font-weight:600}
-
-    .map-wrap{display:none;border:1.5px solid var(--border);
-      border-radius:12px;overflow:hidden}
-    #mapDevice,#mapAccess{height:280px;width:100%}
-    .map-toolbar{display:flex;gap:8px;padding:8px;background:var(--card)}
-    .map-toolbar button{flex:1;padding:10px;border-radius:8px;
-      border:1px solid var(--border);background:var(--card);cursor:pointer;font-size:15px}
-    .map-toolbar button:active{background:var(--accent);color:var(--accent-ink)}
-
-    .btn-row{display:flex;flex-direction:column;gap:12px;margin-top:10px}
-    .btn{padding:14px;font-size:16px;border:none;border-radius:12px;cursor:pointer}
-    .btn.primary{background:var(--accent);color:var(--accent-ink);font-weight:600}
-    .btn.secondary{background:transparent;color:var(--fg);border:1.5px solid var(--border)}
-
-    /* Styles erreurs */
-    input.error, textarea.error {
-      border-color: var(--error) !important;
-      background-color: rgba(229,57,53,.08);
-    }
-    .error-msg {
-      color: var(--error);
-      font-size: 13px;
+    .pill-group {
+      display: flex;
+      gap: 10px;
       margin-top: 4px;
+    }
+    .pill{flex:1;text-align:center;padding:12px;border:1px solid var(--border);
+      border-radius:999px;cursor:pointer}
+    .pill.active{background:var(--accent);color:var(--accent-ink)}
+    .map-wrap{display:none;margin-top:12px;border:1px solid var(--border);
+      border-radius:10px;overflow:hidden}
+    #mapDevice,#mapAccess{height:300px;width:100%}
+    .map-toolbar{display:flex;gap:8px;padding:6px;background:var(--card)}
+    .map-toolbar button{flex:1;padding:8px;border-radius:8px;border:1px solid var(--border);cursor:pointer}
+    .btn-row{display:flex;gap:12px;margin-top:18px}
+    .btn{flex:1;padding:12px;font-size:16px;border:none;border-radius:10px;cursor:pointer}
+    .btn.primary{background:var(--accent);color:var(--accent-ink)}
+    .btn.secondary{background:#ccc}
+    @media(prefers-color-scheme:dark){.btn.secondary{background:#2a2f36;color:#eee}}
+
+    /* ======= Overrides FLAT DESIGN (visuel uniquement) ======= */
+    /* Rythme & label ↔ champ */
+    form { gap: 18px; }
+    label { margin-bottom: 5px; } /* 5px sous le label, compact mais lisible */
+
+    /* Champs flat, focus propre */
+    input, textarea {
+      padding: 12px 14px;
+      min-height: 46px;
+      border: 1.5px solid #d7dbe0;
+      border-radius: 12px;
+      background: var(--card);
+      transition: border-color .2s, box-shadow .2s, background .2s;
+    }
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(11,108,255,.12);
+    }
+    ::placeholder{ color: var(--muted); opacity:.85; }
+
+    /* Hints plus sobres et rapprochés */
+    .hint {
+      margin: 2px 0 4px;
+      color: #8a8f98;
+      font-style: normal;
+      font-size: 12.5px;
+    }
+
+    /* Segmented Oui/Non – flat */
+    .pill-group { gap: 10px; margin-top: 2px; }
+    .pill {
+      padding: 11px 14px;
+      min-height: 42px;
+      font-size: 15px;
+      border-radius: 999px;
+      border: 1.5px solid #d7dbe0;
+      background: #fff;
+      color: var(--fg);
+      transition: background .15s, color .15s, border-color .15s, box-shadow .15s;
+    }
+    .pill.active {
+      background: var(--accent);
+      color: var(--accent-ink);
+      border-color: var(--accent);
+      box-shadow: 0 2px 6px rgba(11,108,255,.18);
+    }
+
+    /* Cartes – cosmétique uniquement (pas de display/height modifiés) */
+    .map-wrap {
+      border: 1.5px solid #d7dbe0;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-top: 10px; /* léger ajustement visuel */
+    }
+    /* height 300px conservée plus haut */
+
+    .map-toolbar {
+      gap: 8px;
+      padding: 8px;
+      background: var(--card);
+    }
+    .map-toolbar button {
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1.5px solid #d7dbe0;
+      background: #fff;
+      font-size: 15px;
+    }
+    .map-toolbar button:active {
+      background: var(--accent);
+      color: var(--accent-ink);
+      border-color: var(--accent);
+    }
+
+    /* Boutons d’action – hiérarchie propre */
+    .btn-row { gap: 12px; margin-top: 12px; }
+    .btn {
+      padding: 13px 14px;
+      border-radius: 12px;
+      font-size: 16px;
+    }
+    .btn.primary {
+      background: var(--accent);
+      color: var(--accent-ink);
+      font-weight: 600;
+    }
+    .btn.secondary {
+      background: transparent;
+      color: var(--fg);
+      border: 1.5px solid #d7dbe0;
+    }
+
+    /* Dark mode – contraste ajusté */
+    @media (prefers-color-scheme: dark) {
+      input, textarea, .pill {
+        background: var(--card);
+        border-color: #2a2f36;
+      }
+      .map-wrap { border-color: #2a2f36; }
+      .map-toolbar button { border-color: #2a2f36; background: var(--card); }
+      .hint { color: #9aa1ab; }
+      .btn.secondary { border-color: #2a2f36; }
     }
   </style>
 </head>
@@ -84,102 +194,119 @@
 
   <div class="card">
     <form id="formAppareil">
-      <div>
-        <label>Demandeur *</label>
-        <input id="demandeur" required>
-      </div>
+      <label>👤 Demandeur : </label>
+      <input id="demandeur" required>
 
-      <div>
-        <label>Poste *</label>
-        <input id="poste">
-      </div>
+      <label>Poste</label>
+      <input id="poste">
 
-      <div>
-        <label>SAT (optionnel)</label>
-        <input id="sat" placeholder="Ex : SAT1, SAT2…">
-      </div>
+      <label>SAT (optionnel)</label>
+      <input id="sat" placeholder="Ex : SAT1, SAT2…">
 
-      <div>
-        <label>Nom de l’appareil *</label>
-        <input id="appareil" placeholder="Ex : I7112" required>
-      </div>
+      <label>💡 Nom de l’appareil</label>
+      <input id="appareil" placeholder="Ex : I7112" required>
 
-      <div>
-        <div class="section-title">🛰️ Localisation de l’appareil</div>
-        <label>Géolocaliser automatiquement ?</label>
-        <div class="hint">Vous pouvez déplacer le marqueur pour ajuster la position.</div>
-        <div class="pill-group">
-          <div class="pill" id="pill-oui" data-value="oui">Oui</div>
-          <div class="pill" id="pill-non" data-value="non">Non</div>
-        </div>
-        <input type="hidden" id="presentValue">
+      <label>📍Localiser l’appareil via GPS ?</label>
+      <div class="hint">Déplacez le curseur pour ajuster la position de l’appareil.</div>
+      <div class="pill-group">
+        <div class="pill" id="pill-oui" data-value="oui">Oui</div>
+        <div class="pill" id="pill-non" data-value="non">Non</div>
       </div>
+      <input type="hidden" id="presentValue">
 
+      <!-- Carte si oui -->
       <div class="map-wrap" id="mapDeviceWrap">
         <div id="mapDevice"></div>
         <div class="map-toolbar">
-          <button type="button" id="btnRecenterDevice">🎯 Ma position</button>
+          <button type="button" id="btnRecenterDevice">📍 Localiser</button>
           <button type="button" id="btnToggleDevice">🗺️ Plan</button>
         </div>
       </div>
-
       <div id="coordsDevice" style="display:none;">
-        <label>Latitude</label>
-        <input id="latDevice" inputmode="decimal">
-        <label>Longitude</label>
-        <input id="lonDevice" inputmode="decimal">
+        <label>Latitude de l’appareil</label>
+        <input id="latDevice">
+        <label>Longitude de l’appareil</label>
+        <input id="lonDevice">
       </div>
 
+      <!-- Lien si non -->
       <div id="lienField" style="display:none;">
-        <label>Lien Google Maps</label>
+        <label>Coller le lien Google Maps</label>
         <input id="lien" type="url" placeholder="https://maps.app.goo.gl/…">
       </div>
 
-      <div>
-        <div class="section-title">🚪 Accès</div>
-        <label>L’appareil a un accès distinct ?</label>
-        <div class="pill-group">
-          <div class="pill" id="pill-acces-oui" data-value="oui">Oui</div>
-          <div class="pill" id="pill-acces-non" data-value="non">Non</div>
-        </div>
-        <input type="hidden" id="accessValue">
+      <!-- Accès spécifique -->
+      <label>📍L’appareil a un accès distinct ?</label>
+      <div class="hint">Déplacez le curseur pour ajuster la position de l’accès.</div>
+      <div class="pill-group">
+        <div class="pill" id="pill-acces-oui" data-value="oui">Oui</div>
+        <div class="pill" id="pill-acces-non" data-value="non">Non</div>
       </div>
+      <input type="hidden" id="accessValue">
 
       <div class="map-wrap" id="mapAccessWrap">
         <div id="mapAccess"></div>
         <div class="map-toolbar">
-          <button type="button" id="btnRecenterAccess">🎯 Ma position</button>
+          <button type="button" id="btnRecenterAccess">📍 Localiser</button>
           <button type="button" id="btnToggleAccess">🗺️ Plan</button>
         </div>
       </div>
-
       <div id="coordsAccess" style="display:none;">
         <label>Latitude accès</label>
-        <input id="latAccess" inputmode="decimal">
+        <input id="latAccess">
         <label>Longitude accès</label>
-        <input id="lonAccess" inputmode="decimal">
+        <input id="lonAccess">
       </div>
-
       <div id="lienAccessField" style="display:none;">
         <label>Lien Google Maps de l’accès (optionnel)</label>
         <input id="lienAccess" type="url" placeholder="https://maps.app.goo.gl/…">
-        <div class="hint">Indiquez soit les coordonnées GPS de l’accès, soit un lien Google Maps valide.</div>
+        <div class="hint">Si vous indiquez « Oui » : complétez soit les coordonnées GPS de l’accès, soit un lien Google Maps valide.</div>
       </div>
 
-      <div>
-        <label>Notes complémentaires</label>
-        <textarea id="infos" placeholder="Repère visuel, portail, etc."></textarea>
-      </div>
+      <label>Notes complémentaires</label>
+      <textarea id="infos" placeholder="Indiquez un repère ou une info utile (accès, portail, etc.)"></textarea>
 
       <div class="btn-row">
         <button type="submit" class="btn primary">📩 Envoyer la contribution</button>
-        <button type="button" class="btn secondary" onclick="location.href='index.html'">⬅️ Retour</button>
+        <button type="button" class="btn secondary" onclick="location.href='index.html'">⬅️ Retour à l’accueil</button>
       </div>
     </form>
   </div>
 
   <script>
+    /* ======= Ton JS d’origine, inchangé ======= */
     const DEST_EMAIL = "arnaud.debaecker@sncf.fr";
+    (function prefillFromURL(){
+      const $ = (id)=>document.getElementById(id);
+      const params   = new URLSearchParams(location.search);
+      const appareil = params.get("appareil");
+      const poste    = params.get("poste");
+      if (poste) {
+        $("poste").value = poste;
+        try { localStorage.setItem("poste_selectionne", poste); } catch(e){}
+      }
+      else if (appareil) {
+        $("appareil").value = appareil;
+        try { localStorage.removeItem("poste_selectionne"); } catch(e){}
+      }
+      else {
+        try {
+          const cached = localStorage.getItem("poste_selectionne");
+          if (cached) $("poste").value = cached;
+        } catch(e){}
+      }
+      if (appareil) $("appareil").value = appareil;
+    })();
+
+    (function prefillName() {
+      const savedName = localStorage.getItem("nom_demandeur");
+      if (savedName) {
+        document.getElementById("demandeur").value = savedName;
+      }
+    })();
+    const COUNTER_URL = "https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec";
+
+    let mapDevice, mapAccess, markerDevice, markerAccess;
 
     function $(id){return document.getElementById(id);}
     function toggle(el,show){el.style.display=show?"block":"none";}
@@ -190,57 +317,192 @@
     }
     function isValidUrl(str){return /^https?:\/\/.+/i.test((str||"").trim());}
 
-    // Erreurs visuelles
-    function showError(el, msg) {
-      el.classList.add("error");
-      let m = document.createElement("div");
-      m.className = "error-msg";
-      m.textContent = msg;
-      if (!el.nextElementSibling || !el.nextElementSibling.classList.contains("error-msg")) {
-        el.parentNode.insertBefore(m, el.nextSibling);
-      }
-    }
-    function clearErrors() {
-      document.querySelectorAll(".error").forEach(e => e.classList.remove("error"));
-      document.querySelectorAll(".error-msg").forEach(e => e.remove());
+    const HAZE = [50.72454, 2.54311];
+    let lastFix = null;
+    let GEO_BLOCKED = false;
+    const GEO_OPTS = { enableHighAccuracy: true, timeout: 7000, maximumAge: 15000 };
+
+    function setMapTo(map, marker, lat, lon, kind){
+      if(!map || !marker) return;
+      map.setView([lat, lon], 18);
+      marker.setLatLng([lat, lon]);
+      if(kind === "device"){ $("latDevice").value = lat; $("lonDevice").value = lon; }
+      else if(kind === "access"){ $("latAccess").value = lat; $("lonAccess").value = lon; }
     }
 
-    // Pills
+    function applyFix(lat, lon){
+      lastFix = { lat, lon, ts: Date.now() };
+      if(mapDevice && markerDevice) setMapTo(mapDevice, markerDevice, lat, lon, "device");
+      if(mapAccess && markerAccess) setMapTo(mapAccess, markerAccess, lat, lon, "access");
+    }
+
+    function onGeoDenied(target){
+      GEO_BLOCKED = true;
+      if(target === "device"){
+        $("presentValue").value = "non";
+        $("pill-oui").classList.remove("active");
+        $("pill-non").classList.add("active");
+        toggle($("mapDeviceWrap"), 0);
+        toggle($("coordsDevice"), 0);
+        toggle($("lienField"), 1);
+        alert("La géolocalisation est refusée. Renseignez un lien Google Maps.");
+      } else if(target === "access"){
+        $("accessValue").value = "non";
+        $("pill-acces-oui").classList.remove("active");
+        $("pill-acces-non").classList.add("active");
+        toggle($("mapAccessWrap"), 0);
+        toggle($("coordsAccess"), 0);
+        toggle($("lienAccessField"), 1);
+        alert("La géolocalisation est refusée. Renseignez un lien Google Maps pour l’accès.");
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      if(navigator.geolocation){
+        navigator.geolocation.getCurrentPosition(
+          p => applyFix(p.coords.latitude, p.coords.longitude),
+          err => { if(err && err.code === 1) { GEO_BLOCKED = true; } },
+          GEO_OPTS
+        );
+      }
+    });
+
     $("pill-oui").onclick=()=>setPill("oui");
     $("pill-non").onclick=()=>setPill("non");
     function setPill(v){
       $("presentValue").value=v;
       $("pill-oui").classList.toggle("active",v==="oui");
       $("pill-non").classList.toggle("active",v==="non");
-      if(v==="oui"){ toggle($("mapDeviceWrap"),1);toggle($("coordsDevice"),1);toggle($("lienField"),0);}
+      if(v==="oui"){
+        if(GEO_BLOCKED){ onGeoDenied("device"); return; }
+        toggle($("mapDeviceWrap"),1);toggle($("coordsDevice"),1);toggle($("lienField"),0);startLocDevice();
+      }
       else{toggle($("mapDeviceWrap"),0);toggle($("coordsDevice"),0);toggle($("lienField"),1);}
     }
+
     $("pill-acces-oui").onclick=()=>setAccess("oui");
     $("pill-acces-non").onclick=()=>setAccess("non");
     function setAccess(v){
       $("accessValue").value=v;
       $("pill-acces-oui").classList.toggle("active",v==="oui");
       $("pill-acces-non").classList.toggle("active",v==="non");
-      if(v==="oui"){ toggle($("mapAccessWrap"),1);toggle($("coordsAccess"),1);toggle($("lienAccessField"),1);}
-      else{toggle($("mapAccessWrap"),0);toggle($("coordsAccess"),0);toggle($("lienAccessField"),0);}
+      if(v==="oui"){
+        if(GEO_BLOCKED){ onGeoDenied("access"); return; }
+        toggle($("mapAccessWrap"),1);
+        toggle($("coordsAccess"),1);
+        toggle($("lienAccessField"),1);
+        startLocAccess();
+      } else {
+        toggle($("mapAccessWrap"),0);
+        toggle($("coordsAccess"),0);
+        toggle($("lienAccessField"),0);
+      }
     }
 
-    // Submit
+    function ensureMap(mapId,btnToggle,btnRecenter,lat,lon){
+      let map,marker;
+      map = L.map(mapId).setView([50.72454, 2.54311], 18);
+      setTimeout(() => map.invalidateSize(), 300);
+
+      const esri = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}");
+      const osm  = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png");
+      osm.addTo(map);
+
+      let isSat = false;
+      $(btnToggle).textContent = "🛰️ Satellite";
+
+      const startLat = (lastFix ? lastFix.lat : lat);
+      const startLon = (lastFix ? lastFix.lon : lon);
+      marker = L.marker([startLat,startLon],{draggable:true}).addTo(map);
+
+      marker.on("dragend",()=>{
+        let p=marker.getLatLng();
+        if(mapId==="mapDevice"){
+          $("latDevice").value=p.lat;
+          $("lonDevice").value=p.lng;
+        } else {
+          $("latAccess").value=p.lat;
+          $("lonAccess").value=p.lng;
+        }
+      });
+
+      $(btnToggle).onclick = () => {
+        isSat = !isSat;
+        if (isSat) {
+          if (map.hasLayer(osm)) map.removeLayer(osm);
+          esri.addTo(map);
+          $(btnToggle).textContent = "🗺️ Plan";
+        } else {
+          if (map.hasLayer(esri)) map.removeLayer(esri);
+          osm.addTo(map);
+          $(btnToggle).textContent = "🛰️ Satellite";
+        }
+      };
+
+      $(btnRecenter).onclick=()=>{
+        if(GEO_BLOCKED){
+          const target = (mapId === "mapDevice") ? "device" : "access";
+          onGeoDenied(target);
+          return;
+        }
+        if (lastFix){
+          const isDevice = (mapId === "mapDevice");
+          const mapRef    = isDevice ? mapDevice   : mapAccess;
+          const markerRef = isDevice ? markerDevice: markerAccess;
+          const kind      = isDevice ? "device"    : "access";
+          setMapTo(mapRef, markerRef, lastFix.lat, lastFix.lon, kind);
+        }
+        if(navigator.geolocation){
+          navigator.geolocation.getCurrentPosition(
+            p => applyFix(p.coords.latitude,p.coords.longitude),
+            err => { if(err && err.code === 1){ const t=(mapId==="mapDevice")?"device":"access"; onGeoDenied(t); } },
+            GEO_OPTS
+          );
+        }
+      };
+
+      if(mapId==="mapDevice"){ mapDevice=map; markerDevice=marker; }
+      else{ mapAccess=map; markerAccess=marker; }
+    }
+
+    function startLocDevice(){
+      if(GEO_BLOCKED){ onGeoDenied("device"); return; }
+      if(!mapDevice){
+        ensureMap("mapDevice","btnToggleDevice","btnRecenterDevice",50.72454,2.54311);
+      }
+      if(lastFix) setMapTo(mapDevice, markerDevice, lastFix.lat, lastFix.lon, "device");
+      if(navigator.geolocation){
+        navigator.geolocation.getCurrentPosition(
+          p=>applyFix(p.coords.latitude,p.coords.longitude),
+          err=>{ if(err && err.code===1) onGeoDenied("device"); },
+          GEO_OPTS
+        );
+      }
+    }
+
+    function startLocAccess(){
+      if(GEO_BLOCKED){ onGeoDenied("access"); return; }
+      if(!mapAccess){
+        ensureMap("mapAccess","btnToggleAccess","btnRecenterAccess",50.72454,2.54311);
+      }
+      if(lastFix) setMapTo(mapAccess, markerAccess, lastFix.lat, lastFix.lon, "access");
+      if(navigator.geolocation){
+        navigator.geolocation.getCurrentPosition(
+          p=>applyFix(p.coords.latitude,p.coords.longitude),
+          err=>{ if(err && err.code===1) onGeoDenied("access"); },
+          GEO_OPTS
+        );
+      }
+    }
+
     $("formAppareil").onsubmit=e=>{
       e.preventDefault();
-      clearErrors();
-
       let demandeur=$("demandeur").value.trim();
+      if (demandeur) { localStorage.setItem("nom_demandeur", demandeur); }
       let poste=$("poste").value.trim();
       let appareil=$("appareil").value.trim();
       let infos=$("infos").value.trim();
-      let ok = true;
-
-      if(!demandeur){showError($("demandeur"),"Ce champ est obligatoire.");ok=false;}
-      if(!poste){showError($("poste"),"Ce champ est obligatoire.");ok=false;}
-      if(!appareil){showError($("appareil"),"Ce champ est obligatoire.");ok=false;}
-
-      if(!ok){
+      if(!demandeur||!poste||!appareil){
         alert("⚠️ Merci de renseigner tous les champs obligatoires.");
         return;
       }
@@ -254,17 +516,47 @@
         return;
       }
 
-      // Suite normale → génération e-mail (inchangée chez toi)
+      let coordAppareil="",coordAcces="";
+      if($("presentValue").value==="oui"){
+        let la=sanitizeCoord($("latDevice").value),lo=sanitizeCoord($("lonDevice").value);
+        if(!isValidLatLon(la,lo)){alert("⚠️ Les coordonnées GPS de l’appareil ne sont pas valides.");return;}
+        coordAppareil=la+","+lo;
+      }else if($("presentValue").value==="non"){
+        if(!isValidUrl($("lien").value)){alert("⚠️ Merci de fournir un lien valide.");return;}
+        coordAppareil=$("lien").value;
+      }
+
+      if($("accessValue").value==="oui"){
+        let la=sanitizeCoord($("latAccess").value),lo=sanitizeCoord($("lonAccess").value);
+        let lienAcces=$("lienAccess").value.trim();
+        if(isValidLatLon(la,lo)){
+          coordAcces=la+","+lo;
+        } else if(isValidUrl(lienAcces)){
+          coordAcces=lienAcces;
+        } else {
+          alert("⚠️ Merci de renseigner soit les coordonnées GPS de l’accès, soit un lien Google Maps valide.");
+          return;
+        }
+      }
+
       let subject=`Contribution : ajout d’un appareil au poste de ${poste}`;
-      let body=`Bonjour,%0D%0A%0D%0A${demandeur} propose l’ajout de l’appareil suivant :%0D%0A%0D%0A`
+      let body=`Bonjour Arnaud,%0D%0A%0D%0A${demandeur} propose l’ajout de l’appareil suivant :%0D%0A%0D%0A`
         +`Poste : ${poste}%0D%0A`
         +`SAT : ${$("sat").value.trim()}%0D%0A`
         +`Appareil : ${appareil}%0D%0A`
+        +`Localisation : ${coordAppareil}%0D%0A`
+        +(coordAcces?`Accès spécifique : ${coordAcces}%0D%0A`:"")
         +`Notes : ${infos}%0D%0A%0D%0A`
         +`Cordialement,%0D%0A${demandeur}`;
-      location.href=`mailto:${DEST_EMAIL}?subject=${encodeURIComponent(subject)}&body=${body}`;
 
+      location.href=`mailto:${DEST_EMAIL}?subject=${encodeURIComponent(subject)}&body=${body}`;
+      fetch(COUNTER_URL+"?increment=true").catch(()=>{});
       alert("L’e-mail de contribution est généré, vérifiez et envoyez-le.");
+
+      const savedName = demandeur;
+      $("formAppareil").reset();
+      setPill("");setAccess("");
+      if (savedName) { $("demandeur").value = savedName; }
     };
   </script>
 </body>
