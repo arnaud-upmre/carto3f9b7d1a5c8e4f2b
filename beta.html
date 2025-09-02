@@ -72,20 +72,21 @@ textarea {
     .card{max-width:640px;margin:auto;background:var(--card);padding:16px;
       border-radius:14px;box-shadow:0 2px 6px rgba(0,0,0,.15)}
 
+
     input, textarea {
-  margin-top: 0px;   /* réduit l’espace entre le label et le champ */
+  width: auto;     /* laisse le flex gérer */
+  flex: 1;         /* occupe la largeur dispo */
+  min-width: 0;    /* évite les débordements */
+  padding: 12px;
+  font-size: 16px;
+  margin-top: 0;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card);
+  color: var(--fg);
+  min-height: 44px;
 }
-    input,textarea {
-      width: 100%;
-      padding: 12px;
-      font-size: 16px;
-      margin-top: 0;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      background: var(--card);
-      color: var(--fg);
-      min-height: 44px;
-    }
+
     textarea{min-height:96px;resize:none;overflow:auto}
     .pill-group {
       display: flex;
@@ -438,6 +439,8 @@ label + .hint,
   // Gestion des boutons Oui/Non pour "Localiser l’appareil via GPS ?"
 $("pill-oui").onclick=()=>setPill("oui");
 $("pill-non").onclick=()=>setPill("non");
+$("pill-acces-oui").onclick=()=>setAccess("oui");
+$("pill-acces-non").onclick=()=>setAccess("non");
 
 function setPill(v){
   $("presentValue").value = v;
@@ -447,39 +450,37 @@ function setPill(v){
   if (v === "oui") {
     if (GEO_BLOCKED){ onGeoDenied("device"); return; }
     toggle($("mapDeviceWrap"), 1);
-    $("hintDevice").style.display = "block";   // ✅ affiche le texte d’aide
+    $("hintDevice").style.display = "block";
     toggle($("coordsDevice"), 1);
     toggle($("lienField"), 0);
     startLocDevice();
   } else {
     toggle($("mapDeviceWrap"), 0);
-    $("hintDevice").style.display = "none";    // ✅ cache le texte d’aide
+    $("hintDevice").style.display = "none";
     toggle($("coordsDevice"), 0);
     toggle($("lienField"), 1);
   }
-}  
-$("pill-acces-oui").onclick=()=>setAccess("oui");
-$("pill-acces-non").onclick=()=>setAccess("non");
+}
+    function setAccess(v){
+  $("accessValue").value=v;
+  $("pill-acces-oui").classList.toggle("active",v==="oui");
+  $("pill-acces-non").classList.toggle("active",v==="non");
 
-function setAccess(v){
-  $("accessValue").value = v;
-  $("pill-acces-oui").classList.toggle("active", v === "oui");
-  $("pill-acces-non").classList.toggle("active", v === "non");
-
-  if (v === "oui") {
-    if (GEO_BLOCKED){ onGeoDenied("access"); return; }
-    toggle($("mapAccessWrap"), 1);
-    $("hintAccess").style.display = "block";   // ✅ affiche le texte
-    toggle($("coordsAccess"), 1);
-    toggle($("lienAccessField"), 0);
+  if(v==="oui"){
+    if(GEO_BLOCKED){onGeoDenied("access");return;}
+    toggle($("mapAccessWrap"),1);
+    $("hintAccess").style.display="block";
+    toggle($("coordsAccess"),1);
+    toggle($("lienAccessField"),1);  // ✅ lien visible seulement si Oui
     startLocAccess();
   } else {
-    toggle($("mapAccessWrap"), 0);
-    $("hintAccess").style.display = "none";    // ✅ cache le texte
-    toggle($("coordsAccess"), 0);
-    toggle($("lienAccessField"), 1);
+    toggle($("mapAccessWrap"),0);
+    $("hintAccess").style.display="none";
+    toggle($("coordsAccess"),0);
+    toggle($("lienAccessField"),0);  // ✅ lien masqué si Non
   }
 }
+
 
     function ensureMap(mapId,btnToggle,btnRecenter,lat,lon){
       let map,marker;
