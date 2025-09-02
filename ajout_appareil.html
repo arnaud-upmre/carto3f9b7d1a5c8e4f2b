@@ -13,62 +13,119 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 
   <style>    
-    .hint {
+ .hint {
   font-size: 12px;
   color: #999;
   font-style: italic;
   margin: 2px 0 6px;
 }
-    *,*::before,*::after{box-sizing:border-box}
-    html{-webkit-text-size-adjust:100%}
-    body{
-      margin:0; padding:16px;
-      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      background:var(--bg); color:var(--fg);
-    }
-    :root{
-      --bg:#f7f7f8; --fg:#202124; --card:#fff; --border:#d0d7de;
-      --accent:#0b6cff; --accent-ink:#fff; --muted:#666;
-    }
-    @media(prefers-color-scheme:dark){
-      :root{
-        --bg:#0b0b0b; --fg:#eceff1; --card:#141414; --border:#2a2a2a;
-        --accent:#5aa3ff; --accent-ink:#081018; --muted:#999;
-      }
-    }
-    h2{text-align:center;margin:0 0 12px}
-    .card{max-width:640px;margin:auto;background:var(--card);padding:16px;
-      border-radius:14px;box-shadow:0 2px 6px rgba(0,0,0,.15)}
-    label{display:block;margin-top:12px;font-weight:600}
-    input,textarea{
-      width:100%;
-      padding:12px;
-      font-size:16px;
-      margin-top:6px;
-      margin-bottom:16px; 
-      border:1px solid var(--border);
-      border-radius:10px;
-      background:var(--card);color:var(--fg);min-height:44px
-    }
-    textarea{min-height:96px;resize:none;overflow:auto}
-    .pill-group{display:flex;gap:10px;margin-top:8px}
-    .pill{flex:1;text-align:center;padding:12px;border:1px solid var(--border);
-      border-radius:999px;cursor:pointer}
-    .pill.active{background:var(--accent);color:var(--accent-ink)}
-    .map-wrap{display:none;margin-top:12px;border:1px solid var(--border);
-      border-radius:10px;overflow:hidden}
-    #mapDevice,#mapAccess{height:300px;width:100%}
-    .map-toolbar{display:flex;gap:8px;padding:6px;background:var(--card)}
-    .map-toolbar button{flex:1;padding:8px;border-radius:8px;border:1px solid var(--border);cursor:pointer}
-    .btn-row{display:flex;gap:12px;margin-top:18px}
-    .btn{flex:1;padding:12px;font-size:16px;border:none;border-radius:10px;cursor:pointer}
-    .btn.primary{background:var(--accent);color:var(--accent-ink)}
-    .btn.secondary{background:#ccc}
-    @media(prefers-color-scheme:dark){.btn.secondary{background:#2a2f36;color:#eee}}
 
-    /* Espace après les groupes de boutons Oui/Non */
-.pill-group {
-  margin-bottom: 16px;
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0; padding: 16px;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+  background: var(--bg); color: var(--fg);
+}
+
+:root{
+  --bg:#f7f7f8; --fg:#202124; --card:#fff; --border:#d0d7de;
+  --accent:#0b6cff; --accent-ink:#fff; --muted:#666;
+}
+
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0b0b0b; --fg:#eceff1; --card:#141414; --border:#2a2a2a;
+    --accent:#5aa3ff; --accent-ink:#081018; --muted:#999;
+  }
+}
+
+h2 { text-align: center; margin: 0 0 12px; }
+
+.card {
+  max-width: 640px;
+  margin: auto;
+  background: var(--card);
+  padding: 16px;
+  border-radius: 14px;
+  box-shadow: 0 2px 6px rgba(0,0,0,.15);
+}
+
+label { display: block; margin-top: 12px; font-weight: 600; }
+
+input, textarea {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  margin-top: 6px;         /* espace sous le label */
+  margin-bottom: 16px;     /* espace avant le label suivant */
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card);
+  color: var(--fg);
+  min-height: 44px;
+}
+
+textarea { min-height: 96px; resize: none; overflow: auto; }
+
+/* Groupe Oui/Non */
+.pill-group{
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+  margin-bottom: 16px;     /* espace sous les boutons Oui/Non */
+}
+
+.pill{
+  flex: 1;
+  text-align: center;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  cursor: pointer;
+}
+.pill.active { background: var(--accent); color: var(--accent-ink); }
+
+/* Blocs cartes */
+.map-wrap{
+  display: none;
+  margin-top: 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+#mapDevice, #mapAccess { height: 300px; width: 100%; }
+
+.map-toolbar{
+  display: flex;
+  gap: 8px;
+  padding: 6px;
+  background: var(--card);
+}
+.map-toolbar button{
+  flex: 1;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+}
+
+/* Boutons de fin */
+.btn-row { display: flex; gap: 12px; margin-top: 18px; }
+.btn{
+  flex: 1;
+  padding: 12px;
+  font-size: 16px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.btn.primary{ background: var(--accent); color: var(--accent-ink); }
+.btn.secondary{ background: #ccc; }
+@media (prefers-color-scheme: dark){
+  .btn.secondary{ background: #2a2f36; color: #eee; }
 }
 
 /* Espace après les blocs conditionnels (cartes, coordonnées, liens) */
