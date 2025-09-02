@@ -259,7 +259,7 @@
       $("pill-non").classList.toggle("active",v==="non");
       if(v==="oui"){
         if(GEO_BLOCKED){ onGeoDenied("device"); return; }
-        toggle($("mapDeviceWrap"),1);toggle($("coordsDevice"),1);toggle($("lienField"),0);startLocDevice();
+        toggle($("mapDeviceWrap"),1);toggle($("coordsDevice"),1);toggle($("lienField"),0);startLocDevice();requestAnimationFrame(() => mapDevice && mapDevice.invalidateSize());
       }
       else{toggle($("mapDeviceWrap"),0);toggle($("coordsDevice"),0);toggle($("lienField"),1);}
     }
@@ -277,6 +277,7 @@
     toggle($("coordsAccess"),1);
     toggle($("lienAccessField"),1);
     startLocAccess();
+    requestAnimationFrame(() => mapAccess && mapAccess.invalidateSize());
   } else {
     toggle($("mapAccessWrap"),0);
     toggle($("coordsAccess"),0);
@@ -330,6 +331,7 @@ $(btnToggle).textContent = "🛰️ Satellite"; // bouton propose de passer en s
     osm.addTo(map);
     $(btnToggle).textContent = "🛰️ Satellite";
   }
+     requestAnimationFrame(() => map.invalidateSize());
 };
 
       $(btnRecenter).onclick=()=>{
