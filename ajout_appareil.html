@@ -46,12 +46,24 @@
     h2{text-align:center;margin:0 0 12px}
     .card{max-width:640px;margin:auto;background:var(--card);padding:16px;
       border-radius:14px;box-shadow:0 2px 6px rgba(0,0,0,.15)}
-    label{display:block;margin-top:12px;font-weight:600}
-    input,textarea{
-      width:100%;padding:12px;font-size:16px;margin-top:6px;
-      border:1px solid var(--border);border-radius:10px;
-      background:var(--card);color:var(--fg);min-height:44px
-    }
+   label {
+  display: block;
+  margin-bottom: 6px;   /* espace juste sous le label */
+  margin-top: 0;        /* pas d’espace au-dessus */
+  font-weight: 600;
+}
+
+input,textarea {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  margin-top: 0;        /* on supprime le décalage inutile */
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card);
+  color: var(--fg);
+  min-height: 44px;
+}
     textarea{min-height:96px;resize:none;overflow:auto}
     .pill-group{display:flex;gap:10px;margin-top:8px}
     .pill{flex:1;text-align:center;padding:12px;border:1px solid var(--border);
@@ -74,7 +86,7 @@
 
   <div class="card">
     <form id="formAppareil">
-      <label>Demandeur</label>
+      <label>👤 Demandeur : </label>
       <input id="demandeur" required>
 
       <label>Poste</label>
@@ -83,10 +95,10 @@
       <label>SAT (optionnel)</label>
 <input id="sat" placeholder="Ex : SAT1, SAT2…">
 
-      <label>Nom de l’appareil</label>
+      <label>💡 Nom de l’appareil</label>
       <input id="appareil" placeholder="Ex : I7112" required>
 
-     <label>Localiser l’appareil via GPS ?</label>
+     <label>📍Localiser l’appareil via GPS ?</label>
 <div class="hint">Déplacez le curseur pour ajuster la position de l’appareil.</div>
 <div class="pill-group">
   <div class="pill" id="pill-oui" data-value="oui">Oui</div>
@@ -116,7 +128,7 @@
       </div>
 
       <!-- Accès spécifique -->
-    <label>L’appareil a un accès distinct ?</label>
+    <label>📍L’appareil a un accès distinct ?</label>
 <div class="hint">Déplacez le curseur pour ajuster la position de l’accès.</div>
 <div class="pill-group">
   <div class="pill" id="pill-acces-oui" data-value="oui">Oui</div>
