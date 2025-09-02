@@ -45,7 +45,7 @@
       padding:12px;
       font-size:16px;
       margin-top:6px;
-      margin-bottom:18px; 
+      margin-bottom:16px; 
       border:1px solid var(--border);
       border-radius:10px;
       background:var(--card);color:var(--fg);min-height:44px
@@ -65,6 +65,20 @@
     .btn.primary{background:var(--accent);color:var(--accent-ink)}
     .btn.secondary{background:#ccc}
     @media(prefers-color-scheme:dark){.btn.secondary{background:#2a2f36;color:#eee}}
+
+    /* Espace après les groupes de boutons Oui/Non */
+.pill-group {
+  margin-bottom: 16px;
+}
+
+/* Espace après les blocs conditionnels (cartes, coordonnées, liens) */
+.map-wrap,
+#lienField,
+#coordsDevice,
+#coordsAccess,
+#lienAccessField {
+  margin-bottom: 16px;
+}
   </style>
 </head>
 <body>
