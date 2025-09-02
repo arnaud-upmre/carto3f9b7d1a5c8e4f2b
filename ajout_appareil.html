@@ -12,13 +12,7 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 
-  <style>
-/* Plus d'espace entre un champ et le label SUIVANT */
-input:not([type="hidden"]),
-textarea {
-  margin-bottom: 18px;
-}
-    
+  <style>    
     .hint {
   font-size: 12px;
   color: #999;
@@ -47,8 +41,13 @@ textarea {
       border-radius:14px;box-shadow:0 2px 6px rgba(0,0,0,.15)}
     label{display:block;margin-top:12px;font-weight:600}
     input,textarea{
-      width:100%;padding:12px;font-size:16px;margin-top:6px;
-      border:1px solid var(--border);border-radius:10px;
+      width:100%;
+      padding:12px;
+      font-size:16px;
+      margin-top:6px;
+      margin-bottom:18px; 
+      border:1px solid var(--border);
+      border-radius:10px;
       background:var(--card);color:var(--fg);min-height:44px
     }
     textarea{min-height:96px;resize:none;overflow:auto}
