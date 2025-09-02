@@ -232,7 +232,7 @@
     function ensureMap(mapId,btnToggle,btnRecenter,lat,lon){
       let map,marker;
       map = L.map(mapId).setView([lat,lon],18);
-
+      setTimeout(() => map.invalidateSize(), 300);
       const esri = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}");
       const osm  = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png");
 
