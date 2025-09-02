@@ -13,7 +13,20 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 
   <style>
+/* Uniformiser l’espacement entre tous les champs */
+form > div {
+  margin-top: 0;       /* annule les marges parasites */
+  margin-bottom: 0;    /* idem */
+}
 
+#lienField,
+#coordsDevice,
+#coordsAccess,
+#lienAccessField,
+.map-wrap {
+  margin-top: 18px;    /* même espacement que les autres champs */
+}
+    
     /* ======= Tes styles existants ======= */
     form {
       display: flex;
