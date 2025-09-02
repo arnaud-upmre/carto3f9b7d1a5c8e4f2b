@@ -51,25 +51,44 @@
     .pill{flex:1;text-align:center;padding:12px;border:1px solid var(--border);
       border-radius:999px;cursor:pointer;user-select:none}
     .pill.active{background:var(--accent);color:var(--accent-ink)}
+    .pill.active{background:var(--accent);color:var(--accent-ink)}
+
+.pill:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
     .map-wrap{display:none;margin-top:12px;border:1px solid var(--border);
       border-radius:10px;overflow:hidden}
     #mapAccess,#mapPoste{height:300px;width:100%}
     .map-toolbar{display:flex;gap:8px;padding:6px;background:var(--card)}
     .map-toolbar button{flex:1;padding:8px;border-radius:8px;border:1px solid var(--border);cursor:pointer}
     .btn-row{display:flex;gap:12px;margin-top:18px}
+    #coordsAccess,
+#lienAccessField,
+#coordsPoste,
+#lienPosteField {
+  margin-top: 12px;
+}
     .btn{flex:1;padding:12px;font-size:16px;border:none;border-radius:10px;cursor:pointer}
     .btn.primary{background:var(--accent);color:var(--accent-ink)}
     .btn.secondary{background:#ccc}
     @media(prefers-color-scheme:dark){.btn.secondary{background:#2a2f36;color:#eee}}
+
+    /* Champs en erreur */
+input.error, textarea.error {
+  border: 2px solid red !important;
+  background: #ffecec;
+}
+    
   </style>
 </head>
 <body>
   <h2>➕ Ajouter un poste</h2>
 
   <div class="card">
-    <form id="formPoste">
+<form id="formPoste" novalidate>
       <label>Votre nom</label>
-      <input id="demandeur" required>
+  <input id="demandeur" required autofocus>
 
       <label>Poste</label>
       <input id="nomPoste" placeholder="Ex : Cambrai" required>
@@ -82,21 +101,21 @@
 
       <!-- ACCÈS (prioritaire / obligatoire d'une manière ou d'une autre) -->
       <label>Souhaitez-vous géolocaliser l’accès ?</label>
-      <div class="hint">Déplacez le curseur pour ajuster la position de l’accès.</div>
       <div class="pill-group">
-        <div class="pill" id="pill-acc-oui" data-value="oui">Oui</div>
-        <div class="pill" id="pill-acc-non" data-value="non">Non</div>
+      <div class="pill" id="pill-acc-oui" data-value="oui" tabindex="0" role="button" aria-pressed="false">Oui</div>
+<div class="pill" id="pill-acc-non" data-value="non" tabindex="0" role="button" aria-pressed="false">Non</div>
       </div>
       <input type="hidden" id="presentAccess">
 
-      <!-- Carte accès si oui -->
-      <div class="map-wrap" id="mapAccessWrap">
-        <div id="mapAccess"></div>
-        <div class="map-toolbar">
-          <button type="button" id="btnRecenterAccess">📍 Localiser</button>
-          <button type="button" id="btnToggleAccess">🗺️ Plan</button>
-        </div>
-      </div>
+<!-- Carte accès si oui -->
+<div class="map-wrap" id="mapAccessWrap">
+  <div class="hint" id="hintAccess">Déplacez le curseur pour ajuster la position de l’accès.</div>
+  <div id="mapAccess"></div>
+  <div class="map-toolbar">
+    <button type="button" id="btnRecenterAccess">📍 Localiser</button>
+    <button type="button" id="btnToggleAccess">🗺️ Plan</button>
+  </div>
+</div>
       <div id="coordsAccess" style="display:none;">
         <label>Latitude accès</label>
         <input id="latAccess" inputmode="decimal">
@@ -112,21 +131,22 @@
 
       <!-- POSTE / GUÉRITE (facultatif) -->
       <label>Souhaitez-vous géolocaliser le poste / guérite ?</label>
-      <div class="hint">Déplacez le curseur pour ajuster la position du poste.</div>
       <div class="pill-group">
-        <div class="pill" id="pill-pos-oui" data-value="oui">Oui</div>
-        <div class="pill" id="pill-pos-non" data-value="non">Non</div>
+       <div class="pill" id="pill-pos-oui" data-value="oui" tabindex="0" role="button" aria-pressed="false">Oui</div>
+<div class="pill" id="pill-pos-non" data-value="non" tabindex="0" role="button" aria-pressed="false">Non</div>
+        
       </div>
       <input type="hidden" id="presentPoste">
 
-      <!-- Carte poste si oui -->
-      <div class="map-wrap" id="mapPosteWrap">
-        <div id="mapPoste"></div>
-        <div class="map-toolbar">
-          <button type="button" id="btnRecenterPoste">📍 Localiser</button>
-          <button type="button" id="btnTogglePoste">🗺️ Plan</button>
-        </div>
-      </div>
+<!-- Carte poste si oui -->
+<div class="map-wrap" id="mapPosteWrap">
+  <div class="hint" id="hintPoste">Déplacez le curseur pour ajuster la position du poste.</div>
+  <div id="mapPoste"></div>
+  <div class="map-toolbar">
+    <button type="button" id="btnRecenterPoste">📍 Localiser</button>
+    <button type="button" id="btnTogglePoste">🗺️ Plan</button>
+  </div>
+</div>
       <div id="coordsPoste" style="display:none;">
         <label>Latitude poste / guérite</label>
         <input id="latPoste" inputmode="decimal">
@@ -239,52 +259,81 @@
     // ——— Pills ACCÈS
     $("pill-acc-oui").onclick = () => setAccess("oui");
     $("pill-acc-non").onclick = () => setAccess("non");
-    function setAccess(v){
-      $("presentAccess").value = v;
-      $("pill-acc-oui").classList.toggle("active", v==="oui");
-      $("pill-acc-non").classList.toggle("active", v==="non");
-      if(v==="oui"){
-        if(GEO_BLOCKED){ onGeoDenied("access"); return; }
-        toggle($("mapAccessWrap"), true);
-        toggle($("coordsAccess"), true);
-        toggle($("lienAccessField"), true); // on laisse visible si l'utilisateur préfère coller un lien
-        startLocAccess();
-        requestAnimationFrame(() => mapAccess && mapAccess.invalidateSize());
-      }else if(v==="non"){
-        toggle($("mapAccessWrap"), false);
-        toggle($("coordsAccess"), false);
-        toggle($("lienAccessField"), true);
-      }else{
-        toggle($("mapAccessWrap"), false);
-        toggle($("coordsAccess"), false);
-        toggle($("lienAccessField"), false);
-      }
-    }
+   function setAccess(v){
+  $("presentAccess").value = v;
+  $("pill-acc-oui").classList.toggle("active", v==="oui");
+  $("pill-acc-non").classList.toggle("active", v==="non");
+
+  if(v==="oui"){
+    if(GEO_BLOCKED){ onGeoDenied("access"); return; }
+    toggle($("mapAccessWrap"), true);
+    toggle($("coordsAccess"), true);
+    toggle($("lienAccessField"), true);
+    toggle($("hintAccess"), true);   // 👈 AJOUT
+    startLocAccess();
+    requestAnimationFrame(() => mapAccess && mapAccess.invalidateSize());
+  } else if(v==="non"){
+    toggle($("mapAccessWrap"), false);
+    toggle($("coordsAccess"), false);
+    toggle($("lienAccessField"), true);
+    toggle($("hintAccess"), false);  // 👈 AJOUT
+  } else {
+    toggle($("mapAccessWrap"), false);
+    toggle($("coordsAccess"), false);
+    toggle($("lienAccessField"), false);
+    toggle($("hintAccess"), false);  // 👈 AJOUT
+  }
+}
 
     // ——— Pills POSTE (facultatif)
     $("pill-pos-oui").onclick = () => setPoste("oui");
     $("pill-pos-non").onclick = () => setPoste("non");
     function setPoste(v){
-      $("presentPoste").value = v;
-      $("pill-pos-oui").classList.toggle("active", v==="oui");
-      $("pill-pos-non").classList.toggle("active", v==="non");
-      if(v==="oui"){
-        if(GEO_BLOCKED){ onGeoDenied("poste"); return; }
-        toggle($("mapPosteWrap"), true);
-        toggle($("coordsPoste"), true);
-        toggle($("lienPosteField"), false);
-        startLocPoste();
-        requestAnimationFrame(() => mapPoste && mapPoste.invalidateSize());
-      }else if(v==="non"){
-        toggle($("mapPosteWrap"), false);
-        toggle($("coordsPoste"), false);
-        toggle($("lienPosteField"), true);
-      }else{
-        toggle($("mapPosteWrap"), false);
-        toggle($("coordsPoste"), false);
-        toggle($("lienPosteField"), false);
-      }
+  $("presentPoste").value = v;
+  $("pill-pos-oui").classList.toggle("active", v==="oui");
+  $("pill-pos-non").classList.toggle("active", v==="non");
+
+  if(v==="oui"){
+    if(GEO_BLOCKED){ onGeoDenied("poste"); return; }
+    toggle($("mapPosteWrap"), true);
+    toggle($("coordsPoste"), true);
+    toggle($("lienPosteField"), false);
+    toggle($("hintPoste"), true);   // 👈 AJOUT
+    startLocPoste();
+    requestAnimationFrame(() => mapPoste && mapPoste.invalidateSize());
+  } else if(v==="non"){
+    toggle($("mapPosteWrap"), false);
+    toggle($("coordsPoste"), false);
+    toggle($("lienPosteField"), true);
+    toggle($("hintPoste"), false);  // 👈 AJOUT
+  } else {
+    toggle($("mapPosteWrap"), false);
+    toggle($("coordsPoste"), false);
+    toggle($("lienPosteField"), false);
+    toggle($("hintPoste"), false);  // 👈 AJOUT
+  }
+}
+    // --- Accessibilité : gestion clavier et aria-pressed pour les pills ---
+["pill-acc-oui","pill-acc-non","pill-pos-oui","pill-pos-non"].forEach(id=>{
+  const el = $(id);
+  if(!el) return;
+
+  // Active la pill au clavier
+  el.addEventListener("keydown", e=>{
+    if(e.key === "Enter" || e.key === " "){
+      e.preventDefault();
+      el.click(); // simule un clic
     }
+  });
+
+  // Mets à jour aria-pressed selon état actif
+  el.addEventListener("click", ()=>{
+    const group = el.parentNode.querySelectorAll(".pill");
+    group.forEach(p => 
+      p.setAttribute("aria-pressed", p.classList.contains("active") ? "true" : "false")
+    );
+  });
+});
 
     // ——— Cartes (aligné sur la page "appareil")
     function ensureMap(mapId, btnToggle, btnRecenter, lat, lon){
@@ -403,16 +452,31 @@
       const pkLigne     = $("pkLigne").value.trim();
       const notes       = $("notes").value.trim();
 
-      if(!demandeur || !nomPoste){
-        alert("⚠️ Merci de renseigner votre nom et le nom du poste.");
-        return;
-      }
+ // Réinitialise l'état erreur
+["demandeur","nomPoste"].forEach(id => $(id).classList.remove("error"));
+
+let missing = [];
+if (!demandeur) { missing.push("Votre nom"); $("demandeur").classList.add("error"); }
+if (!nomPoste)  { missing.push("Nom du poste"); $("nomPoste").classList.add("error"); }
+
+if (missing.length > 0) {
+  alert("⚠️ Merci de renseigner les champs obligatoires :\n" + missing.join(" / "));
+  requestAnimationFrame(() => {
+    const premierChamp = document.querySelector("input.error, textarea.error");
+    if (premierChamp) {
+      premierChamp.focus({ preventScroll: true });
+      premierChamp.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  });
+  return;
+}
 
       // ACCÈS : choix obligatoire + donnée obligatoire (coords OU lien)
-      if(!$("presentAccess").value){
-        alert("⚠️ Merci d’indiquer si vous souhaitez géolocaliser l’accès (Oui / Non).");
-        return;
-      }
+    if(!$("presentAccess").value){
+  alert("⚠️ Merci d’indiquer si vous souhaitez géolocaliser l’accès (Oui / Non).");
+  requestAnimationFrame(() => $("pill-acc-oui")?.focus());
+  return;
+}
 
       let accesStr = "";
       if($("presentAccess").value === "oui"){
@@ -486,6 +550,26 @@
         $("demandeur").value = savedName;
       }
     };
-  </script>
+
+// Supprimer automatiquement le rouge quand on corrige un champ
+document.addEventListener("DOMContentLoaded", () => {
+  ["demandeur","nomPoste"]
+    .forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener("input", () => el.classList.remove("error"));
+    });
+});
+
+// Normalisation automatique des coordonnées : virgule → point
+["latAccess","lonAccess","latPoste","lonPoste"].forEach(id=>{
+  const el = $(id);
+  if (!el) return;
+  el.addEventListener("input", ()=>{
+    if (el.value.includes(",")) {
+      el.value = el.value.replace(",",".");
+    }
+  });
+});
+</script>
 </body>
 </html>
