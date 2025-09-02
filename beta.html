@@ -234,9 +234,7 @@ label + .hint,
   display: flex;
   flex-direction: column;
 }
-    @media (max-width: 520px) {
-  .coord-row { flex-direction: column; gap: 8px; }
-}
+   
   </style>
 </head>
 <body>
@@ -307,7 +305,7 @@ label + .hint,
   </div>
 </div>
       
- <div id="coordsAccess" style="display:none;" class="coord-row">
+<div id="coordsAccess" style="display:none;" class="coord-row">
   <div>
     <label>Latitude</label>
     <input id="latAccess">
@@ -316,7 +314,7 @@ label + .hint,
     <label>Longitude</label>
     <input id="lonAccess">
   </div>
-</div> <!-- ✅ fermeture manquante ajoutée ici -->
+</div>
 
 <div id="lienAccessField" style="display:none;">
   <label>Lien Google Maps de l’accès (optionnel)</label>
