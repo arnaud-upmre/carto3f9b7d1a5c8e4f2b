@@ -28,11 +28,22 @@ form > div {
 }
     
     /* ======= Tes styles existants ======= */
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 18px; /* espace vertical entre les champs */
-    }
+  form {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Règle l’espacement toi-même */
+label {
+  margin-top: 16px;   /* espace AVANT un label = séparation avec le champ précédent */
+  margin-bottom: 2px; /* espace APRÈS un label = collé au champ */
+  font-weight: 600;
+}
+
+input,
+textarea {
+  margin: 0;          /* pas d’espace parasite */
+}
 
     .hint {
       font-size: 12px;
@@ -60,12 +71,7 @@ form > div {
     h2{text-align:center;margin:0 0 12px}
     .card{max-width:640px;margin:auto;background:var(--card);padding:16px;
       border-radius:14px;box-shadow:0 2px 6px rgba(0,0,0,.15)}
-label {
-  display: block;
-  margin-top: 18px;   /* espace AVANT un label (sépare du champ précédent) */
-  margin-bottom: 0px; /* espace APRÈS un label (rapproche du champ suivant) */
-  font-weight: 600;
-}
+
     input, textarea {
   margin-top: 0px;   /* réduit l’espace entre le label et le champ */
 }
@@ -102,7 +108,7 @@ label {
 
     /* ======= Overrides FLAT DESIGN (visuel uniquement) ======= */
     /* Rythme & label ↔ champ */
-    form { gap: 18px; }
+   form { gap: 0; }
   
 
     /* Champs flat, focus propre */
