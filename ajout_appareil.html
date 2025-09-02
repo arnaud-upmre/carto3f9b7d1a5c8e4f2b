@@ -12,7 +12,15 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 
-  <style>.hint {
+  <style>
+    form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px; /* espace vertical entre les champs */
+}
+    
+    
+    .hint {
   font-size: 12px;
   color: #999;
   font-style: italic;
@@ -66,7 +74,7 @@
 
   <div class="card">
     <form id="formAppareil">
-      <label>Votre nom</label>
+      <label>Demandeur</label>
       <input id="demandeur" required>
 
       <label>Poste</label>
