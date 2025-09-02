@@ -13,6 +13,13 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 
   <style>    
+
+    /* Champs en erreur */
+input.error, textarea.error {
+  border: 2px solid red !important;
+  background: #ffecec;
+}
+    
  .hint {
   font-size: 12px;
   color: #999;
@@ -489,10 +496,19 @@ if (demandeur) {
       let poste=$("poste").value.trim();
       let appareil=$("appareil").value.trim();
       let infos=$("infos").value.trim();
-      if(!demandeur||!poste||!appareil){
-        alert("⚠️ Merci de renseigner tous les champs obligatoires.");
-        return;
-      }
+     // Réinitialise l'état erreur
+["demandeur","poste","appareil"].forEach(id => $(id).classList.remove("error"));
+
+let missing = [];
+if (!demandeur) { missing.push("Demandeur"); $("demandeur").classList.add("error"); }
+if (!poste)     { missing.push("Poste"); $("poste").classList.add("error"); }
+if (!appareil)  { missing.push("Nom de l’appareil"); $("appareil").classList.add("error"); }
+
+if (missing.length > 0) {
+  alert("⚠️ Merci de renseigner tous les champs obligatoires :\n" + missing.join(" / "));
+  return;
+}
+
 
       // Q1 obligatoire : géolocaliser OU fournir un lien
       if(!$("presentValue").value){
