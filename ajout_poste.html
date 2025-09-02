@@ -14,11 +14,11 @@
 
   <style>
     .hint {
-  font-size: 13px;
-  color: #777;       /* gris plus clair */
-  font-style: italic;
-  margin-top: 4px;
-}
+      font-size: 13px;
+      color: #777;       /* gris plus clair */
+      font-style: italic;
+      margin-top: 4px;
+    }
     *,*::before,*::after{box-sizing:border-box}
     html{-webkit-text-size-adjust:100%}
     body{
@@ -77,15 +77,15 @@
       <input id="typePoste" placeholder="Ex : SP, SSP, PRCI, L…">
 
       <label>SAT associé (optionnel)</label>
-<input id="sat" placeholder="Si SAT, précisez, ex : SAT1, SAT2…">
+      <input id="sat" placeholder="Si SAT, précisez, ex : SAT1, SAT2…">
 
       <!-- ACCÈS (prioritaire / obligatoire d'une manière ou d'une autre) -->
-<label>Souhaitez-vous géolocaliser l’accès ?</label>
-<div class="hint">Déplacez le curseur pour ajuster la position de l’accès.</div>
-<div class="pill-group">
-  <div class="pill" id="pill-acc-oui" data-value="oui">Oui</div>
-  <div class="pill" id="pill-acc-non" data-value="non">Non</div>
-</div>
+      <label>Souhaitez-vous géolocaliser l’accès ?</label>
+      <div class="hint">Déplacez le curseur pour ajuster la position de l’accès.</div>
+      <div class="pill-group">
+        <div class="pill" id="pill-acc-oui" data-value="oui">Oui</div>
+        <div class="pill" id="pill-acc-non" data-value="non">Non</div>
+      </div>
       <input type="hidden" id="presentAccess">
 
       <!-- Carte accès si oui -->
@@ -110,12 +110,12 @@
       </div>
 
       <!-- POSTE / GUÉRITE (facultatif) -->
-<label>Souhaitez-vous géolocaliser le poste / guérite ?</label>
-<div class="hint">Déplacez le curseur pour ajuster la position du poste.</div>
-<div class="pill-group">
-  <div class="pill" id="pill-pos-oui" data-value="oui">Oui</div>
-  <div class="pill" id="pill-pos-non" data-value="non">Non</div>
-</div>
+      <label>Souhaitez-vous géolocaliser le poste / guérite ?</label>
+      <div class="hint">Déplacez le curseur pour ajuster la position du poste.</div>
+      <div class="pill-group">
+        <div class="pill" id="pill-pos-oui" data-value="oui">Oui</div>
+        <div class="pill" id="pill-pos-non" data-value="non">Non</div>
+      </div>
       <input type="hidden" id="presentPoste">
 
       <!-- Carte poste si oui -->
@@ -154,22 +154,24 @@
   </div>
 
   <script>
-      // --- Préremplissage depuis l'URL (?nom=...)
-  (function () {
-    const q = new URLSearchParams(location.search).get("nom");
-    if (q) document.getElementById("nomPoste").value = q;  // reste éditable
-  })();
+    // --- Préremplissage depuis l'URL (?nom=...)
+    (function () {
+      const q = new URLSearchParams(location.search).get("nom");
+      if (q) document.getElementById("nomPoste").value = q;  // reste éditable
+    })();
+
     // --- Préremplissage du nom du demandeur depuis le localStorage ---
-(function prefillName() {
-  const savedName = localStorage.getItem("nom_demandeur");
-  if (savedName) {
-    document.getElementById("demandeur").value = savedName;
-  }
-})();
+    (function prefillName() {
+      const savedName = localStorage.getItem("nom_demandeur");
+      if (savedName) {
+        document.getElementById("demandeur").value = savedName;
+      }
+    })();
+
     const DEST_EMAIL = "arnaud.debaecker@sncf.fr";
     const COUNTER_URL = "https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec";
 
-let mapAccess, mapPoste, markerAccess, markerPoste;
+    let mapAccess, mapPoste, markerAccess, markerPoste;
 
     function $(id){return document.getElementById(id);}
     function toggle(el,show){el.style.display = show ? "block" : "none";}
@@ -180,6 +182,59 @@ let mapAccess, mapPoste, markerAccess, markerPoste;
     }
     function isValidUrl(str){return /^https?:\/\/.+/i.test((str||"").trim());}
 
+    // ▼▼▼ AJOUTS POUR AMÉLIORATION LOCALISATION (identiques à "appareil") ▼▼▼
+    const HAZE = [50.72454, 2.54311];
+    let lastFix = null;
+    let GEO_BLOCKED = false;
+    const GEO_OPTS = { enableHighAccuracy: true, timeout: 7000, maximumAge: 15000 };
+
+    function setMapTo(map, marker, lat, lon, kind){
+      if(!map || !marker) return;
+      map.setView([lat, lon], 18);
+      marker.setLatLng([lat, lon]);
+      if(kind === "access"){ $("latAccess").value = lat; $("lonAccess").value = lon; }
+      else if(kind === "poste"){ $("latPoste").value = lat; $("lonPoste").value = lon; }
+    }
+
+    function applyFix(lat, lon){
+      lastFix = { lat, lon, ts: Date.now() };
+      if(mapAccess && markerAccess) setMapTo(mapAccess, markerAccess, lat, lon, "access");
+      if(mapPoste && markerPoste) setMapTo(mapPoste, markerPoste, lat, lon, "poste");
+    }
+
+    function onGeoDenied(target){
+      GEO_BLOCKED = true;
+      if(target === "access"){
+        $("presentAccess").value = "non";
+        $("pill-acc-oui").classList.remove("active");
+        $("pill-acc-non").classList.add("active");
+        toggle($("mapAccessWrap"), 0);
+        toggle($("coordsAccess"), 0);
+        toggle($("lienAccessField"), 1);
+        alert("La géolocalisation est refusée. Renseignez un lien Google Maps pour l’accès.");
+      } else if(target === "poste"){
+        $("presentPoste").value = "non";
+        $("pill-pos-oui").classList.remove("active");
+        $("pill-pos-non").classList.add("active");
+        toggle($("mapPosteWrap"), 0);
+        toggle($("coordsPoste"), 0);
+        toggle($("lienPosteField"), 1);
+        alert("La géolocalisation est refusée. Vous pouvez fournir un lien Google Maps pour le poste (facultatif).");
+      }
+    }
+
+    // Pré-récupération de la position au chargement
+    document.addEventListener("DOMContentLoaded", () => {
+      if(navigator.geolocation){
+        navigator.geolocation.getCurrentPosition(
+          p => applyFix(p.coords.latitude, p.coords.longitude),
+          err => { if(err && err.code === 1) { GEO_BLOCKED = true; } },
+          GEO_OPTS
+        );
+      }
+    });
+    // ▲▲▲ FIN AJOUTS ▲▲▲
+
     // ——— Pills ACCÈS
     $("pill-acc-oui").onclick = () => setAccess("oui");
     $("pill-acc-non").onclick = () => setAccess("non");
@@ -188,9 +243,10 @@ let mapAccess, mapPoste, markerAccess, markerPoste;
       $("pill-acc-oui").classList.toggle("active", v==="oui");
       $("pill-acc-non").classList.toggle("active", v==="non");
       if(v==="oui"){
+        if(GEO_BLOCKED){ onGeoDenied("access"); return; }
         toggle($("mapAccessWrap"), true);
         toggle($("coordsAccess"), true);
-        toggle($("lienAccessField"), false);
+        toggle($("lienAccessField"), true); // on laisse visible si l'utilisateur préfère coller un lien
         startLocAccess();
       }else if(v==="non"){
         toggle($("mapAccessWrap"), false);
@@ -211,6 +267,7 @@ let mapAccess, mapPoste, markerAccess, markerPoste;
       $("pill-pos-oui").classList.toggle("active", v==="oui");
       $("pill-pos-non").classList.toggle("active", v==="non");
       if(v==="oui"){
+        if(GEO_BLOCKED){ onGeoDenied("poste"); return; }
         toggle($("mapPosteWrap"), true);
         toggle($("coordsPoste"), true);
         toggle($("lienPosteField"), false);
@@ -226,77 +283,105 @@ let mapAccess, mapPoste, markerAccess, markerPoste;
       }
     }
 
-// ——— Cartes
-function ensureMap(mapId, btnToggle, btnRecenter, lat, lon, kind){
-  const map = L.map(mapId).setView([lat, lon], 18);
-  setTimeout(() => map.invalidateSize(), 300);
-  const esri = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}");
-  const osm  = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png");
+    // ——— Cartes (aligné sur la page "appareil")
+    function ensureMap(mapId, btnToggle, btnRecenter, lat, lon){
+      let map, marker;
+      map = L.map(mapId).setView(HAZE, 18);  // Hazebrouck par défaut
+      setTimeout(() => map.invalidateSize(), 300);
 
-  // Par défaut on démarre en satellite
-  esri.addTo(map);
+      const esri = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}");
+      const osm  = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png");
 
-  const marker = L.marker([lat,lon], {draggable:true}).addTo(map);
+      // Par défaut on démarre en OSM (plan rapide)
+      osm.addTo(map);
 
-  marker.on("dragend", ()=>{
-    const p = marker.getLatLng();
-    if(kind==="access"){ $("latAccess").value=p.lat; $("lonAccess").value=p.lng; }
-    else{ $("latPoste").value=p.lat; $("lonPoste").value=p.lng; }
-  });
+      // On est en mode "plan" au départ
+      let isSat = false;
+      $(btnToggle).textContent = "🛰️ Satellite"; // propose de passer en satellite
 
-  // Chaque carte garde son propre état plan/satellite
-  let isSat = true;
-  $(btnToggle).onclick = ()=>{
-    isSat = !isSat;
-    if(isSat){
-      map.removeLayer(osm); esri.addTo(map);
-      $(btnToggle).textContent="🗺️ Plan";
-    }else{
-      map.removeLayer(esri); osm.addTo(map);
-      $(btnToggle).textContent="🛰️ Satellite";
-    }
-  };
+      // point de départ : dernier fix si dispo, sinon paramètres passés
+      const startLat = (lastFix ? lastFix.lat : lat);
+      const startLon = (lastFix ? lastFix.lon : lon);
+      marker = L.marker([startLat, startLon], { draggable:true }).addTo(map);
 
-  $(btnRecenter).onclick = ()=>{
-    if(navigator.geolocation){
-      navigator.geolocation.getCurrentPosition(p=>{
-        map.setView([p.coords.latitude,p.coords.longitude],18);
-        marker.setLatLng([p.coords.latitude,p.coords.longitude]);
-        if(kind==="access"){ $("latAccess").value=p.coords.latitude; $("lonAccess").value=p.coords.longitude; }
-        else{ $("latPoste").value=p.coords.latitude; $("lonPoste").value=p.coords.longitude; }
+      marker.on("dragend", ()=>{
+        const p = marker.getLatLng();
+        if(mapId==="mapAccess"){
+          $("latAccess").value=p.lat; $("lonAccess").value=p.lng;
+        } else {
+          $("latPoste").value=p.lat; $("lonPoste").value=p.lng;
+        }
       });
-    }
-  };
 
-  if(kind==="access"){ mapAccess=map; markerAccess=marker; }
-  else{ mapPoste=map; markerPoste=marker; }
-}
+      $(btnToggle).onclick = () => {
+        isSat = !isSat;
+        if (isSat) {
+          if (map.hasLayer(osm)) map.removeLayer(osm);
+          esri.addTo(map);
+          $(btnToggle).textContent = "🗺️ Plan";
+        } else {
+          if (map.hasLayer(esri)) map.removeLayer(esri);
+          osm.addTo(map);
+          $(btnToggle).textContent = "🛰️ Satellite";
+        }
+      };
+
+      $(btnRecenter).onclick = ()=>{
+        const target = (mapId==="mapAccess") ? "access" : "poste";
+        if(GEO_BLOCKED){ onGeoDenied(target); return; }
+
+        // 1) applique immédiatement le dernier fix si présent
+        if (lastFix){
+          const isAccess = (mapId==="mapAccess");
+          const mapRef    = isAccess ? mapAccess   : mapPoste;
+          const markerRef = isAccess ? markerAccess: markerPoste;
+          const kind      = isAccess ? "access"    : "poste";
+          setMapTo(mapRef, markerRef, lastFix.lat, lastFix.lon, kind);
+        }
+
+        // 2) demande une position plus fraîche
+        if(navigator.geolocation){
+          navigator.geolocation.getCurrentPosition(
+            p => applyFix(p.coords.latitude, p.coords.longitude),
+            err => { if(err && err.code === 1){ onGeoDenied(target); } },
+            GEO_OPTS
+          );
+        }
+      };
+
+      if(mapId==="mapAccess"){ mapAccess=map; markerAccess=marker; }
+      else{ mapPoste=map; markerPoste=marker; }
+    }
 
     function startLocAccess(){
-      if(mapAccess) return;
+      if(GEO_BLOCKED){ onGeoDenied("access"); return; }
+      if(!mapAccess){
+        ensureMap("mapAccess","btnToggleAccess","btnRecenterAccess", HAZE[0], HAZE[1]);
+      }
+      if(lastFix) setMapTo(mapAccess, markerAccess, lastFix.lat, lastFix.lon, "access");
+
       if(navigator.geolocation){
-        navigator.geolocation.getCurrentPosition(p=>{
-          ensureMap("mapAccess","btnToggleAccess","btnRecenterAccess", p.coords.latitude, p.coords.longitude, "access");
-          $("latAccess").value=p.coords.latitude; $("lonAccess").value=p.coords.longitude;
-        }, ()=>{
-          ensureMap("mapAccess","btnToggleAccess","btnRecenterAccess", 50.62925, 3.057256, "access");
-        });
-      }else{
-        ensureMap("mapAccess","btnToggleAccess","btnRecenterAccess", 50.62925, 3.057256, "access");
+        navigator.geolocation.getCurrentPosition(
+          p => applyFix(p.coords.latitude, p.coords.longitude),
+          err => { if(err && err.code === 1) onGeoDenied("access"); },
+          GEO_OPTS
+        );
       }
     }
 
     function startLocPoste(){
-      if(mapPoste) return;
+      if(GEO_BLOCKED){ onGeoDenied("poste"); return; }
+      if(!mapPoste){
+        ensureMap("mapPoste","btnTogglePoste","btnRecenterPoste", HAZE[0], HAZE[1]);
+      }
+      if(lastFix) setMapTo(mapPoste, markerPoste, lastFix.lat, lastFix.lon, "poste");
+
       if(navigator.geolocation){
-        navigator.geolocation.getCurrentPosition(p=>{
-          ensureMap("mapPoste","btnTogglePoste","btnRecenterPoste", p.coords.latitude, p.coords.longitude, "poste");
-          $("latPoste").value=p.coords.latitude; $("lonPoste").value=p.coords.longitude;
-        }, ()=>{
-          ensureMap("mapPoste","btnTogglePoste","btnRecenterPoste", 50.62925, 3.057256, "poste");
-        });
-      }else{
-        ensureMap("mapPoste","btnTogglePoste","btnRecenterPoste", 50.62925, 3.057256, "poste");
+        navigator.geolocation.getCurrentPosition(
+          p => applyFix(p.coords.latitude, p.coords.longitude),
+          err => { if(err && err.code === 1) onGeoDenied("poste"); },
+          GEO_OPTS
+        );
       }
     }
 
@@ -306,11 +391,11 @@ function ensureMap(mapId, btnToggle, btnRecenter, lat, lon, kind){
 
       const demandeur   = $("demandeur").value.trim();
       if (demandeur) {
-  localStorage.setItem("nom_demandeur", demandeur);
-}
+        localStorage.setItem("nom_demandeur", demandeur);
+      }
       const nomPoste    = $("nomPoste").value.trim();
       const typePoste   = $("typePoste").value.trim().toUpperCase();
-     const satellite   = $("sat").value.trim().toUpperCase();
+      const satellite   = $("sat").value.trim().toUpperCase();
       const pkLigne     = $("pkLigne").value.trim();
       const notes       = $("notes").value.trim();
 
@@ -382,20 +467,20 @@ function ensureMap(mapId, btnToggle, btnRecenter, lat, lon, kind){
       // Incrément compteur contributions (identique)
       fetch(COUNTER_URL + "?increment=true").catch(()=>{});
 
-  alert("L’e-mail de contribution est généré, vérifiez et envoyez-le.");
+      alert("L’e-mail de contribution est généré, vérifiez et envoyez-le.");
 
-// Sauvegarde le nom avant reset
-const savedName = demandeur;
+      // Sauvegarde le nom avant reset
+      const savedName = demandeur;
 
-// Reset complet du formulaire
-$("formPoste").reset();
-setAccess("");
-setPoste("");
+      // Reset complet du formulaire
+      $("formPoste").reset();
+      setAccess("");
+      setPoste("");
 
-// Réinjecte le nom sauvegardé
-if (savedName) {
-  $("demandeur").value = savedName;
-}
+      // Réinjecte le nom sauvegardé
+      if (savedName) {
+        $("demandeur").value = savedName;
+      }
     };
   </script>
 </body>
