@@ -14,15 +14,6 @@
 
   <style>
 
-    /* Champs collés à leur label */
-label {
-  margin-bottom: 1px;   /* mini espace, juste pour respirer */
-}
-
-input, textarea {
-  margin-top: 0;        /* supprime le décalage inutile */
-}
-    
     /* ======= Tes styles existants ======= */
     form {
       display: flex;
@@ -56,12 +47,11 @@ input, textarea {
     h2{text-align:center;margin:0 0 12px}
     .card{max-width:640px;margin:auto;background:var(--card);padding:16px;
       border-radius:14px;box-shadow:0 2px 6px rgba(0,0,0,.15)}
-    label {
-      display: block;
-      margin-bottom: 0px;
-      margin-top: 0;
-      font-weight: 600;
-    }
+label {
+  display: block;
+  margin: 0 0 0px;   /* 2px de respiration */
+  font-weight: 600;
+}
     input,textarea {
       width: 100%;
       padding: 12px;
@@ -96,7 +86,7 @@ input, textarea {
     /* ======= Overrides FLAT DESIGN (visuel uniquement) ======= */
     /* Rythme & label ↔ champ */
     form { gap: 18px; }
-    label { margin-bottom: 5px; } /* 5px sous le label, compact mais lisible */
+  
 
     /* Champs flat, focus propre */
     input, textarea {
@@ -146,7 +136,7 @@ input, textarea {
       border: 1.5px solid #d7dbe0;
       border-radius: 12px;
       overflow: hidden;
-      margin-top: 10px; /* léger ajustement visuel */
+      margin-top: 8px; /* léger ajustement visuel */
     }
     /* height 300px conservée plus haut */
 
