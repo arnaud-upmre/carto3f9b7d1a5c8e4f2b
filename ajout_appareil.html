@@ -240,6 +240,10 @@ const osm  = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png");
 // Par défaut on démarre en OSM (plan rapide)
 osm.addTo(map);
 
+// On est en mode "plan" au départ
+let isSat = false;
+$(btnToggle).textContent = "🛰️ Satellite"; // bouton propose de passer en satellite
+
       marker = L.marker([lat,lon],{draggable:true}).addTo(map);
 
       marker.on("dragend",()=>{
@@ -253,18 +257,20 @@ osm.addTo(map);
         }
       });
 
-      // Chaque carte garde son propre état plan/satellite
-      let isSat = true;
-      $(btnToggle).onclick=()=>{
-        isSat=!isSat;
-        if(isSat){
-          map.removeLayer(osm); esri.addTo(map);
-          $(btnToggle).textContent="🗺️ Plan";
-        } else {
-          map.removeLayer(esri); osm.addTo(map);
-          $(btnToggle).textContent="🛰️ Satellite";
-        }
-      };
+  $(btnToggle).onclick = () => {
+  isSat = !isSat;
+  if (isSat) {
+    // passer en satellite
+    if (map.hasLayer(osm)) map.removeLayer(osm);
+    esri.addTo(map);
+    $(btnToggle).textContent = "🗺️ Plan";
+  } else {
+    // repasser en plan (OSM)
+    if (map.hasLayer(esri)) map.removeLayer(esri);
+    osm.addTo(map);
+    $(btnToggle).textContent = "🛰️ Satellite";
+  }
+};
 
       $(btnRecenter).onclick=()=>{
         if(navigator.geolocation){
