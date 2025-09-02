@@ -66,19 +66,19 @@
 
   <div class="card">
     <form id="formAppareil">
-      <label>Votre nom</label>
+      <label>👤 Demandeur : </label>
       <input id="demandeur" required>
 
-      <label>Poste</label>
+      <label>📌 Poste : </label>
       <input id="poste">
 
-      <label>SAT (optionnel)</label>
-<input id="sat" placeholder="Ex : SAT1, SAT2…">
+      <label>📌 SAT :</label>
+<input id="sat" placeholder="Ex : SAT1, SAT2… (optionnel)">
 
-      <label>Nom de l’appareil</label>
+      <label>💡 Nom de l’appareil : </label>
       <input id="appareil" placeholder="Ex : I7112" required>
 
-     <label>Voulez-vous géolocaliser l’appareil ?</label>
+     <label>📍 Localiser l'appareil via GPS ? </label>
 <div class="hint">Déplacez le curseur pour ajuster la position de l’appareil.</div>
 <div class="pill-group">
   <div class="pill" id="pill-oui" data-value="oui">Oui</div>
@@ -95,20 +95,20 @@
         </div>
       </div>
       <div id="coordsDevice" style="display:none;">
-        <label>Latitude de l’appareil</label>
+        <label>Latitude</label>
         <input id="latDevice">
-        <label>Longitude de l’appareil</label>
+        <label>Longitude</label>
         <input id="lonDevice">
       </div>
 
       <!-- Lien si non -->
       <div id="lienField" style="display:none;">
-        <label>Coller le lien Google Maps</label>
+        <label>🔗 Fournir manuellement le lien Google Maps :</label>
         <input id="lien" type="url" placeholder="https://maps.app.goo.gl/…">
       </div>
 
       <!-- Accès spécifique -->
-    <label>L’appareil a-t-il son propre accès ?</label>
+    <label>📍 L’appareil a un accès distinct ?</label>
 <div class="hint">Déplacez le curseur pour ajuster la position de l’accès.</div>
 <div class="pill-group">
   <div class="pill" id="pill-acces-oui" data-value="oui">Oui</div>
@@ -124,13 +124,13 @@
         </div>
       </div>
       <div id="coordsAccess" style="display:none;">
-        <label>Latitude accès</label>
+        <label>Latitude</label>
         <input id="latAccess">
-        <label>Longitude accès</label>
+        <label>Longitude</label>
         <input id="lonAccess">
       </div>
       <div id="lienAccessField" style="display:none;">
-  <label>Lien Google Maps de l’accès (optionnel)</label>
+  <label>Ou ajouter le lien Google Maps de l’accès (optionnel)</label>
   <input id="lienAccess" type="url" placeholder="https://maps.app.goo.gl/…">
   <div class="hint">Si vous indiquez « Oui » : complétez soit les coordonnées GPS de l’accès, soit un lien Google Maps valide.</div>
 </div>
