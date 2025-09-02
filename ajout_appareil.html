@@ -12,7 +12,14 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 
-  <style>.hint {
+  <style>
+/* Plus d'espace entre un champ et le label SUIVANT */
+input:not([type="hidden"]),
+textarea {
+  margin-bottom: 18px;
+}
+    
+    .hint {
   font-size: 12px;
   color: #999;
   font-style: italic;
@@ -132,7 +139,7 @@
       <div id="lienAccessField" style="display:none;">
   <label>Ou ajouter le lien Google Maps de l’accès (optionnel)</label>
   <input id="lienAccess" type="url" placeholder="https://maps.app.goo.gl/…">
-  <div class="hint">Si vous indiquez « Oui » : complétez soit les coordonnées GPS de l’accès, soit un lien Google Maps valide.</div>
+  <div class="hint">Localisation auto (lat/long) ou lien Google Maps</div>
 </div>
 
       <label>📝 Notes complémentaires</label>
