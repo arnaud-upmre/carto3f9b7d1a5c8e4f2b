@@ -200,6 +200,19 @@ label {
       .hint { color: #9aa1ab; }
       .btn.secondary { border-color: #2a2f36; }
     }
+
+    /* Supprimer l’espace entre label et champ */
+label + input,
+label + textarea {
+  margin-top: 0 !important;
+}
+
+/* Supprimer aussi l’espace des hints (si présents) */
+label + .hint,
+.hint + input,
+.hint + textarea {
+  margin-top: 2px !important; /* juste un petit souffle si tu veux */
+}
   </style>
 </head>
 <body>
