@@ -248,6 +248,7 @@
         toggle($("coordsAccess"), true);
         toggle($("lienAccessField"), true); // on laisse visible si l'utilisateur préfère coller un lien
         startLocAccess();
+        requestAnimationFrame(() => mapAccess && mapAccess.invalidateSize());
       }else if(v==="non"){
         toggle($("mapAccessWrap"), false);
         toggle($("coordsAccess"), false);
@@ -272,6 +273,7 @@
         toggle($("coordsPoste"), true);
         toggle($("lienPosteField"), false);
         startLocPoste();
+        requestAnimationFrame(() => mapPoste && mapPoste.invalidateSize());
       }else if(v==="non"){
         toggle($("mapPosteWrap"), false);
         toggle($("coordsPoste"), false);
@@ -324,6 +326,7 @@
           osm.addTo(map);
           $(btnToggle).textContent = "🛰️ Satellite";
         }
+        requestAnimationFrame(() => map.invalidateSize());
       };
 
       $(btnRecenter).onclick = ()=>{
