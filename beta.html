@@ -113,7 +113,7 @@ label {
     }
 
     /* Segmented Oui/Non – flat */
-    .pill-group { gap: 10px; margin-top: 2px; }
+    .pill-group { gap: 10px; margin-top: 0px; }
     .pill {
       padding: 11px 14px;
       min-height: 42px;
@@ -206,22 +206,22 @@ label {
       <label>💡 Nom de l’appareil</label>
       <input id="appareil" placeholder="Ex : I7112" required>
 
-      <label>📍Localiser l’appareil via GPS ?</label>
-      <div class="hint">Déplacez le curseur pour ajuster la position de l’appareil.</div>
-      <div class="pill-group">
-        <div class="pill" id="pill-oui" data-value="oui">Oui</div>
-        <div class="pill" id="pill-non" data-value="non">Non</div>
-      </div>
+ <label>📍Localiser l’appareil via GPS ?</label>
+<div class="pill-group">
+  <div class="pill" id="pill-oui" data-value="oui">Oui</div>
+  <div class="pill" id="pill-non" data-value="non">Non</div>
+</div>
       <input type="hidden" id="presentValue">
 
       <!-- Carte si oui -->
-      <div class="map-wrap" id="mapDeviceWrap">
-        <div id="mapDevice"></div>
-        <div class="map-toolbar">
-          <button type="button" id="btnRecenterDevice">📍 Localiser</button>
-          <button type="button" id="btnToggleDevice">🗺️ Plan</button>
-        </div>
-      </div>
+    <div class="map-wrap" id="mapDeviceWrap">
+  <div id="hintDevice" class="hint">Déplacez le curseur pour ajuster la position de l’appareil.</div>
+  <div id="mapDevice"></div>
+  <div class="map-toolbar">
+    <button type="button" id="btnRecenterDevice">📍 Localiser</button>
+    <button type="button" id="btnToggleDevice">🗺️ Plan</button>
+  </div>
+</div>
       <div id="coordsDevice" style="display:none;">
         <label>Latitude de l’appareil</label>
         <input id="latDevice">
@@ -369,35 +369,25 @@ label {
 
     $("pill-oui").onclick=()=>setPill("oui");
     $("pill-non").onclick=()=>setPill("non");
-    function setPill(v){
-      $("presentValue").value=v;
-      $("pill-oui").classList.toggle("active",v==="oui");
-      $("pill-non").classList.toggle("active",v==="non");
-      if(v==="oui"){
-        if(GEO_BLOCKED){ onGeoDenied("device"); return; }
-        toggle($("mapDeviceWrap"),1);toggle($("coordsDevice"),1);toggle($("lienField"),0);startLocDevice();
-      }
-      else{toggle($("mapDeviceWrap"),0);toggle($("coordsDevice"),0);toggle($("lienField"),1);}
-    }
+ function setPill(v){
+  $("presentValue").value = v;
+  $("pill-oui").classList.toggle("active", v === "oui");
+  $("pill-non").classList.toggle("active", v === "non");
 
-    $("pill-acces-oui").onclick=()=>setAccess("oui");
-    $("pill-acces-non").onclick=()=>setAccess("non");
-    function setAccess(v){
-      $("accessValue").value=v;
-      $("pill-acces-oui").classList.toggle("active",v==="oui");
-      $("pill-acces-non").classList.toggle("active",v==="non");
-      if(v==="oui"){
-        if(GEO_BLOCKED){ onGeoDenied("access"); return; }
-        toggle($("mapAccessWrap"),1);
-        toggle($("coordsAccess"),1);
-        toggle($("lienAccessField"),1);
-        startLocAccess();
-      } else {
-        toggle($("mapAccessWrap"),0);
-        toggle($("coordsAccess"),0);
-        toggle($("lienAccessField"),0);
-      }
-    }
+  if (v === "oui") {
+    if (GEO_BLOCKED){ onGeoDenied("device"); return; }
+    toggle($("mapDeviceWrap"), 1);
+    $("hintDevice").style.display = "block";   // <-- afficher le texte
+    toggle($("coordsDevice"), 1);
+    toggle($("lienField"), 0);
+    startLocDevice();
+  } else {
+    toggle($("mapDeviceWrap"), 0);
+    $("hintDevice").style.display = "none";    // <-- cacher le texte
+    toggle($("coordsDevice"), 0);
+    toggle($("lienField"), 1);
+  }
+}
 
     function ensureMap(mapId,btnToggle,btnRecenter,lat,lon){
       let map,marker;
