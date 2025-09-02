@@ -238,7 +238,12 @@ label + .hint,
   flex-direction: column;
   min-width: 0;          /* permet de rester dans le cadre sans déborder */
 }
-   
+
+    /* Forcer les inputs latitude/longitude à respecter le flex */
+.coord-row input {
+  width: auto;  /* ⚠️ change 100% en auto sinon ça déborde */
+  flex: 1;      /* prend la largeur dispo dans sa moitié */
+}
   </style>
 </head>
 <body>
