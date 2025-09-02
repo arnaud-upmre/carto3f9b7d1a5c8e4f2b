@@ -79,7 +79,6 @@
       <input id="appareil" placeholder="Ex : I7112" required>
 
      <label>📍 Localiser l'appareil via GPS ? </label>
-<div class="hint">Déplacez le curseur pour ajuster la position de l’appareil.</div>
 <div class="pill-group">
   <div class="pill" id="pill-oui" data-value="oui">Oui</div>
   <div class="pill" id="pill-non" data-value="non">Non</div>
@@ -88,6 +87,7 @@
 
       <!-- Carte si oui -->
       <div class="map-wrap" id="mapDeviceWrap">
+        <div class="hint">Déplacez le curseur pour ajuster la position de l’appareil.</div>
         <div id="mapDevice"></div>
         <div class="map-toolbar">
           <button type="button" id="btnRecenterDevice">📍 Localiser</button>
@@ -109,7 +109,6 @@
 
       <!-- Accès spécifique -->
     <label>📍 L’appareil a un accès distinct ?</label>
-<div class="hint">Déplacez le curseur pour ajuster la position de l’accès.</div>
 <div class="pill-group">
   <div class="pill" id="pill-acces-oui" data-value="oui">Oui</div>
   <div class="pill" id="pill-acces-non" data-value="non">Non</div>
@@ -117,6 +116,7 @@
       <input type="hidden" id="accessValue">
 
       <div class="map-wrap" id="mapAccessWrap">
+        <div class="hint">Déplacez le curseur pour ajuster la position de l’accès.</div>
         <div id="mapAccess"></div>
         <div class="map-toolbar">
           <button type="button" id="btnRecenterAccess">📍 Localiser</button>
@@ -135,7 +135,7 @@
   <div class="hint">Si vous indiquez « Oui » : complétez soit les coordonnées GPS de l’accès, soit un lien Google Maps valide.</div>
 </div>
 
-      <label>Notes complémentaires</label>
+      <label>📝 Notes complémentaires</label>
       <textarea id="infos" placeholder="Indiquez un repère ou une info utile (accès, portail, etc.)"></textarea>
 
       <div class="btn-row">
