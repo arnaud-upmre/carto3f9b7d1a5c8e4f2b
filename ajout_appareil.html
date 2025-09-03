@@ -295,13 +295,13 @@ function showDeviceLink(){
 
 function showAccessGPS(){
   toggle($("mapAccessWrap"),1);
-  toggle($("coordsAccess"),1);
+  toggle($("coordsAccessDisplay"),1);  // ✅ bon ID
   toggle($("lienAccessField"),0);
 }
 
 function showAccessLink(){
   toggle($("mapAccessWrap"),0);
-  toggle($("coordsAccess"),0);
+  toggle($("coordsAccessDisplay"),0);  // ✅ bon ID
   toggle($("lienAccessField"),1);
 }
 
