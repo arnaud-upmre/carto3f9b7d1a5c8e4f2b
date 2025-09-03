@@ -173,23 +173,35 @@
   </div>
 
   <script>
-    let currentStep=0;
-    const totalSteps=7;
-    function updateProgress(){
-      document.getElementById("progressBar").style.width=((currentStep)/totalSteps*100)+"%";
-    }
-    function showStep(n){
-      document.querySelectorAll(".step").forEach(s=>s.classList.remove("active"));
-      document.getElementById("step"+n).classList.add("active");
-      currentStep=n;
-      updateProgress();
-    }
-    function nextStep(){
-      if(currentStep<totalSteps){ showStep(currentStep+1); }
-    }
-    function prevStep(){
-      if(currentStep>0){ showStep(currentStep-1); }
-    }
+ let currentStep = 0;
+const totalSteps = 7; // step0 → step7 inclus
+
+function updateProgress() {
+  document.getElementById("progressBar").style.width =
+    (currentStep / totalSteps * 100) + "%";
+}
+
+function showStep(n) {
+  document.querySelectorAll(".step").forEach(s => s.classList.remove("active"));
+  const stepEl = document.getElementById("step" + n);
+  if (stepEl) {
+    stepEl.classList.add("active");
+    currentStep = n;
+    updateProgress();
+  }
+}
+
+function nextStep() {
+  if (currentStep < totalSteps) {
+    showStep(currentStep + 1);
+  }
+}
+
+function prevStep() {
+  if (currentStep > 0) {
+    showStep(currentStep - 1);
+  }
+}
 
     // pill gps
     function setPill(v){
