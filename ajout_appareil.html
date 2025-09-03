@@ -606,8 +606,7 @@ ${coordAcces ? `Accès spécifique : ${coordAcces}\n` : ""}Notes : ${infos}
 Cordialement,
 ${demandeur}`;
 
-         // 🔄 Envoi vers Google Sheets
-      alert("⏳ Envoi en cours…");
+
 
 const formData = new URLSearchParams();
 formData.append("demandeur", demandeur);
@@ -618,19 +617,23 @@ formData.append("localisation", coordAppareil);
 formData.append("acces", coordAcces);
 formData.append("notes", infos);
       
+
+      // 🔄 Envoi vers Google Sheets (non bloquant avec bouton)
+const submitBtn = document.querySelector('.btn.primary');
+const oldLabel = submitBtn.textContent;
+submitBtn.disabled = true;
+submitBtn.textContent = "⏳ Envoi en cours…";
+
 fetch("https://script.google.com/macros/s/AKfycbz8lUhVMKOrRSdeNBeA0p4ZsQCNOesB0Y4DL27KAoHkHWS78hOqrW-t-9bC_azgN-mY/exec", {
   method: "POST",
   body: formData
 })
-.then(res => {
-  console.log("👉 Status HTTP :", res.status);
-  return res.text();
-})
+.then(res => res.text())
 .then((txt) => {
   console.log("👉 Réponse brute du script :", txt);
 
-  // Incrément compteur contributions
-  fetch(COUNTER_URL+"?increment=true").catch(()=>{});
+  // Incrément compteur contributions (non bloquant)
+  fetch(COUNTER_URL + "?increment=true").catch(()=>{});
 
   alert("✅ Merci ! Votre demande a bien été envoyée. L’appareil sera ajouté dans un délai maximum de 48h.");
 
@@ -642,15 +645,16 @@ fetch("https://script.google.com/macros/s/AKfycbz8lUhVMKOrRSdeNBeA0p4ZsQCNOesB0Y
   resetConditionnels();
 
   // Réinjecte le nom sauvegardé
-  if (savedName) {
-    $("demandeur").value = savedName;
-  }
+  if (savedName) $("demandeur").value = savedName;
 })
 .catch((err) => {
   console.error("👉 Erreur attrapée :", err);
   alert("⚠️ Erreur d’envoi : " + (err && err.message ? err.message : "réseau/serveur"));
+})
+.finally(() => {
+  submitBtn.disabled = false;
+  submitBtn.textContent = oldLabel;
 });
-      
     };
 
     // Supprimer automatiquement le rouge quand on corrige un champ
