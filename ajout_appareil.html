@@ -147,8 +147,6 @@ textarea { min-height: 96px; resize: none; overflow: auto; }
 /* Espace après les blocs conditionnels (cartes, coordonnées, liens) */
 .map-wrap,
 #lienField,
-#coordsDeviceWrap,
-#coordsAccess,
 #lienAccessField {
   margin-bottom: 16px;
 }
@@ -295,7 +293,7 @@ function showDeviceLink(){
 
 function showAccessGPS(){
   toggle($("mapAccessWrap"),1);
-  toggle($("coordsAccessDisplay"),1);  // ✅ bon ID
+toggle($("coordsAccessDisplay"),1);
   toggle($("lienAccessField"),0);
 }
 
@@ -330,11 +328,13 @@ if (kind === "device") {
   $("coordsDeviceText").textContent = `${la}, ${lo}`;
   $("coordsDeviceDisplay").style.display = "block";
 }
-   else if(kind === "access"){ 
+  
+else if(kind === "access"){ 
   const la = Number(lat).toFixed(6), lo = Number(lon).toFixed(6);
   $("coordsAccessText").textContent = `${la}, ${lo}`;
   $("coordsAccessDisplay").style.display = "block";
-
+}  
+      
     function applyFix(lat, lon){
       lastFix = { lat, lon, ts: Date.now() };
       if(mapDevice && markerDevice) setMapTo(mapDevice, markerDevice, lat, lon, "device");
