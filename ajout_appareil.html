@@ -606,25 +606,46 @@ ${coordAcces ? `Accès spécifique : ${coordAcces}\n` : ""}Notes : ${infos}
 Cordialement,
 ${demandeur}`;
 
-      // Envoi mail (encodage complet du body)
-      location.href = `mailto:${DEST_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyText)}`;
+         // 🔄 Envoi vers Google Sheets
+      alert("⏳ Envoi en cours…");
 
-      // Incrément compteur contributions
-      fetch(COUNTER_URL+"?increment=true").catch(()=>{});
+      fetch("https://script.google.com/macros/s/AKfycbxzC2V6XFj7ExehXO1_rEWBiVE4LoqVjUW9-PbHfbxjKCaZYG99oAcqyAOwoJ-0MwUPZQ/exec", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          demandeur: demandeur,
+          poste: poste,
+          sat: $("sat").value.trim(),
+          appareil: appareil,
+          localisation: coordAppareil,
+          acces: coordAcces,
+          notes: infos
+        })
+      })
+      .then(res => res.json())
+      .then(() => {
+        // Incrément compteur contributions
+        fetch(COUNTER_URL+"?increment=true").catch(()=>{});
 
-      alert("L’e-mail de contribution est généré, vérifiez et envoyez-le.");
+        alert("✅ Merci ! Votre demande a bien été envoyée. L’appareil sera ajouté dans un délai maximum de 48h.");
 
-      // Sauvegarde le nom avant reset
-      const savedName = demandeur;
+        // Sauvegarde le nom avant reset
+        const savedName = demandeur;
 
-      // Reset complet du formulaire
-      $("formAppareil").reset();
-      resetConditionnels();
+        // Reset complet du formulaire
+        $("formAppareil").reset();
+        resetConditionnels();
 
-      // Réinjecte le nom sauvegardé
-      if (savedName) {
-        $("demandeur").value = savedName;
-      }
+        // Réinjecte le nom sauvegardé
+        if (savedName) {
+          $("demandeur").value = savedName;
+        }
+        
+      })
+      .catch(() => {
+        alert("⚠️ Une erreur est survenue, merci de réessayer ou de contacter Arnaud.");
+      });
+      
     };
 
     // Supprimer automatiquement le rouge quand on corrige un champ
