@@ -368,40 +368,43 @@ if (kind === "device") {
         );
       }
     });
-    // ▲▲▲ FIN AJOUTS ▲▲▲
 
-    // Pills appareil
-    $("pill-oui").onclick=()=>setPill("oui");
-    $("pill-non").onclick=()=>setPill("non");
-    function setPill(v){
-      $("presentValue").value=v;
-      $("pill-oui").classList.toggle("active",v==="oui");
-      $("pill-non").classList.toggle("active",v==="non");
-if(v==="oui"){
-  if(GEO_BLOCKED){ onGeoDenied("device"); return; }
-  showDeviceGPS();
-  startLocDevice();
-  requestAnimationFrame(() => mapDevice && mapDevice.invalidateSize());
-} else {
-  showDeviceLink();
+// Pills appareil
+$("pill-oui").onclick = () => setPill("oui");
+$("pill-non").onclick = () => setPill("non");
+
+function setPill(v){
+  $("presentValue").value = v;
+  $("pill-oui").classList.toggle("active", v === "oui");
+  $("pill-non").classList.toggle("active", v === "non");
+
+  if (v === "oui") {
+    if (GEO_BLOCKED) { onGeoDenied("device"); return; }
+    showDeviceGPS();
+    startLocDevice();
+    requestAnimationFrame(() => mapDevice && mapDevice.invalidateSize());
+  } else {
+    showDeviceLink();
+  }
 }
 
-    // Pills accès
-    $("pill-acces-oui").onclick=()=>setAccess("oui");
-    $("pill-acces-non").onclick=()=>setAccess("non");
-    function setAccess(v){
-  $("accessValue").value=v;
-  $("pill-acces-oui").classList.toggle("active",v==="oui");
-  $("pill-acces-non").classList.toggle("active",v==="non");
-if(v==="oui"){
-  if(GEO_BLOCKED){ onGeoDenied("access"); return; } 
-  showAccessGPS();
-  startLocAccess();                   
-  requestAnimationFrame(() => mapAccess && mapAccess.invalidateSize());
-} else {
-  showAccessLink();
-}
+// Pills accès
+$("pill-acces-oui").onclick = () => setAccess("oui");
+$("pill-acces-non").onclick = () => setAccess("non");
+function setAccess(v){
+  $("accessValue").value = v;
+  $("pill-acces-oui").classList.toggle("active", v === "oui");
+  $("pill-acces-non").classList.toggle("active", v === "non");
 
+  if (v === "oui") {
+    if (GEO_BLOCKED) { onGeoDenied("access"); return; }
+    showAccessGPS();
+    startLocAccess();
+    requestAnimationFrame(() => mapAccess && mapAccess.invalidateSize());
+  } else {
+    showAccessLink();
+  }
+}
     // Maps
      // Maps
     function ensureMap(mapId,btnToggle,btnRecenter,lat,lon){
