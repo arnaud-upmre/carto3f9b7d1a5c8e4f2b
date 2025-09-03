@@ -2,10 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
-  />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
   <title>➕ Ajouter un appareil</title>
 
   <!-- Leaflet -->
@@ -173,7 +170,7 @@
   </div>
 
   <script>
- let currentStep = 0;
+let currentStep = 0;
 const totalSteps = 7; // step0 → step7 inclus
 
 function updateProgress() {
@@ -203,33 +200,104 @@ function prevStep() {
   }
 }
 
-    // pill gps
-    function setPill(v){
-      document.getElementById("pill-oui").classList.toggle("active",v==="oui");
-      document.getElementById("pill-non").classList.toggle("active",v==="non");
-      if(v==="oui"){ document.getElementById("blocMap").style.display="block"; document.getElementById("blocLien").style.display="none"; }
-      else{ document.getElementById("blocMap").style.display="none"; document.getElementById("blocLien").style.display="block"; }
-    }
-    function setAccess(v){
-      document.getElementById("pill-acces-oui").classList.toggle("active",v==="oui");
-      document.getElementById("pill-acces-non").classList.toggle("active",v==="non");
-      if(v==="oui"){ document.getElementById("blocAccess").style.display="block"; }
-      else{ document.getElementById("blocAccess").style.display="none"; }
-    }
+// --- Initialisation carte appareil ---
+let mapDevice, markerDevice;
+function initMapDevice() {
+  if (mapDevice) return;
+  const defaultCenter = [50.72385, 2.54922]; // Hazebrouck
+  mapDevice = L.map("mapDevice").setView(defaultCenter, 15);
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(mapDevice);
 
-    // soumission
-    function submitForm(){
-      let demandeur=document.getElementById("demandeur").value.trim();
-      let poste=document.getElementById("poste").value.trim();
-      let appareil=document.getElementById("appareil").value.trim();
-      if(!demandeur||!poste||!appareil){alert("⚠️ Merci de remplir tous les champs obligatoires.");return;}
+  markerDevice = L.marker(defaultCenter, { draggable: true }).addTo(mapDevice);
 
-      let infos=document.getElementById("infos").value.trim();
-      let subject=`Contribution : ajout appareil ${poste}`;
-      let body=`Demandeur : ${demandeur}\nPoste : ${poste}\nSAT : ${document.getElementById("sat").value.trim()}\nAppareil : ${appareil}\nInfos : ${infos}`;
-      location.href=`mailto:arnaud.debaecker@sncf.fr?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-      alert("L’email est généré, merci de l’envoyer.");
-    }
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      p => {
+        const lat = p.coords.latitude, lon = p.coords.longitude;
+        mapDevice.setView([lat, lon], 18);
+        markerDevice.setLatLng([lat, lon]);
+      },
+      err => {
+        if (err.code === 1) {
+          alert("Géolocalisation refusée, utilisez le lien Google Maps.");
+          setPill("non");
+        }
+      },
+      { enableHighAccuracy: true, timeout: 7000, maximumAge: 15000 }
+    );
+  }
+}
+
+// --- Initialisation carte accès ---
+let mapAccess, markerAccess;
+function initMapAccess() {
+  if (mapAccess) return;
+  const defaultCenter = [50.72385, 2.54922];
+  mapAccess = L.map("mapAccess").setView(defaultCenter, 15);
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(mapAccess);
+
+  markerAccess = L.marker(defaultCenter, { draggable: true }).addTo(mapAccess);
+
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      p => {
+        const lat = p.coords.latitude, lon = p.coords.longitude;
+        mapAccess.setView([lat, lon], 18);
+        markerAccess.setLatLng([lat, lon]);
+      },
+      err => {
+        if (err.code === 1) {
+          alert("Géolocalisation refusée pour l’accès, utilisez le lien.");
+          setAccess("non");
+        }
+      },
+      { enableHighAccuracy: true, timeout: 7000, maximumAge: 15000 }
+    );
+  }
+}
+
+// pill gps
+function setPill(v){
+  document.getElementById("pill-oui").classList.toggle("active",v==="oui");
+  document.getElementById("pill-non").classList.toggle("active",v==="non");
+  if(v==="oui"){ 
+    document.getElementById("blocMap").style.display="block"; 
+    document.getElementById("blocLien").style.display="none"; 
+    initMapDevice();
+  }
+  else{ 
+    document.getElementById("blocMap").style.display="none"; 
+    document.getElementById("blocLien").style.display="block"; 
+  }
+}
+function setAccess(v){
+  document.getElementById("pill-acces-oui").classList.toggle("active",v==="oui");
+  document.getElementById("pill-acces-non").classList.toggle("active",v==="non");
+  if(v==="oui"){ 
+    document.getElementById("blocAccess").style.display="block"; 
+    initMapAccess();
+  }
+  else{ 
+    document.getElementById("blocAccess").style.display="none"; 
+  }
+}
+
+// soumission
+function submitForm(){
+  let demandeur=document.getElementById("demandeur").value.trim();
+  let poste=document.getElementById("poste").value.trim();
+  let appareil=document.getElementById("appareil").value.trim();
+  if(!demandeur||!poste||!appareil){
+    alert("⚠️ Merci de remplir tous les champs obligatoires.");
+    return;
+  }
+
+  let infos=document.getElementById("infos").value.trim();
+  let subject=`Contribution : ajout appareil ${poste}`;
+  let body=`Demandeur : ${demandeur}\nPoste : ${poste}\nSAT : ${document.getElementById("sat").value.trim()}\nAppareil : ${appareil}\nInfos : ${infos}`;
+  location.href=`mailto:arnaud.debaecker@sncf.fr?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  alert("L’email est généré, merci de l’envoyer.");
+}
   </script>
 </body>
 </html>
