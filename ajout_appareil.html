@@ -135,6 +135,14 @@ textarea { min-height: 96px; resize: none; overflow: auto; }
   .btn.secondary{ background: #2a2f36; color: #eee; }
 }
 
+    #coordsDeviceDisplay {
+  margin-top: 6px;
+  color: var(--muted);
+}
+#coordsDeviceText {
+  font-family: monospace;
+}
+
 /* Espace après les blocs conditionnels (cartes, coordonnées, liens) */
 .map-wrap,
 #lienField,
@@ -178,10 +186,11 @@ textarea { min-height: 96px; resize: none; overflow: auto; }
           <button type="button" id="btnToggleDevice">🗺️ Plan</button>
         </div>
       </div>
-<div id="coordsDeviceWrap" style="display:none;">
-    <label>📍 Coordonnées (lat, lon)</label>
-    <input id="coordsDevice" placeholder="50.72307, 2.54086">
+<div id="coordsDeviceDisplay" class="hint" style="display:none; font-family: monospace; font-size: 12px;">
+  Coordonnées relevées : <span id="coordsDeviceText">—</span>
 </div>
+<input type="hidden" id="latDevice">
+<input type="hidden" id="lonDevice">
 
       <!-- Lien si non -->
       <div id="lienField" style="display:none;">
@@ -289,9 +298,12 @@ textarea { min-height: 96px; resize: none; overflow: auto; }
       if(!map || !marker) return;
       map.setView([lat, lon], 18);
       marker.setLatLng([lat, lon]);
-     if (kind === "device") {
+if (kind === "device") {
   const la = Number(lat).toFixed(6), lo = Number(lon).toFixed(6);
-  $("coordsDevice").value = `${la}, ${lo}`;
+  $("latDevice").value = la;
+  $("lonDevice").value = lo;
+  $("coordsDeviceText").textContent = `${la}, ${lo}`;
+  $("coordsDeviceDisplay").style.display = "block";
 }
       else if(kind === "access"){ $("latAccess").value = lat; $("lonAccess").value = lon; }
     }
@@ -395,7 +407,10 @@ $(btnToggle).textContent = "🛰️ Satellite"; // bouton propose de passer en s
       marker.on("dragend",()=>{
         let p=marker.getLatLng();
       if(mapId==="mapDevice"){
-  $("coordsDevice").value = `${p.lat.toFixed(6)}, ${p.lng.toFixed(6)}`;
+ $("latDevice").value = p.lat.toFixed(6);
+$("lonDevice").value = p.lng.toFixed(6);
+$("coordsDeviceText").textContent = `${p.lat.toFixed(6)}, ${p.lng.toFixed(6)}`;
+$("coordsDeviceDisplay").style.display = "block";
 } else {
           $("latAccess").value=p.lat;
           $("lonAccess").value=p.lng;
@@ -551,24 +566,15 @@ if(!$("accessValue").value){
 }
 
       let coordAppareil="",coordAcces="";
-      if($("presentValue").value==="oui"){
+ if($("presentValue").value==="oui"){
+  let la = sanitizeCoord($("latDevice").value);
+  let lo = sanitizeCoord($("lonDevice").value);
 
-let raw = $("coordsDevice").value.trim();
-let coords = raw.split(/\s*,\s*/);
-if (coords.length !== 2) {
-  alert("⚠️ Merci de saisir les coordonnées au format : latitude, longitude");
-  return;
-}
-let la = sanitizeCoord(coords[0].trim());
-let lo = sanitizeCoord(coords[1].trim());
-
-        
-if(!isValidLatLon(la,lo)){
-  alert("⚠️ Les coordonnées GPS de l’appareil ne sont pas valides.");
-  return;
-}
-coordAppareil = la+","+lo;
-
+  if(!isValidLatLon(la,lo)){
+    alert("⚠️ Les coordonnées GPS de l’appareil ne sont pas valides.");
+    return;
+  }
+  coordAppareil = la+","+lo;
         
       }else if($("presentValue").value==="non"){
         if(!isValidUrl($("lien").value)){alert("⚠️ Merci de fournir un lien valide.");return;}
@@ -621,7 +627,7 @@ if (savedName) {
 
     // Supprimer automatiquement le rouge quand on corrige un champ
 document.addEventListener("DOMContentLoaded", () => {
-  ["demandeur","poste","appareil","coordsDevice","lien","latAccess","lonAccess","lienAccess","infos"]
+["demandeur","poste","appareil","lien","latAccess","lonAccess","lienAccess","infos"]
     .forEach(id => {
       const el = document.getElementById(id);
       if (el) el.addEventListener("input", () => el.classList.remove("error"));
