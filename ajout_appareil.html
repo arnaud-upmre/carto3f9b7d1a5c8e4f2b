@@ -281,6 +281,33 @@ textarea { min-height: 96px; resize: none; overflow: auto; }
 
     function $(id){return document.getElementById(id);}
     function toggle(el,show){el.style.display=show?"block":"none";}
+
+    // --- Fonctions utilitaires d'affichage --- //
+function showDeviceGPS(){
+  toggle($("mapDeviceWrap"),1);
+  toggle($("coordsDeviceDisplay"),1);
+  toggle($("lienField"),0);
+}
+
+function showDeviceLink(){
+  toggle($("mapDeviceWrap"),0);
+  toggle($("coordsDeviceDisplay"),0);
+  toggle($("lienField"),1);
+}
+
+function showAccessGPS(){
+  toggle($("mapAccessWrap"),1);
+  toggle($("coordsAccess"),1);
+  toggle($("lienAccessField"),0);
+}
+
+function showAccessLink(){
+  toggle($("mapAccessWrap"),0);
+  toggle($("coordsAccess"),0);
+  toggle($("lienAccessField"),1);
+}
+
+    
    function sanitizeCoord(v){return (v||"").toString().replace(",",".");}
     function isValidLatLon(lat,lon){
       const la=parseFloat(lat),lo=parseFloat(lon);
@@ -316,23 +343,19 @@ if (kind === "device") {
 
     function onGeoDenied(target){
       GEO_BLOCKED = true;
-      if(target === "device"){
-        $("presentValue").value = "non";
-        $("pill-oui").classList.remove("active");
-        $("pill-non").classList.add("active");
-        toggle($("mapDeviceWrap"), 0);
-       toggle($("coordsDeviceWrap"), 0);
-        toggle($("lienField"), 1);
-        alert("La géolocalisation est refusée. Renseignez un lien Google Maps.");
-      } else if(target === "access"){
-        $("accessValue").value = "non";
-        $("pill-acces-oui").classList.remove("active");
-        $("pill-acces-non").classList.add("active");
-        toggle($("mapAccessWrap"), 0);
-        toggle($("coordsAccess"), 0);
-        toggle($("lienAccessField"), 1);
-        alert("La géolocalisation est refusée. Renseignez un lien Google Maps pour l’accès.");
-      }
+    if(target === "device"){
+  $("presentValue").value = "non";
+  $("pill-oui").classList.remove("active");
+  $("pill-non").classList.add("active");
+  showDeviceLink();
+  alert("La géolocalisation est refusée. Renseignez un lien Google Maps.");
+} else if(target === "access"){
+  $("accessValue").value = "non";
+  $("pill-acces-oui").classList.remove("active");
+  $("pill-acces-non").classList.add("active");
+  showAccessLink();
+  alert("La géolocalisation est refusée. Renseignez un lien Google Maps pour l’accès.");
+}
     }
 
     // Pré-récupération de la position au chargement
@@ -354,12 +377,14 @@ if (kind === "device") {
       $("presentValue").value=v;
       $("pill-oui").classList.toggle("active",v==="oui");
       $("pill-non").classList.toggle("active",v==="non");
-      if(v==="oui"){
-        if(GEO_BLOCKED){ onGeoDenied("device"); return; }
-        toggle($("mapDeviceWrap"),1);toggle($("coordsDeviceWrap"),1);toggle($("lienField"),0);startLocDevice();requestAnimationFrame(() => mapDevice && mapDevice.invalidateSize());
-      }
-      else{toggle($("mapDeviceWrap"),0);toggle($("coordsDeviceWrap"),0);toggle($("lienField"),1);}
-    }
+if(v==="oui"){
+  if(GEO_BLOCKED){ onGeoDenied("device"); return; }
+  showDeviceGPS();
+  startLocDevice();
+  requestAnimationFrame(() => mapDevice && mapDevice.invalidateSize());
+} else {
+  showDeviceLink();
+}
 
     // Pills accès
     $("pill-acces-oui").onclick=()=>setAccess("oui");
@@ -368,18 +393,13 @@ if (kind === "device") {
   $("accessValue").value=v;
   $("pill-acces-oui").classList.toggle("active",v==="oui");
   $("pill-acces-non").classList.toggle("active",v==="non");
-  if(v==="oui"){
-    if(GEO_BLOCKED){ onGeoDenied("access"); return; }
-    toggle($("mapAccessWrap"),1);
-    toggle($("coordsAccess"),1);
-    toggle($("lienAccessField"),1);
-    startLocAccess();
-    requestAnimationFrame(() => mapAccess && mapAccess.invalidateSize());
-  } else {
-    toggle($("mapAccessWrap"),0);
-    toggle($("coordsAccess"),0);
-    toggle($("lienAccessField"),0);
-  }
+if(v==="oui"){
+  if(GEO_BLOCKED){ onGeoDenied("access"); return; } 
+  showAccessGPS();
+  startLocAccess();                   
+  requestAnimationFrame(() => mapAccess && mapAccess.invalidateSize());
+} else {
+  showAccessLink();
 }
 
     // Maps
@@ -511,13 +531,8 @@ function resetConditionnels(){
     .forEach(id => $(id).classList.remove("active"));
 
   // Cache tous les blocs conditionnels
-  toggle($("mapDeviceWrap"), 0);
-  toggle($("coordsDeviceWrap"), 0);
-  toggle($("lienField"), 0);
-
-  toggle($("mapAccessWrap"), 0);
-  toggle($("coordsAccess"), 0);
-  toggle($("lienAccessField"), 0);
+showDeviceLink();
+showAccessLink();
 }
     // Submit (validations harmonisées)
     $("formAppareil").onsubmit=e=>{
