@@ -219,6 +219,14 @@ const progress=document.getElementById("progress");
 function showStep(i){
   steps.forEach((s,idx)=>s.classList.toggle("active",idx===i));
   progress.textContent=`Étape ${i+1}/${steps.length}`;
+
+  // 🔧 Correction affichage cartes Leaflet
+  if(i===5 && mapDevice){ // étape 6 = index 5
+    setTimeout(()=>mapDevice.invalidateSize(),300);
+  }
+  if(i===7 && mapAccess){ // étape 8 = index 7
+    setTimeout(()=>mapAccess.invalidateSize(),300);
+  }
 }
 document.querySelectorAll(".next").forEach(btn=>{
   btn.addEventListener("click", e=>{
