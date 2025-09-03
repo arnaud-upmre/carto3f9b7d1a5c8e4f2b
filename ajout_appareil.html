@@ -622,12 +622,14 @@ fetch("https://script.google.com/macros/s/AKfycbz8lUhVMKOrRSdeNBeA0p4ZsQCNOesB0Y
           notes: infos
         })
       })
-      .then(res => res.json())
-      .then(() => {
-        // Incrément compteur contributions
-        fetch(COUNTER_URL+"?increment=true").catch(()=>{});
+      .then(res => res.text())
+.then((txt) => {
+  console.log("Réponse brute du script :", txt);  // 👈 Affiche la réponse exacte
 
-        alert("✅ Merci ! Votre demande a bien été envoyée. L’appareil sera ajouté dans un délai maximum de 48h.");
+  // Incrément compteur contributions
+  fetch(COUNTER_URL+"?increment=true").catch(()=>{});
+
+  alert("✅ Merci ! Votre demande a bien été envoyée. L’appareil sera ajouté dans un délai maximum de 48h.");
 
         // Sauvegarde le nom avant reset
         const savedName = demandeur;
@@ -642,8 +644,8 @@ fetch("https://script.google.com/macros/s/AKfycbz8lUhVMKOrRSdeNBeA0p4ZsQCNOesB0Y
         }
         
       })
-      .catch(() => {
-        alert("⚠️ Une erreur est survenue, merci de réessayer ou de contacter Arnaud.");
+      .catch((err) => {
+        alert("⚠️ Erreur d’envoi : " + (err && err.message ? err.message : "réseau/serveur"));
       });
       
     };
