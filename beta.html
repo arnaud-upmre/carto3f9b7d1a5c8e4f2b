@@ -2,7 +2,10 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+  />
   <title>➕ Ajouter un appareil</title>
 
   <!-- Leaflet -->
@@ -13,291 +16,377 @@
     *,*::before,*::after{box-sizing:border-box}
     html{-webkit-text-size-adjust:100%}
     body{
-      margin:0; padding:0;
-      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      margin:0; padding:16px;
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;
       background:var(--bg); color:var(--fg);
     }
     :root{
       --bg:#f7f7f8; --fg:#202124; --card:#fff; --border:#d0d7de;
       --accent:#0b6cff; --accent-ink:#fff; --muted:#666;
     }
-    @media (prefers-color-scheme: dark){
+    @media(prefers-color-scheme:dark){
       :root{
         --bg:#0b0b0b; --fg:#eceff1; --card:#141414; --border:#2a2a2a;
         --accent:#5aa3ff; --accent-ink:#081018; --muted:#999;
       }
     }
-
-    .step {
-      display:none;
-      min-height:100vh;
-      padding:24px;
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      align-items:center;
-      text-align:center;
-    }
-    .step.active{display:flex}
-    h2{margin-bottom:16px}
-    input, textarea{
-      width:100%;
-      padding:12px;
-      font-size:16px;
-      border:1px solid var(--border);
-      border-radius:10px;
+    h2{text-align:center;margin:0 0 12px}
+    .card{
+      max-width:640px;margin:auto;
       background:var(--card);
-      color:var(--fg);
-      margin-bottom:16px;
+      padding:16px;border-radius:14px;
+      box-shadow:0 2px 6px rgba(0,0,0,.15);
+    }
+    label{display:block;margin:12px 0 6px;font-weight:600}
+    input,textarea{
+      width:100%;padding:12px;font-size:16px;
+      border:1px solid var(--border);border-radius:10px;
+      background:var(--card);color:var(--fg);
+      min-height:44px;
     }
     textarea{min-height:96px;resize:none}
-
+    .pill-group{display:flex;gap:10px;margin:12px 0}
+    .pill{
+      flex:1;text-align:center;padding:12px;
+      border:1px solid var(--border);border-radius:999px;cursor:pointer;
+    }
+    .pill.active{background:var(--accent);color:var(--accent-ink)}
+    .map-wrap{margin:12px 0;border:1px solid var(--border);border-radius:10px;overflow:hidden}
+    #mapDevice,#mapAccess{height:300px;width:100%}
+    .map-toolbar{display:flex;gap:8px;padding:6px;background:var(--card)}
+    .map-toolbar button{
+      flex:1;padding:8px;border-radius:8px;
+      border:1px solid var(--border);cursor:pointer;
+    }
+    .btn-row{display:flex;gap:12px;margin-top:18px}
     .btn{
-      padding:14px;
-      margin:6px 0;
-      font-size:16px;
-      border:none;
-      border-radius:10px;
-      cursor:pointer;
-      width:100%;
+      flex:1;padding:12px;font-size:16px;border:none;border-radius:10px;cursor:pointer;
     }
     .btn.primary{background:var(--accent);color:var(--accent-ink)}
     .btn.secondary{background:#ccc}
     @media(prefers-color-scheme:dark){
       .btn.secondary{background:#2a2f36;color:#eee}
     }
-
-    .pill-group{display:flex;gap:10px;margin:12px 0;width:100%}
-    .pill{
-      flex:1;text-align:center;padding:12px;
-      border:1px solid var(--border);
-      border-radius:999px;cursor:pointer;
-    }
-    .pill.active{background:var(--accent);color:var(--accent-ink)}
-
-    #mapDevice,#mapAccess{height:300px;width:100%;border-radius:10px;margin:12px 0}
-
-    .progress{
-      position:absolute;top:0;left:0;width:100%;height:6px;
-      background:var(--border);
-    }
-    .progress-bar{
-      height:100%;background:var(--accent);width:0%;transition:width .3s;
-    }
-
-    input.error,textarea.error{border:2px solid red;background:#ffecec}
+    .step{display:none;animation:fade .3s ease}
+    .step.active{display:block}
+    @keyframes fade{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:translateX(0)}}
+    #progress{margin-bottom:12px;text-align:center;color:var(--muted)}
+    input.error,textarea.error{border:2px solid red!important;background:#ffecec}
   </style>
 </head>
 <body>
-  <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+  <h2>➕ Ajouter un appareil</h2>
+  <div class="card">
+    <div id="progress">Étape 1/10</div>
+    <form id="formAppareil" novalidate>
 
-  <!-- Step 0 accueil -->
-  <div class="step active" id="step0">
-    <h2>➕ Ajouter un appareil</h2>
-    <p>La procédure dure environ 30 secondes</p>
-    <button class="btn primary" onclick="nextStep()">COMMENCER</button>
+      <!-- Étape 1 -->
+      <div class="step active">
+        <label>👤 Demandeur :</label>
+        <input id="demandeur" required>
+        <div class="btn-row">
+          <button type="button" class="btn primary next">Suivant ➡️</button>
+        </div>
+      </div>
+
+      <!-- Étape 2 -->
+      <div class="step">
+        <label>📌 Poste :</label>
+        <input id="poste" required>
+        <div class="btn-row">
+          <button type="button" class="btn secondary prev">⬅️ Retour</button>
+          <button type="button" class="btn primary next">Suivant ➡️</button>
+        </div>
+      </div>
+
+      <!-- Étape 3 -->
+      <div class="step">
+        <label>📌 SAT :</label>
+        <input id="sat" placeholder="Ex : SAT1, SAT2… (optionnel)">
+        <div class="btn-row">
+          <button type="button" class="btn secondary prev">⬅️ Retour</button>
+          <button type="button" class="btn primary next">Suivant ➡️</button>
+        </div>
+      </div>
+
+      <!-- Étape 4 -->
+      <div class="step">
+        <label>💡 Nom de l’appareil :</label>
+        <input id="appareil" required placeholder="Ex : I7112">
+        <div class="btn-row">
+          <button type="button" class="btn secondary prev">⬅️ Retour</button>
+          <button type="button" class="btn primary next">Suivant ➡️</button>
+        </div>
+      </div>
+
+      <!-- Étape 5 -->
+      <div class="step">
+        <label>📍 Localiser l'appareil via GPS ?</label>
+        <div class="pill-group">
+          <div class="pill" id="pill-oui" data-value="oui">Oui</div>
+          <div class="pill" id="pill-non" data-value="non">Non</div>
+        </div>
+        <input type="hidden" id="presentValue">
+        <div class="btn-row">
+          <button type="button" class="btn secondary prev">⬅️ Retour</button>
+          <button type="button" class="btn primary next">Suivant ➡️</button>
+        </div>
+      </div>
+
+      <!-- Étape 6 -->
+      <div class="step">
+        <div id="mapDeviceWrap" class="map-wrap" style="display:none">
+          <div>Déplacez le curseur pour ajuster la position de l’appareil.</div>
+          <div id="mapDevice"></div>
+          <div class="map-toolbar">
+            <button type="button" id="btnRecenterDevice">📍 Localiser</button>
+            <button type="button" id="btnToggleDevice">🗺️ Plan</button>
+          </div>
+        </div>
+        <div id="coordsDeviceDisplay" style="display:none;color:var(--muted);margin:8px 0"></div>
+        <input type="hidden" id="latDevice"><input type="hidden" id="lonDevice">
+        <div id="lienField" style="display:none">
+          <label>🔗 Lien Google Maps :</label>
+          <input id="lien" type="url" placeholder="https://maps.app.goo.gl/…">
+        </div>
+        <div class="btn-row">
+          <button type="button" class="btn secondary prev">⬅️ Retour</button>
+          <button type="button" class="btn primary next">Suivant ➡️</button>
+        </div>
+      </div>
+
+      <!-- Étape 7 -->
+      <div class="step">
+        <label>📍 L’appareil a un accès distinct ?</label>
+        <div class="pill-group">
+          <div class="pill" id="pill-acces-oui" data-value="oui">Oui</div>
+          <div class="pill" id="pill-acces-non" data-value="non">Non</div>
+        </div>
+        <input type="hidden" id="accessValue">
+        <div class="btn-row">
+          <button type="button" class="btn secondary prev">⬅️ Retour</button>
+          <button type="button" class="btn primary next">Suivant ➡️</button>
+        </div>
+      </div>
+
+      <!-- Étape 8 -->
+      <div class="step">
+        <div id="mapAccessWrap" class="map-wrap" style="display:none">
+          <div>Déplacez le curseur pour ajuster la position de l’accès.</div>
+          <div id="mapAccess"></div>
+          <div class="map-toolbar">
+            <button type="button" id="btnRecenterAccess">📍 Localiser</button>
+            <button type="button" id="btnToggleAccess">🗺️ Plan</button>
+          </div>
+        </div>
+        <div id="coordsAccessDisplay" style="display:none;color:var(--muted);margin:8px 0"></div>
+        <div id="lienAccessField" style="display:none">
+          <label>🔗 Lien Google Maps accès :</label>
+          <input id="lienAccess" type="url" placeholder="https://maps.app.goo.gl/…">
+        </div>
+        <div class="btn-row">
+          <button type="button" class="btn secondary prev">⬅️ Retour</button>
+          <button type="button" class="btn primary next">Suivant ➡️</button>
+        </div>
+      </div>
+
+      <!-- Étape 9 -->
+      <div class="step">
+        <label>📝 Notes complémentaires :</label>
+        <textarea id="infos" placeholder="Accès, portail…"></textarea>
+        <div class="btn-row">
+          <button type="button" class="btn secondary prev">⬅️ Retour</button>
+          <button type="button" class="btn primary next">Suivant ➡️</button>
+        </div>
+      </div>
+
+      <!-- Étape 10 -->
+      <div class="step">
+        <p>✅ Vérifiez vos informations puis envoyez.</p>
+        <div class="btn-row">
+          <button type="button" class="btn secondary prev">⬅️ Retour</button>
+          <button type="submit" class="btn primary">📩 Envoyer</button>
+        </div>
+      </div>
+
+    </form>
   </div>
 
-  <!-- Step 1 demandeur -->
-  <div class="step" id="step1">
-    <h2>👤 Votre nom</h2>
-    <input id="demandeur" placeholder="Entrez votre nom" required>
-    <button class="btn primary" onclick="nextStep()">Suivant</button>
-  </div>
-
-  <!-- Step 2 poste -->
-  <div class="step" id="step2">
-    <h2>📌 Poste</h2>
-    <input id="poste" placeholder="Nom du poste" required>
-    <button class="btn primary" onclick="nextStep()">Suivant</button>
-    <button class="btn secondary" onclick="prevStep()">Retour</button>
-  </div>
-
-  <!-- Step 3 SAT -->
-  <div class="step" id="step3">
-    <h2>📌 SAT (optionnel)</h2>
-    <input id="sat" placeholder="Ex : SAT1, SAT2…">
-    <button class="btn primary" onclick="nextStep()">Suivant</button>
-    <button class="btn secondary" onclick="prevStep()">Retour</button>
-  </div>
-
-  <!-- Step 4 appareil -->
-  <div class="step" id="step4">
-    <h2>💡 Nom de l’appareil</h2>
-    <input id="appareil" placeholder="Ex : I7112" required>
-    <button class="btn primary" onclick="nextStep()">Suivant</button>
-    <button class="btn secondary" onclick="prevStep()">Retour</button>
-  </div>
-
-  <!-- Step 5 choix localisation -->
-  <div class="step" id="step5">
-    <h2>📍 Localiser l’appareil ?</h2>
-    <div class="pill-group">
-      <div class="pill" id="pill-oui" onclick="setPill('oui')">Oui</div>
-      <div class="pill" id="pill-non" onclick="setPill('non')">Non</div>
-    </div>
-    <div id="blocMap" style="display:none">
-      <div id="mapDevice"></div>
-    </div>
-    <div id="blocLien" style="display:none">
-      <input id="lien" type="url" placeholder="https://maps.app.goo.gl/...">
-    </div>
-    <button class="btn primary" onclick="nextStep()">Suivant</button>
-    <button class="btn secondary" onclick="prevStep()">Retour</button>
-  </div>
-
-  <!-- Step 6 accès -->
-  <div class="step" id="step6">
-    <h2>📍 L’appareil a un accès distinct ?</h2>
-    <div class="pill-group">
-      <div class="pill" id="pill-acces-oui" onclick="setAccess('oui')">Oui</div>
-      <div class="pill" id="pill-acces-non" onclick="setAccess('non')">Non</div>
-    </div>
-    <div id="blocAccess" style="display:none">
-      <div id="mapAccess"></div>
-      <input id="lienAccess" type="url" placeholder="Lien Google Maps (optionnel)">
-    </div>
-    <button class="btn primary" onclick="nextStep()">Suivant</button>
-    <button class="btn secondary" onclick="prevStep()">Retour</button>
-  </div>
-
-  <!-- Step 7 infos -->
-  <div class="step" id="step7">
-    <h2>📝 Notes complémentaires</h2>
-    <textarea id="infos" placeholder="Infos utiles (accès, portail…)"></textarea>
-    <button class="btn primary" onclick="submitForm()">📩 Envoyer</button>
-    <button class="btn secondary" onclick="prevStep()">Retour</button>
-  </div>
-
-  <script>
-let currentStep = 0;
-const totalSteps = 7; // step0 → step7 inclus
-
-function updateProgress() {
-  document.getElementById("progressBar").style.width =
-    (currentStep / totalSteps * 100) + "%";
+<script>
+let currentStep=0;
+const steps=document.querySelectorAll(".step");
+const progress=document.getElementById("progress");
+function showStep(i){
+  steps.forEach((s,idx)=>s.classList.toggle("active",idx===i));
+  progress.textContent=`Étape ${i+1}/${steps.length}`;
+}
+document.querySelectorAll(".next").forEach(btn=>btn.onclick=()=>{
+  if(validateStep(currentStep)){currentStep++;showStep(currentStep);}
+});
+document.querySelectorAll(".prev").forEach(btn=>btn.onclick=()=>{
+  currentStep--;showStep(currentStep);
+});
+function validateStep(i){
+  const step=steps[i];
+  const input=step.querySelector("input[required],textarea[required]");
+  if(input && !input.value.trim()){
+    input.classList.add("error");
+    alert("⚠️ Merci de remplir ce champ");
+    return false;
+  }
+  return true;
 }
 
-function showStep(n) {
-  document.querySelectorAll(".step").forEach(s => s.classList.remove("active"));
-  const stepEl = document.getElementById("step" + n);
-  if (stepEl) {
-    stepEl.classList.add("active");
-    currentStep = n;
-    updateProgress();
+// GPS / lien logique simplifiée
+function $(id){return document.getElementById(id);}
+function toggle(el,show){el.style.display=show?"block":"none";}
+$("pill-oui").onclick=()=>{ $("presentValue").value="oui";$("pill-oui").classList.add("active");$("pill-non").classList.remove("active");toggle($("mapDeviceWrap"),1);toggle($("lienField"),0);};
+$("pill-non").onclick=()=>{ $("presentValue").value="non";$("pill-non").classList.add("active");$("pill-oui").classList.remove("active");toggle($("mapDeviceWrap"),0);toggle($("lienField"),1);};
+$("pill-acces-oui").onclick=()=>{ $("accessValue").value="oui";$("pill-acces-oui").classList.add("active");$("pill-acces-non").classList.remove("active");toggle($("mapAccessWrap"),1);toggle($("lienAccessField"),0);};
+$("pill-acces-non").onclick=()=>{ $("accessValue").value="non";$("pill-acces-non").classList.add("active");$("pill-acces-oui").classList.remove("active");toggle($("mapAccessWrap"),0);toggle($("lienAccessField"),1);};
+
+// ---------------- LOGIQUE COMPLÈTE LEAFLET + ENVOI ----------------
+
+const COUNTER_URL = "https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec";
+
+let mapDevice,mapAccess,markerDevice,markerAccess;
+let lastFix=null; let GEO_BLOCKED=false;
+const HAZE=[50.72454,2.54311];
+const GEO_OPTS={enableHighAccuracy:true,timeout:7000,maximumAge:15000};
+
+function sanitizeCoord(v){return (v||"").toString().replace(",",".");}
+function isValidLatLon(lat,lon){
+  const la=parseFloat(lat),lo=parseFloat(lon);
+  return !isNaN(la)&&!isNaN(lo)&&la>=-90&&la<=90&&lo>=-180&&lo<=180;
+}
+function isValidUrl(str){return /^https?:\/\/.+/i.test((str||"").trim());}
+
+function setMapTo(map,marker,lat,lon,kind){
+  if(!map||!marker)return;
+  map.setView([lat,lon],18);
+  marker.setLatLng([lat,lon]);
+  const la=Number(lat).toFixed(6), lo=Number(lon).toFixed(6);
+  if(kind==="device"){
+    $("latDevice").value=la; $("lonDevice").value=lo;
+    $("coordsDeviceDisplay").textContent=`Coordonnées relevées : ${la}, ${lo}`;
+    $("coordsDeviceDisplay").style.display="block";
+  } else if(kind==="access"){
+    $("coordsAccessDisplay").textContent=`Coordonnées relevées (accès) : ${la}, ${lo}`;
+    $("coordsAccessDisplay").style.display="block";
   }
 }
-
-function nextStep() {
-  if (currentStep < totalSteps) {
-    showStep(currentStep + 1);
-  }
+function applyFix(lat,lon){
+  lastFix={lat,lon,ts:Date.now()};
+  if(mapDevice&&markerDevice)setMapTo(mapDevice,markerDevice,lat,lon,"device");
+  if(mapAccess&&markerAccess)setMapTo(mapAccess,markerAccess,lat,lon,"access");
+}
+function onGeoDenied(target){
+  GEO_BLOCKED=true;
+  if(target==="device"){ $("presentValue").value="non"; toggle($("mapDeviceWrap"),0); toggle($("lienField"),1); }
+  if(target==="access"){ $("accessValue").value="non"; toggle($("mapAccessWrap"),0); toggle($("lienAccessField"),1); }
+  alert("⚠️ La géolocalisation a été refusée, utilisez un lien Google Maps.");
+}
+function ensureMap(mapId,btnToggle,btnRecenter,lat,lon){
+  let map=L.map(mapId).setView([lat,lon],18);
+  setTimeout(()=>map.invalidateSize(),300);
+  const esri=L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}");
+  const osm=L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png");
+  osm.addTo(map);
+  let marker=L.marker([lat,lon],{draggable:true}).addTo(map);
+  marker.on("dragend",()=>{
+    let p=marker.getLatLng();
+    if(mapId==="mapDevice"){ $("latDevice").value=p.lat.toFixed(6); $("lonDevice").value=p.lng.toFixed(6);
+      $("coordsDeviceDisplay").textContent=`Coordonnées relevées : ${p.lat.toFixed(6)}, ${p.lng.toFixed(6)}`; }
+    else{ $("coordsAccessDisplay").textContent=`Coordonnées relevées (accès) : ${p.lat.toFixed(6)}, ${p.lng.toFixed(6)}`; }
+  });
+  $(btnToggle).onclick=()=>{
+    if(map.hasLayer(osm)){map.removeLayer(osm); esri.addTo(map); $(btnToggle).textContent="🗺️ Plan";}
+    else{map.removeLayer(esri); osm.addTo(map); $(btnToggle).textContent="🛰️ Satellite";}
+    map.invalidateSize();
+  };
+  $(btnRecenter).onclick=()=>{
+    if(GEO_BLOCKED){onGeoDenied(mapId==="mapDevice"?"device":"access");return;}
+    if(lastFix){setMapTo(map,marker,lastFix.lat,lastFix.lon,mapId==="mapDevice"?"device":"access");}
+    if(navigator.geolocation){
+      navigator.geolocation.getCurrentPosition(
+        p=>applyFix(p.coords.latitude,p.coords.longitude),
+        err=>{if(err.code===1)onGeoDenied(mapId==="mapDevice"?"device":"access");},
+        GEO_OPTS);
+    }
+  };
+  if(mapId==="mapDevice"){mapDevice=map;markerDevice=marker;}
+  else{mapAccess=map;markerAccess=marker;}
+}
+function startLocDevice(){
+  if(!mapDevice)ensureMap("mapDevice","btnToggleDevice","btnRecenterDevice",HAZE[0],HAZE[1]);
+  if(lastFix)setMapTo(mapDevice,markerDevice,lastFix.lat,lastFix.lon,"device");
+}
+function startLocAccess(){
+  if(!mapAccess)ensureMap("mapAccess","btnToggleAccess","btnRecenterAccess",HAZE[0],HAZE[1]);
+  if(lastFix)setMapTo(mapAccess,markerAccess,lastFix.lat,lastFix.lon,"access");
 }
 
-function prevStep() {
-  if (currentStep > 0) {
-    showStep(currentStep - 1);
-  }
-}
-
-// --- Initialisation carte appareil ---
-let mapDevice, markerDevice;
-function initMapDevice() {
-  if (mapDevice) return;
-  const defaultCenter = [50.72385, 2.54922]; // Hazebrouck
-  mapDevice = L.map("mapDevice").setView(defaultCenter, 15);
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(mapDevice);
-
-  markerDevice = L.marker(defaultCenter, { draggable: true }).addTo(mapDevice);
-
-  if (navigator.geolocation) {
+// Précharger position si dispo
+document.addEventListener("DOMContentLoaded",()=>{
+  if(navigator.geolocation){
     navigator.geolocation.getCurrentPosition(
-      p => {
-        const lat = p.coords.latitude, lon = p.coords.longitude;
-        mapDevice.setView([lat, lon], 18);
-        markerDevice.setLatLng([lat, lon]);
-      },
-      err => {
-        if (err.code === 1) {
-          alert("Géolocalisation refusée, utilisez le lien Google Maps.");
-          setPill("non");
-        }
-      },
-      { enableHighAccuracy: true, timeout: 7000, maximumAge: 15000 }
-    );
+      p=>applyFix(p.coords.latitude,p.coords.longitude),
+      err=>{if(err.code===1)GEO_BLOCKED=true;},
+      GEO_OPTS);
   }
-}
+});
 
-// --- Initialisation carte accès ---
-let mapAccess, markerAccess;
-function initMapAccess() {
-  if (mapAccess) return;
-  const defaultCenter = [50.72385, 2.54922];
-  mapAccess = L.map("mapAccess").setView(defaultCenter, 15);
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(mapAccess);
+// Soumission finale
+$("formAppareil").onsubmit=e=>{
+  e.preventDefault();
+  let demandeur=$("demandeur").value.trim();
+  let poste=$("poste").value.trim();
+  let appareil=$("appareil").value.trim();
+  let infos=$("infos").value.trim();
+  if(!demandeur||!poste||!appareil){alert("⚠️ Merci de remplir tous les champs obligatoires.");return;}
+  if(!$("presentValue").value){alert("⚠️ Indiquez GPS ou Lien.");return;}
+  if(!$("accessValue").value){alert("⚠️ Indiquez accès Oui / Non.");return;}
 
-  markerAccess = L.marker(defaultCenter, { draggable: true }).addTo(mapAccess);
-
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      p => {
-        const lat = p.coords.latitude, lon = p.coords.longitude;
-        mapAccess.setView([lat, lon], 18);
-        markerAccess.setLatLng([lat, lon]);
-      },
-      err => {
-        if (err.code === 1) {
-          alert("Géolocalisation refusée pour l’accès, utilisez le lien.");
-          setAccess("non");
-        }
-      },
-      { enableHighAccuracy: true, timeout: 7000, maximumAge: 15000 }
-    );
+  let coordAppareil="",coordAcces="";
+  if($("presentValue").value==="oui"){
+    let la=sanitizeCoord($("latDevice").value), lo=sanitizeCoord($("lonDevice").value);
+    if(!isValidLatLon(la,lo)){alert("⚠️ Coordonnées invalides.");return;}
+    coordAppareil=la+","+lo;
+  } else {
+    if(!isValidUrl($("lien").value)){alert("⚠️ Lien invalide.");return;}
+    coordAppareil=$("lien").value;
   }
-}
-
-// pill gps
-function setPill(v){
-  document.getElementById("pill-oui").classList.toggle("active",v==="oui");
-  document.getElementById("pill-non").classList.toggle("active",v==="non");
-  if(v==="oui"){ 
-    document.getElementById("blocMap").style.display="block"; 
-    document.getElementById("blocLien").style.display="none"; 
-    initMapDevice();
-  }
-  else{ 
-    document.getElementById("blocMap").style.display="none"; 
-    document.getElementById("blocLien").style.display="block"; 
-  }
-}
-function setAccess(v){
-  document.getElementById("pill-acces-oui").classList.toggle("active",v==="oui");
-  document.getElementById("pill-acces-non").classList.toggle("active",v==="non");
-  if(v==="oui"){ 
-    document.getElementById("blocAccess").style.display="block"; 
-    initMapAccess();
-  }
-  else{ 
-    document.getElementById("blocAccess").style.display="none"; 
-  }
-}
-
-// soumission
-function submitForm(){
-  let demandeur=document.getElementById("demandeur").value.trim();
-  let poste=document.getElementById("poste").value.trim();
-  let appareil=document.getElementById("appareil").value.trim();
-  if(!demandeur||!poste||!appareil){
-    alert("⚠️ Merci de remplir tous les champs obligatoires.");
-    return;
+  if($("accessValue").value==="oui"){
+    let accessCoords=$("coordsAccessDisplay").textContent.replace("Coordonnées relevées (accès) : ","").trim();
+    let lienAcces=$("lienAccess").value.trim();
+    if(/^[-]?\d+(\.\d+)?,\s*[-]?\d+(\.\d+)?$/.test(accessCoords)){coordAcces=accessCoords;}
+    else if(isValidUrl(lienAcces)){coordAcces=lienAcces;}
+    else{alert("⚠️ Renseignez coordonnées ou lien Google Maps pour l’accès.");return;}
   }
 
-  let infos=document.getElementById("infos").value.trim();
-  let subject=`Contribution : ajout appareil ${poste}`;
-  let body=`Demandeur : ${demandeur}\nPoste : ${poste}\nSAT : ${document.getElementById("sat").value.trim()}\nAppareil : ${appareil}\nInfos : ${infos}`;
-  location.href=`mailto:arnaud.debaecker@sncf.fr?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-  alert("L’email est généré, merci de l’envoyer.");
-}
-  </script>
+  const formData=new URLSearchParams();
+  formData.append("demandeur",demandeur);
+  formData.append("poste",poste);
+  formData.append("sat",$("sat").value.trim());
+  formData.append("appareil",appareil);
+  formData.append("localisation",coordAppareil);
+  formData.append("acces",coordAcces);
+  formData.append("notes",infos);
+
+  const submitBtn=document.querySelector('.btn.primary[type="submit"]');
+  const oldLabel=submitBtn.textContent;
+  submitBtn.disabled=true; submitBtn.textContent="⏳ Envoi en cours…";
+
+  fetch("https://script.google.com/macros/s/AKfycbz8lUhVMKOrRSdeNBeA0p4ZsQCNOesB0Y4DL27KAoHkHWS78hOqrW-t-9bC_azgN-mY/exec",{method:"POST",body:formData})
+  .then(r=>r.text())
+  .then(()=>{fetch(COUNTER_URL+"?increment=true").catch(()=>{});
+    alert("✅ Merci ! Votre demande a bien été envoyée.");
+    $("formAppareil").reset(); currentStep=0; showStep(currentStep);
+  })
+  .catch(err=>{alert("⚠️ Erreur d’envoi : "+err.message);})
+  .finally(()=>{submitBtn.disabled=false;submitBtn.textContent=oldLabel;});
+};
+showStep(currentStep);
+</script>
 </body>
 </html>
