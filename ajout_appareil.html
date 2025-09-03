@@ -215,12 +215,9 @@ textarea { min-height: 96px; resize: none; overflow: auto; }
           <button type="button" id="btnToggleAccess">🗺️ Plan</button>
         </div>
       </div>
-      <div id="coordsAccess" style="display:none;">
-        <label>Latitude</label>
-        <input id="latAccess">
-        <label>Longitude</label>
-        <input id="lonAccess">
-      </div>
+<div id="coordsAccessDisplay" class="hint" style="display:none; font-family: monospace; font-size: 12px; margin-bottom: 18px;">
+  Coordonnées relevées (accès) : <span id="coordsAccessText">—</span>
+</div>
       <div id="lienAccessField" style="display:none;">
   <label>Ou ajouter le lien Google Maps de l’accès (optionnel)</label>
   <input id="lienAccess" type="url" placeholder="https://maps.app.goo.gl/…">
@@ -333,8 +330,10 @@ if (kind === "device") {
   $("coordsDeviceText").textContent = `${la}, ${lo}`;
   $("coordsDeviceDisplay").style.display = "block";
 }
-      else if(kind === "access"){ $("latAccess").value = lat; $("lonAccess").value = lon; }
-    }
+   else if(kind === "access"){ 
+  const la = Number(lat).toFixed(6), lo = Number(lon).toFixed(6);
+  $("coordsAccessText").textContent = `${la}, ${lo}`;
+  $("coordsAccessDisplay").style.display = "block";
 
     function applyFix(lat, lon){
       lastFix = { lat, lon, ts: Date.now() };
@@ -436,9 +435,9 @@ $("lonDevice").value = p.lng.toFixed(6);
 $("coordsDeviceText").textContent = `${p.lat.toFixed(6)}, ${p.lng.toFixed(6)}`;
 $("coordsDeviceDisplay").style.display = "block";
 } else {
-          $("latAccess").value=p.lat;
-          $("lonAccess").value=p.lng;
-        }
+  $("coordsAccessText").textContent = `${p.lat.toFixed(6)}, ${p.lng.toFixed(6)}`;
+  $("coordsAccessDisplay").style.display = "block";
+}
       });
 
   $(btnToggle).onclick = () => {
@@ -600,13 +599,14 @@ if(!$("accessValue").value){
         coordAppareil=$("lien").value;
       }
 
-     if($("accessValue").value==="oui"){
-  let la=sanitizeCoord($("latAccess").value),lo=sanitizeCoord($("lonAccess").value);
-  let lienAcces=$("lienAccess").value.trim();
-  if(isValidLatLon(la,lo)){
-    coordAcces=la+","+lo;
-  } else if(isValidUrl(lienAcces)){
-    coordAcces=lienAcces;
+if($("accessValue").value==="oui"){
+  let accessCoords = $("coordsAccessText").textContent.trim();
+  let lienAcces = $("lienAccess").value.trim();
+
+  if (/^-?\d+(\.\d+)?,\s*-?\d+(\.\d+)?$/.test(accessCoords)) {
+    coordAcces = accessCoords;
+  } else if (isValidUrl(lienAcces)) {
+    coordAcces = lienAcces;
   } else {
     alert("⚠️ Merci de renseigner soit les coordonnées GPS de l’accès, soit un lien Google Maps valide.");
     return;
@@ -646,7 +646,7 @@ if (savedName) {
 
     // Supprimer automatiquement le rouge quand on corrige un champ
 document.addEventListener("DOMContentLoaded", () => {
-["demandeur","poste","appareil","lien","latAccess","lonAccess","lienAccess","infos"]
+["demandeur","poste","appareil","lien","lienAccess","infos"]
     .forEach(id => {
       const el = document.getElementById(id);
       if (el) el.addEventListener("input", () => el.classList.remove("error"));
