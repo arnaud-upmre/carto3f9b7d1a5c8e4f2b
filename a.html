@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<body>
+<script>
+fetch("https://script.google.com/macros/s/AKfycbz8lUhVMKOrRSdeNBeA0p4ZsQCNOesB0Y4DL27KAoHkHWS78hOqrW-t-9bC_azgN-mY/exec", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    demandeur: "TEST",
+    poste: "POSTE_TEST",
+    sat: "SAT_TEST",
+    appareil: "APP_TEST",
+    localisation: "0,0",
+    acces: "LIEN_TEST",
+    notes: "NOTE_TEST"
+  })
+})
+.then(r => r.json())
+.then(console.log)
+.catch(console.error);
+</script>
+</body>
+</html>
