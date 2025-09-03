@@ -611,21 +611,29 @@ ${demandeur}`;
 
 fetch("https://script.google.com/macros/s/AKfycbz8lUhVMKOrRSdeNBeA0p4ZsQCNOesB0Y4DL27KAoHkHWS78hOqrW-t-9bC_azgN-mY/exec", {
       method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          demandeur: demandeur,
-          poste: poste,
-          sat: $("sat").value.trim(),
-          appareil: appareil,
-          localisation: coordAppareil,
-          acces: coordAcces,
-          notes: infos
-        })
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        demandeur: demandeur,
+        poste: poste,
+        sat: $("sat").value.trim(),
+        appareil: appareil,
+        localisation: coordAppareil,
+        acces: coordAcces,
+        notes: infos
       })
-      .then(res => res.text())
+})
+.then(res => {
+  console.log("👉 Status HTTP :", res.status);
+  return res.text();
+})
 .then((txt) => {
-  console.log("Réponse brute du script :", txt);  // 👈 Affiche la réponse exacte
-
+  console.log("👉 Réponse brute du script :", txt);
+  alert("✅ Réponse reçue du serveur !");
+})
+.catch((err) => {
+  console.error("👉 Erreur attrapée :", err);
+  alert("⚠️ Erreur attrapée : " + err.message);
+});
   // Incrément compteur contributions
   fetch(COUNTER_URL+"?increment=true").catch(()=>{});
 
