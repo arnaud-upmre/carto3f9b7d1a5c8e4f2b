@@ -220,11 +220,24 @@ function showStep(i){
   steps.forEach((s,idx)=>s.classList.toggle("active",idx===i));
   progress.textContent=`Étape ${i+1}/${steps.length}`;
 }
-document.querySelectorAll(".next").forEach(btn=>btn.onclick=()=>{
-  if(validateStep(currentStep)){currentStep++;showStep(currentStep);}
+document.querySelectorAll(".next").forEach(btn=>{
+  btn.addEventListener("click", e=>{
+    e.preventDefault(); // empêche la soumission du formulaire
+    if(validateStep(currentStep)){
+      currentStep++;
+      showStep(currentStep);
+    }
+  });
 });
-document.querySelectorAll(".prev").forEach(btn=>btn.onclick=()=>{
-  currentStep--;showStep(currentStep);
+
+document.querySelectorAll(".prev").forEach(btn=>{
+  btn.addEventListener("click", e=>{
+    e.preventDefault(); // idem
+    if(currentStep>0){
+      currentStep--;
+      showStep(currentStep);
+    }
+  });
 });
 function validateStep(i){
   const step=steps[i];
