@@ -71,12 +71,27 @@
     .step.active{display:block}
     @keyframes fade{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:translateX(0)}}
     #progress{margin-bottom:12px;text-align:center;color:var(--muted)}
+#progressbar {
+  width: 100%;
+  height: 6px;
+  background: var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+#progressbar-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--accent);
+  transition: width 0.3s ease;
+}
+    
     input.error,textarea.error{border:2px solid red!important;background:#ffecec}
   </style>
 </head>
 <body>
   <h2>➕ Ajouter un appareil</h2>
-  <div class="card">
+  <div class="card"><div id="progressbar"><div id="progressbar-fill"></div></div>
     <div id="progress">Étape 1/10</div>
     <form id="formAppareil" novalidate>
 
@@ -219,13 +234,20 @@ const progress=document.getElementById("progress");
 function showStep(i){
   steps.forEach((s,idx)=>s.classList.toggle("active",idx===i));
   progress.textContent=`Étape ${i+1}/${steps.length}`;
+  document.getElementById("progressbar-fill").style.width = ((i+1)/steps.length*100) + "%";
 
-  // 🔧 Correction affichage cartes Leaflet
-  if(i===5 && mapDevice){ // étape 6 = index 5
-    setTimeout(()=>mapDevice.invalidateSize(),300);
+  // 🔧 Initialisation + redessin des cartes Leaflet
+  if(i===5){ // étape 6 = carte appareil
+    if(!mapDevice){
+      startLocDevice(); // initialise la carte si pas déjà fait
+    }
+    setTimeout(()=>mapDevice && mapDevice.invalidateSize(),300);
   }
-  if(i===7 && mapAccess){ // étape 8 = index 7
-    setTimeout(()=>mapAccess.invalidateSize(),300);
+  if(i===7){ // étape 8 = carte accès
+    if(!mapAccess){
+      startLocAccess(); // initialise la carte si pas déjà fait
+    }
+    setTimeout(()=>mapAccess && mapAccess.invalidateSize(),300);
   }
 }
 document.querySelectorAll(".next").forEach(btn=>{
