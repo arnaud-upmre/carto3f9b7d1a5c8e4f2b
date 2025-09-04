@@ -991,9 +991,11 @@ const labelFor = (item) =>
 
 results.forEach((item, i) => {
   const li = document.createElement("li");
-  const icon = (item.category === "poste") ? "🚙" : "💡"; // 🚙 = voiture bleue
+const icon = (item.category === "poste")
+  ? `🚙${item.poste_latitude && item.poste_longitude ? " 📍" : ""}`
+  : "💡";
 
-  li.innerHTML = `${icon} ${labelFor(item)}`;
+li.innerHTML = `${icon} ${labelFor(item)}`;
 
   if (i === 0) li.classList.add("best");
 
