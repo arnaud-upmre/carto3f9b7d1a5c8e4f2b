@@ -272,14 +272,15 @@ Remplir uniquement si l’appareil dépend d’un SAT
         </div>
       </div>
 
-      <!-- Étape 10 -->
-      <div class="step">
-        <p>✅ Vérifiez vos informations puis envoyez.</p>
-        <div class="btn-row">
-          <button type="button" class="btn secondary prev">⬅️ Retour</button>
-          <button type="submit" class="btn primary">📩 Envoyer</button>
-        </div>
-      </div>
+    <!-- Étape 10 -->
+<div class="step">
+  <p>✅ Vérifiez vos informations puis envoyez.</p>
+  <div id="recap" style="margin:12px 0; font-size:15px; line-height:1.5"></div>
+  <div class="btn-row">
+    <button type="button" class="btn secondary prev">⬅️ Retour</button>
+    <button type="submit" class="btn primary">📩 Envoyer</button>
+  </div>
+</div>
 <!-- Étape confirmation (n’est pas comptée comme une étape normale) -->
 <div class="step" id="confirmationStep">
   <h3 style="text-align:center;margin:16px 0">✅ Merci ! Votre demande a bien été envoyée.</h3>
@@ -355,6 +356,37 @@ if(i===8){ // étape 9 = détails accès (carte/lien)
     }
   }
 }
+
+  // Étape 10 = affichage du récapitulatif
+  if(i===9){
+    const recap = $("recap");
+    recap.innerHTML = "";
+
+    const data = [
+      { step: 0, label: "👤 Demandeur", value: $("demandeur").value },
+      { step: 1, label: "📌 Poste", value: $("poste").value + ( $("type").value ? " ("+$("type").value+")" : "" ) },
+      { step: 2, label: "📌 SAT", value: $("sat").value },
+      { step: 3, label: "💡 Appareil", value: $("appareil").value },
+      { step: 5, label: "📍 Localisation", value: $("presentValue").value==="oui" ? ($("latDevice").value+","+$("lonDevice").value) : $("lien").value },
+      { step: 6, label: "🚪 Accès", value: $("accessValue").value },
+      { step: 8, label: "📝 Notes", value: $("infos").value }
+    ];
+
+    data.forEach(item=>{
+      if(item.value && item.value.trim()!==""){
+        const div = document.createElement("div");
+        div.textContent = `${item.label} : ${item.value}`;
+        div.style.cursor = "pointer";
+        div.style.margin = "6px 0";
+        div.style.padding = "6px";
+        div.style.border = "1px solid var(--border)";
+        div.style.borderRadius = "6px";
+        div.onclick = ()=>{ currentStep=item.step; showStep(currentStep); };
+        recap.appendChild(div);
+      }
+    });
+  }
+  
 }
 document.querySelectorAll(".next").forEach(btn=>{
   btn.addEventListener("click", e=>{
