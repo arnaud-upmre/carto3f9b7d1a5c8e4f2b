@@ -393,6 +393,7 @@ function ensureMap(mapId,btnToggle,btnRecenter,lat,lon){
   const esri=L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}");
   const osm=L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png");
   osm.addTo(map);
+  $(btnToggle).textContent = "🛰️ Satellite"; // par défaut on propose de passer en satellite
   let marker=L.marker([lat,lon],{draggable:true}).addTo(map);
   marker.on("dragend",()=>{
     let p=marker.getLatLng();
@@ -429,13 +430,28 @@ function startLocAccess(){
 
 // Précharger position si dispo
 document.addEventListener("DOMContentLoaded",()=>{
+    // Préremplir poste si passé en paramètre d'URL
+  const params = new URLSearchParams(window.location.search);
+  if(params.has("poste")){
+    $("poste").value = params.get("poste");
+  }
   if(navigator.geolocation){
     navigator.geolocation.getCurrentPosition(
       p=>applyFix(p.coords.latitude,p.coords.longitude),
       err=>{if(err.code===1)GEO_BLOCKED=true;},
       GEO_OPTS);
   }
+    // Charger Demandeur depuis localStorage
+  const savedDemandeur = localStorage.getItem("demandeur");
+  if(savedDemandeur){
+    $("demandeur").value = savedDemandeur;
+  }
+
+  // Sauvegarder Demandeur à chaque modification
+$("demandeur").addEventListener("input", ()=>{
+  localStorage.setItem("demandeur", $("demandeur").value.trim());
 });
+  });
 
   function resetForm(){
   $("formAppareil").reset();
