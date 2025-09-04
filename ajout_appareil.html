@@ -274,7 +274,12 @@ Remplir uniquement si l’appareil dépend d’un SAT
 
     <!-- Étape 10 -->
 <div class="step">
-  <p>✅ Vérifiez vos informations puis envoyez.</p>
+  <p style="line-height:1.5">
+    🎉 Super, presque terminé !<br>
+    Vérifiez ci-dessous les informations saisies.<br>
+    Un détail à modifier ? Touchez la ligne correspondante.<br>
+    Sinon, envoyez votre contribution ✅
+  </p>
   <div id="recap" style="margin:12px 0; font-size:15px; line-height:1.5"></div>
   <div class="btn-row">
     <button type="button" class="btn secondary prev">⬅️ Retour</button>
@@ -367,15 +372,32 @@ if(i===8){ // étape 9 = détails accès (carte/lien)
       { step: 1, label: "📌 Poste", value: $("poste").value + ( $("type").value ? " ("+$("type").value+")" : "" ) },
       { step: 2, label: "📌 SAT", value: $("sat").value },
       { step: 3, label: "💡 Appareil", value: $("appareil").value },
-      { step: 5, label: "📍 Localisation", value: $("presentValue").value==="oui" ? ($("latDevice").value+","+$("lonDevice").value) : $("lien").value },
+      { step: 5, label: "📍 Localisation appareil", value: $("presentValue").value==="oui" ? ($("latDevice").value+","+$("lonDevice").value) : $("lien").value },
       { step: 6, label: "🚪 Accès", value: $("accessValue").value },
-      { step: 8, label: "📝 Notes", value: $("infos").value }
+      { step: 8, label: "📍 Localisation accès", value: $("accessValue").value==="oui" ? 
+         ($("accessMethod").value==="gps" ? $("coordsAccessDisplay").textContent.replace("Coordonnées relevées (accès) : ","") : $("lienAccess").value) : "" },
+      { step: 9, label: "📝 Notes", value: $("infos").value }
     ];
 
     data.forEach(item=>{
       if(item.value && item.value.trim()!==""){
         const div = document.createElement("div");
-        div.textContent = `${item.label} : ${item.value}`;
+
+        // Si coordonnées GPS → rendre cliquable (Google Maps zoom 20)
+        if(item.value.includes(",") && !item.value.startsWith("http")){
+          const [lat, lon] = item.value.split(",");
+          const a = document.createElement("a");
+          a.href = `https://www.google.com/maps?q=${lat.trim()},${lon.trim()}&z=20`;
+          a.target = "_blank";
+          a.rel = "noopener";
+          a.textContent = `${item.label} : ${item.value}`;
+          a.style.textDecoration = "none";
+          a.style.color = "inherit";
+          div.appendChild(a);
+        } else {
+          div.textContent = `${item.label} : ${item.value}`;
+        }
+
         div.style.cursor = "pointer";
         div.style.margin = "6px 0";
         div.style.padding = "6px";
