@@ -513,14 +513,24 @@ function setMapTo(map,marker,lat,lon,kind){
   map.setView([lat,lon],18);
   marker.setLatLng([lat,lon]);
   const la=Number(lat).toFixed(6), lo=Number(lon).toFixed(6);
+
   if(kind==="device"){
-    $("latDevice").value=la; $("lonDevice").value=lo;
-    $("coordsDeviceDisplay").textContent=`Coordonnées relevées : ${la}, ${lo}`;
-    $("coordsDeviceDisplay").style.display="block";
-  } else if(kind==="access"){
-    $("coordsAccessDisplay").textContent=`Coordonnées relevées (accès) : ${la}, ${lo}`;
-    $("coordsAccessDisplay").style.display="block";
+    $("latDevice").value=la; 
+    $("lonDevice").value=lo;
+    if($("presentValue").value === "oui"){   // ✅ seulement si GPS
+      $("coordsDeviceDisplay").textContent=`Coordonnées relevées : ${la}, ${lo}`;
+      $("coordsDeviceDisplay").style.display="block";
+    } else {
+      $("coordsDeviceDisplay").style.display="none";
+    }
+} else if(kind==="access"){
+  if ($("accessMethod").value === "gps") {
+    $("coordsAccessDisplay").textContent = `Coordonnées relevées (accès) : ${la}, ${lo}`;
+    $("coordsAccessDisplay").style.display = "block";
+  } else {
+    $("coordsAccessDisplay").style.display = "none";
   }
+}
 }
 function applyFix(lat,lon){
   lastFix={lat,lon,ts:Date.now()};
@@ -531,7 +541,7 @@ function onGeoDenied(target){
   GEO_BLOCKED=true;
   if(target==="device"){ $("presentValue").value="non"; toggle($("mapDeviceWrap"),0); toggle($("lienField"),1); }
   if(target==="access"){ $("accessValue").value="non"; toggle($("mapAccessWrap"),0); toggle($("lienAccessField"),1); }
-  alert("⚠️ La géolocalisation a été refusée, utilisez un lien Google Maps.");
+
 }
 function ensureMap(mapId,btnToggle,btnRecenter,lat,lon){
   let map=L.map(mapId).setView([lat,lon],18);
@@ -541,12 +551,28 @@ function ensureMap(mapId,btnToggle,btnRecenter,lat,lon){
   osm.addTo(map);
   $(btnToggle).textContent = "🛰️ Satellite"; // par défaut on propose de passer en satellite
   let marker=L.marker([lat,lon],{draggable:true}).addTo(map);
-  marker.on("dragend",()=>{
-    let p=marker.getLatLng();
-    if(mapId==="mapDevice"){ $("latDevice").value=p.lat.toFixed(6); $("lonDevice").value=p.lng.toFixed(6);
-      $("coordsDeviceDisplay").textContent=`Coordonnées relevées : ${p.lat.toFixed(6)}, ${p.lng.toFixed(6)}`; }
-    else{ $("coordsAccessDisplay").textContent=`Coordonnées relevées (accès) : ${p.lat.toFixed(6)}, ${p.lng.toFixed(6)}`; }
-  });
+
+marker.on("dragend", ()=>{
+  let p = marker.getLatLng();
+  if (mapId === "mapDevice") {
+    $("latDevice").value = p.lat.toFixed(6);
+    $("lonDevice").value = p.lng.toFixed(6);
+    if ($("presentValue").value === "oui") {
+      $("coordsDeviceDisplay").textContent = `Coordonnées relevées : ${p.lat.toFixed(6)}, ${p.lng.toFixed(6)}`;
+      $("coordsDeviceDisplay").style.display = "block";
+    } else {
+      $("coordsDeviceDisplay").style.display = "none";
+    }
+  } else { // accès
+    if ($("accessMethod").value === "gps") {
+      $("coordsAccessDisplay").textContent = `Coordonnées relevées (accès) : ${p.lat.toFixed(6)}, ${p.lng.toFixed(6)}`;
+      $("coordsAccessDisplay").style.display = "block";
+    } else {
+      $("coordsAccessDisplay").style.display = "none";
+    }
+  }
+});
+  
   $(btnToggle).onclick=()=>{
     if(map.hasLayer(osm)){map.removeLayer(osm); esri.addTo(map); $(btnToggle).textContent="🗺️ Plan";}
     else{map.removeLayer(esri); osm.addTo(map); $(btnToggle).textContent="🛰️ Satellite";}
@@ -650,83 +676,96 @@ function resetForm(){
   }
 }
 // Soumission finale
-$("formAppareil").onsubmit=e=>{
+
+$("formAppareil").onsubmit = e => {
   e.preventDefault();
-  let demandeur=$("demandeur").value.trim();
-  let poste=$("poste").value.trim();
-  let appareil=$("appareil").value.trim();
-  let infos=$("infos").value.trim();
-if(!$("presentValue").value){
-  alert("⚠️ Choisissez une méthode de localisation de l’appareil (GPS ou lien).");
-  return;
-}
-if(!$("accessValue").value){
-  alert("⚠️ Indiquez si l’appareil possède un accès routier distinct (Oui ou Non).");
-  return;
-}
 
-  let coordAppareil="",coordAcces="";
-  if($("presentValue").value==="oui"){
-    let la=sanitizeCoord($("latDevice").value), lo=sanitizeCoord($("lonDevice").value);
-    if(!isValidLatLon(la,lo)){alert("⚠️ Coordonnées invalides.");return;}
-    coordAppareil=la+","+lo;
-  } else {
-    if(!isValidUrl($("lien").value)){alert("⚠️ Lien invalide.");return;}
-    coordAppareil=$("lien").value;
-  }
-if($("accessValue").value==="oui"){
-  if($("accessMethod").value==="gps"){
-    let accessCoords = $("coordsAccessDisplay").textContent
-      .replace("Coordonnées relevées (accès) : ","").trim();
+  let demandeur = $("demandeur").value.trim();
+  let poste = $("poste").value.trim();
+  let appareil = $("appareil").value.trim();
+  let infos = $("infos").value.trim();
 
-    if (/^[-]?\d+(\.\d+)?,\s*[-]?\d+(\.\d+)?$/.test(accessCoords)) {
-      coordAcces = accessCoords;
-    } else {
-      alert("⚠️ Merci de positionner l’accès sur la carte.");
+  let coordAppareil = "", coordAcces = "";
+
+  // Vérif appareil obligatoire
+  if ($("presentValue").value === "oui") {
+    let la = sanitizeCoord($("latDevice").value),
+        lo = sanitizeCoord($("lonDevice").value);
+    if (!isValidLatLon(la, lo)) {
+      markError($("latDevice"), null, true); // rouge
       return;
     }
-  } else if($("accessMethod").value==="lien"){
-    let lienAcces = $("lienAccess").value.trim();
-    if (isValidUrl(lienAcces)) {
-      coordAcces = lienAcces;
-    } else {
-      alert("⚠️ Merci de fournir un lien Google Maps valide pour l’accès.");
+    coordAppareil = la + "," + lo;
+  } else if ($("presentValue").value === "non") {
+    if (!isValidUrl($("lien").value)) {
+      markError($("lien"), $("lienHelp"), true);
       return;
     }
+    coordAppareil = $("lien").value;
   } else {
-    alert("⚠️ Choisissez une méthode pour identifier l’accès (GPS ou Lien).");
+    // pas de choix → force étape 5 en erreur
+    document.querySelectorAll("#pill-oui, #pill-non").forEach(p=>p.classList.add("error"));
     return;
   }
-}
 
-  const formData=new URLSearchParams();
-  formData.append("demandeur",demandeur);
-  formData.append("poste",poste);
-  formData.append("type",$("type").value.trim());
-  formData.append("sat",$("sat").value.trim());
-  formData.append("appareil",appareil);
-  formData.append("localisation",coordAppareil);
-  formData.append("acces",coordAcces);
-  formData.append("notes",infos);
+  // Vérif accès
+  if ($("accessValue").value === "oui") {
+    if ($("accessMethod").value === "gps") {
+      let la = $("coordsAccessDisplay").textContent;
+      if (!la.includes(",")) {
+        // rien positionné
+        document.querySelectorAll("#pill-access-gps").forEach(p=>p.classList.add("error"));
+        return;
+      }
+      coordAcces = la.replace("Coordonnées relevées (accès) : ", "").trim();
+    } else if ($("accessMethod").value === "lien") {
+      let lienAcces = $("lienAccess").value.trim();
+      if (!isValidUrl(lienAcces)) {
+        markError($("lienAccess"), $("lienAccessHelp"), true);
+        return;
+      }
+      coordAcces = lienAcces;
+    } else {
+      document.querySelectorAll("#pill-access-gps, #pill-access-lien").forEach(p=>p.classList.add("error"));
+      return;
+    }
+  }
 
-  const submitBtn=document.querySelector('.btn.primary[type="submit"]');
-  const oldLabel=submitBtn.textContent;
-  submitBtn.disabled=true; submitBtn.textContent="⏳ Envoi en cours…";
+  // Données prêtes
+  const formData = new URLSearchParams();
+  formData.append("demandeur", demandeur);
+  formData.append("poste", poste);
+  formData.append("type", $("type").value.trim());
+  formData.append("sat", $("sat").value.trim());
+  formData.append("appareil", appareil);
+  formData.append("localisation", coordAppareil);
+  formData.append("acces", coordAcces);
+  formData.append("notes", infos);
 
-  fetch("https://script.google.com/macros/s/AKfycbz8lUhVMKOrRSdeNBeA0p4ZsQCNOesB0Y4DL27KAoHkHWS78hOqrW-t-9bC_azgN-mY/exec",{method:"POST",body:formData})
-  .then(r=>r.text())
-.then(()=>{
-  fetch(COUNTER_URL+"?increment=true").catch(()=>{});
-  // masquer tout le formulaire
-  steps.forEach(s=>s.classList.remove("active"));
-  document.getElementById("confirmationStep").classList.add("active");
-  // masquer la barre de progression
-  document.getElementById("progress").style.display = "none";
-  document.getElementById("progressbar").style.display = "none";
-})
-  .catch(err=>{alert("⚠️ Erreur d’envoi : "+err.message);})
-  .finally(()=>{submitBtn.disabled=false;submitBtn.textContent=oldLabel;});
+  const submitBtn = document.querySelector('.btn.primary[type="submit"]');
+  const oldLabel = submitBtn.textContent;
+  submitBtn.disabled = true;
+  submitBtn.textContent = "⏳ Envoi en cours…";
+
+  fetch("https://script.google.com/macros/s/AKfycbz8lUhVMKOrRSdeNBeA0p4ZsQCNOesB0Y4DL27KAoHkHWS78hOqrW-t-9bC_azgN-mY/exec", {method:"POST", body:formData})
+    .then(r=>r.text())
+    .then(()=>{
+      fetch(COUNTER_URL+"?increment=true").catch(()=>{});
+      steps.forEach(s=>s.classList.remove("active"));
+      document.getElementById("confirmationStep").classList.add("active");
+      document.getElementById("progress").style.display = "none";
+      document.getElementById("progressbar").style.display = "none";
+    })
+    .catch(err=>{
+      console.error("Erreur d’envoi", err);
+      markError(submitBtn, null, true);
+    })
+    .finally(()=>{
+      submitBtn.disabled = false;
+      submitBtn.textContent = oldLabel;
+    });
 };
+
 // Au départ : n’afficher que l’intro
 steps.forEach(s => s.classList.remove("active"));
 document.getElementById("introStep").classList.add("active");
