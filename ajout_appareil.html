@@ -95,20 +95,14 @@
     <div id="progress">Étape 1/10</div>
     <form id="formAppareil" novalidate>
 
-      <!-- Étape d’introduction (ne compte pas dans le total) -->
+<!-- Étape d’introduction (ne compte pas dans le total) -->
 <div class="step active" id="introStep">
-  <h2 style="text-align:center;margin:12px 0">➕ Ajouter un appareil</h2>
-<p style="text-align:center;color:var(--muted);margin-bottom:20px;line-height:1.5">
-  ⏱️ Quelques secondes suffisent pour renseigner un appareil.<br>
-  🙏 Merci beaucoup pour votre contribution !
-</p>
+  <p style="text-align:center;color:var(--muted);margin-bottom:20px;line-height:1.5">
+    ⏱️ Quelques secondes suffisent pour renseigner un appareil.<br>
+    🙏 Merci beaucoup pour votre contribution !
+  </p>
   <div class="btn-row">
-<button type="button" class="btn primary" id="startForm">🚀 Commencer</button>
-  </div>
-  <div class="btn-row">
-    <button type="button" class="btn secondary" onclick="window.location.href='index.html'">
-      ❌ Annuler et revenir à l’accueil
-    </button>
+    <button type="button" class="btn primary" id="startForm">🚀 Commencer</button>
   </div>
 </div>
 
@@ -264,6 +258,12 @@ Remplir uniquement si l’appareil dépend d’un SAT
     <button type="button" class="btn secondary" onclick="window.location.href='index.html'">🏠 Retour à l’accueil</button>
     <button type="button" class="btn primary" onclick="resetForm()">➕ Ajouter un autre appareil</button>
   </div>
+</div>
+      <!-- Bouton Annuler global -->
+<div id="cancel-row" class="btn-row" style="margin-top:12px">
+  <button type="button" class="btn secondary" onclick="window.location.href='index.html'">
+    ❌ Annuler et revenir à l’accueil
+  </button>
 </div>
     </form>
   </div>
