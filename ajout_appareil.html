@@ -506,10 +506,14 @@ document.addEventListener("DOMContentLoaded",()=>{
 
 function resetForm(){
   $("formAppareil").reset();
-  // remettre les variables et visuels
   currentStep = 0;
+
+  // Réaffiche le formulaire normal (cache confirmation)
+  document.getElementById("confirmationStep").classList.remove("active");
+  document.getElementById("introStep").style.display = "none";
   document.getElementById("progress").style.display = "block";
   document.getElementById("progressbar").style.display = "block";
+
   showStep(currentStep);
 
   // ✅ Réinjecter automatiquement le demandeur depuis localStorage
