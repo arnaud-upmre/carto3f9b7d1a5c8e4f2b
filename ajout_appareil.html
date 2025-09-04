@@ -570,6 +570,10 @@ document.addEventListener("DOMContentLoaded",()=>{
   const params = new URLSearchParams(window.location.search);
 
    if (params.has("poste")) {
+     // Préremplir le nom de l’appareil si passé en paramètre
+if (params.has("appareil")) {
+  $("appareil").value = params.get("appareil").trim();
+}
   const TYPES = ["A","L","L-A","LGV","P","PRCI","S","SP","ST","SST","SS","SSP","SSPA","SSP-A"];
   let raw = params.get("poste").trim();
   let foundType = "";
