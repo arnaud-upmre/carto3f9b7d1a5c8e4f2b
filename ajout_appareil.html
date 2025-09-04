@@ -13,6 +13,11 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 
   <style>
+
+    .field-hint{font-size:13px;color:#c62828;margin-top:6px;display:none}
+.field-hint.show{display:block}
+input.error{border:2px solid #c62828!important;background:#ffecec}
+    
     *,*::before,*::after{box-sizing:border-box}
     html{-webkit-text-size-adjust:100%}
     body{
@@ -179,6 +184,7 @@ Remplir uniquement si l’appareil dépend d’un SAT
         <div id="lienField" style="display:none">
           <label>🔗 Lien Google Maps :</label>
           <input id="lien" type="url" placeholder="https://maps.app.goo.gl/…">
+          <div id="lienHelp" class="field-hint">⚠️ Lien requis pour continuer</div>
         </div>
         <div class="btn-row">
           <button type="button" class="btn secondary prev">⬅️ Retour</button>
@@ -241,6 +247,7 @@ Remplir uniquement si l’appareil dépend d’un SAT
   <div id="lienAccessField" style="display:none">
     <label>🔗 Lien Google Maps accès :</label>
     <input id="lienAccess" type="url" placeholder="https://maps.app.goo.gl/…">
+    <div id="lienAccessHelp" class="field-hint">⚠️ Lien requis pour continuer</div>
   </div>
 
   <div class="btn-row">
@@ -333,6 +340,19 @@ if(currentStep === 7 && $("accessValue").value === "oui"){
     return;
   }
 }
+      // Étape 6 => appareil via LIEN
+if(currentStep === 5 && $("presentValue").value === "non"){
+  const ok = isValidUrl($("lien").value);
+  markError($("lien"), $("lienHelp"), !ok);
+  if(!ok) return;
+}
+
+// Étape 9 => accès via LIEN
+if(currentStep === 8 && $("accessValue").value === "oui" && $("accessMethod").value === "lien"){
+  const ok = isValidUrl($("lienAccess").value);
+  markError($("lienAccess"), $("lienAccessHelp"), !ok);
+  if(!ok) return;
+}
       currentStep++;
       showStep(currentStep);
     }
@@ -375,6 +395,13 @@ document.addEventListener("input", (e)=>{
 // GPS / lien logique simplifiée
 function $(id){return document.getElementById(id);}
 function toggle(el,show){el.style.display=show?"block":"none";}
+  function showHint(el, show){ 
+  el.classList.toggle("show", !!show); 
+}
+function markError(input, helpEl, on){
+  input.classList.toggle("error", !!on);
+  showHint(helpEl, !!on);
+}
 $("pill-oui").onclick=()=>{
   $("presentValue").value="oui";
   $("pill-oui").classList.add("active");
@@ -384,6 +411,7 @@ $("pill-oui").onclick=()=>{
 
   // 👇 ajout
   setTimeout(()=>mapDevice && mapDevice.invalidateSize(),300);
+  markError($("lien"), $("lienHelp"), false);
 };
   
 $("pill-non").onclick=()=>{ $("presentValue").value="non";$("pill-non").classList.add("active");$("pill-oui").classList.remove("active");toggle($("mapDeviceWrap"),0);toggle($("lienField"),1);};
@@ -395,6 +423,7 @@ $("pill-acces-oui").onclick=()=>{
 
   // 👇 ajout
   setTimeout(()=>mapAccess && mapAccess.invalidateSize(),300);
+  markError($("lienAccess"), $("lienAccessHelp"), false);
 };
 
 $("pill-acces-non").onclick=()=>{
@@ -413,6 +442,7 @@ $("pill-access-gps").onclick = () => {
   toggle($("mapAccessWrap"), 1);
   toggle($("lienAccessField"), 0);
   setTimeout(()=>mapAccess && mapAccess.invalidateSize(),300);
+  markError($("lienAccess"), $("lienAccessHelp"), false);
 };
 
 $("pill-access-lien").onclick = () => {
@@ -422,7 +452,19 @@ $("pill-access-lien").onclick = () => {
   // On prépare l'étape suivante : cacher carte, afficher lien
   toggle($("mapAccessWrap"), 0);
   toggle($("lienAccessField"), 1);
+  const ok = isValidUrl($("lienAccess").value);
+markError($("lienAccess"), $("lienAccessHelp"), !ok);
 };
+
+  $("lien").addEventListener("input", ()=>{
+  const ok = isValidUrl($("lien").value);
+  markError($("lien"), $("lienHelp"), !ok && $("presentValue").value === "non");
+});
+
+$("lienAccess").addEventListener("input", ()=>{
+  const ok = isValidUrl($("lienAccess").value);
+  markError($("lienAccess"), $("lienAccessHelp"), !ok && $("accessMethod").value === "lien");
+});
 // ---------------- LOGIQUE COMPLÈTE LEAFLET + ENVOI ----------------
 
 const COUNTER_URL = "https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec";
