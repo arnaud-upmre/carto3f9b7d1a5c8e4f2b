@@ -2348,23 +2348,6 @@
   {
     "nom": "Lesquin",
     "type": "SP",
-    "SAT": "",
-    "accès": "I18",
-    "latitude": 50.59369,
-    "longitude": 3.11539,
-    "description": "",
-    "rss": "B",
-    "contact": "",
-    "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
-    "pk": "",
-    "poste_latitude": "50.6011174",
-    "poste_longitude": "3.1099532"
-  },
-  {
-    "nom": "Lesquin",
-    "type": "SP",
     "SAT": "SAT1",
     "accès": "",
     "latitude": 50.59102,
