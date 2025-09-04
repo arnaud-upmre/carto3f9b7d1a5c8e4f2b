@@ -437,13 +437,28 @@ document.addEventListener("DOMContentLoaded",()=>{
   // Préremplir poste/appareil si passés en paramètres d'URL
   const params = new URLSearchParams(window.location.search);
 
-  if (params.has("poste")) {
-    $("poste").value = params.get("poste");
-  }
+   if (params.has("poste")) {
+    const TYPES = ["A","L","L-A","LGV","P","PRCI","S","SP","ST","SST","SS","SSP","SSPA","SSP-A"];
+    let raw = params.get("poste").trim();
+    let foundType = "";
 
-  // ✅ NOUVEAU : auto-remplir l’étape 4 (Nom de l’appareil)
-  if (params.has("appareil")) {
-    $("appareil").value = params.get("appareil");
+    // Cherche si le texte finit par un type connu
+    for (let t of TYPES) {
+      if (raw.endsWith(" " + t) || raw === t) {
+        foundType = t;
+        break;
+      }
+    }
+
+    if (foundType) {
+      // Enlève le type à la fin pour ne garder que le nom
+      let nameOnly = raw.replace(new RegExp("\\s*" + foundType + "$"), "").trim();
+      $("poste").value = nameOnly;
+      $("type").value = foundType;
+    } else {
+      // Si aucun type trouvé → on met tout dans "poste"
+      $("poste").value = raw;
+    }
   }
 
   // (la suite de ton code inchangée : géoloc, demandeur depuis localStorage, etc.)
