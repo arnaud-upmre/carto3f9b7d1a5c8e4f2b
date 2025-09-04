@@ -299,11 +299,15 @@ Remplir uniquement si l’appareil dépend d’un SAT
 
 <script>
 let currentStep=0;
+  // Coordonnées par défaut pour centrer la carte (Hazebrouck)
+// ⚠️ Ne seront PAS enregistrées tant que l’utilisateur ne clique pas sur Localiser
+const HAZE = [50.72384, 2.54924];
 const steps=document.querySelectorAll(".step:not(#introStep):not(#confirmationStep)");
 const progress=document.getElementById("progress");
 function showStep(i){
   steps.forEach((s,idx)=>s.classList.toggle("active",idx===i));
-  progress.textContent=`Étape ${i+1}/${steps.length}`;
+  let pct = Math.round(((i+1) / steps.length) * 100);
+progress.textContent = `${pct}%`;
   document.getElementById("progressbar-fill").style.width = ((i+1)/steps.length*100) + "%";
 
   // 🔧 Initialisation + redessin des cartes Leaflet
