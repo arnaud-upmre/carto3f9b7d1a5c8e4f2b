@@ -373,40 +373,56 @@ if(i===8){ // étape 9 = détails accès (carte/lien)
       { step: 2, label: "📌 SAT", value: $("sat").value },
       { step: 3, label: "💡 Appareil", value: $("appareil").value },
       { step: 5, label: "📍 Localisation appareil", value: $("presentValue").value==="oui" ? ($("latDevice").value+","+$("lonDevice").value) : $("lien").value },
-      { step: 6, label: "🚪 Accès", value: $("accessValue").value },
       { step: 8, label: "📍 Localisation accès", value: $("accessValue").value==="oui" ? 
          ($("accessMethod").value==="gps" ? $("coordsAccessDisplay").textContent.replace("Coordonnées relevées (accès) : ","") : $("lienAccess").value) : "" },
       { step: 9, label: "📝 Notes", value: $("infos").value }
     ];
 
-    data.forEach(item=>{
-      if(item.value && item.value.trim()!==""){
-        const div = document.createElement("div");
+   data.forEach(item=>{
+  if(item.value && item.value.trim()!==""){
+    const div = document.createElement("div");
 
-        // Si coordonnées GPS → rendre cliquable (Google Maps zoom 20)
-        if(item.value.includes(",") && !item.value.startsWith("http")){
-          const [lat, lon] = item.value.split(",");
-          const a = document.createElement("a");
-          a.href = `https://www.google.com/maps?q=${lat.trim()},${lon.trim()}&z=20`;
-          a.target = "_blank";
-          a.rel = "noopener";
-          a.textContent = `${item.label} : ${item.value}`;
-          a.style.textDecoration = "none";
-          a.style.color = "inherit";
-          div.appendChild(a);
-        } else {
-          div.textContent = `${item.label} : ${item.value}`;
-        }
+    // Si coordonnées GPS → lien Google Maps satellite zoom 20
+    if(item.value.includes(",") && !item.value.startsWith("http")){
+      const [lat, lon] = item.value.split(",");
+      const a = document.createElement("a");
+      a.href = `https://www.google.com/maps/@${lat.trim()},${lon.trim()},20z/data=!3m1!1e3`;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.textContent = `${item.label} : ${item.value}`;
+      a.style.textDecoration = "none";
+      a.style.color = "inherit";
+      div.appendChild(a);
 
-        div.style.cursor = "pointer";
-        div.style.margin = "6px 0";
-        div.style.padding = "6px";
-        div.style.border = "1px solid var(--border)";
-        div.style.borderRadius = "6px";
-        div.onclick = ()=>{ currentStep=item.step; showStep(currentStep); };
-        recap.appendChild(div);
+    // Si lien Google Maps → on force aussi la vue satellite
+    } else if(item.value.startsWith("http")){
+      let url = item.value;
+      if(url.includes("maps.app.goo.gl")){
+        url = url.replace("maps.app.goo.gl", "www.google.com/maps");
       }
-    });
+      const a = document.createElement("a");
+      a.href = url + "/data=!3m1!1e3";
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.textContent = `${item.label} : ${item.value}`;
+      a.style.textDecoration = "none";
+      a.style.color = "inherit";
+      div.appendChild(a);
+
+    // Sinon texte normal
+    } else {
+      div.textContent = `${item.label} : ${item.value}`;
+    }
+
+    div.style.cursor = "pointer";
+    div.style.margin = "6px 0";
+    div.style.padding = "6px";
+    div.style.border = "1px solid var(--border)";
+    div.style.borderRadius = "6px";
+    div.onclick = ()=>{ currentStep=item.step; showStep(currentStep); };
+    recap.appendChild(div);
+  }
+});
   }
   
 }
