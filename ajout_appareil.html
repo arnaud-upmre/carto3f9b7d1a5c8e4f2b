@@ -508,8 +508,11 @@ function resetForm(){
   $("formAppareil").reset();
   currentStep = 0;
 
-  // Réaffiche le formulaire normal (cache confirmation)
+  // Masquer l'écran de confirmation
   document.getElementById("confirmationStep").classList.remove("active");
+  document.getElementById("confirmationStep").style.display = "none";
+
+  // Réaffiche le formulaire normal
   document.getElementById("introStep").style.display = "none";
   document.getElementById("progress").style.display = "block";
   document.getElementById("progressbar").style.display = "block";
@@ -522,7 +525,6 @@ function resetForm(){
     $("demandeur").value = savedDemandeur;
   }
 }
-
 // Soumission finale
 $("formAppareil").onsubmit=e=>{
   e.preventDefault();
