@@ -463,13 +463,19 @@ document.addEventListener("DOMContentLoaded",()=>{
   });
 });
 
-  function resetForm(){
+function resetForm(){
   $("formAppareil").reset();
   // remettre les variables et visuels
   currentStep = 0;
   document.getElementById("progress").style.display = "block";
   document.getElementById("progressbar").style.display = "block";
   showStep(currentStep);
+
+  // ✅ Réinjecter automatiquement le demandeur depuis localStorage
+  const savedDemandeur = localStorage.getItem("demandeur");
+  if(savedDemandeur){
+    $("demandeur").value = savedDemandeur;
+  }
 }
 
 // Soumission finale
