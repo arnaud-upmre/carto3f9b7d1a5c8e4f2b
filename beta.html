@@ -452,6 +452,7 @@ if($("accessValue").value==="oui"){
   const formData=new URLSearchParams();
   formData.append("demandeur",demandeur);
   formData.append("poste",poste);
+  formData.append("type",$("type").value.trim());
   formData.append("sat",$("sat").value.trim());
   formData.append("appareil",appareil);
   formData.append("localisation",coordAppareil);
