@@ -464,28 +464,32 @@ document.addEventListener("DOMContentLoaded",()=>{
   const params = new URLSearchParams(window.location.search);
 
    if (params.has("poste")) {
-    const TYPES = ["A","L","L-A","LGV","P","PRCI","S","SP","ST","SST","SS","SSP","SSPA","SSP-A"];
-    let raw = params.get("poste").trim();
-    let foundType = "";
+  const TYPES = ["A","L","L-A","LGV","P","PRCI","S","SP","ST","SST","SS","SSP","SSPA","SSP-A"];
+  let raw = params.get("poste").trim();
+  let foundType = "";
+  let foundSat = "";
 
-    // Cherche si le texte finit par un type connu
-    for (let t of TYPES) {
-      if (raw.endsWith(" " + t) || raw === t) {
-        foundType = t;
-        break;
-      }
-    }
+  // 1️⃣ On cherche le SAT à la fin (ex: "SAT1")
+  const satMatch = raw.match(/\bSAT\d+\b$/i);
+  if (satMatch) {
+    foundSat = satMatch[0];
+    raw = raw.replace(new RegExp("\\s*" + foundSat + "$"), "").trim();
+  }
 
-    if (foundType) {
-      // Enlève le type à la fin pour ne garder que le nom
-      let nameOnly = raw.replace(new RegExp("\\s*" + foundType + "$"), "").trim();
-      $("poste").value = nameOnly;
-      $("type").value = foundType;
-    } else {
-      // Si aucun type trouvé → on met tout dans "poste"
-      $("poste").value = raw;
+  // 2️⃣ On cherche le type
+  for (let t of TYPES) {
+    if (raw.endsWith(" " + t) || raw === t) {
+      foundType = t;
+      raw = raw.replace(new RegExp("\\s*" + foundType + "$"), "").trim();
+      break;
     }
   }
+
+  // 3️⃣ On alimente les champs
+  $("poste").value = raw;
+  if (foundType) $("type").value = foundType;
+  if (foundSat) $("sat").value = foundSat;
+}
 
   // (la suite de ton code inchangée : géoloc, demandeur depuis localStorage, etc.)
   if(navigator.geolocation){
