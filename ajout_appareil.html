@@ -270,7 +270,7 @@ Remplir uniquement si l’appareil dépend d’un SAT
 
 <script>
 let currentStep=0;
-const steps=document.querySelectorAll(".step:not(#confirmationStep)");
+const steps=document.querySelectorAll(".step:not(#introStep):not(#confirmationStep)");
 const progress=document.getElementById("progress");
 function showStep(i){
   steps.forEach((s,idx)=>s.classList.toggle("active",idx===i));
