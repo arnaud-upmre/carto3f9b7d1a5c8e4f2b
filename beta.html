@@ -108,6 +108,8 @@
       <div class="step">
         <label>📌 Poste :</label>
         <input id="poste" required>
+        <label>📌 Type (optionnel) :</label>
+<input id="type" placeholder="Ex : SP, SSP, PRCI....">
         <div class="btn-row">
           <button type="button" class="btn secondary prev">⬅️ Retour</button>
           <button type="button" class="btn primary next">Suivant ➡️</button>
@@ -136,11 +138,11 @@
 
       <!-- Étape 5 -->
       <div class="step">
-        <label>📍 Localiser l'appareil via GPS ?</label>
-        <div class="pill-group">
-          <div class="pill" id="pill-oui" data-value="oui">Oui</div>
-          <div class="pill" id="pill-non" data-value="non">Non</div>
-        </div>
+      <label>📍 Comment localiser l’appareil ?</label>
+<div class="pill-group">
+  <div class="pill" id="pill-oui" data-value="oui">📡 Oui, avec ma position GPS</div>
+  <div class="pill" id="pill-non" data-value="non">🔗 Non, je mets un lien</div>
+</div>
         <input type="hidden" id="presentValue">
         <div class="btn-row">
           <button type="button" class="btn secondary prev">⬅️ Retour</button>
@@ -172,11 +174,11 @@
 
       <!-- Étape 7 -->
       <div class="step">
-        <label>📍 L’appareil a un accès distinct ?</label>
-        <div class="pill-group">
-          <div class="pill" id="pill-acces-oui" data-value="oui">Oui</div>
-          <div class="pill" id="pill-acces-non" data-value="non">Non</div>
-        </div>
+<label>🚪 L’appareil a-t-il un accès routier distinct ?<br>
+<span style="font-weight:normal;color:var(--muted);font-size:14px">
+Si vous répondez « Non », on considérera que l’accès est le même que celui du poste indiqué au début.
+</span>
+</label>
         <input type="hidden" id="accessValue">
         <div class="btn-row">
           <button type="button" class="btn secondary prev">⬅️ Retour</button>
@@ -186,19 +188,24 @@
 
       <!-- Étape 8 -->
       <div class="step">
-        <div id="mapAccessWrap" class="map-wrap" style="display:none">
-          <div>Déplacez le curseur pour ajuster la position de l’accès.</div>
-          <div id="mapAccess"></div>
-          <div class="map-toolbar">
-            <button type="button" id="btnRecenterAccess">📍 Localiser</button>
-            <button type="button" id="btnToggleAccess">🗺️ Plan</button>
-          </div>
-        </div>
-        <div id="coordsAccessDisplay" style="display:none;color:var(--muted);margin:8px 0"></div>
-        <div id="lienAccessField" style="display:none">
-          <label>🔗 Lien Google Maps accès :</label>
-          <input id="lienAccess" type="url" placeholder="https://maps.app.goo.gl/…">
-        </div>
+<div id="mapAccessWrap" class="map-wrap" style="display:none">
+  <div>Déplacez le curseur pour ajuster la position de l’accès.</div>
+  <div id="mapAccess"></div>
+  <div class="map-toolbar">
+    <button type="button" id="btnRecenterAccess">📍 Localiser</button>
+    <button type="button" id="btnToggleAccess">🗺️ Plan</button>
+  </div>
+</div>
+<div id="coordsAccessDisplay" style="display:none;color:var(--muted);margin:8px 0"></div>
+
+<!-- Séparateur OU -->
+<div style="text-align:center;margin:12px 0;font-weight:bold;color:var(--muted)">— OU —</div>
+
+<!-- Champ lien toujours visible à l’étape 8 -->
+<div id="lienAccessField">
+  <label>🔗 Lien Google Maps accès :</label>
+  <input id="lienAccess" type="url" placeholder="https://maps.app.goo.gl/…">
+</div>
         <div class="btn-row">
           <button type="button" class="btn secondary prev">⬅️ Retour</button>
           <button type="button" class="btn primary next">Suivant ➡️</button>
@@ -252,8 +259,16 @@ function showStep(i){
 }
 document.querySelectorAll(".next").forEach(btn=>{
   btn.addEventListener("click", e=>{
-    e.preventDefault(); // empêche la soumission du formulaire
+    e.preventDefault();
     if(validateStep(currentStep)){
+      // 🔧 Cas particulier étape 7 (index 6 car 0-based)
+      if(currentStep === 6){
+        if($("accessValue").value === "non"){
+          currentStep = 8; // saute directement aux notes (étape 9)
+          showStep(currentStep);
+          return;
+        }
+      }
       currentStep++;
       showStep(currentStep);
     }
@@ -285,9 +300,19 @@ function $(id){return document.getElementById(id);}
 function toggle(el,show){el.style.display=show?"block":"none";}
 $("pill-oui").onclick=()=>{ $("presentValue").value="oui";$("pill-oui").classList.add("active");$("pill-non").classList.remove("active");toggle($("mapDeviceWrap"),1);toggle($("lienField"),0);};
 $("pill-non").onclick=()=>{ $("presentValue").value="non";$("pill-non").classList.add("active");$("pill-oui").classList.remove("active");toggle($("mapDeviceWrap"),0);toggle($("lienField"),1);};
-$("pill-acces-oui").onclick=()=>{ $("accessValue").value="oui";$("pill-acces-oui").classList.add("active");$("pill-acces-non").classList.remove("active");toggle($("mapAccessWrap"),1);toggle($("lienAccessField"),0);};
-$("pill-acces-non").onclick=()=>{ $("accessValue").value="non";$("pill-acces-non").classList.add("active");$("pill-acces-oui").classList.remove("active");toggle($("mapAccessWrap"),0);toggle($("lienAccessField"),1);};
+$("pill-acces-oui").onclick=()=>{
+  $("accessValue").value="oui";
+  $("pill-acces-oui").classList.add("active");
+  $("pill-acces-non").classList.remove("active");
+  toggle($("mapAccessWrap"),1); // affiche la carte
+};
 
+$("pill-acces-non").onclick=()=>{
+  $("accessValue").value="non";
+  $("pill-acces-non").classList.add("active");
+  $("pill-acces-oui").classList.remove("active");
+  toggle($("mapAccessWrap"),0); // cache la carte
+};
 // ---------------- LOGIQUE COMPLÈTE LEAFLET + ENVOI ----------------
 
 const COUNTER_URL = "https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec";
@@ -387,8 +412,14 @@ $("formAppareil").onsubmit=e=>{
   let appareil=$("appareil").value.trim();
   let infos=$("infos").value.trim();
   if(!demandeur||!poste||!appareil){alert("⚠️ Merci de remplir tous les champs obligatoires.");return;}
-  if(!$("presentValue").value){alert("⚠️ Indiquez GPS ou Lien.");return;}
-  if(!$("accessValue").value){alert("⚠️ Indiquez accès Oui / Non.");return;}
+if(!$("presentValue").value){
+  alert("⚠️ Choisissez une méthode de localisation de l’appareil (GPS ou lien).");
+  return;
+}
+if(!$("accessValue").value){
+  alert("⚠️ Indiquez si l’appareil possède un accès routier distinct (Oui ou Non).");
+  return;
+}
 
   let coordAppareil="",coordAcces="";
   if($("presentValue").value==="oui"){
@@ -399,13 +430,24 @@ $("formAppareil").onsubmit=e=>{
     if(!isValidUrl($("lien").value)){alert("⚠️ Lien invalide.");return;}
     coordAppareil=$("lien").value;
   }
-  if($("accessValue").value==="oui"){
-    let accessCoords=$("coordsAccessDisplay").textContent.replace("Coordonnées relevées (accès) : ","").trim();
-    let lienAcces=$("lienAccess").value.trim();
-    if(/^[-]?\d+(\.\d+)?,\s*[-]?\d+(\.\d+)?$/.test(accessCoords)){coordAcces=accessCoords;}
-    else if(isValidUrl(lienAcces)){coordAcces=lienAcces;}
-    else{alert("⚠️ Renseignez coordonnées ou lien Google Maps pour l’accès.");return;}
+if($("accessValue").value==="oui"){
+  let accessCoords = $("coordsAccessDisplay").textContent
+    .replace("Coordonnées relevées (accès) : ","").trim();
+  let lienAcces = $("lienAccess").value.trim();
+
+  if (isValidUrl(lienAcces)) {
+    // Si un lien est fourni → on garde uniquement le lien et on masque les coordonnées
+    coordAcces = lienAcces;
+    $("coordsAccessDisplay").style.display = "none";
+  } else if (/^[-]?\d+(\.\d+)?,\s*[-]?\d+(\.\d+)?$/.test(accessCoords)) {
+    // Sinon on prend les coordonnées si valides
+    coordAcces = accessCoords;
+    $("coordsAccessDisplay").style.display = "block";
+  } else {
+    alert("⚠️ Merci d’indiquer soit les coordonnées GPS, soit un lien Google Maps valide pour l’accès.");
+    return;
   }
+}
 
   const formData=new URLSearchParams();
   formData.append("demandeur",demandeur);
