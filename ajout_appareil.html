@@ -314,7 +314,6 @@ function validateStep(i){
   const input=step.querySelector("input[required],textarea[required]");
   if(input && !input.value.trim()){
     input.classList.add("error");
-    alert("⚠️ Merci de remplir ce champ");
     return false;
   }
   return true;
