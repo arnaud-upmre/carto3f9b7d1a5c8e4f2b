@@ -440,7 +440,7 @@ $("pill-acces-oui").onclick=()=>{
   // 👇 ajout
   setTimeout(()=>mapAccess && mapAccess.invalidateSize(),300);
   markError($("lienAccess"), $("lienAccessHelp"), false);
-  document.querySelectorAll("#pill-oui, #pill-non").forEach(p=>p.classList.remove("error"));
+  document.querySelectorAll("#pill-acces-oui, #pill-acces-non").forEach(p=>p.classList.remove("error"));
 };
 
 $("pill-acces-non").onclick=()=>{
