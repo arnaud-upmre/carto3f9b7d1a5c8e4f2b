@@ -378,57 +378,53 @@ if(i===8){ // étape 9 = détails accès (carte/lien)
       { step: 9, label: "📝 Notes", value: $("infos").value }
     ];
 
-   data.forEach(item=>{
+ data.forEach(item=>{
   if(item.value && item.value.trim()!==""){
     const div = document.createElement("div");
 
-// Si coordonnées GPS → texte + lien séparés
+ // Si coordonnées GPS → texte simplifié + lien
 if(item.value.includes(",") && !item.value.startsWith("http")){
   const [lat, lon] = item.value.split(",");
-  
-  // Texte principal (retour édition)
   const span = document.createElement("span");
-  span.textContent = `${item.label} : ${item.value}`;
+  span.textContent = `${item.label} (par GPS)`;
   div.appendChild(span);
 
-  // Lien Google Maps
   const link = document.createElement("a");
   link.href = `https://www.google.com/maps/@${lat.trim()},${lon.trim()},20z/data=!3m1!1e3`;
   link.target = "_blank";
   link.rel = "noopener";
   link.textContent = " 🔎 Voir sur Google Maps";
   link.style.marginLeft = "8px";
-  link.style.color = "#0b6cff";   // bleu accent
+  link.style.color = "#0b6cff";
   link.style.textDecoration = "underline";
+  link.addEventListener("click", e => e.stopPropagation());
   div.appendChild(link);
 
-      // Si lien Google Maps → texte + lien séparés
-    } else if(item.value.startsWith("http")){
-      let url = item.value;
-      if(url.includes("maps.app.goo.gl")){
-        url = url.replace("maps.app.goo.gl", "www.google.com/maps");
-      }
+// Si lien Google Maps → texte simplifié + lien
+} else if(item.value.startsWith("http")){
+  let url = item.value;
+  if(url.includes("maps.app.goo.gl")){
+    url = url.replace("maps.app.goo.gl", "www.google.com/maps");
+  }
+  const span = document.createElement("span");
+  span.textContent = `${item.label} (par lien)`;
+  div.appendChild(span);
 
-      // Texte principal (retour édition)
-      const span = document.createElement("span");
-      span.textContent = `${item.label} : ${item.value}`;
-      div.appendChild(span);
+  const link = document.createElement("a");
+  link.href = url + "/data=!3m1!1e3";
+  link.target = "_blank";
+  link.rel = "noopener";
+  link.textContent = " 🔎 Voir sur Google Maps";
+  link.style.marginLeft = "8px";
+  link.style.color = "#0b6cff";
+  link.style.textDecoration = "underline";
+  link.addEventListener("click", e => e.stopPropagation());
+  div.appendChild(link);
 
-      // Lien Google Maps
-      const link = document.createElement("a");
-      link.href = url + "/data=!3m1!1e3";
-      link.target = "_blank";
-      link.rel = "noopener";
-      link.textContent = " 🔎 Voir sur Google Maps";
-      link.style.marginLeft = "8px";
-      link.style.color = "#0b6cff";
-      link.style.textDecoration = "underline";
-      div.appendChild(link);
-
-    // Sinon texte normal
-    } else {
-      div.textContent = `${item.label} : ${item.value}`;
-    }
+// Sinon texte normal
+} else {
+  div.textContent = `${item.label} : ${item.value}`;
+}
 
     div.style.cursor = "pointer";
     div.style.margin = "6px 0";
