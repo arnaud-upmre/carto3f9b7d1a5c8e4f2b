@@ -250,7 +250,7 @@
 
 <script>
 let currentStep=0;
-const steps=document.querySelectorAll(".step");
+const steps=document.querySelectorAll(".step:not(#confirmationStep)");
 const progress=document.getElementById("progress");
 function showStep(i){
   steps.forEach((s,idx)=>s.classList.toggle("active",idx===i));
@@ -428,30 +428,35 @@ function startLocAccess(){
   if(lastFix)setMapTo(mapAccess,markerAccess,lastFix.lat,lastFix.lon,"access");
 }
 
-// Précharger position si dispo
 document.addEventListener("DOMContentLoaded",()=>{
-    // Préremplir poste si passé en paramètre d'URL
+  // Préremplir poste/appareil si passés en paramètres d'URL
   const params = new URLSearchParams(window.location.search);
-  if(params.has("poste")){
+
+  if (params.has("poste")) {
     $("poste").value = params.get("poste");
   }
+
+  // ✅ NOUVEAU : auto-remplir l’étape 4 (Nom de l’appareil)
+  if (params.has("appareil")) {
+    $("appareil").value = params.get("appareil");
+  }
+
+  // (la suite de ton code inchangée : géoloc, demandeur depuis localStorage, etc.)
   if(navigator.geolocation){
     navigator.geolocation.getCurrentPosition(
       p=>applyFix(p.coords.latitude,p.coords.longitude),
       err=>{if(err.code===1)GEO_BLOCKED=true;},
       GEO_OPTS);
   }
-    // Charger Demandeur depuis localStorage
+
   const savedDemandeur = localStorage.getItem("demandeur");
   if(savedDemandeur){
     $("demandeur").value = savedDemandeur;
   }
-
-  // Sauvegarder Demandeur à chaque modification
-$("demandeur").addEventListener("input", ()=>{
-  localStorage.setItem("demandeur", $("demandeur").value.trim());
-});
+  $("demandeur").addEventListener("input", ()=>{
+    localStorage.setItem("demandeur", $("demandeur").value.trim());
   });
+});
 
   function resetForm(){
   $("formAppareil").reset();
