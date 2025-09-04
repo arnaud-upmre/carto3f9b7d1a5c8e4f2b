@@ -56,6 +56,10 @@ input.error{border:2px solid #c62828!important;background:#ffecec}
       border:1px solid var(--border);border-radius:999px;cursor:pointer;
     }
     .pill.active{background:var(--accent);color:var(--accent-ink)}
+    .pill.error {
+  border: 2px solid #c62828 !important;
+  background: #ffecec;
+}
     .map-wrap{margin:12px 0;border:1px solid var(--border);border-radius:10px;overflow:hidden}
     #mapDevice,#mapAccess{height:300px;width:100%}
     .map-toolbar{display:flex;gap:8px;padding:6px;background:var(--card)}
@@ -325,6 +329,17 @@ document.querySelectorAll(".next").forEach(btn=>{
   btn.addEventListener("click", e=>{
     e.preventDefault();
     if(validateStep(currentStep)){
+      // Étape 5 (localiser l’appareil) → obligatoire
+if(currentStep === 4 && !$("presentValue").value){
+  document.querySelectorAll("#pill-oui, #pill-non").forEach(p=>p.classList.add("error"));
+  return; // empêche d’avancer
+}
+
+// Étape 7 (accès distinct) → obligatoire
+if(currentStep === 6 && !$("accessValue").value){
+  document.querySelectorAll("#pill-acces-oui, #pill-acces-non").forEach(p=>p.classList.add("error"));
+  return; // empêche d’avancer
+}
       // 🔧 Cas particulier étape 7 (index 6 car 0-based)
       if(currentStep === 6){
         if($("accessValue").value === "non"){
@@ -412,6 +427,7 @@ $("pill-oui").onclick=()=>{
   // 👇 ajout
   setTimeout(()=>mapDevice && mapDevice.invalidateSize(),300);
   markError($("lien"), $("lienHelp"), false);
+  document.querySelectorAll("#pill-oui, #pill-non").forEach(p=>p.classList.remove("error"));
 };
   
 $("pill-non").onclick=()=>{ $("presentValue").value="non";$("pill-non").classList.add("active");$("pill-oui").classList.remove("active");toggle($("mapDeviceWrap"),0);toggle($("lienField"),1);};
@@ -424,6 +440,7 @@ $("pill-acces-oui").onclick=()=>{
   // 👇 ajout
   setTimeout(()=>mapAccess && mapAccess.invalidateSize(),300);
   markError($("lienAccess"), $("lienAccessHelp"), false);
+  document.querySelectorAll("#pill-oui, #pill-non").forEach(p=>p.classList.remove("error"));
 };
 
 $("pill-acces-non").onclick=()=>{
@@ -431,6 +448,7 @@ $("pill-acces-non").onclick=()=>{
   $("pill-acces-non").classList.add("active");
   $("pill-acces-oui").classList.remove("active");
   toggle($("mapAccessWrap"),0); // cache la carte
+  document.querySelectorAll("#pill-acces-oui, #pill-acces-non").forEach(p=>p.classList.remove("error"));
 };
 
   // --- Étape 8 (choix méthode d’accès) ---
