@@ -569,11 +569,12 @@ document.addEventListener("DOMContentLoaded",()=>{
   // Préremplir poste/appareil si passés en paramètres d'URL
   const params = new URLSearchParams(window.location.search);
 
-   if (params.has("poste")) {
-     // Préremplir le nom de l’appareil si passé en paramètre
+ // Préremplir le nom de l’appareil si passé en paramètre
 if (params.has("appareil")) {
   $("appareil").value = params.get("appareil").trim();
 }
+
+if (params.has("poste")) {
   const TYPES = ["A","L","L-A","LGV","P","PRCI","S","SP","ST","SST","SS","SSP","SSPA","SSP-A"];
   let raw = params.get("poste").trim();
   let foundType = "";
