@@ -820,11 +820,11 @@ if (params.has("poste")) {
   let foundType = "";
   let foundSat = "";
 
-  // 1️⃣ On cherche le SAT à la fin (ex: "SAT1")
-  const satMatch = raw.match(/\bSAT\d+\b$/i);
+  // 1️⃣ On coupe dès qu’on trouve un SAT (ignore tout ce qui suit)
+  const satMatch = raw.match(/\bSAT\d+\b/i);
   if (satMatch) {
     foundSat = satMatch[0];
-    raw = raw.replace(new RegExp("\\s*" + foundSat + "$"), "").trim();
+    raw = raw.substring(0, raw.indexOf(foundSat)).trim();
   }
 
   // 2️⃣ On cherche le type
