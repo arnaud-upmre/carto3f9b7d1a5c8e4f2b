@@ -312,22 +312,47 @@ progress.textContent = `${pct}%`;
 
   // 🔧 Initialisation + redessin des cartes Leaflet
   if(i===5){ // étape 6 = carte appareil
-    if(!mapDevice){
-      startLocDevice(); // initialise la carte si pas déjà fait
-    }
-    setTimeout(()=>mapDevice && mapDevice.invalidateSize(),300);
+  if(!mapDevice){
+    startLocDevice(); // initialise la carte si pas déjà fait
   }
- if(i===8){ // nouvelle étape 9 = détails accès (carte/lien)
-  // Affiche la bonne UI selon la méthode choisie
+  setTimeout(() => mapDevice && mapDevice.invalidateSize(), 300);
+
+  // 🔥 Relance localisation précise dès qu’on arrive sur la carte
+  if (navigator.geolocation && $("presentValue").value === "oui") {
+    navigator.geolocation.getCurrentPosition(
+      p => {
+        DEVICE_CONFIRMED = true;
+        $("mapDeviceWrap").classList.remove("error");
+        applyFix(p.coords.latitude, p.coords.longitude);
+      },
+      err => { if (err.code === 1) onGeoDenied("device"); },
+      { enableHighAccuracy: true, timeout: 7000, maximumAge: 0 }
+    );
+  }
+}
+if(i===8){ // étape 9 = détails accès (carte/lien)
   const m = $("accessMethod").value;
   toggle($("mapAccessWrap"), m === "gps");
   toggle($("lienAccessField"), m === "lien");
 
   if(m === "gps"){
     if(!mapAccess){
-      startLocAccess(); // initialise la carte si pas déjà fait
+      startLocAccess();
     }
     requestAnimationFrame(()=> mapAccess && mapAccess.invalidateSize());
+
+    // 🔥 Relance localisation précise à l'ouverture
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        p => {
+          ACCESS_CONFIRMED = true;
+          $("mapAccessWrap").classList.remove("error");
+          applyFix(p.coords.latitude, p.coords.longitude);
+        },
+        err => { if (err.code === 1) onGeoDenied("access"); },
+        { enableHighAccuracy: true, timeout: 7000, maximumAge: 0 }
+      );
+    }
   }
 }
 }
@@ -450,24 +475,36 @@ function markError(input, helpEl, on){
   input.classList.toggle("error", !!on);
   showHint(helpEl, !!on);
 }
-$("pill-oui").onclick=()=>{
-  $("presentValue").value="oui";
+$("pill-oui").onclick = () => {
+  $("presentValue").value = "oui";
   $("pill-oui").classList.add("active");
   $("pill-non").classList.remove("active");
-  toggle($("mapDeviceWrap"),1);
-  toggle($("lienField"),0);
+  toggle($("mapDeviceWrap"), 1);
+  toggle($("lienField"), 0);
 
-  // 👇 ajout
-  setTimeout(()=>mapDevice && mapDevice.invalidateSize(),300);
+  // 👇 redimensionner la carte si déjà créée
+  setTimeout(() => mapDevice && mapDevice.invalidateSize(), 300);
   markError($("lien"), $("lienHelp"), false);
-  document.querySelectorAll("#pill-oui, #pill-non").forEach(p=>p.classList.remove("error"));
+  document.querySelectorAll("#pill-oui, #pill-non").forEach(p => p.classList.remove("error"));
 
   DEVICE_CONFIRMED = false;
-$("latDevice").value = "";
-$("lonDevice").value = "";
-$("coordsDeviceDisplay").style.display = "none";
-$("mapDeviceWrap").classList.remove("error");
-  
+  $("latDevice").value = "";
+  $("lonDevice").value = "";
+  $("coordsDeviceDisplay").style.display = "none";
+  $("mapDeviceWrap").classList.remove("error");
+
+  // 🔥 Localisation rapide dès le clic
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      p => {
+        DEVICE_CONFIRMED = true;
+        $("mapDeviceWrap").classList.remove("error");
+        applyFix(p.coords.latitude, p.coords.longitude);
+      },
+      err => { if (err.code === 1) onGeoDenied("device"); },
+      { enableHighAccuracy: false, timeout: 4000, maximumAge: 10000 }
+    );
+  }
 };
   
 $("pill-non").onclick=()=>{
@@ -512,8 +549,21 @@ $("pill-access-gps").onclick = () => {
   markError($("lienAccess"), $("lienAccessHelp"), false);
 
   ACCESS_CONFIRMED = false;
-$("coordsAccessDisplay").style.display = "none";
-$("mapAccessWrap").classList.remove("error");
+  $("coordsAccessDisplay").style.display = "none";
+  $("mapAccessWrap").classList.remove("error");
+
+  // 🔥 Localisation rapide dès le clic
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      p => {
+        ACCESS_CONFIRMED = true;
+        $("mapAccessWrap").classList.remove("error");
+        applyFix(p.coords.latitude, p.coords.longitude);
+      },
+      err => { if (err.code === 1) onGeoDenied("access"); },
+      { enableHighAccuracy: false, timeout: 4000, maximumAge: 10000 }
+    );
+  }
 };
 
 $("pill-access-lien").onclick = () => {
