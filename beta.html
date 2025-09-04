@@ -453,7 +453,6 @@ $("formAppareil").onsubmit=e=>{
   let poste=$("poste").value.trim();
   let appareil=$("appareil").value.trim();
   let infos=$("infos").value.trim();
-  if(!demandeur||!poste||!appareil){alert("⚠️ Merci de remplir tous les champs obligatoires.");return;}
 if(!$("presentValue").value){
   alert("⚠️ Choisissez une méthode de localisation de l’appareil (GPS ou lien).");
   return;
