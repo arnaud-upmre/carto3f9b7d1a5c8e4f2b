@@ -237,7 +237,14 @@
           <button type="submit" class="btn primary">📩 Envoyer</button>
         </div>
       </div>
-
+<!-- Étape confirmation (n’est pas comptée comme une étape normale) -->
+<div class="step" id="confirmationStep">
+  <h3 style="text-align:center;margin:16px 0">✅ Merci ! Votre demande a bien été envoyée.</h3>
+  <div class="btn-row">
+    <button type="button" class="btn secondary" onclick="window.location.href='index.html'">🏠 Retour à l’accueil</button>
+    <button type="button" class="btn primary" onclick="resetForm()">➕ Ajouter un autre appareil</button>
+  </div>
+</div>
     </form>
   </div>
 
@@ -284,8 +291,14 @@ document.querySelectorAll(".next").forEach(btn=>{
 
 document.querySelectorAll(".prev").forEach(btn=>{
   btn.addEventListener("click", e=>{
-    e.preventDefault(); // idem
+    e.preventDefault();
     if(currentStep>0){
+      // 🔧 Cas particulier : retour depuis étape 9 (index 8) avec accès = non
+      if(currentStep === 8 && $("accessValue").value === "non"){
+        currentStep = 6; // retour direct à l’étape 7
+        showStep(currentStep);
+        return;
+      }
       currentStep--;
       showStep(currentStep);
     }
@@ -424,6 +437,15 @@ document.addEventListener("DOMContentLoaded",()=>{
   }
 });
 
+  function resetForm(){
+  $("formAppareil").reset();
+  // remettre les variables et visuels
+  currentStep = 0;
+  document.getElementById("progress").style.display = "block";
+  document.getElementById("progressbar").style.display = "block";
+  showStep(currentStep);
+}
+
 // Soumission finale
 $("formAppareil").onsubmit=e=>{
   e.preventDefault();
@@ -485,10 +507,15 @@ if($("accessValue").value==="oui"){
 
   fetch("https://script.google.com/macros/s/AKfycbz8lUhVMKOrRSdeNBeA0p4ZsQCNOesB0Y4DL27KAoHkHWS78hOqrW-t-9bC_azgN-mY/exec",{method:"POST",body:formData})
   .then(r=>r.text())
-  .then(()=>{fetch(COUNTER_URL+"?increment=true").catch(()=>{});
-    alert("✅ Merci ! Votre demande a bien été envoyée.");
-    $("formAppareil").reset(); currentStep=0; showStep(currentStep);
-  })
+.then(()=>{
+  fetch(COUNTER_URL+"?increment=true").catch(()=>{});
+  // masquer tout le formulaire
+  steps.forEach(s=>s.classList.remove("active"));
+  document.getElementById("confirmationStep").classList.add("active");
+  // masquer la barre de progression
+  document.getElementById("progress").style.display = "none";
+  document.getElementById("progressbar").style.display = "none";
+})
   .catch(err=>{alert("⚠️ Erreur d’envoi : "+err.message);})
   .finally(()=>{submitBtn.disabled=false;submitBtn.textContent=oldLabel;});
 };
