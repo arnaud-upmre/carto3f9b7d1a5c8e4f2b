@@ -172,19 +172,26 @@
         </div>
       </div>
 
-      <!-- Étape 7 -->
-      <div class="step">
-<label>🚪 L’appareil a-t-il un accès routier distinct ?<br>
-<span style="font-weight:normal;color:var(--muted);font-size:14px">
-Si vous répondez « Non », on considérera que l’accès est le même que celui du poste indiqué au début.
-</span>
-</label>
-        <input type="hidden" id="accessValue">
-        <div class="btn-row">
-          <button type="button" class="btn secondary prev">⬅️ Retour</button>
-          <button type="button" class="btn primary next">Suivant ➡️</button>
-        </div>
-      </div>
+<!-- Étape 7 -->
+<div class="step">
+  <label>🚪 L’appareil a-t-il un accès routier distinct ?<br>
+  <span style="font-weight:normal;color:var(--muted);font-size:14px">
+  Si vous répondez « Non », on considérera que l’accès est le même que celui du poste indiqué au début.
+  </span>
+  </label>
+
+  <div class="pill-group">
+    <div class="pill" id="pill-acces-oui" data-value="oui">✅ Oui</div>
+    <div class="pill" id="pill-acces-non" data-value="non">❌ Non</div>
+  </div>
+
+  <input type="hidden" id="accessValue">
+
+  <div class="btn-row">
+    <button type="button" class="btn secondary prev">⬅️ Retour</button>
+    <button type="button" class="btn primary next">Suivant ➡️</button>
+  </div>
+</div>
 
       <!-- Étape 8 -->
       <div class="step">
@@ -298,13 +305,26 @@ function validateStep(i){
 // GPS / lien logique simplifiée
 function $(id){return document.getElementById(id);}
 function toggle(el,show){el.style.display=show?"block":"none";}
-$("pill-oui").onclick=()=>{ $("presentValue").value="oui";$("pill-oui").classList.add("active");$("pill-non").classList.remove("active");toggle($("mapDeviceWrap"),1);toggle($("lienField"),0);};
+$("pill-oui").onclick=()=>{
+  $("presentValue").value="oui";
+  $("pill-oui").classList.add("active");
+  $("pill-non").classList.remove("active");
+  toggle($("mapDeviceWrap"),1);
+  toggle($("lienField"),0);
+
+  // 👇 ajout
+  setTimeout(()=>mapDevice && mapDevice.invalidateSize(),300);
+};
+  
 $("pill-non").onclick=()=>{ $("presentValue").value="non";$("pill-non").classList.add("active");$("pill-oui").classList.remove("active");toggle($("mapDeviceWrap"),0);toggle($("lienField"),1);};
 $("pill-acces-oui").onclick=()=>{
   $("accessValue").value="oui";
   $("pill-acces-oui").classList.add("active");
   $("pill-acces-non").classList.remove("active");
-  toggle($("mapAccessWrap"),1); // affiche la carte
+  toggle($("mapAccessWrap"),1);
+
+  // 👇 ajout
+  setTimeout(()=>mapAccess && mapAccess.invalidateSize(),300);
 };
 
 $("pill-acces-non").onclick=()=>{
