@@ -96,6 +96,10 @@ input.error{border:2px solid #c62828!important;background:#ffecec}
 }
     
     input.error,textarea.error{border:2px solid red!important;background:#ffecec}
+
+.map-wrap.error { border: 2px solid #c62828 !important; }
+
+    
   </style>
 </head>
 <body>
@@ -174,7 +178,7 @@ Remplir uniquement si l’appareil dépend d’un SAT
       <!-- Étape 6 -->
       <div class="step">
         <div id="mapDeviceWrap" class="map-wrap" style="display:none">
-          <div>Déplacez le curseur pour ajuster la position de l’appareil.</div>
+          <div>Déplacez le curseur pour ajuster l’accès.</div>
           <div id="mapDevice"></div>
           <div class="map-toolbar">
             <button type="button" id="btnRecenterDevice">📍 Localiser</button>
@@ -236,7 +240,7 @@ Remplir uniquement si l’appareil dépend d’un SAT
 <div class="step" id="accessDetailsStep">
   <!-- Carte -->
   <div id="mapAccessWrap" class="map-wrap" style="display:none">
-    <div>Déplacez le curseur pour ajuster la position de l’accès.</div>
+    <div>Déplacez le curseur pour ajuster l’accès.</div>
     <div id="mapAccess"></div>
     <div class="map-toolbar">
       <button type="button" id="btnRecenterAccess">📍 Localiser</button>
@@ -326,46 +330,73 @@ function showStep(i){
 document.querySelectorAll(".next").forEach(btn=>{
   btn.addEventListener("click", e=>{
     e.preventDefault();
-    if(validateStep(currentStep)){
-      // Étape 5 (localiser l’appareil) → obligatoire
-if(currentStep === 4 && !$("presentValue").value){
-  document.querySelectorAll("#pill-oui, #pill-non").forEach(p=>p.classList.add("error"));
-  return; // empêche d’avancer
-}
+    if (validateStep(currentStep)) {
 
-// Étape 7 (accès distinct) → obligatoire
-if(currentStep === 6 && !$("accessValue").value){
-  document.querySelectorAll("#pill-acces-oui, #pill-acces-non").forEach(p=>p.classList.add("error"));
-  return; // empêche d’avancer
-}
-      // 🔧 Cas particulier étape 7 (index 6 car 0-based)
-      if(currentStep === 6){
-        if($("accessValue").value === "non"){
-           currentStep = 9; // saute directement aux notes (étape 10 affichée)
+      // Étape 5 (localiser l’appareil) → obligatoire
+      if (currentStep === 4 && !$("presentValue").value) {
+        document.querySelectorAll("#pill-oui, #pill-non").forEach(p => p.classList.add("error"));
+        return; // empêche d’avancer
+      }
+
+      // Étape 7 (accès distinct) → obligatoire
+      if (currentStep === 6 && !$("accessValue").value) {
+        document.querySelectorAll("#pill-acces-oui, #pill-acces-non").forEach(p => p.classList.add("error"));
+        return; // empêche d’avancer
+      }
+
+      // Cas particulier étape 7 (si Non → on saute directement aux notes)
+      if (currentStep === 6) {
+        if ($("accessValue").value === "non") {
+          currentStep = 9; 
           showStep(currentStep);
           return;
         }
       }
-      // Étape 8 = choix méthode d’accès
-if(currentStep === 7 && $("accessValue").value === "oui"){
-  if(!$("accessMethod").value){
-    alert("⚠️ Choisissez une méthode pour identifier l’accès (GPS ou Lien).");
-    return;
-  }
-}
-      // Étape 6 => appareil via LIEN
-if(currentStep === 5 && $("presentValue").value === "non"){
-  const ok = isValidUrl($("lien").value);
-  markError($("lien"), $("lienHelp"), !ok);
-  if(!ok) return;
-}
 
-// Étape 9 => accès via LIEN
-if(currentStep === 8 && $("accessValue").value === "oui" && $("accessMethod").value === "lien"){
-  const ok = isValidUrl($("lienAccess").value);
-  markError($("lienAccess"), $("lienAccessHelp"), !ok);
-  if(!ok) return;
-}
+      // Étape 8 = choix méthode d’accès
+      if (currentStep === 7 && $("accessValue").value === "oui") {
+        if (!$("accessMethod").value) {
+          // 👉 plus d'alert(), on marque les boutons en rouge
+          document.querySelectorAll("#pill-access-gps, #pill-access-lien").forEach(p => p.classList.add("error"));
+          return;
+        }
+      }
+
+      // Étape 6 => appareil via LIEN
+      if (currentStep === 5 && $("presentValue").value === "non") {
+        const ok = isValidUrl($("lien").value);
+        markError($("lien"), $("lienHelp"), !ok);
+        if (!ok) return;
+      }
+
+      // Étape 6 => appareil via GPS
+      if (currentStep === 5 && $("presentValue").value === "oui") {
+        if (!DEVICE_CONFIRMED || !$("latDevice").value || !$("lonDevice").value) {
+          $("mapDeviceWrap").classList.add("error");
+          return;
+        } else {
+          $("mapDeviceWrap").classList.remove("error");
+        }
+      }
+
+      // Étape 9 => accès via LIEN
+      if (currentStep === 8 && $("accessValue").value === "oui" && $("accessMethod").value === "lien") {
+        const ok = isValidUrl($("lienAccess").value);
+        markError($("lienAccess"), $("lienAccessHelp"), !ok);
+        if (!ok) return;
+      }
+
+      // Étape 9 => accès via GPS
+      if (currentStep === 8 && $("accessValue").value === "oui" && $("accessMethod").value === "gps") {
+        if (!ACCESS_CONFIRMED || !$("coordsAccessDisplay").textContent.includes(",")) {
+          $("mapAccessWrap").classList.add("error");
+          return;
+        } else {
+          $("mapAccessWrap").classList.remove("error");
+        }
+      }
+
+           // 👉 si tout est ok → on avance
       currentStep++;
       showStep(currentStep);
     }
@@ -426,6 +457,13 @@ $("pill-oui").onclick=()=>{
   setTimeout(()=>mapDevice && mapDevice.invalidateSize(),300);
   markError($("lien"), $("lienHelp"), false);
   document.querySelectorAll("#pill-oui, #pill-non").forEach(p=>p.classList.remove("error"));
+
+  DEVICE_CONFIRMED = false;
+$("latDevice").value = "";
+$("lonDevice").value = "";
+$("coordsDeviceDisplay").style.display = "none";
+$("mapDeviceWrap").classList.remove("error");
+  
 };
   
 $("pill-non").onclick=()=>{
@@ -468,6 +506,10 @@ $("pill-access-gps").onclick = () => {
   toggle($("lienAccessField"), 0);
   setTimeout(()=>mapAccess && mapAccess.invalidateSize(),300);
   markError($("lienAccess"), $("lienAccessHelp"), false);
+
+  ACCESS_CONFIRMED = false;
+$("coordsAccessDisplay").style.display = "none";
+$("mapAccessWrap").classList.remove("error");
 };
 
 $("pill-access-lien").onclick = () => {
@@ -480,6 +522,8 @@ $("pill-access-lien").onclick = () => {
 
   // ✅ reset d’éventuelles erreurs précédentes
   markError($("lienAccess"), $("lienAccessHelp"), false);
+  ACCESS_CONFIRMED = false;
+$("mapAccessWrap").classList.remove("error");
 };
 
   $("lien").addEventListener("input", ()=>{
@@ -496,8 +540,9 @@ $("lienAccess").addEventListener("input", ()=>{
 const COUNTER_URL = "https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec";
 
 let mapDevice,mapAccess,markerDevice,markerAccess;
+  let DEVICE_CONFIRMED = false;   // l’utilisateur a cliqué Localiser pour l’appareil
+let ACCESS_CONFIRMED = false;   // l’utilisateur a cliqué Localiser pour l’accès
 let lastFix=null; let GEO_BLOCKED=false;
-const HAZE=[50.72454,2.54311];
 const GEO_OPTS={enableHighAccuracy:true,timeout:7000,maximumAge:15000};
 
 function sanitizeCoord(v){return (v||"").toString().replace(",",".");}
@@ -513,17 +558,19 @@ function setMapTo(map,marker,lat,lon,kind){
   marker.setLatLng([lat,lon]);
   const la=Number(lat).toFixed(6), lo=Number(lon).toFixed(6);
 
-  if(kind==="device"){
-    $("latDevice").value=la; 
-    $("lonDevice").value=lo;
-    if($("presentValue").value === "oui"){   // ✅ seulement si GPS
-      $("coordsDeviceDisplay").textContent=`Coordonnées relevées : ${la}, ${lo}`;
-      $("coordsDeviceDisplay").style.display="block";
-    } else {
-      $("coordsDeviceDisplay").style.display="none";
+ if (kind === "device") {
+  if (DEVICE_CONFIRMED) {
+    $("latDevice").value = la;
+    $("lonDevice").value = lo;
+    if ($("presentValue").value === "oui") {
+      $("coordsDeviceDisplay").textContent = `Coordonnées relevées : ${la}, ${lo}`;
+      $("coordsDeviceDisplay").style.display = "block";
     }
-} else if(kind==="access"){
-  if ($("accessMethod").value === "gps") {
+  } else {
+    $("coordsDeviceDisplay").style.display = "none";
+  }
+} else if (kind === "access") {
+  if (ACCESS_CONFIRMED && $("accessMethod").value === "gps") {
     $("coordsAccessDisplay").textContent = `Coordonnées relevées (accès) : ${la}, ${lo}`;
     $("coordsAccessDisplay").style.display = "block";
   } else {
@@ -551,42 +598,65 @@ function ensureMap(mapId,btnToggle,btnRecenter,lat,lon){
   $(btnToggle).textContent = "🛰️ Satellite"; // par défaut on propose de passer en satellite
   let marker=L.marker([lat,lon],{draggable:true}).addTo(map);
 
-marker.on("dragend", ()=>{
-  let p = marker.getLatLng();
-  if (mapId === "mapDevice") {
+let p = marker.getLatLng();
+if (mapId === "mapDevice") {
+  if (DEVICE_CONFIRMED) {
     $("latDevice").value = p.lat.toFixed(6);
     $("lonDevice").value = p.lng.toFixed(6);
     if ($("presentValue").value === "oui") {
       $("coordsDeviceDisplay").textContent = `Coordonnées relevées : ${p.lat.toFixed(6)}, ${p.lng.toFixed(6)}`;
       $("coordsDeviceDisplay").style.display = "block";
-    } else {
-      $("coordsDeviceDisplay").style.display = "none";
-    }
-  } else { // accès
-    if ($("accessMethod").value === "gps") {
-      $("coordsAccessDisplay").textContent = `Coordonnées relevées (accès) : ${p.lat.toFixed(6)}, ${p.lng.toFixed(6)}`;
-      $("coordsAccessDisplay").style.display = "block";
-    } else {
-      $("coordsAccessDisplay").style.display = "none";
     }
   }
-});
+} else { // accès
+  if (ACCESS_CONFIRMED && $("accessMethod").value === "gps") {
+    $("coordsAccessDisplay").textContent = `Coordonnées relevées (accès) : ${p.lat.toFixed(6)}, ${p.lng.toFixed(6)}`;
+    $("coordsAccessDisplay").style.display = "block";
+  } else {
+    $("coordsAccessDisplay").style.display = "none";
+  }
+}
   
   $(btnToggle).onclick=()=>{
     if(map.hasLayer(osm)){map.removeLayer(osm); esri.addTo(map); $(btnToggle).textContent="🗺️ Plan";}
     else{map.removeLayer(esri); osm.addTo(map); $(btnToggle).textContent="🛰️ Satellite";}
     map.invalidateSize();
   };
-  $(btnRecenter).onclick=()=>{
-    if(GEO_BLOCKED){onGeoDenied(mapId==="mapDevice"?"device":"access");return;}
-    if(lastFix){setMapTo(map,marker,lastFix.lat,lastFix.lon,mapId==="mapDevice"?"device":"access");}
-    if(navigator.geolocation){
-      navigator.geolocation.getCurrentPosition(
-        p=>applyFix(p.coords.latitude,p.coords.longitude),
-        err=>{if(err.code===1)onGeoDenied(mapId==="mapDevice"?"device":"access");},
-        GEO_OPTS);
+$(btnRecenter).onclick = () => {
+  if (GEO_BLOCKED) { onGeoDenied(mapId === "mapDevice" ? "device" : "access"); return; }
+
+  const kind = (mapId === "mapDevice") ? "device" : "access";
+
+  // Fonction utilitaire : applique le fix et confirme
+  const confirmFromFix = (fix) => {
+    if (!fix) return false;
+    if (kind === "device") {
+      DEVICE_CONFIRMED = true;
+      $("mapDeviceWrap").classList.remove("error");
+      setMapTo(map, marker, fix.lat, fix.lon, "device");
+    } else {
+      ACCESS_CONFIRMED = true;
+      $("mapAccessWrap").classList.remove("error");
+      setMapTo(map, marker, fix.lat, fix.lon, "access");
     }
+    return true;
   };
+
+  if (confirmFromFix(lastFix)) return;
+
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      p => {
+        applyFix(p.coords.latitude, p.coords.longitude);
+        confirmFromFix({ lat: p.coords.latitude, lon: p.coords.longitude });
+      },
+      err => { if (err.code === 1) onGeoDenied(kind); },
+      GEO_OPTS
+    );
+  }
+};
+
+  
   if(mapId==="mapDevice"){mapDevice=map;markerDevice=marker;}
   else{mapAccess=map;markerAccess=marker;}
 }
