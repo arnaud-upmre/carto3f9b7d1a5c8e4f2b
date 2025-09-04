@@ -430,7 +430,16 @@ $("pill-oui").onclick=()=>{
   document.querySelectorAll("#pill-oui, #pill-non").forEach(p=>p.classList.remove("error"));
 };
   
-$("pill-non").onclick=()=>{ $("presentValue").value="non";$("pill-non").classList.add("active");$("pill-oui").classList.remove("active");toggle($("mapDeviceWrap"),0);toggle($("lienField"),1);};
+$("pill-non").onclick=()=>{
+  $("presentValue").value="non";
+  $("pill-non").classList.add("active");
+  $("pill-oui").classList.remove("active");
+  toggle($("mapDeviceWrap"),0);
+  toggle($("lienField"),1);
+
+  // ✅ enlève le rouge si c’était en erreur
+  document.querySelectorAll("#pill-oui, #pill-non").forEach(p=>p.classList.remove("error"));
+};
 $("pill-acces-oui").onclick=()=>{
   $("accessValue").value="oui";
   $("pill-acces-oui").classList.add("active");
