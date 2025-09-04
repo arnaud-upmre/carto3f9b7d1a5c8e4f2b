@@ -318,6 +318,14 @@ function validateStep(i){
   }
   return true;
 }
+  // 🔧 Retirer le rouge dès que l'utilisateur tape quelque chose
+document.addEventListener("input", (e)=>{
+  if(e.target.matches("input.error, textarea.error")){
+    if(e.target.value.trim() !== ""){
+      e.target.classList.remove("error");
+    }
+  }
+});
 
 // GPS / lien logique simplifiée
 function $(id){return document.getElementById(id);}
