@@ -207,32 +207,48 @@ Remplir uniquement si l’appareil dépend d’un SAT
   </div>
 </div>
 
-      <!-- Étape 8 -->
-      <div class="step">
-<div id="mapAccessWrap" class="map-wrap" style="display:none">
-  <div>Déplacez le curseur pour ajuster la position de l’accès.</div>
-  <div id="mapAccess"></div>
-  <div class="map-toolbar">
-    <button type="button" id="btnRecenterAccess">📍 Localiser</button>
-    <button type="button" id="btnToggleAccess">🗺️ Plan</button>
+      <!-- Étape 8 (nouvelle) -->
+<div class="step" id="accessMethodStep">
+  <label>🆔 Identifier l’accès à l’appareil :</label>
+  <div class="pill-group">
+    <div class="pill" id="pill-access-gps" data-value="gps">📡 Avec ma position GPS</div>
+    <div class="pill" id="pill-access-lien" data-value="lien">🔗 Lien Google Maps</div>
+  </div>
+
+  <input type="hidden" id="accessMethod">
+
+  <div class="btn-row">
+    <button type="button" class="btn secondary prev">⬅️ Retour</button>
+    <button type="button" class="btn primary next">Suivant ➡️</button>
   </div>
 </div>
-<div id="coordsAccessDisplay" style="display:none;color:var(--muted);margin:8px 0"></div>
+      
 
-<!-- Séparateur OU -->
-<div style="text-align:center;margin:12px 0;font-weight:bold;color:var(--muted)">— OU —</div>
+   <!-- Étape 9 (adaptée) -->
+<div class="step" id="accessDetailsStep">
+  <!-- Carte -->
+  <div id="mapAccessWrap" class="map-wrap" style="display:none">
+    <div>Déplacez le curseur pour ajuster la position de l’accès.</div>
+    <div id="mapAccess"></div>
+    <div class="map-toolbar">
+      <button type="button" id="btnRecenterAccess">📍 Localiser</button>
+      <button type="button" id="btnToggleAccess">🗺️ Plan</button>
+    </div>
+  </div>
+  <div id="coordsAccessDisplay" style="display:none;color:var(--muted);margin:8px 0"></div>
 
-<!-- Champ lien toujours visible à l’étape 8 -->
-<div id="lienAccessField">
-  <label>🔗 Lien Google Maps accès :</label>
-  <input id="lienAccess" type="url" placeholder="https://maps.app.goo.gl/…">
+  <!-- Champ lien -->
+  <div id="lienAccessField" style="display:none">
+    <label>🔗 Lien Google Maps accès :</label>
+    <input id="lienAccess" type="url" placeholder="https://maps.app.goo.gl/…">
+  </div>
+
+  <div class="btn-row">
+    <button type="button" class="btn secondary prev">⬅️ Retour</button>
+    <button type="button" class="btn primary next">Suivant ➡️</button>
+  </div>
 </div>
-        <div class="btn-row">
-          <button type="button" class="btn secondary prev">⬅️ Retour</button>
-          <button type="button" class="btn primary next">Suivant ➡️</button>
-        </div>
-      </div>
-
+      
       <!-- Étape 9 -->
       <div class="step">
         <label>📝 Notes complémentaires :</label>
@@ -284,12 +300,19 @@ function showStep(i){
     }
     setTimeout(()=>mapDevice && mapDevice.invalidateSize(),300);
   }
-  if(i===7){ // étape 8 = carte accès
+ if(i===8){ // nouvelle étape 9 = détails accès (carte/lien)
+  // Affiche la bonne UI selon la méthode choisie
+  const m = $("accessMethod").value;
+  toggle($("mapAccessWrap"), m === "gps");
+  toggle($("lienAccessField"), m === "lien");
+
+  if(m === "gps"){
     if(!mapAccess){
       startLocAccess(); // initialise la carte si pas déjà fait
     }
-    setTimeout(()=>mapAccess && mapAccess.invalidateSize(),300);
+    requestAnimationFrame(()=> mapAccess && mapAccess.invalidateSize());
   }
+}
 }
 document.querySelectorAll(".next").forEach(btn=>{
   btn.addEventListener("click", e=>{
@@ -298,11 +321,18 @@ document.querySelectorAll(".next").forEach(btn=>{
       // 🔧 Cas particulier étape 7 (index 6 car 0-based)
       if(currentStep === 6){
         if($("accessValue").value === "non"){
-          currentStep = 8; // saute directement aux notes (étape 9)
+           currentStep = 9; // saute directement aux notes (étape 10 affichée)
           showStep(currentStep);
           return;
         }
       }
+      // Étape 8 = choix méthode d’accès
+if(currentStep === 7 && $("accessValue").value === "oui"){
+  if(!$("accessMethod").value){
+    alert("⚠️ Choisissez une méthode pour identifier l’accès (GPS ou Lien).");
+    return;
+  }
+}
       currentStep++;
       showStep(currentStep);
     }
@@ -313,8 +343,8 @@ document.querySelectorAll(".prev").forEach(btn=>{
   btn.addEventListener("click", e=>{
     e.preventDefault();
     if(currentStep>0){
-      // 🔧 Cas particulier : retour depuis étape 9 (index 8) avec accès = non
-      if(currentStep === 8 && $("accessValue").value === "non"){
+      // 🔧 Cas particulier : retour depuis Notes (index 9) avec accès = non
+      if(currentStep === 9 && $("accessValue").value === "non"){
         currentStep = 6; // retour direct à l’étape 7
         showStep(currentStep);
         return;
@@ -372,6 +402,26 @@ $("pill-acces-non").onclick=()=>{
   $("pill-acces-non").classList.add("active");
   $("pill-acces-oui").classList.remove("active");
   toggle($("mapAccessWrap"),0); // cache la carte
+};
+
+  // --- Étape 8 (choix méthode d’accès) ---
+$("pill-access-gps").onclick = () => {
+  $("accessMethod").value = "gps";
+  $("pill-access-gps").classList.add("active");
+  $("pill-access-lien").classList.remove("active");
+  // On prépare l'étape suivante : afficher carte, cacher lien
+  toggle($("mapAccessWrap"), 1);
+  toggle($("lienAccessField"), 0);
+  setTimeout(()=>mapAccess && mapAccess.invalidateSize(),300);
+};
+
+$("pill-access-lien").onclick = () => {
+  $("accessMethod").value = "lien";
+  $("pill-access-lien").classList.add("active");
+  $("pill-access-gps").classList.remove("active");
+  // On prépare l'étape suivante : cacher carte, afficher lien
+  toggle($("mapAccessWrap"), 0);
+  toggle($("lienAccessField"), 1);
 };
 // ---------------- LOGIQUE COMPLÈTE LEAFLET + ENVOI ----------------
 
@@ -551,20 +601,26 @@ if(!$("accessValue").value){
     coordAppareil=$("lien").value;
   }
 if($("accessValue").value==="oui"){
-  let accessCoords = $("coordsAccessDisplay").textContent
-    .replace("Coordonnées relevées (accès) : ","").trim();
-  let lienAcces = $("lienAccess").value.trim();
+  if($("accessMethod").value==="gps"){
+    let accessCoords = $("coordsAccessDisplay").textContent
+      .replace("Coordonnées relevées (accès) : ","").trim();
 
-  if (isValidUrl(lienAcces)) {
-    // Si un lien est fourni → on garde uniquement le lien et on masque les coordonnées
-    coordAcces = lienAcces;
-    $("coordsAccessDisplay").style.display = "none";
-  } else if (/^[-]?\d+(\.\d+)?,\s*[-]?\d+(\.\d+)?$/.test(accessCoords)) {
-    // Sinon on prend les coordonnées si valides
-    coordAcces = accessCoords;
-    $("coordsAccessDisplay").style.display = "block";
+    if (/^[-]?\d+(\.\d+)?,\s*[-]?\d+(\.\d+)?$/.test(accessCoords)) {
+      coordAcces = accessCoords;
+    } else {
+      alert("⚠️ Merci de positionner l’accès sur la carte.");
+      return;
+    }
+  } else if($("accessMethod").value==="lien"){
+    let lienAcces = $("lienAccess").value.trim();
+    if (isValidUrl(lienAcces)) {
+      coordAcces = lienAcces;
+    } else {
+      alert("⚠️ Merci de fournir un lien Google Maps valide pour l’accès.");
+      return;
+    }
   } else {
-    alert("⚠️ Merci d’indiquer soit les coordonnées GPS, soit un lien Google Maps valide pour l’accès.");
+    alert("⚠️ Choisissez une méthode pour identifier l’accès (GPS ou Lien).");
     return;
   }
 }
