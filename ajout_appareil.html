@@ -613,16 +613,29 @@ $("pill-oui").onclick = () => {
   }
 };
   
-$("pill-non").onclick=()=>{
-  $("presentValue").value="non";
+$("pill-non").onclick = () => {
+  $("presentValue").value = "non";
   $("pill-non").classList.add("active");
   $("pill-oui").classList.remove("active");
-  toggle($("mapDeviceWrap"),0);
-  toggle($("lienField"),1);
+  toggle($("mapDeviceWrap"), 0);
+  toggle($("lienField"), 1);
 
-  // ✅ enlève le rouge si c’était en erreur
-  document.querySelectorAll("#pill-oui, #pill-non").forEach(p=>p.classList.remove("error"));
+  // 🔒 masquer coordonnées + vider lat/lon + reset état
+  $("coordsDeviceDisplay").style.display = "none";
+  $("latDevice").value = "";
+  $("lonDevice").value = "";
+  DEVICE_CONFIRMED = false;
+  $("mapDeviceWrap").classList.remove("error");
+
+  document.querySelectorAll("#pill-oui, #pill-non").forEach(p => p.classList.remove("error"));
+
+  // 👉 confort : focus sans scroll + sélectionner le texte existant
+  setTimeout(() => { 
+    $("lien").focus({ preventScroll:true }); 
+    $("lien").select(); 
+  }, 0);
 };
+  
 $("pill-acces-oui").onclick=()=>{
   $("accessValue").value="oui";
   $("pill-acces-oui").classList.add("active");
@@ -676,14 +689,21 @@ $("pill-access-lien").onclick = () => {
   $("accessMethod").value = "lien";
   $("pill-access-lien").classList.add("active");
   $("pill-access-gps").classList.remove("active");
-  // On prépare l'étape suivante : cacher carte, afficher lien
   toggle($("mapAccessWrap"), 0);
   toggle($("lienAccessField"), 1);
 
-  // ✅ reset d’éventuelles erreurs précédentes
+  // 🔒 masquer l’affichage des coordonnées d’accès
+  $("coordsAccessDisplay").style.display = "none";
+
   markError($("lienAccess"), $("lienAccessHelp"), false);
   ACCESS_CONFIRMED = false;
-$("mapAccessWrap").classList.remove("error");
+  $("mapAccessWrap").classList.remove("error");
+
+  // 👉 confort : focus sans scroll + sélectionner le texte existant
+  setTimeout(() => { 
+    $("lienAccess").focus({ preventScroll:true }); 
+    $("lienAccess").select(); 
+  }, 0);
 };
 
   $("lien").addEventListener("input", ()=>{
@@ -744,11 +764,36 @@ function applyFix(lat,lon){
   if(mapAccess&&markerAccess)setMapTo(mapAccess,markerAccess,lat,lon,"access");
 }
 function onGeoDenied(target){
-  GEO_BLOCKED=true;
-  if(target==="device"){ $("presentValue").value="non"; toggle($("mapDeviceWrap"),0); toggle($("lienField"),1); }
-  if(target==="access"){ $("accessValue").value="non"; toggle($("mapAccessWrap"),0); toggle($("lienAccessField"),1); }
+  GEO_BLOCKED = true;
 
+  if (target === "device") {
+    // on bascule proprement en mode lien pour l'appareil
+    $("presentValue").value = "non";
+    toggle($("mapDeviceWrap"), 0);
+    toggle($("lienField"), 1);
+
+    // 🔒 reset visuel + données
+    $("coordsDeviceDisplay").style.display = "none";
+    $("latDevice").value = "";
+    $("lonDevice").value = "";
+    DEVICE_CONFIRMED = false;
+    $("mapDeviceWrap").classList.remove("error");
+  }
+
+  if (target === "access") {
+    // ❗️ne PAS mettre accessValue="non"
+    // si l'utilisateur voulait un accès distinct, on le garde et on le passe en mode lien
+    $("accessMethod").value = "lien";
+    toggle($("mapAccessWrap"), 0);
+    toggle($("lienAccessField"), 1);
+
+    // 🔒 reset visuel + état
+    $("coordsAccessDisplay").style.display = "none";
+    ACCESS_CONFIRMED = false;
+    $("mapAccessWrap").classList.remove("error");
+  }
 }
+  
 function ensureMap(mapId,btnToggle,btnRecenter,lat,lon){
   let map=L.map(mapId).setView([lat,lon],18);
   setTimeout(()=>map.invalidateSize(),300);
