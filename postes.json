@@ -4130,4 +4130,21 @@
     "poste_latitude": "",
     "poste_longitude": ""
   }
+  {
+    "nom": "Aouste",
+    "type": "SP",
+    "SAT": "",
+    "accès": "",
+    "latitude": 49.79982,
+    "longitude": 4.29306,
+    "description": "",
+    "rss": "B",
+    "contact": "",
+    "portail": "",
+    "lignes": "HIRSON à AMAGNE-LUCQUY",
+    "numero_ligne": "212000",
+    "pk": "22,516",
+    "poste_latitude": "49.79969",
+    "poste_longitude": "4.29321"
+  },
 ]
