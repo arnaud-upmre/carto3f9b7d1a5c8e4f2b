@@ -578,15 +578,24 @@ $("pill-oui").onclick = () => {
   }
 };
   
-$("pill-non").onclick=()=>{
-  $("presentValue").value="non";
+$("pill-non").onclick = () => {
+  $("presentValue").value = "non";
   $("pill-non").classList.add("active");
   $("pill-oui").classList.remove("active");
-  toggle($("mapDeviceWrap"),0);
-  toggle($("lienField"),1);
+
+  // cacher la carte et montrer le champ lien
+  toggle($("mapDeviceWrap"), 0);
+  toggle($("lienField"), 1);
+
+  // 🔒 IMPORTANT : masquer les coordonnées et vider les champs GPS
+  $("coordsDeviceDisplay").style.display = "none";
+  $("latDevice").value = "";
+  $("lonDevice").value = "";
+  DEVICE_CONFIRMED = false;
+  $("mapDeviceWrap").classList.remove("error");
 
   // ✅ enlève le rouge si c’était en erreur
-  document.querySelectorAll("#pill-oui, #pill-non").forEach(p=>p.classList.remove("error"));
+  document.querySelectorAll("#pill-oui, #pill-non").forEach(p => p.classList.remove("error"));
 };
 
 
@@ -623,14 +632,16 @@ $("pill-access-lien").onclick = () => {
   $("accessMethod").value = "lien";
   $("pill-access-lien").classList.add("active");
   $("pill-access-gps").classList.remove("active");
-  // On prépare l'étape suivante : cacher carte, afficher lien
+
   toggle($("mapAccessWrap"), 0);
   toggle($("lienAccessField"), 1);
 
-  // ✅ reset d’éventuelles erreurs précédentes
+  // 🔒 Masquer l’affichage des coordonnées d’accès
+  $("coordsAccessDisplay").style.display = "none";
+
   markError($("lienAccess"), $("lienAccessHelp"), false);
   ACCESS_CONFIRMED = false;
-$("mapAccessWrap").classList.remove("error");
+  $("mapAccessWrap").classList.remove("error");
 };
 
   $("lien").addEventListener("input", ()=>{
