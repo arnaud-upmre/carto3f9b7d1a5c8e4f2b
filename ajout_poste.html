@@ -863,7 +863,7 @@ if (params.has("poste")) {
 
 const esc = s => s.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
 // 🔧 Regex améliorée : accepte espace ou tiret avant, et ignore espaces après
-const TYPES_RE = new RegExp("(?:\\s|-)?(" + TYPES.map(esc).join("|") + ")\\s*$", "i");
+const TYPES_RE = new RegExp("(?:\\s|-)+(" + TYPES.map(esc).join("|") + ")\\s*$", "i");
   
   // 0) Nettoyage
   let raw = (params.get("poste") || "")
