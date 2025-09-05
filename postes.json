@@ -1829,9 +1829,9 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
-    "pk": "",
+    "lignes": "GONESSE à LILLE-FRONTIERE (LGV)",
+    "numero_ligne": "226000",
+    "pk": "6,695",
     "poste_latitude": "50.6025713",
     "poste_longitude": "3.1139317"
   },
