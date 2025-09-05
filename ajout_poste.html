@@ -413,43 +413,23 @@ if(item.value.includes(",") && !item.value.startsWith("http")){
 document.querySelectorAll(".next").forEach(btn=>{
   btn.addEventListener("click", e=>{
     e.preventDefault();
-    if (validateStep(currentStep)) {
-      // ✅ Si on vient du récap, retour direct au récap
-if (returnToRecap) {
-  returnToRecap = false;
-  currentStep = steps.length - 1; // dernière étape = récap
-  showStep(currentStep);
-  return;
-}
 
-     // Étape 3 (choix localisation poste) → obligatoire
-if (currentStep === 2 && !$("presentValue").value) {
-        document.querySelectorAll("#pill-oui, #pill-non").forEach(p => p.classList.add("error"));
-        return; // empêche d’avancer
-      }
+    // Vérifie si le champ obligatoire est rempli
+    if (!validateStep(currentStep)) return;
 
-   
+    // Étape 3 (index 2) : choisir GPS ou Lien pour le poste
+    if (currentStep === 2 && !$("presentValue").value) {
+      document.querySelectorAll("#pill-oui, #pill-non").forEach(p => p.classList.add("error"));
+      return;
+    }
 
-   // Étape 5 = choix méthode d’accès
-if (currentStep === 4 && !$("accessMethod").value) {
-  document.querySelectorAll("#pill-access-gps, #pill-access-lien").forEach(p => p.classList.add("error"));
-  return;
-}
-          // 👉 plus d'alert(), on marque les boutons en rouge
-          document.querySelectorAll("#pill-access-gps, #pill-access-lien").forEach(p => p.classList.add("error"));
-          return;
-        }
-      }
-
-      // Étape 6 => appareil via LIEN
- if (currentStep === 3 && $("presentValue").value === "non") { ... }
+    // Étape 4 (index 3) : validation du poste selon choix
+    if (currentStep === 3) {
+      if ($("presentValue").value === "non") {
         const ok = isValidUrl($("lien").value);
         markError($("lien"), $("lienHelp"), !ok);
         if (!ok) return;
-      }
-
-      // Étape 6 => appareil via GPS
-if (currentStep === 3 && $("presentValue").value === "oui") { ... }
+      } else if ($("presentValue").value === "oui") {
         if (!DEVICE_CONFIRMED || !$("latDevice").value || !$("lonDevice").value) {
           $("mapDeviceWrap").classList.add("error");
           return;
@@ -457,11 +437,17 @@ if (currentStep === 3 && $("presentValue").value === "oui") { ... }
           $("mapDeviceWrap").classList.remove("error");
         }
       }
-
-           // 👉 si tout est ok → on avance
-      currentStep++;
-      showStep(currentStep);
     }
+
+    // Étape 5 (index 4) : choisir méthode d’accès (gps/lien)
+    if (currentStep === 4 && !$("accessMethod").value) {
+      document.querySelectorAll("#pill-access-gps, #pill-access-lien").forEach(p => p.classList.add("error"));
+      return;
+    }
+
+    // 👉 si tout est ok → on avance
+    currentStep++;
+    showStep(currentStep);
   });
 });
 
@@ -917,9 +903,10 @@ if ($("accessMethod").value === "gps") {
     });
 };
 
-// Au départ : n’afficher que l’intro
-steps.forEach(s => s.classList.remove("active"));
+// Au départ : afficher uniquement l’intro, masquer toutes les autres étapes
+document.querySelectorAll(".step").forEach(s => s.classList.remove("active"));
 document.getElementById("introStep").classList.add("active");
+
 progress.style.display = "none"; // cacher la barre au départ
 document.getElementById("progressbar").style.display = "none";
 
