@@ -1,3 +1,5 @@
+Ajout poste avant : 
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -6,23 +8,25 @@
     name="viewport"
     content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
   />
-  <title>➕ Ajouter un poste et l'accès</title>
+  <title>➕ Ajouter un poste</title>
 
   <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 
   <style>
-
-    .field-hint{font-size:13px;color:#c62828;margin-top:6px;display:none}
-.field-hint.show{display:block}
-input.error{border:2px solid #c62828!important;background:#ffecec}
     
+    .hint {
+      font-size: 13px;
+      color: #777;       /* gris plus clair */
+      font-style: italic;
+      margin-top: 4px;
+    }
     *,*::before,*::after{box-sizing:border-box}
     html{-webkit-text-size-adjust:100%}
     body{
       margin:0; padding:16px;
-      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial;
       background:var(--bg); color:var(--fg);
     }
     :root{
@@ -36,836 +40,537 @@ input.error{border:2px solid #c62828!important;background:#ffecec}
       }
     }
     h2{text-align:center;margin:0 0 12px}
-    .card{
-      max-width:640px;margin:auto;
-      background:var(--card);
-      padding:16px;border-radius:14px;
-      box-shadow:0 2px 6px rgba(0,0,0,.15);
-    }
-    label{display:block;margin:12px 0 6px;font-weight:600}
+    .card{max-width:640px;margin:auto;background:var(--card);padding:16px;
+      border-radius:14px;box-shadow:0 2px 6px rgba(0,0,0,.15)}
+    label{display:block;margin-top:12px;font-weight:600}
     input,textarea{
-      width:100%;padding:12px;font-size:16px;
+      width:100%;padding:12px;font-size:16px;margin-top:6px;
       border:1px solid var(--border);border-radius:10px;
-      background:var(--card);color:var(--fg);
-      min-height:44px;
+      background:var(--card);color:var(--fg);min-height:44px
     }
-    textarea{min-height:96px;resize:none}
-    .pill-group{display:flex;gap:10px;margin:12px 0}
-    .pill{
-      flex:1;text-align:center;padding:12px;
-      border:1px solid var(--border);border-radius:999px;cursor:pointer;
-    }
+    textarea{min-height:96px;resize:none;overflow:auto}
+    .pill-group{display:flex;gap:10px;margin-top:8px}
+    .pill{flex:1;text-align:center;padding:12px;border:1px solid var(--border);
+      border-radius:999px;cursor:pointer;user-select:none}
     .pill.active{background:var(--accent);color:var(--accent-ink)}
-    .pill.error {
-  border: 2px solid #c62828 !important;
-  background: #ffecec;
+    .pill.active{background:var(--accent);color:var(--accent-ink)}
+
+.pill:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
-    .map-wrap{margin:12px 0;border:1px solid var(--border);border-radius:10px;overflow:hidden}
-    #mapDevice,#mapAccess{height:300px;width:100%}
+    .map-wrap{display:none;margin-top:12px;border:1px solid var(--border);
+      border-radius:10px;overflow:hidden}
+    #mapAccess,#mapPoste{height:300px;width:100%}
     .map-toolbar{display:flex;gap:8px;padding:6px;background:var(--card)}
-    .map-toolbar button{
-      flex:1;padding:8px;border-radius:8px;
-      border:1px solid var(--border);cursor:pointer;
-    }
+    .map-toolbar button{flex:1;padding:8px;border-radius:8px;border:1px solid var(--border);cursor:pointer}
     .btn-row{display:flex;gap:12px;margin-top:18px}
-    .btn{
-      flex:1;padding:12px;font-size:16px;border:none;border-radius:10px;cursor:pointer;
-    }
+    #coordsAccess,
+#lienAccessField,
+#coordsPoste,
+#lienPosteField {
+  margin-top: 12px;
+}
+    .btn{flex:1;padding:12px;font-size:16px;border:none;border-radius:10px;cursor:pointer}
     .btn.primary{background:var(--accent);color:var(--accent-ink)}
     .btn.secondary{background:#ccc}
-    @media(prefers-color-scheme:dark){
-      .btn.secondary{background:#2a2f36;color:#eee}
-    }
-    .step{display:none;animation:fade .3s ease}
-    .step.active{display:block}
-    @keyframes fade{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:translateX(0)}}
-    #progress{margin-bottom:12px;text-align:center;color:var(--muted)}
-#progressbar {
-  width: 100%;
-  height: 6px;
-  background: var(--border);
-  border-radius: 4px;
-  overflow: hidden;
-  margin-bottom: 8px;
-}
-#progressbar-fill {
-  height: 100%;
-  width: 0%;
-  background: var(--accent);
-  transition: width 0.3s ease;
-}
-    
-    input.error,textarea.error{border:2px solid red!important;background:#ffecec}
+    @media(prefers-color-scheme:dark){.btn.secondary{background:#2a2f36;color:#eee}}
 
-.map-wrap.error { border: 2px solid #c62828 !important; }
-
+    /* Champs en erreur */
+input.error, textarea.error {
+  border: 2px solid red !important;
+  background: #ffecec;
+}
     
   </style>
 </head>
 <body>
-  <h2>➕ Ajouter un poste et l'accès</h2>
-  <div class="card"><div id="progressbar"><div id="progressbar-fill"></div></div>
-    <div id="progress">Étape 1/10</div>
-    <form id="formAppareil" novalidate>
+  <h2>➕ Ajouter un poste</h2>
 
-<!-- Étape d’introduction (ne compte pas dans le total) -->
-<div class="step active" id="introStep">
-  <p style="text-align:center;color:var(--muted);margin-bottom:20px;line-height:1.5">
-    ⏱️ Quelques secondes suffisent pour ajouter un poste.</p>
-  <div class="btn-row">
-    <button type="button" class="btn primary" id="startForm">🚀 Commencer</button>
+  <div class="card">
+<form id="formPoste" novalidate>
+      <label>Votre nom</label>
+  <input id="demandeur" required autofocus>
+
+      <label>Poste</label>
+      <input id="nomPoste" placeholder="Ex : Cambrai" required>
+
+      <label>Type</label>
+      <input id="typePoste" placeholder="Ex : SP, SSP, PRCI, L…">
+
+      <label>SAT (optionnel)</label>
+      <input id="sat" placeholder="Ex : SAT1, SAT2…">
+
+      <!-- ACCÈS (prioritaire / obligatoire d'une manière ou d'une autre) -->
+      <label>Souhaitez-vous géolocaliser l’accès ?</label>
+      <div class="pill-group">
+      <div class="pill" id="pill-acc-oui" data-value="oui" tabindex="0" role="button" aria-pressed="false">Oui</div>
+<div class="pill" id="pill-acc-non" data-value="non" tabindex="0" role="button" aria-pressed="false">Non</div>
+      </div>
+      <input type="hidden" id="presentAccess">
+
+<!-- Carte accès si oui -->
+<div class="map-wrap" id="mapAccessWrap">
+  <div class="hint" id="hintAccess">Déplacez le curseur pour ajuster la position de l’accès.</div>
+  <div id="mapAccess"></div>
+  <div class="map-toolbar">
+    <button type="button" id="btnRecenterAccess">📍 Localiser</button>
+    <button type="button" id="btnToggleAccess">🗺️ Plan</button>
   </div>
 </div>
-
-      <!-- Étape 1 -->
-      <div class="step">
-        <label>👤 Demandeur :</label>
-        <input id="demandeur" required>
-        <div class="btn-row">
-          <button type="button" class="btn primary next">Suivant ➡️</button>
-        </div>
+      <div id="coordsAccess" style="display:none;">
+        <label>Latitude accès</label>
+        <input id="latAccess" inputmode="decimal">
+        <label>Longitude accès</label>
+        <input id="lonAccess" inputmode="decimal">
       </div>
 
-    <!-- Étape Poste / Type / SAT -->
-<div class="step">
-  <label>📌 Poste :</label>
-  <input id="poste" required placeholder="Ex : Hazebrouck">
-
-  <label>📌 Type (optionnel) :</label>
-  <input id="type" placeholder="Ex : SP, SSP, PRCI...">
-
-  <label>📌 SAT (optionnel) :</label>
-  <span style="font-weight:normal;color:var(--muted);font-size:14px">
-    Ne remplir que si vous ajoutez un SAT.
-  </span>
-  <input id="sat" placeholder="Ex : SAT1, SAT2">
-
-  <div class="btn-row">
-    <button type="button" class="btn secondary prev">⬅️ Retour</button>
-    <button type="button" class="btn primary next">Suivant ➡️</button>
-  </div>
-</div>
-
-
-      <!-- Étape 5 -->
-      <div class="step">
-      <label>📍 Comment localiser le poste ?</label>
-<div class="pill-group">
-  <div class="pill" id="pill-oui" data-value="oui">📡 Avec ma position GPS</div>
-  <div class="pill" id="pill-non" data-value="non">🔗 Lien Google Maps</div>
-</div>
-        <input type="hidden" id="presentValue">
-        <div class="btn-row">
-          <button type="button" class="btn secondary prev">⬅️ Retour</button>
-          <button type="button" class="btn primary next">Suivant ➡️</button>
-        </div>
+      <!-- Lien accès si non -->
+      <div id="lienAccessField" style="display:none;">
+        <label>Coller le lien Google Maps de l’accès</label>
+        <input id="lienAccess" type="url" placeholder="https://maps.app.goo.gl/…">
       </div>
 
-  <input type="hidden" id="accessValue">
+      <!-- POSTE / GUÉRITE (facultatif) -->
+      <label>Souhaitez-vous géolocaliser le poste / guérite ?</label>
+      <div class="pill-group">
+       <div class="pill" id="pill-pos-oui" data-value="oui" tabindex="0" role="button" aria-pressed="false">Oui</div>
+<div class="pill" id="pill-pos-non" data-value="non" tabindex="0" role="button" aria-pressed="false">Non</div>
+        
+      </div>
+      <input type="hidden" id="presentPoste">
 
-  <div class="btn-row">
-    <button type="button" class="btn secondary prev">⬅️ Retour</button>
-    <button type="button" class="btn primary next">Suivant ➡️</button>
+<!-- Carte poste si oui -->
+<div class="map-wrap" id="mapPosteWrap">
+  <div class="hint" id="hintPoste">Déplacez le curseur pour ajuster la position du poste.</div>
+  <div id="mapPoste"></div>
+  <div class="map-toolbar">
+    <button type="button" id="btnRecenterPoste">📍 Localiser</button>
+    <button type="button" id="btnTogglePoste">🗺️ Plan</button>
   </div>
 </div>
-
-      <!-- Étape 8 (nouvelle) -->
-<div class="step" id="accessMethodStep">
-  <label>🆔 Comment localiser l'accès :</label>
-  <div class="pill-group">
-    <div class="pill" id="pill-access-gps" data-value="gps">📡 Avec ma position GPS</div>
-    <div class="pill" id="pill-access-lien" data-value="lien">🔗 Lien Google Maps</div>
-  </div>
-
-  <input type="hidden" id="accessMethod">
-
-  <div class="btn-row">
-    <button type="button" class="btn secondary prev">⬅️ Retour</button>
-    <button type="button" class="btn primary next">Suivant ➡️</button>
-  </div>
-</div>
-      
-
-   <!-- Étape 9 (adaptée) -->
-<div class="step" id="accessDetailsStep">
-  <!-- Carte -->
-  <div id="mapAccessWrap" class="map-wrap" style="display:none">
-    <div>Déplacez le curseur pour ajuster l’accès.</div>
-    <div id="mapAccess"></div>
-    <div class="map-toolbar">
-      <button type="button" id="btnRecenterAccess">📍 Localiser</button>
-      <button type="button" id="btnToggleAccess">🗺️ Plan</button>
-    </div>
-  </div>
-  <div id="coordsAccessDisplay" style="display:none;color:var(--muted);margin:8px 0"></div>
-
-  <!-- Champ lien -->
-  <div id="lienAccessField" style="display:none">
-    <label>🔗 Lien Google Maps accès :</label>
-    <input id="lienAccess" type="url" placeholder="https://maps.app.goo.gl/…">
-    <div id="lienAccessHelp" class="field-hint">⚠️ Lien requis pour continuer</div>
-  </div>
-
-  <div class="btn-row">
-    <button type="button" class="btn secondary prev">⬅️ Retour</button>
-    <button type="button" class="btn primary next">Suivant ➡️</button>
-  </div>
-</div>
-      
-      <!-- Étape 9 -->
-      <div class="step">
-        <label>📝 Notes complémentaires :</label>
-        <textarea id="infos" placeholder="Accès, portail…"></textarea>
-        <div class="btn-row">
-          <button type="button" class="btn secondary prev">⬅️ Retour</button>
-          <button type="button" class="btn primary next">Suivant ➡️</button>
-        </div>
+      <div id="coordsPoste" style="display:none;">
+        <label>Latitude poste / guérite</label>
+        <input id="latPoste" inputmode="decimal">
+        <label>Longitude poste / guérite</label>
+        <input id="lonPoste" inputmode="decimal">
       </div>
 
-    <!-- Étape 10 -->
-<div class="step">
-  <p style="line-height:1.5">
-    🎉 Super, presque terminé !<br>
-    Vérifiez ci-dessous les informations saisies.<br>
-    Un détail à modifier ? Touchez la ligne correspondante.<br>
-    Sinon, envoyez votre contribution ✅
-  </p>
-  <div id="recap" style="margin:12px 0; font-size:15px; line-height:1.5"></div>
-  <div class="btn-row">
-    <button type="button" class="btn secondary prev">⬅️ Retour</button>
-    <button type="submit" class="btn primary">📩 Envoyer</button>
-  </div>
-</div>
-<!-- Étape confirmation (n’est pas comptée comme une étape normale) -->
-<div class="step" id="confirmationStep">
-  <h3 style="text-align:center;margin:16px 0">✅ Merci ! Votre demande a bien été envoyée.</h3>
-  <div class="btn-row">
-    <button type="button" class="btn secondary" onclick="window.location.href='index.html'">🏠 Retour à l’accueil</button>
-    <button type="button" class="btn primary" onclick="resetForm()">➕ Ajouter un autre appareil</button>
-  </div>
-</div>
-      <!-- Bouton Annuler global -->
-<div id="cancel-row" class="btn-row" style="margin-top:12px">
-  <button type="button" class="btn secondary" onclick="window.location.href='index.html'">
-    ❌ Annuler et revenir à l’accueil
-  </button>
-</div>
+      <!-- Lien poste si non (optionnel) -->
+      <div id="lienPosteField" style="display:none;">
+        <label>Coller le lien Google Maps du poste / guérite (optionnel)</label>
+        <input id="lienPoste" type="url" placeholder="https://maps.app.goo.gl/…">
+      </div>
+
+      <!-- PK + Ligne fusionnés -->
+      <label>PK / Numéro de ligne (optionnel)</label>
+      <input id="pkLigne" placeholder="Ex : PK 114.100 – Ligne 216000">
+
+      <label>Description / notes utiles</label>
+      <textarea id="notes" placeholder="Code portail, accès Carmillon, repère visuel, proximité gare…"></textarea>
+
+      <div class="btn-row">
+        <button type="submit" class="btn primary">📩 Envoyer la contribution</button>
+        <button type="button" class="btn secondary" onclick="location.href='index.html'">⬅️ Retour à l’accueil</button>
+      </div>
     </form>
   </div>
 
-<script>
-let currentStep=0;
-  let returnToRecap = false;
-  // Coordonnées par défaut pour centrer la carte (Hazebrouck)
-// ⚠️ Ne seront PAS enregistrées tant que l’utilisateur ne clique pas sur Localiser
-const HAZE = [50.72384, 2.54924];
-const steps=document.querySelectorAll(".step:not(#introStep):not(#confirmationStep)");
-const progress=document.getElementById("progress");
-function showStep(i){
-  steps.forEach((s,idx)=>s.classList.toggle("active",idx===i));
-  let pct = Math.round(((i+1) / steps.length) * 100);
-progress.textContent = `${pct}%`;
-  document.getElementById("progressbar-fill").style.width = ((i+1)/steps.length*100) + "%";
+  <script>
+    // --- Préremplissage depuis l'URL (?nom=...)
+    (function () {
+      const q = new URLSearchParams(location.search).get("nom");
+      if (q) document.getElementById("nomPoste").value = q;  // reste éditable
+    })();
 
-  // 🔧 Initialisation + redessin des cartes Leaflet
+    // --- Préremplissage du nom du demandeur depuis le localStorage ---
+    (function prefillName() {
+      const savedName = localStorage.getItem("nom_demandeur");
+      if (savedName) {
+        document.getElementById("demandeur").value = savedName;
+      }
+    })();
 
-if(i===8){ // étape 9 = détails accès (carte/lien)
-  const m = $("accessMethod").value;
-  toggle($("mapAccessWrap"), m === "gps");
-  toggle($("lienAccessField"), m === "lien");
+    const DEST_EMAIL = "arnaud.debaecker@sncf.fr";
+    const COUNTER_URL = "https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec";
 
-  if(m === "gps"){
-    if(!mapAccess){
-      startLocAccess();
+    let mapAccess, mapPoste, markerAccess, markerPoste;
+
+    function $(id){return document.getElementById(id);}
+    function toggle(el,show){el.style.display = show ? "block" : "none";}
+    function sanitizeCoord(v){return (v||"").toString().replace(",",".").trim();}
+    function isValidLatLon(lat,lon){
+      const la=parseFloat(lat), lo=parseFloat(lon);
+      return !isNaN(la) && !isNaN(lo) && la>=-90 && la<=90 && lo>=-180 && lo<=180;
     }
-    requestAnimationFrame(()=> mapAccess && mapAccess.invalidateSize());
+    function isValidUrl(str){return /^https?:\/\/.+/i.test((str||"").trim());}
 
-    // 🔥 Relance localisation précise à l'ouverture
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        p => {
-          ACCESS_CONFIRMED = true;
-          $("mapAccessWrap").classList.remove("error");
-          applyFix(p.coords.latitude, p.coords.longitude);
-        },
-        err => { if (err.code === 1) onGeoDenied("access"); },
-        { enableHighAccuracy: true, timeout: 7000, maximumAge: 0 }
-      );
+    // ▼▼▼ AJOUTS POUR AMÉLIORATION LOCALISATION (identiques à "appareil") ▼▼▼
+    const HAZE = [50.72454, 2.54311];
+    let lastFix = null;
+    let GEO_BLOCKED = false;
+    const GEO_OPTS = { enableHighAccuracy: true, timeout: 7000, maximumAge: 15000 };
+
+    function setMapTo(map, marker, lat, lon, kind){
+      if(!map || !marker) return;
+      map.setView([lat, lon], 18);
+      marker.setLatLng([lat, lon]);
+      if(kind === "access"){ $("latAccess").value = lat; $("lonAccess").value = lon; }
+      else if(kind === "poste"){ $("latPoste").value = lat; $("lonPoste").value = lon; }
     }
+
+    function applyFix(lat, lon){
+      lastFix = { lat, lon, ts: Date.now() };
+      if(mapAccess && markerAccess) setMapTo(mapAccess, markerAccess, lat, lon, "access");
+      if(mapPoste && markerPoste) setMapTo(mapPoste, markerPoste, lat, lon, "poste");
+    }
+
+    function onGeoDenied(target){
+      GEO_BLOCKED = true;
+      if(target === "access"){
+        $("presentAccess").value = "non";
+        $("pill-acc-oui").classList.remove("active");
+        $("pill-acc-non").classList.add("active");
+        toggle($("mapAccessWrap"), 0);
+        toggle($("coordsAccess"), 0);
+        toggle($("lienAccessField"), 1);
+        alert("La géolocalisation est refusée. Renseignez un lien Google Maps pour l’accès.");
+      } else if(target === "poste"){
+        $("presentPoste").value = "non";
+        $("pill-pos-oui").classList.remove("active");
+        $("pill-pos-non").classList.add("active");
+        toggle($("mapPosteWrap"), 0);
+        toggle($("coordsPoste"), 0);
+        toggle($("lienPosteField"), 1);
+        alert("La géolocalisation est refusée. Vous pouvez fournir un lien Google Maps pour le poste (facultatif).");
+      }
+    }
+
+    // Pré-récupération de la position au chargement
+    document.addEventListener("DOMContentLoaded", () => {
+      if(navigator.geolocation){
+        navigator.geolocation.getCurrentPosition(
+          p => applyFix(p.coords.latitude, p.coords.longitude),
+          err => { if(err && err.code === 1) { GEO_BLOCKED = true; } },
+          GEO_OPTS
+        );
+      }
+    });
+    // ▲▲▲ FIN AJOUTS ▲▲▲
+
+    // ——— Pills ACCÈS
+    $("pill-acc-oui").onclick = () => setAccess("oui");
+    $("pill-acc-non").onclick = () => setAccess("non");
+   function setAccess(v){
+  $("presentAccess").value = v;
+  $("pill-acc-oui").classList.toggle("active", v==="oui");
+  $("pill-acc-non").classList.toggle("active", v==="non");
+
+  if(v==="oui"){
+    if(GEO_BLOCKED){ onGeoDenied("access"); return; }
+    toggle($("mapAccessWrap"), true);
+    toggle($("coordsAccess"), true);
+    toggle($("lienAccessField"), true);
+    toggle($("hintAccess"), true);   // 👈 AJOUT
+    startLocAccess();
+    requestAnimationFrame(() => mapAccess && mapAccess.invalidateSize());
+  } else if(v==="non"){
+    toggle($("mapAccessWrap"), false);
+    toggle($("coordsAccess"), false);
+    toggle($("lienAccessField"), true);
+    toggle($("hintAccess"), false);  // 👈 AJOUT
+  } else {
+    toggle($("mapAccessWrap"), false);
+    toggle($("coordsAccess"), false);
+    toggle($("lienAccessField"), false);
+    toggle($("hintAccess"), false);  // 👈 AJOUT
   }
 }
 
-  // Étape 10 = affichage du récapitulatif
-  if(i===10){
-    const recap = $("recap");
-    recap.innerHTML = "";
+    // ——— Pills POSTE (facultatif)
+    $("pill-pos-oui").onclick = () => setPoste("oui");
+    $("pill-pos-non").onclick = () => setPoste("non");
+    function setPoste(v){
+  $("presentPoste").value = v;
+  $("pill-pos-oui").classList.toggle("active", v==="oui");
+  $("pill-pos-non").classList.toggle("active", v==="non");
 
-    const data = [
-      { step: 0, label: "👤 Demandeur", value: $("demandeur").value },
-      { step: 1, label: "📌 Poste", value: $("poste").value + ( $("type").value ? " ("+$("type").value+")" : "" ) },
-      { step: 2, label: "📌 SAT", value: $("sat").value },
-      { step: 8, label: "📍 Localisation accès", value: $("accessValue").value==="oui" ? 
-         ($("accessMethod").value==="gps" ? $("coordsAccessDisplay").textContent.replace("Coordonnées relevées (accès) : ","") : $("lienAccess").value) : "" },
-      { step: 9, label: "📝 Notes", value: $("infos").value }
-    ];
-
- data.forEach(item=>{
-  if(item.value && item.value.trim()!==""){
-    const div = document.createElement("div");
-
- // Si coordonnées GPS → texte simplifié + lien
-if(item.value.includes(",") && !item.value.startsWith("http")){
-  const [lat, lon] = item.value.split(",");
-  const span = document.createElement("span");
-  span.textContent = `${item.label} (par GPS)`;
-  div.appendChild(span);
-
-  const link = document.createElement("a");
-  link.href = `https://www.google.com/maps/@${lat.trim()},${lon.trim()},20z/data=!3m1!1e3`;
-  link.target = "_blank";
-  link.rel = "noopener";
-  link.textContent = " 🔎 Voir sur Google Maps";
-  link.style.marginLeft = "8px";
-  link.style.color = "#0b6cff";
-  link.style.textDecoration = "underline";
-  link.addEventListener("click", e => e.stopPropagation());
-  div.appendChild(link);
-
-// Si lien Google Maps → texte simplifié + lien
-} else if(item.value.startsWith("http")){
-  let url = item.value.trim();
-
-  // 👉 Si l'utilisateur a oublié https:// on l'ajoute
-  if (!/^https?:\/\//i.test(url)) {
-    url = "https://" + url;
+  if(v==="oui"){
+    if(GEO_BLOCKED){ onGeoDenied("poste"); return; }
+    toggle($("mapPosteWrap"), true);
+    toggle($("coordsPoste"), true);
+    toggle($("lienPosteField"), false);
+    toggle($("hintPoste"), true);   // 👈 AJOUT
+    startLocPoste();
+    requestAnimationFrame(() => mapPoste && mapPoste.invalidateSize());
+  } else if(v==="non"){
+    toggle($("mapPosteWrap"), false);
+    toggle($("coordsPoste"), false);
+    toggle($("lienPosteField"), true);
+    toggle($("hintPoste"), false);  // 👈 AJOUT
+  } else {
+    toggle($("mapPosteWrap"), false);
+    toggle($("coordsPoste"), false);
+    toggle($("lienPosteField"), false);
+    toggle($("hintPoste"), false);  // 👈 AJOUT
   }
-
-  const span = document.createElement("span");
-  span.textContent = `${item.label} (par lien)`;
-  div.appendChild(span);
-
-  const link = document.createElement("a");
-  link.href = url; // on garde l'URL telle quelle
-  link.target = "_blank";
-  link.rel = "noopener";
-  link.textContent = " 🔎 Voir sur Google Maps";
-  link.style.marginLeft = "8px";
-  link.style.color = "#0b6cff";
-  link.style.textDecoration = "underline";
-  link.addEventListener("click", e => e.stopPropagation());
-  div.appendChild(link);
-
-// Sinon texte normal
-} else {
-  div.textContent = `${item.label} : ${item.value}`;
 }
+    // --- Accessibilité : gestion clavier et aria-pressed pour les pills ---
+["pill-acc-oui","pill-acc-non","pill-pos-oui","pill-pos-non"].forEach(id=>{
+  const el = $(id);
+  if(!el) return;
 
-    div.style.cursor = "pointer";
-    div.style.margin = "6px 0";
-    div.style.padding = "6px";
-    div.style.border = "1px solid var(--border)";
-    div.style.borderRadius = "6px";
-   div.onclick = () => {
-  currentStep = item.step;
-  showStep(currentStep);
-  returnToRecap = true; // ✅ on note qu’on vient du récap
-};
-    recap.appendChild(div);
-  }
+  // Active la pill au clavier
+  el.addEventListener("keydown", e=>{
+    if(e.key === "Enter" || e.key === " "){
+      e.preventDefault();
+      el.click(); // simule un clic
+    }
+  });
+
+  // Mets à jour aria-pressed selon état actif
+  el.addEventListener("click", ()=>{
+    const group = el.parentNode.querySelectorAll(".pill");
+    group.forEach(p => 
+      p.setAttribute("aria-pressed", p.classList.contains("active") ? "true" : "false")
+    );
+  });
 });
-  }
-  
-}
-document.querySelectorAll(".next").forEach(btn=>{
-  btn.addEventListener("click", e=>{
-    e.preventDefault();
-    if (validateStep(currentStep)) {
-      // ✅ Si on vient du récap, retour direct au récap
-if (returnToRecap) {
-  returnToRecap = false;
-  currentStep = steps.length - 1; // dernière étape = récap
-  showStep(currentStep);
+
+    // ——— Cartes (aligné sur la page "appareil")
+    function ensureMap(mapId, btnToggle, btnRecenter, lat, lon){
+      let map, marker;
+      map = L.map(mapId).setView(HAZE, 18);  // Hazebrouck par défaut
+      setTimeout(() => map.invalidateSize(), 300);
+
+      const esri = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}");
+      const osm  = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png");
+
+      // Par défaut on démarre en OSM (plan rapide)
+      osm.addTo(map);
+
+      // On est en mode "plan" au départ
+      let isSat = false;
+      $(btnToggle).textContent = "🛰️ Satellite"; // propose de passer en satellite
+
+      // point de départ : dernier fix si dispo, sinon paramètres passés
+      const startLat = (lastFix ? lastFix.lat : lat);
+      const startLon = (lastFix ? lastFix.lon : lon);
+      marker = L.marker([startLat, startLon], { draggable:true }).addTo(map);
+
+      marker.on("dragend", ()=>{
+        const p = marker.getLatLng();
+        if(mapId==="mapAccess"){
+          $("latAccess").value=p.lat; $("lonAccess").value=p.lng;
+        } else {
+          $("latPoste").value=p.lat; $("lonPoste").value=p.lng;
+        }
+      });
+
+      $(btnToggle).onclick = () => {
+        isSat = !isSat;
+        if (isSat) {
+          if (map.hasLayer(osm)) map.removeLayer(osm);
+          esri.addTo(map);
+          $(btnToggle).textContent = "🗺️ Plan";
+        } else {
+          if (map.hasLayer(esri)) map.removeLayer(esri);
+          osm.addTo(map);
+          $(btnToggle).textContent = "🛰️ Satellite";
+        }
+        requestAnimationFrame(() => map.invalidateSize());
+      };
+
+      $(btnRecenter).onclick = ()=>{
+        const target = (mapId==="mapAccess") ? "access" : "poste";
+        if(GEO_BLOCKED){ onGeoDenied(target); return; }
+
+        // 1) applique immédiatement le dernier fix si présent
+        if (lastFix){
+          const isAccess = (mapId==="mapAccess");
+          const mapRef    = isAccess ? mapAccess   : mapPoste;
+          const markerRef = isAccess ? markerAccess: markerPoste;
+          const kind      = isAccess ? "access"    : "poste";
+          setMapTo(mapRef, markerRef, lastFix.lat, lastFix.lon, kind);
+        }
+
+        // 2) demande une position plus fraîche
+        if(navigator.geolocation){
+          navigator.geolocation.getCurrentPosition(
+            p => applyFix(p.coords.latitude, p.coords.longitude),
+            err => { if(err && err.code === 1){ onGeoDenied(target); } },
+            GEO_OPTS
+          );
+        }
+      };
+
+      if(mapId==="mapAccess"){ mapAccess=map; markerAccess=marker; }
+      else{ mapPoste=map; markerPoste=marker; }
+    }
+
+    function startLocAccess(){
+      if(GEO_BLOCKED){ onGeoDenied("access"); return; }
+      if(!mapAccess){
+        ensureMap("mapAccess","btnToggleAccess","btnRecenterAccess", HAZE[0], HAZE[1]);
+      }
+      if(lastFix) setMapTo(mapAccess, markerAccess, lastFix.lat, lastFix.lon, "access");
+
+      if(navigator.geolocation){
+        navigator.geolocation.getCurrentPosition(
+          p => applyFix(p.coords.latitude, p.coords.longitude),
+          err => { if(err && err.code === 1) onGeoDenied("access"); },
+          GEO_OPTS
+        );
+      }
+    }
+
+    function startLocPoste(){
+      if(GEO_BLOCKED){ onGeoDenied("poste"); return; }
+      if(!mapPoste){
+        ensureMap("mapPoste","btnTogglePoste","btnRecenterPoste", HAZE[0], HAZE[1]);
+      }
+      if(lastFix) setMapTo(mapPoste, markerPoste, lastFix.lat, lastFix.lon, "poste");
+
+      if(navigator.geolocation){
+        navigator.geolocation.getCurrentPosition(
+          p => applyFix(p.coords.latitude, p.coords.longitude),
+          err => { if(err && err.code === 1) onGeoDenied("poste"); },
+          GEO_OPTS
+        );
+      }
+    }
+
+    // ——— Submit
+    $("formPoste").onsubmit = (e)=>{
+      e.preventDefault();
+
+      const demandeur   = $("demandeur").value.trim();
+      if (demandeur) {
+        localStorage.setItem("nom_demandeur", demandeur);
+      }
+      const nomPoste    = $("nomPoste").value.trim();
+      const typePoste   = $("typePoste").value.trim().toUpperCase();
+      const satellite   = $("sat").value.trim().toUpperCase();
+      const pkLigne     = $("pkLigne").value.trim();
+      const notes       = $("notes").value.trim();
+
+ // Réinitialise l'état erreur
+["demandeur","nomPoste"].forEach(id => $(id).classList.remove("error"));
+
+let missing = [];
+if (!demandeur) { missing.push("Votre nom"); $("demandeur").classList.add("error"); }
+if (!nomPoste)  { missing.push("Nom du poste"); $("nomPoste").classList.add("error"); }
+
+if (missing.length > 0) {
+  alert("⚠️ Merci de renseigner les champs obligatoires :\n" + missing.join(" / "));
+  requestAnimationFrame(() => {
+    const premierChamp = document.querySelector("input.error, textarea.error");
+    if (premierChamp) {
+      premierChamp.focus({ preventScroll: true });
+      premierChamp.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  });
   return;
 }
 
- 
+      // ACCÈS : choix obligatoire + donnée obligatoire (coords OU lien)
+    if(!$("presentAccess").value){
+  alert("⚠️ Merci d’indiquer si vous souhaitez géolocaliser l’accès (Oui / Non).");
+  requestAnimationFrame(() => $("pill-acc-oui")?.focus());
+  return;
+}
 
-      // Étape 7 (accès distinct) → obligatoire
-      if (currentStep === 6 && !$("accessValue").value) {
-        document.querySelectorAll("#pill-acces-oui, #pill-acces-non").forEach(p => p.classList.add("error"));
-        return; // empêche d’avancer
+      let accesStr = "";
+      if($("presentAccess").value === "oui"){
+        const la = sanitizeCoord($("latAccess").value);
+        const lo = sanitizeCoord($("lonAccess").value);
+        if(!isValidLatLon(la,lo)){
+          alert("⚠️ Les coordonnées de l’accès ne sont pas valides.");
+          return;
+        }
+        accesStr = `${la},${lo}`;
+      }else{ // non
+        const lienA = $("lienAccess").value.trim();
+        if(!isValidUrl(lienA)){
+          alert("⚠️ Merci de fournir un lien Google Maps valide pour l’accès.");
+          return;
+        }
+        accesStr = lienA;
       }
 
-      // Cas particulier étape 7 (si Non → on saute directement aux notes)
-      if (currentStep === 6) {
-        if ($("accessValue").value === "non") {
-          currentStep = 9; 
-          showStep(currentStep);
+      // POSTE / GUÉRITE : facultatif
+      let posteStr = "";
+      if($("presentPoste").value === "oui"){
+        const laP = sanitizeCoord($("latPoste").value);
+        const loP = sanitizeCoord($("lonPoste").value);
+        if(!isValidLatLon(laP,loP)){
+          alert("⚠️ Les coordonnées du poste / de la guérite ne sont pas valides.");
           return;
+        }
+        posteStr = `${laP},${loP}`;
+      }else if($("presentPoste").value === "non"){
+        const lienP = $("lienPoste").value.trim();
+        if(lienP){ // optionnel : s'il est rempli, on le vérifie
+          if(!isValidUrl(lienP)){
+            alert("⚠️ Le lien Google Maps du poste / de la guérite n’est pas valide.");
+            return;
+          }
+          posteStr = lienP;
         }
       }
 
-      // Étape 8 = choix méthode d’accès
-      if (currentStep === 7 && $("accessValue").value === "oui") {
-        if (!$("accessMethod").value) {
-          // 👉 plus d'alert(), on marque les boutons en rouge
-          document.querySelectorAll("#pill-access-gps, #pill-access-lien").forEach(p => p.classList.add("error"));
-          return;
-        }
+      // Email
+      const subject = `Contribution : ajout d’un poste — ${nomPoste}`;
+      let body  = `Bonjour Arnaud,%0D%0A%0D%0A${encodeURIComponent(demandeur)} propose l’ajout du poste suivant :%0D%0A%0D%0A`;
+      body += `Nom du poste : ${encodeURIComponent(nomPoste)}%0D%0A`;
+      if(typePoste) body += `Type : ${encodeURIComponent(typePoste)}%0D%0A`;
+      if(satellite) body += `Satellite : ${encodeURIComponent(satellite)}%0D%0A`;
+      body += `Accès : ${encodeURIComponent(accesStr)}%0D%0A`;
+      if(posteStr) body += `Poste / guérite : ${encodeURIComponent(posteStr)}%0D%0A`;
+      if(pkLigne) body += `PK / Ligne : ${encodeURIComponent(pkLigne)}%0D%0A`;
+      if(notes) body += `Notes : ${encodeURIComponent(notes)}%0D%0A`;
+      body += `%0D%0ACordialement,%0D%0A${encodeURIComponent(demandeur)}`;
+
+      // Envoi mail via mailto
+      location.href = `mailto:${DEST_EMAIL}?subject=${encodeURIComponent(subject)}&body=${body}`;
+
+      // Incrément compteur contributions (identique)
+      fetch(COUNTER_URL + "?increment=true").catch(()=>{});
+
+      alert("L’e-mail de contribution est généré, vérifiez et envoyez-le.");
+
+      // Sauvegarde le nom avant reset
+      const savedName = demandeur;
+
+      // Reset complet du formulaire
+      $("formPoste").reset();
+      setAccess("");
+      setPoste("");
+
+      // Réinjecte le nom sauvegardé
+      if (savedName) {
+        $("demandeur").value = savedName;
       }
+    };
 
-
-      // Étape 9 => accès via LIEN
-      if (currentStep === 8 && $("accessValue").value === "oui" && $("accessMethod").value === "lien") {
-        const ok = isValidUrl($("lienAccess").value);
-        markError($("lienAccess"), $("lienAccessHelp"), !ok);
-        if (!ok) return;
-      }
-
-      // Étape 9 => accès via GPS
-      if (currentStep === 8 && $("accessValue").value === "oui" && $("accessMethod").value === "gps") {
-        if (!ACCESS_CONFIRMED || !$("coordsAccessDisplay").textContent.includes(",")) {
-          $("mapAccessWrap").classList.add("error");
-          return;
-        } else {
-          $("mapAccessWrap").classList.remove("error");
-        }
-      }
-
-           // 👉 si tout est ok → on avance
-      currentStep++;
-      showStep(currentStep);
-    }
-  });
-});
-
-document.querySelectorAll(".prev").forEach(btn=>{
-  btn.addEventListener("click", e=>{
-    e.preventDefault();
-
-    // ✅ Si on vient du récap, retour direct au récap
-    if (returnToRecap) {
-      returnToRecap = false;
-      currentStep = steps.length - 1; // dernière étape = récap
-      showStep(currentStep);
-      return;
-    }
-
-    if(currentStep>0){
-      currentStep--;
-      showStep(currentStep);
-    }
-  });
-});
-function validateStep(i){
-  const step=steps[i];
-  const input=step.querySelector("input[required],textarea[required]");
-  if(input && !input.value.trim()){
-    input.classList.add("error");
-    return false;
-  }
-  return true;
-}
-  // 🔧 Retirer le rouge dès que l'utilisateur tape quelque chose
-document.addEventListener("input", (e)=>{
-  if(e.target.matches("input.error, textarea.error")){
-    if(e.target.value.trim() !== ""){
-      e.target.classList.remove("error");
-    }
-  }
-});
-
-// GPS / lien logique simplifiée
-function $(id){return document.getElementById(id);}
-function toggle(el,show){el.style.display=show?"block":"none";}
-  function showHint(el, show){ 
-  el.classList.toggle("show", !!show); 
-}
-function markError(input, helpEl, on){
-  input.classList.toggle("error", !!on);
-  showHint(helpEl, !!on);
-}
-$("pill-oui").onclick = () => {
-  $("presentValue").value = "oui";
-  $("pill-oui").classList.add("active");
-  $("pill-non").classList.remove("active");
-  toggle($("mapDeviceWrap"), 1);
-  toggle($("lienField"), 0);
-
-  // 👇 redimensionner la carte si déjà créée
-  setTimeout(() => mapDevice && mapDevice.invalidateSize(), 300);
-  markError($("lien"), $("lienHelp"), false);
-  document.querySelectorAll("#pill-oui, #pill-non").forEach(p => p.classList.remove("error"));
-
-  DEVICE_CONFIRMED = false;
-  $("latDevice").value = "";
-  $("lonDevice").value = "";
-  $("coordsDeviceDisplay").style.display = "none";
-  $("mapDeviceWrap").classList.remove("error");
-
-  // 🔥 Localisation rapide dès le clic
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      p => {
-        DEVICE_CONFIRMED = true;
-        $("mapDeviceWrap").classList.remove("error");
-        applyFix(p.coords.latitude, p.coords.longitude);
-      },
-      err => { if (err.code === 1) onGeoDenied("device"); },
-      { enableHighAccuracy: false, timeout: 4000, maximumAge: 10000 }
-    );
-  }
-};
-  
-$("pill-non").onclick=()=>{
-  $("presentValue").value="non";
-  $("pill-non").classList.add("active");
-  $("pill-oui").classList.remove("active");
-  toggle($("mapDeviceWrap"),0);
-  toggle($("lienField"),1);
-
-  // ✅ enlève le rouge si c’était en erreur
-  document.querySelectorAll("#pill-oui, #pill-non").forEach(p=>p.classList.remove("error"));
-};
-$("pill-acces-oui").onclick=()=>{
-  $("accessValue").value="oui";
-  $("pill-acces-oui").classList.add("active");
-  $("pill-acces-non").classList.remove("active");
-  toggle($("mapAccessWrap"),1);
-
-  // 👇 ajout
-  setTimeout(()=>mapAccess && mapAccess.invalidateSize(),300);
-  markError($("lienAccess"), $("lienAccessHelp"), false);
-  document.querySelectorAll("#pill-acces-oui, #pill-acces-non").forEach(p=>p.classList.remove("error"));
-};
-
-$("pill-acces-non").onclick=()=>{
-  $("accessValue").value="non";
-  $("pill-acces-non").classList.add("active");
-  $("pill-acces-oui").classList.remove("active");
-  toggle($("mapAccessWrap"),0); // cache la carte
-  document.querySelectorAll("#pill-acces-oui, #pill-acces-non").forEach(p=>p.classList.remove("error"));
-};
-
-  // --- Étape 8 (choix méthode d’accès) ---
-$("pill-access-gps").onclick = () => {
-  $("accessMethod").value = "gps";
-  $("pill-access-gps").classList.add("active");
-  $("pill-access-lien").classList.remove("active");
-  // On prépare l'étape suivante : afficher carte, cacher lien
-  toggle($("mapAccessWrap"), 1);
-  toggle($("lienAccessField"), 0);
-  setTimeout(()=>mapAccess && mapAccess.invalidateSize(),300);
-  markError($("lienAccess"), $("lienAccessHelp"), false);
-
-  ACCESS_CONFIRMED = false;
-  $("coordsAccessDisplay").style.display = "none";
-  $("mapAccessWrap").classList.remove("error");
-
-  // 🔥 Localisation rapide dès le clic
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      p => {
-        ACCESS_CONFIRMED = true;
-        $("mapAccessWrap").classList.remove("error");
-        applyFix(p.coords.latitude, p.coords.longitude);
-      },
-      err => { if (err.code === 1) onGeoDenied("access"); },
-      { enableHighAccuracy: false, timeout: 4000, maximumAge: 10000 }
-    );
-  }
-};
-
-$("pill-access-lien").onclick = () => {
-  $("accessMethod").value = "lien";
-  $("pill-access-lien").classList.add("active");
-  $("pill-access-gps").classList.remove("active");
-  // On prépare l'étape suivante : cacher carte, afficher lien
-  toggle($("mapAccessWrap"), 0);
-  toggle($("lienAccessField"), 1);
-
-  // ✅ reset d’éventuelles erreurs précédentes
-  markError($("lienAccess"), $("lienAccessHelp"), false);
-  ACCESS_CONFIRMED = false;
-$("mapAccessWrap").classList.remove("error");
-};
-
-  $("lien").addEventListener("input", ()=>{
-  const ok = isValidUrl($("lien").value);
-  markError($("lien"), $("lienHelp"), !ok && $("presentValue").value === "non");
-});
-
-$("lienAccess").addEventListener("input", ()=>{
-  const ok = isValidUrl($("lienAccess").value);
-  markError($("lienAccess"), $("lienAccessHelp"), !ok && $("accessMethod").value === "lien");
-});
-// ---------------- LOGIQUE COMPLÈTE LEAFLET + ENVOI ----------------
-
-const COUNTER_URL = "https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec";
-
-let mapAccess, markerAccess;
-let ACCESS_CONFIRMED = false;   // l’utilisateur a cliqué Localiser pour l’accès
-let ACCESS_CONFIRMED = false;   // l’utilisateur a cliqué Localiser pour l’accès
-let lastFix=null; let GEO_BLOCKED=false;
-const GEO_OPTS={enableHighAccuracy:true,timeout:7000,maximumAge:15000};
-
-function sanitizeCoord(v){return (v||"").toString().replace(",",".");}
-function isValidLatLon(lat,lon){
-  const la=parseFloat(lat),lo=parseFloat(lon);
-  return !isNaN(la)&&!isNaN(lo)&&la>=-90&&la<=90&&lo>=-180&&lo<=180;
-}
-function isValidUrl(str){return /^https?:\/\/.+/i.test((str||"").trim());}
-
-function setMapTo(map,marker,lat,lon,kind){
-  if(!map||!marker)return;
-  map.setView([lat,lon],18);
-  marker.setLatLng([lat,lon]);
-  const la=Number(lat).toFixed(6), lo=Number(lon).toFixed(6);
-
-}
-function applyFix(lat,lon){
-  lastFix={lat,lon,ts:Date.now()};
-  if(mapAccess&&markerAccess)setMapTo(mapAccess,markerAccess,lat,lon,"access");
-}
-function onGeoDenied(target){
-  GEO_BLOCKED=true;
-  if(target==="access"){ $("accessValue").value="non"; toggle($("mapAccessWrap"),0); toggle($("lienAccessField"),1); }
-
-}
-function ensureMap(mapId,btnToggle,btnRecenter,lat,lon){
-  let map=L.map(mapId).setView([lat,lon],18);
-  setTimeout(()=>map.invalidateSize(),300);
-  const esri=L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}");
-  const osm=L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png");
-  osm.addTo(map);
-  $(btnToggle).textContent = "🛰️ Satellite"; // par défaut on propose de passer en satellite
-  let marker=L.marker([lat,lon],{draggable:true}).addTo(map);
-
-let p = marker.getLatLng();
- else { // accès
-  if (ACCESS_CONFIRMED && $("accessMethod").value === "gps") {
-    $("coordsAccessDisplay").textContent = `Coordonnées relevées (accès) : ${p.lat.toFixed(6)}, ${p.lng.toFixed(6)}`;
-    $("coordsAccessDisplay").style.display = "block";
-  } else {
-    $("coordsAccessDisplay").style.display = "none";
-  }
-}
-  
-  $(btnToggle).onclick=()=>{
-    if(map.hasLayer(osm)){map.removeLayer(osm); esri.addTo(map); $(btnToggle).textContent="🗺️ Plan";}
-    else{map.removeLayer(esri); osm.addTo(map); $(btnToggle).textContent="🛰️ Satellite";}
-    map.invalidateSize();
-  };
-$(btnRecenter).onclick = () => {
-  if (GEO_BLOCKED) { onGeoDenied(mapId === "mapDevice" ? "device" : "access"); return; }
-
-  const kind = (mapId === "mapDevice") ? "device" : "access";
-
-  // Fonction utilitaire : applique le fix et confirme
-  const confirmFromFix = (fix) => {
-    if (!fix) return false;
-    if (kind === "device") {
-      DEVICE_CONFIRMED = true;
-      $("mapDeviceWrap").classList.remove("error");
-      setMapTo(map, marker, fix.lat, fix.lon, "device");
-    } else {
-      ACCESS_CONFIRMED = true;
-      $("mapAccessWrap").classList.remove("error");
-      setMapTo(map, marker, fix.lat, fix.lon, "access");
-    }
-    return true;
-  };
-
-  if (confirmFromFix(lastFix)) return;
-
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      p => {
-        applyFix(p.coords.latitude, p.coords.longitude);
-        confirmFromFix({ lat: p.coords.latitude, lon: p.coords.longitude });
-      },
-      err => { if (err.code === 1) onGeoDenied(kind); },
-      GEO_OPTS
-    );
-  }
-};
-
-  else{mapAccess=map;markerAccess=marker;}
-}
-
-function startLocAccess(){
-  if(!mapAccess)ensureMap("mapAccess","btnToggleAccess","btnRecenterAccess",HAZE[0],HAZE[1]);
-  if(lastFix)setMapTo(mapAccess,markerAccess,lastFix.lat,lastFix.lon,"access");
-}
-
-document.addEventListener("DOMContentLoaded",()=>{
-  // Préremplir poste/appareil si passés en paramètres d'URL
-  const params = new URLSearchParams(window.location.search);
-
- // Préremplir le nom de l’appareil si passé en paramètre
-if (params.has("appareil")) {
-  $("appareil").value = params.get("appareil").trim();
-}
-
-if (params.has("poste")) {
-  // Types reconnus à la fin du libellé
-  const TYPES = ["A","L","L-A","LGV","P","PRCI","S","SP","ST","SST","SS","SSP","SSPA","SSP-A"];
-
-  const esc = s => s.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
-  const TYPES_RE = new RegExp("\\b(" + TYPES.map(esc).join("|") + ")\\b\\s*$", "i");
-
-  // 0) Nettoyage
-  let raw = (params.get("poste") || "")
-    .replace(/^📍\s*/,"")     // enlève l’emoji éventuel
-    .replace(/\u00A0/g," ")   // nbsp -> espace
-    .replace(/\s+/g," ")      // espaces multiples
-    .trim();
-
-  let foundType = "";
-  let foundSat  = "";
-
-  // 1) SAT : capter "SAT3", "SAT-3", "SAT 3" puis couper TOUT après
-  const satM = raw.match(/\bSAT[\s-]*\d+\b/i);
-  if (satM) {
-    foundSat = satM[0].replace(/\s+/g,"").toUpperCase(); // "SAT3"
-    raw = raw.slice(0, satM.index).trim();               // on garde seulement avant le SAT
-  }
-
-  // 2) Si pas de SAT, couper tout suffixe après un séparateur
-  if (!satM) {
-    raw = raw.split(/(?:—|–|-|,|;|\/|\(|\[|\baccès\b|\bacces\b|\baccess\b)/i)[0].trim();
-  }
-
-  // 3) Extraire le TYPE en fin de chaîne (SP, SSP, SSP-A…)
-  const typeM = raw.match(TYPES_RE);
-  if (typeM) {
-    foundType = typeM[1].toUpperCase();
-    raw = raw.replace(TYPES_RE, "").trim(); // enlever le type du nom
-  }
-
-  // 4) Remplir les champs
-  $("poste").value = raw;            // NOM seulement
-  if (foundType) $("type").value = foundType;
-  if (foundSat)  $("sat").value  = foundSat;
-}
-  
-  // (la suite de ton code inchangée : géoloc, demandeur depuis localStorage, etc.)
-  if(navigator.geolocation){
-    navigator.geolocation.getCurrentPosition(
-      p=>applyFix(p.coords.latitude,p.coords.longitude),
-      err=>{if(err.code===1)GEO_BLOCKED=true;},
-      GEO_OPTS);
-  }
-
-  const savedDemandeur = localStorage.getItem("demandeur");
-  if(savedDemandeur){
-    $("demandeur").value = savedDemandeur;
-  }
-  $("demandeur").addEventListener("input", ()=>{
-    localStorage.setItem("demandeur", $("demandeur").value.trim());
-  });
-});
-
-function resetForm(){
-  $("formAppareil").reset();
-  currentStep = 0;
-
-  // Masquer l'écran de confirmation
-  document.getElementById("confirmationStep").classList.remove("active");
-  document.getElementById("confirmationStep").style.display = "none";
-
-  // Réaffiche le formulaire normal
-  document.getElementById("introStep").style.display = "none";
-  document.getElementById("progress").style.display = "block";
-  document.getElementById("progressbar").style.display = "block";
-
-  showStep(currentStep);
-
-  // ✅ Réinjecter automatiquement le demandeur depuis localStorage
-  const savedDemandeur = localStorage.getItem("demandeur");
-  if(savedDemandeur){
-    $("demandeur").value = savedDemandeur;
-  }
-}
-// Soumission finale
-
-$("formAppareil").onsubmit = e => {
-  e.preventDefault();
-
-  let demandeur = $("demandeur").value.trim();
-  let poste = $("poste").value.trim();
-  let infos = $("infos").value.trim();
-
-  let coordAppareil = "", coordAcces = "";
-
-  // Vérif accès
-  if ($("accessValue").value === "oui") {
-    if ($("accessMethod").value === "gps") {
-      let la = $("coordsAccessDisplay").textContent;
-      if (!la.includes(",")) {
-        // rien positionné
-        document.querySelectorAll("#pill-access-gps").forEach(p=>p.classList.add("error"));
-        return;
-      }
-      coordAcces = la.replace("Coordonnées relevées (accès) : ", "").trim();
-    } else if ($("accessMethod").value === "lien") {
-      let lienAcces = $("lienAccess").value.trim();
-      if (!isValidUrl(lienAcces)) {
-        markError($("lienAccess"), $("lienAccessHelp"), true);
-        return;
-      }
-      coordAcces = lienAcces;
-    } else {
-      document.querySelectorAll("#pill-access-gps, #pill-access-lien").forEach(p=>p.classList.add("error"));
-      return;
-    }
-  }
-
-  // Données prêtes
-  const formData = new URLSearchParams();
-  formData.append("demandeur", demandeur);
-  formData.append("poste", poste);
-  formData.append("type", $("type").value.trim());
-  formData.append("sat", $("sat").value.trim());
-  formData.append("acces", coordAcces);
-  formData.append("notes", infos);
-
-  const submitBtn = document.querySelector('.btn.primary[type="submit"]');
-  const oldLabel = submitBtn.textContent;
-  submitBtn.disabled = true;
-  submitBtn.textContent = "⏳ Envoi en cours…";
-
-  fetch("https://script.google.com/macros/s/AKfycbz8lUhVMKOrRSdeNBeA0p4ZsQCNOesB0Y4DL27KAoHkHWS78hOqrW-t-9bC_azgN-mY/exec", {method:"POST", body:formData})
-    .then(r=>r.text())
-    .then(()=>{
-      fetch(COUNTER_URL+"?increment=true").catch(()=>{});
-      steps.forEach(s=>s.classList.remove("active"));
-      document.getElementById("confirmationStep").classList.add("active");
-      document.getElementById("progress").style.display = "none";
-      document.getElementById("progressbar").style.display = "none";
-    })
-    .catch(err=>{
-      console.error("Erreur d’envoi", err);
-      markError(submitBtn, null, true);
-    })
-    .finally(()=>{
-      submitBtn.disabled = false;
-      submitBtn.textContent = oldLabel;
+// Supprimer automatiquement le rouge quand on corrige un champ
+document.addEventListener("DOMContentLoaded", () => {
+  ["demandeur","nomPoste"]
+    .forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener("input", () => el.classList.remove("error"));
     });
-};
+});
 
-// Au départ : n’afficher que l’intro
-steps.forEach(s => s.classList.remove("active"));
-document.getElementById("introStep").classList.add("active");
-progress.style.display = "none"; // cacher la barre au départ
-document.getElementById("progressbar").style.display = "none";
-
-// Quand on clique sur "Commencer"
-document.getElementById("startForm").addEventListener("click", () => {
-  document.getElementById("introStep").style.display = "none";
-  progress.style.display = "block";
-  document.getElementById("progressbar").style.display = "block";
-  showStep(0); // affiche la vraie étape 1
+// Normalisation automatique des coordonnées : virgule → point
+["latAccess","lonAccess","latPoste","lonPoste"].forEach(id=>{
+  const el = $(id);
+  if (!el) return;
+  el.addEventListener("input", ()=>{
+    if (el.value.includes(",")) {
+      el.value = el.value.replace(",",".");
+    }
+  });
 });
 </script>
 </body>
