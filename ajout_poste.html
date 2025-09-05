@@ -254,21 +254,28 @@ input.error{border:2px solid #c62828!important;background:#ffecec}
     <button type="submit" class="btn primary">📩 Envoyer</button>
   </div>
 </div>
-<!-- Étape confirmation (n’est pas comptée comme une étape normale) -->
+<!-- Étape confirmation -->
 <div class="step" id="confirmationStep">
-  <h3 style="text-align:center;margin:16px 0">✅ Merci ! Votre demande a bien été envoyée.</h3>
+  <h3 style="text-align:center;margin:16px 0">
+    ✅ Merci ! Votre demande a bien été envoyée.
+  </h3>
   <div class="btn-row">
-    <button type="button" class="btn secondary" onclick="window.location.href='index.html'">🏠 Retour à l’accueil</button>
-    <button type="button" class="btn primary" onclick="resetForm()">➕ Ajouter un autre poste</button>
+    <button type="button" class="btn secondary" onclick="window.location.href='index.html'">
+      🏠 Retour à l’accueil
+    </button>
+    <button type="button" class="btn primary" onclick="resetForm()">
+      ➕ Ajouter un autre poste
+    </button>
   </div>
 </div>
-    </form>
-    <!-- Bouton Annuler global (visible pendant le formulaire, pas à la confirmation) -->
+
+<!-- ✅ Bouton Annuler replacé à l’intérieur du form -->
 <div id="cancel-row" class="btn-row" style="margin-top:12px">
   <button type="button" class="btn secondary" onclick="window.location.href='index.html'">
     ❌ Annuler et revenir à l’accueil
   </button>
 </div>
+</form>
   </div>
 
 <script>
