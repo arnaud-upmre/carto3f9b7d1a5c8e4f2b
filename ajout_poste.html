@@ -434,11 +434,11 @@ document.querySelectorAll(".next").forEach(btn=>{
     // Vérifie si le champ obligatoire est rempli
     if (!validateStep(currentStep)) return;
 
-    // Étape 3 (index 2) : choisir GPS ou Lien pour le poste
-    if (currentStep === 2 && !$("presentValue").value) {
-      document.querySelectorAll("#pill-oui, #pill-non").forEach(p => p.classList.add("error"));
-      return;
-    }
+// Étape GPS/Lien poste (après Poste/Type)
+if (steps[currentStep].querySelector("#pill-oui") && !$("presentValue").value) {
+  document.querySelectorAll("#pill-oui, #pill-non").forEach(p => p.classList.add("error"));
+  return;
+}
 
     // Étape 4 (index 3) : validation du poste selon choix
     if (currentStep === 3) {
