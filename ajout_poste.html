@@ -162,7 +162,7 @@ input.error{border:2px solid #c62828!important;background:#ffecec}
       <!-- Étape 6 -->
       <div class="step">
         <div id="mapDeviceWrap" class="map-wrap" style="display:none">
-          <div>Déplacez le curseur pour ajuster l’appareil.</div>
+          <div>Déplacez le curseur pour ajuster le poste.</div>
           <div id="mapDevice"></div>
           <div class="map-toolbar">
             <button type="button" id="btnRecenterDevice">📍 Localiser</button>
@@ -414,6 +414,14 @@ document.querySelectorAll(".next").forEach(btn=>{
   btn.addEventListener("click", e=>{
     e.preventDefault();
 
+    // 🔁 Si on vient du récap, renvoyer directement au récap
+    if (returnToRecap) {
+      returnToRecap = false;
+      currentStep = steps.length - 1; // dernière étape = récap
+      showStep(currentStep);
+      return;
+    }
+
     // Vérifie si le champ obligatoire est rempli
     if (!validateStep(currentStep)) return;
 
@@ -450,26 +458,7 @@ document.querySelectorAll(".next").forEach(btn=>{
     showStep(currentStep);
   });
 });
-
-document.querySelectorAll(".prev").forEach(btn=>{
-  btn.addEventListener("click", e=>{
-    e.preventDefault();
-
-    // ✅ Si on vient du récap, retour direct au récap
-    if (returnToRecap) {
-      returnToRecap = false;
-      currentStep = steps.length - 1; // dernière étape = récap
-      showStep(currentStep);
-      return;
-    }
-
-    if(currentStep>0){
-    
-      currentStep--;
-      showStep(currentStep);
-    }
-  });
-});
+  
 function validateStep(i){
   const step = steps[i];
   const inputs = step.querySelectorAll("input[required], textarea[required]");
@@ -739,10 +728,6 @@ document.addEventListener("DOMContentLoaded",()=>{
   // Préremplir poste/appareil si passés en paramètres d'URL
   const params = new URLSearchParams(window.location.search);
 
- // Préremplir le nom de l’appareil si passé en paramètre
-if (params.has("appareil")) {
-  $("appareil").value = params.get("appareil").trim();
-}
 
 if (params.has("poste")) {
   // Types reconnus à la fin du libellé
