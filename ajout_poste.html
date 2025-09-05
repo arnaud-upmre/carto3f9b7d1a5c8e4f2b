@@ -942,8 +942,8 @@ document.getElementById("startForm").addEventListener("click", () => {
   progress.style.display = "block";
   document.getElementById("progressbar").style.display = "block";
 
-  // On lance directement l’étape 1 (Demandeur)
-  currentStep = 1;
+   // On lance directement l’étape Demandeur (index 1 dans le DOM, mais 0 dans la logique active)
+  currentStep = 0;
   showStep(currentStep);
 });
 </script>
