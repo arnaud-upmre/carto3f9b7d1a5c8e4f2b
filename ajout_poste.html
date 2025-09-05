@@ -276,7 +276,7 @@ const HAZE = [50.72384, 2.54924];
 const steps=document.querySelectorAll(".step");  
 const progress=document.getElementById("progress");
 
-function showStep(i){
+  function showStep(i){
   steps.forEach((s,idx)=>s.classList.toggle("active",idx===i));
 
   // 🔧 ignorer introStep et confirmationStep dans le calcul du %
@@ -286,136 +286,138 @@ function showStep(i){
   if (realIndex >= 0) {
     let pct = Math.round(((realIndex+1) / realSteps.length) * 100);
     progress.textContent = `${pct}%`;
-    document.getElementById("progressbar-fill").style.width = ((realIndex+1)/realSteps.length*100) + "%";
+    document.getElementById("progressbar-fill").style.width =
+      ((realIndex+1)/realSteps.length*100) + "%";
   }
+
   // 🔧 Initialisation + redessin des cartes Leaflet
   if(i===3){ // étape 4 = carte poste
-  if(!mapDevice){
-    startLocDevice(); // initialise la carte si pas déjà fait
-  }
-  setTimeout(() => mapDevice && mapDevice.invalidateSize(), 300);
-
-  // 🔥 Relance localisation précise dès qu’on arrive sur la carte
-  if (navigator.geolocation && $("presentValue").value === "oui") {
-    navigator.geolocation.getCurrentPosition(
-      p => {
-        DEVICE_CONFIRMED = true;
-        $("mapDeviceWrap").classList.remove("error");
-        applyFix(p.coords.latitude, p.coords.longitude);
-      },
-      err => { if (err.code === 1) onGeoDenied("device"); },
-      { enableHighAccuracy: true, timeout: 7000, maximumAge: 0 }
-    );
-  }
-}
-if(i===5){ // étape 6 = détails accès (carte/lien)
-  const m = $("accessMethod").value;
-  toggle($("mapAccessWrap"), m === "gps");
-  toggle($("lienAccessField"), m === "lien");
-
-  if(m === "gps"){
-    if(!mapAccess){
-      startLocAccess();
+    if(!mapDevice){
+      startLocDevice(); // initialise la carte si pas déjà fait
     }
-    requestAnimationFrame(()=> mapAccess && mapAccess.invalidateSize());
+    setTimeout(() => mapDevice && mapDevice.invalidateSize(), 300);
 
-    // 🔥 Relance localisation précise à l'ouverture
-    if (navigator.geolocation) {
+    // 🔥 Relance localisation précise dès qu’on arrive sur la carte
+    if (navigator.geolocation && $("presentValue").value === "oui") {
       navigator.geolocation.getCurrentPosition(
         p => {
-          ACCESS_CONFIRMED = true;
-          $("mapAccessWrap").classList.remove("error");
+          DEVICE_CONFIRMED = true;
+          $("mapDeviceWrap").classList.remove("error");
           applyFix(p.coords.latitude, p.coords.longitude);
         },
-        err => { if (err.code === 1) onGeoDenied("access"); },
+        err => { if (err.code === 1) onGeoDenied("device"); },
         { enableHighAccuracy: true, timeout: 7000, maximumAge: 0 }
       );
     }
   }
-}
 
-  // Étape 10 = affichage du récapitulatif
- if(i===7){ // Étape 8 = affichage du récapitulatif
+  if(i===5){ // étape 6 = détails accès (carte/lien)
+    const m = $("accessMethod").value;
+    toggle($("mapAccessWrap"), m === "gps");
+    toggle($("lienAccessField"), m === "lien");
+
+    if(m === "gps"){
+      if(!mapAccess){
+        startLocAccess();
+      }
+      requestAnimationFrame(()=> mapAccess && mapAccess.invalidateSize());
+
+      // 🔥 Relance localisation précise à l'ouverture
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          p => {
+            ACCESS_CONFIRMED = true;
+            $("mapAccessWrap").classList.remove("error");
+            applyFix(p.coords.latitude, p.coords.longitude);
+          },
+          err => { if (err.code === 1) onGeoDenied("access"); },
+          { enableHighAccuracy: true, timeout: 7000, maximumAge: 0 }
+        );
+      }
+    }
+  }
+
+  // Étape 8 = affichage du récapitulatif
+  if(i===7){
     const recap = $("recap");
     recap.innerHTML = "";
 
-const data = [
-  { step: 0, label: "👤 Demandeur", value: $("demandeur").value },
-  { step: 1, label: "📌 Poste", value: $("poste").value + ( $("type").value ? " ("+$("type").value+")" : "" ) },
-  { step: 1, label: "📌 SAT", value: $("sat").value },
-  { step: 3, label: "📍 Localisation poste", value: $("presentValue").value==="oui" ? ($("latDevice").value+","+$("lonDevice").value) : $("lien").value },
-  { step: 5, label: "📍 Localisation accès", value: ($("accessMethod").value==="gps"
-     ? $("coordsAccessDisplay").textContent.replace("Coordonnées relevées (accès) : ","")
-     : $("lienAccess").value) },
-  { step: 6, label: "📝 Notes", value: $("infos").value }
-];
+    const data = [
+      { step: 0, label: "👤 Demandeur", value: $("demandeur").value },
+      { step: 1, label: "📌 Poste", value: $("poste").value + ( $("type").value ? " ("+$("type").value+")" : "" ) },
+      { step: 1, label: "📌 SAT", value: $("sat").value },
+      { step: 3, label: "📍 Localisation poste", value: $("presentValue").value==="oui" ? ($("latDevice").value+","+$("lonDevice").value) : $("lien").value },
+      { step: 5, label: "📍 Localisation accès", value: ($("accessMethod").value==="gps"
+         ? $("coordsAccessDisplay").textContent.replace("Coordonnées relevées (accès) : ","")
+         : $("lienAccess").value) },
+      { step: 6, label: "📝 Notes", value: $("infos").value }
+    ];
 
- data.forEach(item=>{
-  if(item.value && item.value.trim()!==""){
-    const div = document.createElement("div");
+    data.forEach(item=>{
+      if(item.value && item.value.trim()!==""){
+        const div = document.createElement("div");
 
- // Si coordonnées GPS → texte simplifié + lien
-if(item.value.includes(",") && !item.value.startsWith("http")){
-  const [lat, lon] = item.value.split(",");
-  const span = document.createElement("span");
-  span.textContent = `${item.label} (par GPS)`;
-  div.appendChild(span);
+        // Si coordonnées GPS → texte simplifié + lien
+        if(item.value.includes(",") && !item.value.startsWith("http")){
+          const [lat, lon] = item.value.split(",");
+          const span = document.createElement("span");
+          span.textContent = `${item.label} (par GPS)`;
+          div.appendChild(span);
 
-  const link = document.createElement("a");
-  link.href = `https://www.google.com/maps/@${lat.trim()},${lon.trim()},20z/data=!3m1!1e3`;
-  link.target = "_blank";
-  link.rel = "noopener";
-  link.textContent = " 🔎 Voir sur Google Maps";
-  link.style.marginLeft = "8px";
-  link.style.color = "#0b6cff";
-  link.style.textDecoration = "underline";
-  link.addEventListener("click", e => e.stopPropagation());
-  div.appendChild(link);
+          const link = document.createElement("a");
+          link.href = `https://www.google.com/maps/@${lat.trim()},${lon.trim()},20z/data=!3m1!1e3`;
+          link.target = "_blank";
+          link.rel = "noopener";
+          link.textContent = " 🔎 Voir sur Google Maps";
+          link.style.marginLeft = "8px";
+          link.style.color = "#0b6cff";
+          link.style.textDecoration = "underline";
+          link.addEventListener("click", e => e.stopPropagation());
+          div.appendChild(link);
 
-// Si lien Google Maps → texte simplifié + lien
-} else if(item.value.startsWith("http")){
-  let url = item.value.trim();
+        // Si lien Google Maps → texte simplifié + lien
+        } else if(item.value.startsWith("http")){
+          let url = item.value.trim();
 
-  // 👉 Si l'utilisateur a oublié https:// on l'ajoute
-  if (!/^https?:\/\//i.test(url)) {
-    url = "https://" + url;
+          if (!/^https?:\/\//i.test(url)) {
+            url = "https://" + url;
+          }
+
+          const span = document.createElement("span");
+          span.textContent = `${item.label} (par lien)`;
+          div.appendChild(span);
+
+          const link = document.createElement("a");
+          link.href = url;
+          link.target = "_blank";
+          link.rel = "noopener";
+          link.textContent = " 🔎 Voir sur Google Maps";
+          link.style.marginLeft = "8px";
+          link.style.color = "#0b6cff";
+          link.style.textDecoration = "underline";
+          link.addEventListener("click", e => e.stopPropagation());
+          div.appendChild(link);
+
+        // Sinon texte normal
+        } else {
+          div.textContent = `${item.label} : ${item.value}`;
+        }
+
+        div.style.cursor = "pointer";
+        div.style.margin = "6px 0";
+        div.style.padding = "6px";
+        div.style.border = "1px solid var(--border)";
+        div.style.borderRadius = "6px";
+        div.onclick = () => {
+          currentStep = item.step;
+          showStep(currentStep);
+          returnToRecap = true;
+        };
+        recap.appendChild(div);
+      }
+    });
   }
-
-  const span = document.createElement("span");
-  span.textContent = `${item.label} (par lien)`;
-  div.appendChild(span);
-
-  const link = document.createElement("a");
-  link.href = url; // on garde l'URL telle quelle
-  link.target = "_blank";
-  link.rel = "noopener";
-  link.textContent = " 🔎 Voir sur Google Maps";
-  link.style.marginLeft = "8px";
-  link.style.color = "#0b6cff";
-  link.style.textDecoration = "underline";
-  link.addEventListener("click", e => e.stopPropagation());
-  div.appendChild(link);
-
-// Sinon texte normal
-} else {
-  div.textContent = `${item.label} : ${item.value}`;
-}
-
-    div.style.cursor = "pointer";
-    div.style.margin = "6px 0";
-    div.style.padding = "6px";
-    div.style.border = "1px solid var(--border)";
-    div.style.borderRadius = "6px";
-   div.onclick = () => {
-  currentStep = item.step;
-  showStep(currentStep);
-  returnToRecap = true; // ✅ on note qu’on vient du récap
-};
-   recap.appendChild(div);
-  }
-});
-  }  // ← ferme le if(i===7)
-}    // ← ferme la fonction showStep
+} // ✅ ici on ferme UNE seule fois la fonction
 
 document.querySelectorAll(".next").forEach(btn=>{
   btn.addEventListener("click", e=>{
