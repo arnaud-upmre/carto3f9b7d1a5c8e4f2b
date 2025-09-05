@@ -104,8 +104,9 @@ input.error{border:2px solid #c62828!important;background:#ffecec}
 </head>
 <body>
   <h2>➕ Ajouter un poste et l'accès</h2>
-  <div class="card"><div id="progressbar"><div id="progressbar-fill"></div></div>
-    <div id="progress">Étape 1/10</div>
+  <div class="card">
+<div id="progressbar"><div id="progressbar-fill"></div></div>
+<div id="progress">0%</div>
     <form id="formAppareil" novalidate>
 
 <!-- Étape d’introduction (ne compte pas dans le total) -->
@@ -924,10 +925,17 @@ document.getElementById("progressbar").style.display = "none";
 
 // Quand on clique sur "Commencer"
 document.getElementById("startForm").addEventListener("click", () => {
+  // On désactive l’intro
+  document.getElementById("introStep").classList.remove("active");
   document.getElementById("introStep").style.display = "none";
+
+  // On active la progression
   progress.style.display = "block";
   document.getElementById("progressbar").style.display = "block";
-  showStep(0); // affiche la vraie étape 1
+
+  // On lance directement l’étape 1 (Demandeur)
+  currentStep = 0;
+  showStep(currentStep);
 });
 </script>
 </body>
