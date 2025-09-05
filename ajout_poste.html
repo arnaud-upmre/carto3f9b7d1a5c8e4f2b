@@ -269,12 +269,14 @@ input.error{border:2px solid #c62828!important;background:#ffecec}
 
 <script>
 let currentStep=0;
-  let returnToRecap = false;
+let comeBackAt = null; // à quelle étape on doit revenir au récap
   // Coordonnées par défaut pour centrer la carte (Hazebrouck)
 // ⚠️ Ne seront PAS enregistrées tant que l’utilisateur ne clique pas sur Localiser
 const HAZE = [50.72384, 2.54924];
 const steps=document.querySelectorAll(".step");  
 const progress=document.getElementById("progress");
+  function recapIndex(){ return [...steps].findIndex(s => s.querySelector('#recap')); }
+function stepIndexOf(el){ return el ? [...steps].findIndex(s => s.contains(el)) : -1; }
 
   function showStep(i){
   steps.forEach((s,idx)=>s.classList.toggle("active",idx===i));
@@ -337,19 +339,21 @@ if (steps[i].querySelector("#mapAccessWrap")) {
 }
 
   // Étape 8 = affichage du récapitulatif
-  if(i===7){
+if (steps[i].querySelector('#recap')) {
     const recap = $("recap");
     recap.innerHTML = "";
 
-  const data = [
+const data = [
   { step: 1, label: "👤 Demandeur", value: $("demandeur").value },
   { step: 2, label: "📌 Poste", value: $("poste").value + ( $("type").value ? " ("+$("type").value+")" : "" ) },
   { step: 2, label: "📌 SAT", value: $("sat").value },
-  { step: 6, label: "📍 Localisation poste", value: $("presentValue").value==="oui" ? ($("latDevice").value+","+$("lonDevice").value) : $("lien").value },
-  { step: 9, label: "📍 Localisation accès", value: ($("accessMethod").value==="gps"
+  // Localisation poste → choix (3), mais retour après la carte (4)
+  { step: 3, label: "📍 Localisation poste", value: $("presentValue").value==="oui" ? ($("latDevice").value+","+$("lonDevice").value) : $("lien").value },
+  // Localisation accès → choix (5), mais retour après la carte (6)
+  { step: 5, label: "📍 Localisation accès", value: ($("accessMethod").value==="gps"
      ? $("coordsAccessDisplay").textContent.replace("Coordonnées relevées (accès) : ","")
      : $("lienAccess").value) },
-  { step: 10, label: "📝 Notes", value: $("infos").value }
+  { step: 7, label: "📝 Notes", value: $("infos").value }
 ];
 
     data.forEach(item=>{
@@ -407,11 +411,35 @@ if (steps[i].querySelector("#mapAccessWrap")) {
         div.style.padding = "6px";
         div.style.border = "1px solid var(--border)";
         div.style.borderRadius = "6px";
-        div.onclick = () => {
-          currentStep = item.step;
-          showStep(currentStep);
-          returnToRecap = true;
-        };
+     div.onclick = () => {
+  // Par défaut : revenir juste après cette étape
+  comeBackAt = item.step;
+  currentStep = item.step;
+
+  // Cas spécial : Localisation poste
+  if (item.label.startsWith("📍 Localisation poste")) {
+    if ($("presentValue").value) {
+      currentStep = 4; // étape carte/lien poste
+      comeBackAt = 4;
+    } else {
+      currentStep = 3; // étape choix GPS/lien poste
+      comeBackAt = 4;  // retour après la carte (4)
+    }
+  }
+
+  // Cas spécial : Localisation accès
+  if (item.label.startsWith("📍 Localisation accès")) {
+    if ($("accessMethod").value) {
+      currentStep = 6; // étape carte/lien accès
+      comeBackAt = 6;
+    } else {
+      currentStep = 5; // étape choix GPS/lien accès
+      comeBackAt = 6;  // retour après la carte (6)
+    }
+  }
+
+  showStep(currentStep);
+};
         recap.appendChild(div);
       }
     });
@@ -422,13 +450,12 @@ document.querySelectorAll(".next").forEach(btn=>{
   btn.addEventListener("click", e=>{
     e.preventDefault();
 
-    // 🔁 Si on vient du récap, renvoyer directement au récap
-    if (returnToRecap) {
-      returnToRecap = false;
-      currentStep = steps.length - 1; // dernière étape = récap
-      showStep(currentStep);
-      return;
-    }
+if (comeBackAt !== null && currentStep === comeBackAt) {
+  comeBackAt = null;
+  currentStep = recapIndex();
+  showStep(currentStep);
+  return;
+}
 
     // Vérifie si le champ obligatoire est rempli
     if (!validateStep(currentStep)) return;
@@ -466,14 +493,14 @@ if (steps[currentStep].querySelector("#accessMethodStep") && !$("accessMethod").
     showStep(currentStep);
   });
 });
-  document.querySelectorAll(".prev").forEach(btn=>{
+ document.querySelectorAll(".prev").forEach(btn=>{
   btn.addEventListener("click", e=>{
     e.preventDefault();
 
-    // 🔁 Si on vient du récap, retour direct au récap
-    if (returnToRecap) {
-      returnToRecap = false;
-      currentStep = steps.length - 1; // dernière étape = récap
+    // 🔁 Si on doit revenir au récap après cette étape
+    if (comeBackAt !== null && currentStep === comeBackAt) {
+      comeBackAt = null;
+      currentStep = recapIndex();
       showStep(currentStep);
       return;
     }
