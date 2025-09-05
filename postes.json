@@ -4112,5 +4112,22 @@
     "pk": "3,850",
     "poste_latitude": "50.58556",
     "poste_longitude": "3.14133"
+  },
+    {
+    "nom": "Frise",
+    "type": "SP",
+    "SAT": "",
+    "accès": "",
+    "latitude": 49.92188,
+    "longitude": 2.84689,
+    "description": "",
+    "rss": "A",
+    "contact": "",
+    "portail": "",
+    "lignes": "LILLE PARIS",
+    "numero_ligne": 226000,
+    "pk": "118,105",
+    "poste_latitude": "49.92361",
+    "poste_longitude": "2.85054"
   }
 ]
