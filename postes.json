@@ -2458,11 +2458,11 @@
     "rss": "A",
     "contact": "",
     "portail": "4141",
-    "lignes": "",
-    "numero_ligne": "",
-    "pk": "",
-    "poste_latitude": "",
-    "poste_longitude": ""
+    "lignes": "FRETIN à FRÉTHUN (LGV)",
+    "numero_ligne": "216000",
+    "pk": "10,841",
+    "poste_latitude": "50.63191",
+    "poste_longitude": "3.0831"
   },
   {
     "nom": "Lillers",
@@ -3274,9 +3274,9 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
-    "pk": "",
+    "lignes": "FRETIN à FRÉTHUN (LGV)",
+    "numero_ligne": "216000",
+    "pk": "100,188",
     "poste_latitude": "50.8262393",
     "poste_longitude": "1.9289311"
   },
