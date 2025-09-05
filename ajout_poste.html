@@ -258,12 +258,6 @@ input.error{border:2px solid #c62828!important;background:#ffecec}
     <button type="button" class="btn primary" onclick="resetForm()">➕ Ajouter un autre poste</button>
   </div>
 </div>
-      <!-- Bouton Annuler global -->
-<div id="cancel-row" class="btn-row" style="margin-top:12px">
-  <button type="button" class="btn secondary" onclick="window.location.href='index.html'">
-    ❌ Annuler et revenir à l’accueil
-  </button>
-</div>
     </form>
   </div>
 
@@ -608,15 +602,21 @@ $("pill-non").onclick = () => {
   toggle($("mapDeviceWrap"), 0);
   toggle($("lienField"), 1);
 
-  // 🔒 IMPORTANT : masquer les coordonnées et vider les champs GPS
+  // reset GPS poste
   $("coordsDeviceDisplay").style.display = "none";
   $("latDevice").value = "";
   $("lonDevice").value = "";
   DEVICE_CONFIRMED = false;
   $("mapDeviceWrap").classList.remove("error");
 
-  // ✅ enlève le rouge si c’était en erreur
+  // enlever le rouge éventuel
   document.querySelectorAll("#pill-oui, #pill-non").forEach(p => p.classList.remove("error"));
+
+  // confort : focus + sélection
+  setTimeout(() => { 
+    $("lien").focus({ preventScroll:true }); 
+    $("lien").select(); 
+  }, 0);
 };
 
 
@@ -657,12 +657,16 @@ $("pill-access-lien").onclick = () => {
   toggle($("mapAccessWrap"), 0);
   toggle($("lienAccessField"), 1);
 
-  // 🔒 Masquer l’affichage des coordonnées d’accès
+  // masquer coord. affichées et reset état
   $("coordsAccessDisplay").style.display = "none";
-
-  markError($("lienAccess"), $("lienAccessHelp"), false);
   ACCESS_CONFIRMED = false;
   $("mapAccessWrap").classList.remove("error");
+
+  // confort : focus + sélection
+  setTimeout(() => { 
+    $("lienAccess").focus({ preventScroll:true }); 
+    $("lienAccess").select(); 
+  }, 0);
 };
 
   $("lien").addEventListener("input", ()=>{
@@ -723,10 +727,33 @@ function applyFix(lat,lon){
   if(mapAccess&&markerAccess)setMapTo(mapAccess,markerAccess,lat,lon,"access");
 }
 function onGeoDenied(target){
-  GEO_BLOCKED=true;
-  if(target==="device"){ $("presentValue").value="non"; toggle($("mapDeviceWrap"),0); toggle($("lienField"),1); }
-if(target==="access"){ toggle($("mapAccessWrap"),0); toggle($("lienAccessField"),1); }
+  GEO_BLOCKED = true;
 
+  if (target === "device") {
+    // bascule le poste en mode LIEN
+    $("presentValue").value = "non";
+    toggle($("mapDeviceWrap"), 0);
+    toggle($("lienField"), 1);
+
+    // reset visuel + données
+    $("coordsDeviceDisplay").style.display = "none";
+    $("latDevice").value = "";
+    $("lonDevice").value = "";
+    DEVICE_CONFIRMED = false;
+    $("mapDeviceWrap").classList.remove("error");
+  }
+
+  if (target === "access") {
+    // garder l'accès distinct mais passer la méthode en LIEN
+    $("accessMethod").value = "lien";
+    toggle($("mapAccessWrap"), 0);
+    toggle($("lienAccessField"), 1);
+
+    // reset visuel + état
+    $("coordsAccessDisplay").style.display = "none";
+    ACCESS_CONFIRMED = false;
+    $("mapAccessWrap").classList.remove("error");
+  }
 }
 function ensureMap(mapId,btnToggle,btnRecenter,lat,lon){
   let map=L.map(mapId).setView([lat,lon],18);
