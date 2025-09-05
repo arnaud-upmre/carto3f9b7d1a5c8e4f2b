@@ -1276,13 +1276,15 @@ function updateContrib() {
   // 1) Lecture du cache
   const cached = localStorage.getItem("counterContrib");
   if (cached) {
-    document.getElementById("compteur-valeur").textContent = `(${cached})`;
+  const el1 = document.getElementById("compteur-valeur");
+if (el1) el1.textContent = `(${cached})`;
   }
 
   // 2) Mise à jour depuis le serveur
   fetch(compteurContributionURL).then(r => r.json()).then(data => {
     if (data && typeof data.count !== "undefined") {
-      document.getElementById("compteur-valeur").textContent = `(${data.count})`;
+      const el2 = document.getElementById("compteur-valeur");
+if (el2) el2.textContent = `(${data.count})`;
       localStorage.setItem("counterContrib", data.count); // ✅ sauvegarde en cache
     }
   }).catch(() => {});
