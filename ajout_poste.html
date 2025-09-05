@@ -126,30 +126,25 @@ input.error{border:2px solid #c62828!important;background:#ffecec}
         </div>
       </div>
 
-      <!-- Étape 2 -->
-      <div class="step">
-        <label>📌 Poste :</label>
-        <input id="poste" required placeholder="Ex : Hazebrouck">
-        <label>📌 Type (optionnel) :</label>
-<input id="type" placeholder="Ex : SP, SSP, PRCI....">
-        <div class="btn-row">
-          <button type="button" class="btn secondary prev">⬅️ Retour</button>
-          <button type="button" class="btn primary next">Suivant ➡️</button>
-        </div>
-      </div>
+    <!-- Étape Poste / Type / SAT -->
+<div class="step">
+  <label>📌 Poste :</label>
+  <input id="poste" required placeholder="Ex : Hazebrouck">
 
-      <!-- Étape 3 -->
-      <div class="step">
-<label>📌 SAT associé :</label>
-<span style="font-weight:normal;color:var(--muted);font-size:14px">
-Remplir uniquement si l’appareil dépend d’un SAT
-</span>
-<input id="sat" placeholder="Exemple : SAT1, SAT2">
-        <div class="btn-row">
-          <button type="button" class="btn secondary prev">⬅️ Retour</button>
-          <button type="button" class="btn primary next">Suivant ➡️</button>
-        </div>
-      </div>
+  <label>📌 Type (optionnel) :</label>
+  <input id="type" placeholder="Ex : SP, SSP, PRCI...">
+
+  <label>📌 SAT (optionnel) :</label>
+  <span style="font-weight:normal;color:var(--muted);font-size:14px">
+    Ne remplir que si vous ajoutez un SAT.
+  </span>
+  <input id="sat" placeholder="Ex : SAT1, SAT2">
+
+  <div class="btn-row">
+    <button type="button" class="btn secondary prev">⬅️ Retour</button>
+    <button type="button" class="btn primary next">Suivant ➡️</button>
+  </div>
+</div>
 
 
       <!-- Étape 5 -->
