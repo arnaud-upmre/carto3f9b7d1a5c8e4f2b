@@ -273,14 +273,22 @@ let currentStep=0;
   // Coordonnées par défaut pour centrer la carte (Hazebrouck)
 // ⚠️ Ne seront PAS enregistrées tant que l’utilisateur ne clique pas sur Localiser
 const HAZE = [50.72384, 2.54924];
-const steps=document.querySelectorAll(".step:not(#introStep):not(#confirmationStep)");
+const steps=document.querySelectorAll(".step");  
 const progress=document.getElementById("progress");
+
 function showStep(i){
   steps.forEach((s,idx)=>s.classList.toggle("active",idx===i));
-  let pct = Math.round(((i+1) / steps.length) * 100);
-progress.textContent = `${pct}%`;
-  document.getElementById("progressbar-fill").style.width = ((i+1)/steps.length*100) + "%";
 
+  // 🔧 ignorer introStep et confirmationStep dans le calcul du %
+  const realSteps = [...steps].filter(s => s.id !== "introStep" && s.id !== "confirmationStep");
+  const realIndex = realSteps.indexOf(steps[i]);
+
+  if (realIndex >= 0) {
+    let pct = Math.round(((realIndex+1) / realSteps.length) * 100);
+    progress.textContent = `${pct}%`;
+    document.getElementById("progressbar-fill").style.width = ((realIndex+1)/realSteps.length*100) + "%";
+  }
+}
   // 🔧 Initialisation + redessin des cartes Leaflet
   if(i===3){ // étape 4 = carte poste
   if(!mapDevice){
@@ -458,7 +466,24 @@ document.querySelectorAll(".next").forEach(btn=>{
     showStep(currentStep);
   });
 });
-  
+  document.querySelectorAll(".prev").forEach(btn=>{
+  btn.addEventListener("click", e=>{
+    e.preventDefault();
+
+    // 🔁 Si on vient du récap, retour direct au récap
+    if (returnToRecap) {
+      returnToRecap = false;
+      currentStep = steps.length - 1; // dernière étape = récap
+      showStep(currentStep);
+      return;
+    }
+
+    if (currentStep > 0) {
+      currentStep--;
+      showStep(currentStep);
+    }
+  });
+});
 function validateStep(i){
   const step = steps[i];
   const inputs = step.querySelectorAll("input[required], textarea[required]");
@@ -731,11 +756,12 @@ document.addEventListener("DOMContentLoaded",()=>{
 
 if (params.has("poste")) {
   // Types reconnus à la fin du libellé
-  const TYPES = ["A","L","L-A","LGV","P","PRCI","S","SP","ST","SST","SS","SSP","SSPA","SSP-A"];
+ const TYPES = ["A","L","L-A","LGV","P","PRCI","S","SP","ST","SST","SS","SSP","SSPA","SSP-A"];
 
-  const esc = s => s.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
-  const TYPES_RE = new RegExp("\\b(" + TYPES.map(esc).join("|") + ")\\b\\s*$", "i");
-
+const esc = s => s.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
+// 🔧 Regex améliorée : accepte espace ou tiret avant, et ignore espaces après
+const TYPES_RE = new RegExp("(?:\\s|-)?(" + TYPES.map(esc).join("|") + ")\\s*$", "i");
+  
   // 0) Nettoyage
   let raw = (params.get("poste") || "")
     .replace(/^📍\s*/,"")     // enlève l’emoji éventuel
