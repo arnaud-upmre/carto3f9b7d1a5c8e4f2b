@@ -290,52 +290,51 @@ const progress=document.getElementById("progress");
       ((realIndex+1)/realSteps.length*100) + "%";
   }
 
-  // 🔧 Initialisation + redessin des cartes Leaflet
-  if(i===3){ // étape 4 = carte poste
-    if(!mapDevice){
-      startLocDevice(); // initialise la carte si pas déjà fait
-    }
-    setTimeout(() => mapDevice && mapDevice.invalidateSize(), 300);
+// Étape carte du poste (repérée par la présence de #mapDeviceWrap)
+if (steps[i].querySelector("#mapDeviceWrap")) {
+  if (!mapDevice) {
+    startLocDevice();
+  }
+  setTimeout(() => mapDevice && mapDevice.invalidateSize(), 300);
 
-    // 🔥 Relance localisation précise dès qu’on arrive sur la carte
-    if (navigator.geolocation && $("presentValue").value === "oui") {
+  if (navigator.geolocation && $("presentValue").value === "oui") {
+    navigator.geolocation.getCurrentPosition(
+      p => {
+        DEVICE_CONFIRMED = true;
+        $("mapDeviceWrap").classList.remove("error");
+        applyFix(p.coords.latitude, p.coords.longitude);
+      },
+      err => { if (err.code === 1) onGeoDenied("device"); },
+      { enableHighAccuracy: true, timeout: 7000, maximumAge: 0 }
+    );
+  }
+}
+
+// Étape carte accès (repérée par la présence de #mapAccessWrap)
+if (steps[i].querySelector("#mapAccessWrap")) {
+  const m = $("accessMethod").value;
+  toggle($("mapAccessWrap"), m === "gps");
+  toggle($("lienAccessField"), m === "lien");
+
+  if (m === "gps") {
+    if (!mapAccess) {
+      startLocAccess();
+    }
+    requestAnimationFrame(() => mapAccess && mapAccess.invalidateSize());
+
+    if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         p => {
-          DEVICE_CONFIRMED = true;
-          $("mapDeviceWrap").classList.remove("error");
+          ACCESS_CONFIRMED = true;
+          $("mapAccessWrap").classList.remove("error");
           applyFix(p.coords.latitude, p.coords.longitude);
         },
-        err => { if (err.code === 1) onGeoDenied("device"); },
+        err => { if (err.code === 1) onGeoDenied("access"); },
         { enableHighAccuracy: true, timeout: 7000, maximumAge: 0 }
       );
     }
   }
-
-  if(i===5){ // étape 6 = détails accès (carte/lien)
-    const m = $("accessMethod").value;
-    toggle($("mapAccessWrap"), m === "gps");
-    toggle($("lienAccessField"), m === "lien");
-
-    if(m === "gps"){
-      if(!mapAccess){
-        startLocAccess();
-      }
-      requestAnimationFrame(()=> mapAccess && mapAccess.invalidateSize());
-
-      // 🔥 Relance localisation précise à l'ouverture
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          p => {
-            ACCESS_CONFIRMED = true;
-            $("mapAccessWrap").classList.remove("error");
-            applyFix(p.coords.latitude, p.coords.longitude);
-          },
-          err => { if (err.code === 1) onGeoDenied("access"); },
-          { enableHighAccuracy: true, timeout: 7000, maximumAge: 0 }
-        );
-      }
-    }
-  }
+}
 
   // Étape 8 = affichage du récapitulatif
   if(i===7){
@@ -440,27 +439,27 @@ if (steps[currentStep].querySelector("#pill-oui") && !$("presentValue").value) {
   return;
 }
 
-    // Étape 4 (index 3) : validation du poste selon choix
-    if (currentStep === 3) {
-      if ($("presentValue").value === "non") {
-        const ok = isValidUrl($("lien").value);
-        markError($("lien"), $("lienHelp"), !ok);
-        if (!ok) return;
-      } else if ($("presentValue").value === "oui") {
-        if (!DEVICE_CONFIRMED || !$("latDevice").value || !$("lonDevice").value) {
-          $("mapDeviceWrap").classList.add("error");
-          return;
-        } else {
-          $("mapDeviceWrap").classList.remove("error");
-        }
-      }
-    }
-
-    // Étape 5 (index 4) : choisir méthode d’accès (gps/lien)
-    if (currentStep === 4 && !$("accessMethod").value) {
-      document.querySelectorAll("#pill-access-gps, #pill-access-lien").forEach(p => p.classList.add("error"));
+   // Étape validation du poste (repérée par la présence de #mapDeviceWrap)
+if (steps[currentStep].querySelector("#mapDeviceWrap")) {
+  if ($("presentValue").value === "non") {
+    const ok = isValidUrl($("lien").value);
+    markError($("lien"), $("lienHelp"), !ok);
+    if (!ok) return;
+  } else if ($("presentValue").value === "oui") {
+    if (!DEVICE_CONFIRMED || !$("latDevice").value || !$("lonDevice").value) {
+      $("mapDeviceWrap").classList.add("error");
       return;
+    } else {
+      $("mapDeviceWrap").classList.remove("error");
     }
+  }
+}
+
+// Étape choix méthode d’accès (repérée par la présence de #accessMethodStep)
+if (steps[currentStep].querySelector("#accessMethodStep") && !$("accessMethod").value) {
+  document.querySelectorAll("#pill-access-gps, #pill-access-lien").forEach(p => p.classList.add("error"));
+  return;
+}
 
     // 👉 si tout est ok → on avance
     currentStep++;
