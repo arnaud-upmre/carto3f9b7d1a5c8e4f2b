@@ -471,13 +471,20 @@ document.querySelectorAll(".prev").forEach(btn=>{
   });
 });
 function validateStep(i){
-  const step=steps[i];
-  const input=step.querySelector("input[required],textarea[required]");
-  if(input && !input.value.trim()){
-    input.classList.add("error");
-    return false;
-  }
-  return true;
+  const step = steps[i];
+  const inputs = step.querySelectorAll("input[required], textarea[required]");
+  let valid = true;
+
+  inputs.forEach(input => {
+    if (!input.value.trim()) {
+      input.classList.add("error");
+      valid = false;
+    } else {
+      input.classList.remove("error");
+    }
+  });
+
+  return valid;
 }
   // 🔧 Retirer le rouge dès que l'utilisateur tape quelque chose
 document.addEventListener("input", (e)=>{
