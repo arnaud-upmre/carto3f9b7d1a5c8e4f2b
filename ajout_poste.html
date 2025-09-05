@@ -843,7 +843,7 @@ const TYPES_RE = new RegExp("(?:\\s|-)?(" + TYPES.map(esc).join("|") + ")\\s*$",
 
 function resetForm(){
   $("formAppareil").reset();
-  currentStep = 0;
+  currentStep = 1;
 
   // Masquer l'écran de confirmation
   document.getElementById("confirmationStep").classList.remove("active");
