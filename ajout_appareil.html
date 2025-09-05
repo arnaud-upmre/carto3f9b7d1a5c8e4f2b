@@ -902,8 +902,10 @@ function resetForm(){
   currentStep = 0;
 
   // Masquer l'écran de confirmation
-  document.getElementById("confirmationStep").classList.remove("active");
-  document.getElementById("confirmationStep").style.display = "none";
+ const conf = document.getElementById("confirmationStep");
+conf.classList.remove("active");
+// ⚠️ surtout pas de display:none inline
+conf.style.display = ""; // on nettoie tout inline pour laisser le CSS gérer
 
   // Réaffiche le formulaire normal
   document.getElementById("introStep").style.display = "none";
@@ -996,6 +998,7 @@ $("formAppareil").onsubmit = e => {
       fetch(COUNTER_URL+"?increment=true").catch(()=>{});
       steps.forEach(s=>s.classList.remove("active"));
       document.getElementById("confirmationStep").classList.add("active");
+      document.getElementById("confirmationStep").style.display = "block";
       document.getElementById("progress").style.display = "none";
       document.getElementById("progressbar").style.display = "none";
     })
