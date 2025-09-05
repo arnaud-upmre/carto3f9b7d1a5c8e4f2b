@@ -178,7 +178,7 @@ Remplir uniquement si l’appareil dépend d’un SAT
       <!-- Étape 6 -->
       <div class="step">
         <div id="mapDeviceWrap" class="map-wrap" style="display:none">
-          <div>Déplacez le curseur pour ajuster l’accès.</div>
+          <div>Déplacez le curseur pour ajuster l’appareil.</div>
           <div id="mapDevice"></div>
           <div class="map-toolbar">
             <button type="button" id="btnRecenterDevice">📍 Localiser</button>
@@ -305,6 +305,7 @@ Remplir uniquement si l’appareil dépend d’un SAT
 
 <script>
 let currentStep=0;
+  let returnToRecap = false;
   // Coordonnées par défaut pour centrer la carte (Hazebrouck)
 // ⚠️ Ne seront PAS enregistrées tant que l’utilisateur ne clique pas sur Localiser
 const HAZE = [50.72384, 2.54924];
@@ -363,7 +364,7 @@ if(i===8){ // étape 9 = détails accès (carte/lien)
 }
 
   // Étape 10 = affichage du récapitulatif
-  if(i===9){
+  if(i===10){
     const recap = $("recap");
     recap.innerHTML = "";
 
@@ -402,16 +403,19 @@ if(item.value.includes(",") && !item.value.startsWith("http")){
 
 // Si lien Google Maps → texte simplifié + lien
 } else if(item.value.startsWith("http")){
-  let url = item.value;
-  if(url.includes("maps.app.goo.gl")){
-    url = url.replace("maps.app.goo.gl", "www.google.com/maps");
+  let url = item.value.trim();
+
+  // 👉 Si l'utilisateur a oublié https:// on l'ajoute
+  if (!/^https?:\/\//i.test(url)) {
+    url = "https://" + url;
   }
+
   const span = document.createElement("span");
   span.textContent = `${item.label} (par lien)`;
   div.appendChild(span);
 
   const link = document.createElement("a");
-  link.href = url + "/data=!3m1!1e3";
+  link.href = url; // on garde l'URL telle quelle
   link.target = "_blank";
   link.rel = "noopener";
   link.textContent = " 🔎 Voir sur Google Maps";
@@ -431,7 +435,11 @@ if(item.value.includes(",") && !item.value.startsWith("http")){
     div.style.padding = "6px";
     div.style.border = "1px solid var(--border)";
     div.style.borderRadius = "6px";
-    div.onclick = ()=>{ currentStep=item.step; showStep(currentStep); };
+   div.onclick = () => {
+  currentStep = item.step;
+  showStep(currentStep);
+  returnToRecap = true; // ✅ on note qu’on vient du récap
+};
     recap.appendChild(div);
   }
 });
@@ -442,6 +450,13 @@ document.querySelectorAll(".next").forEach(btn=>{
   btn.addEventListener("click", e=>{
     e.preventDefault();
     if (validateStep(currentStep)) {
+      // ✅ Si on vient du récap, retour direct au récap
+if (returnToRecap) {
+  returnToRecap = false;
+  currentStep = steps.length - 1; // dernière étape = récap
+  showStep(currentStep);
+  return;
+}
 
       // Étape 5 (localiser l’appareil) → obligatoire
       if (currentStep === 4 && !$("presentValue").value) {
@@ -517,6 +532,15 @@ document.querySelectorAll(".next").forEach(btn=>{
 document.querySelectorAll(".prev").forEach(btn=>{
   btn.addEventListener("click", e=>{
     e.preventDefault();
+
+    // ✅ Si on vient du récap, retour direct au récap
+    if (returnToRecap) {
+      returnToRecap = false;
+      currentStep = steps.length - 1; // dernière étape = récap
+      showStep(currentStep);
+      return;
+    }
+
     if(currentStep>0){
       // 🔧 Cas particulier : retour depuis Notes (index 9) avec accès = non
       if(currentStep === 9 && $("accessValue").value === "non"){
