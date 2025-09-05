@@ -968,12 +968,12 @@ if (results.length === 0 && rawQuery.length >= 3) {
     li.onclick = () => {
       location.href = `ajout_appareil.html?appareil=${encodeURIComponent(rawQuery)}`;
     };
-  } else if (isPosteLike(rawQuery)) {
-    li.textContent = `➕ Ajouter ce poste « ${rawQuery} »`;
-    li.onclick = () => {
-      location.href = `ajout_poste.html?nom=${encodeURIComponent(rawQuery)}`;
-    };
-  } else {
+} else if (isPosteLike(rawQuery)) {
+  li.textContent = `➕ Ajouter ce poste « ${rawQuery} »`;
+  li.onclick = () => {
+    location.href = `ajout_poste.html?poste=${encodeURIComponent(rawQuery)}`;
+  };
+} else {
     // Trop court / bruit → on ne propose rien
     return;
   }
@@ -1034,12 +1034,12 @@ if (rawQuery.length >= 3) {
       liAdd.onclick = () => {
         location.href = `ajout_appareil.html?appareil=${encodeURIComponent(rawQuery)}`;
       };
-    } else if (isPosteLike(rawQuery)) {
-      liAdd.textContent = `➕ Ajouter ce poste « ${rawQuery} »`;
-      liAdd.onclick = () => {
-        location.href = `ajout_poste.html?nom=${encodeURIComponent(rawQuery)}`;
-      };
-    }
+} else if (isPosteLike(rawQuery)) {
+  liAdd.textContent = `➕ Ajouter ce poste « ${rawQuery} »`;
+  liAdd.onclick = () => {
+    location.href = `ajout_poste.html?poste=${encodeURIComponent(rawQuery)}`;
+  };
+}
 
     suggestionsEl.insertBefore(liAdd, suggestionsEl.firstChild);
   }
