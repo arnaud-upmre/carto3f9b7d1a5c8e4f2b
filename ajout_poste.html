@@ -288,7 +288,6 @@ function showStep(i){
     progress.textContent = `${pct}%`;
     document.getElementById("progressbar-fill").style.width = ((realIndex+1)/realSteps.length*100) + "%";
   }
-}
   // 🔧 Initialisation + redessin des cartes Leaflet
   if(i===3){ // étape 4 = carte poste
   if(!mapDevice){
@@ -412,12 +411,12 @@ if(item.value.includes(",") && !item.value.startsWith("http")){
   showStep(currentStep);
   returnToRecap = true; // ✅ on note qu’on vient du récap
 };
-    recap.appendChild(div);
+   recap.appendChild(div);
   }
 });
-  }
-  
-}
+  }  // ← ferme le if(i===7)
+}    // ← ferme la fonction showStep
+
 document.querySelectorAll(".next").forEach(btn=>{
   btn.addEventListener("click", e=>{
     e.preventDefault();
