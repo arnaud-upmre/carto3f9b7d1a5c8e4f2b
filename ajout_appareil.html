@@ -105,6 +105,10 @@ input.error{border:2px solid #c62828!important;background:#ffecec}
 
 .map-wrap.error { border: 2px solid #c62828 !important; }
 
+    /* ✅ Masquer le bouton Annuler uniquement à la confirmation */
+#confirmationStep.active ~ #cancel-row {
+  display: none;
+}
     
   </style>
 </head>
