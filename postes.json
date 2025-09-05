@@ -1228,17 +1228,17 @@
     "type": "PRCI",
     "SAT": "",
     "accès": "",
-    "latitude": 50.67218,
-    "longitude": 2.82697,
+    "latitude": 50.67246,
+    "longitude": 2.82542,
     "description": "",
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
-    "pk": "",
-    "poste_latitude": "",
-    "poste_longitude": ""
+    "lignes": "FRETIN à FRÉTHUN (LGV)",
+    "numero_ligne": "216000",
+    "pk": "31,503",
+    "poste_latitude": "50.67208",
+    "poste_longitude": "2.82736"
   },
   {
     "nom": "Esquelbecq",
@@ -1506,9 +1506,9 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
-    "pk": "",
+    "lignes": "LILLE à LES FONTINETTES",
+    "numero_ligne": "295000",
+    "pk": "25,795",
     "poste_latitude": "",
     "poste_longitude": ""
   },
@@ -2248,17 +2248,17 @@
     "type": "P",
     "SAT": "",
     "accès": "",
-    "latitude": 50.70592,
-    "longitude": 2.71988,
+    "latitude": 50.70689,
+    "longitude": 2.72167,
     "description": "",
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
-    "pk": "",
-    "poste_latitude": "",
-    "poste_longitude": ""
+    "lignes": "FRETIN à FRÉTHUN (LGV) ",
+    "numero_ligne": "216000",
+    "pk": "39,986",
+    "poste_latitude": "50.70584",
+    "poste_longitude": "2.72011"
   },
   {
     "nom": "Lens",
@@ -4057,7 +4057,7 @@
     "contact": "",
     "portail": "",
     "lignes": "GONESSE à LILLE-FRONTIERE (LGV)",
-    "numero_ligne": 226000.0,
+    "numero_ligne": 226000,
     "pk": "153,586",
     "poste_latitude": "",
     "poste_longitude": ""
@@ -4074,7 +4074,7 @@
     "contact": "",
     "portail": "",
     "lignes": "GONESSE à LILLE-FRONTIERE (LGV)",
-    "numero_ligne": 226000.0,
+    "numero_ligne": 226000,
     "pk": "208,699",
     "poste_latitude": "",
     "poste_longitude": ""
@@ -4091,7 +4091,7 @@
     "contact": "",
     "portail": "",
     "lignes": "PARIS-NORD à LILLE",
-    "numero_ligne": 272000.0,
+    "numero_ligne": 272000,
     "pk": "244,860",
     "poste_latitude": "50.5945631",
     "poste_longitude": "3.062718"
@@ -4108,7 +4108,7 @@
     "contact": "",
     "portail": "",
     "lignes": "PARIS-NORD à LILLE",
-    "numero_ligne": 272000.0,
+    "numero_ligne": 272000,
     "pk": "244,860",
     "poste_latitude": "50.5945631",
     "poste_longitude": "3.062718"
@@ -4125,7 +4125,7 @@
     "contact": "",
     "portail": "",
     "lignes": "FRETIN à FRÉTHUN (LGV)",
-    "numero_ligne": 216000.0,
+    "numero_ligne": 216000,
     "pk": "96,683",
     "poste_latitude": "",
     "poste_longitude": ""
@@ -4146,5 +4146,22 @@
     "pk": "22,516",
     "poste_latitude": "49.79969",
     "poste_longitude": "4.29321"
-  }
+  },
+    {
+    "nom": "Gamand",
+    "type": "P",
+    "SAT": "",
+    "accès": "",
+    "latitude": 50.58547,
+    "longitude": 3.14155,
+    "description": "",
+    "rss": "A",
+    "contact": "",
+    "portail": "",
+    "lignes": "FRETIN à FRÉTHUN (LGV)",
+    "numero_ligne": 216000,
+    "pk": "3,850",
+    "poste_latitude": "50.58556",
+    "poste_longitude": "3.14133"
+  },
 ]
