@@ -341,16 +341,16 @@ if (steps[i].querySelector("#mapAccessWrap")) {
     const recap = $("recap");
     recap.innerHTML = "";
 
-    const data = [
-      { step: 0, label: "👤 Demandeur", value: $("demandeur").value },
-      { step: 1, label: "📌 Poste", value: $("poste").value + ( $("type").value ? " ("+$("type").value+")" : "" ) },
-      { step: 1, label: "📌 SAT", value: $("sat").value },
-      { step: 3, label: "📍 Localisation poste", value: $("presentValue").value==="oui" ? ($("latDevice").value+","+$("lonDevice").value) : $("lien").value },
-      { step: 5, label: "📍 Localisation accès", value: ($("accessMethod").value==="gps"
-         ? $("coordsAccessDisplay").textContent.replace("Coordonnées relevées (accès) : ","")
-         : $("lienAccess").value) },
-      { step: 6, label: "📝 Notes", value: $("infos").value }
-    ];
+  const data = [
+  { step: 1, label: "👤 Demandeur", value: $("demandeur").value },
+  { step: 2, label: "📌 Poste", value: $("poste").value + ( $("type").value ? " ("+$("type").value+")" : "" ) },
+  { step: 2, label: "📌 SAT", value: $("sat").value },
+  { step: 6, label: "📍 Localisation poste", value: $("presentValue").value==="oui" ? ($("latDevice").value+","+$("lonDevice").value) : $("lien").value },
+  { step: 9, label: "📍 Localisation accès", value: ($("accessMethod").value==="gps"
+     ? $("coordsAccessDisplay").textContent.replace("Coordonnées relevées (accès) : ","")
+     : $("lienAccess").value) },
+  { step: 10, label: "📝 Notes", value: $("infos").value }
+];
 
     data.forEach(item=>{
       if(item.value && item.value.trim()!==""){
