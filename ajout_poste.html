@@ -6,7 +6,7 @@
     name="viewport"
     content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
   />
-  <title>➕ Ajouter un poste</title>
+  <title>➕ Ajouter un poste et accès</title>
 
   <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
@@ -83,7 +83,7 @@ input.error, textarea.error {
   </style>
 </head>
 <body>
-  <h2>➕ Ajouter un poste</h2>
+  <h2>➕ Ajouter un poste et accès<</h2>
 
   <div class="card">
 <form id="formPoste" novalidate>
@@ -96,8 +96,18 @@ input.error, textarea.error {
       <label>Type</label>
       <input id="typePoste" placeholder="Ex : SP, SSP, PRCI, L…">
 
-      <label>SAT (optionnel)</label>
-      <input id="sat" placeholder="Ex : SAT1, SAT2…">
+     <label>📌 Est-ce un SAT que vous voulez ajouter ?</label>
+<div class="pill-group">
+  <div class="pill" id="pill-sat-oui" data-value="oui">✅ Oui</div>
+  <div class="pill" id="pill-sat-non" data-value="non">❌ Non</div>
+</div>
+<input type="hidden" id="presentSat">
+
+<!-- Champ texte caché au départ -->
+<div id="satField" style="display:none; margin-top:10px;">
+  <label>SAT associé</label>
+  <input id="sat" placeholder="Ex : SAT1, SAT2…">
+</div>
 
       <!-- ACCÈS (prioritaire / obligatoire d'une manière ou d'une autre) -->
       <label>Souhaitez-vous géolocaliser l’accès ?</label>
@@ -313,6 +323,22 @@ input.error, textarea.error {
     toggle($("hintPoste"), false);  // 👈 AJOUT
   }
 }
+    // ——— Pills SAT
+$("pill-sat-oui").onclick = () => setSat("oui");
+$("pill-sat-non").onclick = () => setSat("non");
+
+function setSat(v){
+  $("presentSat").value = v;
+  $("pill-sat-oui").classList.toggle("active", v==="oui");
+  $("pill-sat-non").classList.toggle("active", v==="non");
+
+  if(v === "oui"){
+    $("satField").style.display = "block";  // affiche le champ texte
+  } else {
+    $("satField").style.display = "none";   // cache le champ texte
+    $("sat").value = "";                    // vide la valeur si NON
+  }
+}
     // --- Accessibilité : gestion clavier et aria-pressed pour les pills ---
 ["pill-acc-oui","pill-acc-non","pill-pos-oui","pill-pos-non"].forEach(id=>{
   const el = $(id);
@@ -447,10 +473,13 @@ input.error, textarea.error {
         localStorage.setItem("nom_demandeur", demandeur);
       }
       const nomPoste    = $("nomPoste").value.trim();
-      const typePoste   = $("typePoste").value.trim().toUpperCase();
-      const satellite   = $("sat").value.trim().toUpperCase();
-      const pkLigne     = $("pkLigne").value.trim();
-      const notes       = $("notes").value.trim();
+     const typePoste   = $("typePoste").value.trim().toUpperCase();
+let satellite     = "";
+if ($("presentSat").value === "oui") {
+  satellite = $("sat").value.trim().toUpperCase();
+}
+const pkLigne     = $("pkLigne").value.trim();
+const notes       = $("notes").value.trim();
 
  // Réinitialise l'état erreur
 ["demandeur","nomPoste"].forEach(id => $(id).classList.remove("error"));
