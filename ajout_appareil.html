@@ -667,6 +667,8 @@ $("pill-access-gps").onclick = () => {
   $("accessMethod").value = "gps";
   $("pill-access-gps").classList.add("active");
   $("pill-access-lien").classList.remove("active");
+    // ✅ Retirer l’état rouge des deux boutons
+  document.querySelectorAll("#pill-access-gps, #pill-access-lien").forEach(p => p.classList.remove("error"));
   // On prépare l'étape suivante : afficher carte, cacher lien
   toggle($("mapAccessWrap"), 1);
   toggle($("lienAccessField"), 0);
@@ -685,6 +687,7 @@ $("pill-access-gps").onclick = () => {
         $("mapAccessWrap").classList.remove("error");
         applyFix(p.coords.latitude, p.coords.longitude);
       },
+      
       err => { if (err.code === 1) onGeoDenied("access"); },
       { enableHighAccuracy: false, timeout: 4000, maximumAge: 10000 }
     );
@@ -695,6 +698,8 @@ $("pill-access-lien").onclick = () => {
   $("accessMethod").value = "lien";
   $("pill-access-lien").classList.add("active");
   $("pill-access-gps").classList.remove("active");
+    // ✅ Retirer l’état rouge des deux boutons
+  document.querySelectorAll("#pill-access-gps, #pill-access-lien").forEach(p => p.classList.remove("error"));
   toggle($("mapAccessWrap"), 0);
   toggle($("lienAccessField"), 1);
 
