@@ -60,6 +60,12 @@ input.error{border:2px solid #c62828!important;background:#ffecec}
   border: 2px solid #c62828 !important;
   background: #ffecec;
 }
+    /* ✅ L'état actif doit écraser l'état erreur */
+.pill.active {
+  background: var(--accent) !important;
+  color: var(--accent-ink) !important;
+  border: 1px solid var(--accent) !important;
+}
     .map-wrap{margin:12px 0;border:1px solid var(--border);border-radius:10px;overflow:hidden}
     #mapDevice,#mapAccess{height:300px;width:100%}
     .map-toolbar{display:flex;gap:8px;padding:6px;background:var(--card)}
