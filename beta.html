@@ -1024,11 +1024,12 @@ if (/^pn(\s*\d.*)?$/i.test(rawQuery)) {
 
       suggestionsEl.innerHTML = "";
       filtered.slice(0, 20).forEach(pn => {
-        const li = document.createElement("li");
-        li.innerHTML = `🚦 ${pn.libelle}`;
-        li.onclick = () => showPN(pn);
-        suggestionsEl.appendChild(li);
-      });
+  const li = document.createElement("li");
+  const communeTxt = pn.commune ? ` (${pn.commune})` : "";
+  li.innerHTML = `🚦 ${pn.libelle}${communeTxt}`;
+  li.onclick = () => showPN(pn);
+  suggestionsEl.appendChild(li);
+});
     });
   return; // on arrête ici pour ne pas mélanger avec postes/appareils
 }
