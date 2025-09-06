@@ -3982,8 +3982,8 @@
     "type": "P",
     "SAT": "",
     "accès": "",
-    "latitude": 50.23471,
-    "longitude": 2.853878,
+    "latitude": 50.23461,
+    "longitude": 2.85399,
     "description": "",
     "rss": "A",
     "contact": "",
@@ -3991,8 +3991,8 @@
     "lignes": "GONESSE à LILLE-FRONTIERE (LGV)",
     "numero_ligne": 226000,
     "pk": "153,586",
-    "poste_latitude": "",
-    "poste_longitude": ""
+    "poste_latitude": "50.23802",
+    "poste_longitude": "2.85293"
   },
   {
     "nom": "Wannehain",
