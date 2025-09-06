@@ -4214,5 +4214,22 @@
     "pk": "143,321",
     "poste_latitude": "50.1471",
     "poste_longitude": "2.87154"
+  },
+    {
+    "nom": "Croisilles",
+    "type": "PRCI",
+    "SAT": "",
+    "accès": "",
+    "latitude": 50.19842,
+    "longitude": 2.86619,
+    "description": "",
+    "rss": "A",
+    "contact": "",
+    "portail": "",
+    "lignes": "GONESSE à LILLE-FRONTIERE (LGV)",
+    "numero_ligne": 226000,
+    "pk": "149,208",
+    "poste_latitude": "50.19965",
+    "poste_longitude": "2.86585"
   }
 ]
