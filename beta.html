@@ -1023,9 +1023,10 @@ if (/^pn(\s*\d.*)?$/i.test(rawQuery)) {
       }
 
       suggestionsEl.innerHTML = "";
-      filtered.slice(0, 20).forEach(pn => {
+    filtered.slice(0, 20).forEach(pn => {
   const li = document.createElement("li");
-  const communeTxt = pn.commune ? ` (${pn.commune})` : "";
+  // Ajoute la commune entre parenthèses si elle existe
+  const communeTxt = (pn.commune && pn.commune.trim()) ? ` (${pn.commune})` : "";
   li.innerHTML = `🚦 ${pn.libelle}${communeTxt}`;
   li.onclick = () => showPN(pn);
   suggestionsEl.appendChild(li);
