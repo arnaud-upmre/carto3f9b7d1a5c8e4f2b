@@ -3268,8 +3268,8 @@
     "type": "PRCI",
     "SAT": "",
     "accès": "",
-    "latitude": 50.30524,
-    "longitude": 2.888113,
+    "latitude": 50.30525,
+    "longitude": 2.8904,
     "description": "",
     "rss": "A",
     "contact": "",
@@ -3277,8 +3277,8 @@
     "lignes": "",
     "numero_ligne": "",
     "pk": "",
-    "poste_latitude": "",
-    "poste_longitude": ""
+    "poste_latitude": "50.30824",
+    "poste_longitude": " 2.89192"
   },
   {
     "nom": "Roeux",
