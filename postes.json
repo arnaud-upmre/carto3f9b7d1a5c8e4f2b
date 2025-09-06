@@ -1710,11 +1710,11 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
-    "pk": "",
-    "poste_latitude": "",
-    "poste_longitude": ""
+    "lignes": "BOULOGNE-VILLE à CALAIS MARITIME",
+    "numero_ligne": "314000",
+    "pk": "254,140",
+    "poste_latitude": "50.72123",
+    "poste_longitude": "1.6134"
   },
   {
     "nom": "Hauteville",
@@ -1727,8 +1727,8 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
+    "lignes": "BOULOGNE-VILLE à CALAIS MARITIME",
+    "numero_ligne": "314000",
     "pk": "",
     "poste_latitude": "50.7064902",
     "poste_longitude": "1.6043048"
@@ -1743,9 +1743,9 @@
     "description": "",
     "rss": "A",
     "contact": "",
-    "portail": "5962",
-    "lignes": "",
-    "numero_ligne": "",
+    "portail": "Code 5962 et code Agent E 7879",
+    "lignes": "BOULOGNE-VILLE à CALAIS MARITIME",
+    "numero_ligne": "314000",
     "pk": "",
     "poste_latitude": "50.7129492",
     "poste_longitude": "1.6082651"
@@ -1760,9 +1760,9 @@
     "description": "",
     "rss": "A",
     "contact": "",
-    "portail": "5962",
-    "lignes": "",
-    "numero_ligne": "",
+    "portail": "Code 5962 et code Agent E 7879",
+    "lignes": "BOULOGNE-VILLE à CALAIS MARITIME",
+    "numero_ligne": "314000",
     "pk": "",
     "poste_latitude": "50.717426",
     "poste_longitude": "1.6124626"
