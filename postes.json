@@ -591,8 +591,8 @@
     "lignes": "FRETIN à FRÉTHUN (LGV)",
     "numero_ligne": 216000,
     "pk": "68,359",
-    "poste_latitude": "",
-    "poste_longitude": ""
+    "poste_latitude": "50.80769",
+    "poste_longitude": "2.35391"
   },
   {
     "nom": "Busigny",
@@ -3121,11 +3121,11 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
-    "pk": "",
-    "poste_latitude": "",
-    "poste_longitude": ""
+    "lignes": "FRETIN à FRÉTHUN (LGV)",
+    "numero_ligne": "216000",
+    "pk": "80,849",
+    "poste_latitude": "50.84411",
+    "poste_longitude": "2.19144"
   },
   {
     "nom": "Quilleval",
@@ -3138,11 +3138,11 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
+    "lignes": "FRETIN à FRÉTHUN (LGV)",
+    "numero_ligne": "216000",
     "pk": "",
-    "poste_latitude": "",
-    "poste_longitude": ""
+    "poste_latitude": "50.84411",
+    "poste_longitude": "2.19144"
   },
   {
     "nom": "Rang",
@@ -3495,11 +3495,11 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
-    "pk": "",
-    "poste_latitude": "",
-    "poste_longitude": ""
+    "lignes": "LILLE à LES FONTINETTES",
+    "numero_ligne": "295000",
+    "pk": "77,855 ",
+    "poste_latitude": "50.84457",
+    "poste_longitude": "2.19484"
   },
   {
     "nom": "Saint Eloi",
@@ -4076,8 +4076,8 @@
     "lignes": "FRETIN à FRÉTHUN (LGV)",
     "numero_ligne": 216000,
     "pk": "96,683",
-    "poste_latitude": "",
-    "poste_longitude": ""
+    "poste_latitude": "50.81887",
+    "poste_longitude": "1.9768"
   },
   {
     "nom": "Aouste",
@@ -4129,5 +4129,22 @@
     "pk": "118,105",
     "poste_latitude": "49.92361",
     "poste_longitude": "2.85054"
+  },
+    {
+    "nom": "Chaulnes",
+    "type": "PRCI",
+    "SAT": "",
+    "accès": "",
+    "latitude": 49.84614,
+    "longitude": 2.83075,
+    "description": "",
+    "rss": "A",
+    "contact": "",
+    "portail": "",
+    "lignes": "LILLE PARIS",
+    "numero_ligne": 226000,
+    "pk": "110,0820",
+    "poste_latitude": "49.85186",
+    "poste_longitude": "2.83114"
   }
 ]
