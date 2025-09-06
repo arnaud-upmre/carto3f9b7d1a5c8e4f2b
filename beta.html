@@ -873,7 +873,8 @@ Promise.all([
 });
 
 document.getElementById("search").addEventListener("input", e => {
-  const query = normalize(e.target.value.trim());
+  const rawQuery = e.target.value.trim();        // version brute (ex: "PN39")
+  const query = normalize(rawQuery);             // version normalisée pour Fuse
   const suggestionsEl = document.getElementById("suggestions");
   const resultEl = document.getElementById("result");
 
@@ -1006,7 +1007,7 @@ if (results.length === 0 && rawQuery.length >= 3) {
   return; // on s'arrête ici : pas d’autres lignes à afficher
 }
   // -------- Recherche spéciale PN --------
-if (/^pn(\s*\d.*)?$/i.test(query)) {
+if (/^pn(\s*\d.*)?$/i.test(rawQuery)) {
   fetch(pnUrl)
     .then(r => r.json())
     .then(pns => {
@@ -1247,9 +1248,13 @@ function showPN(pn) {
   document.getElementById("suggestions").innerHTML = "";
   result.style.display = "block";
 
-  const lat = pn.geo_point_2d?.lat || pn.y_wgs84;
-  const lon = pn.geo_point_2d?.lon || pn.x_wgs84;
-  const urlMyMapsPN = myMapsViewer(lat, lon, 18);
+const lat = pn.geo_point_2d?.lat || pn.y_wgs84 || null;
+const lon = pn.geo_point_2d?.lon || pn.x_wgs84 || null;
+if (!lat || !lon) {
+  result.innerHTML = "<p>⚠️ Coordonnées manquantes pour ce PN</p>";
+  return;
+}
+const urlMyMapsPN = myMapsViewer(lat, lon, 18);
 
   // Classe → numéro + définition
   let classeNum = "";
