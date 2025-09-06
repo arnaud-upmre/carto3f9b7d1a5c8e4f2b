@@ -4180,5 +4180,22 @@
     "pk": "141,044",
     "poste_latitude": "50.12668",
     "poste_longitude": "2.87077"
+  },
+    {
+    "nom": "Beuvraignes",
+    "type": "PRCI",
+    "SAT": "",
+    "accès": "",
+    "latitude": 49.64698,
+    "longitude": 2.75505,
+    "description": "",
+    "rss": "A",
+    "contact": "",
+    "portail": "",
+    "lignes": "LILLE PARIS",
+    "numero_ligne": 226000,
+    "pk": "87,500",
+    "poste_latitude": "49.65794",
+    "poste_longitude": "2.76327"
   }
 ]
