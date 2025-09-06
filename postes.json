@@ -4282,5 +4282,22 @@
     "pk": "149,208",
     "poste_latitude": "50.19965",
     "poste_longitude": "2.86585"
+  },
+    {
+    "nom": "Izel",
+    "type": "PRCI",
+    "SAT": "",
+    "accès": "",
+    "latitude": 50.3481,
+    "longitude": 2.93062,
+    "description": "",
+    "rss": "A",
+    "contact": "",
+    "portail": "",
+    "lignes": "GONESSE à LILLE-FRONTIERE (LGV)",
+    "numero_ligne": 226000,
+    "pk": "167,482",
+    "poste_latitude": "50.34643",
+    "poste_longitude": "2.93815"
   }
 ]
