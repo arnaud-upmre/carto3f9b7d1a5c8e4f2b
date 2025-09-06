@@ -1006,17 +1006,20 @@ if (results.length === 0 && rawQuery.length >= 3) {
   suggestionsEl.appendChild(li);
   return; // on s'arrête ici : pas d’autres lignes à afficher
 }
-  // -------- Recherche spéciale PN --------
+// -------- Recherche spéciale PN --------
 if (/^pn(\s*\d.*)?$/i.test(rawQuery)) {
   fetch(pnUrl)
     .then(r => r.json())
     .then(pns => {
-      // PN dans ce json
-      const qNum = query.replace(/pn/i, "").trim();
+      // on garde le numéro directement depuis rawQuery (non normalisé)
+      const qNum = rawQuery.replace(/pn/i, "").trim();
       let filtered = pns;
 
       if (qNum) {
-        filtered = pns.filter(p => p.libelle.replace(/\s+/g,"").toLowerCase().includes(("pn"+qNum).toLowerCase()));
+        filtered = pns.filter(p => 
+          (p.libelle || "").replace(/\s+/g,"").toLowerCase()
+          .includes(("pn" + qNum).toLowerCase())
+        );
       }
 
       suggestionsEl.innerHTML = "";
