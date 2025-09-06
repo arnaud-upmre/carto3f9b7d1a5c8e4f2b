@@ -983,7 +983,7 @@ results.sort((a, b) => {
 });
   // -------- fin TRI AVANCÉ ----------
   // ——— 0 résultat : proposer l’ajout ———
-const rawQuery = e.target.value.trim();  // on garde tel quel pour l’affichage + préremplissage
+// on réutilise rawQuery déjà défini plus haut
 if (results.length === 0 && rawQuery.length >= 3) {
   const li = document.createElement("li");
   li.style.fontStyle = "italic"; // léger pour signaler que c'est une action spéciale
