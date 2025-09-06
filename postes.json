@@ -4163,5 +4163,22 @@
     "pk": "128,150",
     "poste_latitude": "50.01133",
     "poste_longitude": "2.87603"
+  },
+    {
+    "nom": "Mory",
+    "type": "P",
+    "SAT": "",
+    "accès": "",
+    "latitude": 50.12636,
+    "longitude": 2.87015,
+    "description": "",
+    "rss": "A",
+    "contact": "",
+    "portail": "",
+    "lignes": "LILLE PARIS",
+    "numero_ligne": 226000,
+    "pk": "141,044",
+    "poste_latitude": "50.12668",
+    "poste_longitude": "2.87077"
   }
 ]
