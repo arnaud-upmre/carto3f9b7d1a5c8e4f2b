@@ -340,23 +340,6 @@
     "poste_longitude": "2.645906"
   },
   {
-    "nom": "Beugnâtre",
-    "type": "PRCI",
-    "SAT": "",
-    "accès": "",
-    "latitude": 50.14765,
-    "longitude": 2.871433,
-    "description": "",
-    "rss": "A",
-    "contact": "",
-    "portail": "",
-    "lignes": "GONESSE à LILLE-FRONTIERE (LGV)",
-    "numero_ligne": 226000,
-    "pk": "143,321",
-    "poste_latitude": "",
-    "poste_longitude": ""
-  },
-  {
     "nom": "Beuvry",
     "type": "SP",
     "SAT": "",
