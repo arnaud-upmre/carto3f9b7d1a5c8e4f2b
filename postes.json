@@ -1314,16 +1314,16 @@
     "SAT": "",
     "accès": "",
     "latitude": 50.30057,
-    "longitude": 2.88311,
+    "longitude": 2.88313,
     "description": "",
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
-    "pk": "",
-    "poste_latitude": "",
-    "poste_longitude": ""
+    "lignes": "Raccordement d'Arras-Nord",
+    "numero_ligne": "226309",
+    "pk": "0,245",
+    "poste_latitude": "50.30039",
+    "poste_longitude": "2.88298"
   },
   {
     "nom": "Fives",
