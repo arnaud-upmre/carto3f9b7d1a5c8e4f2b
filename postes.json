@@ -4197,5 +4197,22 @@
     "pk": "87,500",
     "poste_latitude": "49.65794",
     "poste_longitude": "2.76327"
+  },
+    {
+    "nom": "Lessart",
+    "type": "P",
+    "SAT": "",
+    "accès": "",
+    "latitude": 49.7526,
+    "longitude": 2.78943,
+    "description": "",
+    "rss": "A",
+    "contact": "",
+    "portail": "",
+    "lignes": "LILLE PARIS",
+    "numero_ligne": 226000,
+    "pk": "96,000",
+    "poste_latitude": "49.74863",
+    "poste_longitude": "2.78901"
   }
 ]
