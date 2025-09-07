@@ -1234,11 +1234,11 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
-    "pk": "",
-    "poste_latitude": "",
-    "poste_longitude": ""
+    "lignes": "ARRAS à DUNKERQUE",
+    "numero_ligne": 301000,
+    "pk": "287,404",
+    "poste_latitude": "50.88948",
+    "poste_longitude": "2.41228"
   },
   {
     "nom": "Etaples",
@@ -4006,7 +4006,7 @@
     "contact": "",
     "portail": "",
     "lignes": "ARRAS à DUNKERQUE",
-    "numero_ligne": 301000.0,
+    "numero_ligne": 301000,
     "pk": "226,556",
     "poste_latitude": "",
     "poste_longitude": ""
