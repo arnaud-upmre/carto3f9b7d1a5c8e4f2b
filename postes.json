@@ -1660,7 +1660,7 @@
     "contact": "",
     "portail": "",
     "lignes": "PARIS-NORD à LILLE",
-    "numero_ligne": 272000.0,
+    "numero_ligne": 272000,
     "pk": "228,600",
     "poste_latitude": "",
     "poste_longitude": ""
@@ -3513,7 +3513,7 @@
     "contact": "",
     "portail": "",
     "lignes": "GONESSE à LILLE-FRONTIERE (LGV)",
-    "numero_ligne": 226000.0,
+    "numero_ligne": 226000,
     "pk": "2,535",
     "poste_latitude": "",
     "poste_longitude": ""
@@ -3938,7 +3938,7 @@
     "contact": "",
     "portail": "",
     "lignes": "BOULOGNE-VILLE à CALAIS MARITIME",
-    "numero_ligne": 314000.0,
+    "numero_ligne": 314000,
     "pk": "284,612",
     "poste_latitude": "50.88192",
     "poste_longitude": "1.81146"
@@ -3972,7 +3972,7 @@
     "contact": "",
     "portail": "Code: 594   https://photos.app.goo.gl/eMkW3ziyviHTHgin9",
     "lignes": "FIVES à HIRSON",
-    "numero_ligne": 267000.0,
+    "numero_ligne": 267000,
     "pk": "45,854",
     "poste_latitude": "50.3753064",
     "poste_longitude": "3.523896"
@@ -3989,7 +3989,7 @@
     "contact": "",
     "portail": "",
     "lignes": "FIVES à HIRSON",
-    "numero_ligne": 267000.0,
+    "numero_ligne": 267000,
     "pk": "45,854",
     "poste_latitude": "50.3753064",
     "poste_longitude": "3.523896"
@@ -4023,7 +4023,7 @@
     "contact": "",
     "portail": "",
     "lignes": "ARRAS à DUNKERQUE",
-    "numero_ligne": 301000.0,
+    "numero_ligne": 301000,
     "pk": "267,650",
     "poste_latitude": "",
     "poste_longitude": ""
