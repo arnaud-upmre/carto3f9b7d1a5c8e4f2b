@@ -174,8 +174,8 @@
     "type": "P",
     "SAT": "",
     "accès": "",
-    "latitude": 50.74563,
-    "longitude": 2.31644,
+    "latitude": 50.74569,
+    "longitude": 2.31635,
     "description": "",
     "rss": "A",
     "contact": "",
@@ -183,8 +183,8 @@
     "lignes": "LILLE à LES FONTINETTES",
     "numero_ligne": 295000,
     "pk": "62,755",
-    "poste_latitude": "",
-    "poste_longitude": ""
+    "poste_latitude": "50.74559",
+    "poste_longitude": "2.31656"
   },
   {
     "nom": "A2000",
@@ -358,7 +358,7 @@
   },
   {
     "nom": "Bif coulogne",
-    "type": "SS",
+    "type": "L",
     "SAT": "",
     "accès": "",
     "latitude": 50.93497,
@@ -367,11 +367,11 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
-    "pk": "",
-    "poste_latitude": "50.9347788",
-    "poste_longitude": "1.8581175"
+    "lignes": "LILLE à LES FONTINETTES",
+    "numero_ligne": "295000",
+    "pk": "103,900",
+    "poste_latitude": "50.93477",
+    "poste_longitude": "1.85811"
   },
   {
     "nom": "Bif Coupvent",
@@ -540,8 +540,8 @@
     "lignes": "COUDEKERQUE-BRANCHE à LES FONTINETTES",
     "numero_ligne": 304000,
     "pk": "18,450",
-    "poste_latitude": "",
-    "poste_longitude": ""
+    "poste_latitude": "50.95307",
+    "poste_longitude": "2.18408"
   },
   {
     "nom": "Brearde",
@@ -982,8 +982,8 @@
     "lignes": "LILLE à LES FONTINETTES",
     "numero_ligne": "295000",
     "pk": "104,810 ",
-    "poste_latitude": "50.9406155",
-    "poste_longitude": "1.8501469"
+    "poste_latitude": "50.94061",
+    "poste_longitude": "1.85014"
   },
   {
     "nom": "Curie",
@@ -1574,9 +1574,9 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
-    "pk": "",
+    "lignes": "COUDEKERQUE-BRANCHE à LES FONTINETTES",
+    "numero_ligne": 304000,
+    "pk": "23,700",
     "poste_latitude": "50.9786499",
     "poste_longitude": "2.1225921"
   },
@@ -1591,8 +1591,8 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
+    "lignes": "COUDEKERQUE-BRANCHE à LES FONTINETTES",
+    "numero_ligne": 304000,
     "pk": "",
     "poste_latitude": "50.978107",
     "poste_longitude": "2.1302745"
@@ -1608,8 +1608,8 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
+    "lignes": "COUDEKERQUE-BRANCHE à LES FONTINETTES",
+    "numero_ligne": 304000,
     "pk": "",
     "poste_latitude": "50.9788961",
     "poste_longitude": "2.1201756"
@@ -1625,8 +1625,8 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
+    "lignes": "COUDEKERQUE-BRANCHE à LES FONTINETTES",
+    "numero_ligne": 304000,
     "pk": "",
     "poste_latitude": "50.9774895",
     "poste_longitude": "2.1060996"
@@ -2798,11 +2798,11 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
-    "pk": "",
-    "poste_latitude": "",
-    "poste_longitude": ""
+    "lignes": "LILLE à LES FONTINETTES ",
+    "numero_ligne": "295000",
+    "pk": "89,433 ",
+    "poste_latitude": "50.88065",
+    "poste_longitude": "2.04124"
   },
   {
     "nom": "Noyelles",
@@ -3580,9 +3580,9 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
-    "pk": "",
+    "lignes": "LILLE à LES FONTINETTES",
+    "numero_ligne": "295000",
+    "pk": "66,352",
     "poste_latitude": "50.7558154",
     "poste_longitude": "2.2620473"
   },
@@ -3597,8 +3597,8 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
+    "lignes": "LILLE à LES FONTINETTES",
+    "numero_ligne": "295000",
     "pk": "",
     "poste_latitude": "50.7508005",
     "poste_longitude": "2.27643"
@@ -3614,8 +3614,8 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
+    "lignes": "LILLE à LES FONTINETTES",
+    "numero_ligne": "295000",
     "pk": "",
     "poste_latitude": "50.7518093",
     "poste_longitude": "2.272768"
@@ -3631,8 +3631,8 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
+    "lignes": "LILLE à LES FONTINETTES",
+    "numero_ligne": "295000",
     "pk": "",
     "poste_latitude": "50.7580464",
     "poste_longitude": "2.2580918"
