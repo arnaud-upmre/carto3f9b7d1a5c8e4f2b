@@ -1194,17 +1194,17 @@
     "type": "SSPA",
     "SAT": "",
     "accès": "",
-    "latitude": 51.02866,
-    "longitude": 2.36969,
+    "latitude": 51.02868,
+    "longitude": 2.36975,
     "description": "",
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
-    "pk": "",
-    "poste_latitude": "",
-    "poste_longitude": ""
+    "lignes": "ARRAS à DUNKERQUE",
+    "numero_ligne": 301000.,
+    "pk": "304,572",
+    "poste_latitude": "51.02856",
+    "poste_longitude": "2.36966"
   },
   {
     "nom": "Erquinghem",
@@ -1548,7 +1548,7 @@
   },
   {
     "nom": "Grande Synthe IA2",
-    "type": "",
+    "type": "A",
     "SAT": "",
     "accès": "",
     "latitude": 51.0021,
@@ -1557,11 +1557,11 @@
     "rss": "A",
     "contact": "Agent E de Dunkerque 8 au 0328248177",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
-    "pk": "",
-    "poste_latitude": "",
-    "poste_longitude": ""
+    "lignes": "COUDEKERQUE-BRANCHE à LES FONTINETTES",
+    "numero_ligne": 304000,
+    "pk": "6,760",
+    "poste_latitude": "51.00211",
+    "poste_longitude": "2.31156"
   },
   {
     "nom": "Gravelines",
@@ -2958,7 +2958,7 @@
     "poste_longitude": "2.21834"
   },
   {
-    "nom": "PE4 Pondéreux",
+    "nom": "PE4 Pondereux",
     "type": "A",
     "SAT": "",
     "accès": "",
@@ -2968,9 +2968,9 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
-    "pk": "",
+    "lignes": "COUDEKERQUE-BRANCHE à LES FONTINETTES",
+    "numero_ligne": 304000,
+    "pk": "9,418",
     "poste_latitude": "50.9931754",
     "poste_longitude": "2.2758878"
   },
@@ -3070,9 +3070,9 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
-    "pk": "",
+    "lignes": "COUDEKERQUE-BRANCHE à LES FONTINETTES",
+    "numero_ligne": 304000,
+    "pk": "9,388",
     "poste_latitude": "50.9932135",
     "poste_longitude": "2.2758493"
   },
