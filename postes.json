@@ -166,8 +166,8 @@
     "lignes": "ARRAS à DUNKERQUE",
     "numero_ligne": 301000,
     "pk": "280,901",
-    "poste_latitude": "",
-    "poste_longitude": ""
+    "poste_latitude": "50.83117",
+    "poste_longitude": "2.40834"
   },
   {
     "nom": "Arques",
@@ -3880,17 +3880,17 @@
     "type": "SP",
     "SAT": "",
     "accès": "",
-    "latitude": 50.6580416,
-    "longitude": 2.4800218,
+    "latitude": 50.65803,
+    "longitude": 2.47997,
     "description": "",
     "rss": "C",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
-    "pk": "",
-    "poste_latitude": "",
-    "poste_longitude": ""
+    "lignes": "ARRAS à DUNKERQUE",
+    "numero_ligne": 301000,
+    "pk": "253,0935",
+    "poste_latitude": "50.65806",
+    "poste_longitude": "2.48019"
   },
   {
     "nom": "Tourcoing",
