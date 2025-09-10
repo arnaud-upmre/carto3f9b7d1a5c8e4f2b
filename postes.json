@@ -3410,11 +3410,11 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
-    "pk": "",
-    "poste_latitude": "50.710521",
-    "poste_longitude": "3.1626948"
+    "lignes": "FIVES à MOUSCRON",
+    "numero_ligne": "278000",
+    "pk": "11,450",
+    "poste_latitude": "50.71051",
+    "poste_longitude": "3.16268"
   },
   {
     "nom": "Rue verte",
@@ -3801,11 +3801,11 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
-    "pk": "",
-    "poste_latitude": "",
-    "poste_longitude": ""
+    "lignes": "LILLE à LES FONTINETTES",
+    "numero_ligne": 295000,
+    "pk": "27,544",
+    "poste_latitude": "50.71342",
+    "poste_longitude": "2.78619"
   },
   {
     "nom": "Strazeele",
@@ -3910,7 +3910,7 @@
     "poste_longitude": "2.48019"
   },
   {
-    "nom": "Tourcoing",
+    "nom": "Tourcoing Gare",
     "type": "A",
     "SAT": "",
     "accès": "",
@@ -3920,9 +3920,9 @@
     "rss": "A",
     "contact": "Agent E : 03 20 11 68 07  03 20 11 68 20",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
-    "pk": "",
+    "lignes": "FIVES à MOUSCRON",
+    "numero_ligne": "278000",
+    "pk": "13,090",
     "poste_latitude": "50.7185346",
     "poste_longitude": "3.1778003"
   },
@@ -3937,9 +3937,9 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
-    "pk": "",
+    "lignes": "FIVES à MOUSCRON",
+    "numero_ligne": "278000",
+    "pk": "14,394",
     "poste_latitude": "50.7213464",
     "poste_longitude": "3.1943516"
   },
