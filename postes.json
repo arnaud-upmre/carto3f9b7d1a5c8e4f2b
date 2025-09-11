@@ -3733,11 +3733,11 @@
     "rss": "B",
     "contact": "",
     "portail": "Accès par carmillon",
-    "lignes": "",
-    "numero_ligne": "",
-    "pk": "",
-    "poste_latitude": "",
-    "poste_longitude": ""
+    "lignes": "PARIS-NORD à LILLE",
+    "numero_ligne": 272000,
+    "pk": "239,366",
+    "poste_latitude": "50.54811",
+    "poste_longitude": "3.03567"
   },
   {
     "nom": "Avion",
