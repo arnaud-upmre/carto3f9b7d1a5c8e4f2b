@@ -2602,7 +2602,7 @@
   {
     "nom": "Lesquin",
     "type": "SP",
-    "SAT": "",
+    "SAT": "SAT1",
     "accès": "",
     "appareil": "I16",
     "latitude": 50.5912681,
@@ -2612,7 +2612,7 @@
   {
     "nom": "Lesquin",
     "type": "SP",
-    "SAT": "",
+    "SAT": "SAT1",
     "accès": "",
     "appareil": "I17",
     "latitude": 50.5920143,
