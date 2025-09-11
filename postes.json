@@ -4384,5 +4384,22 @@
     "pk": "003,0000",
     "poste_latitude": "50.62176",
     "poste_longitude": "3.10852"
+  },
+    {
+    "nom": "Templemars",
+    "type": "L",
+    "SAT": "",
+    "accès": "",
+    "latitude": 50.57915,
+    "longitude": 3.05147,
+    "description": "",
+    "rss": "A",
+    "contact": "",
+    "portail": "",
+    "lignes": "PARIS-NORD à LILLE",
+    "numero_ligne": 272000,
+    "pk": "242,999",
+    "poste_latitude": "50.57906",
+    "poste_longitude": "3.05143"
   }
 ]
