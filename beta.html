@@ -400,6 +400,58 @@ main {
   }
 }
     #btn-localiser { margin-top: 4rem; }  /* plus d’espace au-dessus */
+    /* --- Mode édition : vibration + halo --- */
+@keyframes edit-shake {
+  0%   { transform: translate(0, 0); }
+  20%  { transform: translate(-2px, 0); }
+  40%  { transform: translate(2px, 0); }
+  60%  { transform: translate(-2px, 0); }
+  80%  { transform: translate(2px, 0); }
+  100% { transform: translate(0, 0); }
+}
+
+.edit-shake {
+  animation: edit-shake 0.2s linear infinite;
+}
+
+.edit-highlight {
+  outline: 2px solid rgba(26, 115, 232, 0.4); /* halo bleu pâle */
+  border-radius: 6px;
+}
+    /* Bouton flottant "Quitter édition" */
+#btn-exit-edit {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 1px solid #1a73e8;
+  background: #f5f9ff;
+  color: #1a73e8;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  display: none; /* caché par défaut */
+}
+
+#btn-exit-edit:hover {
+  background: #1a73e8;
+  color: #fff;
+}
+
+@media (prefers-color-scheme: dark) {
+  #btn-exit-edit {
+    background: #1e1e1e;
+    color: #90caf9;
+    border: 1px solid #90caf9;
+  }
+  #btn-exit-edit:hover {
+    background: #90caf9;
+    color: #121212;
+  }
+}
   </style>
   <meta name="color-scheme" content="light dark">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
@@ -441,7 +493,6 @@ main {
   <script>
 const jsonUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/postes.json";
 const appareilsUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/appareils.json";
-const pnUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/PN.json";
 const compteurURL = "https://script.google.com/macros/s/AKfycbzUFaek89LYosR0FSw9gyxn2IZXlFlWXA_dIFIDwox-szE3DgH-l8IVbGfaoIgGK04h/exec";
 const compteurAppareilURL = "https://script.google.com/macros/s/AKfycbwJIlvcfNYREJn1oPiVAhQqHACXXar8ZbRl6aChwYw4TFSAaMTFEHTT5X2T7BKLJ3gsJw/exec";
 
@@ -509,30 +560,7 @@ content += ` <a href="${video}" target="_blank" rel="noopener" class="inline-lin
 
   return `<p><strong>🚧 Portail :</strong> ${content}</p>`;
 }
-
-const PN_CLASSES = {
-  "10": "PN public pour voitures sans barrières protection assurée par un agent",
-  "11": "PN public pour voitures avec barrières gardé sans passage piétons accolé manœuvré à pied d'œuvre",
-  "12": "PN public pour voitures avec barrières gardé sans passage piétons accolé manœuvré à distance",
-  "13": "PN public pour voitures avec barrières gardé sans passage piétons accolé manœuvré à pied d'œuvre et distance",
-  "14": "PN public pour voitures avec barrières gardé avec passage piétons accolé manœuvré à pied d'œuvre",
-  "15": "PN public pour voitures avec barrières gardé avec passage piétons accolé manœuvré à distance",
-  "16": "PN public pour voitures avec barrières gardé avec passage piétons accolé manœuvré à pied d'œuvre distance",
-  "17": "PN public pour voitures avec barrières ou 1/2 barrières non gardé à SAL 2 et SAL 2B",
-  "18": "PN public pour voitures avec barrières ou 1/2 barrières non gardé à SAL 2 + ilot séparateur",
-  "19": "PN public pour voitures avec barrières ou 1/2 barrières non gardé à SAL 4",
-  "20": "PN public pour voitures sans barrières sans SAL",
-  "21": "PN public pour voitures sans barrières avec SAL 0",
-  "31": "PN public isolé pour piétons sans portillons",
-  "32": "PN public isolé pour piétons avec portillons",
-  "41": "PN privé pour voitures sans barrières",
-  "42": "PN privé pour voitures avec barrières sans passage piétons accolé",
-  "43": "PN privé pour voitures avec barrières avec passage piétons accolé public",
-  "44": "PN privé pour voitures avec barrières avec passage piétons accolé privé",
-  "45": "PN privé isolé pour piétons sans portillons",
-  "46": "PN privé isolé pour piétons avec portillons"
-};
-    
+  
 function normalize(str) {
   return str
     .normalize("NFD")
@@ -795,9 +823,11 @@ const targetLat = usePoste ? _latPoste : lieu.latitude;
 const targetLon = usePoste ? _lonPoste : lieu.longitude;
 const urlMyMapsPoste = myMapsViewer(targetLat, targetLon, 18);
 
-let html = `<h2><a href="#" data-href="${urlMyMapsPoste}" onclick="window.open(this.dataset.href,'_blank','noopener')" class="titre-lien">
-  📍 ${formatNomCompletLieu(lieu)}
-</a>
+let html = `<h2>
+  <a href="#" data-href="${urlMyMapsPoste}" onclick="window.open(this.dataset.href,'_blank','noopener')" class="titre-lien">
+    📍 ${formatNomCompletLieu(lieu)}
+  </a>
+  <a href="#" id="btn-edit" style="font-size:14px; font-weight:400; margin-left:8px; text-decoration:underline; color:#666;">(modifier)</a>
 </h2>
 
 <p style="text-align:center; font-weight:600; margin:1.5rem 0 0.5rem 0;">🛣️ Repérer l’accès :</p>
@@ -830,7 +860,38 @@ let html = `<h2><a href="#" data-href="${urlMyMapsPoste}" onclick="window.open(t
   if (appareilsHTML) {
     html += `<hr class="separator" />${appareilsHTML}`;
   }
+  // === Gestion du bouton "modifier" ===
+  setTimeout(() => {
+    const btnEdit = document.getElementById("btn-edit");
+    const btnExit = document.getElementById("btn-exit-edit");
+    if (btnEdit && btnExit) {
+      btnEdit.addEventListener("click", (ev) => {
+        ev.preventDefault();
+if (navigator.vibrate) navigator.vibrate(2000);
+        // cible tous les paragraphes et blocs du résultat
+        const editables = result.querySelectorAll("p, .inline-links, h2");
 
+        // ajoute vibration + halo
+        editables.forEach(el => {
+          el.classList.add("edit-shake", "edit-highlight");
+        });
+
+        // stoppe la vibration après 2s mais garde le halo
+        setTimeout(() => {
+          editables.forEach(el => el.classList.remove("edit-shake"));
+        }, 2000);
+
+        // affiche le bouton quitter
+        btnExit.style.display = "block";
+
+        // quand on clique sur quitter
+        btnExit.onclick = () => {
+          editables.forEach(el => el.classList.remove("edit-highlight", "edit-shake"));
+          btnExit.style.display = "none"; // cache le bouton
+        };
+      });
+    }
+  }, 50);
   result.innerHTML = html;
 }
 
@@ -873,8 +934,7 @@ Promise.all([
 });
 
 document.getElementById("search").addEventListener("input", e => {
-  const rawQuery = e.target.value.trim();        // version brute (ex: "PN39")
-  const query = normalize(rawQuery);             // version normalisée pour Fuse
+  const query = normalize(e.target.value.trim());
   const suggestionsEl = document.getElementById("suggestions");
   const resultEl = document.getElementById("result");
 
@@ -983,7 +1043,7 @@ results.sort((a, b) => {
 });
   // -------- fin TRI AVANCÉ ----------
   // ——— 0 résultat : proposer l’ajout ———
-// on réutilise rawQuery déjà défini plus haut
+const rawQuery = e.target.value.trim();  // on garde tel quel pour l’affichage + préremplissage
 if (results.length === 0 && rawQuery.length >= 3) {
   const li = document.createElement("li");
   li.style.fontStyle = "italic"; // léger pour signaler que c'est une action spéciale
@@ -1005,34 +1065,6 @@ if (results.length === 0 && rawQuery.length >= 3) {
 
   suggestionsEl.appendChild(li);
   return; // on s'arrête ici : pas d’autres lignes à afficher
-}
-// -------- Recherche spéciale PN --------
-if (/^pn(\s*\d.*)?$/i.test(rawQuery)) {
-  fetch(pnUrl)
-    .then(r => r.json())
-    .then(pns => {
-      // on garde le numéro directement depuis rawQuery (non normalisé)
-      const qNum = rawQuery.replace(/pn/i, "").trim();
-      let filtered = pns;
-
-      if (qNum) {
-        filtered = pns.filter(p => 
-          (p.libelle || "").replace(/\s+/g,"").toLowerCase()
-          .includes(("pn" + qNum).toLowerCase())
-        );
-      }
-
-      suggestionsEl.innerHTML = "";
-    filtered.slice(0, 20).forEach(pn => {
-  const li = document.createElement("li");
-  // Ajoute la commune entre parenthèses si elle existe
-  const communeTxt = (pn.commune && pn.commune.trim()) ? ` (${pn.commune})` : "";
-  li.innerHTML = `🚦 ${pn.libelle}${communeTxt}`;
-  li.onclick = () => showPN(pn);
-  suggestionsEl.appendChild(li);
-});
-    });
-  return; // on arrête ici pour ne pas mélanger avec postes/appareils
 }
 // --- Affichage des résultats (avec icônes) ---
 suggestionsEl.innerHTML = "";
@@ -1247,50 +1279,6 @@ document.getElementById("btn-localiser").addEventListener("click", () => {
 });
 
     // Affiche la page suivante de résultats (+10)
-
-function showPN(pn) {
-  const result = document.getElementById("result");
-  document.getElementById("suggestions").innerHTML = "";
-  result.style.display = "block";
-
-const lat = pn.geo_point_2d?.lat || pn.y_wgs84 || null;
-const lon = pn.geo_point_2d?.lon || pn.x_wgs84 || null;
-if (!lat || !lon) {
-  result.innerHTML = "<p>⚠️ Coordonnées manquantes pour ce PN</p>";
-  return;
-}
-const urlMyMapsPN = myMapsViewer(lat, lon, 18);
-
-  // Classe → numéro + définition
-  let classeNum = "";
-  let classeDef = "";
-  if (pn.mnemo && pn.mnemo.startsWith("CLASSE")) {
-    classeNum = pn.mnemo.replace("CLASSE", "").trim();
-    classeDef = PN_CLASSES[classeNum] || "";
-  }
-
-  let html = `<h2><a href="#" data-href="${urlMyMapsPN}" onclick="window.open(this.dataset.href,'_blank','noopener')" class="titre-lien">
-  🚦 ${pn.libelle}
-</a></h2>
-
-<div class="inline-links pills-3" style="margin-top:10px; margin-bottom:1.5rem;">
-  <a href="${myMapsViewer(lat, lon, 19)}" target="_blank" rel="noopener">🛰️ Vue satellite</a>
-  <a href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lat},${lon}" target="_blank" rel="noopener">👁️ Street View</a>
-</div>`;
-
-  const blocs = [];
-  if (pn.commune) blocs.push(`<p><strong>🏙️ Commune :</strong> ${pn.commune}</p>`);
-  if (pn.code_ligne) blocs.push(`<p><strong>🚄 Ligne :</strong> ${pn.code_ligne}</p>`);
-  if (pn.pk) blocs.push(`<p><strong>📍 PK :</strong> ${pn.pk}</p>`);
-  if (classeNum) blocs.push(`<p><strong>📑 Classe ${classeNum} :</strong> ${classeDef}</p>`);
-
-  if (blocs.length > 0) {
-    html += blocs.join("<hr class='separator' />");
-  }
-
-  result.innerHTML = html;
-}
-    
 function renderProximitePage() {
   const container = document.getElementById("proximite");
   const ul = container.querySelector("ul");
@@ -1389,7 +1377,9 @@ if (el2) el2.textContent = `(${data.count})`;
 
 updateContrib();
 setInterval(updateContrib, 3000);
-</script> </main>
+</script> 
+  <button id="btn-exit-edit">❌ Quitter édition</button>
+</main>
 <div id="about-footer">
 
   🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.01</span>
