@@ -4084,8 +4084,8 @@
     "type": "PRCI",
     "SAT": "",
     "accès": "",
-    "latitude": 50.5744,
-    "longitude": 3.262949,
+    "latitude": 50.57473,
+    "longitude": 3.26223,
     "description": "",
     "rss": "A",
     "contact": "",
@@ -4093,8 +4093,8 @@
     "lignes": "GONESSE à LILLE-FRONTIERE (LGV)",
     "numero_ligne": 226000,
     "pk": "208,699",
-    "poste_latitude": "",
-    "poste_longitude": ""
+    "poste_latitude": "50.57433",
+    "poste_longitude": "3.26354"
   },
   {
     "nom": "Wattignies",
