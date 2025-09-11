@@ -2280,7 +2280,7 @@
   {
     "nom": "Lesquin",
     "type": "SP",
-    "SAT": "",
+    "SAT": "SAT1",
     "accès": "I18",
     "latitude": 50.59369,
     "longitude": 3.11539,
@@ -2288,11 +2288,28 @@
     "rss": "B",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
+    "lignes": "FIVES à HIRSON",
+    "numero_ligne": 267000,
     "pk": "",
-    "poste_latitude": "50.6011174",
-    "poste_longitude": "3.1099532"
+    "poste_latitude": "",
+    "poste_longitude": ""
+  }, 
+  {
+    "nom": "Lesquin",
+    "type": "SP",
+    "SAT": "SAT1",
+    "accès": "I14",
+    "latitude": 50.59369,
+    "longitude": 3.11539,
+    "description": "",
+    "rss": "B",
+    "contact": "",
+    "portail": "",
+    "lignes": "FIVES à HIRSON",
+    "numero_ligne": 267000,
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   },
   {
     "nom": "Lesquin",
@@ -2305,8 +2322,8 @@
     "rss": "B",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
+    "lignes": "FIVES à HIRSON",
+    "numero_ligne": 267000,
     "pk": "",
     "poste_latitude": "",
     "poste_longitude": ""
