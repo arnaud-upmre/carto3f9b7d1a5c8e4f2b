@@ -215,7 +215,7 @@
     "contact": "",
     "portail": "",
     "lignes": "LENS à OSTRICOURT",
-    "numero_ligne": "284000",
+    "numero_ligne": 284000,
     "pk": "",
     "poste_latitude": "",
     "poste_longitude": ""
@@ -368,7 +368,7 @@
     "contact": "",
     "portail": "",
     "lignes": "LILLE à LES FONTINETTES",
-    "numero_ligne": "295000",
+    "numero_ligne": 295000,
     "pk": "103,900",
     "poste_latitude": "50.93477",
     "poste_longitude": "1.85811"
@@ -656,7 +656,7 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "FRETIN à FRÉTHUN (LGV) ",
+    "lignes": "FRETIN à FRÉTHUN (LGV)",
     "numero_ligne": 216000,
     "pk": "59,146",
     "poste_latitude": "50.7804883",
@@ -673,7 +673,7 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "FRETIN à FRÉTHUN (LGV) ",
+    "lignes": "FRETIN à FRÉTHUN (LGV)",
     "numero_ligne": 216000,
     "pk": "",
     "poste_latitude": "50.7779977",
@@ -690,7 +690,7 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "FRETIN à FRÉTHUN (LGV) ",
+    "lignes": "FRETIN à FRÉTHUN (LGV)",
     "numero_ligne": 216000,
     "pk": "",
     "poste_latitude": "50.7831982",
@@ -708,7 +708,7 @@
     "contact": "",
     "portail": "Badge Eurotunnel obligatoire",
     "lignes": "BOULOGNE-VILLE à CALAIS MARITIME",
-    "numero_ligne": "314000",
+    "numero_ligne": 314000,
     "pk": "290,475",
     "poste_latitude": "50.9263379",
     "poste_longitude": "1.8340766"
@@ -725,7 +725,7 @@
     "contact": "",
     "portail": "Badge Eurotunnel obligatoire",
     "lignes": "BOULOGNE-VILLE à CALAIS MARITIME",
-    "numero_ligne": "314000",
+    "numero_ligne": 314000,
     "pk": "",
     "poste_latitude": "50.9229094",
     "poste_longitude": "1.8265219"
@@ -742,7 +742,7 @@
     "contact": "",
     "portail": "Badge Eurotunnel obligatoire",
     "lignes": "BOULOGNE-VILLE à CALAIS MARITIME",
-    "numero_ligne": "314000",
+    "numero_ligne": 314000,
     "pk": "",
     "poste_latitude": "50.9242639",
     "poste_longitude": "1.8291523"
@@ -759,7 +759,7 @@
     "contact": "",
     "portail": "Badge Eurotunnel obligatoire",
     "lignes": "BOULOGNE-VILLE à CALAIS MARITIME",
-    "numero_ligne": "314000",
+    "numero_ligne": 314000,
     "pk": "",
     "poste_latitude": "50.9266608",
     "poste_longitude": "1.833571"
@@ -776,7 +776,7 @@
     "contact": "",
     "portail": "Badge Eurotunnel obligatoire",
     "lignes": "BOULOGNE-VILLE à CALAIS MARITIME",
-    "numero_ligne": "314000",
+    "numero_ligne": 314000,
     "pk": "",
     "poste_latitude": "50.9286998",
     "poste_longitude": "1.8373747"
@@ -793,7 +793,7 @@
     "contact": "",
     "portail": "Badge Eurotunnel obligatoire",
     "lignes": "BOULOGNE-VILLE à CALAIS MARITIME",
-    "numero_ligne": "314000",
+    "numero_ligne": 314000,
     "pk": "",
     "poste_latitude": "50.9274108",
     "poste_longitude": "1.836196"
@@ -810,7 +810,7 @@
     "contact": "",
     "portail": "",
     "lignes": "ARRAS à DUNKERQUE",
-    "numero_ligne": "301000",
+    "numero_ligne": 301000,
     "pk": "300,521",
     "poste_latitude": "50.99503",
     "poste_longitude": "2.39038"
@@ -827,7 +827,7 @@
     "contact": "",
     "portail": "",
     "lignes": "ARRAS à DUNKERQUE",
-    "numero_ligne": "301000",
+    "numero_ligne": 301000,
     "pk": "",
     "poste_latitude": "",
     "poste_longitude": ""
@@ -844,7 +844,7 @@
     "contact": "",
     "portail": "",
     "lignes": "ARRAS à DUNKERQUE",
-    "numero_ligne": "301000",
+    "numero_ligne": 301000,
     "pk": "",
     "poste_latitude": "51.0065412",
     "poste_longitude": "2.37997"
@@ -861,7 +861,7 @@
     "contact": "",
     "portail": "",
     "lignes": "LILLE à LES FONTINETTES",
-    "numero_ligne": "295000",
+    "numero_ligne": 295000,
     "pk": "103,900",
     "poste_latitude": "50.9346815",
     "poste_longitude": "1.8582382"
@@ -878,7 +878,7 @@
     "contact": "",
     "portail": "",
     "lignes": "LILLE à LES FONTINETTES",
-    "numero_ligne": "295000",
+    "numero_ligne": 295000,
     "pk": "",
     "poste_latitude": "50.9346815",
     "poste_longitude": "1.8582382"
@@ -895,7 +895,7 @@
     "contact": "",
     "portail": "",
     "lignes": "LILLE à LES FONTINETTES",
-    "numero_ligne": "295000",
+    "numero_ligne": 295000,
     "pk": "",
     "poste_latitude": "50.9346815",
     "poste_longitude": "1.8582382"
@@ -912,7 +912,7 @@
     "contact": "",
     "portail": "",
     "lignes": "LILLE à LES FONTINETTES",
-    "numero_ligne": "295000",
+    "numero_ligne": 295000,
     "pk": "",
     "poste_latitude": "",
     "poste_longitude": ""
@@ -929,7 +929,7 @@
     "contact": "",
     "portail": "",
     "lignes": "LILLE à LES FONTINETTES",
-    "numero_ligne": "295000",
+    "numero_ligne": 295000,
     "pk": "",
     "poste_latitude": "50.9357924",
     "poste_longitude": "1.8496275"
@@ -946,7 +946,7 @@
     "contact": "",
     "portail": "",
     "lignes": "LILLE à LES FONTINETTES",
-    "numero_ligne": "295000",
+    "numero_ligne": 295000,
     "pk": "",
     "poste_latitude": "50.935167",
     "poste_longitude": "1.8494559"
@@ -963,7 +963,7 @@
     "contact": "",
     "portail": "",
     "lignes": "LILLE à LES FONTINETTES",
-    "numero_ligne": "295000",
+    "numero_ligne": 295000,
     "pk": "",
     "poste_latitude": "50.936077",
     "poste_longitude": "1.8544386"
@@ -980,8 +980,8 @@
     "contact": "",
     "portail": "",
     "lignes": "LILLE à LES FONTINETTES",
-    "numero_ligne": "295000",
-    "pk": "104,810 ",
+    "numero_ligne": 295000,
+    "pk": "104,810",
     "poste_latitude": "50.94061",
     "poste_longitude": "1.85014"
   },
@@ -997,7 +997,7 @@
     "contact": "",
     "portail": "",
     "lignes": "LILLE à LES FONTINETTES",
-    "numero_ligne": "295000",
+    "numero_ligne": 295000,
     "pk": "",
     "poste_latitude": "50.9420114",
     "poste_longitude": "1.8480671"
@@ -1014,7 +1014,7 @@
     "contact": "",
     "portail": "",
     "lignes": "LILLE à LES FONTINETTES",
-    "numero_ligne": "295000",
+    "numero_ligne": 295000,
     "pk": "",
     "poste_latitude": "50.9415922",
     "poste_longitude": "1.8490988"
@@ -1031,7 +1031,7 @@
     "contact": "",
     "portail": "",
     "lignes": "LILLE à LES FONTINETTES",
-    "numero_ligne": "295000",
+    "numero_ligne": 295000,
     "pk": "",
     "poste_latitude": "50.9424372",
     "poste_longitude": "1.84732"
@@ -1048,7 +1048,7 @@
     "contact": "",
     "portail": "",
     "lignes": "LILLE à LES FONTINETTES",
-    "numero_ligne": "295000",
+    "numero_ligne": 295000,
     "pk": "",
     "poste_latitude": "50.9457199",
     "poste_longitude": "1.8411439"
@@ -1065,7 +1065,7 @@
     "contact": "",
     "portail": "",
     "lignes": "LONGUEAU à BOULOGNE-VILLE",
-    "numero_ligne": "311000",
+    "numero_ligne": 311000,
     "pk": "234,000",
     "poste_latitude": "50.57974",
     "poste_longitude": "1.61451"
@@ -1082,7 +1082,7 @@
     "contact": "Agent E du poste 1 : 03 28 55 72 28 09 71 92 25 31",
     "portail": "",
     "lignes": "HAUBOURDIN à SAINT-ANDRÉ",
-    "numero_ligne": "292000",
+    "numero_ligne": 292000,
     "pk": "14,869",
     "poste_latitude": "50.62769",
     "poste_longitude": "2.9918"
@@ -1218,7 +1218,7 @@
     "contact": "",
     "portail": "",
     "lignes": "FRETIN à FRÉTHUN (LGV)",
-    "numero_ligne": "216000",
+    "numero_ligne": 216000,
     "pk": "31,503",
     "poste_latitude": "50.67208",
     "poste_longitude": "2.82736"
@@ -1252,7 +1252,7 @@
     "contact": "",
     "portail": "",
     "lignes": "LONGUEAU à BOULOGNE-VILLE",
-    "numero_ligne": "311000",
+    "numero_ligne": 311000,
     "pk": "226,900",
     "poste_latitude": "50.5197701",
     "poste_longitude": "1.6365417"
@@ -1269,7 +1269,7 @@
     "contact": "",
     "portail": "",
     "lignes": "LONGUEAU à BOULOGNE-VILLE",
-    "numero_ligne": "311000",
+    "numero_ligne": 311000,
     "pk": "",
     "poste_latitude": "50.5069278",
     "poste_longitude": "1.6444343"
@@ -1286,7 +1286,7 @@
     "contact": "",
     "portail": "",
     "lignes": "LONGUEAU à BOULOGNE-VILLE",
-    "numero_ligne": "311000",
+    "numero_ligne": 311000,
     "pk": "",
     "poste_latitude": "50.5121415",
     "poste_longitude": "1.644521"
@@ -1320,7 +1320,7 @@
     "contact": "",
     "portail": "",
     "lignes": "Raccordement d'Arras-Nord",
-    "numero_ligne": "226309",
+    "numero_ligne": 226309,
     "pk": "0,245",
     "poste_latitude": "50.30039",
     "poste_longitude": "2.88298"
@@ -1490,7 +1490,7 @@
     "contact": "",
     "portail": "",
     "lignes": "LILLE à LES FONTINETTES",
-    "numero_ligne": "295000",
+    "numero_ligne": 295000,
     "pk": "25,795",
     "poste_latitude": "",
     "poste_longitude": ""
@@ -1643,7 +1643,7 @@
     "contact": "",
     "portail": "",
     "lignes": "FRETIN à FRÉTHUN (LGV)",
-    "numero_ligne": "216000",
+    "numero_ligne": 216000,
     "pk": "106,0712",
     "poste_latitude": "50.8543",
     "poste_longitude": "1.84764"
@@ -1677,7 +1677,7 @@
     "contact": "",
     "portail": "",
     "lignes": "LILLE à Les FONTINETTES",
-    "numero_ligne": "295000",
+    "numero_ligne": 295000,
     "pk": "48,772",
     "poste_latitude": "50.72991",
     "poste_longitude": "2.50539"
@@ -1694,7 +1694,7 @@
     "contact": "",
     "portail": "",
     "lignes": "LILLE à Les FONTINETTES",
-    "numero_ligne": "295000",
+    "numero_ligne": 295000,
     "pk": "",
     "poste_latitude": "50.72991",
     "poste_longitude": "2.50539"
@@ -1711,7 +1711,7 @@
     "contact": "",
     "portail": "",
     "lignes": "BOULOGNE-VILLE à CALAIS MARITIME",
-    "numero_ligne": "314000",
+    "numero_ligne": 314000,
     "pk": "254,140",
     "poste_latitude": "50.72123",
     "poste_longitude": "1.6134"
@@ -1728,7 +1728,7 @@
     "contact": "",
     "portail": "",
     "lignes": "BOULOGNE-VILLE à CALAIS MARITIME",
-    "numero_ligne": "314000",
+    "numero_ligne": 314000,
     "pk": "",
     "poste_latitude": "50.7064902",
     "poste_longitude": "1.6043048"
@@ -1745,7 +1745,7 @@
     "contact": "",
     "portail": "Code 5962 et code Agent E 7879",
     "lignes": "BOULOGNE-VILLE à CALAIS MARITIME",
-    "numero_ligne": "314000",
+    "numero_ligne": 314000,
     "pk": "",
     "poste_latitude": "50.7129492",
     "poste_longitude": "1.6082651"
@@ -1762,7 +1762,7 @@
     "contact": "",
     "portail": "Code 5962 et code Agent E 7879",
     "lignes": "BOULOGNE-VILLE à CALAIS MARITIME",
-    "numero_ligne": "314000",
+    "numero_ligne": 314000,
     "pk": "",
     "poste_latitude": "50.717426",
     "poste_longitude": "1.6124626"
@@ -1830,7 +1830,7 @@
     "contact": "",
     "portail": "",
     "lignes": "GONESSE à LILLE-FRONTIERE (LGV)",
-    "numero_ligne": "226000",
+    "numero_ligne": 226000,
     "pk": "6,695",
     "poste_latitude": "50.6025713",
     "poste_longitude": "3.1139317"
@@ -1847,7 +1847,7 @@
     "contact": "",
     "portail": "",
     "lignes": "HIRSON à AMAGNE-LUCQUY",
-    "numero_ligne": "212000",
+    "numero_ligne": 212000,
     "pk": "0,783",
     "poste_latitude": "49.90953",
     "poste_longitude": "4.07688"
@@ -1864,7 +1864,7 @@
     "contact": "",
     "portail": "",
     "lignes": "FRETIN à FRÉTHUN (LGV)",
-    "numero_ligne": "216000",
+    "numero_ligne": 216000,
     "pk": "56,214",
     "poste_latitude": "50.7661",
     "poste_longitude": "2.51244"
@@ -1881,7 +1881,7 @@
     "contact": "",
     "portail": "",
     "lignes": "FRETIN à FRÉTHUN (LGV)",
-    "numero_ligne": "216000",
+    "numero_ligne": 216000,
     "pk": "",
     "poste_latitude": "50.7661",
     "poste_longitude": "2.51244"
@@ -1898,7 +1898,7 @@
     "contact": "",
     "portail": "",
     "lignes": "FRETIN à FRÉTHUN (LGV)",
-    "numero_ligne": "216000",
+    "numero_ligne": 216000,
     "pk": "",
     "poste_latitude": "50.7661",
     "poste_longitude": "2.51244"
@@ -1983,7 +1983,7 @@
     "contact": "",
     "portail": "",
     "lignes": "LILLE à Les FONTINETTES",
-    "numero_ligne": "295000",
+    "numero_ligne": 295000,
     "pk": "5,805",
     "poste_latitude": "50.6605998",
     "poste_longitude": "3.0697984"
@@ -2000,7 +2000,7 @@
     "contact": "",
     "portail": "",
     "lignes": "LILLE à Les FONTINETTES",
-    "numero_ligne": "295000",
+    "numero_ligne": 295000,
     "pk": "",
     "poste_latitude": "",
     "poste_longitude": ""
@@ -2017,7 +2017,7 @@
     "contact": "",
     "portail": "",
     "lignes": "LILLE à Les FONTINETTES",
-    "numero_ligne": "295000",
+    "numero_ligne": 295000,
     "pk": "",
     "poste_latitude": "50.6606965",
     "poste_longitude": "3.0584348"
@@ -2068,7 +2068,7 @@
     "contact": "",
     "portail": "4242#",
     "lignes": "FRETIN à FRÉTHUN (LGV)",
-    "numero_ligne": "216000",
+    "numero_ligne": 216000,
     "pk": "16,123",
     "poste_latitude": "50.65928",
     "poste_longitude": "3.02475"
@@ -2085,7 +2085,7 @@
     "contact": "",
     "portail": "",
     "lignes": "FRETIN à FRÉTHUN (LGV)",
-    "numero_ligne": "216000",
+    "numero_ligne": 216000,
     "pk": "",
     "poste_latitude": "50.65928",
     "poste_longitude": "3.02475"
@@ -2102,7 +2102,7 @@
     "contact": "",
     "portail": "",
     "lignes": "FRETIN à FRÉTHUN (LGV)",
-    "numero_ligne": "216000",
+    "numero_ligne": 216000,
     "pk": "",
     "poste_latitude": "50.65928",
     "poste_longitude": "3.02475"
@@ -2119,7 +2119,7 @@
     "contact": "",
     "portail": "4242#",
     "lignes": "LILLE à Les FONTINETTES",
-    "numero_ligne": "295000",
+    "numero_ligne": 295000,
     "pk": "9,503",
     "poste_latitude": "50.6596897",
     "poste_longitude": "3.0233049"
@@ -2204,7 +2204,7 @@
     "contact": "",
     "portail": "",
     "lignes": "FRETIN à FRÉTHUN (LGV) ",
-    "numero_ligne": "216000",
+    "numero_ligne": 216000,
     "pk": "39,986",
     "poste_latitude": "50.70584",
     "poste_longitude": "2.72011"
@@ -2425,7 +2425,7 @@
     "contact": "",
     "portail": "4141",
     "lignes": "FRETIN à FRÉTHUN (LGV)",
-    "numero_ligne": "216000",
+    "numero_ligne": 216000,
     "pk": "10,841",
     "poste_latitude": "50.63191",
     "poste_longitude": "3.0831"
@@ -2459,7 +2459,7 @@
     "contact": "",
     "portail": "",
     "lignes": "FIVES à MOUSCRON",
-    "numero_ligne": "278000",
+    "numero_ligne": 278000,
     "pk": "2,526",
     "poste_latitude": "50.64566",
     "poste_longitude": "3.09531"
@@ -2476,7 +2476,7 @@
     "contact": "",
     "portail": "",
     "lignes": "FIVES à MOUSCRON",
-    "numero_ligne": "278000",
+    "numero_ligne": 278000,
     "pk": "",
     "poste_latitude": "",
     "poste_longitude": ""
@@ -2493,7 +2493,7 @@
     "contact": "",
     "portail": "",
     "lignes": "FIVES à MOUSCRON",
-    "numero_ligne": "278000",
+    "numero_ligne": 278000,
     "pk": "",
     "poste_latitude": "",
     "poste_longitude": ""
@@ -2510,7 +2510,7 @@
     "contact": "",
     "portail": "",
     "lignes": "FIVES à MOUSCRON",
-    "numero_ligne": "278000",
+    "numero_ligne": 278000,
     "pk": "",
     "poste_latitude": "",
     "poste_longitude": ""
@@ -2544,7 +2544,7 @@
     "contact": "",
     "portail": "",
     "lignes": "HAUBOURDIN à SAINT-ANDRÉ",
-    "numero_ligne": "292000",
+    "numero_ligne": 292000,
     "pk": "18,290",
     "poste_latitude": "50.6524609",
     "poste_longitude": "3.0199253"
@@ -2697,7 +2697,7 @@
     "contact": "",
     "portail": "",
     "lignes": "FRETIN à FRÉTHUN (LGV)",
-    "numero_ligne": "216000",
+    "numero_ligne": 216000,
     "pk": "111,146",
     "poste_latitude": "50.89641",
     "poste_longitude": "1.81576"
@@ -2833,8 +2833,8 @@
     "contact": "",
     "portail": "",
     "lignes": "LILLE à LES FONTINETTES ",
-    "numero_ligne": "295000",
-    "pk": "89,433 ",
+    "numero_ligne": 295000,
+    "pk": "89,433",
     "poste_latitude": "50.88065",
     "poste_longitude": "2.04124"
   },
@@ -2918,7 +2918,7 @@
     "contact": "",
     "portail": "",
     "lignes": "FRETIN à FRÉTHUN (LGV)",
-    "numero_ligne": "216000",
+    "numero_ligne": 216000,
     "pk": "113,453",
     "poste_latitude": "50.9083245",
     "poste_longitude": "1.8065524"
@@ -3071,7 +3071,7 @@
     "contact": "",
     "portail": "",
     "lignes": "LONGUEAU à BOULOGNE-VILLE",
-    "numero_ligne": "311000",
+    "numero_ligne": 311000,
     "pk": "248,537",
     "poste_latitude": "50.68354",
     "poste_longitude": "1.62416"
@@ -3139,7 +3139,7 @@
     "contact": "",
     "portail": "",
     "lignes": "FRETIN à FRÉTHUN (LGV)",
-    "numero_ligne": "216000",
+    "numero_ligne": 216000,
     "pk": "80,849",
     "poste_latitude": "50.84411",
     "poste_longitude": "2.19144"
@@ -3156,7 +3156,7 @@
     "contact": "",
     "portail": "",
     "lignes": "FRETIN à FRÉTHUN (LGV)",
-    "numero_ligne": "216000",
+    "numero_ligne": 216000,
     "pk": "",
     "poste_latitude": "50.84411",
     "poste_longitude": "2.19144"
@@ -3173,7 +3173,7 @@
     "contact": "",
     "portail": "",
     "lignes": "LONGUEAU à BOULOGNE-VILLE",
-    "numero_ligne": "311000",
+    "numero_ligne": 311000,
     "pk": "215,200",
     "poste_latitude": "50.4163991",
     "poste_longitude": "1.6480278"
@@ -3190,7 +3190,7 @@
     "contact": "",
     "portail": "",
     "lignes": "BOULOGNE-VILLE à CALAIS MARITIME",
-    "numero_ligne": "314000",
+    "numero_ligne": 314000,
     "pk": "291,503",
     "poste_latitude": "50.9316",
     "poste_longitude": "1.8449"
@@ -3207,7 +3207,7 @@
     "contact": "",
     "portail": "",
     "lignes": "BOULOGNE-VILLE à CALAIS MARITIME",
-    "numero_ligne": "314000",
+    "numero_ligne": 314000,
     "pk": "",
     "poste_latitude": "",
     "poste_longitude": ""
@@ -3224,7 +3224,7 @@
     "contact": "",
     "portail": "",
     "lignes": "BOULOGNE-VILLE à CALAIS MARITIME",
-    "numero_ligne": "314000",
+    "numero_ligne": 314000,
     "pk": "",
     "poste_latitude": "50.9317909",
     "poste_longitude": "1.8451904"
@@ -3241,7 +3241,7 @@
     "contact": "",
     "portail": "",
     "lignes": "FRETIN à FRÉTHUN (LGV)",
-    "numero_ligne": "216000",
+    "numero_ligne": 216000,
     "pk": "100,188",
     "poste_latitude": "50.8262393",
     "poste_longitude": "1.9289311"
@@ -3258,7 +3258,7 @@
     "contact": "",
     "portail": "",
     "lignes": "FRETIN à FRÉTHUN (LGV)",
-    "numero_ligne": "216000",
+    "numero_ligne": 216000,
     "pk": "100,188",
     "poste_latitude": "50.8262393",
     "poste_longitude": "1.9289311"
@@ -3275,7 +3275,7 @@
     "contact": "",
     "portail": "",
     "lignes": "FRETIN à FRÉTHUN (LGV)",
-    "numero_ligne": "216000",
+    "numero_ligne": 216000,
     "pk": "100,188",
     "poste_latitude": "50.8262393",
     "poste_longitude": "1.9289311"
@@ -3292,7 +3292,7 @@
     "contact": "",
     "portail": "",
     "lignes": "FRETIN à FRÉTHUN (LGV)",
-    "numero_ligne": "216000",
+    "numero_ligne": 216000,
     "pk": "100,188",
     "poste_latitude": "50.8262393",
     "poste_longitude": "1.9289311"
@@ -3312,7 +3312,7 @@
     "numero_ligne": 226000,
     "pk": "162,019",
     "poste_latitude": "50.30824",
-    "poste_longitude": " 2.89192"
+    "poste_longitude": "2.89192"
   },
   {
     "nom": "Roeux",
@@ -3377,7 +3377,7 @@
     "contact": "",
     "portail": "",
     "lignes": "PARIS-NORD à LILLE",
-    "numero_ligne": "27200",
+    "numero_ligne": 272000,
     "pk": "201,185",
     "poste_latitude": "50.30517",
     "poste_longitude": "2.90081"
@@ -3428,7 +3428,7 @@
     "contact": "",
     "portail": "",
     "lignes": "FIVES à MOUSCRON",
-    "numero_ligne": "278000",
+    "numero_ligne": 278000,
     "pk": "11,450",
     "poste_latitude": "50.71051",
     "poste_longitude": "3.16268"
@@ -3445,7 +3445,7 @@
     "contact": "",
     "portail": "Badge Eurotunnel obligatoire",
     "lignes": "BOULOGNE-VILLE à CALAIS MARITIME",
-    "numero_ligne": "314000",
+    "numero_ligne": 314000,
     "pk": "289,500",
     "poste_latitude": "50.9144202",
     "poste_longitude": "1.8116308"
@@ -3462,7 +3462,7 @@
     "contact": "",
     "portail": "Badge Eurotunnel obligatoire",
     "lignes": "BOULOGNE-VILLE à CALAIS MARITIME",
-    "numero_ligne": "314000",
+    "numero_ligne": 314000,
     "pk": "",
     "poste_latitude": "50.9137055",
     "poste_longitude": "1.8101758"
@@ -3479,7 +3479,7 @@
     "contact": "",
     "portail": "Badge Eurotunnel obligatoire",
     "lignes": "BOULOGNE-VILLE à CALAIS MARITIME",
-    "numero_ligne": "314000",
+    "numero_ligne": 314000,
     "pk": "",
     "poste_latitude": "50.9138959",
     "poste_longitude": "1.8111583"
@@ -3496,7 +3496,7 @@
     "contact": "",
     "portail": "Badge Eurotunnel obligatoire",
     "lignes": "BOULOGNE-VILLE à CALAIS MARITIME",
-    "numero_ligne": "314000",
+    "numero_ligne": 314000,
     "pk": "",
     "poste_latitude": "50.9154433",
     "poste_longitude": "1.8141352"
@@ -3513,7 +3513,7 @@
     "contact": "",
     "portail": "Badge Eurotunnel obligatoire",
     "lignes": "BOULOGNE-VILLE à CALAIS MARITIME",
-    "numero_ligne": "314000",
+    "numero_ligne": 314000,
     "pk": "",
     "poste_latitude": "50.9167565",
     "poste_longitude": "1.8162583"
@@ -3530,7 +3530,7 @@
     "contact": "",
     "portail": "Badge Eurotunnel obligatoire",
     "lignes": "BOULOGNE-VILLE à CALAIS MARITIME",
-    "numero_ligne": "314000",
+    "numero_ligne": 314000,
     "pk": "",
     "poste_latitude": "50.9169776",
     "poste_longitude": "1.8161042"
@@ -3564,8 +3564,8 @@
     "contact": "",
     "portail": "",
     "lignes": "LILLE à LES FONTINETTES",
-    "numero_ligne": "295000",
-    "pk": "77,855 ",
+    "numero_ligne": 295000,
+    "pk": "77,855",
     "poste_latitude": "50.84457",
     "poste_longitude": "2.19484"
   },
@@ -3615,7 +3615,7 @@
     "contact": "",
     "portail": "",
     "lignes": "LILLE à LES FONTINETTES",
-    "numero_ligne": "295000",
+    "numero_ligne": 295000,
     "pk": "66,352",
     "poste_latitude": "50.7558154",
     "poste_longitude": "2.2620473"
@@ -3632,7 +3632,7 @@
     "contact": "",
     "portail": "",
     "lignes": "LILLE à LES FONTINETTES",
-    "numero_ligne": "295000",
+    "numero_ligne": 295000,
     "pk": "",
     "poste_latitude": "50.7508005",
     "poste_longitude": "2.27643"
@@ -3649,7 +3649,7 @@
     "contact": "",
     "portail": "",
     "lignes": "LILLE à LES FONTINETTES",
-    "numero_ligne": "295000",
+    "numero_ligne": 295000,
     "pk": "",
     "poste_latitude": "50.7518093",
     "poste_longitude": "2.272768"
@@ -3666,7 +3666,7 @@
     "contact": "",
     "portail": "",
     "lignes": "LILLE à LES FONTINETTES",
-    "numero_ligne": "295000",
+    "numero_ligne": 295000,
     "pk": "",
     "poste_latitude": "50.7580464",
     "poste_longitude": "2.2580918"
@@ -3894,7 +3894,7 @@
   },
   {
     "nom": "Terres Noires",
-    "type": "SST ",
+    "type": "SST",
     "SAT": "",
     "accès": "",
     "latitude": 50.3617,
@@ -3938,7 +3938,7 @@
     "contact": "Agent E : 03 20 11 68 07  03 20 11 68 20",
     "portail": "",
     "lignes": "FIVES à MOUSCRON",
-    "numero_ligne": "278000",
+    "numero_ligne": 278000,
     "pk": "13,090",
     "poste_latitude": "50.7185346",
     "poste_longitude": "3.1778003"
@@ -3955,7 +3955,7 @@
     "contact": "",
     "portail": "",
     "lignes": "FIVES à MOUSCRON",
-    "numero_ligne": "278000",
+    "numero_ligne": 278000,
     "pk": "14,394",
     "poste_latitude": "50.7213464",
     "poste_longitude": "3.1943516"
@@ -4159,7 +4159,7 @@
     "contact": "",
     "portail": "",
     "lignes": "HIRSON à AMAGNE-LUCQUY",
-    "numero_ligne": "212000",
+    "numero_ligne": 212000,
     "pk": "22,516",
     "poste_latitude": "49.79969",
     "poste_longitude": "4.29321"
