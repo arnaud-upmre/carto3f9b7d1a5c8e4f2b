@@ -4537,5 +4537,22 @@
     "pk": "215,499",
     "poste_latitude": "50.19675",
     "poste_longitude": "3.84174"
+  },
+  {
+    "nom": "Landrecies",
+    "type": "SP",
+    "SAT": "",
+    "accès": "",
+    "latitude": 50.11949,
+    "longitude": 3.66436,
+    "description": "",
+    "rss": "B",
+    "contact": "",
+    "portail": "",
+    "lignes": "CREIL à JEUMONT",
+    "numero_ligne": 242000,
+    "pk": "199,837",
+    "poste_latitude": "50.11891",
+    "poste_longitude": "3.66562"
   }
 ]
