@@ -259,8 +259,8 @@
     "type": "SSP",
     "SAT": "",
     "accès": "",
-    "latitude": 50.61734,
-    "longitude": 3.26365,
+    "latitude": 50.6167,
+    "longitude": 3.2631,
     "description": "",
     "rss": "A",
     "contact": "",
@@ -268,8 +268,8 @@
     "lignes": "FIVES à BAISIEUX",
     "numero_ligne": 269000,
     "pk": "14,602",
-    "poste_latitude": "",
-    "poste_longitude": ""
+    "poste_latitude": "50.6174",
+    "poste_longitude": "3.26319"
   },
   {
     "nom": "Berlaimont",
