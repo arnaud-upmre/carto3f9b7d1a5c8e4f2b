@@ -30,8 +30,8 @@
     "lignes": "BUSIGNY à SOMAIN",
     "numero_ligne": 250000,
     "pk": "230,460",
-    "poste_latitude": "",
-    "poste_longitude": ""
+    "poste_latitude": "50.35576",
+    "poste_longitude": "3.28792"
   },
   {
     "nom": "Achiet",
@@ -47,8 +47,8 @@
     "lignes": "PARIS-NORD à LILLE",
     "numero_ligne": 272000,
     "pk": "174,750",
-    "poste_latitude": "",
-    "poste_longitude": ""
+    "poste_latitude": "50.13921",
+    "poste_longitude": "2.78181"
   },
   {
     "nom": "Alleux",
@@ -251,8 +251,8 @@
     "lignes": "ARRAS à DUNKERQUE",
     "numero_ligne": 301000,
     "pk": "200,290",
-    "poste_latitude": "",
-    "poste_longitude": ""
+    "poste_latitude": "50.3351",
+    "poste_longitude": "2.84087"
   },
   {
     "nom": "Baisieux",
@@ -285,8 +285,8 @@
     "lignes": "FIVES à HIRSON ",
     "numero_ligne": 267000,
     "pk": "77,312",
-    "poste_latitude": "",
-    "poste_longitude": ""
+    "poste_latitude": "50.20385",
+    "poste_longitude": "3.78801"
   },
   {
     "nom": "Bethune",
@@ -437,9 +437,9 @@
     "portail": "",
     "lignes": "PARIS-NORD à LILLE",
     "numero_ligne": 272000,
-    "pk": "183,080",
-    "poste_latitude": "",
-    "poste_longitude": ""
+    "pk": "200,0290",
+    "poste_latitude": "50.21049",
+    "poste_longitude": "2.77185"
   },
   {
     "nom": "Boisleux",
@@ -582,8 +582,8 @@
     "type": "SST",
     "SAT": "",
     "accès": "",
-    "latitude": 50.0547,
-    "longitude": 3.458062,
+    "latitude": 50.04771,
+    "longitude": 3.45259,
     "description": "",
     "rss": "B",
     "contact": "",
@@ -591,8 +591,8 @@
     "lignes": "CREIL à JEUMONT",
     "numero_ligne": 242000,
     "pk": "182,251",
-    "poste_latitude": "",
-    "poste_longitude": ""
+    "poste_latitude": "50.05486",
+    "poste_longitude": "3.45816"
   },
   {
     "nom": "Caffiers",
@@ -1517,17 +1517,17 @@
     "type": "SST",
     "SAT": "",
     "accès": "",
-    "latitude": 50.02215,
-    "longitude": 4.052668,
+    "latitude": 50.02076,
+    "longitude": 4.05295,
     "description": "",
     "rss": "B",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
-    "pk": "",
-    "poste_latitude": "",
-    "poste_longitude": ""
+    "lignes": "FIVES à HIRSON",
+    "numero_ligne": 267000,
+    "pk": "108,0934",
+    "poste_latitude": "50.02229",
+    "poste_longitude": "4.05258"
   },
   {
     "nom": "Gannes",
@@ -2900,11 +2900,11 @@
     "rss": "B",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
-    "pk": "",
-    "poste_latitude": "",
-    "poste_longitude": ""
+    "lignes": "PARIS-NORD à LILLE",
+    "numero_ligne": 272000,
+    "pk": "227,400",
+    "poste_latitude": "50.44795",
+    "poste_longitude": "3.0281"
   },
   {
     "nom": "Pays Blanc",
