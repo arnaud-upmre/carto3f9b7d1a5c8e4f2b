@@ -3111,7 +3111,7 @@
     "poste_longitude": "2.2758493"
   },
   {
-    "nom": "Quévy",
+    "nom": "Quevy",
     "type": "SSPA",
     "SAT": "",
     "accès": "",
@@ -3121,9 +3121,9 @@
     "rss": "B",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
-    "pk": "",
+    "lignes": "HAUTMONT à FEIGNIES (Frontière) et MONS",
+    "numero_ligne": "247000",
+    "pk": "233,017",
     "poste_latitude": "50.3398621",
     "poste_longitude": "3.9095434"
   },
@@ -4469,5 +4469,39 @@
     "pk": "237,867",
     "poste_latitude": "50.29163",
     "poste_longitude": "4.07655"
+  },
+  {
+    "nom": "Sambre",
+    "type": "A",
+    "SAT": "",
+    "accès": "",
+    "latitude": 50.22326,
+    "longitude": 3.88161,
+    "description": "",
+    "rss": "B",
+    "contact": "",
+    "portail": "",
+    "lignes": "CREIL à JEUMONT",
+    "numero_ligne": 242000,
+    "pk": "219,684",
+    "poste_latitude": "50.22362",
+    "poste_longitude": "3.8824"
+  },
+  {
+    "nom": "Avesnes",
+    "type": "SSP",
+    "SAT": "",
+    "accès": "",
+    "latitude": 50.12665,
+    "longitude": 3.93313,
+    "description": "",
+    "rss": "B",
+    "contact": "",
+    "portail": "",
+    "lignes": "FIVES à HIRSON ",
+    "numero_ligne": 267000,
+    "pk": "93,707",
+    "poste_latitude": "50.1266",
+    "poste_longitude": "3.93351"
   }
 ]
