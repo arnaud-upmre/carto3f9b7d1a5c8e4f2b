@@ -1662,8 +1662,8 @@
     "lignes": "PARIS-NORD à LILLE",
     "numero_ligne": 272000,
     "pk": "228,600",
-    "poste_latitude": "",
-    "poste_longitude": ""
+    "poste_latitude": "50.45662",
+    "poste_longitude": "3.01419"
   },
   {
     "nom": "Haute Loge",
@@ -1772,17 +1772,17 @@
     "type": "SST",
     "SAT": "",
     "accès": "",
-    "latitude": 50.2654,
-    "longitude": 3.930395,
+    "latitude": 50.26566,
+    "longitude": 3.93299,
     "description": "",
     "rss": "B",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
-    "pk": "",
-    "poste_latitude": "",
-    "poste_longitude": ""
+    "lignes": "CREIL à JEUMONT",
+    "numero_ligne": 242000,
+    "pk": "225,0591",
+    "poste_latitude": "50.26534",
+    "poste_longitude": "3.93034"
   },
   {
     "nom": "Hazebrouck (Équipe)",
