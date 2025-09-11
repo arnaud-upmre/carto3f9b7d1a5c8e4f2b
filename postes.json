@@ -506,8 +506,8 @@
     "lignes": "ARRAS à DUNKERQUE",
     "numero_ligne": 301000,
     "pk": "211,700",
-    "poste_latitude": "",
-    "poste_longitude": ""
+    "poste_latitude": "50.42869",
+    "poste_longitude": "2.82333"
   },
   {
     "nom": "Botiaux",
@@ -2231,17 +2231,17 @@
     "type": "SSPA",
     "SAT": "",
     "accès": "",
-    "latitude": 50.41635,
-    "longitude": 2.84638,
+    "latitude": 50.41642,
+    "longitude": 2.84613,
     "description": "",
     "rss": "C",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
-    "pk": "",
-    "poste_latitude": "",
-    "poste_longitude": ""
+    "lignes": "ARRAS à DUNKERQUE",
+    "numero_ligne": 301000,
+    "pk": "210,0310",
+    "poste_latitude": "50.41647",
+    "poste_longitude": "2.84592"
   },
   {
     "nom": "Lesquin",
