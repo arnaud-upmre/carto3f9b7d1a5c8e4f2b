@@ -2592,8 +2592,8 @@
   {
     "nom": "Lesquin",
     "type": "SP",
-    "SAT": "",
-    "accès": "",
+    "SAT": "SAT1",
+    "accès": "I14",
     "appareil": "I14",
     "latitude": 50.5929888,
     "longitude": 3.1163097,
@@ -2622,8 +2622,8 @@
   {
     "nom": "Lesquin",
     "type": "SP",
-    "SAT": "",
-    "accès": "",
+    "SAT": "SAT1",
+    "accès": "I18",
     "appareil": "I18",
     "latitude": 50.5938779,
     "longitude": 3.1155443,
