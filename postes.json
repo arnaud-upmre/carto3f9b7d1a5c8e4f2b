@@ -3540,8 +3540,8 @@
     "type": "SP",
     "SAT": "",
     "accès": "",
-    "latitude": 50.56515,
-    "longitude": 3.312072,
+    "latitude": 50.56443,
+    "longitude": 3.31106,
     "description": "Clé spécifique",
     "rss": "A",
     "contact": "",
@@ -3549,8 +3549,8 @@
     "lignes": "GONESSE à LILLE-FRONTIERE (LGV)",
     "numero_ligne": 226000,
     "pk": "2,535",
-    "poste_latitude": "",
-    "poste_longitude": ""
+    "poste_latitude": "50.565",
+    "poste_longitude": "3.31384"
   },
   {
     "nom": "Ruminghem",
