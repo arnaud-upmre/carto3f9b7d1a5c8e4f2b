@@ -3053,9 +3053,9 @@
     "rss": "B",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
-    "pk": "",
+    "lignes": "PARIS-NORD à LILLE",
+    "numero_ligne": 272000,
+    "pk": "236,0522",
     "poste_latitude": "50.5242462",
     "poste_longitude": "3.0229981"
   },
