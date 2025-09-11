@@ -2656,17 +2656,17 @@
     "type": "SP",
     "SAT": "",
     "accès": "",
-    "latitude": 50.23186,
-    "longitude": 2.77589,
+    "latitude": 50.23139,
+    "longitude": 2.77734,
     "description": "",
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
-    "pk": "",
-    "poste_latitude": "",
-    "poste_longitude": ""
+    "lignes": "Raccordement d'ARRAS-SUD",
+    "numero_ligne": "226306",
+    "pk": "8,055",
+    "poste_latitude": "50.23185",
+    "poste_longitude": "2.77582"
   },
   {
     "nom": "Mercatel",
@@ -2679,8 +2679,8 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
+    "lignes": "Raccordement d'ARRAS-SUD",
+    "numero_ligne": "226306",
     "pk": "",
     "poste_latitude": "",
     "poste_longitude": ""
@@ -3716,11 +3716,11 @@
     "rss": "B",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
-    "pk": "",
-    "poste_latitude": "",
-    "poste_longitude": ""
+    "lignes": "CREIL à JEUMONT",
+    "numero_ligne": 242000,
+    "pk": "213,812",
+    "poste_latitude": "50.18895",
+    "poste_longitude": "3.82401"
   },
   {
     "nom": "Seclin",
@@ -3784,11 +3784,11 @@
     "rss": "B",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
-    "pk": "",
-    "poste_latitude": "",
-    "poste_longitude": ""
+    "lignes": "SAINT-JUST à DOUAI",
+    "numero_ligne": "259000",
+    "pk": "217,016",
+    "poste_latitude": "50.35807",
+    "poste_longitude": "3.10542"
   },
   {
     "nom": "Somain",
@@ -3903,11 +3903,11 @@
     "rss": "B",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
-    "pk": "",
-    "poste_latitude": "",
-    "poste_longitude": ""
+    "lignes": "DOUAI à BLANC-MISSERON",
+    "numero_ligne": "262000",
+    "pk": "219,154",
+    "poste_latitude": "50.35941",
+    "poste_longitude": "3.13492"
   },
   {
     "nom": "Thiennes",
