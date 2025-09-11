@@ -4503,5 +4503,39 @@
     "pk": "93,707",
     "poste_latitude": "50.1266",
     "poste_longitude": "3.93351"
+  },
+  {
+    "nom": "Bachant",
+    "type": "A",
+    "SAT": "",
+    "accès": "",
+    "latitude": 50.20737,
+    "longitude": 3.85838,
+    "description": "",
+    "rss": "B",
+    "contact": "",
+    "portail": "",
+    "lignes": "CREIL à JEUMONT",
+    "numero_ligne": 242000,
+    "pk": "217,203",
+    "poste_latitude": "50.20713",
+    "poste_longitude": "3.85922"
+  },
+  {
+    "nom": "Aulnoye",
+    "type": "SSPA",
+    "SAT": "",
+    "accès": "",
+    "latitude": 50.19668,
+    "longitude": 3.8415,
+    "description": "",
+    "rss": "B",
+    "contact": "",
+    "portail": "",
+    "lignes": "CREIL à JEUMONT",
+    "numero_ligne": 242000,
+    "pk": "215,499",
+    "poste_latitude": "50.19675",
+    "poste_longitude": "3.84174"
   }
 ]
