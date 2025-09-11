@@ -214,11 +214,11 @@
     "rss": "C",
     "contact": "",
     "portail": "",
-    "lignes": "LENS à OSTRICOURT",
-    "numero_ligne": 284000,
-    "pk": "",
-    "poste_latitude": "",
-    "poste_longitude": ""
+    "lignes": "ARRAS à DUNKERQUE",
+    "numero_ligne": 301000,
+    "pk": "211,0200",
+    "poste_latitude": "50.40688",
+    "poste_longitude": "2.85223"
   },
   {
     "nom": "Audruicq",
@@ -2220,11 +2220,11 @@
     "rss": "C",
     "contact": "Agent E :  03 21 79 73 54",
     "portail": "2025",
-    "lignes": "",
-    "numero_ligne": "",
-    "pk": "",
-    "poste_latitude": "",
-    "poste_longitude": ""
+    "lignes": "ARRAS à DUNKERQUE",
+    "numero_ligne": 301000,
+    "pk": "210,820",
+    "poste_latitude": "50.42403",
+    "poste_longitude": "2.83406"
   },
   {
     "nom": "Lens",
@@ -4452,5 +4452,22 @@
     "pk": "201,394",
     "poste_latitude": "50.55695",
     "poste_longitude": "3.11728"
+  },
+  {
+    "nom": "Jeumont",
+    "type": "SSPA",
+    "SAT": "",
+    "accès": "",
+    "latitude": 50.29047,
+    "longitude": 4.07505,
+    "description": "",
+    "rss": "B",
+    "contact": "",
+    "portail": "",
+    "lignes": "CREIL à JEUMONT",
+    "numero_ligne": 242000,
+    "pk": "237,867",
+    "poste_latitude": "50.29163",
+    "poste_longitude": "4.07655"
   }
 ]
