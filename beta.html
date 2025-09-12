@@ -144,13 +144,14 @@ ul#suggestions:not(:empty){
     box-shadow: 0 6px 20px rgba(0,0,0,0.6);
   }
 }
-h2, p[style*="Repérer le poste"], 
-p[style*="Repérer l’accès"], 
-p[style*="Itinéraires disponibles"] {
-  display: flex;
-  align-items: center;       /* centre verticalement l’emoji et le texte */
-  justify-content: center;   /* centre horizontalement */
-  gap: 6px;                  /* petit espace entre l’emoji et le texte */
+/* Centrer proprement les titres "Repérer..." */
+.rep-block {
+  text-align: center;
+  margin: 1.5rem 0 0.5rem 0;
+}
+.rep-block p {
+  font-weight: 600;
+  margin: 0 0 6px 0;
 }
     
 </style>
@@ -237,12 +238,13 @@ input[type="text"] {
       font-size: 15px;
       line-height: 1.5;
     }
-    #result h2 {
-      margin-top: 0;
-      font-size: 22px;
-      font-weight: 700;
-      color: #1a73e8;
-    }
+#result h2 {
+  margin-top: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: #1a73e8;
+  text-align: left;   /* ✅ remet le titre à gauche */
+}
 
     /* ——— Uniformiser exactement la largeur avec le champ ——— */
 #search,
@@ -938,9 +940,9 @@ let html = `<h2>
   <a href="#" id="edit-toggle">[modifier]</a>
 </h2>
 
-<div style="text-align:center; margin:1.5rem 0 0.5rem 0;">
-  <p style="font-weight:600; margin:0;">⚡️ Repérer le poste :</p>
-  <div class="inline-links pills-3" style="margin-top:6px;">
+<div class="rep-block">
+  <p>⚡️ Repérer le poste :</p>
+  <div class="inline-links pills-3">
     <a href="${urlMyMapsPoste}" target="_blank" rel="noopener">🛰️ Vue satellite</a>
   </div>
 </div>
@@ -1606,7 +1608,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V2</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V3</span>
 </div>
 
 <script>
