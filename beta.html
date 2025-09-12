@@ -1382,6 +1382,10 @@ document.addEventListener("click", function(e){
         const el = document.getElementById(id);
         el.classList.add("editable-halo");
       });
+
+      // ✅ affiche directement les boutons
+      document.getElementById("edit-buttons").style.display = "flex";
+
       navigator.vibrate?.(80);
     }
   }
@@ -1435,7 +1439,7 @@ function quitEditMode(nom, type){
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V3</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V4</span>
 </div>
 
 <script>
