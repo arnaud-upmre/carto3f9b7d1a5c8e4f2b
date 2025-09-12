@@ -1609,9 +1609,15 @@ originalValues.rss = val; // "Table 1", "Table 2", "Table 3"
 if (editMode && (e.target.id === "editable-description" || e.target.closest("#editable-description"))) {
   const parent = document.getElementById("editable-description").parentNode;
   const spanVal = parent.querySelector(".desc-value");
-  const currentVal = spanVal ? spanVal.textContent.trim() : "";
+  const spanPh  = parent.querySelector(".placeholder");
 
-  spanVal.outerHTML = `<textarea id="input-description" style="width:100%; min-height:60px; border:2px solid #1a73e8; padding:4px; border-radius:6px;">${currentVal}</textarea>`;
+  const currentVal = spanVal ? spanVal.textContent.trim() : (spanPh ? "" : "");
+
+  // Remplace le span ou le placeholder par un textarea
+  const target = spanVal || spanPh;
+  if (target) {
+    target.outerHTML = `<textarea id="input-description" style="width:100%; min-height:60px; border:2px solid #1a73e8; padding:4px; border-radius:6px;">${currentVal}</textarea>`;
+  }
 
   document.getElementById("edit-buttons").style.display = "block";
   navigator.vibrate?.(50);
