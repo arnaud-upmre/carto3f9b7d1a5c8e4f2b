@@ -1606,26 +1606,29 @@ document.getElementById("btn-save").addEventListener("click", function(){
   const newSat   = document.getElementById("input-sat")?.value   || originalValues.sat || "";
   const newAcces = document.getElementById("input-acces")?.value || originalValues.acces || "";
 
-const demandeur = getDemandeur();
-const ficheOrigine = currentItem
-  ? `${currentItem.nom || ''} ${currentItem.type || ''} ${currentItem.SAT || ''} ${currentItem.accès || ''}`.trim()
-  : "";
+  const demandeur = getDemandeur();
+  const ficheOrigine = currentItem
+    ? `${currentItem.nom || ''} ${currentItem.type || ''} ${currentItem.SAT || ''} ${currentItem.accès || ''}`.trim()
+    : "";
 
-fetch("https://script.google.com/macros/s/AKfycbyxh3HGR6iHcn0ynwfGzSzOm5Djc7o2e1uA4dvdPurolDerZlNiARcpsiY4daDRPSV1tw/exec", {
+  // ✅ Ne garde que les vraies modifications
+  const payload = {
+    demandeur,
+    ficheOrigine
+  };
+
+  if (newNom !== originalValues.nom) payload.nom = newNom;
+  if (newType !== originalValues.type) payload.type = newType;
+  if (newSat !== (originalValues.sat || "")) payload.sat = newSat;
+  if (newAcces !== (originalValues.acces || "")) payload.acces = newAcces;
+  if (originalValues.rss) payload.rss = originalValues.rss;
+
+  fetch("https://script.google.com/macros/s/AKfycbyxh3HGR6iHcn0ynwfGzSzOm5Djc7o2e1uA4dvdPurolDerZlNiARcpsiY4daDRPSV1tw/exec", {
     method: "POST",
     mode: "no-cors",
     headers: { "Content-Type": "application/json" },
-body: JSON.stringify({
-  demandeur,
-  ficheOrigine,
-  nom: newNom,
-  type: newType,
-  sat: newSat,
-  acces: newAcces,
-  rss: originalValues.rss || ""   // ✅ ajout ici
-})
-})
-  
+    body: JSON.stringify(payload)
+  })
   .then(() => {
     showNotification("✅ Modification envoyée (en attente d’approbation)", "success");
     quitEditMode(newNom, newType, newSat, newAcces);
