@@ -148,14 +148,14 @@ ul#suggestions:not(:empty){
 .rep-block{
   display:flex;
   flex-direction:column;
-  align-items:center;          /* centre le texte + le bouton */
+  align-items:center; /* centre le texte + le bouton */
   margin:1.5rem 0 .5rem 0;
 }
 .rep-block p{
-  display:inline-flex;         /* aligne ⚡️ avec le texte */
+  display:inline-flex;
   justify-content:center;
   align-items:center;
-  font-weight:600;             /* gras */
+  font-weight:600;
   gap:6px;
   margin:0 0 6px 0;
 }
@@ -945,7 +945,9 @@ let html = `<h2>
   <a href="#" id="edit-toggle">[modifier]</a>
 </h2>
 
-<p style="text-align:center; font-weight:600; margin:1.5rem 0 0.5rem 0;">Repérer le poste :</p>
+<div class="rep-block">
+  <p>⚡️ Repérer le poste :</p>
+</div>
 <div class="inline-links pills-3">
   <a href="${urlMyMapsPoste}" target="_blank" rel="noopener">🛰️ Vue satellite</a>
 </div>
@@ -1611,7 +1613,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V6</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1</span>
 </div>
 
 <script>
