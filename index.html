@@ -644,14 +644,15 @@ function myMapsViewer(lat, lon, z = 19) {
 let proximiteIndex = 0;
 const PROX_STEP = 10;
 let proximiteSorted = [];
-  function formatContact(val) {
-  if (!val) return "";
+    
+function formatContact(val) {
+  if (!val) return `<p><strong id="editable-contact">👤 Contact :</strong> <span class="placeholder">(non renseigné)</span></p>`;
 
   const phoneRegex = /\d{2}\s?\d{2}\s?\d{2}\s?\d{2}\s?\d{2}/g;
   const matches = val.match(phoneRegex);
 
   if (!matches) {
-    return `<p><strong>👤 Contact :</strong> ${val}</p>`;
+    return `<p><strong id="editable-contact">👤 Contact :</strong> ${val}</p>`;
   }
 
   const texteSansNum = val.replace(phoneRegex, "").trim();
@@ -659,43 +660,36 @@ let proximiteSorted = [];
   const boutons = matches.map(num => {
     const cleaned = num.replace(/\s+/g, "");
     return `<a href="tel:${cleaned}">${num}</a>`;
-  }).join("");
+  }).join(" ");
 
-  return `<p><strong>👤 Contact :</strong> ${texteSansNum}</p>
-          <div class="inline-links">${boutons}</div>`;
+  return `<p><strong id="editable-contact">👤 Contact :</strong> ${texteSansNum} ${boutons}</p>`;
 }
 
 function formatPortail(val) {
-  if (!val) return "";
+  if (!val) return `<p><strong id="editable-portail">🚧 Portail :</strong> <span class="placeholder">(non renseigné)</span></p>`;
 
   // Cherche une URL dans la chaîne
   const urlRegex = /(https?:\/\/[^\s]+)/;
   const urlMatch = val.match(urlRegex);
   const video = urlMatch ? urlMatch[0] : null;
 
-  // Le "code" = tout ce qui n'est pas l'URL
   const code = val.replace(urlRegex, "").trim();
 
-  // Regex stricte : numéros français 10 chiffres (avec ou sans espaces) + extensions DTMF
   const phoneRegex = /^(\d{10}|\d{2}(\s?\d{2}){4})([,\;\*#0-9]*)?$/;
-
   let content = "";
 
   if (phoneRegex.test(code)) {
     const cleaned = code.replace(/\s+/g, "");
-    // ✅ on garde inline-links mais en <span>
-    content = `<span class="inline-links" style="display:inline-block; margin-left:6px;">
-                 <a href="tel:${cleaned}">${code}</a>
-               </span>`;
+    content = `<a href="tel:${cleaned}">${code}</a>`;
   } else {
     content = code;
   }
 
   if (video) {
-content += ` <a href="${video}" target="_blank" rel="noopener" class="inline-link">▶️ Explication</a>`;
+    content += ` <a href="${video}" target="_blank" rel="noopener">▶️ Explication</a>`;
   }
 
-  return `<p><strong>🚧 Portail :</strong> ${content}</p>`;
+  return `<p><strong id="editable-portail">🚧 Portail :</strong> ${content}</p>`;
 }
   
 function normalize(str) {
@@ -1625,8 +1619,8 @@ if (e.target.id === "editable-description") {
 }
 
 if (e.target.id === "editable-contact") {
-  const parent = e.target.parentNode; // <p>
-  const val = parent.querySelector(".contact-value")?.textContent.trim() || "";
+  const parent = e.target.parentNode;
+  const val = parent.textContent.replace("👤 Contact :", "").trim();
   parent.innerHTML = `
     <strong id="editable-contact">👤 Contact :</strong>
     <input type="text" id="input-contact" value="${val}" 
@@ -1638,12 +1632,12 @@ if (e.target.id === "editable-contact") {
 }
 
 if (e.target.id === "editable-portail") {
-  const parent = e.target.parentNode; // <p>
-  const val = parent.querySelector(".portail-value")?.textContent.trim() || "";
+  const parent = e.target.parentNode;
+  const val = parent.textContent.replace("🚧 Portail :", "").trim();
   parent.innerHTML = `
     <strong id="editable-portail">🚧 Portail :</strong>
     <input type="text" id="input-portail" value="${val}" 
-      style="border:2px solid #1a73e8; padding:3px; border-radius:6px; width:auto; display:inline-block; margin-left:6px;" />
+      style="border:2px solid #1a73e8; padding:3px; border-radius:6px; margin-left:6px; width:80%;" />
   `;
   document.getElementById("edit-buttons").style.display = "block";
   navigator.vibrate?.(50);
@@ -1752,14 +1746,12 @@ function quitEditMode(nom, type, sat = "", acces = ""){
   }
 if (document.getElementById("editable-contact")) {
   document.getElementById("editable-contact").parentNode.outerHTML =
-    formatContact(originalValues.contact) ||
-    `<p><strong id="editable-contact">👤 Contact :</strong> <span class="placeholder">(non renseigné)</span></p>`;
+    formatContact(originalValues.contact);
 }
 
 if (document.getElementById("editable-portail")) {
   document.getElementById("editable-portail").parentNode.outerHTML =
-    formatPortail(originalValues.portail) ||
-    `<p><strong id="editable-portail">🚧 Portail :</strong> <span class="placeholder">(non renseigné)</span></p>`;
+    formatPortail(originalValues.portail);
 }
   
   editMode = false;
@@ -1788,7 +1780,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V2</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V5</span>
 </div>
 
 <script>
