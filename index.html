@@ -1007,18 +1007,14 @@ if (lieu.rss) {
   blocs.push(formatRSS(lieu.rss));
 }
 
-// Informations générales + Description (même ligne)
-blocs.push(`<p><strong>ℹ️ Informations :</strong> <span id="editable-description">${lieu.description || '<span class="placeholder">(non renseigné)</span>'}</span></p>`);
-  
+// Informations
+blocs.push(`<p><strong id="editable-description">ℹ️ Informations :</strong> <span class="desc-value">${lieu.description || '<span class="placeholder">(non renseigné)</span>'}</span></p>`);
+
 // Contact
-blocs.push(`${lieu.contact 
-  ? formatContact(lieu.contact).replace("<p", "<p id='editable-contact'") 
-  : '<p id="editable-contact"><strong>👤 Contact :</strong> <span class="placeholder">(non renseigné) - Ex : Agent E : 03 28....</span></p>'}`);
+blocs.push(`<p><strong id="editable-contact">👤 Contact :</strong> <span class="contact-value">${lieu.contact || '<span class="placeholder">(non renseigné)</span>'}</span></p>`);
 
 // Portail
-blocs.push(`${lieu.portail 
-  ? formatPortail(lieu.portail).replace("<p", "<p id='editable-portail'") 
-  : '<p id="editable-portail"><strong>🚧 Portail :</strong> <span class="placeholder">(non renseigné) - Ex : Code 1212#</span></p>'}`);
+blocs.push(`<p><strong id="editable-portail">🚧 Portail :</strong> <span class="portail-value">${lieu.portail || '<span class="placeholder">(non renseigné)</span>'}</span></p>`);
   
   if (blocs.length > 0) {
     html += `<hr class="separator" />` +
@@ -1603,32 +1599,36 @@ originalValues.rss = val; // "Table 1", "Table 2", "Table 3"
     
       return; // on sort ici pour ne pas exécuter le reste
     }
-    // Cas spécial Description (textarea multi-ligne)
-    if (e.target.id === "editable-description") {
-      const currentVal = e.target.textContent.trim();
-      e.target.innerHTML = `<textarea id="input-description" style="width:100%; min-height:60px; border:2px solid #1a73e8; padding:4px; border-radius:6px;">${currentVal}</textarea>`;
-      document.getElementById("edit-buttons").style.display = "block";
-      navigator.vibrate?.(50);
-      return;
-    }
+  
+// Description
+if (e.target.id === "editable-description") {
+  const span = e.target.parentNode.querySelector(".desc-value");
+  const currentVal = span ? span.textContent.trim() : "";
+  span.outerHTML = `<textarea id="input-description" style="width:100%; min-height:60px; border:2px solid #1a73e8; padding:4px; border-radius:6px;">${currentVal}</textarea>`;
+  document.getElementById("edit-buttons").style.display = "block";
+  navigator.vibrate?.(50);
+  return;
+}
 
-    // Cas spécial Contact (input)
-    if (e.target.id === "editable-contact") {
-      const currentVal = e.target.textContent.replace("👤 Contact :","").trim();
-      e.target.innerHTML = `<input type="text" id="input-contact" value="${currentVal}" style="border:2px solid #1a73e8; padding:3px; border-radius:6px; width:100%;" />`;
-      document.getElementById("edit-buttons").style.display = "block";
-      navigator.vibrate?.(50);
-      return;
-    }
+// Contact
+if (e.target.id === "editable-contact") {
+  const span = e.target.parentNode.querySelector(".contact-value");
+  const currentVal = span ? span.textContent.trim() : "";
+  span.outerHTML = `<input type="text" id="input-contact" value="${currentVal}" style="border:2px solid #1a73e8; padding:3px; border-radius:6px; width:100%;" />`;
+  document.getElementById("edit-buttons").style.display = "block";
+  navigator.vibrate?.(50);
+  return;
+}
 
-    // Cas spécial Portail (input)
-    if (e.target.id === "editable-portail") {
-      const currentVal = e.target.textContent.replace("🚧 Portail :","").trim();
-      e.target.innerHTML = `<input type="text" id="input-portail" value="${currentVal}" style="border:2px solid #1a73e8; padding:3px; border-radius:6px; width:100%;" />`;
-      document.getElementById("edit-buttons").style.display = "block";
-      navigator.vibrate?.(50);
-      return;
-    }
+// Portail
+if (e.target.id === "editable-portail") {
+  const span = e.target.parentNode.querySelector(".portail-value");
+  const currentVal = span ? span.textContent.trim() : "";
+  span.outerHTML = `<input type="text" id="input-portail" value="${currentVal}" style="border:2px solid #1a73e8; padding:3px; border-radius:6px; width:100%;" />`;
+  document.getElementById("edit-buttons").style.display = "block";
+  navigator.vibrate?.(50);
+  return;
+}
   
     // Cas normal (nom, type, sat, accès)
     const field = e.target.id.replace("editable-","");
@@ -1762,7 +1762,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V2</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1</span>
 </div>
 
 <script>
