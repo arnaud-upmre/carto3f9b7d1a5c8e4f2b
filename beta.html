@@ -968,7 +968,7 @@ let html = `<h2>
 </div> <!-- ✅ fermeture manquante -->
 
 <div class="rep-block">
-  <p>🛣️ Repérer l’accès :</p>
+<p><span class="emoji">🛣️</span> Repérer l’accès :</p>
   <div class="inline-links pills-3">
     <a href="${myMapsViewer(lieu.latitude, lieu.longitude, 19)}" target="_blank" rel="noopener">🛰️ Vue satellite</a>
     <a href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">👁️ Street View</a>
@@ -976,7 +976,7 @@ let html = `<h2>
 </div>
 
 <div class="rep-block">
-  <p>🚙 Itinéraires disponibles :</p>
+<p><span class="emoji">🚙</span> Itinéraires disponibles :</p>
   <div class="inline-links pills-3">
     <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🗺️ Maps</a>
     <a href="https://maps.apple.com/?daddr=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🍎 Plans</a>
