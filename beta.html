@@ -905,8 +905,10 @@ const urlMyMapsPoste = myMapsViewer(targetLat, targetLon, 18);
 let html = `<h2>
   📍 <span id="editable-nom">${lieu.nom}</span> 
   <span id="editable-type">${lieu.type}</span>
-<a href="#" id="edit-toggle">[modifier]</a>
-</h2>
+  ${lieu.SAT ? `<span id="editable-sat"> ${lieu.SAT}</span>` : ""}
+  ${lieu.accès ? `<span id="editable-acces"> – accès ${lieu.accès}</span>` : ""}
+  <a href="#" id="edit-toggle">[modifier]</a>
+</h2>`;
 
 <p style="text-align:center; font-weight:600; margin:1.5rem 0 0.5rem 0;">🛣️ Repérer l’accès :</p>
 <div class="inline-links pills-3">
@@ -1436,26 +1438,30 @@ document.addEventListener("click", function(e){
       editMode = true;
       originalValues.nom = document.getElementById("editable-nom").textContent;
       originalValues.type = document.getElementById("editable-type").textContent;
+      if (document.getElementById("editable-sat")) {
+        originalValues.sat = document.getElementById("editable-sat").textContent.trim();
+      }
+      if (document.getElementById("editable-acces")) {
+        originalValues.acces = document.getElementById("editable-acces").textContent.replace("– accès ","").trim();
+      }
 
-      // Ajoute halo + vibration sur les zones modifiables
-      ["editable-nom","editable-type"].forEach(id=>{
+      // Ajoute halo + vibration sur les zones modifiables existantes
+      ["editable-nom","editable-type","editable-sat","editable-acces"].forEach(id=>{
         const el = document.getElementById(id);
-        el.classList.add("editable-halo");
+        if (el) el.classList.add("editable-halo");
       });
 
-      // ✅ affiche directement les boutons
       document.getElementById("edit-buttons").style.display = "flex";
-
       navigator.vibrate?.(80);
     }
   }
 });
 
-// Quand on clique sur une zone modifiable (nom ou type)
+// Quand on clique sur une zone modifiable
 document.addEventListener("click", function(e){
-  if (editMode && (e.target.id === "editable-nom" || e.target.id === "editable-type")) {
+  if (editMode && ["editable-nom","editable-type","editable-sat","editable-acces"].includes(e.target.id)) {
     const field = e.target.id.replace("editable-","");
-    const currentVal = e.target.textContent;
+    let currentVal = e.target.textContent.replace("– accès ","").trim();
     e.target.innerHTML = `<input type="text" id="input-${field}" value="${currentVal}" style="border:2px solid #1a73e8; padding:3px; border-radius:6px;" />`;
     document.getElementById("edit-buttons").style.display = "block";
     navigator.vibrate?.(50);
@@ -1468,18 +1474,20 @@ document.getElementById("btn-save").addEventListener("click", function(){
   btnSave.disabled = true;
   btnSave.textContent = "⏳ Envoi..."; // sablier qui tourne
 
-  const newNom = document.getElementById("input-nom")?.value || originalValues.nom;
-  const newType = document.getElementById("input-type")?.value || originalValues.type;
+  const newNom   = document.getElementById("input-nom")?.value   || originalValues.nom;
+  const newType  = document.getElementById("input-type")?.value  || originalValues.type;
+  const newSat   = document.getElementById("input-sat")?.value   || originalValues.sat || "";
+  const newAcces = document.getElementById("input-acces")?.value || originalValues.acces || "";
 
   fetch("https://script.google.com/macros/s/AKfycbyxh3HGR6iHcn0ynwfGzSzOm5Djc7o2e1uA4dvdPurolDerZlNiARcpsiY4daDRPSV1tw/exec", {
     method: "POST",
     mode: "no-cors",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ nom: newNom, type: newType })
+    body: JSON.stringify({ nom: newNom, type: newType, sat: newSat, acces: newAcces })
   })
   .then(() => {
     showNotification("✅ Modification envoyée (en attente d’approbation)", "success");
-    quitEditMode(newNom, newType);
+    quitEditMode(newNom, newType, newSat, newAcces);
   })
   .catch(() => showNotification("❌ Échec d’envoi (réseau)", "error"))
   .finally(() => {
@@ -1490,12 +1498,17 @@ document.getElementById("btn-save").addEventListener("click", function(){
   });
 });
 
-function quitEditMode(nom, type){
+function quitEditMode(nom, type, sat = "", acces = ""){
   document.getElementById("editable-nom").textContent = nom;
   document.getElementById("editable-type").textContent = type;
+  if (document.getElementById("editable-sat")) {
+    document.getElementById("editable-sat").textContent = " " + sat;
+  }
+  if (document.getElementById("editable-acces")) {
+    document.getElementById("editable-acces").textContent = " – accès " + acces;
+  }
 
-  // Supprime le halo
-  ["editable-nom","editable-type"].forEach(id=>{
+  ["editable-nom","editable-type","editable-sat","editable-acces"].forEach(id=>{
     const el = document.getElementById(id);
     if (el) el.classList.remove("editable-halo");
   });
@@ -1503,6 +1516,17 @@ function quitEditMode(nom, type){
   document.getElementById("edit-buttons").style.display = "none";
   editMode = false;
 }
+    // Annuler édition
+document.getElementById("btn-cancel").addEventListener("click", function(){
+  quitEditMode(
+    originalValues.nom,
+    originalValues.type,
+    originalValues.sat || "",
+    originalValues.acces || ""
+  );
+  showNotification("🔙 Édition annulée", "info");
+});
+    
     function showNotification(message, type = "info") {
   const notif = document.getElementById("notification");
   notif.textContent = message;
