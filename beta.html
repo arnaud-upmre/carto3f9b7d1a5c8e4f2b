@@ -1551,11 +1551,19 @@ if (phones) phones.style.display = "none";
       `;
 
       document.querySelectorAll(".btn-rss").forEach(btn => {
-        btn.addEventListener("click", ev => {
-          const val = ev.target.dataset.val;
-e.target.innerHTML = `<strong>📞 RSS ${val}</strong>`;
-originalValues.rss = `RSS ${val}`;
-        });
+       btn.addEventListener("click", ev => {
+  const val = ev.target.dataset.val; // "Table 1", "Table 2", etc.
+  
+  // On convertit "Table 1" -> "A", "Table 2" -> "B", "Table 3" -> "C"
+  const map = { "Table 1": "A", "Table 2": "B", "Table 3": "C" };
+  const code = map[val] || val;
+
+  // Mets à jour l'affichage complet (titre + numéros)
+  e.target.outerHTML = formatRSS(code);
+
+  // Mémorise la valeur finale envoyée au Google Sheet
+  originalValues.rss = `RSS ${val}`;
+});
       });
       return; // on sort ici pour ne pas exécuter le reste
     }
