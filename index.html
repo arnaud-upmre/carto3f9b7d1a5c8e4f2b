@@ -1706,7 +1706,7 @@ function quitEditMode(nom, type, sat = "", acces = ""){
     document.getElementById("editable-acces").textContent = " – accès " + acces;
   }
 
-["editable-nom","editable-type","editable-sat","editable-acces","editable-rss"].forEach(id=>{
+["editable-nom","editable-type","editable-sat","editable-acces","editable-rss","editable-description","editable-contact","editable-portail"].forEach(id=>{
   const el = document.getElementById(id);
   if (el) el.classList.remove("editable-halo");
 });
@@ -1747,7 +1747,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V2</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V3</span>
 </div>
 
 <script>
