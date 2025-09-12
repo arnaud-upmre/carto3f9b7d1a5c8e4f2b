@@ -824,27 +824,25 @@ function incrementCounterAppareil() {
 
 function showLieu(lieu) {
   const result = document.getElementById("result");
-  const btnExit = document.getElementById("btn-exit-edit"); // toujours dispo
+  const btnExit = document.getElementById("btn-exit-edit");
   document.getElementById("suggestions").innerHTML = "";
   result.style.display = "block";
   incrementCounter();
 
-  // cache le bouton quitter au départ
   if (btnExit) btnExit.style.display = "none";
 
-  // URL MyMaps
   const _latPoste = (lieu.poste_latitude ?? "").toString();
   const _lonPoste = (lieu.poste_longitude ?? "").toString();
   const usePoste = _latPoste !== "" && _lonPoste !== "";
-  const targetLat = usePoste ? _latPoste : lieu.latitude;
-  const targetLon = usePoste ? _lonPoste : lieu.longitude;
+  const targetLat = usePoste ? _latPoste : (lieu.latitude || 0);
+  const targetLon = usePoste ? _lonPoste : (lieu.longitude || 0);
   const urlMyMapsPoste = myMapsViewer(targetLat, targetLon, 18);
 
   let html = `
     <div id="view-mode">
       <h2 class="editable-zone">
-        📍 ${lieu.nom} 
-        <span class="editable-zone" style="font-weight:400; color:#555;">${lieu.type}</span>
+        📍 ${lieu.nom || "Nom inconnu"} 
+        <span class="editable-zone" style="font-weight:400; color:#555;">${lieu.type || "?"}</span>
         <a href="#" id="btn-edit" style="font-size:14px; font-weight:400; margin-left:8px; text-decoration:underline; color:#666;">(modifier)</a>
       </h2>
 
@@ -853,7 +851,7 @@ function showLieu(lieu) {
         
         <!-- 1. Titre + Type -->
         <h2>
-          📍 <input type="text" id="edit-nom" value="${lieu.nom}" style="width:70%">
+          📍 <input type="text" id="edit-nom" value="${lieu.nom || 'Nom manquant'}" style="width:70%">
           <select id="edit-type">
             <option value="SP"   ${lieu.type==="SP"?"selected":""}>SP</option>
             <option value="SSP"  ${lieu.type==="SSP"?"selected":""}>SSP</option>
@@ -865,21 +863,21 @@ function showLieu(lieu) {
         <h3>📍 Localisation — Accès</h3>
         <input type="text" id="acces-link" placeholder="Coller un lien Google Maps" style="width:100%; margin-bottom:6px">
         <div id="map-acces" style="height:220px; margin-bottom:8px; border:1px solid #ccc; border-radius:8px;"></div>
-        <input type="text" id="acces-lat" value="${lieu.latitude}" placeholder="Latitude" style="width:48%">
-        <input type="text" id="acces-lon" value="${lieu.longitude}" placeholder="Longitude" style="width:48%">
+        <input type="text" id="acces-lat" value="${lieu.latitude || '0.00000'}" placeholder="Latitude" style="width:48%">
+        <input type="text" id="acces-lon" value="${lieu.longitude || '0.00000'}" placeholder="Longitude" style="width:48%">
         
         <!-- Localisation Poste -->
         <h3>📍 Localisation — Poste</h3>
         <input type="text" id="poste-link" placeholder="Coller un lien Google Maps" style="width:100%; margin-bottom:6px">
         <div id="map-poste" style="height:220px; margin-bottom:8px; border:1px solid #ccc; border-radius:8px;"></div>
-        <input type="text" id="poste-lat" value="${lieu.poste_latitude || ''}" placeholder="Latitude" style="width:48%">
-        <input type="text" id="poste-lon" value="${lieu.poste_longitude || ''}" placeholder="Longitude" style="width:48%">
+        <input type="text" id="poste-lat" value="${lieu.poste_latitude || '0.00000'}" placeholder="Latitude" style="width:48%">
+        <input type="text" id="poste-lon" value="${lieu.poste_longitude || '0.00000'}" placeholder="Longitude" style="width:48%">
 
         <!-- PK + Ligne -->
         <h3>🚄 Données ferroviaires</h3>
-        <input type="text" id="edit-pk" value="${lieu.pk || ''}" placeholder="PK" style="width:30%">
-        <input type="text" id="edit-ligne-num" value="${lieu.numero_ligne || ''}" placeholder="Numéro ligne" style="width:30%">
-        <input type="text" id="edit-ligne-nom" value="${lieu.lignes || ''}" placeholder="Nom de la ligne" style="width:35%">
+        <input type="text" id="edit-pk" value="${lieu.pk || '???,???'}" placeholder="PK" style="width:30%">
+        <input type="text" id="edit-ligne-num" value="${lieu.numero_ligne || '000000'}" placeholder="Numéro ligne" style="width:30%">
+        <input type="text" id="edit-ligne-nom" value="${lieu.lignes || 'Nom ligne'}" placeholder="Nom de la ligne" style="width:35%">
 
         <!-- RSS -->
         <h3>📞 RSS</h3>
@@ -891,11 +889,11 @@ function showLieu(lieu) {
 
         <!-- Contact -->
         <h3>👤 Contact</h3>
-        <input type="text" id="contact" value="${lieu.contact || ''}" placeholder="Nom et téléphone" style="width:100%">
+        <input type="text" id="contact" value="${lieu.contact || 'Nom + numéro'}" placeholder="Nom et téléphone" style="width:100%">
 
         <!-- Portail -->
         <h3>🚧 Portail</h3>
-        <input type="text" id="portail" value="${lieu.portail || ''}" placeholder="Code ou lien vidéo" style="width:100%">
+        <input type="text" id="portail" value="${lieu.portail || 'Code ou lien'}" placeholder="Code ou lien vidéo" style="width:100%">
 
         <!-- Boutons -->
         <div style="margin-top:1rem; text-align:right">
@@ -971,13 +969,13 @@ function showLieu(lieu) {
         lieu.longitude = document.getElementById("acces-lon").value;
         lieu.poste_latitude = document.getElementById("poste-lat").value;
         lieu.poste_longitude = document.getElementById("poste-lon").value;
-        showLieu(lieu); // recharge en mode vue
+        showLieu(lieu);
       };
     }
 
     // Bouton Annuler
     const btnCancel = document.getElementById("btn-cancel");
- if (btnCancel) {
+    if (btnCancel) {
       btnCancel.onclick = () => {
         document.getElementById("edit-mode").style.display = "none";
         document.getElementById("view-mode").style.display = "block";
