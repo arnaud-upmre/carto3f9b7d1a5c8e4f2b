@@ -27,15 +27,34 @@
   @keyframes eale-zoomIn{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
   .eale-intro-hide{opacity:0; transition:opacity .35s ease}
 
- /* Pills itinéraires : centrage + wrap sur petits écrans */
-.inline-links.pills-3{
+.inline-links.pills-3 {
+  display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  text-align: center;  /* centre les lignes quand ça passe à la ligne */
+  justify-content: center;   /* centre horizontalement */
+  align-items: center;       /* centre verticalement */
+  text-align: center;
   gap: 8px;
 }
-.inline-links.pills-3 a{
+
+.inline-links.pills-3 a {
+  display: inline-flex;       /* ✅ force l’emoji et le texte à s’aligner */
+  align-items: center;        /* ✅ centrage vertical dans le bouton */
+  vertical-align: middle;     /* ✅ élimine le flottement */
   padding: 6px 10px;
+}
+  
+    
+/* Force une seule ligne dès qu’il y a la place */
+@media (min-width: 420px){
+  .inline-links.pills-3{ flex-wrap: nowrap; }
+}
+
+/* Ultra compact sur écrans ≤ 390px */
+@media (max-width: 390px){
+  .inline-links.pills-3 a{
+    padding: 6px 8px;
+    font-size: 13.5px;
+  }
 }
 
 /* Force une seule ligne dès qu’il y a la place */
@@ -61,6 +80,95 @@ ul#suggestions:not(:empty){
   margin: .4rem 0 .6rem 0;
 }
 
+ /* Halo bleu + effet tremblement façon iOS */
+.editable-halo {
+  display: inline-block;
+  padding: 2px 4px;
+  border-radius: 6px;
+  animation: pulseHalo 1.2s infinite, wiggle 0.3s infinite;
+}
+
+/* Halo pulsant bleu */
+@keyframes pulseHalo {
+  0% { box-shadow: 0 0 0 0 rgba(26,115,232,0.6); }
+  70% { box-shadow: 0 0 0 6px rgba(26,115,232,0); }
+  100% { box-shadow: 0 0 0 0 rgba(26,115,232,0); }
+}
+
+/* Tremblement façon iOS */
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-2deg); }
+  50% { transform: rotate(2deg); }
+}
+    
+/* Style discret façon Wikipédia pour le lien [modifier] */
+#edit-toggle {
+  font-size: 13px;
+  font-style: italic;
+  color: #777;
+  margin-left: 6px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+#edit-toggle:hover {
+  color: #1a73e8;  /* bleu Google */
+  text-decoration: underline;
+}
+    /* Barre d’édition centrée en bas */
+#edit-buttons {
+  display: none;
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+
+  background: rgba(255, 255, 255, 0.8); /* fond translucide clair */
+  backdrop-filter: blur(8px);            /* effet flou derrière */
+  -webkit-backdrop-filter: blur(8px);    /* compatibilité iOS */
+
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  padding: 12px 20px;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  border: 1px solid #ddd;
+}
+
+/* Mode sombre */
+@media (prefers-color-scheme: dark) {
+  #edit-buttons {
+    background: rgba(30, 30, 30, 0.8);  /* translucide foncé */
+    border: 1px solid #444;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+  }
+}
+/* Centrer proprement les titres "Repérer..." */
+.rep-block {
+  display: block;              /* ⬅️ plus de flex ici */
+  margin: 1.5rem 0 0.5rem 0;
+  text-align: center;          /* ⬅️ centre juste le contenu */
+}
+
+.rep-block p {
+  font-weight: 600;
+  margin: 0 0 6px 0;
+  text-align: center;   /* ✅ centrage simple et propre */
+}
+
+    .rep-block p .emoji {
+  display: inline-block;
+  width: 1.6em;   /* ✅ même largeur pour tous */
+  text-align: center;
+}
+
+    .rep-block.poste-only p {
+  transform: translateX(-14px);  /* décale le texte vers la gauche */
+}
+
+    
 </style>
   <meta name="robots" content="noindex, nofollow" />
   <meta charset="UTF-8" />
@@ -68,6 +176,8 @@ ul#suggestions:not(:empty){
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+  
+
   <style>
 body {
   font-family: 'Inter', sans-serif;
@@ -145,12 +255,13 @@ input[type="text"] {
       font-size: 15px;
       line-height: 1.5;
     }
-    #result h2 {
-      margin-top: 0;
-      font-size: 22px;
-      font-weight: 700;
-      color: #1a73e8;
-    }
+#result h2 {
+  margin-top: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: #1a73e8;
+  text-align: left;   /* ✅ remet le titre à gauche */
+}
 
     /* ——— Uniformiser exactement la largeur avec le champ ——— */
 #search,
@@ -400,6 +511,75 @@ main {
   }
 }
     #btn-localiser { margin-top: 4rem; }  /* plus d’espace au-dessus */
+
+  #notification {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 240px;
+  max-width: 90%;
+  padding: 12px 18px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  text-align: center;
+  display: none;
+  z-index: 99999;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+/* Succès */
+#notification.success {
+  background: #e6f4ea;
+  color: #137333;
+  border: 1px solid #137333;
+}
+
+/* Erreur */
+#notification.error {
+  background: #fce8e6;
+  color: #b00020;
+  border: 1px solid #b00020;
+}
+
+/* Info (pour annulation) */
+#notification.info {
+  background: #e8f0fe;
+  color: #174ea6;
+  border: 1px solid #174ea6;
+}
+
+/* Mode sombre */
+@media (prefers-color-scheme: dark) {
+  #notification.success {
+    background: #1e2a21;
+    color: #8dd39c;
+    border: 1px solid #8dd39c;
+  }
+  #notification.error {
+    background: #3a1c1c;
+    color: #ff8a80;
+    border: 1px solid #ff8a80;
+  }
+  #notification.info {
+    background: #1a237e;
+    color: #90caf9;
+    border: 1px solid #90caf9;
+  }
+}
+    .rep-block.horizontal {
+  flex-direction: row;          
+  justify-content: center;      
+  align-items: center;          
+  gap: 12px;                    
+}
+
+.rep-block.horizontal p {
+  margin: 0; 
+  font-weight: 600;
+}
+  
   </style>
   <meta name="color-scheme" content="light dark">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
@@ -428,6 +608,11 @@ main {
 </div>
 <div id="result"></div>
 
+  <!-- Boutons flottants pour édition -->
+<div id="edit-buttons" style="display:none;">
+  <button id="btn-save" class="btn-primary">💾 Sauvegarder</button>
+  <button id="btn-cancel" class="btn-primary">❌ Annuler édition</button>
+</div>
 
 
 <!-- Bouton localiser -->
@@ -445,6 +630,7 @@ const compteurURL = "https://script.google.com/macros/s/AKfycbzUFaek89LYosR0FSw9
 const compteurAppareilURL = "https://script.google.com/macros/s/AKfycbwJIlvcfNYREJn1oPiVAhQqHACXXar8ZbRl6aChwYw4TFSAaMTFEHTT5X2T7BKLJ3gsJw/exec";
 
 let lieux = [], appareils = [];
+    let currentItem = null; // ✅ mémorise la fiche affichée
 
 function myMapsViewer(lat, lon, z = 19) {
   const mid = "1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r"; // ID de ta carte MyMaps
@@ -568,7 +754,8 @@ function formatRSS(table) {
   const tableNum = { "A": "1", "B": "2", "C": "3" };
   if (!tables[table]) return `<p><strong>📞 RSS :</strong> ${table}</p>`;
   const nums = tables[table].map(num => `<a href="tel:${num.replace(/\s+/g, '')}">${num}</a>`).join("");
-  return `<p><strong>📞 RSS Table ${tableNum[table] || table} :</strong></p><div class="inline-links">${nums}</div>`;
+return `<p id="editable-rss"><strong>📞 RSS Table ${tableNum[table] || table}</strong></p>
+        <div id="rss-phones" class="inline-links">${nums}</div>`;
 }
 function generateAppareilListHTML(currentLieu) {
   const matchingApps = appareils.filter(app => 
@@ -728,7 +915,8 @@ function generateAlias(appareil, nom, sat, posteType) {
   fetch(compteurURL).then(res => res.json()).then(data => {
     if (data && typeof data.count !== "undefined") {
       document.getElementById("counterPostes").textContent = data.count;
-      localStorage.setItem("counterPostes", data.count); // sauvegarde local
+      localStorage.setItem("counterPostes", data.count); 
+      // sauvegarde local
     }
   });
 }
@@ -758,6 +946,7 @@ function incrementCounterAppareil() {
 }
 
 function showLieu(lieu) {
+    currentItem = lieu; // ✅ mémorise le poste affiché
   const result = document.getElementById("result");
   document.getElementById("suggestions").innerHTML = "";
   result.style.display = "block";
@@ -769,25 +958,44 @@ const _lonPoste = (lieu.poste_longitude ?? "").toString();
 const usePoste = _latPoste !== "" && _lonPoste !== "";
 const targetLat = usePoste ? _latPoste : lieu.latitude;
 const targetLon = usePoste ? _lonPoste : lieu.longitude;
-const urlMyMapsPoste = myMapsViewer(targetLat, targetLon, 18);
+const urlMyMapsPoste = myMapsViewer(targetLat, targetLon, 20);
 
-let html = `<h2><a href="#" data-href="${urlMyMapsPoste}" onclick="window.open(this.dataset.href,'_blank','noopener')" class="titre-lien">
-  📍 ${formatNomCompletLieu(lieu)}
-</a>
-</h2>
+let html = `<h2>
+  📍 <span id="editable-nom">${lieu.nom}</span> 
+  <span id="editable-type">${lieu.type}</span>
+  ${lieu.SAT ? `<span id="editable-sat"> ${lieu.SAT}</span>` : ""}
+  ${lieu.accès ? `<span id="editable-acces"> – accès ${lieu.accès}</span>` : ""}
+  <a href="#" id="edit-toggle">[modifier]</a>
+</h2>`;
+    
+// ✅ Affiche "Repérer le poste" seulement si les coordonnées poste sont présentes
+if (usePoste) {
+  html += `
+  <div class="rep-block poste-only">
+    <p><span class="emoji">⚡️</span>Repérer le poste (sat/guérite)</p>
+    <div class="inline-links pills-3">
+      <a href="${urlMyMapsPoste}" target="_blank" rel="noopener">🛰️ Vue satellite</a>
+    </div>
+  </div>`;
+}
 
-<p style="text-align:center; font-weight:600; margin:1.5rem 0 0.5rem 0;">🛣️ Repérer l’accès :</p>
-<div class="inline-links pills-3">
-  <a href="${myMapsViewer(lieu.latitude, lieu.longitude, 19)}" target="_blank" rel="noopener">🛰️ Vue satellite</a>
-  <a href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">👁️ Street View</a>
+html += `
+<div class="rep-block">
+  <p><span class="emoji">🛣️</span> Repérer l’accès :</p>
+  <div class="inline-links pills-3">
+    <a href="${myMapsViewer(lieu.latitude, lieu.longitude, 19)}" target="_blank" rel="noopener">🛰️ Vue satellite</a>
+    <a href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">👁️ Street View</a>
+  </div>
 </div>
 
-  <p style="text-align:center; font-weight:600; margin:1.5rem 0 0.5rem 0;">🚙 Itinéraires disponibles :</p>
-<div class="inline-links pills-3">
-   <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🗺️ Maps</a>
-   <a href="https://maps.apple.com/?daddr=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🍎 Plans</a>
-   <a href="https://waze.com/ul?ll=${lieu.latitude},${lieu.longitude}&navigate=yes" target="_blank" rel="noopener">🚗 Waze</a>
-  </div>`;
+<div class="rep-block">
+  <p><span class="emoji">🚙</span> Itinéraires disponibles :</p>
+  <div class="inline-links pills-3">
+    <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🗺️ Maps</a>
+    <a href="https://maps.apple.com/?daddr=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🍎 Plans</a>
+    <a href="https://waze.com/ul?ll=${lieu.latitude},${lieu.longitude}&navigate=yes" target="_blank" rel="noopener">🚗 Waze</a>
+  </div>
+</div>`;
 
   const blocs = [];
   if (lieu.description) blocs.push(`<p>${lieu.description}</p>`);
@@ -1292,6 +1500,187 @@ if (el2) el2.textContent = `(${data.count})`;
 
 updateContrib();
 setInterval(updateContrib, 3000);
+    // === Édition Nom + Type ===
+let editMode = false;
+let originalValues = {};
+
+// Quand on clique sur (modifier)
+document.addEventListener("click", function(e){
+  if (e.target.id === "edit-toggle") {
+    e.preventDefault();
+    if (!editMode) {
+      editMode = true;
+      originalValues.nom = document.getElementById("editable-nom").textContent;
+      originalValues.type = document.getElementById("editable-type").textContent;
+      if (document.getElementById("editable-sat")) {
+        originalValues.sat = document.getElementById("editable-sat").textContent.trim();
+      }
+      if (document.getElementById("editable-acces")) {
+        originalValues.acces = document.getElementById("editable-acces").textContent.replace("– accès ","").trim();
+      }
+
+      // Ajoute halo + vibration sur les zones modifiables existantes
+["editable-nom","editable-type","editable-sat","editable-acces","editable-rss"].forEach(id=>{
+  const el = document.getElementById(id);
+  if (el) el.classList.add("editable-halo");
+});
+
+      document.getElementById("edit-buttons").style.display = "flex";
+      navigator.vibrate?.(80);
+    }
+  }
+});
+
+// Quand on clique sur une zone modifiable
+document.addEventListener("click", function(e){
+if (editMode && (
+    ["editable-nom","editable-type","editable-sat","editable-acces","editable-rss"].includes(e.target.id) ||
+    e.target.closest("#editable-rss")
+)) {
+    
+    // Cas spécial RSS → boutons Table 1/2/3
+  if (e.target.id === "editable-rss" || e.target.closest("#editable-rss")) {
+    const phones = document.getElementById("rss-phones");
+if (phones) phones.style.display = "none";
+      e.target.innerHTML = `
+        <div class="inline-links">
+          <button class="btn-primary btn-rss" data-val="Table 1">Table 1</button>
+          <button class="btn-primary btn-rss" data-val="Table 2">Table 2</button>
+          <button class="btn-primary btn-rss" data-val="Table 3">Table 3</button>
+        </div>
+      `;
+
+      document.querySelectorAll(".btn-rss").forEach(btn => {
+       btn.addEventListener("click", ev => {
+  const val = ev.target.dataset.val; // "Table 1", "Table 2", etc.
+  
+  // On convertit "Table 1" -> "A", "Table 2" -> "B", "Table 3" -> "C"
+  const map = { "Table 1": "A", "Table 2": "B", "Table 3": "C" };
+  const code = map[val] || val;
+
+  // Mets à jour l'affichage complet (titre + numéros)
+  e.target.outerHTML = formatRSS(code);
+
+  // Mémorise la valeur finale envoyée au Google Sheet
+  originalValues.rss = `RSS ${val}`;
+});
+      });
+      return; // on sort ici pour ne pas exécuter le reste
+    }
+
+    // Cas normal (nom, type, sat, accès)
+    const field = e.target.id.replace("editable-","");
+    let currentVal = e.target.textContent.replace("– accès ","").trim();
+    e.target.innerHTML = `<input type="text" id="input-${field}" value="${currentVal}" style="border:2px solid #1a73e8; padding:3px; border-radius:6px;" />`;
+    document.getElementById("edit-buttons").style.display = "block";
+    navigator.vibrate?.(50);
+  }
+});
+
+function getDemandeur() {
+  let demandeur = localStorage.getItem("demandeur");
+  const regexNom = /^[A-Za-zÀ-ÖØ-öø-ÿ\s\-]{2,}$/;
+
+  while (!demandeur || !regexNom.test(demandeur)) {
+    demandeur = prompt("👉 Entrez votre prénom et nom").trim();
+
+    if (!demandeur || !regexNom.test(demandeur)) {
+      alert("⚠️ Nom invalide. Utilisez uniquement lettres / espaces / accents.");
+      demandeur = "";
+    }
+  }
+
+  // ✅ On garde le nom en mémoire dans le navigateur
+  localStorage.setItem("demandeur", demandeur);
+  return demandeur;
+}
+    
+// Sauvegarde
+document.getElementById("btn-save").addEventListener("click", function(){
+  const btnSave = document.getElementById("btn-save");
+  btnSave.disabled = true;
+  btnSave.textContent = "⏳ Envoi..."; // sablier qui tourne
+
+  const newNom   = document.getElementById("input-nom")?.value   || originalValues.nom;
+  const newType  = document.getElementById("input-type")?.value  || originalValues.type;
+  const newSat   = document.getElementById("input-sat")?.value   || originalValues.sat || "";
+  const newAcces = document.getElementById("input-acces")?.value || originalValues.acces || "";
+
+  const demandeur = getDemandeur();
+  const ficheOrigine = currentItem
+    ? `${currentItem.nom || ''} ${currentItem.type || ''} ${currentItem.SAT || ''} ${currentItem.accès || ''}`.trim()
+    : "";
+
+  // ✅ Ne garde que les vraies modifications
+  const payload = {
+    demandeur,
+    ficheOrigine
+  };
+
+  if (newNom !== originalValues.nom) payload.nom = newNom;
+  if (newType !== originalValues.type) payload.type = newType;
+  if (newSat !== (originalValues.sat || "")) payload.sat = newSat;
+  if (newAcces !== (originalValues.acces || "")) payload.acces = newAcces;
+  if (originalValues.rss) payload.rss = originalValues.rss;
+
+  fetch("https://script.google.com/macros/s/AKfycbyxh3HGR6iHcn0ynwfGzSzOm5Djc7o2e1uA4dvdPurolDerZlNiARcpsiY4daDRPSV1tw/exec", {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  })
+  .then(() => {
+    showNotification("✅ Modification envoyée (en attente d’approbation)", "success");
+    quitEditMode(newNom, newType, newSat, newAcces);
+  })
+  .catch(() => showNotification("❌ Échec d’envoi (réseau)", "error"))
+  .finally(() => {
+    setTimeout(() => {
+      btnSave.disabled = false;
+      btnSave.textContent = "💾 Sauvegarder"; // retour normal
+    }, 3000);
+  });
+});
+
+function quitEditMode(nom, type, sat = "", acces = ""){
+  document.getElementById("editable-nom").textContent = nom;
+  document.getElementById("editable-type").textContent = type;
+  if (document.getElementById("editable-sat")) {
+    document.getElementById("editable-sat").textContent = " " + sat;
+  }
+  if (document.getElementById("editable-acces")) {
+    document.getElementById("editable-acces").textContent = " – accès " + acces;
+  }
+
+["editable-nom","editable-type","editable-sat","editable-acces","editable-rss"].forEach(id=>{
+  const el = document.getElementById(id);
+  if (el) el.classList.remove("editable-halo");
+});
+
+  document.getElementById("edit-buttons").style.display = "none";
+  editMode = false;
+}
+    // Annuler édition
+document.getElementById("btn-cancel").addEventListener("click", function(){
+  quitEditMode(
+    originalValues.nom,
+    originalValues.type,
+    originalValues.sat || "",
+    originalValues.acces || ""
+  );
+  showNotification("🔙 Édition annulée", "info");
+});
+    
+    function showNotification(message, type = "info") {
+  const notif = document.getElementById("notification");
+  notif.textContent = message;
+  notif.className = type; // "success", "error" ou "info"
+  notif.style.display = "block";
+
+  setTimeout(() => {
+    notif.style.display = "none";
+  }, 4000);
+}
 </script> </main>
 <div id="about-footer">
 
@@ -1385,5 +1774,6 @@ setInterval(updateContrib, 3000);
   }
 })();
 </script>
+  <div id="notification"></div>
 </body>
 </html>
