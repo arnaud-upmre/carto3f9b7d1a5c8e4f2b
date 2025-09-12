@@ -575,6 +575,7 @@ const compteurURL = "https://script.google.com/macros/s/AKfycbzUFaek89LYosR0FSw9
 const compteurAppareilURL = "https://script.google.com/macros/s/AKfycbwJIlvcfNYREJn1oPiVAhQqHACXXar8ZbRl6aChwYw4TFSAaMTFEHTT5X2T7BKLJ3gsJw/exec";
 
 let lieux = [], appareils = [];
+    let currentItem = null; // ✅ mémorise la fiche affichée
 
 function myMapsViewer(lat, lon, z = 19) {
   const mid = "1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r"; // ID de ta carte MyMaps
@@ -889,6 +890,7 @@ function incrementCounterAppareil() {
 }
 
 function showLieu(lieu) {
+    currentItem = lieu; // ✅ mémorise le poste affiché
   const result = document.getElementById("result");
   document.getElementById("suggestions").innerHTML = "";
   result.style.display = "block";
@@ -1498,13 +1500,24 @@ document.getElementById("btn-save").addEventListener("click", function(){
   const newAcces = document.getElementById("input-acces")?.value || originalValues.acces || "";
 
 const demandeur = getDemandeur();
+const ficheOrigine = currentItem
+  ? `${currentItem.nom || ''} ${currentItem.type || ''} ${currentItem.SAT || ''} ${currentItem.accès || ''}`.trim()
+  : "";
 
 fetch("https://script.google.com/macros/s/AKfycbyxh3HGR6iHcn0ynwfGzSzOm5Djc7o2e1uA4dvdPurolDerZlNiARcpsiY4daDRPSV1tw/exec", {
     method: "POST",
     mode: "no-cors",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ demandeur, nom: newNom, type: newType, sat: newSat, acces: newAcces })
+    body: JSON.stringify({
+      demandeur,
+      ficheOrigine,
+      nom: newNom,
+      type: newType,
+      sat: newSat,
+      acces: newAcces
+    })
 })
+  
   .then(() => {
     showNotification("✅ Modification envoyée (en attente d’approbation)", "success");
     quitEditMode(newNom, newType, newSat, newAcces);
