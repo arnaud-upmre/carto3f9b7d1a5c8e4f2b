@@ -1010,10 +1010,10 @@ if (lieu.rss) {
 // 🚄 PK + Ligne (même si incomplet)
 const pk = lieu.pk ? lieu.pk : '<span class="placeholder">(non renseigné)</span>';
 const numLigne = lieu.numero_ligne ? lieu.numero_ligne : '<span class="placeholder">(non renseigné)</span>';
-const ligneNom = lieu.lignes ? lieu.lignes : '<span class="placeholder">(non renseigné)</span>';
+const ligneNom = lieu.lignes ? ` – ${lieu.lignes}` : "";
 
 blocs.push(`
-  <p><strong>🚄 PK ${pk}</strong> sur la ligne n°<strong>${numLigne}</strong> – ${ligneNom}</p>
+  <p><strong>🚄 PK ${pk}</strong> sur la ligne n°<strong>${numLigne}</strong>${ligneNom}</p>
 `);
 
 // Informations
