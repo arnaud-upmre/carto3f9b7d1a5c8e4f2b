@@ -957,7 +957,7 @@ const _lonPoste = (lieu.poste_longitude ?? "").toString();
 const usePoste = _latPoste !== "" && _lonPoste !== "";
 const targetLat = usePoste ? _latPoste : lieu.latitude;
 const targetLon = usePoste ? _lonPoste : lieu.longitude;
-const urlMyMapsPoste = myMapsViewer(targetLat, targetLon, 21);
+const urlMyMapsPoste = myMapsViewer(targetLat, targetLon, 20);
 
 let html = `<h2>
   📍 <span id="editable-nom">${lieu.nom}</span> 
