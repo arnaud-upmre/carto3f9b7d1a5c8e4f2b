@@ -42,7 +42,10 @@
   vertical-align: middle;     /* ✅ élimine le flottement */
   padding: 6px 10px;
 }
-
+    
+.rep-block.poste-only .inline-links.pills-3 {
+  width: 100%;   /* ✅ ce bloc occupe toute la largeur */
+}
 /* Force une seule ligne dès qu’il y a la place */
 @media (min-width: 420px){
   .inline-links.pills-3{ flex-wrap: nowrap; }
@@ -960,7 +963,7 @@ let html = `<h2>
   <a href="#" id="edit-toggle">[modifier]</a>
 </h2>
 
-<div class="rep-block">
+<div class="rep-block poste-only">
   <p><span class="emoji">⚡️</span> Repérer le poste :</p>
   <div class="inline-links pills-3">
     <a href="${myMapsViewer(lieu.latitude, lieu.longitude, 19)}" target="_blank" rel="noopener">🛰️ Vue satellite</a>
