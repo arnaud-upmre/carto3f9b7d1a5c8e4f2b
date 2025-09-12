@@ -1559,22 +1559,33 @@ if (phones) phones.style.display = "none";
         </div>
       `;
 
-      document.querySelectorAll(".btn-rss").forEach(btn => {
-       btn.addEventListener("click", ev => {
-  const val = ev.target.dataset.val; // "Table 1", "Table 2", etc.
-  
-  // On convertit "Table 1" -> "A", "Table 2" -> "B", "Table 3" -> "C"
-  const map = { "Table 1": "A", "Table 2": "B", "Table 3": "C" };
-  const code = map[val] || val;
+document.querySelectorAll(".btn-rss").forEach(btn => {
+  btn.addEventListener("click", ev => {
+    const val = ev.target.dataset.val; // "Table 1", "Table 2", etc.
 
-  // Mets à jour l'affichage complet (titre + numéros)
-  e.target.outerHTML = formatRSS(code);
+    // Convertit "Table 1" -> "A", "Table 2" -> "B", "Table 3" -> "C"
+    const map = { "Table 1": "A", "Table 2": "B", "Table 3": "C" };
+    const code = map[val] || val;
 
-// Mémorise la valeur finale envoyée au Google Sheet
-const map = { "Table 1": "A", "Table 2": "B", "Table 3": "C" };
-originalValues.rss = map[val] || val;
+    // Mets à jour uniquement le texte du bloc RSS
+    const rssBlock = document.getElementById("editable-rss");
+    if (rssBlock) {
+      rssBlock.innerHTML = `<strong>📞 RSS ${val}</strong>`;
+    }
+
+    // Mets à jour uniquement les numéros de téléphone
+    const phones = document.getElementById("rss-phones");
+    if (phones) {
+      phones.innerHTML = formatRSS(code).split("</p>")[1]; // récupère juste la partie numéros
+      phones.style.display = "block";
+    }
+
+    // Mémorise la valeur finale envoyée au Google Sheet
+    originalValues.rss = code;
+  });
 });
-      });
+
+    
       return; // on sort ici pour ne pas exécuter le reste
     }
     // Cas spécial Description (textarea multi-ligne)
