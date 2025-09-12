@@ -1740,10 +1740,10 @@ function quitEditMode(nom, type, sat = "", acces = ""){
   // Réinitialise aussi description / contact / portail
 if (document.getElementById("editable-description")) {
   const descVal = originalValues.description || "";
-  document.getElementById("editable-description").parentNode.outerHTML =
-    `<p><strong id="editable-description">ℹ️ Informations :</strong> 
-      <span class="desc-value">${descVal || '<span class="placeholder">(non renseigné)</span>'}</span>
-    </p>`;
+  const span = document.querySelector(".desc-value");
+  if (span) {
+    span.innerHTML = descVal || '<span class="placeholder">(non renseigné)</span>';
+  }
 }
 
 if (document.getElementById("editable-contact")) {
