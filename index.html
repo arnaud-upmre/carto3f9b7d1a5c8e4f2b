@@ -1010,11 +1010,15 @@ if (lieu.rss) {
 // Informations générales + Description (même ligne)
 blocs.push(`<p><strong>ℹ️ Informations :</strong> <span id="editable-description">${lieu.description || '<span class="placeholder">(non renseigné)</span>'}</span></p>`);
   
-// Contact → toujours affiché avec numéros cliquables
-blocs.push(`<div id="editable-contact">${lieu.contact ? formatContact(lieu.contact) : '<p><strong>👤 Contact :</strong> <span class="placeholder">(non renseigné) - Ex : Agent E : 03 28....</span></p>'}</div>`);
+// Contact
+blocs.push(`${lieu.contact 
+  ? formatContact(lieu.contact).replace("<p", "<p id='editable-contact'") 
+  : '<p id="editable-contact"><strong>👤 Contact :</strong> <span class="placeholder">(non renseigné) - Ex : Agent E : 03 28....</span></p>'}`);
 
-// Portail → toujours affiché avec lien cliquable si numéro ou URL
-blocs.push(`<div id="editable-portail">${lieu.portail ? formatPortail(lieu.portail) : '<p><strong>🚧 Portail :</strong> <span class="placeholder">(non renseigné) - Ex : Code 1212#</span></p>'}</div>`);
+// Portail
+blocs.push(`${lieu.portail 
+  ? formatPortail(lieu.portail).replace("<p", "<p id='editable-portail'") 
+  : '<p id="editable-portail"><strong>🚧 Portail :</strong> <span class="placeholder">(non renseigné) - Ex : Code 1212#</span></p>'}`);
   
   if (blocs.length > 0) {
     html += `<hr class="separator" />` +
