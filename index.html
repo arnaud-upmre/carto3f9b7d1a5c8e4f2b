@@ -1576,10 +1576,12 @@ if (ligneNomEl) ligneNomEl.style.display = "none";
 
 // Quand on clique sur une zone modifiable
 document.addEventListener("click", function(e){
-if (editMode && (
-    ["editable-nom","editable-type","editable-sat","editable-acces","editable-rss","editable-description","editable-contact","editable-portail"].includes(e.target.id) ||
-    e.target.closest("#editable-rss")
-)) {
+  if (editMode && (
+      ["editable-nom","editable-type","editable-sat","editable-acces","editable-rss",
+       "editable-description","editable-contact","editable-portail",
+       "editable-pk","editable-numero_ligne"].includes(e.target.id) ||
+      e.target.closest("#editable-rss")
+  )) {
     
     // Cas spécial RSS → boutons Table 1/2/3
   if (e.target.id === "editable-rss" || e.target.closest("#editable-rss")) {
@@ -1763,7 +1765,9 @@ function quitEditMode(nom, type, sat = "", acces = ""){
     document.getElementById("editable-acces").textContent = " – accès " + acces;
   }
 
-["editable-nom","editable-type","editable-sat","editable-acces","editable-rss","editable-description","editable-contact","editable-portail"].forEach(id=>{
+["editable-nom","editable-type","editable-sat","editable-acces","editable-rss",
+ "editable-description","editable-contact","editable-portail",
+ "editable-pk","editable-numero_ligne"].forEach(id=>{
   const el = document.getElementById(id);
   if (el) el.classList.remove("editable-halo");
 });
