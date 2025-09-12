@@ -4571,5 +4571,22 @@
     "pk": "47,000",
     "poste_latitude": "50.36629",
     "poste_longitude": "3.51944"
+  },
+  {
+    "nom": "Essais",
+    "type": "Arnaud",
+    "SAT": "SAT1",
+    "accès": "V1",
+    "latitude": 50.36588,
+    "longitude": 3.52115,
+    "description": "Essais description",
+    "rss": "B",
+    "contact": "Essais contacts",
+    "portail": "4242 code ",
+    "lignes": "FIVES à HIRSON ",
+    "numero_ligne": 267000,
+    "pk": "47,000",
+    "poste_latitude": "50.36629",
+    "poste_longitude": "3.51944"
   }
 ]
