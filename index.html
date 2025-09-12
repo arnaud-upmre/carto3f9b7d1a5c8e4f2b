@@ -1627,7 +1627,7 @@ if (e.target.id === "editable-description") {
 // Contact
 if (e.target.id === "editable-contact") {
   const span = e.target.parentNode.querySelector(".contact-value");
-  const currentVal = span ? span.textContent.trim() : "";
+  const currentVal = originalValues.contact || ""; // ✅ valeur brute d’origine
   span.innerHTML = `<input type="text" id="input-contact" value="${currentVal}" 
     style="border:2px solid #1a73e8; padding:3px; border-radius:6px; width:100%;" />`;
   document.getElementById("edit-buttons").style.display = "block";
@@ -1638,7 +1638,7 @@ if (e.target.id === "editable-contact") {
 // Portail
 if (e.target.id === "editable-portail") {
   const span = e.target.parentNode.querySelector(".portail-value");
-  const currentVal = span ? span.textContent.trim() : "";
+  const currentVal = originalValues.portail || ""; // ✅ valeur brute d’origine
   span.innerHTML = `<input type="text" id="input-portail" value="${currentVal}" 
     style="border:2px solid #1a73e8; padding:3px; border-radius:6px; width:100%;" />`;
   document.getElementById("edit-buttons").style.display = "block";
@@ -1746,12 +1746,16 @@ function quitEditMode(nom, type, sat = "", acces = ""){
     if (document.getElementById("editable-description")) {
     document.getElementById("editable-description").textContent = originalValues.description || "";
   }
-  if (document.getElementById("editable-contact")) {
-    document.getElementById("editable-contact").textContent = originalValues.contact || "";
-  }
-  if (document.getElementById("editable-portail")) {
-    document.getElementById("editable-portail").textContent = originalValues.portail || "";
-  }
+if (document.querySelector(".contact-value")) {
+  document.querySelector(".contact-value").innerHTML =
+    originalValues.contact ? formatContact(originalValues.contact).replace("👤 Contact :", "") : '<span class="placeholder">(non renseigné)</span>';
+}
+
+if (document.querySelector(".portail-value")) {
+  document.querySelector(".portail-value").innerHTML =
+    originalValues.portail ? formatPortail(originalValues.portail).replace("🚧 Portail :", "") : '<span class="placeholder">(non renseigné)</span>';
+}
+  
   editMode = false;
 }
     // Annuler édition
@@ -1778,7 +1782,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V2</span>
 </div>
 
 <script>
