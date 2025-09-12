@@ -61,6 +61,42 @@ ul#suggestions:not(:empty){
   margin: .4rem 0 .6rem 0;
 }
 
+ /* Halo bleu + effet tremblement façon iOS */
+.editable-halo {
+  display: inline-block;
+  padding: 2px 4px;
+  border-radius: 6px;
+  animation: pulseHalo 1.2s infinite, wiggle 0.3s infinite;
+}
+
+/* Halo pulsant bleu */
+@keyframes pulseHalo {
+  0% { box-shadow: 0 0 0 0 rgba(26,115,232,0.6); }
+  70% { box-shadow: 0 0 0 6px rgba(26,115,232,0); }
+  100% { box-shadow: 0 0 0 0 rgba(26,115,232,0); }
+}
+
+/* Tremblement façon iOS */
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-2deg); }
+  50% { transform: rotate(2deg); }
+}
+    
+/* Style discret façon Wikipédia pour le lien [modifier] */
+#edit-toggle {
+  font-size: 13px;
+  font-style: italic;
+  color: #777;
+  margin-left: 6px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+#edit-toggle:hover {
+  color: #1a73e8;  /* bleu Google */
+  text-decoration: underline;
+}
+    
 </style>
   <meta name="robots" content="noindex, nofollow" />
   <meta charset="UTF-8" />
@@ -779,8 +815,7 @@ const urlMyMapsPoste = myMapsViewer(targetLat, targetLon, 18);
 let html = `<h2>
   📍 <span id="editable-nom">${lieu.nom}</span> 
   <span id="editable-type">${lieu.type}</span>
-  <a href="#" class="edit-link" data-field="nom">(modifier)</a>
-  <a href="#" class="edit-link" data-field="type">(modifier)</a>
+<a href="#" id="edit-toggle">[modifier]</a>
 </h2>
 
 <p style="text-align:center; font-weight:600; margin:1.5rem 0 0.5rem 0;">🛣️ Repérer l’accès :</p>
@@ -1303,26 +1338,33 @@ setInterval(updateContrib, 3000);
 let editMode = false;
 let originalValues = {};
 
+// Quand on clique sur (modifier)
 document.addEventListener("click", function(e){
-  if (e.target.classList.contains("edit-link")) {
+  if (e.target.id === "edit-toggle") {
     e.preventDefault();
-    const field = e.target.dataset.field;
-    const span = document.getElementById("editable-" + field);
-
-    if (!span) return;
-
     if (!editMode) {
-      // Active mode édition
       editMode = true;
-      document.getElementById("edit-buttons").style.display = "block";
       originalValues.nom = document.getElementById("editable-nom").textContent;
       originalValues.type = document.getElementById("editable-type").textContent;
-    }
 
-    // Transforme en input texte
-    const currentVal = span.textContent;
-    span.innerHTML = `<input type="text" id="input-${field}" value="${currentVal}" style="border:2px solid #1a73e8; padding:3px; border-radius:6px;" />`;
-    navigator.vibrate?.(50); // vibration
+      // Ajoute halo + vibration sur les zones modifiables
+      ["editable-nom","editable-type"].forEach(id=>{
+        const el = document.getElementById(id);
+        el.classList.add("editable-halo");
+      });
+      navigator.vibrate?.(80);
+    }
+  }
+});
+
+// Quand on clique sur une zone modifiable (nom ou type)
+document.addEventListener("click", function(e){
+  if (editMode && (e.target.id === "editable-nom" || e.target.id === "editable-type")) {
+    const field = e.target.id.replace("editable-","");
+    const currentVal = e.target.textContent;
+    e.target.innerHTML = `<input type="text" id="input-${field}" value="${currentVal}" style="border:2px solid #1a73e8; padding:3px; border-radius:6px;" />`;
+    document.getElementById("edit-buttons").style.display = "block";
+    navigator.vibrate?.(50);
   }
 });
 
@@ -1357,7 +1399,7 @@ function quitEditMode(nom, type){
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V2</span>
 </div>
 
 <script>
