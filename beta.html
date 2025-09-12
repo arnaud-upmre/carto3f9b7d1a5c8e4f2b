@@ -146,10 +146,9 @@ ul#suggestions:not(:empty){
 }
 /* Centrer proprement les titres "Repérer..." */
 .rep-block {
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* centre texte + boutons */
+  display: block;              /* ⬅️ plus de flex ici */
   margin: 1.5rem 0 0.5rem 0;
+  text-align: center;          /* ⬅️ centre juste le contenu */
 }
 
 .rep-block p {
@@ -962,10 +961,11 @@ let html = `<h2>
 </h2>
 
 <div class="rep-block">
-<p><span class="emoji">⚡️</span> Repérer le poste :</p>
+  <p><span class="emoji">⚡️</span> Repérer le poste :</p>
   <div class="inline-links pills-3">
     <a href="${myMapsViewer(lieu.latitude, lieu.longitude, 19)}" target="_blank" rel="noopener">🛰️ Vue satellite</a>
-</div>
+  </div>
+</div> <!-- ✅ fermeture manquante -->
 
 <div class="rep-block">
   <p>🛣️ Repérer l’accès :</p>
@@ -1632,7 +1632,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V4</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V5</span>
 </div>
 
 <script>
