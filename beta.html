@@ -96,6 +96,36 @@ ul#suggestions:not(:empty){
   color: #1a73e8;  /* bleu Google */
   text-decoration: underline;
 }
+    /* Barre d’édition centrée en bas */
+#edit-buttons {
+  display: none;
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+
+  background: rgba(255, 255, 255, 0.8); /* fond translucide clair */
+  backdrop-filter: blur(8px);            /* effet flou derrière */
+  -webkit-backdrop-filter: blur(8px);    /* compatibilité iOS */
+
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  padding: 12px 20px;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  border: 1px solid #ddd;
+}
+
+/* Mode sombre */
+@media (prefers-color-scheme: dark) {
+  #edit-buttons {
+    background: rgba(30, 30, 30, 0.8);  /* translucide foncé */
+    border: 1px solid #444;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+  }
+}
     
 </style>
   <meta name="robots" content="noindex, nofollow" />
@@ -465,9 +495,9 @@ main {
 <div id="result"></div>
 
   <!-- Boutons flottants pour édition -->
-<div id="edit-buttons" style="display:none; position:fixed; bottom:20px; right:20px; z-index:9999;">
+<div id="edit-buttons">
   <button id="btn-save" class="btn-primary">💾 Sauvegarder</button>
-  <button id="btn-cancel" class="btn-primary" style="margin-left:10px;">❌ Annuler édition</button>
+  <button id="btn-cancel" class="btn-primary">❌ Annuler édition</button>
 </div>
 
 
@@ -1389,17 +1419,23 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
   quitEditMode(originalValues.nom, originalValues.type);
 });
 
-// Quitter le mode édition
 function quitEditMode(nom, type){
   document.getElementById("editable-nom").textContent = nom;
   document.getElementById("editable-type").textContent = type;
+
+  // Supprime le halo
+  ["editable-nom","editable-type"].forEach(id=>{
+    const el = document.getElementById(id);
+    if (el) el.classList.remove("editable-halo");
+  });
+
   document.getElementById("edit-buttons").style.display = "none";
   editMode = false;
 }
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V2</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V3</span>
 </div>
 
 <script>
