@@ -1735,12 +1735,12 @@ if (newPortail !== (originalValues.portail || "")) payload.portail = newPortail;
  if (newPk !== (currentItem.pk || "")) payload.pk = newPk;
 if (newNumLigne !== (currentItem.numero_ligne || "")) payload.numero_ligne = newNumLigne;
   
-  fetch("https://script.google.com/macros/s/AKfycbyxh3HGR6iHcn0ynwfGzSzOm5Djc7o2e1uA4dvdPurolDerZlNiARcpsiY4daDRPSV1tw/exec", {
-    method: "POST",
-    mode: "no-cors",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload)
-  })
+fetch("https://script.google.com/macros/s/AKfycbyxh3HGR6iHcn0ynwfGzSzOm5Djc7o2e1uA4dvdPurolDerZlNiARcpsiY4daDRPSV1tw/exec", {
+  method: "POST",
+  mode: "no-cors",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(payload)
+})
 .then(() => {
   showNotification("✅ Modification envoyée (en attente d’approbation)", "success");
   // ⚡️ Mets à jour l’affichage avec les nouvelles valeurs locales
@@ -1748,14 +1748,17 @@ if (newNumLigne !== (currentItem.numero_ligne || "")) payload.numero_ligne = new
   originalValues.contact = newContact;
   originalValues.portail = newPortail;
   quitEditMode(newNom, newType, newSat, newAcces);
+
+  // ➕ Incrémente le compteur de contributions (⚠️ bien à l’intérieur du .then)
+  return fetch("https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec?increment=true");
 })
-  .catch(() => showNotification("❌ Échec d’envoi (réseau)", "error"))
-  .finally(() => {
-    setTimeout(() => {
-      btnSave.disabled = false;
-      btnSave.textContent = "💾 Sauvegarder"; // retour normal
-    }, 3000);
-  });
+.then(() => console.log("✅ Contribution créditée"))
+.catch(() => showNotification("❌ Échec d’envoi (réseau)", "error"))
+.finally(() => {
+  setTimeout(() => {
+    btnSave.disabled = false;
+    btnSave.textContent = "💾 Sauvegarder"; // retour normal
+  }, 3000);
 });
 
 function quitEditMode(nom, type, sat = "", acces = ""){
