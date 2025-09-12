@@ -1401,21 +1401,27 @@ document.addEventListener("click", function(e){
     navigator.vibrate?.(50);
   }
 });
-
+    
 // Sauvegarde
 document.getElementById("btn-save").addEventListener("click", function(){
   const newNom = document.getElementById("input-nom")?.value || originalValues.nom;
   const newType = document.getElementById("input-type")?.value || originalValues.type;
 
-  // Envoi vers Google Sheets
   fetch("https://script.google.com/macros/s/AKfycbyxh3HGR6iHcn0ynwfGzSzOm5Djc7o2e1uA4dvdPurolDerZlNiARcpsiY4daDRPSV1tw/exec", {
     method: "POST",
-    body: JSON.stringify({ nom: newNom, type: newType }),
-    headers: { "Content-Type": "application/json" }
-  }).then(r => r.text()).then(res => {
-    alert("✅ Modifications enregistrées !");
-    quitEditMode(newNom, newType);
-  }).catch(err => alert("❌ Erreur : " + err));
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ nom: newNom, type: newType })
+  })
+  .then(r => r.text()) // ✅ on lit en texte brut
+  .then(txt => {
+    if (txt.includes("OK")) {
+      alert("✅ Modifications enregistrées !");
+      quitEditMode(newNom, newType);
+    } else {
+      alert("⚠️ Réponse inattendue : " + txt);
+    }
+  })
+  .catch(err => alert("❌ Erreur réseau : " + err));
 });
 
 // Annuler édition
@@ -1439,7 +1445,7 @@ function quitEditMode(nom, type){
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V4</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V5</span>
 </div>
 
 <script>
@@ -1481,7 +1487,27 @@ function quitEditMode(nom, type){
       "Une idée d’Arnaud.",
       "Mis en place par Arnaud.",
       "Lancé par Arnaud.",
-      "Conçu par Arnaud.",
+      "Conçu par Arnaud.",// Sauvegarde
+document.getElementById("btn-save").addEventListener("click", function(){
+  const newNom = document.getElementById("input-nom")?.value || originalValues.nom;
+  const newType = document.getElementById("input-type")?.value || originalValues.type;
+
+  fetch("https://script.google.com/macros/s/AKfycbyxh3HGR6iHcn0ynwfGzSzOm5Djc7o2e1uA4dvdPurolDerZlNiARcpsiY4daDRPSV1tw/exec", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ nom: newNom, type: newType })
+  })
+  .then(r => r.json())
+  .then(res => {
+    if (res.status === "ok") {
+      alert("✅ Modifications enregistrées !");
+      quitEditMode(newNom, newType);
+    } else {
+      alert("⚠️ Erreur côté script : " + res.error);
+    }
+  })
+  .catch(err => alert("❌ Erreur réseau : " + err));
+});V
       "Mis en ligne par Arnaud.",
       "Mis en route par Arnaud.",
       "Fait maison par Arnaud.",
