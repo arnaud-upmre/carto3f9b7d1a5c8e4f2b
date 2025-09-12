@@ -1703,10 +1703,14 @@ if (newPortail !== (originalValues.portail || "")) payload.portail = newPortail;
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload)
   })
-  .then(() => {
-    showNotification("✅ Modification envoyée (en attente d’approbation)", "success");
-    quitEditMode(newNom, newType, newSat, newAcces);
-  })
+.then(() => {
+  showNotification("✅ Modification envoyée (en attente d’approbation)", "success");
+  // ⚡️ Mets à jour l’affichage avec les nouvelles valeurs locales
+  originalValues.description = newDescription;
+  originalValues.contact = newContact;
+  originalValues.portail = newPortail;
+  quitEditMode(newNom, newType, newSat, newAcces);
+})
   .catch(() => showNotification("❌ Échec d’envoi (réseau)", "error"))
   .finally(() => {
     setTimeout(() => {
