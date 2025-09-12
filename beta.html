@@ -858,7 +858,8 @@ function generateAlias(appareil, nom, sat, posteType) {
   fetch(compteurURL).then(res => res.json()).then(data => {
     if (data && typeof data.count !== "undefined") {
       document.getElementById("counterPostes").textContent = data.count;
-      localStorage.setItem("counterPostes", data.count); // sauvegarde local
+      localStorage.setItem("counterPostes", data.count); 
+      // sauvegarde local
     }
   });
 }
@@ -1463,6 +1464,10 @@ document.addEventListener("click", function(e){
     
 // Sauvegarde
 document.getElementById("btn-save").addEventListener("click", function(){
+  const btnSave = document.getElementById("btn-save");
+  btnSave.disabled = true;
+  btnSave.textContent = "⏳ Envoi..."; // sablier qui tourne
+
   const newNom = document.getElementById("input-nom")?.value || originalValues.nom;
   const newType = document.getElementById("input-type")?.value || originalValues.type;
 
@@ -1476,13 +1481,13 @@ document.getElementById("btn-save").addEventListener("click", function(){
     showNotification("✅ Modification envoyée (en attente d’approbation)", "success");
     quitEditMode(newNom, newType);
   })
-  .catch(() => showNotification("❌ Échec d’envoi (réseau)", "error"));
-});
-
-// Annuler édition
-document.getElementById("btn-cancel").addEventListener("click", function(){
-  quitEditMode(originalValues.nom, originalValues.type);
-  showNotification("🔙 Édition annulée", "info");
+  .catch(() => showNotification("❌ Échec d’envoi (réseau)", "error"))
+  .finally(() => {
+    setTimeout(() => {
+      btnSave.disabled = false;
+      btnSave.textContent = "💾 Sauvegarder"; // retour normal
+    }, 3000);
+  });
 });
 
 function quitEditMode(nom, type){
