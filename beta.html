@@ -144,7 +144,14 @@ ul#suggestions:not(:empty){
     box-shadow: 0 6px 20px rgba(0,0,0,0.6);
   }
 }
-
+h2, p[style*="Repérer le poste"], 
+p[style*="Repérer l’accès"], 
+p[style*="Itinéraires disponibles"] {
+  display: flex;
+  align-items: center;       /* centre verticalement l’emoji et le texte */
+  justify-content: center;   /* centre horizontalement */
+  gap: 6px;                  /* petit espace entre l’emoji et le texte */
+}
     
 </style>
   <meta name="robots" content="noindex, nofollow" />
@@ -1597,7 +1604,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V2</span>
 </div>
 
 <script>
