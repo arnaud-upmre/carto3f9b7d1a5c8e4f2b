@@ -824,92 +824,30 @@ function incrementCounterAppareil() {
 
 function showLieu(lieu) {
   const result = document.getElementById("result");
-  const btnExit = document.getElementById("btn-exit-edit");
   document.getElementById("suggestions").innerHTML = "";
   result.style.display = "block";
   incrementCounter();
 
-  if (btnExit) btnExit.style.display = "none";
-
-  const _latPoste = (lieu.poste_latitude ?? "").toString();
-  const _lonPoste = (lieu.poste_longitude ?? "").toString();
-  const usePoste = _latPoste !== "" && _lonPoste !== "";
-  const targetLat = usePoste ? _latPoste : (lieu.latitude || 0);
-  const targetLon = usePoste ? _lonPoste : (lieu.longitude || 0);
-  const urlMyMapsPoste = myMapsViewer(targetLat, targetLon, 18);
-
   let html = `
     <div id="view-mode">
-      <h2 class="editable-zone">
-        📍 ${lieu.nom || "Nom inconnu"} 
-        <span class="editable-zone" style="font-weight:400; color:#555;">${lieu.type || "?"}</span>
+      <h2 class="editable-zone" data-field="nom">
+        📍 ${lieu.nom || "Nom inconnu"}
+        <span class="editable-zone" data-field="type" style="font-weight:400; color:#555;">
+          ${lieu.type || "?"}
+        </span>
         <a href="#" id="btn-edit" style="font-size:14px; font-weight:400; margin-left:8px; text-decoration:underline; color:#666;">(modifier)</a>
       </h2>
-
-      <!-- Bloc édition caché par défaut -->
-      <div id="edit-mode" style="display:none; padding:10px; border-radius:8px; margin-top:1rem; border:2px solid rgba(26,115,232,0.4);">
-        
-        <!-- 1. Titre + Type -->
-        <h2>
-          📍 <input type="text" id="edit-nom" value="${lieu.nom || 'Nom manquant'}" style="width:70%">
-          <select id="edit-type">
-            <option value="SP"   ${lieu.type==="SP"?"selected":""}>SP</option>
-            <option value="SSP"  ${lieu.type==="SSP"?"selected":""}>SSP</option>
-            <option value="PRCI" ${lieu.type==="PRCI"?"selected":""}>PRCI</option>
-          </select>
-        </h2>
-
-        <!-- Localisation Accès -->
-        <h3>📍 Localisation — Accès</h3>
-        <input type="text" id="acces-link" placeholder="Coller un lien Google Maps" style="width:100%; margin-bottom:6px">
-        <div id="map-acces" style="height:220px; margin-bottom:8px; border:1px solid #ccc; border-radius:8px;"></div>
-        <input type="text" id="acces-lat" value="${lieu.latitude || '0.00000'}" placeholder="Latitude" style="width:48%">
-        <input type="text" id="acces-lon" value="${lieu.longitude || '0.00000'}" placeholder="Longitude" style="width:48%">
-        
-        <!-- Localisation Poste -->
-        <h3>📍 Localisation — Poste</h3>
-        <input type="text" id="poste-link" placeholder="Coller un lien Google Maps" style="width:100%; margin-bottom:6px">
-        <div id="map-poste" style="height:220px; margin-bottom:8px; border:1px solid #ccc; border-radius:8px;"></div>
-        <input type="text" id="poste-lat" value="${lieu.poste_latitude || '0.00000'}" placeholder="Latitude" style="width:48%">
-        <input type="text" id="poste-lon" value="${lieu.poste_longitude || '0.00000'}" placeholder="Longitude" style="width:48%">
-
-        <!-- PK + Ligne -->
-        <h3>🚄 Données ferroviaires</h3>
-        <input type="text" id="edit-pk" value="${lieu.pk || '???,???'}" placeholder="PK" style="width:30%">
-        <input type="text" id="edit-ligne-num" value="${lieu.numero_ligne || '000000'}" placeholder="Numéro ligne" style="width:30%">
-        <input type="text" id="edit-ligne-nom" value="${lieu.lignes || 'Nom ligne'}" placeholder="Nom de la ligne" style="width:35%">
-
-        <!-- RSS -->
-        <h3>📞 RSS</h3>
-        <div class="inline-links pills-3">
-          <button class="btn-rss ${lieu.rss==='A'?'active':''}" data-value="A">Table 1</button>
-          <button class="btn-rss ${lieu.rss==='B'?'active':''}" data-value="B">Table 2</button>
-          <button class="btn-rss ${lieu.rss==='C'?'active':''}" data-value="C">Table 3</button>
-        </div>
-
-        <!-- Contact -->
-        <h3>👤 Contact</h3>
-        <input type="text" id="contact" value="${lieu.contact || 'Nom + numéro'}" placeholder="Nom et téléphone" style="width:100%">
-
-        <!-- Portail -->
-        <h3>🚧 Portail</h3>
-        <input type="text" id="portail" value="${lieu.portail || 'Code ou lien'}" placeholder="Code ou lien vidéo" style="width:100%">
-
-        <!-- Boutons -->
-        <div style="margin-top:1rem; text-align:right">
-          <button id="btn-save" class="btn-primary">💾 Sauvegarder</button>
-          <button id="btn-cancel" class="btn-primary">❌ Annuler</button>
-        </div>
-      </div>
   `;
 
   const blocs = [];
-  if (lieu.description) blocs.push(`<p class="editable-zone">${lieu.description}</p>`);
+  if (lieu.description)
+    blocs.push(`<p class="editable-zone" data-field="description">${lieu.description}</p>`);
   if (lieu.pk && lieu.numero_ligne && lieu.lignes)
-    blocs.push(`<p class="editable-zone"><strong>🚄 PK ${lieu.pk}</strong> sur la ligne n°<strong>${lieu.numero_ligne}</strong> - ${lieu.lignes}</p>`);
-  if (lieu.rss) blocs.push(formatRSS(lieu.rss));
-  if (lieu.contact) blocs.push(formatContact(lieu.contact));
-  if (lieu.portail) blocs.push(formatPortail(lieu.portail));
+    blocs.push(`<p class="editable-zone" data-field="pk"><strong>🚄 PK ${lieu.pk}</strong> sur la ligne n°<strong>${lieu.numero_ligne}</strong> - ${lieu.lignes}</p>`);
+  if (lieu.rss)
+    blocs.push(`<p class="editable-zone" data-field="rss">${formatRSS(lieu.rss)}</p>`);
+  if (lieu.portail)
+    blocs.push(`<p class="editable-zone" data-field="portail">${formatPortail(lieu.portail)}</p>`);
 
   if (blocs.length > 0) {
     html += `<hr class="separator" />` +
@@ -927,14 +865,6 @@ function showLieu(lieu) {
   setTimeout(() => {
     const btnEdit = document.getElementById("btn-edit");
 
-    if (btnExit) {
-      btnExit.onclick = () => {
-        document.getElementById("edit-mode").style.display = "none";
-        document.getElementById("view-mode").style.display = "block";
-        btnExit.style.display = "none";
-      };
-    }
-
     if (btnEdit) {
       btnEdit.addEventListener("click", (ev) => {
         ev.preventDefault();
@@ -943,47 +873,92 @@ function showLieu(lieu) {
         document.querySelectorAll(".editable-zone").forEach(el=>{
           el.classList.add("edit-highlight");
           el.addEventListener("click", ()=>{
-            document.getElementById("view-mode").style.display = "none";
-            document.getElementById("edit-mode").style.display = "block";
-            if (btnExit) btnExit.style.display = "block";
-            document.querySelectorAll(".editable-zone").forEach(x=>{
-              x.classList.remove("edit-highlight");
-            });
+            const field = el.dataset.field;
+
+            if (field === "nom" || field === "description" || field === "portail") {
+              const oldText = el.textContent.trim();
+              const input = document.createElement("input");
+              input.type = "text";
+              input.value = oldText;
+              input.style.width = "90%";
+              el.innerHTML = "";
+              el.appendChild(input);
+              input.focus();
+
+              input.addEventListener("blur", ()=>{
+                el.textContent = input.value;
+                lieu[field] = input.value;
+              });
+            }
+
+            if (field === "type") {
+              const select = document.createElement("select");
+              ["SP","SSP","PRCI"].forEach(opt=>{
+                const option = document.createElement("option");
+                option.value = opt;
+                option.textContent = opt;
+                if (lieu.type === opt) option.selected = true;
+                select.appendChild(option);
+              });
+              el.innerHTML = "";
+              el.appendChild(select);
+              select.focus();
+
+              select.addEventListener("blur", ()=>{
+                el.textContent = select.value;
+                lieu.type = select.value;
+              });
+            }
+
+            if (field === "pk") {
+              const inputPK = document.createElement("input");
+              inputPK.type = "text";
+              inputPK.value = lieu.pk || "";
+              const inputNum = document.createElement("input");
+              inputNum.type = "text";
+              inputNum.value = lieu.numero_ligne || "";
+              const inputNom = document.createElement("input");
+              inputNom.type = "text";
+              inputNom.value = lieu.lignes || "";
+
+              el.innerHTML = "";
+              el.appendChild(inputPK);
+              el.appendChild(inputNum);
+              el.appendChild(inputNom);
+              inputPK.focus();
+
+              const savePK = ()=>{
+                el.textContent = `🚄 PK ${inputPK.value} sur la ligne n°${inputNum.value} - ${inputNom.value}`;
+                lieu.pk = inputPK.value;
+                lieu.numero_ligne = inputNum.value;
+                lieu.lignes = inputNom.value;
+              };
+
+              inputNom.addEventListener("blur", savePK);
+            }
+
+            if (field === "rss") {
+              el.innerHTML = `
+                <button class="btn-rss" data-value="A">Table 1</button>
+                <button class="btn-rss" data-value="B">Table 2</button>
+                <button class="btn-rss" data-value="C">Table 3</button>
+              `;
+              el.querySelectorAll(".btn-rss").forEach(btn=>{
+                btn.addEventListener("click", ()=>{
+                  lieu.rss = btn.dataset.value;
+                  el.innerHTML = formatRSS(lieu.rss);
+                });
+              });
+            }
+
+            el.classList.remove("edit-highlight");
           }, { once:true });
         });
       });
     }
-
-    // Bouton Sauvegarder
-    const btnSave = document.getElementById("btn-save");
-    if (btnSave) {
-      btnSave.onclick = () => {
-        lieu.nom = document.getElementById("edit-nom").value;
-        lieu.type = document.getElementById("edit-type").value;
-        lieu.pk = document.getElementById("edit-pk").value;
-        lieu.numero_ligne = document.getElementById("edit-ligne-num").value;
-        lieu.lignes = document.getElementById("edit-ligne-nom").value;
-        lieu.contact = document.getElementById("contact").value;
-        lieu.portail = document.getElementById("portail").value;
-        lieu.latitude = document.getElementById("acces-lat").value;
-        lieu.longitude = document.getElementById("acces-lon").value;
-        lieu.poste_latitude = document.getElementById("poste-lat").value;
-        lieu.poste_longitude = document.getElementById("poste-lon").value;
-        showLieu(lieu);
-      };
-    }
-
-    // Bouton Annuler
-    const btnCancel = document.getElementById("btn-cancel");
-    if (btnCancel) {
-      btnCancel.onclick = () => {
-        document.getElementById("edit-mode").style.display = "none";
-        document.getElementById("view-mode").style.display = "block";
-        if (btnExit) btnExit.style.display = "none";
-      };
-    }
   }, 50);
 }
+    
   let allItems = [], fuseMix;
 
 // Charger postes + appareils
@@ -1474,7 +1449,7 @@ setInterval(updateContrib, 3000);
 
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.01</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V2</span>
 </div>
 
 <script>
