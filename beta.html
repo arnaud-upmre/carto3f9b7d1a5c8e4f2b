@@ -145,18 +145,20 @@ ul#suggestions:not(:empty){
   }
 }
 /* Centrer proprement les titres "Repérer..." */
-.rep-block {
-  text-align: center;
+.rep-block{
+  display:flex;
+  flex-direction:column;
+  align-items:center;          /* centre le texte + le bouton */
+  margin:1.5rem 0 .5rem 0;
 }
-
-.rep-block p {
-  display: inline-flex;       /* le texte prend la largeur du contenu */
-  justify-content: center;    /* centre le ⚡️ + texte */
-  align-items: center;
-  gap: 6px;
-  margin: 0 0 6px 0;
+.rep-block p{
+  display:inline-flex;         /* aligne ⚡️ avec le texte */
+  justify-content:center;
+  align-items:center;
+  font-weight:600;             /* gras */
+  gap:6px;
+  margin:0 0 6px 0;
 }
-    
 </style>
   <meta name="robots" content="noindex, nofollow" />
   <meta charset="UTF-8" />
@@ -944,7 +946,7 @@ let html = `<h2>
 </h2>
 
 <div class="rep-block">
-  <p>⚡️ <span>Repérer le poste :</span></p>
+  <p>⚡️ Repérer le poste :</p>
   <div class="inline-links pills-3">
     <a href="${urlMyMapsPoste}" target="_blank" rel="noopener">🛰️ Vue satellite</a>
   </div>
