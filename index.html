@@ -1605,24 +1605,14 @@ originalValues.rss = val; // "Table 1", "Table 2", "Table 3"
       return; // on sort ici pour ne pas exécuter le reste
     }
   
-// Description
-if (e.target.id === "editable-description") {
-  const span = e.target.parentNode.querySelector(".desc-value");
-  const currentVal = span ? span.textContent.trim() : "";
-  span.outerHTML = `<textarea id="input-description" style="width:100%; min-height:60px; border:2px solid #1a73e8; padding:4px; border-radius:6px;">${currentVal}</textarea>`;
-  document.getElementById("edit-buttons").style.display = "block";
-  navigator.vibrate?.(50);
-  return;
-}
+// Description (cliquable sur tout le bloc)
+if (editMode && (e.target.id === "editable-description" || e.target.closest("#editable-description"))) {
+  const parent = document.getElementById("editable-description").parentNode;
+  const spanVal = parent.querySelector(".desc-value");
+  const currentVal = spanVal ? spanVal.textContent.trim() : "";
 
-if (e.target.id === "editable-contact") {
-  const parent = e.target.parentNode;
-const val = originalValues.contact || "";
-  parent.innerHTML = `
-    <strong id="editable-contact">👤 Contact :</strong>
-    <input type="text" id="input-contact" value="${val}" 
-      style="border:2px solid #1a73e8; padding:3px; border-radius:6px; margin-left:6px; width:80%;" />
-  `;
+  spanVal.outerHTML = `<textarea id="input-description" style="width:100%; min-height:60px; border:2px solid #1a73e8; padding:4px; border-radius:6px;">${currentVal}</textarea>`;
+
   document.getElementById("edit-buttons").style.display = "block";
   navigator.vibrate?.(50);
   return;
