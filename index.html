@@ -1010,10 +1010,13 @@ if (lieu.rss) {
 // 🚄 PK + Ligne (même si incomplet)
 const pk = lieu.pk ? lieu.pk : '<span class="placeholder">(non renseigné)</span>';
 const numLigne = lieu.numero_ligne ? lieu.numero_ligne : '<span class="placeholder">(non renseigné)</span>';
-const ligneNom = lieu.lignes ? ` – ${lieu.lignes}` : "";
+const ligneNom = lieu.lignes ? ` <span id="ligne-nom">– ${lieu.lignes}</span>` : "";
 
 blocs.push(`
-  <p><strong>🚄 PK ${pk}</strong> sur la ligne n°<strong>${numLigne}</strong>${ligneNom}</p>
+  <p>
+    <strong id="editable-pk">🚄 PK ${pk}</strong>
+    sur la ligne n°<strong id="editable-numero_ligne">${numLigne}</strong>${ligneNom}
+  </p>
 `);
 
 // Informations
@@ -1554,10 +1557,16 @@ originalValues.contact = currentItem.contact || "";
 originalValues.portail = currentItem.portail || "";
 
       // Ajoute halo + vibration sur les zones modifiables existantes
-["editable-nom","editable-type","editable-sat","editable-acces","editable-rss","editable-description","editable-contact","editable-portail"].forEach(id=>{
+["editable-nom","editable-type","editable-sat","editable-acces","editable-rss",
+ "editable-description","editable-contact","editable-portail",
+ "editable-pk","editable-numero_ligne"].forEach(id=>{
   const el = document.getElementById(id);
   if (el) el.classList.add("editable-halo");
 });
+
+// Masque le nom de ligne pendant l’édition
+const ligneNomEl = document.getElementById("ligne-nom");
+if (ligneNomEl) ligneNomEl.style.display = "none";
 
       document.getElementById("edit-buttons").style.display = "flex";
       navigator.vibrate?.(80);
@@ -1696,7 +1705,8 @@ document.getElementById("btn-save").addEventListener("click", function(){
 const newDescription = document.getElementById("input-description")?.value || originalValues.description || "";
 const newContact     = document.getElementById("input-contact")?.value     || originalValues.contact || "";
 const newPortail     = document.getElementById("input-portail")?.value     || originalValues.portail || "";
-
+const newPk   = document.getElementById("input-pk")?.value || currentItem.pk || "";
+const newNumLigne = document.getElementById("input-numero_ligne")?.value || currentItem.numero_ligne || "";
   
   const demandeur = getDemandeur();
   const ficheOrigine = currentItem
@@ -1717,6 +1727,8 @@ const newPortail     = document.getElementById("input-portail")?.value     || or
 if (newDescription !== (originalValues.description || "")) payload.description = newDescription;
 if (newContact !== (originalValues.contact || "")) payload.contact = newContact;
 if (newPortail !== (originalValues.portail || "")) payload.portail = newPortail;
+ if (newPk !== (currentItem.pk || "")) payload.pk = newPk;
+if (newNumLigne !== (currentItem.numero_ligne || "")) payload.numero_ligne = newNumLigne;
   
   fetch("https://script.google.com/macros/s/AKfycbyxh3HGR6iHcn0ynwfGzSzOm5Djc7o2e1uA4dvdPurolDerZlNiARcpsiY4daDRPSV1tw/exec", {
     method: "POST",
@@ -1778,6 +1790,9 @@ if (document.getElementById("editable-portail")) {
   document.getElementById("editable-portail").parentNode.outerHTML =
     formatPortail(portailVal);
 }
+  // Réaffiche le nom de la ligne après édition
+const ligneNomEl = document.getElementById("ligne-nom");
+if (ligneNomEl) ligneNomEl.style.display = "inline";
   editMode = false;
 }
     // Annuler édition
