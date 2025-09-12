@@ -152,7 +152,12 @@ ul#suggestions:not(:empty){
 .rep-block p {
   font-weight: 600;
   margin: 0 0 6px 0;
-  text-align: center;   /* ✅ centre le texte */
+  text-align: center;
+
+  display: flex;              /* active flexbox */
+  justify-content: center;    /* centre tout au milieu */
+  align-items: center;        /* aligne emoji + texte verticalement */
+  gap: 6px;                   /* petit espace entre emoji et texte */
 }
     
 </style>
@@ -942,7 +947,7 @@ let html = `<h2>
 </h2>
 
 <div class="rep-block">
-  <p>⚡️ Repérer le poste :</p>
+ <p>⚡️ <span>Repérer le poste :</span></p>
   <div class="inline-links pills-3">
     <a href="${urlMyMapsPoste}" target="_blank" rel="noopener">🛰️ Vue satellite</a>
   </div>
