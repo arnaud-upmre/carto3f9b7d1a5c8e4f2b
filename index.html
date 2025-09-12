@@ -1542,6 +1542,9 @@ document.addEventListener("click", function(e){
       editMode = true;
       originalValues.nom = document.getElementById("editable-nom").textContent;
       originalValues.type = document.getElementById("editable-type").textContent;
+        originalValues.pk = currentItem.pk || "";
+  originalValues.numero_ligne = currentItem.numero_ligne || "";
+      
       if (document.getElementById("editable-sat")) {
         originalValues.sat = document.getElementById("editable-sat").textContent.trim();
       }
@@ -1765,8 +1768,8 @@ function quitEditMode(nom, type, sat = "", acces = ""){
     document.getElementById("editable-acces").textContent = " – accès " + acces;
   }
   // ➡️ Reconstruit le bloc PK + ligne
-const pkVal = currentItem.pk || "(non renseigné)";
-const numVal = currentItem.numero_ligne || "(non renseigné)";
+const pkVal = originalValues.pk || currentItem.pk || "(non renseigné)";
+const numVal = originalValues.numero_ligne || currentItem.numero_ligne || "(non renseigné)";
 const ligneNomEl = document.getElementById("ligne-nom");
 const ligneNomTxt = ligneNomEl ? ligneNomEl.textContent : "";
 
@@ -1809,7 +1812,6 @@ if (document.getElementById("editable-portail")) {
     formatPortail(portailVal);
 }
   // Réaffiche le nom de la ligne après édition
-const ligneNomEl = document.getElementById("ligne-nom");
 if (ligneNomEl) ligneNomEl.style.display = "inline";
   editMode = false;
 }
