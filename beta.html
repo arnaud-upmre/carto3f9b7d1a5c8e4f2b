@@ -1604,14 +1604,15 @@ fetch("https://script.google.com/macros/s/AKfycbyxh3HGR6iHcn0ynwfGzSzOm5Djc7o2e1
     method: "POST",
     mode: "no-cors",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      demandeur,
-      ficheOrigine,
-      nom: newNom,
-      type: newType,
-      sat: newSat,
-      acces: newAcces
-    })
+body: JSON.stringify({
+  demandeur,
+  ficheOrigine,
+  nom: newNom,
+  type: newType,
+  sat: newSat,
+  acces: newAcces,
+  rss: originalValues.rss || ""   // ✅ ajout ici
+})
 })
   
   .then(() => {
