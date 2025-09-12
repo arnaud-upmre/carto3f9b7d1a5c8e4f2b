@@ -466,6 +466,65 @@ main {
   }
 }
     #btn-localiser { margin-top: 4rem; }  /* plus d’espace au-dessus */
+
+  #notification {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 240px;
+  max-width: 90%;
+  padding: 12px 18px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  text-align: center;
+  display: none;
+  z-index: 99999;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+/* Succès */
+#notification.success {
+  background: #e6f4ea;
+  color: #137333;
+  border: 1px solid #137333;
+}
+
+/* Erreur */
+#notification.error {
+  background: #fce8e6;
+  color: #b00020;
+  border: 1px solid #b00020;
+}
+
+/* Info (pour annulation) */
+#notification.info {
+  background: #e8f0fe;
+  color: #174ea6;
+  border: 1px solid #174ea6;
+}
+
+/* Mode sombre */
+@media (prefers-color-scheme: dark) {
+  #notification.success {
+    background: #1e2a21;
+    color: #8dd39c;
+    border: 1px solid #8dd39c;
+  }
+  #notification.error {
+    background: #3a1c1c;
+    color: #ff8a80;
+    border: 1px solid #ff8a80;
+  }
+  #notification.info {
+    background: #1a237e;
+    color: #90caf9;
+    border: 1px solid #90caf9;
+  }
+}
+  
+  
   </style>
   <meta name="color-scheme" content="light dark">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
@@ -1409,20 +1468,21 @@ document.getElementById("btn-save").addEventListener("click", function(){
 
   fetch("https://script.google.com/macros/s/AKfycbyxh3HGR6iHcn0ynwfGzSzOm5Djc7o2e1uA4dvdPurolDerZlNiARcpsiY4daDRPSV1tw/exec", {
     method: "POST",
-    mode: "no-cors",   // ✅ contourne le blocage CORS
+    mode: "no-cors",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ nom: newNom, type: newType })
   })
   .then(() => {
-    alert("✅ Modifications envoyées !");
+    showNotification("✅ Modification envoyée (en attente d’approbation)", "success");
     quitEditMode(newNom, newType);
   })
-  .catch(err => alert("❌ Erreur réseau : " + err));
+  .catch(() => showNotification("❌ Échec d’envoi (réseau)", "error"));
 });
 
 // Annuler édition
 document.getElementById("btn-cancel").addEventListener("click", function(){
   quitEditMode(originalValues.nom, originalValues.type);
+  showNotification("🔙 Édition annulée", "info");
 });
 
 function quitEditMode(nom, type){
@@ -1438,10 +1498,20 @@ function quitEditMode(nom, type){
   document.getElementById("edit-buttons").style.display = "none";
   editMode = false;
 }
+    function showNotification(message, type = "info") {
+  const notif = document.getElementById("notification");
+  notif.textContent = message;
+  notif.className = type; // "success", "error" ou "info"
+  notif.style.display = "block";
+
+  setTimeout(() => {
+    notif.style.display = "none";
+  }, 4000);
+}
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V6</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1</span>
 </div>
 
 <script>
@@ -1483,27 +1553,7 @@ function quitEditMode(nom, type){
       "Une idée d’Arnaud.",
       "Mis en place par Arnaud.",
       "Lancé par Arnaud.",
-      "Conçu par Arnaud.",// Sauvegarde
-document.getElementById("btn-save").addEventListener("click", function(){
-  const newNom = document.getElementById("input-nom")?.value || originalValues.nom;
-  const newType = document.getElementById("input-type")?.value || originalValues.type;
-
-  fetch("https://script.google.com/macros/s/AKfycbyxh3HGR6iHcn0ynwfGzSzOm5Djc7o2e1uA4dvdPurolDerZlNiARcpsiY4daDRPSV1tw/exec", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ nom: newNom, type: newType })
-  })
-  .then(r => r.json())
-  .then(res => {
-    if (res.status === "ok") {
-      alert("✅ Modifications enregistrées !");
-      quitEditMode(newNom, newType);
-    } else {
-      alert("⚠️ Erreur côté script : " + res.error);
-    }
-  })
-  .catch(err => alert("❌ Erreur réseau : " + err));
-});V
+      "Conçu par Arnaud.",
       "Mis en ligne par Arnaud.",
       "Mis en route par Arnaud.",
       "Fait maison par Arnaud.",
@@ -1551,5 +1601,6 @@ document.getElementById("btn-save").addEventListener("click", function(){
   }
 })();
 </script>
+  <div id="notification"></div>
 </body>
 </html>
