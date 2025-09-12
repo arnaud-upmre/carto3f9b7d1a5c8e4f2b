@@ -1011,24 +1011,17 @@ if (lieu.rss) {
 blocs.push(`<p><strong id="editable-description">ℹ️ Informations :</strong> <span class="desc-value">${lieu.description || '<span class="placeholder">(non renseigné)</span>'}</span></p>`);
 
 // Contact
-blocs.push(`
-  <p>
-    <strong id="editable-contact">👤 Contact :</strong>
-    <span class="contact-value">
-      ${lieu.contact ? formatContact(lieu.contact).replace("👤 Contact :", "") : '<span class="placeholder">(non renseigné)</span>'}
-    </span>
-  </p>
-`);
+blocs.push(
+  formatContact(lieu.contact) ||
+  `<p><strong id="editable-contact">👤 Contact :</strong> <span class="contact-value"><span class="placeholder">(non renseigné)</span></span></p>`
+);
 
 // Portail
-blocs.push(`
-  <p>
-    <strong id="editable-portail">🚧 Portail :</strong>
-    <span class="portail-value">
-      ${lieu.portail ? formatPortail(lieu.portail).replace("🚧 Portail :", "") : '<span class="placeholder">(non renseigné)</span>'}
-    </span>
-  </p>
-`);
+blocs.push(
+  formatPortail(lieu.portail) ||
+  `<p><strong id="editable-portail">🚧 Portail :</strong> <span class="portail-value"><span class="placeholder">(non renseigné)</span></span></p>`
+);
+
   
   if (blocs.length > 0) {
     html += `<hr class="separator" />` +
@@ -1546,12 +1539,19 @@ document.addEventListener("click", function(e){
         if (document.getElementById("editable-description")) {
     originalValues.description = document.getElementById("editable-description").textContent.trim();
   }
-  if (document.getElementById("editable-contact")) {
-    originalValues.contact = document.getElementById("editable-contact").textContent.replace("👤 Contact :","").trim();
-  }
-  if (document.getElementById("editable-portail")) {
-    originalValues.portail = document.getElementById("editable-portail").textContent.replace("🚧 Portail :","").trim();
-  }
+ if (document.getElementById("editable-contact")) {
+  document.getElementById("editable-contact").parentNode.innerHTML =
+    `<strong id="editable-contact">👤 Contact :</strong> ${
+      originalValues.contact || '<span class="placeholder">(non renseigné)</span>'
+    }`;
+}
+
+if (document.getElementById("editable-portail")) {
+  document.getElementById("editable-portail").parentNode.innerHTML =
+    `<strong id="editable-portail">🚧 Portail :</strong> ${
+      originalValues.portail || '<span class="placeholder">(non renseigné)</span>'
+    }`;
+}
 
       // Ajoute halo + vibration sur les zones modifiables existantes
 ["editable-nom","editable-type","editable-sat","editable-acces","editable-rss","editable-description","editable-contact","editable-portail"].forEach(id=>{
@@ -1624,23 +1624,27 @@ if (e.target.id === "editable-description") {
   return;
 }
 
-// Contact
 if (e.target.id === "editable-contact") {
-  const span = e.target.parentNode.querySelector(".contact-value");
-  const currentVal = originalValues.contact || ""; // ✅ valeur brute d’origine
-  span.innerHTML = `<input type="text" id="input-contact" value="${currentVal}" 
-    style="border:2px solid #1a73e8; padding:3px; border-radius:6px; width:100%;" />`;
+  const parent = e.target.parentNode; // <p>
+  const val = parent.querySelector(".contact-value")?.textContent.trim() || "";
+  parent.innerHTML = `
+    <strong id="editable-contact">👤 Contact :</strong>
+    <input type="text" id="input-contact" value="${val}" 
+      style="border:2px solid #1a73e8; padding:3px; border-radius:6px; margin-left:6px; width:80%;" />
+  `;
   document.getElementById("edit-buttons").style.display = "block";
   navigator.vibrate?.(50);
   return;
 }
 
-// Portail
 if (e.target.id === "editable-portail") {
-  const span = e.target.parentNode.querySelector(".portail-value");
-  const currentVal = originalValues.portail || ""; // ✅ valeur brute d’origine
-  span.innerHTML = `<input type="text" id="input-portail" value="${currentVal}" 
-    style="border:2px solid #1a73e8; padding:3px; border-radius:6px; width:100%;" />`;
+  const parent = e.target.parentNode; // <p>
+  const val = parent.querySelector(".portail-value")?.textContent.trim() || "";
+  parent.innerHTML = `
+    <strong id="editable-portail">🚧 Portail :</strong>
+    <input type="text" id="input-portail" value="${val}" 
+      style="border:2px solid #1a73e8; padding:3px; border-radius:6px; width:auto; display:inline-block; margin-left:6px;" />
+  `;
   document.getElementById("edit-buttons").style.display = "block";
   navigator.vibrate?.(50);
   return;
@@ -1746,14 +1750,16 @@ function quitEditMode(nom, type, sat = "", acces = ""){
     if (document.getElementById("editable-description")) {
     document.getElementById("editable-description").textContent = originalValues.description || "";
   }
-if (document.querySelector(".contact-value")) {
-  document.querySelector(".contact-value").innerHTML =
-    originalValues.contact ? formatContact(originalValues.contact).replace("👤 Contact :", "") : '<span class="placeholder">(non renseigné)</span>';
+if (document.getElementById("editable-contact")) {
+  document.getElementById("editable-contact").parentNode.outerHTML =
+    formatContact(originalValues.contact) ||
+    `<p><strong id="editable-contact">👤 Contact :</strong> <span class="placeholder">(non renseigné)</span></p>`;
 }
 
-if (document.querySelector(".portail-value")) {
-  document.querySelector(".portail-value").innerHTML =
-    originalValues.portail ? formatPortail(originalValues.portail).replace("🚧 Portail :", "") : '<span class="placeholder">(non renseigné)</span>';
+if (document.getElementById("editable-portail")) {
+  document.getElementById("editable-portail").parentNode.outerHTML =
+    formatPortail(originalValues.portail) ||
+    `<p><strong id="editable-portail">🚧 Portail :</strong> <span class="placeholder">(non renseigné)</span></p>`;
 }
   
   editMode = false;
