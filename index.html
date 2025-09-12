@@ -1740,8 +1740,9 @@ function quitEditMode(nom, type, sat = "", acces = ""){
 if (document.getElementById("editable-description")) {
   const descVal = originalValues.description || "";
   const textarea = document.getElementById("input-description");
+
   if (textarea) {
-    // On écrase seulement le contenu du textarea par un span
+    // Remplace seulement le textarea par le span
     textarea.replaceWith(
       Object.assign(document.createElement("span"), {
         className: "desc-value",
@@ -1749,7 +1750,7 @@ if (document.getElementById("editable-description")) {
       })
     );
   } else {
-    // Si déjà en span, on met juste à jour
+    // Si déjà en span, on met juste à jour son contenu
     const span = document.querySelector(".desc-value");
     if (span) {
       span.innerHTML = descVal || '<span class="placeholder">(non renseigné)</span>';
