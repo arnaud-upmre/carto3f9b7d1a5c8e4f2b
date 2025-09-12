@@ -1520,7 +1520,7 @@ document.addEventListener("click", function(e){
       }
 
       // Ajoute halo + vibration sur les zones modifiables existantes
-["editable-nom","editable-type","editable-sat","editable-acces","editable-rss"].forEach(id=>{
+["editable-nom","editable-type","editable-sat","editable-acces","editable-rss","editable-description","editable-contact","editable-portail"].forEach(id=>{
   const el = document.getElementById(id);
   if (el) el.classList.add("editable-halo");
 });
@@ -1534,7 +1534,7 @@ document.addEventListener("click", function(e){
 // Quand on clique sur une zone modifiable
 document.addEventListener("click", function(e){
 if (editMode && (
-    ["editable-nom","editable-type","editable-sat","editable-acces","editable-rss"].includes(e.target.id) ||
+    ["editable-nom","editable-type","editable-sat","editable-acces","editable-rss","editable-description","editable-contact","editable-portail"].includes(e.target.id) ||
     e.target.closest("#editable-rss")
 )) {
     
@@ -1567,7 +1567,33 @@ if (phones) phones.style.display = "none";
       });
       return; // on sort ici pour ne pas exécuter le reste
     }
+    // Cas spécial Description (textarea multi-ligne)
+    if (e.target.id === "editable-description") {
+      const currentVal = e.target.textContent.trim();
+      e.target.innerHTML = `<textarea id="input-description" style="width:100%; min-height:60px; border:2px solid #1a73e8; padding:4px; border-radius:6px;">${currentVal}</textarea>`;
+      document.getElementById("edit-buttons").style.display = "block";
+      navigator.vibrate?.(50);
+      return;
+    }
 
+    // Cas spécial Contact (input)
+    if (e.target.id === "editable-contact") {
+      const currentVal = e.target.textContent.replace("👤 Contact :","").trim();
+      e.target.innerHTML = `<input type="text" id="input-contact" value="${currentVal}" style="border:2px solid #1a73e8; padding:3px; border-radius:6px; width:100%;" />`;
+      document.getElementById("edit-buttons").style.display = "block";
+      navigator.vibrate?.(50);
+      return;
+    }
+
+    // Cas spécial Portail (input)
+    if (e.target.id === "editable-portail") {
+      const currentVal = e.target.textContent.replace("🚧 Portail :","").trim();
+      e.target.innerHTML = `<input type="text" id="input-portail" value="${currentVal}" style="border:2px solid #1a73e8; padding:3px; border-radius:6px; width:100%;" />`;
+      document.getElementById("edit-buttons").style.display = "block";
+      navigator.vibrate?.(50);
+      return;
+    }
+  
     // Cas normal (nom, type, sat, accès)
     const field = e.target.id.replace("editable-","");
     let currentVal = e.target.textContent.replace("– accès ","").trim();
@@ -1605,7 +1631,11 @@ document.getElementById("btn-save").addEventListener("click", function(){
   const newType  = document.getElementById("input-type")?.value  || originalValues.type;
   const newSat   = document.getElementById("input-sat")?.value   || originalValues.sat || "";
   const newAcces = document.getElementById("input-acces")?.value || originalValues.acces || "";
+const newDescription = document.getElementById("input-description")?.value || originalValues.description || "";
+const newContact     = document.getElementById("input-contact")?.value     || originalValues.contact || "";
+const newPortail     = document.getElementById("input-portail")?.value     || originalValues.portail || "";
 
+  
   const demandeur = getDemandeur();
   const ficheOrigine = currentItem
     ? `${currentItem.nom || ''} ${currentItem.type || ''} ${currentItem.SAT || ''} ${currentItem.accès || ''}`.trim()
@@ -1622,7 +1652,10 @@ document.getElementById("btn-save").addEventListener("click", function(){
   if (newSat !== (originalValues.sat || "")) payload.sat = newSat;
   if (newAcces !== (originalValues.acces || "")) payload.acces = newAcces;
   if (originalValues.rss) payload.rss = originalValues.rss;
-
+if (newDescription !== (originalValues.description || "")) payload.description = newDescription;
+if (newContact !== (originalValues.contact || "")) payload.contact = newContact;
+if (newPortail !== (originalValues.portail || "")) payload.portail = newPortail;
+  
   fetch("https://script.google.com/macros/s/AKfycbyxh3HGR6iHcn0ynwfGzSzOm5Djc7o2e1uA4dvdPurolDerZlNiARcpsiY4daDRPSV1tw/exec", {
     method: "POST",
     mode: "no-cors",
@@ -1658,6 +1691,15 @@ function quitEditMode(nom, type, sat = "", acces = ""){
 });
 
   document.getElementById("edit-buttons").style.display = "none";
+    if (document.getElementById("editable-description")) {
+    document.getElementById("editable-description").textContent = originalValues.description || "";
+  }
+  if (document.getElementById("editable-contact")) {
+    document.getElementById("editable-contact").textContent = originalValues.contact || "";
+  }
+  if (document.getElementById("editable-portail")) {
+    document.getElementById("editable-portail").textContent = originalValues.portail || "";
+  }
   editMode = false;
 }
     // Annuler édition
