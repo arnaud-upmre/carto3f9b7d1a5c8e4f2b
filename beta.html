@@ -754,7 +754,8 @@ function formatRSS(table) {
   const tableNum = { "A": "1", "B": "2", "C": "3" };
   if (!tables[table]) return `<p><strong>📞 RSS :</strong> ${table}</p>`;
   const nums = tables[table].map(num => `<a href="tel:${num.replace(/\s+/g, '')}">${num}</a>`).join("");
- return `<p id="editable-rss"><strong>📞 RSS Table ${tableNum[table] || table}</strong></p><div class="inline-links">${nums}</div>`;
+return `<p id="editable-rss"><strong>📞 RSS Table ${tableNum[table] || table}</strong></p>
+        <div id="rss-phones" class="inline-links">${nums}</div>`;
 }
 function generateAppareilListHTML(currentLieu) {
   const matchingApps = appareils.filter(app => 
@@ -1539,6 +1540,8 @@ if (editMode && (
     
     // Cas spécial RSS → boutons Table 1/2/3
   if (e.target.id === "editable-rss" || e.target.closest("#editable-rss")) {
+    const phones = document.getElementById("rss-phones");
+if (phones) phones.style.display = "none";
       e.target.innerHTML = `
         <div class="inline-links">
           <button class="btn-primary btn-rss" data-val="Table 1">Table 1</button>
@@ -1550,8 +1553,8 @@ if (editMode && (
       document.querySelectorAll(".btn-rss").forEach(btn => {
         btn.addEventListener("click", ev => {
           const val = ev.target.dataset.val;
-          e.target.innerHTML = `<strong>📞 ${val}</strong>`;
-          originalValues.rss = val; // ✅ stocke la valeur choisie
+e.target.innerHTML = `<strong>📞 RSS ${val}</strong>`;
+originalValues.rss = `RSS ${val}`;
         });
       });
       return; // on sort ici pour ne pas exécuter le reste
@@ -1638,10 +1641,10 @@ function quitEditMode(nom, type, sat = "", acces = ""){
     document.getElementById("editable-acces").textContent = " – accès " + acces;
   }
 
-  ["editable-nom","editable-type","editable-sat","editable-acces"].forEach(id=>{
-    const el = document.getElementById(id);
-    if (el) el.classList.remove("editable-halo");
-  });
+["editable-nom","editable-type","editable-sat","editable-acces","editable-rss"].forEach(id=>{
+  const el = document.getElementById(id);
+  if (el) el.classList.remove("editable-halo");
+});
 
   document.getElementById("edit-buttons").style.display = "none";
   editMode = false;
