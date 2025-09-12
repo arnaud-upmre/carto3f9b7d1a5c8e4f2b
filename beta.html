@@ -167,6 +167,8 @@ ul#suggestions:not(:empty){
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+  
+
   <style>
 body {
   font-family: 'Inter', sans-serif;
@@ -557,7 +559,17 @@ main {
     border: 1px solid #90caf9;
   }
 }
-  
+    .rep-block.horizontal {
+  flex-direction: row;          
+  justify-content: center;      
+  align-items: center;          
+  gap: 12px;                    
+}
+
+.rep-block.horizontal p {
+  margin: 0; 
+  font-weight: 600;
+}
   
   </style>
   <meta name="color-scheme" content="light dark">
@@ -946,11 +958,9 @@ let html = `<h2>
   <a href="#" id="edit-toggle">[modifier]</a>
 </h2>
 
-<div class="rep-block">
-  <p>⚡️ Repérer le poste :</p>
-  <div class="inline-links pills-3">
-    <a href="${urlMyMapsPoste}" target="_blank" rel="noopener">🛰️ Vue satellite</a>
-  </div>
+<div class="rep-block horizontal">
+  <p style="margin:0; font-weight:600;">⚡️ Repérer le poste :</p>
+  <a href="${urlMyMapsPoste}" target="_blank" rel="noopener" class="btn-primary">🛰️ Vue satellite</a>
 </div>
 
 <div class="rep-block">
@@ -1618,7 +1628,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V3</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1</span>
 </div>
 
 <script>
