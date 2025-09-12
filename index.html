@@ -1749,12 +1749,13 @@ function quitEditMode(nom, type, sat = "", acces = ""){
 
   document.getElementById("edit-buttons").style.display = "none";
  
-if (document.getElementById("editable-description")) {
-  const descVal = originalValues.description || "";
-  const span = document.querySelector(".desc-value");
-  if (span) {
-    span.innerHTML = descVal || '<span class="placeholder">(non renseigné)</span>';
-  }
+if (document.getElementById("input-description")) {
+  const descVal = document.getElementById("input-description").value.trim();
+  originalValues.description = descVal; // on garde la valeur locale
+
+  // ➡️ remplace le textarea par le bloc normal formaté
+  document.getElementById("input-description").parentNode.outerHTML =
+    formatDescription(descVal);
 }
 
 if (document.getElementById("editable-contact")) {
@@ -1794,7 +1795,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V3</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1</span>
 </div>
 
 <script>
