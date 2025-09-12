@@ -1532,10 +1532,13 @@ document.addEventListener("click", function(e){
 
 // Quand on clique sur une zone modifiable
 document.addEventListener("click", function(e){
-  if (editMode && ["editable-nom","editable-type","editable-sat","editable-acces","editable-rss"].includes(e.target.id)) {
+if (editMode && (
+    ["editable-nom","editable-type","editable-sat","editable-acces","editable-rss"].includes(e.target.id) ||
+    e.target.closest("#editable-rss")
+)) {
     
     // Cas spécial RSS → boutons Table 1/2/3
-    if (e.target.id === "editable-rss") {
+  if (e.target.id === "editable-rss" || e.target.closest("#editable-rss")) {
       e.target.innerHTML = `
         <div class="inline-links">
           <button class="btn-primary btn-rss" data-val="Table 1">Table 1</button>
