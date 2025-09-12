@@ -456,6 +456,8 @@ main {
   <meta name="color-scheme" content="light dark">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
 <meta name="theme-color" media="(prefers-color-scheme: dark)"  content="#121212">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body> <main>
   <div id="train-container">
@@ -831,18 +833,18 @@ let html = `<h2 class="editable-zone">
 </h2>`;
 
 html += `
-  <p style="text-align:center; font-weight:600; margin:1.5rem 0 0.5rem 0;">🛣️ Repérer l’accès :</p>
-  <div class="inline-links pills-3">
-    <a href="${myMapsViewer(lieu.latitude, lieu.longitude, 19)}" target="_blank" rel="noopener">🛰️ Vue satellite</a>
-    <a href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">👁️ Street View</a>
-  </div>
+  <div id="edit-localisation" style="padding:10px; border-radius:8px; margin-top:1rem; border:2px solid rgba(26,115,232,0.4);">
+    <h3>📍 Localisation — Accès</h3>
+    <input type="text" id="acces-lat" value="${lieu.latitude}" placeholder="Latitude" style="width:48%; margin:2px;">
+    <input type="text" id="acces-lon" value="${lieu.longitude}" placeholder="Longitude" style="width:48%; margin:2px;">
+    <input type="text" id="acces-link" placeholder="Lien Google Maps" style="width:100%; margin-top:4px;">
 
-  <p style="text-align:center; font-weight:600; margin:1.5rem 0 0.5rem 0;">🚙 Itinéraires disponibles :</p>
-  <div class="inline-links pills-3">
-    <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🗺️ Maps</a>
-    <a href="https://maps.apple.com/?daddr=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🍎 Plans</a>
-    <a href="https://waze.com/ul?ll=${lieu.latitude},${lieu.longitude}&navigate=yes" target="_blank" rel="noopener">🚗 Waze</a>
+    <h3 style="margin-top:1.2rem;">📍 Localisation — Poste</h3>
+    <input type="text" id="poste-lat" value="${lieu.poste_latitude || ''}" placeholder="Latitude" style="width:48%; margin:2px;">
+    <input type="text" id="poste-lon" value="${lieu.poste_longitude || ''}" placeholder="Longitude" style="width:48%; margin:2px;">
+    <input type="text" id="poste-link" placeholder="Lien Google Maps" style="width:100%; margin-top:4px;">
   </div>`;
+
 
   const blocs = [];
  if (lieu.description) blocs.push(`<p class="editable-zone">${lieu.description}</p>`);
