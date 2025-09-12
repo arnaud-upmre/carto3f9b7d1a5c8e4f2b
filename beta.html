@@ -1468,22 +1468,22 @@ document.addEventListener("click", function(e){
   }
 });
 
-function getAuteur() {
-  let auteur = localStorage.getItem("auteur");
+function getDemandeur() {
+  let demandeur = localStorage.getItem("demandeur");
   const regexNom = /^[A-Za-zÀ-ÖØ-öø-ÿ\s\-]{2,}$/;
 
-  while (!auteur || !regexNom.test(auteur)) {
-    auteur = prompt("👉 Entrez votre prénom et nom").trim();
+  while (!demandeur || !regexNom.test(demandeur)) {
+    demandeur = prompt("👉 Entrez votre prénom et nom").trim();
 
-    if (!auteur || !regexNom.test(auteur)) {
-      alert("⚠️ Nom invalide");
-      auteur = "";
+    if (!demandeur || !regexNom.test(demandeur)) {
+      alert("⚠️ Nom invalide. Utilisez uniquement lettres / espaces / accents.");
+      demandeur = "";
     }
   }
 
   // ✅ On garde le nom en mémoire dans le navigateur
-  localStorage.setItem("auteur", auteur);
-  return auteur;
+  localStorage.setItem("demandeur", demandeur);
+  return demandeur;
 }
     
 // Sauvegarde
@@ -1497,13 +1497,13 @@ document.getElementById("btn-save").addEventListener("click", function(){
   const newSat   = document.getElementById("input-sat")?.value   || originalValues.sat || "";
   const newAcces = document.getElementById("input-acces")?.value || originalValues.acces || "";
 
-const auteur = getAuteur(); // ⬅️ récupère l’auteur
+const demandeur = getDemandeur();
 
 fetch("https://script.google.com/macros/s/AKfycbyxh3HGR6iHcn0ynwfGzSzOm5Djc7o2e1uA4dvdPurolDerZlNiARcpsiY4daDRPSV1tw/exec", {
     method: "POST",
     mode: "no-cors",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ auteur, nom: newNom, type: newType, sat: newSat, acces: newAcces })
+    body: JSON.stringify({ demandeur, nom: newNom, type: newType, sat: newSat, acces: newAcces })
 })
   .then(() => {
     showNotification("✅ Modification envoyée (en attente d’approbation)", "success");
