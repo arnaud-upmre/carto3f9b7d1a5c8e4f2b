@@ -60,7 +60,18 @@ ul#suggestions:empty {
 ul#suggestions:not(:empty){
   margin: .4rem 0 .6rem 0;
 }
-
+.btn-rss {
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid #1a73e8;
+  background: #f5f9ff;
+  color: #1a73e8;
+  cursor: pointer;
+}
+.btn-rss.active {
+  background: #1a73e8;
+  color: white;
+}
 </style>
   <meta name="robots" content="noindex, nofollow" />
   <meta charset="UTF-8" />
@@ -825,25 +836,72 @@ const targetLat = usePoste ? _latPoste : lieu.latitude;
 const targetLon = usePoste ? _lonPoste : lieu.longitude;
 const urlMyMapsPoste = myMapsViewer(targetLat, targetLon, 18);
 
-let html = `<h2 class="editable-zone">
-  <a href="#" data-href="${urlMyMapsPoste}" onclick="window.open(this.dataset.href,'_blank','noopener')" class="titre-lien">
-    📍 ${formatNomCompletLieu(lieu)}
-  </a>
-  <a href="#" id="btn-edit" style="font-size:14px; font-weight:400; margin-left:8px; text-decoration:underline; color:#666;">(modifier)</a>
-</h2>`;
+let html = `
+  <div id="view-mode">
+    <h2 class="editable-zone">
+      <a href="#" data-href="${urlMyMapsPoste}" onclick="window.open(this.dataset.href,'_blank','noopener')" class="titre-lien">
+        📍 ${formatNomCompletLieu(lieu)}
+      </a>
+      <a href="#" id="btn-edit" style="font-size:14px; font-weight:400; margin-left:8px; text-decoration:underline; color:#666;">(modifier)</a>
+    </h2>
+  </div>
 
-html += `
-  <div id="edit-localisation" style="padding:10px; border-radius:8px; margin-top:1rem; border:2px solid rgba(26,115,232,0.4);">
-    <h3>📍 Localisation — Accès</h3>
-    <input type="text" id="acces-lat" value="${lieu.latitude}" placeholder="Latitude" style="width:48%; margin:2px;">
-    <input type="text" id="acces-lon" value="${lieu.longitude}" placeholder="Longitude" style="width:48%; margin:2px;">
-    <input type="text" id="acces-link" placeholder="Lien Google Maps" style="width:100%; margin-top:4px;">
+  <!-- Bloc édition caché par défaut -->
+  <div id="edit-mode" style="display:none; padding:10px; border-radius:8px; margin-top:1rem; border:2px solid rgba(26,115,232,0.4);">
+    
+    <!-- 1. Titre -->
+    <h2>
+      📍 <input type="text" id="edit-nom" value="${lieu.nom}" style="width:70%">
+      <span>${lieu.type}</span>
+    </h2>
 
-    <h3 style="margin-top:1.2rem;">📍 Localisation — Poste</h3>
-    <input type="text" id="poste-lat" value="${lieu.poste_latitude || ''}" placeholder="Latitude" style="width:48%; margin:2px;">
-    <input type="text" id="poste-lon" value="${lieu.poste_longitude || ''}" placeholder="Longitude" style="width:48%; margin:2px;">
-    <input type="text" id="poste-link" placeholder="Lien Google Maps" style="width:100%; margin-top:4px;">
-  </div>`;
+<h3>📍 Localisation — Accès</h3>
+<div style="margin-bottom:6px;">
+  <input type="text" id="acces-link" placeholder="Coller un lien Google Maps" style="width:100%; margin-bottom:6px">
+  <small>ou ajustez le point sur la carte</small>
+</div>
+<div id="map-acces" style="height:220px; margin-bottom:8px; border:1px solid #ccc; border-radius:8px;"></div>
+<input type="text" id="acces-lat" value="${lieu.latitude}" placeholder="Latitude" style="width:48%">
+<input type="text" id="acces-lon" value="${lieu.longitude}" placeholder="Longitude" style="width:48%">
+   
+<h3>📍 Localisation — Poste</h3>
+<div style="margin-bottom:6px;">
+  <input type="text" id="poste-link" placeholder="Coller un lien Google Maps" style="width:100%; margin-bottom:6px">
+  <small>ou ajustez le point sur la carte</small>
+</div>
+<div id="map-poste" style="height:220px; margin-bottom:8px; border:1px solid #ccc; border-radius:8px;"></div>
+<input type="text" id="poste-lat" value="${lieu.poste_latitude || ''}" placeholder="Latitude" style="width:48%">
+<input type="text" id="poste-lon" value="${lieu.poste_longitude || ''}" placeholder="Longitude" style="width:48%">
+
+    <!-- 4. PK + Ligne -->
+    <h3>🚄 Données ferroviaires</h3>
+    <input type="text" id="edit-pk" value="${lieu.pk || ''}" placeholder="PK" style="width:30%">
+    <input type="text" id="edit-ligne-num" value="${lieu.numero_ligne || ''}" placeholder="Numéro ligne" style="width:30%">
+    <input type="text" id="edit-ligne-nom" value="${lieu.lignes || ''}" placeholder="Nom de la ligne" style="width:35%">
+
+    <!-- 5. RSS -->
+    <h3>📞 RSS</h3>
+    <div class="inline-links pills-3">
+      <button class="btn-rss ${lieu.rss==='A'?'active':''}" data-value="A">Table 1</button>
+      <button class="btn-rss ${lieu.rss==='B'?'active':''}" data-value="B">Table 2</button>
+      <button class="btn-rss ${lieu.rss==='C'?'active':''}" data-value="C">Table 3</button>
+    </div>
+
+    <!-- 6. Contact -->
+    <h3>👤 Contact</h3>
+    <input type="text" id="contact" value="${lieu.contact || ''}" placeholder="Nom et téléphone" style="width:100%">
+
+    <!-- 7. Portail -->
+    <h3>🚧 Portail</h3>
+    <input type="text" id="portail" value="${lieu.portail || ''}" placeholder="Code ou lien vidéo" style="width:100%">
+
+    <!-- ✅ Boutons -->
+    <div style="margin-top:1rem; text-align:right">
+      <button id="btn-save" class="btn-primary">💾 Sauvegarder</button>
+      <button id="btn-cancel" class="btn-primary">❌ Annuler</button>
+    </div>
+  </div>
+`;
 
 
   const blocs = [];
@@ -866,35 +924,136 @@ html += `
   // === Gestion du bouton "modifier" ===
   setTimeout(() => {
     const btnEdit = document.getElementById("btn-edit");
-    const btnExit = document.getElementById("btn-exit-edit");
-    if (btnEdit && btnExit) {
+        const btnExit = document.getElementById("btn-exit-edit");
+    if (btnExit) {
+      btnExit.onclick = () => {
+        document.getElementById("edit-mode").style.display = "none";
+        document.getElementById("view-mode").style.display = "block";
+        btnExit.style.display = "none"; // recache le bouton flottant
+      };
+    }
+    if (btnEdit) {
       btnEdit.addEventListener("click", (ev) => {
         ev.preventDefault();
-if (navigator.vibrate) navigator.vibrate(2000);
-     // cible uniquement les zones marquées comme éditables
-const editables = result.querySelectorAll(".editable-zone");
+        if (navigator.vibrate) navigator.vibrate(200);
 
-        // ajoute vibration + halo
-        editables.forEach(el => {
-          el.classList.add("edit-shake", "edit-highlight");
+        document.getElementById("view-mode").style.display = "none";
+        document.getElementById("edit-mode").style.display = "block";
+if (btnExit) btnExit.style.display = "block"; // affiche le bouton flottant
+      
+  
+        
+        // Gérer RSS (activation des boutons Table1/2/3)
+        document.querySelectorAll(".btn-rss").forEach(btn=>{
+          btn.addEventListener("click", ()=>{
+            document.querySelectorAll(".btn-rss").forEach(b=>b.classList.remove("active"));
+            btn.classList.add("active");
+            lieu.rss = btn.dataset.value;
+                
+          });
         });
 
-        // stoppe la vibration après 2s mais garde le halo
-        setTimeout(() => {
-          editables.forEach(el => el.classList.remove("edit-shake"));
-        }, 2000);
+    // Bouton Annuler
+document.getElementById("btn-cancel").onclick = ()=>{
+  document.getElementById("edit-mode").style.display = "none";
+  document.getElementById("view-mode").style.display = "block";
+  if (btnExit) btnExit.style.display = "none"; // 👈 recache le bouton flottant
+};
 
-        // affiche le bouton quitter
-        btnExit.style.display = "block";
+          // === Init carte Accès ===
+  const mapAcces = L.map('map-acces').setView([lieu.latitude || 50.6, lieu.longitude || 3.0], 18);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap'
+  }).addTo(mapAcces);
+  const markerAcces = L.marker([lieu.latitude || 50.6, lieu.longitude || 3.0], {draggable:true}).addTo(mapAcces);
+  markerAcces.on('dragend', e=>{
+    const {lat, lng} = markerAcces.getLatLng();
+    document.getElementById("acces-lat").value = lat.toFixed(6);
+    document.getElementById("acces-lon").value = lng.toFixed(6);
+  });
 
-        // quand on clique sur quitter
-        btnExit.onclick = () => {
-          editables.forEach(el => el.classList.remove("edit-highlight", "edit-shake"));
-          btnExit.style.display = "none"; // cache le bouton
+  // === Init carte Poste ===
+  const latPoste = lieu.poste_latitude || lieu.latitude || 50.6;
+  const lonPoste = lieu.poste_longitude || lieu.longitude || 3.0;
+  const mapPoste = L.map('map-poste').setView([latPoste, lonPoste], 18);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap'
+  }).addTo(mapPoste);
+  const markerPoste = L.marker([latPoste, lonPoste], {draggable:true}).addTo(mapPoste);
+  markerPoste.on('dragend', e=>{
+    const {lat, lng} = markerPoste.getLatLng();
+    document.getElementById("poste-lat").value = lat.toFixed(6);
+    document.getElementById("poste-lon").value = lng.toFixed(6);
+  });
+// === Conversion lien Google Maps -> coordonnées ===
+function parseGoogleMapsLink(val) {
+  if (!val) return null;
+
+  // Cas 1 : liens avec "@lat,lon"
+  let regexAt = /@(-?\d+\.\d+),(-?\d+\.\d+)/;
+  let match = val.match(regexAt);
+  if (match) {
+    return { lat: parseFloat(match[1]), lon: parseFloat(match[2]) };
+  }
+
+  // Cas 2 : liens avec "?q=lat,lon"
+  let regexQ = /[?&]q=(-?\d+\.\d+),(-?\d+\.\d+)/;
+  match = val.match(regexQ);
+  if (match) {
+    return { lat: parseFloat(match[1]), lon: parseFloat(match[2]) };
+  }
+
+  // Cas 3 : liens courts maps.app.goo.gl qui finissent par "/lat,lon"
+  let regexEnd = /\/(-?\d+\.\d+),(-?\d+\.\d+)$/;
+  match = val.match(regexEnd);
+  if (match) {
+    return { lat: parseFloat(match[1]), lon: parseFloat(match[2]) };
+  }
+
+  return null; // rien trouvé
+}
+
+  document.getElementById("acces-link").addEventListener("change", e=>{
+    const coords = parseGoogleMapsLink(e.target.value);
+    if (coords) {
+      document.getElementById("acces-lat").value = coords.lat.toFixed(6);
+      document.getElementById("acces-lon").value = coords.lon.toFixed(6);
+      markerAcces.setLatLng([coords.lat, coords.lon]);
+      mapAcces.setView([coords.lat, coords.lon], 18);
+    }
+  });
+
+  document.getElementById("poste-link").addEventListener("change", e=>{
+    const coords = parseGoogleMapsLink(e.target.value);
+    if (coords) {
+      document.getElementById("poste-lat").value = coords.lat.toFixed(6);
+      document.getElementById("poste-lon").value = coords.lon.toFixed(6);
+      markerPoste.setLatLng([coords.lat, coords.lon]);
+      mapPoste.setView([coords.lat, coords.lon], 18);
+    }
+  });
+        
+        // Bouton Sauvegarder
+        document.getElementById("btn-save").onclick = ()=>{
+          lieu.nom = document.getElementById("edit-nom").value;
+          lieu.pk = document.getElementById("edit-pk").value;
+          lieu.numero_ligne = document.getElementById("edit-ligne-num").value;
+          lieu.lignes = document.getElementById("edit-ligne-nom").value;
+          lieu.contact = document.getElementById("contact").value;
+          lieu.portail = document.getElementById("portail").value;
+          lieu.latitude = document.getElementById("acces-lat").value;
+          lieu.longitude = document.getElementById("acces-lon").value;
+          lieu.poste_latitude = document.getElementById("poste-lat").value;
+          lieu.poste_longitude = document.getElementById("poste-lon").value;
+
+          // revient en mode lecture (rafraîchit avec les nouvelles données)
+          if (btnExit) btnExit.style.display = "none"; // 👈 recache le bouton flottant
+          showLieu(lieu);
         };
       });
     }
   }, 50);
+
   result.innerHTML = html;
 }
 
