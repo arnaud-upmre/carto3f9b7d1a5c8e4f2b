@@ -1518,6 +1518,15 @@ document.addEventListener("click", function(e){
       if (document.getElementById("editable-acces")) {
         originalValues.acces = document.getElementById("editable-acces").textContent.replace("– accès ","").trim();
       }
+        if (document.getElementById("editable-description")) {
+    originalValues.description = document.getElementById("editable-description").textContent.trim();
+  }
+  if (document.getElementById("editable-contact")) {
+    originalValues.contact = document.getElementById("editable-contact").textContent.replace("👤 Contact :","").trim();
+  }
+  if (document.getElementById("editable-portail")) {
+    originalValues.portail = document.getElementById("editable-portail").textContent.replace("🚧 Portail :","").trim();
+  }
 
       // Ajoute halo + vibration sur les zones modifiables existantes
 ["editable-nom","editable-type","editable-sat","editable-acces","editable-rss","editable-description","editable-contact","editable-portail"].forEach(id=>{
@@ -1561,8 +1570,9 @@ if (phones) phones.style.display = "none";
   // Mets à jour l'affichage complet (titre + numéros)
   e.target.outerHTML = formatRSS(code);
 
-  // Mémorise la valeur finale envoyée au Google Sheet
-  originalValues.rss = `RSS ${val}`;
+// Mémorise la valeur finale envoyée au Google Sheet
+const map = { "Table 1": "A", "Table 2": "B", "Table 3": "C" };
+originalValues.rss = map[val] || val;
 });
       });
       return; // on sort ici pour ne pas exécuter le reste
