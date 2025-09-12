@@ -1620,7 +1620,7 @@ if (e.target.id === "editable-description") {
 
 if (e.target.id === "editable-contact") {
   const parent = e.target.parentNode;
-  const val = parent.textContent.replace("👤 Contact :", "").trim();
+const val = originalValues.contact || "";
   parent.innerHTML = `
     <strong id="editable-contact">👤 Contact :</strong>
     <input type="text" id="input-contact" value="${val}" 
@@ -1633,7 +1633,7 @@ if (e.target.id === "editable-contact") {
 
 if (e.target.id === "editable-portail") {
   const parent = e.target.parentNode;
-  const val = parent.textContent.replace("🚧 Portail :", "").trim();
+ const val = originalValues.portail || "";
   parent.innerHTML = `
     <strong id="editable-portail">🚧 Portail :</strong>
     <input type="text" id="input-portail" value="${val}" 
