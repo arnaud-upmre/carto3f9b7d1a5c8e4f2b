@@ -1007,6 +1007,13 @@ if (lieu.rss) {
   blocs.push(formatRSS(lieu.rss));
 }
 
+  // 🚄 PK + Ligne → seulement si présent dans le JSON
+if (lieu.pk && lieu.numero_ligne && lieu.lignes) {
+  blocs.push(`
+    <p><strong>🚄 PK ${lieu.pk}</strong> sur la ligne n°<strong>${lieu.numero_ligne}</strong> – ${lieu.lignes}</p>
+  `);
+}
+
 // Informations
 blocs.push(formatDescription(lieu.description));
   
