@@ -1007,12 +1007,14 @@ if (lieu.rss) {
   blocs.push(formatRSS(lieu.rss));
 }
 
-  // 🚄 PK + Ligne → seulement si présent dans le JSON
-if (lieu.pk && lieu.numero_ligne && lieu.lignes) {
-  blocs.push(`
-    <p><strong>🚄 PK ${lieu.pk}</strong> sur la ligne n°<strong>${lieu.numero_ligne}</strong> – ${lieu.lignes}</p>
-  `);
-}
+// 🚄 PK + Ligne (même si incomplet)
+const pk = lieu.pk ? lieu.pk : '<span class="placeholder">(non renseigné)</span>';
+const numLigne = lieu.numero_ligne ? lieu.numero_ligne : '<span class="placeholder">(non renseigné)</span>';
+const ligneNom = lieu.lignes ? lieu.lignes : '<span class="placeholder">(non renseigné)</span>';
+
+blocs.push(`
+  <p><strong>🚄 PK ${pk}</strong> sur la ligne n°<strong>${numLigne}</strong> – ${ligneNom}</p>
+`);
 
 // Informations
 blocs.push(formatDescription(lieu.description));
