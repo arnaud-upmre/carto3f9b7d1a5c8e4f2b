@@ -1001,19 +1001,23 @@ html += `
 </div>`;
 
 const blocs = [];
-// Description → toujours affichée (ou "non renseigné")
-blocs.push(`<p id="editable-description">${lieu.description || '<span class="placeholder">(non renseigné)</span>'}</p>`);
 
-// RSS → seulement s’il existe
+// RSS → s’il existe, on le met en premier
 if (lieu.rss) {
   blocs.push(formatRSS(lieu.rss));
 }
 
+// Informations générales
+blocs.push(`<p><strong>ℹ️ Informations :</strong></p>`);
+
+// Description → toujours affichée
+blocs.push(`<p id="editable-description">${lieu.description || '<span class="placeholder">(non renseigné)</span>'}</p>`);
+
 // Contact → toujours affiché
-blocs.push(`<p><strong>👤 Contact :</strong> <span id="editable-contact">${lieu.contact || '<span class="placeholder">(non renseigné)</span>'}</span></p>`);
-  
+blocs.push(`<p><strong>👤 Contact :</strong> <span id="editable-contact">${lieu.contact || '<span class="placeholder">(non renseigné) - Ex : Agent E : 03 28....</span>'}</span></p>`);
+
 // Portail → toujours affiché
-blocs.push(`<p><strong>🚧 Portail :</strong> <span id="editable-portail">${lieu.portail || '<span class="placeholder">(non renseigné)</span>'}</span></p>`);
+blocs.push(`<p><strong>🚧 Portail :</strong> <span id="editable-portail">${lieu.portail || '<span class="placeholder">(non renseigné) - Ex : Code 1212#</span>'}</span></p>`);
   
   if (blocs.length > 0) {
     html += `<hr class="separator" />` +
