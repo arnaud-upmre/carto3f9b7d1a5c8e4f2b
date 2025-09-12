@@ -147,17 +147,14 @@ ul#suggestions:not(:empty){
 /* Centrer proprement les titres "Repérer..." */
 .rep-block {
   text-align: center;
-  margin: 1.5rem 0 0.5rem 0;
 }
-.rep-block p {
-  font-weight: 600;
-  margin: 0 0 6px 0;
-  text-align: center;
 
-  display: flex;              /* active flexbox */
-  justify-content: center;    /* centre tout au milieu */
-  align-items: center;        /* aligne emoji + texte verticalement */
-  gap: 6px;                   /* petit espace entre emoji et texte */
+.rep-block p {
+  display: inline-flex;       /* le texte prend la largeur du contenu */
+  justify-content: center;    /* centre le ⚡️ + texte */
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 6px 0;
 }
     
 </style>
@@ -947,7 +944,7 @@ let html = `<h2>
 </h2>
 
 <div class="rep-block">
- <p>⚡️ <span>Repérer le poste :</span></p>
+  <p>⚡️ <span>Repérer le poste :</span></p>
   <div class="inline-links pills-3">
     <a href="${urlMyMapsPoste}" target="_blank" rel="noopener">🛰️ Vue satellite</a>
   </div>
@@ -1614,7 +1611,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V4</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V5</span>
 </div>
 
 <script>
