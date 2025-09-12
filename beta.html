@@ -978,8 +978,9 @@ if (usePoste) {
   </div>`;
 }
 
+html += `
 <div class="rep-block">
-<p><span class="emoji">🛣️</span> Repérer l’accès :</p>
+  <p><span class="emoji">🛣️</span> Repérer l’accès :</p>
   <div class="inline-links pills-3">
     <a href="${myMapsViewer(lieu.latitude, lieu.longitude, 19)}" target="_blank" rel="noopener">🛰️ Vue satellite</a>
     <a href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">👁️ Street View</a>
@@ -987,7 +988,7 @@ if (usePoste) {
 </div>
 
 <div class="rep-block">
-<p><span class="emoji">🚙</span> Itinéraires disponibles :</p>
+  <p><span class="emoji">🚙</span> Itinéraires disponibles :</p>
   <div class="inline-links pills-3">
     <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🗺️ Maps</a>
     <a href="https://maps.apple.com/?daddr=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🍎 Plans</a>
@@ -1643,7 +1644,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V5</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1</span>
 </div>
 
 <script>
