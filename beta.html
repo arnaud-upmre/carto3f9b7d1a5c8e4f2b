@@ -60,18 +60,7 @@ ul#suggestions:empty {
 ul#suggestions:not(:empty){
   margin: .4rem 0 .6rem 0;
 }
-.btn-rss {
-  padding: 6px 12px;
-  border-radius: 8px;
-  border: 1px solid #1a73e8;
-  background: #f5f9ff;
-  color: #1a73e8;
-  cursor: pointer;
-}
-.btn-rss.active {
-  background: #1a73e8;
-  color: white;
-}
+
 </style>
   <meta name="robots" content="noindex, nofollow" />
   <meta charset="UTF-8" />
@@ -411,64 +400,10 @@ main {
   }
 }
     #btn-localiser { margin-top: 4rem; }  /* plus d’espace au-dessus */
-    /* --- Mode édition : vibration + halo --- */
-@keyframes edit-shake {
-  0%   { transform: translate(0, 0); }
-  20%  { transform: translate(-2px, 0); }
-  40%  { transform: translate(2px, 0); }
-  60%  { transform: translate(-2px, 0); }
-  80%  { transform: translate(2px, 0); }
-  100% { transform: translate(0, 0); }
-}
-
-.edit-shake {
-  animation: edit-shake 0.2s linear infinite;
-}
-
-.edit-highlight {
-  outline: 2px solid rgba(26, 115, 232, 0.4); /* halo bleu pâle */
-  border-radius: 6px;
-}
-    /* Bouton flottant "Quitter édition" */
-#btn-exit-edit {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  z-index: 9999;
-  padding: 10px 16px;
-  border-radius: 8px;
-  border: 1px solid #1a73e8;
-  background: #f5f9ff;
-  color: #1a73e8;
-  font-weight: 600;
-  cursor: pointer;
-  font-size: 14px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-  display: none; /* caché par défaut */
-}
-
-#btn-exit-edit:hover {
-  background: #1a73e8;
-  color: #fff;
-}
-
-@media (prefers-color-scheme: dark) {
-  #btn-exit-edit {
-    background: #1e1e1e;
-    color: #90caf9;
-    border: 1px solid #90caf9;
-  }
-  #btn-exit-edit:hover {
-    background: #90caf9;
-    color: #121212;
-  }
-}
   </style>
   <meta name="color-scheme" content="light dark">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
 <meta name="theme-color" media="(prefers-color-scheme: dark)"  content="#121212">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body> <main>
   <div id="train-container">
@@ -493,6 +428,11 @@ main {
 </div>
 <div id="result"></div>
 
+  <!-- Boutons flottants pour édition -->
+<div id="edit-buttons" style="display:none; position:fixed; bottom:20px; right:20px; z-index:9999;">
+  <button id="btn-save" class="btn-primary">💾 Sauvegarder</button>
+  <button id="btn-cancel" class="btn-primary" style="margin-left:10px;">❌ Annuler édition</button>
+</div>
 
 
 <!-- Bouton localiser -->
@@ -571,7 +511,7 @@ function formatPortail(val) {
 content += ` <a href="${video}" target="_blank" rel="noopener" class="inline-link">▶️ Explication</a>`;
   }
 
- return `<p class="editable-zone"><strong>🚧 Portail :</strong> ${content}</p>`;
+  return `<p><strong>🚧 Portail :</strong> ${content}</p>`;
 }
   
 function normalize(str) {
@@ -633,7 +573,7 @@ function formatRSS(table) {
   const tableNum = { "A": "1", "B": "2", "C": "3" };
   if (!tables[table]) return `<p><strong>📞 RSS :</strong> ${table}</p>`;
   const nums = tables[table].map(num => `<a href="tel:${num.replace(/\s+/g, '')}">${num}</a>`).join("");
-  return `<p class="editable-zone"><strong>📞 RSS Table ${tableNum[table] || table} :</strong></p><div class="inline-links">${nums}</div>`;
+  return `<p><strong>📞 RSS Table ${tableNum[table] || table} :</strong></p><div class="inline-links">${nums}</div>`;
 }
 function generateAppareilListHTML(currentLieu) {
   const matchingApps = appareils.filter(app => 
@@ -824,212 +764,59 @@ function incrementCounterAppareil() {
 
 function showLieu(lieu) {
   const result = document.getElementById("result");
-  const btnExit = document.getElementById("btn-exit-edit");
   document.getElementById("suggestions").innerHTML = "";
   result.style.display = "block";
   incrementCounter();
 
-  if (btnExit) btnExit.style.display = "none";
+// URL MyMaps : priorité aux coords guérite si présentes, sinon accès
+const _latPoste = (lieu.poste_latitude ?? "").toString();
+const _lonPoste = (lieu.poste_longitude ?? "").toString();
+const usePoste = _latPoste !== "" && _lonPoste !== "";
+const targetLat = usePoste ? _latPoste : lieu.latitude;
+const targetLon = usePoste ? _lonPoste : lieu.longitude;
+const urlMyMapsPoste = myMapsViewer(targetLat, targetLon, 18);
 
-  // objet pour stocker uniquement les champs modifiés
-  let changes = {};
+let html = `<h2>
+  📍 <span id="editable-nom">${lieu.nom}</span> 
+  <span id="editable-type">${lieu.type}</span>
+  <a href="#" class="edit-link" data-field="nom">(modifier)</a>
+  <a href="#" class="edit-link" data-field="type">(modifier)</a>
+</h2>
 
-  let html = `
-    <div id="view-mode">
-      <h2 class="editable-zone" data-field="nom">
-        📍 ${lieu.nom || "Nom inconnu"} 
-        <span class="editable-zone" data-field="type" style="font-weight:400; color:#555;">
-          ${lieu.type || "?"}
-        </span>
-        <a href="#" id="btn-edit" style="font-size:14px; font-weight:400; margin-left:8px; text-decoration:underline; color:#666;">(modifier)</a>
-      </h2>
-  `;
+<p style="text-align:center; font-weight:600; margin:1.5rem 0 0.5rem 0;">🛣️ Repérer l’accès :</p>
+<div class="inline-links pills-3">
+  <a href="${myMapsViewer(lieu.latitude, lieu.longitude, 19)}" target="_blank" rel="noopener">🛰️ Vue satellite</a>
+  <a href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">👁️ Street View</a>
+</div>
 
+<p style="text-align:center; font-weight:600; margin:1.5rem 0 0.5rem 0;">🚙 Itinéraires disponibles :</p>
+<div class="inline-links pills-3">
+   <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🗺️ Maps</a>
+   <a href="https://maps.apple.com/?daddr=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🍎 Plans</a>
+   <a href="https://waze.com/ul?ll=${lieu.latitude},${lieu.longitude}&navigate=yes" target="_blank" rel="noopener">🚗 Waze</a>
+</div>`;
+
+  const blocs = [];
+  if (lieu.description) blocs.push(`<p>${lieu.description}</p>`);
   if (lieu.pk && lieu.numero_ligne && lieu.lignes)
-    html += `<p class="editable-zone" data-field="pk">🚄 PK ${lieu.pk} sur la ligne n°${lieu.numero_ligne} - ${lieu.lignes}</p>`;
-  if (lieu.rss)
-    html += `<p class="editable-zone" data-field="rss">${formatRSS(lieu.rss)}</p>`;
-  if (lieu.portail)
-    html += `<p class="editable-zone" data-field="portail">🚧 Portail : ${lieu.portail}</p>`;
-  if (lieu.description)
-    html += `<p class="editable-zone" data-field="description">${lieu.description}</p>`;
+    blocs.push(`<p><strong>🚄 PK ${lieu.pk}</strong> sur la ligne n°<strong>${lieu.numero_ligne}</strong> - ${lieu.lignes}</p>`);
+  if (lieu.rss) blocs.push(formatRSS(lieu.rss));
+  if (lieu.contact) blocs.push(formatContact(lieu.contact));
+  if (lieu.portail) blocs.push(formatPortail(lieu.portail));
 
-  // pills GPS (accès / poste)
-  html += `
-    <div class="inline-links pills-3">
-      <a href="#" class="editable-zone" data-field="gps-acces">📍 Localiser accès</a>
-      <a href="#" class="editable-zone" data-field="gps-poste">📍 Localiser poste</a>
-    </div>
-  `;
+  if (blocs.length > 0) {
+    html += `<hr class="separator" />` +
+            blocs.map((b,i)=> i===0 ? b : `<hr class="separator" />${b}`).join("");
+  }
 
-  // Boutons globaux
-  html += `
-    <div style="margin-top:1rem; text-align:right">
-      <button id="btn-save" class="btn-primary">💾 Sauvegarder</button>
-      <button id="btn-cancel" class="btn-primary">❌ Annuler</button>
-    </div>
-  `;
+  const appareilsHTML = generateAppareilListHTML(lieu);
+  if (appareilsHTML) {
+    html += `<hr class="separator" />${appareilsHTML}`;
+  }
 
   result.innerHTML = html;
-
-  // === Bouton "modifier" ===
-  setTimeout(() => {
-    const btnEdit = document.getElementById("btn-edit");
-    if (btnEdit) {
-      btnEdit.addEventListener("click", (ev) => {
-        ev.preventDefault();
-        if (navigator.vibrate) navigator.vibrate(200);
-
-        if (btnExit) btnExit.style.display = "block";
-
-        document.querySelectorAll(".editable-zone").forEach(el=>{
-          el.classList.add("edit-highlight");
-          el.addEventListener("click", ()=>{
-            const field = el.dataset.field;
-
-            // === NOM / DESCRIPTION / PORTAIL ===
-            if (["nom","description","portail"].includes(field)) {
-              const oldText = el.textContent.trim();
-              const input = document.createElement("input");
-              input.type = "text";
-              input.value = oldText;
-              input.style.width = "90%";
-              el.innerHTML = "";
-              el.appendChild(input);
-              input.focus();
-
-              input.addEventListener("blur", ()=>{
-                el.textContent = input.value;
-                changes[field] = input.value;
-              });
-            }
-
-            // === TYPE ===
-            if (field === "type") {
-              const select = document.createElement("select");
-              ["SP","SSP","PRCI"].forEach(opt=>{
-                const option = document.createElement("option");
-                option.value = opt;
-                option.textContent = opt;
-                if (lieu.type === opt) option.selected = true;
-                select.appendChild(option);
-              });
-              el.innerHTML = "";
-              el.appendChild(select);
-              select.focus();
-              select.addEventListener("blur", ()=>{
-                el.textContent = select.value;
-                changes["type"] = select.value;
-              });
-            }
-
-            // === PK + LIGNE ===
-            if (field === "pk") {
-              el.innerHTML = `
-                <input type="text" id="edit-pk" value="${lieu.pk || ""}" placeholder="PK" style="width:25%">
-                <input type="text" id="edit-ligne-num" value="${lieu.numero_ligne || ""}" placeholder="Numéro ligne" style="width:30%">
-                <input type="text" id="edit-ligne-nom" value="${lieu.lignes || ""}" placeholder="Nom ligne" style="width:40%">
-              `;
-              const savePK = ()=>{
-                changes["pk"] = document.getElementById("edit-pk").value;
-                changes["numero_ligne"] = document.getElementById("edit-ligne-num").value;
-                changes["lignes"] = document.getElementById("edit-ligne-nom").value;
-              };
-              el.querySelectorAll("input").forEach(inp=>{
-                inp.addEventListener("blur", savePK);
-              });
-            }
-
-            // === RSS ===
-            if (field === "rss") {
-              el.innerHTML = `
-                <button class="btn-rss" data-value="A">Table 1</button>
-                <button class="btn-rss" data-value="B">Table 2</button>
-                <button class="btn-rss" data-value="C">Table 3</button>
-              `;
-              el.querySelectorAll(".btn-rss").forEach(btn=>{
-                btn.addEventListener("click", ()=>{
-                  changes["rss"] = btn.dataset.value;
-                  el.innerHTML = `📞 RSS : Table ${btn.dataset.value}`;
-                });
-              });
-            }
-
-            // === GPS (ACCES / POSTE) ===
-            if (field === "gps-acces" || field === "gps-poste") {
-              const mapDiv = document.createElement("div");
-              mapDiv.style.height = "200px";
-              mapDiv.style.marginTop = "8px";
-              el.appendChild(mapDiv);
-
-              const isPoste = field === "gps-poste";
-              const lat = isPoste ? (lieu.poste_latitude || 50.0) : (lieu.latitude || 50.0);
-              const lon = isPoste ? (lieu.poste_longitude || 3.0) : (lieu.longitude || 3.0);
-
-              const map = L.map(mapDiv).setView([lat, lon], 18);
-              L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19,
-              }).addTo(map);
-              const marker = L.marker([lat, lon], {draggable:true}).addTo(map);
-
-              marker.on("dragend", ()=>{
-                const {lat, lng} = marker.getLatLng();
-                if (isPoste) {
-                  changes["poste_latitude"] = lat.toFixed(6);
-                  changes["poste_longitude"] = lng.toFixed(6);
-                } else {
-                  changes["latitude"] = lat.toFixed(6);
-                  changes["longitude"] = lng.toFixed(6);
-                }
-              });
-            }
-
-            el.classList.remove("edit-highlight");
-          }, { once:true });
-        });
-      });
-    }
-
-    // === Bouton Sauvegarder ===
-    const btnSave = document.getElementById("btn-save");
-    if (btnSave) {
-      btnSave.onclick = () => {
-        if (Object.keys(changes).length === 0) {
-          alert("Aucun champ modifié");
-          return;
-        }
-
-        fetch("https://script.google.com/macros/s/AKfycbyxh3HGR6iHcn0ynwfGzSzOm5Djc7o2e1uA4dvdPurolDerZlNiARcpsiY4daDRPSV1tw/exec", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(changes)
-        })
-        .then(r => r.json())
-        .then(res => {
-          if (res.status === "ok") {
-            alert("✅ Modifications enregistrées");
-            showLieu(lieu);
-          } else {
-            alert("❌ Erreur d’enregistrement");
-          }
-        })
-        .catch(err => {
-          console.error(err);
-          alert("❌ Impossible d’envoyer les données");
-        });
-      };
-    }
-
-    // === Bouton Annuler ===
-    const btnCancel = document.getElementById("btn-cancel");
-    if (btnCancel) {
-      btnCancel.onclick = () => {
-        showLieu(lieu); // recharge sans enregistrer
-      };
-    }
-  }, 50);
 }
-    
+
   let allItems = [], fuseMix;
 
 // Charger postes + appareils
@@ -1326,7 +1113,7 @@ function showAppareil(app) {
     html += blocs.map((b,i)=> i===0 ? b : `<hr class="separator" />${b}`).join("");
   }
 
-
+  result.innerHTML = html;
 }
     updateCounter();
 updateCounterAppareil();
@@ -1512,15 +1299,65 @@ if (el2) el2.textContent = `(${data.count})`;
 
 updateContrib();
 setInterval(updateContrib, 3000);
-</script> 
+    // === Édition Nom + Type ===
+let editMode = false;
+let originalValues = {};
 
-<!-- ✅ Bouton Quitter édition -->
-<button id="btn-exit-edit">❌ Quitter édition</button>
-</main>
+document.addEventListener("click", function(e){
+  if (e.target.classList.contains("edit-link")) {
+    e.preventDefault();
+    const field = e.target.dataset.field;
+    const span = document.getElementById("editable-" + field);
 
+    if (!span) return;
+
+    if (!editMode) {
+      // Active mode édition
+      editMode = true;
+      document.getElementById("edit-buttons").style.display = "block";
+      originalValues.nom = document.getElementById("editable-nom").textContent;
+      originalValues.type = document.getElementById("editable-type").textContent;
+    }
+
+    // Transforme en input texte
+    const currentVal = span.textContent;
+    span.innerHTML = `<input type="text" id="input-${field}" value="${currentVal}" style="border:2px solid #1a73e8; padding:3px; border-radius:6px;" />`;
+    navigator.vibrate?.(50); // vibration
+  }
+});
+
+// Sauvegarde
+document.getElementById("btn-save").addEventListener("click", function(){
+  const newNom = document.getElementById("input-nom")?.value || originalValues.nom;
+  const newType = document.getElementById("input-type")?.value || originalValues.type;
+
+  // Envoi vers Google Sheets
+  fetch("https://script.google.com/macros/s/AKfycbyxh3HGR6iHcn0ynwfGzSzOm5Djc7o2e1uA4dvdPurolDerZlNiARcpsiY4daDRPSV1tw/exec", {
+    method: "POST",
+    body: JSON.stringify({ nom: newNom, type: newType }),
+    headers: { "Content-Type": "application/json" }
+  }).then(r => r.text()).then(res => {
+    alert("✅ Modifications enregistrées !");
+    quitEditMode(newNom, newType);
+  }).catch(err => alert("❌ Erreur : " + err));
+});
+
+// Annuler édition
+document.getElementById("btn-cancel").addEventListener("click", function(){
+  quitEditMode(originalValues.nom, originalValues.type);
+});
+
+// Quitter le mode édition
+function quitEditMode(nom, type){
+  document.getElementById("editable-nom").textContent = nom;
+  document.getElementById("editable-type").textContent = type;
+  document.getElementById("edit-buttons").style.display = "none";
+  editMode = false;
+}
+</script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V3</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1</span>
 </div>
 
 <script>
@@ -1528,7 +1365,7 @@ setInterval(updateContrib, 3000);
   // ===== Config =====
   var INTRO_DURATION_MS = 3000;             // Durée d’affichage (ms)
   var STORAGE_KEY       = 'eale_intro_last_day'; // Clé de mémo 1/jour
-  
+
   // Date locale AAAA-MM-JJ (pas en UTC, évite les décalages)
   function todayLocal(){
     var d=new Date();
