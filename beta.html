@@ -838,13 +838,11 @@ const urlMyMapsPoste = myMapsViewer(targetLat, targetLon, 18);
 
 let html = `
   <div id="view-mode">
-    <h2 class="editable-zone">
-      <a href="#" data-href="${urlMyMapsPoste}" onclick="window.open(this.dataset.href,'_blank','noopener')" class="titre-lien">
-        📍 ${formatNomCompletLieu(lieu)}
-      </a>
-      <a href="#" id="btn-edit" style="font-size:14px; font-weight:400; margin-left:8px; text-decoration:underline; color:#666;">(modifier)</a>
-    </h2>
-  </div>
+<h2 class="editable-zone">
+  📍 ${lieu.nom} 
+  <span class="editable-zone" style="font-weight:400; color:#555;">${lieu.type}</span>
+  <a href="#" id="btn-edit" style="font-size:14px; font-weight:400; margin-left:8px; text-decoration:underline; color:#666;">(modifier)</a>
+</h2>
 
   <!-- Bloc édition caché par défaut -->
   <div id="edit-mode" style="display:none; padding:10px; border-radius:8px; margin-top:1rem; border:2px solid rgba(26,115,232,0.4);">
@@ -933,14 +931,27 @@ let html = `
       };
     }
     if (btnEdit) {
-      btnEdit.addEventListener("click", (ev) => {
-        ev.preventDefault();
-        if (navigator.vibrate) navigator.vibrate(200);
+btnEdit.addEventListener("click", (ev) => {
+  ev.preventDefault();
+  if (navigator.vibrate) navigator.vibrate(200);
 
-        document.getElementById("view-mode").style.display = "none";
-        document.getElementById("edit-mode").style.display = "block";
-if (btnExit) btnExit.style.display = "block"; // affiche le bouton flottant
-      
+  // Ajoute un halo bleu sur toutes les zones éditables
+  document.querySelectorAll(".editable-zone").forEach(el=>{
+    el.classList.add("edit-highlight");
+
+    // Clique sur une zone -> ouvre l’édition
+    el.addEventListener("click", ()=>{
+      document.getElementById("view-mode").style.display = "none";
+      document.getElementById("edit-mode").style.display = "block";
+      if (btnExit) btnExit.style.display = "block";
+
+      // ✅ On enlève le halo une fois passé en édition
+      document.querySelectorAll(".editable-zone").forEach(x=>{
+        x.classList.remove("edit-highlight");
+      });
+    }, { once:true });
+  });
+});
   
         
         // Gérer RSS (activation des boutons Table1/2/3)
