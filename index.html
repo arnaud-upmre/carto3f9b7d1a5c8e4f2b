@@ -1742,7 +1742,7 @@ if (document.getElementById("editable-description")) {
   const textarea = document.getElementById("input-description");
 
   if (textarea) {
-    // Remplace seulement le textarea par le span
+    // On est en mode édition → remplacer le textarea par un span
     textarea.replaceWith(
       Object.assign(document.createElement("span"), {
         className: "desc-value",
@@ -1750,10 +1750,11 @@ if (document.getElementById("editable-description")) {
       })
     );
   } else {
-    // Si déjà en span, on met juste à jour son contenu
-    const span = document.querySelector(".desc-value");
-    if (span) {
-      span.innerHTML = descVal || '<span class="placeholder">(non renseigné)</span>';
+    // On est déjà en affichage normal → juste mettre à jour le span
+    const strong = document.getElementById("editable-description");
+    const next = strong.nextElementSibling;
+    if (next && next.classList.contains("desc-value")) {
+      next.innerHTML = descVal || '<span class="placeholder">(non renseigné)</span>';
     }
   }
 }
