@@ -1736,19 +1736,27 @@ function quitEditMode(nom, type, sat = "", acces = ""){
 });
 
   document.getElementById("edit-buttons").style.display = "none";
-    if (document.getElementById("editable-description")) {
-    document.getElementById("editable-description").textContent = originalValues.description || "";
-  }
+ 
+  // Réinitialise aussi description / contact / portail
+if (document.getElementById("editable-description")) {
+  const descVal = originalValues.description || "";
+  document.getElementById("editable-description").parentNode.outerHTML =
+    `<p><strong id="editable-description">ℹ️ Informations :</strong> 
+      <span class="desc-value">${descVal || '<span class="placeholder">(non renseigné)</span>'}</span>
+    </p>`;
+}
+
 if (document.getElementById("editable-contact")) {
+  const contactVal = originalValues.contact || "";
   document.getElementById("editable-contact").parentNode.outerHTML =
-    formatContact(originalValues.contact);
+    formatContact(contactVal);
 }
 
 if (document.getElementById("editable-portail")) {
+  const portailVal = originalValues.portail || "";
   document.getElementById("editable-portail").parentNode.outerHTML =
-    formatPortail(originalValues.portail);
+    formatPortail(portailVal);
 }
-  
   editMode = false;
 }
     // Annuler édition
@@ -1775,7 +1783,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V8</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V9</span>
 </div>
 
 <script>
