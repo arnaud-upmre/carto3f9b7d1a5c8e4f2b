@@ -691,7 +691,13 @@ function formatPortail(val) {
 
   return `<p><strong id="editable-portail">🚧 Portail :</strong> ${content}</p>`;
 }
-  
+
+    function formatDescription(val) {
+  return `<p><strong id="editable-description">ℹ️ Informations :</strong> 
+    ${val ? `<span class="desc-value">${val}</span>` : '<span class="placeholder">(non renseigné)</span>'}
+  </p>`;
+}
+    
 function normalize(str) {
   return str
     .normalize("NFD")
@@ -1739,24 +1745,8 @@ function quitEditMode(nom, type, sat = "", acces = ""){
  
 if (document.getElementById("editable-description")) {
   const descVal = originalValues.description || "";
-  const textarea = document.getElementById("input-description");
-
-  if (textarea) {
-    // On est en mode édition → remplacer le textarea par un span
-    textarea.replaceWith(
-      Object.assign(document.createElement("span"), {
-        className: "desc-value",
-        innerHTML: descVal || '<span class="placeholder">(non renseigné)</span>'
-      })
-    );
-  } else {
-    // On est déjà en affichage normal → juste mettre à jour le span
-    const strong = document.getElementById("editable-description");
-    const next = strong.nextElementSibling;
-    if (next && next.classList.contains("desc-value")) {
-      next.innerHTML = descVal || '<span class="placeholder">(non renseigné)</span>';
-    }
-  }
+  document.getElementById("editable-description").parentNode.outerHTML =
+    formatDescription(descVal);
 }
 
 if (document.getElementById("editable-contact")) {
