@@ -27,11 +27,12 @@
   @keyframes eale-zoomIn{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
   .eale-intro-hide{opacity:0; transition:opacity .35s ease}
 
- /* Pills itinéraires : centrage + wrap sur petits écrans */
-.inline-links.pills-3{
+.inline-links.pills-3 {
+  display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  text-align: center;  /* centre les lignes quand ça passe à la ligne */
+  justify-content: center;   /* centre horizontalement */
+  align-items: center;       /* centre verticalement */
+  text-align: center;        /* évite le flottement si ligne unique */
   gap: 8px;
 }
 .inline-links.pills-3 a{
@@ -127,13 +128,6 @@ ul#suggestions:not(:empty){
   }
 }
 
-    .inline-links.pills-3 {
-  flex-wrap: wrap;
-  justify-content: center;   /* ✅ centre toujours horizontalement */
-  align-items: center;       /* ✅ centre verticalement */
-  text-align: center;
-  gap: 8px;
-}
     
 </style>
   <meta name="robots" content="noindex, nofollow" />
