@@ -1007,12 +1007,9 @@ if (lieu.rss) {
   blocs.push(formatRSS(lieu.rss));
 }
 
-// Informations générales
-blocs.push(`<p><strong>ℹ️ Informations :</strong></p>`);
-
-// Description → toujours affichée
-blocs.push(`<p id="editable-description">${lieu.description || '<span class="placeholder">(non renseigné)</span>'}</p>`);
-
+// Informations générales + Description (même ligne)
+blocs.push(`<p><strong>ℹ️ Informations :</strong> <span id="editable-description">${lieu.description || '<span class="placeholder">(non renseigné)</span>'}</span></p>`);
+  
 // Contact → toujours affiché
 blocs.push(`<p><strong>👤 Contact :</strong> <span id="editable-contact">${lieu.contact || '<span class="placeholder">(non renseigné) - Ex : Agent E : 03 28....</span>'}</span></p>`);
 
