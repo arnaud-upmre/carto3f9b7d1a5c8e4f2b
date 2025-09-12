@@ -1741,10 +1741,15 @@ if (document.getElementById("editable-description")) {
   const descVal = originalValues.description || "";
   const textarea = document.getElementById("input-description");
   if (textarea) {
-    // Si on est en édition → remplace le textarea par un span normal
-    textarea.outerHTML = `<span class="desc-value">${descVal || '<span class="placeholder">(non renseigné)</span>'}</span>`;
+    // On écrase seulement le contenu du textarea par un span
+    textarea.replaceWith(
+      Object.assign(document.createElement("span"), {
+        className: "desc-value",
+        innerHTML: descVal || '<span class="placeholder">(non renseigné)</span>'
+      })
+    );
   } else {
-    // Sinon → on met juste à jour la valeur du span
+    // Si déjà en span, on met juste à jour
     const span = document.querySelector(".desc-value");
     if (span) {
       span.innerHTML = descVal || '<span class="placeholder">(non renseigné)</span>';
