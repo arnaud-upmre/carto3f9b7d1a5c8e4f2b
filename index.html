@@ -1533,15 +1533,10 @@ document.addEventListener("click", function(e){
         if (document.getElementById("editable-description")) {
     originalValues.description = document.getElementById("editable-description").textContent.trim();
   }
-if (document.getElementById("editable-contact")) {
-  const node = document.getElementById("editable-contact").nextSibling;
-  originalValues.contact = node ? node.textContent.trim() : "";
-}
 
-if (document.getElementById("editable-portail")) {
-  const node = document.getElementById("editable-portail").nextSibling;
-  originalValues.portail = node ? node.textContent.trim() : "";
-}
+      // ⚡️ On prend la valeur brute du JSON affiché, pas le rendu cliquable
+originalValues.contact = currentItem.contact || "";
+originalValues.portail = currentItem.portail || "";
 
       // Ajoute halo + vibration sur les zones modifiables existantes
 ["editable-nom","editable-type","editable-sat","editable-acces","editable-rss","editable-description","editable-contact","editable-portail"].forEach(id=>{
@@ -1776,7 +1771,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V7</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V8</span>
 </div>
 
 <script>
