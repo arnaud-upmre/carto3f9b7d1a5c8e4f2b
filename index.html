@@ -1745,8 +1745,10 @@ function quitEditMode(nom, type, sat = "", acces = ""){
  
 if (document.getElementById("editable-description")) {
   const descVal = originalValues.description || "";
-  const block = document.getElementById("editable-description").parentNode;
-  block.outerHTML = formatDescription(descVal);
+  const span = document.querySelector(".desc-value");
+  if (span) {
+    span.innerHTML = descVal || '<span class="placeholder">(non renseigné)</span>';
+  }
 }
 
 if (document.getElementById("editable-contact")) {
