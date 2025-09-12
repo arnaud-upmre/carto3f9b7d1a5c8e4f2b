@@ -1533,18 +1533,17 @@ document.addEventListener("click", function(e){
         if (document.getElementById("editable-description")) {
     originalValues.description = document.getElementById("editable-description").textContent.trim();
   }
- if (document.getElementById("editable-contact")) {
-  document.getElementById("editable-contact").parentNode.innerHTML =
-    `<strong id="editable-contact">👤 Contact :</strong> ${
-      originalValues.contact || '<span class="placeholder">(non renseigné)</span>'
-    }`;
+if (document.getElementById("editable-contact")) {
+  originalValues.contact = document.getElementById("editable-contact").parentNode.textContent
+    .replace("👤 Contact :", "")
+    .trim();
 }
 
 if (document.getElementById("editable-portail")) {
-  document.getElementById("editable-portail").parentNode.innerHTML =
-    `<strong id="editable-portail">🚧 Portail :</strong> ${
-      originalValues.portail || '<span class="placeholder">(non renseigné)</span>'
-    }`;
+  originalValues.portail = document.getElementById("editable-portail").parentNode.textContent
+    .replace("🚧 Portail :", "")
+    .trim();
+}
 }
 
       // Ajoute halo + vibration sur les zones modifiables existantes
@@ -1780,7 +1779,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V5</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V6</span>
 </div>
 
 <script>
