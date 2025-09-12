@@ -1608,16 +1608,12 @@ originalValues.rss = val; // "Table 1", "Table 2", "Table 3"
 // Description (cliquable sur tout le bloc)
 if (editMode && (e.target.id === "editable-description" || e.target.closest("#editable-description"))) {
   const parent = document.getElementById("editable-description").parentNode;
-  const spanVal = parent.querySelector(".desc-value");
-  const spanPh  = parent.querySelector(".placeholder");
+  const val = currentItem.description || ""; // ✅ valeur brute du JSON
 
-  const currentVal = spanVal ? spanVal.textContent.trim() : (spanPh ? "" : "");
-
-  // Remplace le span ou le placeholder par un textarea
-  const target = spanVal || spanPh;
-  if (target) {
-    target.outerHTML = `<textarea id="input-description" style="width:100%; min-height:60px; border:2px solid #1a73e8; padding:4px; border-radius:6px;">${currentVal}</textarea>`;
-  }
+  parent.innerHTML = `
+    <strong id="editable-description">ℹ️ Informations :</strong>
+    <textarea id="input-description" style="width:100%; min-height:60px; border:2px solid #1a73e8; padding:4px; border-radius:6px;">${val}</textarea>
+  `;
 
   document.getElementById("edit-buttons").style.display = "block";
   navigator.vibrate?.(50);
@@ -1632,6 +1628,20 @@ if (e.target.id === "editable-portail") {
     <input type="text" id="input-portail" value="${val}" 
       style="border:2px solid #1a73e8; padding:3px; border-radius:6px; margin-left:6px; width:80%;" />
   `;
+  document.getElementById("edit-buttons").style.display = "block";
+  navigator.vibrate?.(50);
+  return;
+}
+  if (e.target.id === "editable-contact") {
+  const val = currentItem.contact || ""; // ✅ valeur brute du JSON
+  const parent = e.target.parentNode;
+
+  parent.innerHTML = `
+    <strong id="editable-contact">👤 Contact :</strong>
+    <input type="text" id="input-contact" value="${val}" 
+      style="border:2px solid #1a73e8; padding:3px; border-radius:6px; margin-left:6px; width:80%;" />
+  `;
+
   document.getElementById("edit-buttons").style.display = "block";
   navigator.vibrate?.(50);
   return;
@@ -1741,10 +1751,8 @@ function quitEditMode(nom, type, sat = "", acces = ""){
  
 if (document.getElementById("editable-description")) {
   const descVal = originalValues.description || "";
-  const span = document.querySelector(".desc-value");
-  if (span) {
-    span.innerHTML = descVal || '<span class="placeholder">(non renseigné)</span>';
-  }
+  document.getElementById("editable-description").parentNode.outerHTML =
+    formatDescription(descVal);
 }
 
 if (document.getElementById("editable-contact")) {
@@ -1784,7 +1792,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V11</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1</span>
 </div>
 
 <script>
