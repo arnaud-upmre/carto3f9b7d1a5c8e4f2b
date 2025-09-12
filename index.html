@@ -1011,10 +1011,24 @@ if (lieu.rss) {
 blocs.push(`<p><strong id="editable-description">ℹ️ Informations :</strong> <span class="desc-value">${lieu.description || '<span class="placeholder">(non renseigné)</span>'}</span></p>`);
 
 // Contact
-blocs.push(`<p><strong id="editable-contact">👤 Contact :</strong> <span class="contact-value">${lieu.contact || '<span class="placeholder">(non renseigné)</span>'}</span></p>`);
+blocs.push(`
+  <p>
+    <strong id="editable-contact">👤 Contact :</strong>
+    <span class="contact-value">
+      ${lieu.contact ? formatContact(lieu.contact).replace("👤 Contact :", "") : '<span class="placeholder">(non renseigné)</span>'}
+    </span>
+  </p>
+`);
 
 // Portail
-blocs.push(`<p><strong id="editable-portail">🚧 Portail :</strong> <span class="portail-value">${lieu.portail || '<span class="placeholder">(non renseigné)</span>'}</span></p>`);
+blocs.push(`
+  <p>
+    <strong id="editable-portail">🚧 Portail :</strong>
+    <span class="portail-value">
+      ${lieu.portail ? formatPortail(lieu.portail).replace("🚧 Portail :", "") : '<span class="placeholder">(non renseigné)</span>'}
+    </span>
+  </p>
+`);
   
   if (blocs.length > 0) {
     html += `<hr class="separator" />` +
@@ -1614,7 +1628,8 @@ if (e.target.id === "editable-description") {
 if (e.target.id === "editable-contact") {
   const span = e.target.parentNode.querySelector(".contact-value");
   const currentVal = span ? span.textContent.trim() : "";
-  span.outerHTML = `<input type="text" id="input-contact" value="${currentVal}" style="border:2px solid #1a73e8; padding:3px; border-radius:6px; width:100%;" />`;
+  span.innerHTML = `<input type="text" id="input-contact" value="${currentVal}" 
+    style="border:2px solid #1a73e8; padding:3px; border-radius:6px; width:100%;" />`;
   document.getElementById("edit-buttons").style.display = "block";
   navigator.vibrate?.(50);
   return;
@@ -1624,7 +1639,8 @@ if (e.target.id === "editable-contact") {
 if (e.target.id === "editable-portail") {
   const span = e.target.parentNode.querySelector(".portail-value");
   const currentVal = span ? span.textContent.trim() : "";
-  span.outerHTML = `<input type="text" id="input-portail" value="${currentVal}" style="border:2px solid #1a73e8; padding:3px; border-radius:6px; width:100%;" />`;
+  span.innerHTML = `<input type="text" id="input-portail" value="${currentVal}" 
+    style="border:2px solid #1a73e8; padding:3px; border-radius:6px; width:100%;" />`;
   document.getElementById("edit-buttons").style.display = "block";
   navigator.vibrate?.(50);
   return;
