@@ -558,7 +558,7 @@ function formatPortail(val) {
 content += ` <a href="${video}" target="_blank" rel="noopener" class="inline-link">▶️ Explication</a>`;
   }
 
-  return `<p><strong>🚧 Portail :</strong> ${content}</p>`;
+ return `<p class="editable-zone"><strong>🚧 Portail :</strong> ${content}</p>`;
 }
   
 function normalize(str) {
@@ -620,7 +620,7 @@ function formatRSS(table) {
   const tableNum = { "A": "1", "B": "2", "C": "3" };
   if (!tables[table]) return `<p><strong>📞 RSS :</strong> ${table}</p>`;
   const nums = tables[table].map(num => `<a href="tel:${num.replace(/\s+/g, '')}">${num}</a>`).join("");
-  return `<p><strong>📞 RSS Table ${tableNum[table] || table} :</strong></p><div class="inline-links">${nums}</div>`;
+  return `<p class="editable-zone"><strong>📞 RSS Table ${tableNum[table] || table} :</strong></p><div class="inline-links">${nums}</div>`;
 }
 function generateAppareilListHTML(currentLieu) {
   const matchingApps = appareils.filter(app => 
@@ -823,30 +823,31 @@ const targetLat = usePoste ? _latPoste : lieu.latitude;
 const targetLon = usePoste ? _lonPoste : lieu.longitude;
 const urlMyMapsPoste = myMapsViewer(targetLat, targetLon, 18);
 
-let html = `<h2>
+let html = `<h2 class="editable-zone">
   <a href="#" data-href="${urlMyMapsPoste}" onclick="window.open(this.dataset.href,'_blank','noopener')" class="titre-lien">
     📍 ${formatNomCompletLieu(lieu)}
   </a>
   <a href="#" id="btn-edit" style="font-size:14px; font-weight:400; margin-left:8px; text-decoration:underline; color:#666;">(modifier)</a>
-</h2>
+</h2>`;
 
-<p style="text-align:center; font-weight:600; margin:1.5rem 0 0.5rem 0;">🛣️ Repérer l’accès :</p>
-<div class="inline-links pills-3">
-  <a href="${myMapsViewer(lieu.latitude, lieu.longitude, 19)}" target="_blank" rel="noopener">🛰️ Vue satellite</a>
-  <a href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">👁️ Street View</a>
-</div>
+html += `
+  <p style="text-align:center; font-weight:600; margin:1.5rem 0 0.5rem 0;">🛣️ Repérer l’accès :</p>
+  <div class="inline-links pills-3">
+    <a href="${myMapsViewer(lieu.latitude, lieu.longitude, 19)}" target="_blank" rel="noopener">🛰️ Vue satellite</a>
+    <a href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">👁️ Street View</a>
+  </div>
 
   <p style="text-align:center; font-weight:600; margin:1.5rem 0 0.5rem 0;">🚙 Itinéraires disponibles :</p>
-<div class="inline-links pills-3">
-   <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🗺️ Maps</a>
-   <a href="https://maps.apple.com/?daddr=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🍎 Plans</a>
-   <a href="https://waze.com/ul?ll=${lieu.latitude},${lieu.longitude}&navigate=yes" target="_blank" rel="noopener">🚗 Waze</a>
+  <div class="inline-links pills-3">
+    <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🗺️ Maps</a>
+    <a href="https://maps.apple.com/?daddr=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🍎 Plans</a>
+    <a href="https://waze.com/ul?ll=${lieu.latitude},${lieu.longitude}&navigate=yes" target="_blank" rel="noopener">🚗 Waze</a>
   </div>`;
 
   const blocs = [];
-  if (lieu.description) blocs.push(`<p>${lieu.description}</p>`);
+ if (lieu.description) blocs.push(`<p class="editable-zone">${lieu.description}</p>`);
   if (lieu.pk && lieu.numero_ligne && lieu.lignes)
-    blocs.push(`<p><strong>🚄 PK ${lieu.pk}</strong> sur la ligne n°<strong>${lieu.numero_ligne}</strong> - ${lieu.lignes}</p>`);
+    blocs.push(`<p class="editable-zone"><strong>🚄 PK ${lieu.pk}</strong> sur la ligne n°<strong>${lieu.numero_ligne}</strong> - ${lieu.lignes}</p>`);
   if (lieu.rss) blocs.push(formatRSS(lieu.rss));
   if (lieu.contact) blocs.push(formatContact(lieu.contact));
   if (lieu.portail) blocs.push(formatPortail(lieu.portail));
@@ -868,8 +869,8 @@ let html = `<h2>
       btnEdit.addEventListener("click", (ev) => {
         ev.preventDefault();
 if (navigator.vibrate) navigator.vibrate(2000);
-        // cible tous les paragraphes et blocs du résultat
-        const editables = result.querySelectorAll("p, .inline-links, h2");
+     // cible uniquement les zones marquées comme éditables
+const editables = result.querySelectorAll(".editable-zone");
 
         // ajoute vibration + halo
         editables.forEach(el => {
@@ -1378,8 +1379,11 @@ if (el2) el2.textContent = `(${data.count})`;
 updateContrib();
 setInterval(updateContrib, 3000);
 </script> 
-  <button id="btn-exit-edit">❌ Quitter édition</button>
+
+<!-- ✅ Bouton Quitter édition -->
+<button id="btn-exit-edit">❌ Quitter édition</button>
 </main>
+
 <div id="about-footer">
 
   🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1.01</span>
@@ -1390,7 +1394,7 @@ setInterval(updateContrib, 3000);
   // ===== Config =====
   var INTRO_DURATION_MS = 3000;             // Durée d’affichage (ms)
   var STORAGE_KEY       = 'eale_intro_last_day'; // Clé de mémo 1/jour
-
+  
   // Date locale AAAA-MM-JJ (pas en UTC, évite les décalages)
   function todayLocal(){
     var d=new Date();
