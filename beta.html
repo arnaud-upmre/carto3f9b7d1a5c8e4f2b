@@ -965,14 +965,18 @@ let html = `<h2>
   ${lieu.SAT ? `<span id="editable-sat"> ${lieu.SAT}</span>` : ""}
   ${lieu.accès ? `<span id="editable-acces"> – accès ${lieu.accès}</span>` : ""}
   <a href="#" id="edit-toggle">[modifier]</a>
-</h2>
-
-<div class="rep-block poste-only">
-  <p><span class="emoji">⚡️</span> Repérer le poste :</p>
-  <div class="inline-links pills-3">
-   <a href="${urlMyMapsPoste}" target="_blank" rel="noopener">🛰️ Vue satellite</a>
-  </div>
-</div> <!-- ✅ fermeture manquante -->
+</h2>`;
+    
+// ✅ Affiche "Repérer le poste" seulement si les coordonnées poste sont présentes
+if (usePoste) {
+  html += `
+  <div class="rep-block poste-only">
+    <p><span class="emoji">⚡️</span> Repérer le poste :</p>
+    <div class="inline-links pills-3">
+      <a href="${urlMyMapsPoste}" target="_blank" rel="noopener">🛰️ Vue satellite</a>
+    </div>
+  </div>`;
+}
 
 <div class="rep-block">
 <p><span class="emoji">🛣️</span> Repérer l’accès :</p>
