@@ -1409,17 +1409,13 @@ document.getElementById("btn-save").addEventListener("click", function(){
 
   fetch("https://script.google.com/macros/s/AKfycbyxh3HGR6iHcn0ynwfGzSzOm5Djc7o2e1uA4dvdPurolDerZlNiARcpsiY4daDRPSV1tw/exec", {
     method: "POST",
+    mode: "no-cors",   // ✅ contourne le blocage CORS
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ nom: newNom, type: newType })
   })
-  .then(r => r.text()) // ✅ on lit en texte brut
-  .then(txt => {
-    if (txt.includes("OK")) {
-      alert("✅ Modifications enregistrées !");
-      quitEditMode(newNom, newType);
-    } else {
-      alert("⚠️ Réponse inattendue : " + txt);
-    }
+  .then(() => {
+    alert("✅ Modifications envoyées !");
+    quitEditMode(newNom, newType);
   })
   .catch(err => alert("❌ Erreur réseau : " + err));
 });
@@ -1445,7 +1441,7 @@ function quitEditMode(nom, type){
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V5</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V6</span>
 </div>
 
 <script>
