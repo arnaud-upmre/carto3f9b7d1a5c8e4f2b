@@ -998,13 +998,18 @@ html += `
 </div>`;
 
 const blocs = [];
-if (lieu.description) blocs.push(`<p id="editable-description">${lieu.description}</p>`);
-if (lieu.pk && lieu.numero_ligne && lieu.lignes)
-  blocs.push(`<p><strong>🚄 PK ${lieu.pk}</strong> sur la ligne n°<strong>${lieu.numero_ligne}</strong> - ${lieu.lignes}</p>`);
-if (lieu.rss) blocs.push(formatRSS(lieu.rss));
-if (lieu.contact) blocs.push(`<div id="editable-contact">${formatContact(lieu.contact)}</div>`);
-if (lieu.portail) blocs.push(`<div id="editable-portail">${formatPortail(lieu.portail)}</div>`);
-
+if (lieu.description) {
+  blocs.push(`<p id="editable-description">${lieu.description}</p>`);
+}
+if (lieu.rss) {
+  blocs.push(formatRSS(lieu.rss));
+}
+if (lieu.contact) {
+  blocs.push(`<p><strong>👤 Contact :</strong> <span id="editable-contact">${lieu.contact}</span></p>`);
+}
+if (lieu.portail) {
+  blocs.push(`<p><strong>🚧 Portail :</strong> <span id="editable-portail">${lieu.portail}</span></p>`);
+}
   if (blocs.length > 0) {
     html += `<hr class="separator" />` +
             blocs.map((b,i)=> i===0 ? b : `<hr class="separator" />${b}`).join("");
@@ -1747,7 +1752,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V3</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1</span>
 </div>
 
 <script>
