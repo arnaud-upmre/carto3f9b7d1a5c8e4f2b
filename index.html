@@ -1764,6 +1764,20 @@ function quitEditMode(nom, type, sat = "", acces = ""){
   if (document.getElementById("editable-acces")) {
     document.getElementById("editable-acces").textContent = " – accès " + acces;
   }
+  // ➡️ Reconstruit le bloc PK + ligne
+const pkVal = currentItem.pk || "(non renseigné)";
+const numVal = currentItem.numero_ligne || "(non renseigné)";
+const ligneNomEl = document.getElementById("ligne-nom");
+const ligneNomTxt = ligneNomEl ? ligneNomEl.textContent : "";
+
+const pkParent = document.getElementById("editable-pk")?.parentNode;
+if (pkParent) {
+  pkParent.innerHTML = `
+    🚄 PK <strong id="editable-pk">${pkVal}</strong>
+    sur la ligne n°<strong id="editable-numero_ligne">${numVal}</strong>
+    ${ligneNomTxt ? `<span id="ligne-nom">${ligneNomTxt}</span>` : ""}
+  `;
+}
 
 ["editable-nom","editable-type","editable-sat","editable-acces","editable-rss",
  "editable-description","editable-contact","editable-portail",
