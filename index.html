@@ -167,7 +167,10 @@ ul#suggestions:not(:empty){
     .rep-block.poste-only p {
   transform: translateX(-14px);  /* décale le texte vers la gauche */
 }
-
+.placeholder {
+  color: #888;
+  font-style: italic;
+}
     
 </style>
   <meta name="robots" content="noindex, nofollow" />
@@ -998,18 +1001,20 @@ html += `
 </div>`;
 
 const blocs = [];
-if (lieu.description) {
-  blocs.push(`<p id="editable-description">${lieu.description}</p>`);
-}
+// Description → toujours affichée (ou "non renseigné")
+blocs.push(`<p id="editable-description">${lieu.description || '<span class="placeholder">(non renseigné)</span>'}</p>`);
+
+// RSS → seulement s’il existe
 if (lieu.rss) {
   blocs.push(formatRSS(lieu.rss));
 }
-if (lieu.contact) {
-  blocs.push(`<p><strong>👤 Contact :</strong> <span id="editable-contact">${lieu.contact}</span></p>`);
-}
-if (lieu.portail) {
-  blocs.push(`<p><strong>🚧 Portail :</strong> <span id="editable-portail">${lieu.portail}</span></p>`);
-}
+
+// Contact → toujours affiché
+blocs.push(`<p><strong>👤 Contact :</strong> <span id="editable-contact">${lieu.contact || '<span class="placeholder">(non renseigné)</span>'}</span></p>`);
+  
+// Portail → toujours affiché
+blocs.push(`<p><strong>🚧 Portail :</strong> <span id="editable-portail">${lieu.portail || '<span class="placeholder">(non renseigné)</span>'}</span></p>`);
+  
   if (blocs.length > 0) {
     html += `<hr class="separator" />` +
             blocs.map((b,i)=> i===0 ? b : `<hr class="separator" />${b}`).join("");
