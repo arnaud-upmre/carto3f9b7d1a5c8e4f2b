@@ -972,15 +972,17 @@ let html = `<h2>
 </h2>`;
     
 // ✅ Affiche "Repérer le poste" seulement si les coordonnées poste sont présentes
-if (usePoste) {
-  html += `
-  <div class="rep-block poste-only">
-    <p><span class="emoji">⚡️</span>Repérer le poste (sat/guérite)</p>
-    <div class="inline-links pills-3">
-      <a href="${urlMyMapsPoste}" target="_blank" rel="noopener">🛰️ Vue satellite</a>
-    </div>
-  </div>`;
-}
+html += `
+<div class="rep-block poste-only">
+  <p><span class="emoji">⚡️</span>Repérer le poste (sat/guérite)</p>
+  <div class="inline-links pills-3">
+    ${
+      usePoste
+        ? `<a href="${urlMyMapsPoste}" target="_blank" rel="noopener">🛰️ Vue satellite</a>`
+        : `<span class="placeholder">(non renseigné – fournir un lien Maps)</span>`
+    }
+  </div>
+</div>`;
 
 html += `
 <div class="rep-block">
