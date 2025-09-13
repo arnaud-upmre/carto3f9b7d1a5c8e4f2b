@@ -1632,8 +1632,8 @@ document.querySelectorAll(".btn-rss").forEach(btn => {
       rssBlock.outerHTML = formatRSS(code);
     }
 
-    // On mémorise la valeur choisie pour l’envoi
-    originalValues.rss = code; // "A", "B" ou "C"
+// ➕ On stocke le choix en temporaire
+currentItem.rssTemp = code; // "A", "B" ou "C"
   });
 });
 
@@ -1735,6 +1735,12 @@ const newNumLigne = document.getElementById("input-numero_ligne")?.value || curr
     demandeur,
     ficheOrigine
   };
+  if (currentItem.rssTemp) {
+  payload.rss = currentItem.rssTemp;         // on envoie la nouvelle table
+  originalValues.rss = currentItem.rssTemp;  // on fige la nouvelle valeur
+  currentItem.rss = currentItem.rssTemp;     // on met à jour la fiche affichée
+  delete currentItem.rssTemp;                // on nettoie le temporaire
+}
 
   if (newNom !== originalValues.nom) payload.nom = newNom;
   if (newType !== originalValues.type) payload.type = newType;
