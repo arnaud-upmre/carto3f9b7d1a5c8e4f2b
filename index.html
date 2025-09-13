@@ -1627,15 +1627,22 @@ document.querySelectorAll(".btn-rss").forEach(btn => {
     const map = { "Table 1": "A", "Table 2": "B", "Table 3": "C" };
     const code = map[val] || val;
 
- // Mets à jour uniquement le texte affiché
-const rssBlock = document.getElementById("editable-rss");
-if (rssBlock) {
-  rssBlock.innerHTML = `<strong>📞 RSS ${val}</strong>`;
-}
+    // Mets à jour le titre (ex: "📞 RSS Table 2")
+    const rssBlock = document.getElementById("editable-rss");
+    if (rssBlock) {
+      rssBlock.innerHTML = `<strong>📞 RSS ${val}</strong>`;
+    }
 
-// 👉 On ne touche PAS à rss-phones ici
-// On mémorise seulement la nouvelle valeur
-originalValues.rss = val; // "Table 1", "Table 2", "Table 3"
+    // Mets à jour les numéros sans recréer le bloc complet
+    const phones = document.getElementById("rss-phones");
+    if (phones) {
+      const m = formatRSS(code).match(/<div id="rss-phones"[^>]*>([\s\S]*?)<\/div>/);
+      phones.innerHTML = m ? m[1] : "";
+      phones.style.display = "block";
+    }
+
+    // Mémorise la valeur finale envoyée
+    originalValues.rss = val; // "Table 1", "Table 2", "Table 3"
   });
 });
 
