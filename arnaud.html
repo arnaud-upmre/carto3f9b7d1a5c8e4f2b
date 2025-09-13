@@ -216,11 +216,29 @@ a:hover {
       <div class="stats-content" id="stats"></div>
     </div>
 
+    <div class="card">
+  <h2>⚡ Bilan d’utilisation</h2>
+  <p>
+    Depuis septembre 2021, la carte MyMaps totalise plus de 
+    <strong>20 700 affichages</strong> <em>(et ça continue…)</em>.
+  </p>
+  <p>
+    Depuis son lancement, la webapp a déjà généré 
+    <strong id="total-req">…</strong> requêtes :
+  </p>
+
+  <div class="stats-content">
+    <span class="stat-pill">📍 <span id="counterPostes">0</span> recherches de postes</span>
+    <span class="stat-pill">💡 <span id="counterAppareils">0</span> recherches d’appareils</span>
+    <span class="stat-pill">🙌 <span id="counterContrib">0</span> contributions</span>
+  </div>
+</div>
+
 <!-- Conclusion avec badge -->
 <div class="card conclusion-card">
-  <span class="badge-rd">🕒 +60h R&D</span>
+  <span class="badge-rd">🕒 +120h R&D</span>
   <h2>✨ En conclusion</h2>
-  <p>Derrière cette webapp, il y a plus de 60 heures passées à chercher, tester et recommencer.</p>
+  <p>Derrière cette webapp, il y a plus de 120 heures passées à chercher, tester et recommencer.</p>
   <p>Mais ce projet me rappelle qu’il n’y a rien de plus gratifiant que de voir son travail servir aux autres.</p>
   <p>Au fond, une <a href="https://www.google.fr/maps/d/u/0/edit?mid=1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r&usp=sharing" target="_blank">carte</a> n’est qu’un outil. Mais c’est quand elle sert vraiment sur le terrain qu’elle prend tout son sens.</p>
   <p><strong>L’efficacité ne vient pas uniquement d’une bonne préparation, mais aussi de la manière dont on sait s’entraider et avancer ensemble.</strong></p>
@@ -259,5 +277,44 @@ a:hover {
       document.addEventListener(evt, e => e.preventDefault(), { passive: false });
     });
   </script>
+    <script>
+  async function fetchBilan() {
+    try {
+      // URLs des scripts Google
+      const urlPostes = "https://script.google.com/macros/s/AKfycbzUFaek89LYosR0FSw9gyxn2IZXlFlWXA_dIFIDwox-szE3DgH-l8IVbGfaoIgGK04h/exec";
+      const urlAppareils = "https://script.google.com/macros/s/AKfycbwJIlvcfNYREJn1oPiVAhQqHACXXar8ZbRl6aChwYw4TFSAaMTFEHTT5X2T7BKLJ3gsJw/exec";
+      const urlContrib = "https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec";
+
+      // Récupération parallèle
+      const [resPostes, resAppareils, resContrib] = await Promise.all([
+        fetch(urlPostes),
+        fetch(urlAppareils),
+        fetch(urlContrib)
+      ]);
+
+      const dataPostes = await resPostes.json();
+      const dataAppareils = await resAppareils.json();
+      const dataContrib = await resContrib.json();
+
+      // Valeurs
+      const nbPostes = dataPostes.count || 0;
+      const nbAppareils = dataAppareils.count || 0;
+      const nbContrib = dataContrib.count || 0;
+      const total = nbPostes + nbAppareils;
+
+      // Mise à jour HTML
+      document.getElementById("counterPostes").textContent = nbPostes;
+      document.getElementById("counterAppareils").textContent = nbAppareils;
+      document.getElementById("counterContrib").textContent = nbContrib;
+      document.getElementById("total-req").textContent = total;
+    } catch (err) {
+      console.error("Erreur chargement compteurs :", err);
+    }
+  }
+
+  // Mise à jour au chargement puis toutes les 5 secondes
+  fetchBilan();
+  setInterval(fetchBilan, 5000);
+</script>
 </body>
 </html>
