@@ -85,7 +85,11 @@ ul#suggestions:not(:empty){
   display: inline-block;
   padding: 2px 4px;
   border-radius: 6px;
-  animation: pulseHalo 1.2s infinite, wiggle 0.3s infinite;
+  animation: pulseHalo 1.2s infinite; /* halo seul */
+}
+
+.editable-wiggle {
+  animation: wiggle 0.3s infinite; /* wiggle seul */
 }
 
 /* Halo pulsant bleu */
@@ -1574,7 +1578,9 @@ originalValues.portail = currentItem.portail || "";
  "editable-description","editable-contact","editable-portail",
  "editable-pk","editable-numero_ligne"].forEach(id=>{
   const el = document.getElementById(id);
-  if (el) el.classList.add("editable-halo");
+  if (el) {
+    el.classList.add("editable-halo", "editable-wiggle"); // halo + vibration
+  }
 });
 
 // Masque le nom de ligne pendant l’édition
@@ -1595,6 +1601,11 @@ document.addEventListener("click", function(e){
        "editable-pk","editable-numero_ligne"].includes(e.target.id) ||
       e.target.closest("#editable-rss")
   )) {
+
+    // 👉 Stoppe la vibration mais garde le halo pour certains champs
+if (["editable-nom","editable-type","editable-sat","editable-acces","editable-pk","editable-numero_ligne"].includes(e.target.id)) {
+  e.target.classList.remove("editable-wiggle");
+}
     
     // Cas spécial RSS → boutons Table 1/2/3
   if (e.target.id === "editable-rss" || e.target.closest("#editable-rss")) {
@@ -1853,7 +1864,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V2</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V3</span>
 </div>
 
 <script>
