@@ -1828,10 +1828,15 @@ if (document.getElementById("editable-portail")) {
     formatPortail(portailVal);
 }
 
-  // ✅ Réinitialise le bloc RSS correctement
+// ✅ Réinitialise le bloc RSS correctement avec la dernière valeur choisie
 if (document.getElementById("editable-rss")) {
   const rssEl = document.getElementById("editable-rss");
-  if (rssEl) rssEl.outerHTML = formatRSS(currentItem.rss || "");
+  if (rssEl) {
+    const map = { "Table 1": "A", "Table 2": "B", "Table 3": "C" };
+    const val = originalValues.rss || currentItem.rss || "";
+    const code = map[val] || val;
+    rssEl.outerHTML = formatRSS(code);
+  }
 }
   
   // Réaffiche le nom de la ligne après édition
