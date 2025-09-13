@@ -1836,6 +1836,13 @@ if (document.getElementById("editable-portail")) {
   document.getElementById("editable-portail").parentNode.outerHTML =
     formatPortail(portailVal);
 }
+
+  if (document.getElementById("editable-rss")) {
+  const rssVal = originalValues.rss || currentItem.rss || "";
+  document.getElementById("editable-rss").parentNode.outerHTML =
+    formatRSS(rssVal);
+}
+  
   // Réaffiche le nom de la ligne après édition
 if (ligneNomEl) ligneNomEl.style.display = "inline";
   editMode = false;
@@ -1864,7 +1871,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V3</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V4</span>
 </div>
 
 <script>
