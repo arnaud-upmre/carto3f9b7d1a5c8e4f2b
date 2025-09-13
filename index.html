@@ -1627,24 +1627,18 @@ document.querySelectorAll(".btn-rss").forEach(btn => {
     const map = { "Table 1": "A", "Table 2": "B", "Table 3": "C" };
     const code = map[val] || val;
 
-    // Mets à jour uniquement le texte du bloc RSS
-    const rssBlock = document.getElementById("editable-rss");
-    if (rssBlock) {
-      rssBlock.innerHTML = `<strong>📞 RSS ${val}</strong>`;
-    }
-
-// ➕ Reconstruit complètement le bloc RSS (évite les doublons)
-const rssContainer = document.getElementById("editable-rss");
-if (rssContainer) {
-  rssContainer.outerHTML = formatRSS(code);
+ // Mets à jour uniquement le texte affiché
+const rssBlock = document.getElementById("editable-rss");
+if (rssBlock) {
+  rssBlock.innerHTML = `<strong>📞 RSS ${val}</strong>`;
 }
 
-// Mémorise la valeur finale envoyée au Google Sheet
+// 👉 On ne touche PAS à rss-phones ici
+// On mémorise seulement la nouvelle valeur
 originalValues.rss = val; // "Table 1", "Table 2", "Table 3"
   });
 });
 
-    
       return; // on sort ici pour ne pas exécuter le reste
     }
   
