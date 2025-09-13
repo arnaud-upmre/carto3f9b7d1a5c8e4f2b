@@ -1627,13 +1627,16 @@ document.querySelectorAll(".btn-rss").forEach(btn => {
     const map = { "Table 1": "A", "Table 2": "B", "Table 3": "C" };
     const code = map[val] || val;
 
- const rssBlock = document.getElementById("editable-rss");
+const rssBlock = document.getElementById("editable-rss");
 if (rssBlock) {
   rssBlock.outerHTML = formatRSS(code);
 }
 
 // ➕ On stocke le choix en temporaire
 currentItem.rssTemp = code; // "A", "B" ou "C"
+
+// 🔧 Met aussi à jour l’affichage en direct (numéros visibles immédiatement)
+currentItem.rss = code;
   });
 });
 
@@ -1872,7 +1875,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V3</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V4</span>
 </div>
 
 <script>
