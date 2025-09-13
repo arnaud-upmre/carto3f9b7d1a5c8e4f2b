@@ -1623,17 +1623,14 @@ document.querySelectorAll(".btn-rss").forEach(btn => {
   btn.addEventListener("click", ev => {
     const val = ev.target.dataset.val; // "Table 1", "Table 2", etc.
 
-    // ➕ Reconstruit tout le bloc RSS (titre + numéros)
-    const map = { "Table 1": "A", "Table 2": "B", "Table 3": "C" };
-    const code = map[val] || val;
+   // ➕ Reconstruit tout le bloc RSS (titre + numéros)
+const rssBlock = document.getElementById("editable-rss");
+if (rssBlock) {
+  rssBlock.outerHTML = formatRSS(code); // "A", "B", "C"
+}
 
-    const rssBlock = document.getElementById("editable-rss");
-    if (rssBlock) {
-      rssBlock.outerHTML = formatRSS(code);
-    }
-
-    // On mémorise la valeur choisie pour l’envoi
-    originalValues.rss = val; // "Table 1", "Table 2", "Table 3"
+// On mémorise la valeur choisie pour l’envoi
+originalValues.rss = val; // "Table 1", "Table 2", "Table 3"
   });
 });
 
@@ -1862,7 +1859,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V7</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V8</span>
 </div>
 
 <script>
