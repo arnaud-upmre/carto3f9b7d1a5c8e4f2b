@@ -1634,11 +1634,12 @@ document.querySelectorAll(".btn-rss").forEach(btn => {
     }
 
     // Mets à jour uniquement les numéros de téléphone
-    const phones = document.getElementById("rss-phones");
-    if (phones) {
-      phones.innerHTML = formatRSS(code).split("</p>")[1]; // récupère juste la partie numéros
-      phones.style.display = "block";
-    }
+const phones = document.getElementById("rss-phones");
+if (phones) {
+  const m = formatRSS(code).match(/<div id="rss-phones"[^>]*>([\s\S]*?)<\/div>/);
+  phones.innerHTML = m ? m[1] : ""; // injecte UNIQUEMENT les liens, pas un <div id="rss-phones"> imbriqué
+  phones.style.display = "block";
+}
 
 // Mémorise la valeur finale envoyée au Google Sheet
 originalValues.rss = val; // "Table 1", "Table 2", "Table 3"
@@ -1837,10 +1838,10 @@ if (document.getElementById("editable-portail")) {
     formatPortail(portailVal);
 }
 
+  // ✅ Réinitialise le bloc RSS correctement
 if (document.getElementById("editable-rss")) {
-  const rssVal = currentItem.rss || ""; 
-  document.getElementById("editable-rss").outerHTML =
-    formatRSS(rssVal);
+  const rssEl = document.getElementById("editable-rss");
+  if (rssEl) rssEl.outerHTML = formatRSS(currentItem.rss || "");
 }
   
   // Réaffiche le nom de la ligne après édition
