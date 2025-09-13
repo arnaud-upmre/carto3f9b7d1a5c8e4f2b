@@ -1633,12 +1633,10 @@ document.querySelectorAll(".btn-rss").forEach(btn => {
       rssBlock.innerHTML = `<strong>📞 RSS ${val}</strong>`;
     }
 
-    // Mets à jour uniquement les numéros de téléphone
-const phones = document.getElementById("rss-phones");
-if (phones) {
-  const m = formatRSS(code).match(/<div id="rss-phones"[^>]*>([\s\S]*?)<\/div>/);
-  phones.innerHTML = m ? m[1] : ""; // injecte UNIQUEMENT les liens, pas un <div id="rss-phones"> imbriqué
-  phones.style.display = "block";
+// ➕ Reconstruit complètement le bloc RSS (évite les doublons)
+const rssContainer = document.getElementById("editable-rss");
+if (rssContainer) {
+  rssContainer.outerHTML = formatRSS(code);
 }
 
 // Mémorise la valeur finale envoyée au Google Sheet
@@ -1872,7 +1870,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V6</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V7</span>
 </div>
 
 <script>
