@@ -1586,12 +1586,8 @@ originalValues.portail = currentItem.portail || "";
  "editable-pk","editable-numero_ligne","editable-rss"].forEach(id=>{
   const el = document.getElementById(id);
   if (el) {
-    // 👉 Pour RSS : seulement le halo (pas de wiggle)
-    if (id === "editable-rss") {
-      el.classList.add("editable-halo");
-    } else {
-      el.classList.add("editable-halo", "editable-wiggle");
-    }
+    // 👉 Tous les champs ont halo + wiggle
+    el.classList.add("editable-halo", "editable-wiggle");
   }
 });
 
@@ -1867,7 +1863,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V4</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V5</span>
 </div>
 
 <script>
