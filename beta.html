@@ -1594,6 +1594,12 @@ originalValues.portail = currentItem.portail || "";
     el.classList.add("editable-halo", "editable-wiggle");
   }
 });
+      ["editable-rep-poste","editable-rep-acces"].forEach(id=>{
+  const el = document.getElementById(id);
+  if (el) {
+    el.classList.add("editable-halo", "editable-wiggle");
+  }
+});
 
 // Masque le nom de ligne pendant l’édition
 const ligneNomEl = document.getElementById("ligne-nom");
