@@ -94,13 +94,13 @@ L.tileLayer(
       $('#scorePts').textContent='— pts'; $('#scoreDist').textContent='Clique sur la carte pour placer ta réponse';
     }
 
-    function showOverlayFor(p){
-      state.target=p;
-      $('#consigne').textContent=`Retrouve le poste ${p.nom}`;
-      $('#consigneType').textContent=`Type : ${p.type}`;
-      $('#overlay').style.display='flex';
-      resetRound();
-    }
+function showOverlayFor(p){
+  state.target=p;
+  $('#consigne').textContent=`Retrouve le poste ${p.nom}`;
+  $('#consigneType').textContent=`Type : ${p.type}`;
+  $('#overlay').style.display='flex';
+  resetRound();
+}
 
     function startRound(){ $('#overlay').style.display='none'; toast('Carte activée'); }
 
@@ -136,15 +136,34 @@ L.tileLayer(
       showOverlayFor(DATA[i]);
     }
 
-    async function loadData(){
-      try{
-        const res=await fetch('postes.json'); const arr=await res.json();
-        DATA=arr.filter(p=>p&&p.latitude&&p.longitude&&!/acc[eè]s/i.test(p.type||'')&&!/acc[eè]s/i.test(p.nom||''))
-                .map(p=>({nom:p.nom,latitude:+p.latitude,longitude:+p.longitude,type:p.type||''}));
-        toast(`${DATA.length} postes chargés`);
-        pickRandom();
-      }catch(e){console.error(e);toast('Erreur chargement postes.json');}
-    }
+async function loadData(){
+  try{
+    const res = await fetch('postes.json');
+    const arr = await res.json();
+
+    // 🔹 On garde seulement les postes :
+    // - qui ont latitude + longitude
+    // - qui ont un "type" NON vide
+    // - qui ne sont pas des "Accès"
+    DATA = arr.filter(p =>
+      p && p.latitude && p.longitude &&
+      p.type && p.type.trim() !== "" &&
+      !/acc[eè]s/i.test(p.type) &&
+      !/acc[eè]s/i.test(p.nom||"")
+    ).map(p => ({
+      nom: p.nom,
+      latitude: +p.latitude,
+      longitude: +p.longitude,
+      type: p.type
+    }));
+
+    toast(`${DATA.length} postes chargés`);
+    pickRandom();
+  } catch(e){
+    console.error(e);
+    toast('Erreur chargement postes.json');
+  }
+}
 
     loadData();
   </script>
