@@ -4707,5 +4707,39 @@
     "pk": "156,700",
     "poste_latitude": "49.86452",
     "poste_longitude": "3.3209"
+  },
+  {
+    "nom": "Fresnoy le grand",
+    "type": "SSP",
+    "SAT": "",
+    "accès": "",
+    "latitude": 49.96001,
+    "longitude": 3.43638,
+    "description": "",
+    "rss": "B",
+    "contact": "",
+    "portail": "",
+    "lignes": "CREIL à JEUMONT",
+    "numero_ligne": 242000,
+    "pk": "171,400",
+    "poste_latitude": "49.96001",
+    "poste_longitude": "3.43631"
+  },
+  {
+    "nom": "Iwuy",
+    "type": "SP",
+    "SAT": "",
+    "accès": "",
+    "latitude": 50.21623,
+    "longitude": 3.3109,
+    "description": "",
+    "rss": "B",
+    "contact": "",
+    "portail": "",
+    "lignes": "BUSIGNY à SOMAIN",
+    "numero_ligne": 250000,
+    "pk": "212,185",
+    "poste_latitude": "50.21725",
+    "poste_longitude": "3.31357"
   }
 ]
