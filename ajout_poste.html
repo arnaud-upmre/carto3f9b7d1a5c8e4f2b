@@ -144,9 +144,9 @@ input.error{border:2px solid #c62828!important;background:#ffecec}
       <div class="step">
         <label>📌 Poste :</label>
         <input id="poste" required placeholder="Ex : Hazebrouck">
-       <label>📌 Type :</label>
-<input id="type" required placeholder="Ex : SP, SSP, PRCI....">
-
+    <label>📌 Type (optionnel) :</label>
+<input id="type" placeholder="Ex : SP, SSP, PRCI....">
+        
 <label>📌 SAT (optionnel) :</label>
 <span style="font-weight:normal;color:var(--muted);font-size:14px">
   Remplir uniquement si vous souhaitez enregistrer un SAT
@@ -158,13 +158,17 @@ input.error{border:2px solid #c62828!important;background:#ffecec}
         </div>
       </div>
 
-      <!-- Étape 5 -->
-      <div class="step">
-      <label>📍 Comment localiser le poste?</label>
-<div class="pill-group">
-  <div class="pill" id="pill-oui" data-value="oui">📡 Avec ma position GPS</div>
-  <div class="pill" id="pill-non" data-value="non">🔗 Lien Google Maps</div>
-</div>
+<!-- Étape 5 -->
+<div class="step">
+  <label>📍 Comment localiser le poste (guérite, SAT, armoire…)?</label>
+  <p style="font-size:14px;color:var(--muted);margin:6px 0 12px">
+    ℹ️ L’accès sera défini à l’étape suivante.
+  </p>
+  <div class="pill-group">
+    <div class="pill" id="pill-oui" data-value="oui">📡 Avec ma position GPS</div>
+    <div class="pill" id="pill-non" data-value="non">🔗 Lien Google Maps</div>
+  </div>
+  
         <input type="hidden" id="presentValue">
         <div class="btn-row">
           <button type="button" class="btn secondary prev">⬅️ Retour</button>
