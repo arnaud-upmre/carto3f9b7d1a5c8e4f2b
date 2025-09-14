@@ -1034,7 +1034,7 @@ const blocs = [];
 
 // RSS → s’il existe, on le met en premier
 if (lieu.rss) {
-  blocs.push(formatRSS(lieu.rss));
+blocs.push(formatRSS(lieu.rss, true));
 }
 
 // 🚄 PK + Ligne (même si incomplet)
@@ -1872,12 +1872,12 @@ if (rssEl) {
   if (currentItem.rssChanged) {
     // cas : l’utilisateur a vraiment choisi une table
     const rssVal = originalValues.rss || currentItem.rss || "";
-    rssEl.outerHTML = formatRSS(rssVal);
+rssEl.outerHTML = formatRSS(rssVal, true);
     delete currentItem.rssChanged;
   } else if (rssEl.querySelector(".btn-rss")) {
     // cas : le bloc est resté sous forme de boutons sans choix
     const rssVal = originalValues.rss || currentItem.rss || "";
-    rssEl.outerHTML = formatRSS(rssVal);
+rssEl.outerHTML = formatRSS(rssVal, true);
   }
 }
   
@@ -1907,7 +1907,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V8</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V0</span>
 </div>
 
 <script>
