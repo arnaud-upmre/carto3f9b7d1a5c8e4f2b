@@ -4588,5 +4588,22 @@
     "pk": "107,500",
     "poste_latitude": "49.57717",
     "poste_longitude": "3.01316"
+  },
+  {
+    "nom": "Appily",
+    "type": "SS",
+    "SAT": "",
+    "accès": "",
+    "latitude": 49.58103,
+    "longitude": 3.12081,
+    "description": "",
+    "rss": "",
+    "contact": "",
+    "portail": "",
+    "lignes": "CREIL à JEUMONT",
+    "numero_ligne": 242000,
+    "pk": "115,300",
+    "poste_latitude": "49.58084",
+    "poste_longitude": "3.1218"
   }
 ]
