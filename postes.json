@@ -4656,5 +4656,39 @@
     "pk": "111,160",
     "poste_latitude": "49.75519",
     "poste_longitude": "2.36455"
+  },
+  {
+    "nom": "Longueau",
+    "type": "SSP",
+    "SAT": "",
+    "accès": "",
+    "latitude": 49.75464,
+    "longitude": 2.36441,
+    "description": "",
+    "rss": "C",
+    "contact": "",
+    "portail": "",
+    "lignes": "PARIS-NORD à LILLE",
+    "numero_ligne": 272000,
+    "pk": "111,160",
+    "poste_latitude": "49.75519",
+    "poste_longitude": "2.36455"
+  },
+  {
+    "nom": "Longueau",
+    "type": "",
+    "SAT": "",
+    "accès": "",
+    "latitude": 49.86072,
+    "longitude": 2.371,
+    "description": "",
+    "rss": "C",
+    "contact": "",
+    "portail": "",
+    "lignes": "PARIS-NORD à LILLE",
+    "numero_ligne": 272000,
+    "pk": "124,500",
+    "poste_latitude": "49.86067",
+    "poste_longitude": "2.37188"
   }
 ]
