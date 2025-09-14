@@ -1777,10 +1777,11 @@ const newNumLigne = document.getElementById("input-numero_ligne")?.value || curr
     demandeur,
     ficheOrigine
   };
- if (currentItem.rssTemp) {
-  payload.rss = currentItem.rssTemp;         
-  originalValues.rss = currentItem.rssTemp;  
-  delete currentItem.rssTemp;                
+if (currentItem.rssTemp) {
+  payload.rss = currentItem.rssTemp;
+  payload.rssChanged = true;   // ✅ indique au serveur que RSS a été modifié
+  originalValues.rss = currentItem.rssTemp;
+  delete currentItem.rssTemp;
 }
 
   if (newNom !== originalValues.nom) payload.nom = newNom;
