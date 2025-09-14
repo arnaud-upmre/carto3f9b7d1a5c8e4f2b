@@ -1632,16 +1632,17 @@ if (["editable-nom","editable-type","editable-sat","editable-acces","editable-pk
     
 // Cas spécial RSS → choix direct A / B / C
 if (e.target.id === "editable-rss" || e.target.closest("#editable-rss")) {
-  const rssEl = document.getElementById("editable-rss");
-  if (!rssEl) return;
+const rssEl = document.getElementById("editable-rss");
+if (!rssEl) return;
 
-  rssEl.innerHTML = `
-    <div class="inline-links">
-      <button class="btn-primary btn-rss" data-code="A">Table 1</button>
-      <button class="btn-primary btn-rss" data-code="B">Table 2</button>
-      <button class="btn-primary btn-rss" data-code="C">Table 3</button>
-    </div>
-  `;
+// ➡️ On remplace tout le bloc RSS (titre + numéros) par uniquement les boutons
+rssEl.outerHTML = `
+  <div id="editable-rss" class="inline-links">
+    <button class="btn-primary btn-rss" data-code="A">Table 1</button>
+    <button class="btn-primary btn-rss" data-code="B">Table 2</button>
+    <button class="btn-primary btn-rss" data-code="C">Table 3</button>
+  </div>
+`;
 
   document.querySelectorAll(".btn-rss").forEach(btn => {
    btn.addEventListener("click", () => {
@@ -1898,7 +1899,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V4</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V5</span>
 </div>
 
 <script>
