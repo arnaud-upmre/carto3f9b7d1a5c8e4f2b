@@ -4730,8 +4730,8 @@
     "type": "SP",
     "SAT": "",
     "accès": "",
-    "latitude": 50.21623,
-    "longitude": 3.3109,
+    "latitude": 50.2162,
+    "longitude": 3.31093,
     "description": "",
     "rss": "B",
     "contact": "",
@@ -4741,5 +4741,22 @@
     "pk": "212,185",
     "poste_latitude": "50.21725",
     "poste_longitude": "3.31357"
+  },
+  {
+    "nom": "Cambrai",
+    "type": "L",
+    "SAT": "",
+    "accès": "",
+    "latitude": 50.16717,
+    "longitude": 3.25902,
+    "description": "",
+    "rss": "B",
+    "contact": "",
+    "portail": "",
+    "lignes": "BUSIGNY à SOMAIN",
+    "numero_ligne": 250000,
+    "pk": "204,620",
+    "poste_latitude": "50.16679",
+    "poste_longitude": "3.25999"
   }
 ]
