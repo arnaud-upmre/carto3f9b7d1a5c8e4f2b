@@ -56,19 +56,6 @@
     font-size: 13.5px;
   }
 }
-
-/* Force une seule ligne dès qu’il y a la place */
-@media (min-width: 420px){
-  .inline-links.pills-3{ flex-wrap: nowrap; }
-}
-
-/* Ultra compact sur écrans ≤ 390px */
-@media (max-width: 390px){
-  .inline-links.pills-3 a{
-    padding: 6px 8px;
-    font-size: 13.5px;
-  }
-}
     
     /* Supprime l’espace vertical quand il n’y a aucune suggestion */
 ul#suggestions:empty {
@@ -101,17 +88,8 @@ ul#suggestions:not(:empty){
   100% { box-shadow: 0 0 4px rgba(26,115,232,0.6), 0 0 8px rgba(26,115,232,0.4); }
 }
 
-    
-
 .editable-wiggle {
   animation: wiggle 0.3s infinite; /* wiggle seul */
-}
-
-/* Halo pulsant bleu */
-@keyframes pulseHalo {
-  0% { box-shadow: 0 0 0 0 rgba(26,115,232,0.6); }
-  70% { box-shadow: 0 0 0 6px rgba(26,115,232,0); }
-  100% { box-shadow: 0 0 0 0 rgba(26,115,232,0); }
 }
 
 /* Tremblement façon iOS */
@@ -1596,7 +1574,7 @@ if (currentItem.rss) {
         originalValues.sat = document.getElementById("editable-sat").textContent.trim();
       }
       if (document.getElementById("editable-acces")) {
-        originalValues.acces = document.getElementById("editable-acces").textContent.replace("– accès ","").trim();
+       originalValues["accès"] = document.getElementById("editable-acces").textContent.replace("– accès ","").trim();
       }
         if (document.getElementById("editable-description")) {
     originalValues.description = document.getElementById("editable-description").textContent.trim();
@@ -1774,7 +1752,7 @@ document.getElementById("btn-save").addEventListener("click", function(){
   const newNom   = document.getElementById("input-nom")?.value   || originalValues.nom;
   const newType  = document.getElementById("input-type")?.value  || originalValues.type;
   const newSat   = document.getElementById("input-sat")?.value   || originalValues.sat || "";
-  const newAcces = document.getElementById("input-acces")?.value || originalValues.acces || "";
+  const newAcces = document.getElementById("input-acces")?.value || originalValues["accès"] || "";
 const newDescription = document.getElementById("input-description")?.value || originalValues.description || "";
 const newContact     = document.getElementById("input-contact")?.value     || originalValues.contact || "";
 const newPortail     = document.getElementById("input-portail")?.value     || originalValues.portail || "";
@@ -1802,7 +1780,7 @@ const newNumLigne = document.getElementById("input-numero_ligne")?.value || curr
   if (newNom !== originalValues.nom) payload.nom = newNom;
   if (newType !== originalValues.type) payload.type = newType;
   if (newSat !== (originalValues.sat || "")) payload.sat = newSat;
-  if (newAcces !== (originalValues.acces || "")) payload.acces = newAcces;
+ if (newAcces !== (originalValues["accès"] || "")) payload["accès"] = newAcces;
   if (originalValues.rss) payload.rss = originalValues.rss;
 if (newDescription !== (originalValues.description || "")) payload.description = newDescription;
 if (newContact !== (originalValues.contact || "")) payload.contact = newContact;
@@ -1924,7 +1902,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
     originalValues.nom,
     originalValues.type,
     originalValues.sat || "",
-    originalValues.acces || ""
+     originalValues["accès"] || ""
   );
   showNotification("🔙 Édition annulée", "info");
 });
