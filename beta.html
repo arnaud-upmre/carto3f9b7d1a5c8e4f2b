@@ -1706,30 +1706,29 @@ if (e.target.id === "editable-portail") {
     navigator.vibrate?.(50);
   }
    // 🔹 AJOUT ICI
-  // Bloc POSTE → remplacer bouton par champ texte
+// Bloc POSTE → remplacer boutons par champ texte
 if (editMode && e.target.id === "editable-rep-poste") {
-    const bloc = document.querySelector("#rep-poste .inline-links");
-    bloc.innerHTML = `
-      <input type="text" id="input-poste-link"
-        placeholder="Coller ici le lien Google Maps"
-        style="width:100%; border:2px solid #1a73e8; border-radius:6px; padding:4px;" />
-    `;
-    navigator.vibrate?.(50);
-    return;
-  }
+  const bloc = e.target.closest(".rep-block").querySelector(".inline-links");
+  bloc.innerHTML = `
+    <input type="text" id="input-poste-link"
+      placeholder="Coller ici le lien Google Maps"
+      style="width:100%; border:2px solid #1a73e8; border-radius:6px; padding:4px;" />
+  `;
+  navigator.vibrate?.(50);
+  return;
+}
 
-  // Bloc ACCES → remplacer boutons par champ texte
- if (editMode && e.target.id === "editable-rep-acces") {
-    const bloc = document.querySelector("#rep-acces .inline-links");
-    bloc.innerHTML = `
-      <input type="text" id="input-acces-link"
-        placeholder="Coller ici le lien Google Maps"
-        style="width:100%; border:2px solid #1a73e8; border-radius:6px; padding:4px;" />
-    `;
-    navigator.vibrate?.(50);
-    return;
-  }
-});
+// Bloc ACCES → remplacer boutons par champ texte
+if (editMode && e.target.id === "editable-rep-acces") {
+  const bloc = e.target.closest(".rep-block").querySelector(".inline-links");
+  bloc.innerHTML = `
+    <input type="text" id="input-acces-link"
+      placeholder="Coller ici le lien Google Maps"
+      style="width:100%; border:2px solid #1a73e8; border-radius:6px; padding:4px;" />
+  `;
+  navigator.vibrate?.(50);
+  return;
+}
 
 function getDemandeur() {
   let demandeur = localStorage.getItem("demandeur");
@@ -1926,7 +1925,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V2</span>
 </div>
 
 <script>
