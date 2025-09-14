@@ -70,8 +70,8 @@
     let DATA=[], state={target:null, guess:null, guessMarker:null, realMarker:null, line:null, locked:false};
 
     const map=L.map('map',{minZoom:3,maxZoom:19}).setView([46.7,2.3],6);
-// Calque satellite
-// 🌍 Fond satellite IGN (orthophotos)
+
+// Fond orthophotos IGN
 L.tileLayer(
   "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&STYLE=normal&FORMAT=image/jpeg&LAYER=ORTHOIMAGERY.ORTHOPHOTOS&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
   {
@@ -81,17 +81,19 @@ L.tileLayer(
   }
 ).addTo(map);
 
-// 🏙️ Labels IGN (routes, villes, etc.)
+// Labels OSM
 L.tileLayer(
-  "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&STYLE=normal&FORMAT=image/png&LAYER=GEOGRAPHICALGRIDSYSTEMS.MAPS&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
+  "https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png",
   {
-    attribution: "© IGN-F/Geoportail",
+    attribution: "&copy; <a href=\"https://www.openstreetmap.org/\">OSM</a> contributors &copy; <a href=\"https://carto.com/\">CARTO</a>",
+    subdomains: "abcd",
     tileSize: 256,
     transparent: true,
-    maxZoom: 19
+    maxZoom: 20
   }
 ).addTo(map);
 
+    
     function dotIcon(color){return L.divIcon({className:'',html:`<div style="width:14px;height:14px;border-radius:50%;border:2px solid #fff;background:${color};box-shadow:0 0 6px #0006"></div>`,iconSize:[14,14],iconAnchor:[7,7]});}
     const iconGuess=dotIcon('#ef4444'), iconReal=dotIcon('#22c55e');
 
