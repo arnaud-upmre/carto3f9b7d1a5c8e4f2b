@@ -1666,8 +1666,10 @@ document.querySelectorAll(".btn-rss").forEach(btn => {
     currentItem.rssChanged = true;       // ✅ on note que l’utilisateur a modifié
         // ✅ même vibration que les autres champs
     navigator.vibrate?.(50);
-    document.querySelector("#editable-rss").innerHTML =
-      `<strong>📞 RSS Table ${code === "A" ? "1" : code === "B" ? "2" : "3"}</strong>`;
+document.querySelector("#editable-rss").innerHTML =
+  `<strong id="editable-rss" class="editable-halo editable-wiggle">
+     📞 RSS Table ${code === "A" ? "1" : code === "B" ? "2" : "3"}
+   </strong>`;
   });
 });
 
@@ -1916,7 +1918,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V3</span>
 </div>
 
 <script>
