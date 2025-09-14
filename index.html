@@ -1637,9 +1637,9 @@ if (e.target.id === "editable-rss" || e.target.closest("#editable-rss")) {
 
   rssEl.innerHTML = `
     <div class="inline-links">
-      <button class="btn-primary btn-rss" data-code="A">Table A</button>
-      <button class="btn-primary btn-rss" data-code="B">Table B</button>
-      <button class="btn-primary btn-rss" data-code="C">Table C</button>
+      <button class="btn-primary btn-rss" data-code="A">Table 1</button>
+      <button class="btn-primary btn-rss" data-code="B">Table 2</button>
+      <button class="btn-primary btn-rss" data-code="C">Table 3</button>
     </div>
   `;
 
@@ -1856,6 +1856,13 @@ if (document.getElementById("editable-portail")) {
 
   // Réaffiche le nom de la ligne après édition
 if (ligneNomEl) ligneNomEl.style.display = "inline";
+
+  // ➡️ Restaurer le RSS d’origine
+if (document.getElementById("editable-rss")) {
+  const rssVal = originalValues.rss || currentItem.rss || "";
+  document.getElementById("editable-rss").outerHTML = formatRSS(rssVal);
+}
+  
   editMode = false;
 }
     // Annuler édition
@@ -1882,7 +1889,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V2</span>
 </div>
 
 <script>
