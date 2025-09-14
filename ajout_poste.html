@@ -494,31 +494,38 @@ if (steps[currentStep].querySelector("#mapDeviceWrap")) {
 }
 
 // Étape choix méthode d’accès (repérée par la présence de #accessMethodStep)
-if (steps[currentStep].querySelector("#accessMethodStep") && !$("accessMethod").value) {
-  document.querySelectorAll("#pill-access-gps, #pill-access-lien").forEach(p => p.classList.add("error"));
-  return;
+if (steps[currentStep].querySelector("#accessMethodStep")) {
+  if (!$("accessMethod").value) {
+    document.querySelectorAll("#pill-access-gps, #pill-access-lien").forEach(p => p.classList.add("error"));
+    return; // ⛔ bloque "Suivant" si rien choisi
+  }
 }
 
-    // Étape validation de l'accès (carte ou lien)
-    if (steps[currentStep].querySelector("#accessDetailsStep")) {
-      const m = $("accessMethod").value;
+// Étape validation de l'accès (carte ou lien)
+if (steps[currentStep].querySelector("#accessDetailsStep")) {
+  const m = $("accessMethod").value;
 
-      if (m === "lien") {
-        // lien requis et valide
-        const ok = isValidUrl($("lienAccess").value);
-        markError($("lienAccess"), $("lienAccessHelp"), !ok);
-        if (!ok) return; // ⛔️ bloque "Suivant"
-      } else if (m === "gps") {
-        // coordonnées confirmées requises
-        const ok = ACCESS_CONFIRMED && $("coordsAccessDisplay").textContent.includes(",");
-        if (!ok) {
-          $("mapAccessWrap").classList.add("error");
-          return; // ⛔️ bloque "Suivant"
-        } else {
-          $("mapAccessWrap").classList.remove("error");
-        }
-      }
+  if (m === "lien") {
+    // lien requis et valide
+    const ok = isValidUrl($("lienAccess").value);
+    markError($("lienAccess"), $("lienAccessHelp"), !ok);
+
+    if (!ok) {
+      $("lienAccess").classList.add("error");
+      $("lienAccessHelp").classList.add("show");
+      return; // ⛔ bloque "Suivant"
     }
+  } else if (m === "gps") {
+    // coordonnées confirmées requises
+    const ok = ACCESS_CONFIRMED && $("coordsAccessDisplay").textContent.includes(",");
+    if (!ok) {
+      $("mapAccessWrap").classList.add("error");
+      return; // ⛔ bloque "Suivant"
+    } else {
+      $("mapAccessWrap").classList.remove("error");
+    }
+  }
+}
 
     // 👉 si tout est ok → on avance
     currentStep++;
