@@ -1857,14 +1857,19 @@ if (document.getElementById("editable-portail")) {
   // Réaffiche le nom de la ligne après édition
 if (ligneNomEl) ligneNomEl.style.display = "inline";
 
-// ➡️ Restaurer le RSS seulement si modifié
-if (currentItem.rssChanged) {
-  const rssVal = originalValues.rss || currentItem.rss || "";
-  const rssEl = document.getElementById("editable-rss");
-  if (rssEl) {
+// ➡️ Restaurer le RSS si modifié OU si resté en mode boutons
+const rssEl = document.getElementById("editable-rss");
+if (rssEl) {
+  if (currentItem.rssChanged) {
+    // cas : l’utilisateur a vraiment choisi une table
+    const rssVal = originalValues.rss || currentItem.rss || "";
+    rssEl.outerHTML = formatRSS(rssVal);
+    delete currentItem.rssChanged;
+  } else if (rssEl.querySelector(".btn-rss")) {
+    // cas : le bloc est resté sous forme de boutons sans choix
+    const rssVal = originalValues.rss || currentItem.rss || "";
     rssEl.outerHTML = formatRSS(rssVal);
   }
-  delete currentItem.rssChanged; // ✅ on réinitialise le flag
 }
   
   editMode = false;
@@ -1893,7 +1898,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V3</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V4</span>
 </div>
 
 <script>
