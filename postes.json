@@ -4792,5 +4792,22 @@
     "pk": "224,242",
     "poste_latitude": "50.31671",
     "poste_longitude": "3.34176"
+  },
+  {
+    "nom": "Lourches",
+    "type": "L",
+    "SAT": "",
+    "accès": "",
+    "latitude": 50.31061,
+    "longitude": 3.34303,
+    "description": "",
+    "rss": "B",
+    "contact": "",
+    "portail": "",
+    "lignes": "BUSIGNY à SOMAIN",
+    "numero_ligne": 250000,
+    "pk": "224,242",
+    "poste_latitude": "50.31168",
+    "poste_longitude": "3.34289"
   }
 ]
