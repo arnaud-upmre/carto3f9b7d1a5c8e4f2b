@@ -4775,5 +4775,22 @@
     "pk": "205,892",
     "poste_latitude": "50.17746",
     "poste_longitude": "3.25474"
+  },
+  {
+    "nom": "Lourches",
+    "type": "SSPA",
+    "SAT": "",
+    "accès": "",
+    "latitude": 50.31887,
+    "longitude": 3.34224,
+    "description": "",
+    "rss": "B",
+    "contact": "",
+    "portail": "",
+    "lignes": "LOURCHES à VALENCIENNES",
+    "numero_ligne": 254000,
+    "pk": "224,242",
+    "poste_latitude": "50.31671",
+    "poste_longitude": "3.34176"
   }
 ]
