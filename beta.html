@@ -80,29 +80,29 @@ ul#suggestions:not(:empty){
   margin: .4rem 0 .6rem 0;
 }
 
-.editable-halo {
+    .editable-halo {
   display: inline-block;
   padding: 2px 6px;
-  border-radius: 8px;
+  border-radius: 10px;
   position: relative;
 
-  /* Fond translucide façon iOS */
-  background: rgba(255, 255, 255, 0.25);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  /* Fond translucide blanc/bleu */
+  background: rgba(26,115,232,0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 
-  /* Halo bleu fin + lumineux */
-  box-shadow: 0 0 4px rgba(26,115,232,0.7),
-              0 0 10px rgba(26,115,232,0.5);
+  /* Halo lumineux très marqué */
+  box-shadow: 0 0 12px rgba(26,115,232,0.8),
+              0 0 24px rgba(26,115,232,0.6);
 
-  animation: pulseHalo 2s ease-in-out infinite;
+  /* Glow pulsant */
+  animation: pulseHalo 1.8s ease-in-out infinite;
 }
 
-/* 🔄 nouvelle animation plus fluide */
 @keyframes pulseHalo {
-  0%   { box-shadow: 0 0 4px rgba(26,115,232,0.4), 0 0 8px rgba(26,115,232,0.3); }
-  50%  { box-shadow: 0 0 12px rgba(26,115,232,0.9), 0 0 20px rgba(26,115,232,0.5); }
-  100% { box-shadow: 0 0 4px rgba(26,115,232,0.4), 0 0 8px rgba(26,115,232,0.3); }
+  0%   { box-shadow: 0 0 6px rgba(26,115,232,0.4), 0 0 12px rgba(26,115,232,0.3); }
+  50%  { box-shadow: 0 0 20px rgba(26,115,232,1), 0 0 40px rgba(26,115,232,0.8); }
+  100% { box-shadow: 0 0 6px rgba(26,115,232,0.4), 0 0 12px rgba(26,115,232,0.3); }
 }
 
     
