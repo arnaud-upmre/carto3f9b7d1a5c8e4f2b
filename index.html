@@ -1833,21 +1833,15 @@ if (document.getElementById("editable-portail")) {
     formatPortail(portailVal);
 }
 
-// ✅ Réinitialise le bloc RSS seulement si nécessaire
-if (document.getElementById("editable-rss")) {
-  const rssEl = document.getElementById("editable-rss");
-
-  // valeur attendue (soit modifiée, soit initiale si pas de changement)
-  const code = currentItem.rssChanged ? (currentItem.rss || "") : (originalValues.rss || "");
-  const newHTML = code ? formatRSS(code) : "";
-
-  // ⚡️ Ne réinjecte QUE si le HTML actuel est différent
-  if (rssEl && newHTML && rssEl.outerHTML.trim() !== newHTML.trim()) {
-    rssEl.outerHTML = newHTML;
+// ✅ Ne touche PAS au RSS si aucune modif
+if (currentItem.rssChanged) {
+  const code = currentItem.rss || "";
+  if (code) {
+    const rssEl = document.getElementById("editable-rss");
+    if (rssEl) rssEl.outerHTML = formatRSS(code);
   }
 }
-
-delete currentItem.rssChanged; // 🔄 nettoyage
+delete currentItem.rssChanged;
   
   
   // Réaffiche le nom de la ligne après édition
@@ -1878,7 +1872,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V2</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V3</span>
 </div>
 
 <script>
