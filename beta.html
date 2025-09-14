@@ -1587,8 +1587,7 @@ originalValues.portail = currentItem.portail || "";
       // Ajoute halo + vibration sur les zones modifiables existantes
 ["editable-nom","editable-type","editable-sat","editable-acces",
  "editable-description","editable-contact","editable-portail",
- "editable-pk","editable-numero_ligne","editable-rss",
- "editable-rep-poste","editable-rep-acces"].forEach(id=>{
+ "editable-pk","editable-numero_ligne","editable-rss"].forEach(id=>{
   const el = document.getElementById(id);
   if (el) {
     el.classList.add("editable-halo", "editable-wiggle");
