@@ -1833,22 +1833,20 @@ if (document.getElementById("editable-portail")) {
     formatPortail(portailVal);
 }
 
-// ✅ Réinitialise le bloc RSS correctement
+// ✅ Réinitialise le bloc RSS seulement si nécessaire
 if (document.getElementById("editable-rss")) {
   const rssEl = document.getElementById("editable-rss");
 
-  if (rssEl) {
-    if (currentItem.rssChanged) {
-      // Cas : l’utilisateur a cliqué sur Table A/B/C
-      const code = currentItem.rss || "";
-      if (code) rssEl.outerHTML = formatRSS(code);
-    } else {
-      // Cas : Annuler → on revient à la valeur initiale
-      const code = originalValues.rss || "";
-      if (code) rssEl.outerHTML = formatRSS(code);
-    }
+  // valeur attendue (soit modifiée, soit initiale si pas de changement)
+  const code = currentItem.rssChanged ? (currentItem.rss || "") : (originalValues.rss || "");
+  const newHTML = code ? formatRSS(code) : "";
+
+  // ⚡️ Ne réinjecte QUE si le HTML actuel est différent
+  if (rssEl && newHTML && rssEl.outerHTML.trim() !== newHTML.trim()) {
+    rssEl.outerHTML = newHTML;
   }
 }
+
 delete currentItem.rssChanged; // 🔄 nettoyage
   
   
