@@ -1581,12 +1581,17 @@ originalValues.contact = currentItem.contact || "";
 originalValues.portail = currentItem.portail || "";
 
       // Ajoute halo + vibration sur les zones modifiables existantes
-["editable-nom","editable-type","editable-sat","editable-acces","editable-rss",
+["editable-nom","editable-type","editable-sat","editable-acces",
  "editable-description","editable-contact","editable-portail",
- "editable-pk","editable-numero_ligne"].forEach(id=>{
+ "editable-pk","editable-numero_ligne","editable-rss"].forEach(id=>{
   const el = document.getElementById(id);
   if (el) {
-    el.classList.add("editable-halo", "editable-wiggle"); // halo + vibration
+    // 👉 Pour RSS : seulement le halo (pas de wiggle)
+    if (id === "editable-rss") {
+      el.classList.add("editable-halo");
+    } else {
+      el.classList.add("editable-halo", "editable-wiggle");
+    }
   }
 });
 
@@ -1862,7 +1867,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V3</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V4</span>
 </div>
 
 <script>
