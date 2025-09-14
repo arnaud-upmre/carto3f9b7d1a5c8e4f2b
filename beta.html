@@ -1721,6 +1721,30 @@ if (e.target.id === "editable-portail") {
     document.getElementById("edit-buttons").style.display = "block";
     navigator.vibrate?.(50);
   }
+   // 🔹 AJOUT ICI
+  // Bloc POSTE → remplacer bouton par champ texte
+  if (editMode && e.target.closest("#rep-poste")) {
+    const bloc = document.querySelector("#rep-poste .inline-links");
+    bloc.innerHTML = `
+      <input type="text" id="input-poste-link"
+        placeholder="Coller ici le lien Google Maps"
+        style="width:100%; border:2px solid #1a73e8; border-radius:6px; padding:4px;" />
+    `;
+    navigator.vibrate?.(50);
+    return;
+  }
+
+  // Bloc ACCES → remplacer boutons par champ texte
+  if (editMode && e.target.closest("#rep-acces")) {
+    const bloc = document.querySelector("#rep-acces .inline-links");
+    bloc.innerHTML = `
+      <input type="text" id="input-acces-link"
+        placeholder="Coller ici le lien Google Maps"
+        style="width:100%; border:2px solid #1a73e8; border-radius:6px; padding:4px;" />
+    `;
+    navigator.vibrate?.(50);
+    return;
+  }
 });
 
 function getDemandeur() {
@@ -1756,6 +1780,8 @@ const newContact     = document.getElementById("input-contact")?.value     || or
 const newPortail     = document.getElementById("input-portail")?.value     || originalValues.portail || "";
 const newPk   = document.getElementById("input-pk")?.value || currentItem.pk || "";
 const newNumLigne = document.getElementById("input-numero_ligne")?.value || currentItem.numero_ligne || "";
+    const newPosteLink = document.getElementById("input-poste-link")?.value || "";
+  const newAccesLink = document.getElementById("input-acces-link")?.value || "";
   
   const demandeur = getDemandeur();
   const ficheOrigine = currentItem
@@ -1783,6 +1809,8 @@ if (newContact !== (originalValues.contact || "")) payload.contact = newContact;
 if (newPortail !== (originalValues.portail || "")) payload.portail = newPortail;
  if (newPk !== (currentItem.pk || "")) payload.pk = newPk;
 if (newNumLigne !== (currentItem.numero_ligne || "")) payload.numero_ligne = newNumLigne;
+    if (newPosteLink) payload.lien_poste = newPosteLink;
+  if (newAccesLink) payload.lien_acces = newAccesLink;
   
 fetch("https://script.google.com/macros/s/AKfycbyxh3HGR6iHcn0ynwfGzSzOm5Djc7o2e1uA4dvdPurolDerZlNiARcpsiY4daDRPSV1tw/exec", {
   method: "POST",
