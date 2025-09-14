@@ -79,29 +79,26 @@ ul#suggestions:empty {
 ul#suggestions:not(:empty){
   margin: .4rem 0 .6rem 0;
 }
+
 .editable-halo {
   display: inline-block;
   padding: 2px 4px;
-  border-radius: 8px;
+  border-radius: 6px;
   position: relative;
 
-  /* Fond translucide discret */
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  /* ✅ halo fin + lumineux */
+  box-shadow: 0 0 6px rgba(26,115,232,0.8),
+              0 0 12px rgba(26,115,232,0.5);
 
-  /* Halo très fin et doux */
-  box-shadow: 0 0 4px rgba(26,115,232,0.4),
-              0 0 8px rgba(26,115,232,0.2);
-
-  /* Animation subtile */
-  animation: pulseHalo 2.5s ease-in-out infinite;
+  /* ✅ pulsation plus douce */
+  animation: pulseHalo 1.6s ease-in-out infinite;
 }
 
+/* 🔄 nouvelle animation plus fluide */
 @keyframes pulseHalo {
-  0%   { box-shadow: 0 0 3px rgba(26,115,232,0.25), 0 0 6px rgba(26,115,232,0.15); }
-  50%  { box-shadow: 0 0 6px rgba(26,115,232,0.45), 0 0 12px rgba(26,115,232,0.25); }
-  100% { box-shadow: 0 0 3px rgba(26,115,232,0.25), 0 0 6px rgba(26,115,232,0.15); }
+  0%   { box-shadow: 0 0 4px rgba(26,115,232,0.6), 0 0 8px rgba(26,115,232,0.4); }
+  50%  { box-shadow: 0 0 10px rgba(26,115,232,0.9), 0 0 18px rgba(26,115,232,0.6); }
+  100% { box-shadow: 0 0 4px rgba(26,115,232,0.6), 0 0 8px rgba(26,115,232,0.4); }
 }
 
     
@@ -1007,7 +1004,7 @@ let html = `<h2>
     
 // ✅ Affiche "Repérer le poste" seulement si les coordonnées poste sont présentes
 html += `
-<div class="rep-block poste-only">
+<div class="rep-block poste-only" id="rep-poste">
   <p><span class="emoji">⚡️</span>Repérer le poste (sat/guérite)</p>
   <div class="inline-links pills-3">
     ${
@@ -1019,7 +1016,7 @@ html += `
 </div>`;
 
 html += `
-<div class="rep-block">
+<div class="rep-block" id="rep-acces">
   <p><span class="emoji">🛣️</span> Repérer l’accès :</p>
   <div class="inline-links pills-3">
     <a href="${myMapsViewer(lieu.latitude, lieu.longitude, 19)}" target="_blank" rel="noopener">🛰️ Vue satellite</a>
@@ -1612,10 +1609,10 @@ originalValues.portail = currentItem.portail || "";
       // Ajoute halo + vibration sur les zones modifiables existantes
 ["editable-nom","editable-type","editable-sat","editable-acces",
  "editable-description","editable-contact","editable-portail",
- "editable-pk","editable-numero_ligne","editable-rss"].forEach(id=>{
+ "editable-pk","editable-numero_ligne","editable-rss",
+ "rep-poste","rep-acces"].forEach(id=>{
   const el = document.getElementById(id);
   if (el) {
-    // 👉 Tous les champs ont halo + wiggle
     el.classList.add("editable-halo", "editable-wiggle");
   }
 });
