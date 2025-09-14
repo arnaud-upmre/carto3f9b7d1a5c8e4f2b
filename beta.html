@@ -1854,7 +1854,8 @@ if (pkParent) {
 ].forEach(id => {
   const el = document.getElementById(id);
   if (el) {
-    el.classList.remove("editable-halo", "editable-wiggle"); // ✅ On enlève les effets
+    el.classList.remove("editable-halo", "editable-wiggle"); 
+    // ✅ On enlève les effets
   }
 });
 
@@ -1899,7 +1900,10 @@ rssEl.outerHTML = formatRSS(rssVal, true);
 rssEl.outerHTML = formatRSS(rssVal, true);
   }
 }
-  
+    // Nettoie tous les halos/vibrations restants
+  document.querySelectorAll(".editable-halo, .editable-wiggle").forEach(el => {
+    el.classList.remove("editable-halo", "editable-wiggle");
+  });
   editMode = false;
 }
     // Annuler édition
