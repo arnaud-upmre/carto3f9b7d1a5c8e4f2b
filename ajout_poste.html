@@ -60,6 +60,15 @@ input.error{border:2px solid #c62828!important;background:#ffecec}
   border: 2px solid #c62828 !important;
   background: #ffecec;
 }
+    /* ➕ Amélioration lisibilité en dark mode */
+@media (prefers-color-scheme: dark) {
+  .pill.error {
+    border: 2px solid #ff6b6b !important;  /* rouge vif */
+    background: rgba(198, 40, 40, 0.25);   /* fond rouge transparent */
+    color: #fff;                           /* texte blanc */
+  }
+}
+    
     .map-wrap{margin:12px 0;border:1px solid var(--border);border-radius:10px;overflow:hidden}
     #mapDevice,#mapAccess{height:300px;width:100%}
     .map-toolbar{display:flex;gap:8px;padding:6px;background:var(--card)}
