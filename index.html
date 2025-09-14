@@ -775,22 +775,65 @@ function formatRSS(table) {
     "C": ["03 28 55 82 53", "03 28 55 82 54"]
   };
   const tableNum = { "A": "1", "B": "2", "C": "3" };
+  if (!tables[table]) return `<p><strong>📞 RSS :</strong> ${table}</p>`;
+  const nums = tables[table].map(num => `<a href="tel:${num.replace(/\s+/g, '')}">${num}</a>`).join("");
+return `<p id="editable-rss"><strong>📞 RSS Table ${tableNum[table] || table}</strong></p>
+        <div id="rss-phones" class="inline-links">${nums}</div>`;
+}
+function generateAppareilListHTML(currentLieu) {
+  const matchingApps = appareils.filter(app => 
+    app.nom  === currentLieu.nom  &&
+    app.type === currentLieu.type
+  );
 
-  if (!tables[table]) {
-    return `<p><strong id="editable-rss">📞 RSS :</strong> ${table}</p>`;
+  const isSAT = currentLieu.SAT && currentLieu.SAT !== "";
+
+  // ✅ Si on est dans un SAT, on ne compte que les appareils de CE SAT
+  const matchingAppsForScope = isSAT
+    ? matchingApps.filter(app => (app.SAT || "") === currentLieu.SAT)
+    : matchingApps;
+
+  // Aucun appareil trouvé dans le scope (SAT précis ou poste entier)
+  if (matchingAppsForScope.length === 0) {
+    return `
+      <div class="missing-box">
+        🤝 Appareil manquant ?
+       <a href="ajout_appareil.html?poste=${encodeURIComponent(formatNomCompletLieu(currentLieu))}">Aidez-nous à l’ajouter.</a>
+      </div>
+    `;
   }
 
-  const nums = tables[table]
-    .map(num => `<a href="tel:${num.replace(/\s+/g, '')}">${num}</a>`)
-    .join(" ");
+  // Il y a au moins un appareil dans le scope → titre + liste
+  let grouped = {};
+  matchingAppsForScope.forEach(app => {
+    const sat = app.SAT || 'Poste';
+    if (!grouped[sat]) grouped[sat] = [];
+    grouped[sat].push(app);
+  });
 
-  // ✅ id="editable-rss" seulement sur le titre Table X
-  return `
-    <p><strong id="editable-rss">📞 RSS Table ${tableNum[table] || table}</strong></p>
-    <div id="rss-phones" class="inline-links">${nums}</div>
+  let html = `<p><strong>🧩 Appareils trouvés dans ce ${isSAT ? 'SAT' : 'poste'} :</strong></p>`;
+
+  for (const [sat, list] of Object.entries(grouped)) {
+    if (!isSAT) {
+      html += `<p><strong>${sat === "Poste" ? "Poste" : sat} :</strong> `;
+    } else {
+      html += `<p>`;
+    }
+    html += list
+      .map(app => `<a href="#" onclick='showAppareil(${JSON.stringify(app)})'>${app.appareil}</a>`)
+      .join(", ") + `</p>`;
+  }
+
+  // Carte bleue toujours présente en dessous
+  html += `
+    <div class="missing-box">
+      🤝 Appareil manquant ?
+      <a href="ajout_appareil.html?poste=${encodeURIComponent(formatNomCompletLieu(currentLieu))}">Aidez-nous à l’ajouter.</a>
+    </div>
   `;
-}
 
+  return html;
+}
     
 function generateAlias(appareil, nom, sat, posteType) {
   const alias = new Set();
@@ -1587,36 +1630,31 @@ if (["editable-nom","editable-type","editable-sat","editable-acces","editable-pk
   e.target.classList.remove("editable-wiggle");
 }
     
-// Cas spécial RSS → propose Table 1 / 2 / 3 (sans numéros)
+// Cas spécial RSS → choix direct A / B / C
 if (e.target.id === "editable-rss" || e.target.closest("#editable-rss")) {
-  const rssEl = document.getElementById("editable-rss");
-  if (!rssEl) return;
+const rssEl = document.getElementById("editable-rss");
+if (!rssEl) return;
 
-  // 👉 On affiche uniquement les 3 boutons
-  rssEl.outerHTML = `
-    <div id="editable-rss" class="inline-links editable-halo editable-wiggle">
-      <button class="btn-primary btn-rss" data-code="A">Table 1</button>
-      <button class="btn-primary btn-rss" data-code="B">Table 2</button>
-      <button class="btn-primary btn-rss" data-code="C">Table 3</button>
-    </div>
-  `;
+// ➡️ On remplace tout le bloc RSS (titre + numéros) par uniquement les boutons
+rssEl.outerHTML = `
+  <div id="editable-rss" class="inline-links">
+    <button class="btn-primary btn-rss" data-code="A">Table 1</button>
+    <button class="btn-primary btn-rss" data-code="B">Table 2</button>
+    <button class="btn-primary btn-rss" data-code="C">Table 3</button>
+  </div>
+`;
 
-  // 👉 Quand on clique un bouton
   document.querySelectorAll(".btn-rss").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const code = btn.dataset.code; // "A", "B" ou "C"
-      currentItem.rss = code;
-      currentItem.rssChanged = true;
-      const newEl = document.getElementById("editable-rss");
-      if (newEl) {
-        newEl.outerHTML = formatRSS(code); // 📞 RSS Table X + numéros
-        document.getElementById("editable-rss").classList.add("editable-halo", "editable-wiggle");
-        navigator.vibrate?.(80);
-      }
-    });
+   btn.addEventListener("click", () => {
+  const code = btn.dataset.code;
+  currentItem.rss = code;
+  originalValues.rss = code;
+  currentItem.rssChanged = true;   // ✅ on note que l’utilisateur a modifié le RSS
+  rssEl.outerHTML = formatRSS(code);
+});
   });
 
-  return; // ⛔ stoppe ici
+  return; // ⛔ stoppe ici pour éviter le reste
 }
   
 // Description (cliquable sur tout le bloc)
@@ -1861,7 +1899,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1U6276271</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V5</span>
 </div>
 
 <script>
