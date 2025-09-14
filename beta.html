@@ -1662,14 +1662,18 @@ rssBlock.outerHTML = `
 document.querySelectorAll(".btn-rss").forEach(btn => {
   btn.addEventListener("click", () => {
     const code = btn.dataset.code;
-    currentItem.rssTemp = code;          // ✅ valeur temporaire
-    currentItem.rssChanged = true;       // ✅ on note que l’utilisateur a modifié
-        // ✅ même vibration que les autres champs
+    currentItem.rssTemp = code;     // valeur temporaire
+    currentItem.rssChanged = true;  // note que l’utilisateur a modifié
+
+    // ✅ vibration identique aux autres champs
     navigator.vibrate?.(50);
-document.querySelector("#editable-rss").innerHTML =
-  `<strong id="editable-rss" class="editable-halo editable-wiggle">
-     📞 RSS Table ${code === "A" ? "1" : code === "B" ? "2" : "3"}
-   </strong>`;
+
+    // ✅ affiche directement Table + numéros avec halo/wiggle
+    const rssHTML = formatRSS(code, true).replace(
+      'id="editable-rss"',
+      'id="editable-rss" class="editable-halo editable-wiggle"'
+    );
+    document.querySelector("#editable-rss").outerHTML = rssHTML;
   });
 });
 
@@ -1918,7 +1922,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V3</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V2</span>
 </div>
 
 <script>
