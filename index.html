@@ -1628,12 +1628,13 @@ if (e.target.id === "editable-rss" || e.target.closest("#editable-rss")) {
   `;
 
   document.querySelectorAll(".btn-rss").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const code = btn.dataset.code;
-      currentItem.rss = code;          // 🔄 on garde A/B/C dans l’objet courant
-      originalValues.rss = code;       // 🔄 on mémorise pour la sauvegarde
-      rssEl.outerHTML = formatRSS(code); // 🔄 reconstruit le bloc normal
-    });
+   btn.addEventListener("click", () => {
+  const code = btn.dataset.code;
+  currentItem.rss = code;
+  originalValues.rss = code;
+  currentItem.rssChanged = true;   // ✅ on note que l’utilisateur a modifié le RSS
+  rssEl.outerHTML = formatRSS(code);
+});
   });
 
   return; // ⛔ stoppe ici pour éviter le reste
@@ -1832,16 +1833,24 @@ if (document.getElementById("editable-portail")) {
     formatPortail(portailVal);
 }
 
-// ✅ Réinitialise le bloc RSS uniquement avec la valeur d'origine
+// ✅ Réinitialise le bloc RSS correctement
 if (document.getElementById("editable-rss")) {
   const rssEl = document.getElementById("editable-rss");
+
   if (rssEl) {
-    const code = originalValues.rss || "";  // 👈 toujours la valeur de départ
-    if (code) {
-      rssEl.outerHTML = formatRSS(code);
+    if (currentItem.rssChanged) {
+      // Cas : l’utilisateur a cliqué sur Table A/B/C
+      const code = currentItem.rss || "";
+      if (code) rssEl.outerHTML = formatRSS(code);
+    } else {
+      // Cas : Annuler → on revient à la valeur initiale
+      const code = originalValues.rss || "";
+      if (code) rssEl.outerHTML = formatRSS(code);
     }
   }
 }
+delete currentItem.rssChanged; // 🔄 nettoyage
+  
   
   // Réaffiche le nom de la ligne après édition
 if (ligneNomEl) ligneNomEl.style.display = "inline";
@@ -1871,7 +1880,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V2</span>
 </div>
 
 <script>
