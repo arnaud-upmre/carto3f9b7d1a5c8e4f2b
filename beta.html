@@ -71,15 +71,25 @@
 
     const map=L.map('map',{minZoom:3,maxZoom:19}).setView([46.7,2.3],6);
 // Calque satellite
+// 🌍 Fond satellite IGN (orthophotos)
 L.tileLayer(
-  'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-  { attribution: 'Tiles © Esri & Sources' }
+  "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&STYLE=normal&FORMAT=image/jpeg&LAYER=ORTHOIMAGERY.ORTHOPHOTOS&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
+  {
+    attribution: "© IGN-F/Geoportail",
+    tileSize: 256,
+    maxZoom: 19
+  }
 ).addTo(map);
 
-// Calque labels (routes, villes, etc.)
+// 🏙️ Labels IGN (routes, villes, etc.)
 L.tileLayer(
-  'https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',
-  { attribution: 'Labels © Esri' }
+  "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&STYLE=normal&FORMAT=image/png&LAYER=GEOGRAPHICALGRIDSYSTEMS.MAPS&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
+  {
+    attribution: "© IGN-F/Geoportail",
+    tileSize: 256,
+    transparent: true,
+    maxZoom: 19
+  }
 ).addTo(map);
 
     function dotIcon(color){return L.divIcon({className:'',html:`<div style="width:14px;height:14px;border-radius:50%;border:2px solid #fff;background:${color};box-shadow:0 0 6px #0006"></div>`,iconSize:[14,14],iconAnchor:[7,7]});}
