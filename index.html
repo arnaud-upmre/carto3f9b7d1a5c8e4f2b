@@ -80,15 +80,28 @@ ul#suggestions:not(:empty){
   margin: .4rem 0 .6rem 0;
 }
 
-/* Halo bleu + effet tremblement façon iOS */
 .editable-halo {
   display: inline-block;
   padding: 2px 4px;
   border-radius: 6px;
-  position: relative; /* ✅ nécessaire pour bien afficher l’ombre */
-  box-shadow: 0 0 0 3px rgba(26,115,232,0.6); /* ✅ halo visible immédiatement */
-  animation: pulseHalo 1.2s infinite; /* halo animé */
+  position: relative;
+
+  /* ✅ halo fin + lumineux */
+  box-shadow: 0 0 6px rgba(26,115,232,0.8),
+              0 0 12px rgba(26,115,232,0.5);
+
+  /* ✅ pulsation plus douce */
+  animation: pulseHalo 1.6s ease-in-out infinite;
 }
+
+/* 🔄 nouvelle animation plus fluide */
+@keyframes pulseHalo {
+  0%   { box-shadow: 0 0 4px rgba(26,115,232,0.6), 0 0 8px rgba(26,115,232,0.4); }
+  50%  { box-shadow: 0 0 10px rgba(26,115,232,0.9), 0 0 18px rgba(26,115,232,0.6); }
+  100% { box-shadow: 0 0 4px rgba(26,115,232,0.6), 0 0 8px rgba(26,115,232,0.4); }
+}
+
+    
 
 .editable-wiggle {
   animation: wiggle 0.3s infinite; /* wiggle seul */
@@ -1869,7 +1882,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V3</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1</span>
 </div>
 
 <script>
