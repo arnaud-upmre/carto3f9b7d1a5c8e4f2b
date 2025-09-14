@@ -1832,14 +1832,18 @@ if (document.getElementById("editable-portail")) {
     formatPortail(portailVal);
 }
 
-// ✅ Réinitialise le bloc RSS uniquement si une valeur existe
+// ✅ Réinitialise le bloc RSS uniquement si la valeur a changé
 if (document.getElementById("editable-rss")) {
   const rssEl = document.getElementById("editable-rss");
   if (rssEl) {
-    // On prend toujours la version stockée en A/B/C
-    const code = originalValues.rss || currentItem.rss || "";
-    if (code) {
-      rssEl.outerHTML = formatRSS(code);
+    const initCode = originalValues.rss || "";
+    const newCode  = currentItem.rss || "";
+
+    // ⚡️ Seulement si ça a changé
+    if (newCode && newCode !== initCode) {
+      rssEl.outerHTML = formatRSS(newCode);
+    } else if (initCode) {
+      rssEl.outerHTML = formatRSS(initCode);
     }
   }
 }
@@ -1872,7 +1876,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V7</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V8</span>
 </div>
 
 <script>
