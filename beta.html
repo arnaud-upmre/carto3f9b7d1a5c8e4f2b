@@ -982,8 +982,8 @@ let html = `<h2>
     
 // ✅ Affiche "Repérer le poste" seulement si les coordonnées poste sont présentes
 html += `
-<div class="rep-block poste-only" id="rep-poste">
-  <p><span class="emoji">⚡️</span>Repérer le poste (sat/guérite)</p>
+<div class="rep-block poste-only">
+  <p id="editable-rep-poste"><span class="emoji">⚡️</span> Repérer le poste (sat/guérite)</p>
   <div class="inline-links pills-3">
     ${
       usePoste
@@ -994,13 +994,13 @@ html += `
 </div>`;
 
 html += `
-<div class="rep-block" id="rep-acces">
-  <p><span class="emoji">🛣️</span> Repérer l’accès :</p>
+<div class="rep-block">
+  <p id="editable-rep-acces"><span class="emoji">🛣️</span> Repérer l’accès :</p>
   <div class="inline-links pills-3">
     <a href="${myMapsViewer(lieu.latitude, lieu.longitude, 19)}" target="_blank" rel="noopener">🛰️ Vue satellite</a>
     <a href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">👁️ Street View</a>
   </div>
-</div>
+</div>`;
 
 <div class="rep-block">
   <p><span class="emoji">🚙</span> Itinéraires disponibles :</p>
@@ -1588,7 +1588,7 @@ originalValues.portail = currentItem.portail || "";
 ["editable-nom","editable-type","editable-sat","editable-acces",
  "editable-description","editable-contact","editable-portail",
  "editable-pk","editable-numero_ligne","editable-rss",
- "rep-poste","rep-acces"].forEach(id=>{
+ "editable-rep-poste","editable-rep-acces"].forEach(id=>{
   const el = document.getElementById(id);
   if (el) {
     el.classList.add("editable-halo", "editable-wiggle");
@@ -1701,7 +1701,7 @@ if (e.target.id === "editable-portail") {
   }
    // 🔹 AJOUT ICI
   // Bloc POSTE → remplacer bouton par champ texte
-  if (editMode && e.target.closest("#rep-poste")) {
+if (editMode && e.target.id === "editable-rep-poste") {
     const bloc = document.querySelector("#rep-poste .inline-links");
     bloc.innerHTML = `
       <input type="text" id="input-poste-link"
@@ -1713,7 +1713,7 @@ if (e.target.id === "editable-portail") {
   }
 
   // Bloc ACCES → remplacer boutons par champ texte
-  if (editMode && e.target.closest("#rep-acces")) {
+ if (editMode && e.target.id === "editable-rep-acces") {
     const bloc = document.querySelector("#rep-acces .inline-links");
     bloc.innerHTML = `
       <input type="text" id="input-acces-link"
