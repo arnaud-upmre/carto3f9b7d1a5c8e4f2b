@@ -4622,5 +4622,22 @@
     "pk": "80,500",
     "poste_latitude": "49.51148",
     "poste_longitude": "2.43501"
+  },
+  {
+    "nom": "La Faloise",
+    "type": "SP",
+    "SAT": "",
+    "accès": "",
+    "latitude": 49.6849,
+    "longitude": 2.33967,
+    "description": "",
+    "rss": "C",
+    "contact": "",
+    "portail": "",
+    "lignes": "PARIS-NORD à LILLE",
+    "numero_ligne": 272000,
+    "pk": "80,500",
+    "poste_latitude": "49.6856",
+    "poste_longitude": "2.34038"
   }
 ]
