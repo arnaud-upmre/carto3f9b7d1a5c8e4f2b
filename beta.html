@@ -141,19 +141,18 @@ async function loadData(){
     const res = await fetch('postes.json');
     const arr = await res.json();
 
-    // 🔹 On garde seulement les postes :
-    // - qui ont latitude + longitude
-    // - qui ont un "type" NON vide
-    // - qui ne sont pas des "Accès"
+    // 🔹 Filtre : on prend uniquement les postes avec nom + type + coordonnées du poste
     DATA = arr.filter(p =>
-      p && p.latitude && p.longitude &&
+      p &&
+      p.nom && p.nom.trim() !== "" &&
       p.type && p.type.trim() !== "" &&
-      !/acc[eè]s/i.test(p.type) &&
-      !/acc[eè]s/i.test(p.nom||"")
+      p.poste_latitude && p.poste_longitude &&     // coordonnées du poste uniquement
+      !/acc[eè]s/i.test(p.type) &&                 // exclut type = Accès
+      !/acc[eè]s/i.test(p.nom||"")                 // exclut nom contenant Accès
     ).map(p => ({
       nom: p.nom,
-      latitude: +p.latitude,
-      longitude: +p.longitude,
+      latitude: +p.poste_latitude,   // ✅ on prend bien poste_latitude
+      longitude: +p.poste_longitude, // ✅ on prend bien poste_longitude
       type: p.type
     }));
 
