@@ -1665,8 +1665,9 @@ document.querySelectorAll(".btn-rss").forEach(btn => {
     currentItem.rssTemp = code;       // valeur temporaire
     currentItem.rssChanged = true;
 
-    // ➡️ Affiche immédiatement Table + numéros
-    document.getElementById("editable-rss").outerHTML = formatRSS(code, true);
+    // ➡️ Remplace tout le bloc par RSS complet (titre + numéros)
+    const rssContainer = document.getElementById("editable-rss").parentNode;
+    rssContainer.innerHTML = formatRSS(code, true);
   });
 });
 
