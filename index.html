@@ -56,19 +56,6 @@
     font-size: 13.5px;
   }
 }
-
-/* Force une seule ligne dès qu’il y a la place */
-@media (min-width: 420px){
-  .inline-links.pills-3{ flex-wrap: nowrap; }
-}
-
-/* Ultra compact sur écrans ≤ 390px */
-@media (max-width: 390px){
-  .inline-links.pills-3 a{
-    padding: 6px 8px;
-    font-size: 13.5px;
-  }
-}
     
     /* Supprime l’espace vertical quand il n’y a aucune suggestion */
 ul#suggestions:empty {
@@ -101,17 +88,8 @@ ul#suggestions:not(:empty){
   100% { box-shadow: 0 0 4px rgba(26,115,232,0.6), 0 0 8px rgba(26,115,232,0.4); }
 }
 
-    
-
 .editable-wiggle {
   animation: wiggle 0.3s infinite; /* wiggle seul */
-}
-
-/* Halo pulsant bleu */
-@keyframes pulseHalo {
-  0% { box-shadow: 0 0 0 0 rgba(26,115,232,0.6); }
-  70% { box-shadow: 0 0 0 6px rgba(26,115,232,0); }
-  100% { box-shadow: 0 0 0 0 rgba(26,115,232,0); }
 }
 
 /* Tremblement façon iOS */
@@ -1005,7 +983,7 @@ let html = `<h2>
 // ✅ Affiche "Repérer le poste" seulement si les coordonnées poste sont présentes
 html += `
 <div class="rep-block poste-only">
-  <p><span class="emoji">⚡️</span>Repérer le poste (sat/guérite)</p>
+  <p id="editable-rep-poste"><span class="emoji">⚡️</span> Repérer le poste (sat/guérite)</p>
   <div class="inline-links pills-3">
     ${
       usePoste
@@ -1017,13 +995,14 @@ html += `
 
 html += `
 <div class="rep-block">
-  <p><span class="emoji">🛣️</span> Repérer l’accès :</p>
+  <p id="editable-rep-acces"><span class="emoji">🛣️</span> Repérer l’accès :</p>
   <div class="inline-links pills-3">
     <a href="${myMapsViewer(lieu.latitude, lieu.longitude, 19)}" target="_blank" rel="noopener">🛰️ Vue satellite</a>
     <a href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">👁️ Street View</a>
   </div>
-</div>
-
+</div>`;
+  
+html += `
 <div class="rep-block">
   <p><span class="emoji">🚙</span> Itinéraires disponibles :</p>
   <div class="inline-links pills-3">
@@ -1596,7 +1575,7 @@ if (currentItem.rss) {
         originalValues.sat = document.getElementById("editable-sat").textContent.trim();
       }
       if (document.getElementById("editable-acces")) {
-        originalValues.acces = document.getElementById("editable-acces").textContent.replace("– accès ","").trim();
+       originalValues["accès"] = document.getElementById("editable-acces").textContent.replace("– accès ","").trim();
       }
         if (document.getElementById("editable-description")) {
     originalValues.description = document.getElementById("editable-description").textContent.trim();
@@ -1612,7 +1591,12 @@ originalValues.portail = currentItem.portail || "";
  "editable-pk","editable-numero_ligne","editable-rss"].forEach(id=>{
   const el = document.getElementById(id);
   if (el) {
-    // 👉 Tous les champs ont halo + wiggle
+    el.classList.add("editable-halo", "editable-wiggle");
+  }
+});
+      ["editable-rep-poste","editable-rep-acces"].forEach(id=>{
+  const el = document.getElementById(id);
+  if (el) {
     el.classList.add("editable-halo", "editable-wiggle");
   }
 });
@@ -1721,7 +1705,31 @@ if (e.target.id === "editable-portail") {
     document.getElementById("edit-buttons").style.display = "block";
     navigator.vibrate?.(50);
   }
-});
+   // 🔹 AJOUT ICI
+// Bloc POSTE → remplacer boutons par champ texte
+if (editMode && e.target.id === "editable-rep-poste") {
+  const bloc = e.target.closest(".rep-block").querySelector(".inline-links");
+  bloc.innerHTML = `
+    <input type="text" id="input-poste-link"
+      placeholder="Coller ici le lien Google Maps"
+      style="width:100%; border:2px solid #1a73e8; border-radius:6px; padding:4px;" />
+  `;
+  navigator.vibrate?.(50);
+  return;
+}
+
+// Bloc ACCES → remplacer boutons par champ texte
+if (editMode && e.target.id === "editable-rep-acces") {
+  const bloc = e.target.closest(".rep-block").querySelector(".inline-links");
+  bloc.innerHTML = `
+    <input type="text" id="input-acces-link"
+      placeholder="Coller ici le lien Google Maps"
+      style="width:100%; border:2px solid #1a73e8; border-radius:6px; padding:4px;" />
+  `;
+  navigator.vibrate?.(50);
+  return;
+}
+  });
 
 function getDemandeur() {
   let demandeur = localStorage.getItem("demandeur");
@@ -1750,12 +1758,14 @@ document.getElementById("btn-save").addEventListener("click", function(){
   const newNom   = document.getElementById("input-nom")?.value   || originalValues.nom;
   const newType  = document.getElementById("input-type")?.value  || originalValues.type;
   const newSat   = document.getElementById("input-sat")?.value   || originalValues.sat || "";
-  const newAcces = document.getElementById("input-acces")?.value || originalValues.acces || "";
+  const newAcces = document.getElementById("input-acces")?.value || originalValues["accès"] || "";
 const newDescription = document.getElementById("input-description")?.value || originalValues.description || "";
 const newContact     = document.getElementById("input-contact")?.value     || originalValues.contact || "";
 const newPortail     = document.getElementById("input-portail")?.value     || originalValues.portail || "";
 const newPk   = document.getElementById("input-pk")?.value || currentItem.pk || "";
 const newNumLigne = document.getElementById("input-numero_ligne")?.value || currentItem.numero_ligne || "";
+    const newPosteLink = document.getElementById("input-poste-link")?.value || "";
+  const newAccesLink = document.getElementById("input-acces-link")?.value || "";
   
   const demandeur = getDemandeur();
   const ficheOrigine = currentItem
@@ -1767,22 +1777,25 @@ const newNumLigne = document.getElementById("input-numero_ligne")?.value || curr
     demandeur,
     ficheOrigine
   };
- if (currentItem.rssTemp) {
-  payload.rss = currentItem.rssTemp;         
-  originalValues.rss = currentItem.rssTemp;  
-  delete currentItem.rssTemp;                
+if (currentItem.rssTemp) {
+  payload.rss = currentItem.rssTemp;
+  payload.rssChanged = true;   // ✅ indique au serveur que RSS a été modifié
+  originalValues.rss = currentItem.rssTemp;
+  delete currentItem.rssTemp;
 }
 
   if (newNom !== originalValues.nom) payload.nom = newNom;
   if (newType !== originalValues.type) payload.type = newType;
   if (newSat !== (originalValues.sat || "")) payload.sat = newSat;
-  if (newAcces !== (originalValues.acces || "")) payload.acces = newAcces;
+ if (newAcces !== (originalValues["accès"] || "")) payload["accès"] = newAcces;
   if (originalValues.rss) payload.rss = originalValues.rss;
 if (newDescription !== (originalValues.description || "")) payload.description = newDescription;
 if (newContact !== (originalValues.contact || "")) payload.contact = newContact;
 if (newPortail !== (originalValues.portail || "")) payload.portail = newPortail;
  if (newPk !== (currentItem.pk || "")) payload.pk = newPk;
 if (newNumLigne !== (currentItem.numero_ligne || "")) payload.numero_ligne = newNumLigne;
+    if (newPosteLink) payload.lien_poste = newPosteLink;
+  if (newAccesLink) payload.lien_acces = newAccesLink;
   
 fetch("https://script.google.com/macros/s/AKfycbyxh3HGR6iHcn0ynwfGzSzOm5Djc7o2e1uA4dvdPurolDerZlNiARcpsiY4daDRPSV1tw/exec", {
   method: "POST",
@@ -1842,7 +1855,8 @@ if (pkParent) {
 ].forEach(id => {
   const el = document.getElementById(id);
   if (el) {
-    el.classList.remove("editable-halo", "editable-wiggle"); // ✅ On enlève les effets
+    el.classList.remove("editable-halo", "editable-wiggle"); 
+    // ✅ On enlève les effets
   }
 });
 
@@ -1887,7 +1901,32 @@ rssEl.outerHTML = formatRSS(rssVal, true);
 rssEl.outerHTML = formatRSS(rssVal, true);
   }
 }
-  
+  // 🔁 Remet les blocs "Repérer..." si on les avait passés en champ texte
+const repPosteInput = document.getElementById("input-poste-link");
+if (repPosteInput) {
+  const bloc = repPosteInput.closest(".inline-links");
+  const latPoste = (currentItem.poste_latitude ?? "").toString();
+  const lonPoste = (currentItem.poste_longitude ?? "").toString();
+  const usePoste = latPoste !== "" && lonPoste !== "";
+  const targetLat = usePoste ? latPoste : currentItem.latitude;
+  const targetLon = usePoste ? lonPoste : currentItem.longitude;
+  bloc.innerHTML = usePoste
+    ? `<a href="${myMapsViewer(targetLat, targetLon, 20)}" target="_blank" rel="noopener">🛰️ Vue satellite</a>`
+    : `<span class="placeholder">(non renseigné – fournir un lien Maps)</span>`;
+}
+
+const repAccesInput = document.getElementById("input-acces-link");
+if (repAccesInput) {
+  const bloc = repAccesInput.closest(".inline-links");
+  bloc.innerHTML = `
+    <a href="${myMapsViewer(currentItem.latitude, currentItem.longitude, 19)}" target="_blank" rel="noopener">🛰️ Vue satellite</a>
+    <a href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${currentItem.latitude},${currentItem.longitude}" target="_blank" rel="noopener">👁️ Street View</a>
+  `;
+}
+    // Nettoie tous les halos/vibrations restants
+  document.querySelectorAll(".editable-halo, .editable-wiggle").forEach(el => {
+    el.classList.remove("editable-halo", "editable-wiggle");
+  });
   editMode = false;
 }
     // Annuler édition
@@ -1896,7 +1935,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
     originalValues.nom,
     originalValues.type,
     originalValues.sat || "",
-    originalValues.acces || ""
+     originalValues["accès"] || ""
   );
   showNotification("🔙 Édition annulée", "info");
 });
@@ -1914,7 +1953,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V2</span>
 </div>
 
 <script>
