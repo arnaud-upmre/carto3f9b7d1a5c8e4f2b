@@ -2,75 +2,70 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8" />
-  <title>Beta — Jeu de précision (Postes seulement)</title>
+  <title>Beta — Jeu des Postes</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <!-- Leaflet CSS -->
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    crossorigin=""
-  />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
   <style>
     :root{
-      --ink:#101114; --muted:#6b7280; --bg:#0b0c0e; --card:#111317; --accent:#4f46e5;
-      --glass:rgba(17,19,23,.7); --border:rgba(255,255,255,.08);
+      --accent:#4f46e5; --bg:#0b0c0e; --card:#111317;
+      --ink:#f9fafb; --muted:#9ca3af;
+      --glass:rgba(17,19,23,.65); --border:rgba(255,255,255,.08);
     }
     html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,Roboto,Inter,Arial,sans-serif;}
-    #app{position:fixed; inset:0; display:grid; grid-template-rows:auto 1fr auto;}
-    .topbar, .bottombar{
-      display:flex; gap:.6rem; align-items:center; padding:.6rem .8rem;
-      backdrop-filter:saturate(1.2) blur(10px);
-      background:var(--glass); border:1px solid var(--border); z-index:5000;
+    #map{width:100%;height:100%;}
+    .btn{border:none;border-radius:.8rem;padding:.7rem 1.2rem;font-size:1rem;font-weight:600;cursor:pointer;}
+    .btn.primary{background:var(--accent);color:#fff;}
+    .btn:disabled{opacity:.5;cursor:not-allowed;}
+    /* Overlay */
+    #overlay{
+      position:fixed; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;
+      backdrop-filter:blur(20px) saturate(1.4); background:var(--glass);
+      z-index:6000; text-align:center; padding:1.5rem;
     }
-    .topbar{border-bottom:1px solid var(--border);}
-    .bottombar{border-top:1px solid var(--border);}
-    .name{font-weight:600; font-size:.95rem;}
-    .search{display:flex; gap:.4rem; flex:1; background:var(--card); border:1px solid var(--border); border-radius:.6rem; padding:.25rem .4rem;}
-    .search input{border:none; outline:none; background:transparent; color:inherit; width:100%; font-size:.9rem;}
-    .btn{border:none; border-radius:.6rem; padding:.5rem .8rem; font-weight:600; cursor:pointer; background:var(--card); color:inherit; border:1px solid var(--border);}
-    .btn.primary{background:var(--accent); color:#fff; border:none;}
-    .btn:disabled{opacity:.5; cursor:not-allowed;}
-    #map{width:100%; height:100%;}
-    .score{flex:1; background:var(--card); border:1px solid var(--border); border-radius:.6rem; padding:.4rem .6rem; font-variant-numeric:tabular-nums;}
-    .score .pts{font-size:1.2rem; font-weight:700;}
-    .score .dist{color:var(--muted); font-size:.85rem;}
-    .toast{position:fixed; left:50%; bottom:90px; transform:translateX(-50%); background:var(--card); border:1px solid var(--border); padding:.5rem .8rem; border-radius:.6rem; display:none; z-index:6000;}
+    #overlay h1{font-size:1.5rem; margin-bottom:.5rem;}
+    #overlay p{color:var(--muted); margin-bottom:1.2rem;}
+    /* HUD bas */
+    .bottombar{
+      position:fixed; bottom:0; left:0; right:0;
+      display:flex; gap:.6rem; align-items:center; padding:.6rem .8rem;
+      backdrop-filter:blur(12px) saturate(1.2);
+      background:var(--glass); border-top:1px solid var(--border); z-index:5000;
+    }
+    .score{flex:1; font-variant-numeric:tabular-nums;}
+    .score .pts{font-size:1.1rem; font-weight:700;}
+    .score .dist{color:var(--muted); font-size:.9rem;}
+    .toast{position:fixed; left:50%; bottom:90px; transform:translateX(-50%);
+      background:var(--card); border:1px solid var(--border); padding:.5rem .9rem; border-radius:.7rem; display:none; z-index:6500;}
   </style>
 </head>
 <body>
-  <div id="app">
-    <div class="topbar">
-      <div class="name">Cible: <span id="targetName">—</span></div>
-      <div class="search">
-        <input id="searchInput" list="names" placeholder="Rechercher un poste…" />
-        <datalist id="names"></datalist>
-        <button class="btn" id="btn-pick">🎲 Aléatoire</button>
-        <button class="btn primary" id="btn-load">Charger</button>
-      </div>
-    </div>
+  <div id="map"></div>
 
-    <div id="map"></div>
+  <!-- Overlay consigne -->
+  <div id="overlay">
+    <h1 id="consigne">Chargement…</h1>
+    <p id="consigneType"></p>
+    <button class="btn primary" id="btn-start">Commencer</button>
+  </div>
 
-    <div class="bottombar">
-      <div class="score">
-        <span class="pts" id="scorePts">— pts</span>
-        <span class="dist" id="scoreDist">Clique sur la carte pour placer ta réponse</span>
-      </div>
-      <button class="btn" id="btn-reset">🧹 Effacer</button>
-      <button class="btn" id="btn-validate" disabled>✅ Valider</button>
-      <button class="btn" id="btn-next" style="display:none">➡️ Suivant</button>
+  <!-- HUD bas -->
+  <div class="bottombar">
+    <div class="score">
+      <span class="pts" id="scorePts">— pts</span> ·
+      <span class="dist" id="scoreDist">Clique sur la carte pour placer ta réponse</span>
     </div>
+    <button class="btn" id="btn-validate" disabled>✅ Valider</button>
+    <button class="btn" id="btn-next" style="display:none">➡️ Suivant</button>
   </div>
 
   <div class="toast" id="toast"></div>
 
-  <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <script>
-    const $ = s => document.querySelector(s);
-    const toast = (msg, ms=1500)=>{const t=$('#toast');t.textContent=msg;t.style.display='block';clearTimeout(toast._to);toast._to=setTimeout(()=>t.style.display='none',ms);};
-    const scoreFromMeters = m => m<10?5000:m<15?4000:m<20?3500:m<25?2500:m<30?1500:m<35?800:m<40?400:m>=45?0:200;
-    const formatMeters = m => m<1000?`${m.toFixed(1)} m`:`${(m/1000).toFixed(3)} km`;
+    const $=s=>document.querySelector(s);
+    const toast=(m,ms=1600)=>{const t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(toast._to);toast._to=setTimeout(()=>t.style.display='none',ms);};
+    const scoreFromMeters=m=>m<10?5000:m<15?4000:m<20?3500:m<25?2500:m<30?1500:m<35?800:m<40?400:m>=45?0:200;
+    const formatMeters=m=>m<1000?`${m.toFixed(1)} m`:`${(m/1000).toFixed(3)} km`;
 
     let DATA=[], state={target:null, guess:null, guessMarker:null, realMarker:null, line:null, locked:false};
 
@@ -81,26 +76,31 @@
     function dotIcon(color){return L.divIcon({className:'',html:`<div style="width:14px;height:14px;border-radius:50%;border:2px solid #fff;background:${color};box-shadow:0 0 6px #0006"></div>`,iconSize:[14,14],iconAnchor:[7,7]});}
     const iconGuess=dotIcon('#ef4444'), iconReal=dotIcon('#22c55e');
 
-    function resetRound(keepTarget=false){
+    function resetRound(){
       if(state.guessMarker) map.removeLayer(state.guessMarker);
       if(state.realMarker) map.removeLayer(state.realMarker);
       if(state.line) map.removeLayer(state.line);
       state.guess=state.guessMarker=state.realMarker=state.line=null; state.locked=false;
       $('#btn-validate').disabled=true; $('#btn-next').style.display='none';
-      if(!keepTarget) { state.target=null; $('#targetName').textContent='—'; }
       $('#scorePts').textContent='— pts'; $('#scoreDist').textContent='Clique sur la carte pour placer ta réponse';
     }
 
-    function setTarget(p){state.target=p; $('#targetName').textContent=p.nom; resetRound(true); toast(`Nouvelle cible: ${p.nom}`);}
+    function showOverlayFor(p){
+      state.target=p;
+      $('#consigne').textContent=`Retrouve le poste ${p.nom}`;
+      $('#consigneType').textContent=`Type : ${p.type}`;
+      $('#overlay').style.display='flex';
+      resetRound();
+    }
+
+    function startRound(){ $('#overlay').style.display='none'; toast('Carte activée'); }
 
     function validate(){
       if(!state.target||!state.guess||state.locked) return;
-      const t=state.target, g=state.guess;
+      const t=state.target,g=state.guess;
       const real=L.latLng(t.latitude,t.longitude);
-      const dist=g.distanceTo(real);
-      const pts=scoreFromMeters(dist);
-      $('#scorePts').textContent=`${pts} pts`;
-      $('#scoreDist').textContent=`${formatMeters(dist)}`;
+      const dist=g.distanceTo(real), pts=scoreFromMeters(dist);
+      $('#scorePts').textContent=`${pts} pts`; $('#scoreDist').textContent=formatMeters(dist);
       state.realMarker=L.marker(real,{icon:iconReal}).addTo(map);
       state.line=L.polyline([g,real],{color:'#fff',weight:2,opacity:.7,dashArray:'4 4'}).addTo(map);
       $('#btn-next').style.display='inline-block';
@@ -108,7 +108,7 @@
     }
 
     map.on('click',e=>{
-      if(state.locked) return;
+      if(state.locked||!state.target) return;
       if(state.guessMarker) map.removeLayer(state.guessMarker);
       state.guess=e.latlng;
       state.guessMarker=L.marker(e.latlng,{icon:iconGuess}).addTo(map);
@@ -117,30 +117,23 @@
     });
 
     $('#btn-validate').onclick=validate;
-    $('#btn-reset').onclick=()=>resetRound(true);
-    $('#btn-next').onclick=()=>pickRandom();
+    $('#btn-next').onclick=()=>{ pickRandom(); };
 
-    $('#btn-pick').onclick=pickRandom;
-    $('#btn-load').onclick=()=>{
-      const val=$('#searchInput').value.trim().toLowerCase();
-      const f=DATA.find(p=>(p.nom||'').toLowerCase()===val);
-      if(f) setTarget(f); else toast('Nom introuvable');
-    };
+    $('#btn-start').onclick=startRound;
 
     function pickRandom(){
       if(!DATA.length){toast('Pas de données chargées');return;}
       const i=Math.floor(Math.random()*DATA.length);
-      setTarget(DATA[i]);
+      showOverlayFor(DATA[i]);
     }
 
     async function loadData(){
       try{
         const res=await fetch('postes.json'); const arr=await res.json();
-        DATA=arr.filter(p=>p && p.latitude && p.longitude && !/acc[eè]s/i.test(p.type||'') && !/acc[eè]s/i.test(p.nom||''))
+        DATA=arr.filter(p=>p&&p.latitude&&p.longitude&&!/acc[eè]s/i.test(p.type||'')&&!/acc[eè]s/i.test(p.nom||''))
                 .map(p=>({nom:p.nom,latitude:+p.latitude,longitude:+p.longitude,type:p.type||''}));
-        const dl=$('#names'); dl.innerHTML='';
-        DATA.forEach(p=>{const o=document.createElement('option'); o.value=p.nom; dl.appendChild(o);});
         toast(`${DATA.length} postes chargés`);
+        pickRandom();
       }catch(e){console.error(e);toast('Erreur chargement postes.json');}
     }
 
