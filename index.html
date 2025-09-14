@@ -1832,18 +1832,8 @@ if (document.getElementById("editable-portail")) {
   document.getElementById("editable-portail").parentNode.outerHTML =
     formatPortail(portailVal);
 }
+  
 
-// ✅ Ne touche PAS au RSS si aucune modif
-if (currentItem.rssChanged) {
-  const code = currentItem.rss || "";
-  if (code) {
-    const rssEl = document.getElementById("editable-rss");
-    if (rssEl) rssEl.outerHTML = formatRSS(code);
-  }
-}
-delete currentItem.rssChanged;
-  
-  
   // Réaffiche le nom de la ligne après édition
 if (ligneNomEl) ligneNomEl.style.display = "inline";
   editMode = false;
