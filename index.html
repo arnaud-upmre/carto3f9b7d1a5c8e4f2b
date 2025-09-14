@@ -1614,42 +1614,30 @@ if (["editable-nom","editable-type","editable-sat","editable-acces","editable-pk
   e.target.classList.remove("editable-wiggle");
 }
     
-    // Cas spécial RSS → boutons Table 1/2/3
-  if (e.target.id === "editable-rss" || e.target.closest("#editable-rss")) {
-    const phones = document.getElementById("rss-phones");
-if (phones) phones.style.display = "none";
-      e.target.innerHTML = `
-        <div class="inline-links">
-          <button class="btn-primary btn-rss" data-val="Table 1">Table 1</button>
-          <button class="btn-primary btn-rss" data-val="Table 2">Table 2</button>
-          <button class="btn-primary btn-rss" data-val="Table 3">Table 3</button>
-        </div>
-      `;
-
-// ✅ Réinitialise le bloc RSS UNIQUEMENT si ça a vraiment changé
-if (document.getElementById("editable-rss")) {
+// Cas spécial RSS → choix direct A / B / C
+if (e.target.id === "editable-rss" || e.target.closest("#editable-rss")) {
   const rssEl = document.getElementById("editable-rss");
+  if (!rssEl) return;
 
-  // Valeur initiale (avant édition)
-  const initCode = originalValues.rss || "";
-  // Valeur modifiée pendant l’édition
-  const newCode = currentItem.rssTemp || currentItem.rss || "";
+  rssEl.innerHTML = `
+    <div class="inline-links">
+      <button class="btn-primary btn-rss" data-code="A">Table A</button>
+      <button class="btn-primary btn-rss" data-code="B">Table B</button>
+      <button class="btn-primary btn-rss" data-code="C">Table C</button>
+    </div>
+  `;
 
-  if (rssEl && newCode && newCode !== initCode) {
-    rssEl.outerHTML = formatRSS(newCode);
-    currentItem.rss = newCode;   // 🔄 mise à jour de l’objet courant
-    delete currentItem.rssTemp;  // 🔄 nettoyage du temporaire
-  }
-}
-
-// ➕ On stocke le choix en temporaire
-currentItem.rssTemp = code; // "A", "B" ou "C"
-    originalValues.rss = code; // 🔄 on mémorise toujours la lettre (A/B/C)
+  document.querySelectorAll(".btn-rss").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const code = btn.dataset.code;
+      currentItem.rss = code;          // 🔄 on garde A/B/C dans l’objet courant
+      originalValues.rss = code;       // 🔄 on mémorise pour la sauvegarde
+      rssEl.outerHTML = formatRSS(code); // 🔄 reconstruit le bloc normal
+    });
   });
-});
 
-      return; // on sort ici pour ne pas exécuter le reste
-    }
+  return; // ⛔ stoppe ici pour éviter le reste
+}
   
 // Description (cliquable sur tout le bloc)
 if (editMode && (e.target.id === "editable-description" || e.target.closest("#editable-description"))) {
@@ -1884,7 +1872,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V6</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V7</span>
 </div>
 
 <script>
