@@ -1557,6 +1557,12 @@ document.addEventListener("click", function(e){
       editMode = true;
       originalValues.nom = document.getElementById("editable-nom").textContent;
       originalValues.type = document.getElementById("editable-type").textContent;
+      // ✅ Forcer RSS en lettre (A/B/C) dès le départ
+if (currentItem.rss) {
+  originalValues.rss = currentItem.rss;  // déjà A/B/C
+} else {
+  originalValues.rss = "";
+}
         originalValues.pk = currentItem.pk || "";
   originalValues.numero_ligne = currentItem.numero_ligne || "";
       
@@ -1620,17 +1626,20 @@ if (phones) phones.style.display = "none";
         </div>
       `;
 
-document.querySelectorAll(".btn-rss").forEach(btn => {
-  btn.addEventListener("click", ev => {
-    const val = ev.target.dataset.val; // "Table 1", "Table 2", etc.
+// ✅ Réinitialise le bloc RSS UNIQUEMENT si ça a vraiment changé
+if (document.getElementById("editable-rss")) {
+  const rssEl = document.getElementById("editable-rss");
 
-    // ➕ Reconstruit tout le bloc RSS (titre + numéros)
-    const map = { "Table 1": "A", "Table 2": "B", "Table 3": "C" };
-    const code = map[val] || val;
+  // Valeur initiale (avant édition)
+  const initCode = originalValues.rss || "";
+  // Valeur modifiée pendant l’édition
+  const newCode = currentItem.rssTemp || currentItem.rss || "";
 
-const rssBlock = document.getElementById("editable-rss");
-if (rssBlock) {
-  rssBlock.outerHTML = formatRSS(code);
+  if (rssEl && newCode && newCode !== initCode) {
+    rssEl.outerHTML = formatRSS(newCode);
+    currentItem.rss = newCode;   // 🔄 mise à jour de l’objet courant
+    delete currentItem.rssTemp;  // 🔄 nettoyage du temporaire
+  }
 }
 
 // ➕ On stocke le choix en temporaire
@@ -1875,7 +1884,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V5</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V6</span>
 </div>
 
 <script>
