@@ -791,54 +791,6 @@ function formatRSS(table) {
   `;
 }
 
-  const isSAT = currentLieu.SAT && currentLieu.SAT !== "";
-
-  // ✅ Si on est dans un SAT, on ne compte que les appareils de CE SAT
-  const matchingAppsForScope = isSAT
-    ? matchingApps.filter(app => (app.SAT || "") === currentLieu.SAT)
-    : matchingApps;
-
-  // Aucun appareil trouvé dans le scope (SAT précis ou poste entier)
-  if (matchingAppsForScope.length === 0) {
-    return `
-      <div class="missing-box">
-        🤝 Appareil manquant ?
-       <a href="ajout_appareil.html?poste=${encodeURIComponent(formatNomCompletLieu(currentLieu))}">Aidez-nous à l’ajouter.</a>
-      </div>
-    `;
-  }
-
-  // Il y a au moins un appareil dans le scope → titre + liste
-  let grouped = {};
-  matchingAppsForScope.forEach(app => {
-    const sat = app.SAT || 'Poste';
-    if (!grouped[sat]) grouped[sat] = [];
-    grouped[sat].push(app);
-  });
-
-  let html = `<p><strong>🧩 Appareils trouvés dans ce ${isSAT ? 'SAT' : 'poste'} :</strong></p>`;
-
-  for (const [sat, list] of Object.entries(grouped)) {
-    if (!isSAT) {
-      html += `<p><strong>${sat === "Poste" ? "Poste" : sat} :</strong> `;
-    } else {
-      html += `<p>`;
-    }
-    html += list
-      .map(app => `<a href="#" onclick='showAppareil(${JSON.stringify(app)})'>${app.appareil}</a>`)
-      .join(", ") + `</p>`;
-  }
-
-  // Carte bleue toujours présente en dessous
-  html += `
-    <div class="missing-box">
-      🤝 Appareil manquant ?
-      <a href="ajout_appareil.html?poste=${encodeURIComponent(formatNomCompletLieu(currentLieu))}">Aidez-nous à l’ajouter.</a>
-    </div>
-  `;
-
-  return html;
-}
     
 function generateAlias(appareil, nom, sat, posteType) {
   const alias = new Set();
@@ -1909,7 +1861,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1111</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1U6276271</span>
 </div>
 
 <script>
