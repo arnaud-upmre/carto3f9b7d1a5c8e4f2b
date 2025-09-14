@@ -1643,29 +1643,34 @@ if (["editable-nom","editable-type","editable-sat","editable-acces","editable-pk
     
 // Cas spécial RSS → choix direct A / B / C
 if (e.target.id === "editable-rss" || e.target.closest("#editable-rss")) {
-const rssEl = document.getElementById("editable-rss");
-if (!rssEl) return;
+  const block = document.getElementById("editable-rss").closest(".rss-block");
+  if (!block) return;
 
-// ➡️ On remplace tout le bloc RSS (titre + numéros) par uniquement les boutons
-rssEl.outerHTML = `
-  <div id="editable-rss" class="inline-links">
-    <button class="btn-primary btn-rss" data-code="A">Table 1</button>
-    <button class="btn-primary btn-rss" data-code="B">Table 2</button>
-    <button class="btn-primary btn-rss" data-code="C">Table 3</button>
-  </div>
-`;
+  // ➡️ On force uniquement les 3 boutons (sans numéros)
+  block.outerHTML = `
+    <div class="rss-block" id="editable-rss">
+      <div class="inline-links">
+        <button class="btn-primary btn-rss" data-code="A">Table 1</button>
+        <button class="btn-primary btn-rss" data-code="B">Table 2</button>
+        <button class="btn-primary btn-rss" data-code="C">Table 3</button>
+      </div>
+    </div>
+  `;
 
   document.querySelectorAll(".btn-rss").forEach(btn => {
-   btn.addEventListener("click", () => {
-  const code = btn.dataset.code;
-  currentItem.rss = code;
-  originalValues.rss = code;
-  currentItem.rssChanged = true;   // ✅ on note que l’utilisateur a modifié le RSS
-document.querySelector("#editable-rss").innerHTML = `<strong>📞 RSS Table ${code === "A" ? "1" : code === "B" ? "2" : "3"}</strong>`;
-});
+    btn.addEventListener("click", () => {
+      const code = btn.dataset.code;
+      currentItem.rss = code;
+      originalValues.rss = code;
+      currentItem.rssChanged = true;
+
+      // 👉 après le choix : affiche seulement "RSS Table X" (sans numéros)
+      const container = document.getElementById("editable-rss");
+      container.outerHTML = formatRSS(code, false);
+    });
   });
 
-  return; // ⛔ stoppe ici pour éviter le reste
+  return; // ⛔ stoppe ici
 }
   
 // Description (cliquable sur tout le bloc)
@@ -1869,19 +1874,13 @@ if (document.getElementById("editable-portail")) {
   // Réaffiche le nom de la ligne après édition
 if (ligneNomEl) ligneNomEl.style.display = "inline";
 
-// ➡️ Restaurer le RSS si modifié OU si resté en mode boutons
-const rssEl = document.getElementById("editable-rss");
-if (rssEl) {
-  if (currentItem.rssChanged) {
-    // cas : l’utilisateur a vraiment choisi une table
-    const rssVal = originalValues.rss || currentItem.rss || "";
-rssEl.outerHTML = formatRSS(rssVal, true);
-    delete currentItem.rssChanged;
-  } else if (rssEl.querySelector(".btn-rss")) {
-    // cas : le bloc est resté sous forme de boutons sans choix
-    const rssVal = originalValues.rss || currentItem.rss || "";
-rssEl.outerHTML = formatRSS(rssVal, true);
-  }
+// ➡️ Restaurer le RSS avec numéros en sortie d’édition
+const rssNode = document.getElementById("editable-rss");
+if (rssNode) {
+  const cont = rssNode.closest(".rss-block") || rssNode;
+  const rssVal = originalValues.rss || currentItem.rss || "";
+  cont.outerHTML = formatRSS(rssVal, true);
+  delete currentItem.rssChanged;
 }
   
   editMode = false;
@@ -1910,7 +1909,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V2</span>
 </div>
 
 <script>
