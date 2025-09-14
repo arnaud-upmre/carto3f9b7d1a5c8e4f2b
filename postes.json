@@ -4605,5 +4605,22 @@
     "pk": "115,300",
     "poste_latitude": "49.58084",
     "poste_longitude": "3.1218"
+  },
+  {
+    "nom": "Saint Just",
+    "type": "SSP",
+    "SAT": "",
+    "accès": "",
+    "latitude": 49.51282,
+    "longitude": 2.43483,
+    "description": "",
+    "rss": "C",
+    "contact": "",
+    "portail": "",
+    "lignes": "PARIS-NORD à LILLE",
+    "numero_ligne": 272000,
+    "pk": "80,500",
+    "poste_latitude": "49.51148",
+    "poste_longitude": "2.43501"
   }
 ]
