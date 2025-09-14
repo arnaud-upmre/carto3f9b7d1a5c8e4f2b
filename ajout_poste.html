@@ -990,12 +990,15 @@ if ($("accessMethod").value === "gps") {
 } else if ($("accessMethod").value === "lien") {
   let lienAcces = $("lienAccess").value.trim();
   if (!isValidUrl(lienAcces)) {
-    markError($("lienAccess"), $("lienAccessHelp"), true);
-    return;
+    $("lienAccess").classList.add("error");
+    $("lienAccessHelp").classList.add("show");
+    return; // ⛔ bloque envoi
   }
   coordAcces = lienAcces;
 } else {
-  document.querySelectorAll("#pill-access-gps, #pill-access-lien").forEach(p=>p.classList.add("error"));
+  // aucun choix → forcer rouge sur les pills
+  document.querySelectorAll("#pill-access-gps, #pill-access-lien")
+    .forEach(p => p.classList.add("error"));
   return;
 }
 
