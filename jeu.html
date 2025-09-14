@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>Beta — Jeu des Postes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+  <style>
+    :root{
+      --accent:#4f46e5; --bg:#0b0c0e; --card:#111317;
+      --ink:#f9fafb; --muted:#9ca3af;
+      --glass:rgba(17,19,23,.65); --border:rgba(255,255,255,.08);
+    }
+    html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,Roboto,Inter,Arial,sans-serif;}
+    #map{width:100%;height:100%;}
+    .btn{border:none;border-radius:.8rem;padding:.7rem 1.2rem;font-size:1rem;font-weight:600;cursor:pointer;}
+    .btn.primary{background:var(--accent);color:#fff;}
+    .btn:disabled{opacity:.5;cursor:not-allowed;}
+    /* Overlay */
+    #overlay{
+      position:fixed; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;
+      backdrop-filter:blur(20px) saturate(1.4); background:var(--glass);
+      z-index:6000; text-align:center; padding:1.5rem;
+    }
+    #overlay h1{font-size:1.5rem; margin-bottom:.5rem;}
+    #overlay p{color:var(--muted); margin-bottom:1.2rem;}
+    /* HUD bas */
+    .bottombar{
+      position:fixed; bottom:0; left:0; right:0;
+      display:flex; gap:.6rem; align-items:center; padding:.6rem .8rem;
+      backdrop-filter:blur(12px) saturate(1.2);
+      background:var(--glass); border-top:1px solid var(--border); z-index:5000;
+    }
+    .score{flex:1; font-variant-numeric:tabular-nums;}
+    .score .pts{font-size:1.1rem; font-weight:700;}
+    .score .dist{color:var(--muted); font-size:.9rem;}
+    .toast{position:fixed; left:50%; bottom:90px; transform:translateX(-50%);
+      background:var(--card); border:1px solid var(--border); padding:.5rem .9rem; border-radius:.7rem; display:none; z-index:6500;}
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <!-- Overlay consigne -->
+  <div id="overlay">
+    <h1 id="consigne">Chargement…</h1>
+    <p id="consigneType"></p>
+    <button class="btn primary" id="btn-start">Commencer</button>
+  </div>
+
+  <!-- HUD bas -->
+  <div class="bottombar">
+    <div class="score">
+      <span class="pts" id="scorePts">— pts</span> ·
+      <span class="dist" id="scoreDist">Clique sur la carte pour placer ta réponse</span>
+    </div>
+    <button class="btn" id="btn-validate" disabled>✅ Valider</button>
+    <button class="btn" id="btn-next" style="display:none">➡️ Suivant</button>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script>
+    const $=s=>document.querySelector(s);
+    const toast=(m,ms=1600)=>{const t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(toast._to);toast._to=setTimeout(()=>t.style.display='none',ms);};
+    const scoreFromMeters=m=>m<10?5000:m<15?4000:m<20?3500:m<25?2500:m<30?1500:m<35?800:m<40?400:m>=45?0:200;
+    const formatMeters=m=>m<1000?`${m.toFixed(1)} m`:`${(m/1000).toFixed(3)} km`;
+
+    let DATA=[], state={target:null, guess:null, guessMarker:null, realMarker:null, line:null, locked:false};
+
+    const map=L.map('map',{minZoom:3,maxZoom:19}).setView([46.7,2.3],6);
+
+// Fond orthophotos IGN
+L.tileLayer(
+  "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&STYLE=normal&FORMAT=image/jpeg&LAYER=ORTHOIMAGERY.ORTHOPHOTOS&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
+  {
+    attribution: "© IGN-F/Geoportail",
+    tileSize: 256,
+    maxZoom: 19
+  }
+).addTo(map);
+
+// Labels OSM
+L.tileLayer(
+  "https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png",
+  {
+    attribution: "&copy; <a href=\"https://www.openstreetmap.org/\">OSM</a> contributors &copy; <a href=\"https://carto.com/\">CARTO</a>",
+    subdomains: "abcd",
+    tileSize: 256,
+    transparent: true,
+    maxZoom: 20
+  }
+).addTo(map);
+
+    
+    function dotIcon(color){return L.divIcon({className:'',html:`<div style="width:14px;height:14px;border-radius:50%;border:2px solid #fff;background:${color};box-shadow:0 0 6px #0006"></div>`,iconSize:[14,14],iconAnchor:[7,7]});}
+    const iconGuess=dotIcon('#ef4444'), iconReal=dotIcon('#22c55e');
+
+    function resetRound(){
+      if(state.guessMarker) map.removeLayer(state.guessMarker);
+      if(state.realMarker) map.removeLayer(state.realMarker);
+      if(state.line) map.removeLayer(state.line);
+      state.guess=state.guessMarker=state.realMarker=state.line=null; state.locked=false;
+      $('#btn-validate').disabled=true; $('#btn-next').style.display='none';
+      $('#scorePts').textContent='— pts'; $('#scoreDist').textContent='Clique sur la carte pour placer ta réponse';
+    }
+
+function showOverlayFor(p){
+  state.target=p;
+  $('#consigne').textContent=`Retrouve le poste ${p.nom}`;
+  $('#consigneType').textContent=`Type : ${p.type}`;
+  $('#overlay').style.display='flex';
+  resetRound();
+}
+
+    function startRound(){ $('#overlay').style.display='none'; toast('Carte activée'); }
+
+    function validate(){
+      if(!state.target||!state.guess||state.locked) return;
+      const t=state.target,g=state.guess;
+      const real=L.latLng(t.latitude,t.longitude);
+      const dist=g.distanceTo(real), pts=scoreFromMeters(dist);
+      $('#scorePts').textContent=`${pts} pts`; $('#scoreDist').textContent=formatMeters(dist);
+      state.realMarker=L.marker(real,{icon:iconReal}).addTo(map);
+      state.line=L.polyline([g,real],{color:'#fff',weight:2,opacity:.7,dashArray:'4 4'}).addTo(map);
+      $('#btn-next').style.display='inline-block';
+      state.locked=true;
+    }
+
+    map.on('click',e=>{
+      if(state.locked||!state.target) return;
+      if(state.guessMarker) map.removeLayer(state.guessMarker);
+      state.guess=e.latlng;
+      state.guessMarker=L.marker(e.latlng,{icon:iconGuess}).addTo(map);
+      $('#btn-validate').disabled=false;
+      $('#scoreDist').textContent='Réponse placée ✔';
+    });
+
+    $('#btn-validate').onclick=validate;
+    $('#btn-next').onclick=()=>{ pickRandom(); };
+
+    $('#btn-start').onclick=startRound;
+
+    function pickRandom(){
+      if(!DATA.length){toast('Pas de données chargées');return;}
+      const i=Math.floor(Math.random()*DATA.length);
+      showOverlayFor(DATA[i]);
+    }
+
+async function loadData(){
+  try{
+    const res = await fetch('postes.json');
+    const arr = await res.json();
+
+    // 🔹 Filtre : on prend uniquement les postes avec nom + type + coordonnées du poste
+    DATA = arr.filter(p =>
+      p &&
+      p.nom && p.nom.trim() !== "" &&
+      p.type && p.type.trim() !== "" &&
+      p.poste_latitude && p.poste_longitude &&     // coordonnées du poste uniquement
+      !/acc[eè]s/i.test(p.type) &&                 // exclut type = Accès
+      !/acc[eè]s/i.test(p.nom||"")                 // exclut nom contenant Accès
+    ).map(p => {
+  // Construire un libellé clair avec nom + type + SAT
+  let fullName = p.nom;
+  if (p.SAT && p.SAT.trim() !== "") {
+    fullName += " " + p.SAT.trim();
+  }
+  return {
+    nom: fullName,                         // nom complet affiché
+    latitude: +p.poste_latitude,
+    longitude: +p.poste_longitude,
+    type: p.type
+  };
+})
+
+    toast(`${DATA.length} postes chargés`);
+    pickRandom();
+  } catch(e){
+    console.error(e);
+    toast('Erreur chargement postes.json');
+  }
+}
+
+    loadData();
+  </script>
+</body>
+</html>
