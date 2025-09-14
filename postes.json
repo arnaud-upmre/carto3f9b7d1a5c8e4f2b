@@ -1327,7 +1327,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "",
     "accès": "",
     "latitude": 50.61666,
@@ -1344,7 +1344,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "",
     "accès": "S5064-358",
     "latitude": 50.63236,
@@ -1378,7 +1378,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "SAT2",
     "accès": "",
     "latitude": 50.62382,
@@ -1395,7 +1395,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "SAT3",
     "accès": "",
     "latitude": 50.62409,
@@ -1412,7 +1412,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "SAT4",
     "accès": "",
     "latitude": 50.62222,
@@ -1429,7 +1429,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "SAT5",
     "accès": "n°1",
     "latitude": 50.60647,
@@ -1446,7 +1446,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "SAT5",
     "accès": "n°2",
     "latitude": 50.61659,
@@ -1463,7 +1463,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "SAT6",
     "accès": "",
     "latitude": 50.62579,
@@ -3928,7 +3928,7 @@
   },
   {
     "nom": "Tourcoing Gare",
-    "type": "A",
+    "type": "L-A",
     "SAT": "",
     "accès": "",
     "latitude": 50.7189629,
@@ -3945,7 +3945,7 @@
   },
   {
     "nom": "Tourcoing Frontière",
-    "type": "P",
+    "type": "SSP",
     "SAT": "",
     "accès": "",
     "latitude": 50.72275,
