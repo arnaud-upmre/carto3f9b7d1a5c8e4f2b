@@ -82,23 +82,27 @@ ul#suggestions:not(:empty){
 
 .editable-halo {
   display: inline-block;
-  padding: 2px 4px;
-  border-radius: 6px;
+  padding: 2px 6px;
+  border-radius: 8px;
   position: relative;
 
-  /* ✅ halo fin + lumineux */
-  box-shadow: 0 0 6px rgba(26,115,232,0.8),
-              0 0 12px rgba(26,115,232,0.5);
+  /* Fond translucide façon iOS */
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 
-  /* ✅ pulsation plus douce */
-  animation: pulseHalo 1.6s ease-in-out infinite;
+  /* Halo bleu fin + lumineux */
+  box-shadow: 0 0 4px rgba(26,115,232,0.7),
+              0 0 10px rgba(26,115,232,0.5);
+
+  animation: pulseHalo 2s ease-in-out infinite;
 }
 
 /* 🔄 nouvelle animation plus fluide */
 @keyframes pulseHalo {
-  0%   { box-shadow: 0 0 4px rgba(26,115,232,0.6), 0 0 8px rgba(26,115,232,0.4); }
-  50%  { box-shadow: 0 0 10px rgba(26,115,232,0.9), 0 0 18px rgba(26,115,232,0.6); }
-  100% { box-shadow: 0 0 4px rgba(26,115,232,0.6), 0 0 8px rgba(26,115,232,0.4); }
+  0%   { box-shadow: 0 0 4px rgba(26,115,232,0.4), 0 0 8px rgba(26,115,232,0.3); }
+  50%  { box-shadow: 0 0 12px rgba(26,115,232,0.9), 0 0 20px rgba(26,115,232,0.5); }
+  100% { box-shadow: 0 0 4px rgba(26,115,232,0.4), 0 0 8px rgba(26,115,232,0.3); }
 }
 
     
@@ -1662,18 +1666,10 @@ rssBlock.outerHTML = `
 document.querySelectorAll(".btn-rss").forEach(btn => {
   btn.addEventListener("click", () => {
     const code = btn.dataset.code;
-    currentItem.rssTemp = code;     // valeur temporaire
-    currentItem.rssChanged = true;  // note que l’utilisateur a modifié
-
-    // ✅ vibration identique aux autres champs
-    navigator.vibrate?.(50);
-
-    // ✅ affiche directement Table + numéros avec halo/wiggle
-    const rssHTML = formatRSS(code, true).replace(
-      'id="editable-rss"',
-      'id="editable-rss" class="editable-halo editable-wiggle"'
-    );
-    document.querySelector("#editable-rss").outerHTML = rssHTML;
+    currentItem.rssTemp = code;          // ✅ valeur temporaire
+    currentItem.rssChanged = true;       // ✅ on note que l’utilisateur a modifié
+    document.querySelector("#editable-rss").innerHTML =
+      `<strong>📞 RSS Table ${code === "A" ? "1" : code === "B" ? "2" : "3"}</strong>`;
   });
 });
 
@@ -1922,7 +1918,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V2</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1</span>
 </div>
 
 <script>
