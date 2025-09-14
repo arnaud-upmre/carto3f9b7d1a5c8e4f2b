@@ -149,12 +149,19 @@ async function loadData(){
       p.poste_latitude && p.poste_longitude &&     // coordonnées du poste uniquement
       !/acc[eè]s/i.test(p.type) &&                 // exclut type = Accès
       !/acc[eè]s/i.test(p.nom||"")                 // exclut nom contenant Accès
-    ).map(p => ({
-      nom: p.nom,
-      latitude: +p.poste_latitude,   // ✅ on prend bien poste_latitude
-      longitude: +p.poste_longitude, // ✅ on prend bien poste_longitude
-      type: p.type
-    }));
+    ).map(p => {
+  // Construire un libellé clair avec nom + type + SAT
+  let fullName = p.nom;
+  if (p.SAT && p.SAT.trim() !== "") {
+    fullName += " " + p.SAT.trim();
+  }
+  return {
+    nom: fullName,                         // nom complet affiché
+    latitude: +p.poste_latitude,
+    longitude: +p.poste_longitude,
+    type: p.type
+  };
+})
 
     toast(`${DATA.length} postes chargés`);
     pickRandom();
