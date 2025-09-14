@@ -1900,6 +1900,28 @@ rssEl.outerHTML = formatRSS(rssVal, true);
 rssEl.outerHTML = formatRSS(rssVal, true);
   }
 }
+  // 🔁 Remet les blocs "Repérer..." si on les avait passés en champ texte
+const repPosteInput = document.getElementById("input-poste-link");
+if (repPosteInput) {
+  const bloc = repPosteInput.closest(".inline-links");
+  const latPoste = (currentItem.poste_latitude ?? "").toString();
+  const lonPoste = (currentItem.poste_longitude ?? "").toString();
+  const usePoste = latPoste !== "" && lonPoste !== "";
+  const targetLat = usePoste ? latPoste : currentItem.latitude;
+  const targetLon = usePoste ? lonPoste : currentItem.longitude;
+  bloc.innerHTML = usePoste
+    ? `<a href="${myMapsViewer(targetLat, targetLon, 20)}" target="_blank" rel="noopener">🛰️ Vue satellite</a>`
+    : `<span class="placeholder">(non renseigné – fournir un lien Maps)</span>`;
+}
+
+const repAccesInput = document.getElementById("input-acces-link");
+if (repAccesInput) {
+  const bloc = repAccesInput.closest(".inline-links");
+  bloc.innerHTML = `
+    <a href="${myMapsViewer(currentItem.latitude, currentItem.longitude, 19)}" target="_blank" rel="noopener">🛰️ Vue satellite</a>
+    <a href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${currentItem.latitude},${currentItem.longitude}" target="_blank" rel="noopener">👁️ Street View</a>
+  `;
+}
     // Nettoie tous les halos/vibrations restants
   document.querySelectorAll(".editable-halo, .editable-wiggle").forEach(el => {
     el.classList.remove("editable-halo", "editable-wiggle");
