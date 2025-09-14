@@ -777,17 +777,17 @@ function formatRSS(table, showPhones = true) {
   const tableNum = { "A": "1", "B": "2", "C": "3" };
 
   if (!tables[table]) {
-    return `<div id="editable-rss"><strong>📞 RSS :</strong> ${table}</div>`;
+    return `<p><strong id="editable-rss">📞 RSS :</strong> ${table}</p>`;
   }
 
-  let html = `<div id="editable-rss"><strong>📞 RSS Table ${tableNum[table] || table}</strong>`;
+  let html = `<p><strong id="editable-rss">📞 RSS Table ${tableNum[table] || table}</strong></p>`;
+
   if (showPhones) {
     const nums = tables[table]
       .map(num => `<a href="tel:${num.replace(/\s+/g, '')}">${num}</a>`)
       .join(" ");
     html += `<div id="rss-phones" class="inline-links">${nums}</div>`;
   }
-  html += `</div>`;
   return html;
 }
     
@@ -1910,7 +1910,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V2</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1</span>
 </div>
 
 <script>
