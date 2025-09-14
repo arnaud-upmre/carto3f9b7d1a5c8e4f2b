@@ -1111,7 +1111,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "SAT1",
     "accès": "",
     "appareil": "I5088",
@@ -1121,7 +1121,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "",
     "accès": "",
     "appareil": "2-10A",
@@ -1131,7 +1131,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "",
     "accès": "",
     "appareil": "FB56",
@@ -1141,7 +1141,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "",
     "accès": "",
     "appareil": "I5078",
@@ -1151,7 +1151,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "",
     "accès": "",
     "appareil": "I5086",
@@ -1161,7 +1161,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "",
     "accès": "",
     "appareil": "I5262",
@@ -1171,7 +1171,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "",
     "accès": "",
     "appareil": "IL1",
@@ -1181,7 +1181,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "",
     "accès": "",
     "appareil": "IL2",
@@ -1191,7 +1191,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "",
     "accès": "",
     "appareil": "IL3",
@@ -1201,7 +1201,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "",
     "accès": "",
     "appareil": "IL4",
@@ -1221,7 +1221,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "",
     "accès": "",
     "appareil": "IL6",
@@ -1231,7 +1231,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "",
     "accès": "",
     "appareil": "IL7",
@@ -1241,7 +1241,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "",
     "accès": "",
     "appareil": "IL8",
@@ -1251,7 +1251,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "",
     "accès": "",
     "appareil": "S5064-358",
@@ -1261,7 +1261,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "",
     "accès": "",
     "appareil": "TSA",
@@ -1271,7 +1271,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "",
     "accès": "",
     "appareil": "TT Baisieux",
@@ -1281,7 +1281,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "",
     "accès": "",
     "appareil": "TC Baisieux",
@@ -1291,7 +1291,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "",
     "accès": "",
     "appareil": "TT11",
@@ -1301,7 +1301,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "",
     "accès": "",
     "appareil": "TT12",
@@ -1311,7 +1311,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "",
     "accès": "",
     "appareil": "TT21",
@@ -1321,7 +1321,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "",
     "accès": "",
     "appareil": "TT22",
@@ -1331,7 +1331,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "SAT1",
     "accès": "",
     "appareil": "I5259",
@@ -1341,7 +1341,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "SAT2",
     "accès": "",
     "appareil": "I5084",
@@ -1351,7 +1351,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "SAT3",
     "accès": "",
     "appareil": "I5252",
@@ -1361,7 +1361,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "SAT4",
     "accès": "",
     "appareil": "5211",
@@ -1391,7 +1391,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "SAT4",
     "accès": "",
     "appareil": "I5233",
@@ -1401,7 +1401,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "SAT4",
     "accès": "",
     "appareil": "I5234",
@@ -1411,7 +1411,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "SAT4",
     "accès": "",
     "appareil": "I5236",
@@ -1431,7 +1431,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "SAT4",
     "accès": "",
     "appareil": "S5211-5231",
@@ -1441,7 +1441,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "SAT4",
     "accès": "",
     "appareil": "SIA2",
@@ -1451,7 +1451,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "SAT4",
     "accès": "",
     "appareil": "ST1",
@@ -1461,7 +1461,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "SAT4",
     "accès": "",
     "appareil": "ST3",
@@ -1471,7 +1471,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "SAT4",
     "accès": "",
     "appareil": "TC + TT de l’IA2",
@@ -1481,7 +1481,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "SAT6",
     "accès": "",
     "appareil": "5068",
@@ -1491,7 +1491,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "SAT6",
     "accès": "",
     "appareil": "5070",
@@ -1501,7 +1501,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "SAT6",
     "accès": "",
     "appareil": "IA5",
@@ -1511,7 +1511,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "SAT6",
     "accès": "",
     "appareil": "S5065-229",
@@ -1521,7 +1521,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "SAT6",
     "accès": "",
     "appareil": "S5070-207",
@@ -1531,7 +1531,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "SAT6",
     "accès": "",
     "appareil": "TT + TC de l’IA5",
@@ -1541,7 +1541,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "SAT5",
     "accès": "n°1",
     "appareil": "SI5052-5211",
@@ -1551,7 +1551,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "SAT5",
     "accès": "n°1",
     "appareil": "TT",
