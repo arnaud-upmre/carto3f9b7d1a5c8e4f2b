@@ -1646,8 +1646,12 @@ if (e.target.id === "editable-rss" || e.target.closest("#editable-rss")) {
 const rssEl = document.getElementById("editable-rss");
 if (!rssEl) return;
 
-// ➡️ On remplace tout le bloc RSS (titre + numéros) par uniquement les boutons
-rssEl.outerHTML = `
+// ➡️ On remplace uniquement le bloc RSS (le <p> + les numéros) par les boutons
+const rssBlock = rssEl.closest("p"); // juste le <p> contenant 📞 RSS
+const phonesEl = document.getElementById("rss-phones"); // la ligne avec les numéros
+if (phonesEl) phonesEl.remove(); // on supprime la ligne numéros
+
+rssBlock.outerHTML = `
   <div id="editable-rss" class="inline-links">
     <button class="btn-primary btn-rss" data-code="A">Table 1</button>
     <button class="btn-primary btn-rss" data-code="B">Table 2</button>
@@ -1655,15 +1659,15 @@ rssEl.outerHTML = `
   </div>
 `;
 
-  document.querySelectorAll(".btn-rss").forEach(btn => {
-   btn.addEventListener("click", () => {
-  const code = btn.dataset.code;
-  currentItem.rss = code;
-  originalValues.rss = code;
-  currentItem.rssChanged = true;   // ✅ on note que l’utilisateur a modifié le RSS
-document.querySelector("#editable-rss").innerHTML = `<strong>📞 RSS Table ${code === "A" ? "1" : code === "B" ? "2" : "3"}</strong>`;
-});
+document.querySelectorAll(".btn-rss").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const code = btn.dataset.code;
+    currentItem.rssTemp = code;          // ✅ valeur temporaire
+    currentItem.rssChanged = true;       // ✅ on note que l’utilisateur a modifié
+    document.querySelector("#editable-rss").innerHTML =
+      `<strong>📞 RSS Table ${code === "A" ? "1" : code === "B" ? "2" : "3"}</strong>`;
   });
+});
 
   return; // ⛔ stoppe ici pour éviter le reste
 }
