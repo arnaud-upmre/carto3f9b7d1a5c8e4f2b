@@ -1804,11 +1804,13 @@ if (pkParent) {
   `;
 }
 
-["editable-nom","editable-type","editable-sat","editable-acces","editable-rss",
+["editable-nom","editable-type","editable-sat","editable-acces",
  "editable-description","editable-contact","editable-portail",
- "editable-pk","editable-numero_ligne"].forEach(id=>{
+ "editable-pk","editable-numero_ligne","editable-rss"].forEach(id=>{
   const el = document.getElementById(id);
-  if (el) el.classList.remove("editable-halo");
+  if (el) {
+    el.classList.add("editable-halo", "editable-wiggle"); // ✅ ajoute les deux
+  }
 });
 
   document.getElementById("edit-buttons").style.display = "none";
@@ -1863,7 +1865,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 </script> </main>
 <div id="about-footer">
 
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V5</span>
+  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V1</span>
 </div>
 
 <script>
