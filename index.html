@@ -768,18 +768,26 @@ function formatNomCompletLieu(obj) {
 function formatNomComplet(obj) {
   return `${obj.nom || ''} ${obj.type || ''}`.trim();
 }
-function formatRSS(table) {
+function formatRSS(table, showPhones = true) {
   const tables = {
     "A": ["03 28 55 82 56", "03 28 55 82 57"],
     "B": ["03 28 55 82 58", "03 28 55 82 59"],
     "C": ["03 28 55 82 53", "03 28 55 82 54"]
   };
   const tableNum = { "A": "1", "B": "2", "C": "3" };
+
   if (!tables[table]) return `<p><strong>📞 RSS :</strong> ${table}</p>`;
-  const nums = tables[table].map(num => `<a href="tel:${num.replace(/\s+/g, '')}">${num}</a>`).join("");
-return `<p id="editable-rss"><strong>📞 RSS Table ${tableNum[table] || table}</strong></p>
-        <div id="rss-phones" class="inline-links">${nums}</div>`;
+
+  let html = `<p id="editable-rss"><strong>📞 RSS Table ${tableNum[table] || table}</strong></p>`;
+  if (showPhones) {
+    const nums = tables[table]
+      .map(num => `<a href="tel:${num.replace(/\s+/g, '')}">${num}</a>`)
+      .join(" ");
+    html += `<div id="rss-phones" class="inline-links">${nums}</div>`;
+  }
+  return html;
 }
+    
 function generateAppareilListHTML(currentLieu) {
   const matchingApps = appareils.filter(app => 
     app.nom  === currentLieu.nom  &&
