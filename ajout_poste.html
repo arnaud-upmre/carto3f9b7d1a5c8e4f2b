@@ -493,8 +493,8 @@ if (steps[currentStep].querySelector("#mapDeviceWrap")) {
   }
 }
 
-// Étape choix méthode d’accès (repérée par la présence de #accessMethodStep)
-if (steps[currentStep].querySelector("#accessMethodStep")) {
+// Étape choix méthode d’accès (repérée par l’ID du step lui-même)
+if (steps[currentStep].id === "accessMethodStep") {
   if (!$("accessMethod").value) {
     document.querySelectorAll("#pill-access-gps, #pill-access-lien").forEach(p => p.classList.add("error"));
     return; // ⛔ bloque "Suivant" si rien choisi
@@ -502,7 +502,7 @@ if (steps[currentStep].querySelector("#accessMethodStep")) {
 }
 
 // Étape validation de l'accès (carte ou lien)
-if (steps[currentStep].querySelector("#accessDetailsStep")) {
+if (steps[currentStep].id === "accessDetailsStep") {
   const m = $("accessMethod").value;
 
   if (m === "lien") {
@@ -649,6 +649,8 @@ $("pill-access-gps").onclick = () => {
   $("accessMethod").value = "gps";
   $("pill-access-gps").classList.add("active");
   $("pill-access-lien").classList.remove("active");
+    // 🔧 enlever le rouge si on clique
+  document.querySelectorAll("#pill-access-gps, #pill-access-lien").forEach(p => p.classList.remove("error"));
   // On prépare l'étape suivante : afficher carte, cacher lien
   toggle($("mapAccessWrap"), 1);
   toggle($("lienAccessField"), 0);
@@ -677,6 +679,8 @@ $("pill-access-lien").onclick = () => {
   $("accessMethod").value = "lien";
   $("pill-access-lien").classList.add("active");
   $("pill-access-gps").classList.remove("active");
+    // 🔧 enlever le rouge si on clique
+  document.querySelectorAll("#pill-access-gps, #pill-access-lien").forEach(p => p.classList.remove("error"));
 
   toggle($("mapAccessWrap"), 0);
   toggle($("lienAccessField"), 1);
