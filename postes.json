@@ -1468,15 +1468,15 @@
     "accès": "",
     "latitude": 50.62579,
     "longitude": 3.08532,
-    "description": "",
+    "description": "IA5 voir avec Agent E",
     "rss": "A",
-    "contact": "",
+    "contact": "Agent E Lille :  03 28 55 71 07",
     "portail": "",
     "lignes": "PARIS-NORD à LILLE",
     "numero_ligne": 272000,
     "pk": "",
-    "poste_latitude": "",
-    "poste_longitude": ""
+    "poste_latitude": "50.62775",
+    "poste_longitude": "3.08441"
   },
   {
     "nom": "Flamengrie",
