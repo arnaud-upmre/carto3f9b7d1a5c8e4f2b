@@ -1662,10 +1662,11 @@ rssBlock.outerHTML = `
 document.querySelectorAll(".btn-rss").forEach(btn => {
   btn.addEventListener("click", () => {
     const code = btn.dataset.code;
-    currentItem.rssTemp = code;          // ✅ valeur temporaire
-    currentItem.rssChanged = true;       // ✅ on note que l’utilisateur a modifié
-    document.querySelector("#editable-rss").innerHTML =
-      `<strong>📞 RSS Table ${code === "A" ? "1" : code === "B" ? "2" : "3"}</strong>`;
+    currentItem.rssTemp = code;       // valeur temporaire
+    currentItem.rssChanged = true;
+
+    // ➡️ Affiche immédiatement Table + numéros
+    document.getElementById("editable-rss").outerHTML = formatRSS(code, true);
   });
 });
 
