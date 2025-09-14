@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>Contrôle JSON</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #0b0c0e;
+      --fg: #f9fafb;
+      --accent: #4f46e5;
+      --warn: #f59e0b;
+      --ok: #10b981;
+      --border: rgba(255,255,255,.15);
+    }
+    body {
+      font-family: system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      margin: 0; padding: 1rem;
+    }
+    h1, h2 { color: var(--accent); }
+    .file-input { margin: .5rem 0; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      background: rgba(255,255,255,.03);
+      border: 1px solid var(--border);
+    }
+    th, td {
+      padding: .5rem;
+      border: 1px solid var(--border);
+      text-align: left;
+    }
+    th {
+      background: rgba(255,255,255,.08);
+      position: sticky;
+      top: 0;
+    }
+    .warn { color: var(--warn); font-weight: bold; }
+    .ok { color: var(--ok); font-weight: bold; }
+    .controls { margin: 1rem 0; }
+    button {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: .4rem .8rem;
+      border-radius: .4rem;
+      cursor: pointer;
+    }
+    input[type="range"] { width: 200px; }
+  </style>
+</head>
+<body>
+  <h1>Contrôle fichiers JSON</h1>
+
+  <div>
+    <div class="file-input">
+      <label>Importer <strong>appareils.json</strong> :
+        <input type="file" id="fileAppareils" accept=".json" />
+      </label>
+    </div>
+    <div class="file-input">
+      <label>Importer <strong>postes.json</strong> :
+        <input type="file" id="filePostes" accept=".json" />
+      </label>
+    </div>
+  </div>
+
+  <div class="controls">
+    Seuil de similarité noms proches :
+    <input type="range" id="similarity" min="0.7" max="0.95" step="0.01" value="0.8" />
+    <span id="similarityVal">0.8</span>
+    <button onclick="compare()">Recalculer</button>
+  </div>
+
+  <div id="results"></div>
+
+<script>
+let appareils = [], postes = [];
+
+// Lecture fichiers
+document.getElementById("fileAppareils").addEventListener("change", e => {
+  readFile(e.target.files[0], data => appareils = data);
+});
+document.getElementById("filePostes").addEventListener("change", e => {
+  readFile(e.target.files[0], data => postes = data);
+});
+document.getElementById("similarity").addEventListener("input", e => {
+  document.getElementById("similarityVal").innerText = e.target.value;
+});
+
+function readFile(file, cb) {
+  const reader = new FileReader();
+  reader.onload = e => cb(JSON.parse(e.target.result));
+  reader.readAsText(file);
+}
+
+function normalize(str) {
+  return str
+    .toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // accents
+    .replace(/[^a-z0-9\s]/g, " ") // ponctuation
+    .replace(/\s+/g, " ") // espaces multiples
+    .trim();
+}
+
+function levenshtein(a, b) {
+  const m = [];
+  for (let i = 0; i <= b.length; i++) m[i] = [i];
+  for (let j = 0; j <= a.length; j++) m[0][j] = j;
+  for (let i = 1; i <= b.length; i++) {
+    for (let j = 1; j <= a.length; j++) {
+      if (b.charAt(i-1) == a.charAt(j-1)) m[i][j] = m[i-1][j-1];
+      else m[i][j] = Math.min(m[i-1][j-1]+1, m[i][j-1]+1, m[i-1][j]+1);
+    }
+  }
+  return m[b.length][a.length];
+}
+function similarity(a, b) {
+  if (!a.length && !b.length) return 1;
+  const dist = levenshtein(a, b);
+  return 1 - dist / Math.max(a.length, b.length);
+}
+
+function compare() {
+  if (!appareils.length || !postes.length) {
+    alert("Importer les deux fichiers !");
+    return;
+  }
+  const seuil = parseFloat(document.getElementById("similarity").value);
+  const results = document.getElementById("results");
+  results.innerHTML = "";
+
+  // Groupement par nom
+  const appMap = {}, postMap = {};
+  for (let a of appareils) {
+    const n = normalize(a.nom || "");
+    if (!appMap[n]) appMap[n] = new Set();
+    appMap[n].add(a.type || "");
+  }
+  for (let p of postes) {
+    const n = normalize(p.nom || "");
+    if (!postMap[n]) postMap[n] = new Set();
+    postMap[n].add(p.type || "");
+  }
+
+  const nomsA = Object.keys(appMap);
+  const nomsP = Object.keys(postMap);
+
+  const anomaliesType = [];
+  const onlyA = [], onlyP = [];
+  const variants = [];
+
+  for (let n of nomsA) {
+    if (postMap[n]) {
+      if (JSON.stringify([...appMap[n]]) !== JSON.stringify([...postMap[n]])) {
+        anomaliesType.push({
+          nom: n, typesA: [...appMap[n]], typesP: [...postMap[n]]
+        });
+      }
+    } else {
+      onlyA.push(n);
+      // chercher proches dans P
+      for (let m of nomsP) {
+        const s = similarity(n, m);
+        if (s >= seuil) variants.push({nomA: n, nomP: m, sim: s});
+      }
+    }
+  }
+  for (let n of nomsP) {
+    if (!appMap[n]) onlyP.push(n);
+  }
+
+  // Affichage
+  results.appendChild(makeTable("Anomalies de type", ["Nom","Types Appareils","Types Postes"],
+    anomaliesType.map(x=>[x.nom, x.typesA.join(", "), x.typesP.join(", ")])));
+
+  results.appendChild(makeTable("Noms proches", ["Nom appareils","Nom postes","Similarité"],
+    variants.map(x=>[x.nomA, x.nomP, (x.sim*100).toFixed(1)+"%"])));
+
+  results.appendChild(makeTable("Uniquement dans appareils.json", ["Nom"],
+    onlyA.map(x=>[x])));
+
+  results.appendChild(makeTable("Uniquement dans postes.json", ["Nom"],
+    onlyP.map(x=>[x])));
+}
+
+function makeTable(title, headers, rows) {
+  const div = document.createElement("div");
+  const h = document.createElement("h2"); h.innerText = title;
+  div.appendChild(h);
+  const table = document.createElement("table");
+  const thead = document.createElement("thead");
+  const tr = document.createElement("tr");
+  headers.forEach(h => {
+    const th = document.createElement("th"); th.innerText = h; tr.appendChild(th);
+  });
+  thead.appendChild(tr); table.appendChild(thead);
+  const tbody = document.createElement("tbody");
+  rows.forEach(r => {
+    const tr = document.createElement("tr");
+    r.forEach(c => { const td = document.createElement("td"); td.innerText = c; tr.appendChild(td); });
+    tbody.appendChild(tr);
+  });
+  table.appendChild(tbody);
+  div.appendChild(table);
+  return div;
+}
+</script>
+</body>
+</html>
