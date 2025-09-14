@@ -4690,5 +4690,22 @@
     "pk": "153,200",
     "poste_latitude": "49.8406",
     "poste_longitude": "3.29916"
+  },
+  {
+    "nom": "Morcourt",
+    "type": "",
+    "SAT": "",
+    "accès": "",
+    "latitude": 49.86364,
+    "longitude": 3.31832,
+    "description": "",
+    "rss": "B",
+    "contact": "",
+    "portail": "",
+    "lignes": "CREIL à JEUMONT",
+    "numero_ligne": 242000,
+    "pk": "156,700",
+    "poste_latitude": "49.86452",
+    "poste_longitude": "3.3209"
   }
 ]
