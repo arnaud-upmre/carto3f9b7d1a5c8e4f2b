@@ -1662,12 +1662,12 @@ rssBlock.outerHTML = `
 document.querySelectorAll(".btn-rss").forEach(btn => {
   btn.addEventListener("click", () => {
     const code = btn.dataset.code;
-    currentItem.rssTemp = code;       // valeur temporaire
-    currentItem.rssChanged = true;
-
-    // ➡️ Remplace tout le bloc par RSS complet (titre + numéros)
-    const rssContainer = document.getElementById("editable-rss").parentNode;
-    rssContainer.innerHTML = formatRSS(code, true);
+    currentItem.rssTemp = code;          // ✅ valeur temporaire
+    currentItem.rssChanged = true;       // ✅ on note que l’utilisateur a modifié
+        // ✅ même vibration que les autres champs
+    navigator.vibrate?.(50);
+    document.querySelector("#editable-rss").innerHTML =
+      `<strong>📞 RSS Table ${code === "A" ? "1" : code === "B" ? "2" : "3"}</strong>`;
   });
 });
 
