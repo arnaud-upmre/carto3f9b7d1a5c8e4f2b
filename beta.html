@@ -4,98 +4,128 @@
   <meta charset="UTF-8">
   <title>Beta RSS</title>
   <style>
-    body { font-family: sans-serif; padding: 20px; }
-    .inline-links { display: flex; gap: 10px; margin-top: 6px; }
+    body { font-family: Inter, sans-serif; padding:20px; }
+
     .btn-primary {
+      margin: 4px 0;
       padding: 6px 12px;
+      border-radius: 8px;
       border: 1px solid #1a73e8;
-      border-radius: 6px;
       background: #f5f9ff;
       color: #1a73e8;
+      font-weight: 600;
       cursor: pointer;
     }
-    .btn-primary:hover { background: #1a73e8; color: #fff; }
+    .btn-primary:hover { background:#1a73e8; color:#fff; }
+
+    .inline-links { display:flex; flex-wrap:wrap; gap:8px; margin-top:6px; }
+
+    .editable-halo {
+      display:inline-block;
+      padding:2px 4px;
+      border-radius:6px;
+      box-shadow:0 0 6px rgba(26,115,232,0.8),
+                 0 0 12px rgba(26,115,232,0.5);
+      animation:pulseHalo 1.6s ease-in-out infinite;
+    }
+    .editable-wiggle { animation: wiggle 0.3s infinite; }
+
+    @keyframes pulseHalo {
+      0%   { box-shadow:0 0 4px rgba(26,115,232,0.6), 0 0 8px rgba(26,115,232,0.4); }
+      50%  { box-shadow:0 0 10px rgba(26,115,232,0.9), 0 0 18px rgba(26,115,232,0.6); }
+      100% { box-shadow:0 0 4px rgba(26,115,232,0.6), 0 0 8px rgba(26,115,232,0.4); }
+    }
+    @keyframes wiggle {
+      0%,100% { transform:rotate(-2deg); }
+      50%     { transform:rotate(2deg); }
+    }
   </style>
 </head>
 <body>
 
-<h2>Bloc RSS de test</h2>
+<h2>Test du champ RSS seul</h2>
+
 <div id="rss-container"></div>
 <br>
 <button id="edit-toggle" class="btn-primary">[modifier]</button>
 <button id="save-toggle" class="btn-primary" style="display:none;">💾 Sauvegarder</button>
 
 <script>
-let currentItem = { rss: "A" };  // Valeur initiale
+let currentItem = { rss:"A" };   // valeur initiale
+let originalValues = {};
 let editMode = false;
 
-// --- Fonction pour formater le RSS ---
-function formatRSS(table, showPhones = true) {
+// --- Formattage RSS ---
+function formatRSS(table, showPhones=true){
   const tables = {
-    A: ["03 28 55 82 56", "03 28 55 82 57"],
-    B: ["03 28 55 82 58", "03 28 55 82 59"],
-    C: ["03 28 55 82 53", "03 28 55 82 54"]
+    A:["03 28 55 82 56","03 28 55 82 57"],
+    B:["03 28 55 82 58","03 28 55 82 59"],
+    C:["03 28 55 82 53","03 28 55 82 54"]
   };
-  const tableNum = { A: "1", B: "2", C: "3" };
+  const tableNum = {A:"1",B:"2",C:"3"};
 
-  if (!tables[table]) return `<div class="rss-block"><p><strong>📞 RSS :</strong> ${table}</p></div>`;
+  if(!tables[table]){
+    return `<div class="rss-block"><p><strong><span id="editable-rss">📞 RSS :</span></strong> ${table}</p></div>`;
+  }
 
   let html = `<div class="rss-block">
-      <p><strong><span id="editable-rss">📞 RSS Table ${tableNum[table]}</span></strong></p>`;
-  if (showPhones) {
-    const nums = tables[table].map(n =>
-      `<a href="tel:${n.replace(/\s+/g,'')}">${n}</a>`).join(" ");
-    html += `<div class="inline-links">${nums}</div>`;
+    <p><strong><span id="editable-rss">📞 RSS Table ${tableNum[table]}</span></strong></p>`;
+  if(showPhones){
+    const nums = tables[table].map(n=>`<a href="tel:${n.replace(/\s+/g,'')}">${n}</a>`).join(" ");
+    html += `<div class="inline-links" id="rss-phones">${nums}</div>`;
   }
   html += `</div>`;
   return html;
 }
 
-// --- Fonction pour afficher le bloc normal ---
-function renderRSS() {
-  const cont = document.getElementById("rss-container");
-  cont.innerHTML = formatRSS(currentItem.rss, true);
+// --- affichage normal ---
+function renderRSS(){
+  document.getElementById("rss-container").innerHTML = formatRSS(currentItem.rss,true);
 }
 
-// --- Mode édition : affiche 3 boutons ---
-function editRSS() {
+// --- édition RSS ---
+function editRSS(){
   const cont = document.getElementById("rss-container");
   cont.innerHTML = `
-    <div class="rss-block" id="editable-rss">
-      <div class="inline-links">
+    <div class="rss-block">
+      <div class="inline-links" id="editable-rss">
         <button class="btn-primary btn-rss" data-code="A">Table 1</button>
         <button class="btn-primary btn-rss" data-code="B">Table 2</button>
         <button class="btn-primary btn-rss" data-code="C">Table 3</button>
       </div>
     </div>
   `;
-  document.querySelectorAll(".btn-rss").forEach(btn => {
-    btn.addEventListener("click", () => {
+  document.querySelectorAll(".btn-rss").forEach(btn=>{
+    btn.addEventListener("click",()=>{
       const code = btn.dataset.code;
       currentItem.rss = code;
-      // affiche sans numéros pendant l’édition
-      cont.innerHTML = formatRSS(code, false);
+      // en édition → affiche libellé sans numéros
+      document.getElementById("rss-container").innerHTML = `
+        <div class="rss-block">
+          <p><strong><span id="editable-rss" class="editable-halo editable-wiggle">📞 RSS Table ${code==="A"?"1":code==="B"?"2":"3"}</span></strong></p>
+        </div>`;
     });
   });
 }
 
-// --- Toggle édition ---
-document.getElementById("edit-toggle").addEventListener("click", () => {
-  if (!editMode) {
+// --- Toggle bouton modifier ---
+document.getElementById("edit-toggle").addEventListener("click",()=>{
+  if(!editMode){
     editMode = true;
+    originalValues.rss = currentItem.rss;
     editRSS();
     document.getElementById("save-toggle").style.display = "inline-block";
   }
 });
 
-// --- Sauvegarde : revient à l’affichage normal avec numéros ---
-document.getElementById("save-toggle").addEventListener("click", () => {
+// --- Sauvegarde ---
+document.getElementById("save-toggle").addEventListener("click",()=>{
   editMode = false;
   renderRSS();
   document.getElementById("save-toggle").style.display = "none";
 });
 
-// Initial
+// init
 renderRSS();
 </script>
 
