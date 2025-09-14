@@ -4809,5 +4809,22 @@
     "pk": "224,242",
     "poste_latitude": "50.31168",
     "poste_longitude": "3.34289"
+  },
+  {
+    "nom": "Siege Exploitation Eurotunnel",
+    "type": "",
+    "SAT": "",
+    "accès": "",
+    "latitude": 50.92426,
+    "longitude": 1.80846,
+    "description": "Service badge",
+    "rss": "",
+    "contact": "",
+    "portail": "",
+    "lignes": "",
+    "numero_ligne": ,
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": ""
   }
 ]
