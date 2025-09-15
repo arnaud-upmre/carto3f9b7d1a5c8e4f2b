@@ -4839,7 +4839,7 @@
     "latitude": 50.29656,
     "longitude": 2.82482,
     "description": "",
-    "rss": "",
+    "rss": "C",
     "contact": "",
     "portail": "",
     "lignes": "PARIS-NORD à LILLE",
@@ -4847,5 +4847,22 @@
     "pk": "195,001",
     "poste_latitude": "50.29494",
     "poste_longitude": "2.82708"
+  },
+  {
+    "nom": "Blangy Nord",
+    "type": "L",
+    "SAT": "",
+    "accès": "",
+    "latitude": 50.29753,
+    "longitude": 2.82025,
+    "description": "",
+    "rss": "C",
+    "contact": "",
+    "portail": "",
+    "lignes": "PARIS-NORD à LILLE",
+    "numero_ligne": 272000,
+    "pk": "195,000",
+    "poste_latitude": "50.29752",
+    "poste_longitude": "2.82074"
   }
 ]
