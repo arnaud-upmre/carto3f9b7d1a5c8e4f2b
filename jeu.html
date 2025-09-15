@@ -7,6 +7,23 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
   <style>
 
+    /* ✅ Résultat d’une manche */
+#round-result {
+  position:fixed; inset:0;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  backdrop-filter:blur(25px) saturate(1.6);
+  -webkit-backdrop-filter:blur(25px) saturate(1.6);
+  border:1px solid var(--border-light);
+  border-radius:20px;
+  margin:10px;
+  text-align:center;
+  padding:1.5rem;
+  z-index:6800;
+  animation: fadeIn .3s ease;
+}
+#round-result h1 { font-size:1.5rem; margin-bottom:.5rem; }
+#round-result p { color:var(--muted); margin-bottom:1.2rem; }
+
    /* 🟣 Style Apple-like */
 :root {
   --glass-bg-light: rgba(255, 255, 255, 0.55);
@@ -146,10 +163,19 @@
   #btn-exit::after { content: "Quitter"; }
 }
 
+    /* Taille des icônes dans la topbar */
+.topbar .btn::before {
+  font-size: 1rem;   /* taille emoji normale */
+  line-height: 1;
+}
+    
 /* Version mobile compacte (icônes seules) */
 @media (max-width: 480px) {
   .topbar { gap: .3rem; padding: .3rem .5rem; }
-  .topbar .btn { padding: .5rem; font-size: 1.2rem; min-width: 44px; }
+  .topbar .btn { 
+  padding: .35rem .6rem;
+  font-size: .95rem;
+}
   #btn-leaderboard::after,
   #btn-change-mode::after,
   #btn-exit::after { content: ""; }
@@ -227,6 +253,12 @@
     <p id="consigneType"></p>
     <button class="btn primary" id="btn-start">Commencer</button>
   </div>
+  <!-- ✅ Résultat d’une manche -->
+<div id="round-result" style="display:none">
+  <h1 id="round-title">Résultat</h1>
+  <p id="round-details"></p>
+  <button class="btn primary" id="btn-round-next">➡️ Suivant</button>
+</div>
 
   <!-- ✅ Overlay fin de partie -->
 <div id="end-screen" style="display:none">
@@ -255,7 +287,7 @@
   <span class="timer" id="scoreTimer"></span>
 </div>
     <button class="btn" id="btn-validate" disabled>✅ Valider</button>
-    <button class="btn" id="btn-next" style="display:none">➡️ Suivant</button>
+ 
   </div>
 
   <div class="toast" id="toast"></div>
@@ -265,9 +297,16 @@
 
   </script>
   <script>
-    const $=s=>document.querySelector(s);
-    const toast=(m,ms=1600)=>{const t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(toast._to);toast._to=setTimeout(()=>t.style.display='none',ms);};
-   function scoreFromMeters(m) {
+   const $=s=>document.querySelector(s);
+const toast=(m,ms=1600)=>{const t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(toast._to);toast._to=setTimeout(()=>t.style.display='none',ms);};
+
+// ✅ Pré-remplir le pseudo si déjà enregistré
+const savedPseudo = localStorage.getItem("pseudoJeuPostes");
+if(savedPseudo){
+  document.getElementById('input-pseudo').value = savedPseudo;
+}
+    
+    function scoreFromMeters(m) {
   let seuil, step, maxDist;
 
   if (state.mode === "Découverte") {
@@ -292,7 +331,17 @@
 }
     const formatMeters=m=>m<1000?`${m.toFixed(1)} m`:`${(m/1000).toFixed(3)} km`;
 
-    let DATA=[], state={target:null, guess:null, guessMarker:null, realMarker:null, line:null, locked:false, pseudo:null, mode:null};
+  let DATA=[], state={
+  target:null, 
+  guess:null, 
+  guessMarker:null, 
+  realMarker:null, 
+  line:null, 
+  locked:false, 
+  pseudo:null, 
+  mode:null,
+  postesJoues: []  // ✅ nouveau tableau pour enregistrer les postes joués
+};
 
     const map=L.map('map',{minZoom:3,maxZoom:19}).setView([46.7,2.3],6);
 
@@ -325,6 +374,7 @@
       $('#consigne').textContent=`Retrouve le poste ${p.nom}`;
       $('#consigneType').textContent=`Type : ${p.type}`;
       $('#overlay').style.display='flex';
+      state.postesJoues.push(p.nom);  // ✅ on mémorise le nom du poste joué
       resetRound();
     }
 
@@ -335,27 +385,27 @@
   const t=state.target,g=state.guess;
   const real=L.latLng(t.latitude,t.longitude);
   const dist=g.distanceTo(real), pts=scoreFromMeters(dist);
-  $('#scorePts').textContent=`${pts} pts`; 
-  $('#scoreDist').textContent=formatMeters(dist);
+
+  // Marqueurs & ligne
   state.realMarker=L.marker(real,{icon:iconReal}).addTo(map);
   state.line=L.polyline([g,real],{color:'#fff',weight:2,opacity:.7,dashArray:'4 4'}).addTo(map);
-  $('#btn-next').style.display='inline-block';
   state.locked=true;
 
-  // 📌 Gestion mode Normal (3 manches)
   if(state.mode === "Normal"){
     state.scoreTotal += pts;
     state.manches++;
-    if(state.manches >= 3){
-      const elapsed = Math.round((Date.now() - state.startTime)/1000);
-      enregistrerFin(state.pseudo, state.mode, state.scoreTotal, elapsed);
-   afficherFin(state.scoreTotal, elapsed);
-      $('#btn-next').style.display='none'; // plus de suivant
-    }
-  }
 
-  // 📌 Gestion mode Hard (chrono 60s)
-  if(state.mode === "Hard"){
+    // 🔹 Affiche le résultat de la manche
+    $('#round-details').textContent = `Manche ${state.manches} : ${pts} pts – distance ${formatMeters(dist)}`;
+    $('#round-result').style.display = 'flex';
+
+if(state.manches >= 3){
+  const elapsed = Math.round((Date.now() - state.startTime)/1000);
+enregistrerFin(state.pseudo, state.mode, state.scoreTotal, 60, state.postesJoues);
+  afficherFin(state.scoreTotal, elapsed); // Fin de partie
+}
+  }
+  else if(state.mode === "Hard"){
     state.scoreTotal += pts;
   }
 }
@@ -402,24 +452,21 @@
     }
     loadData();
 
-    // ✅ Envoi au Google Sheet
-    function enregistrerDebut(pseudo, mode) {
-      fetch("https://script.google.com/macros/s/AKfycbz0qSFPCtj8jorBf8A-YHINxIpVF7RrJeNhb_nbxGFMep4Wl9cF0vcFVciQYfPTaW_-sA/exec", {
-        method: "POST",
-        headers: { "Content-Type": "text/plain;charset=UTF-8" },
-        body: JSON.stringify({ pseudo: pseudo, mode: mode })
-      })
-      .then(r => r.json()).then(res => console.log("Enregistrement OK", res))
-      .catch(err => console.error("Erreur enregistrement", err));
-    }
-    function enregistrerFin(pseudo, mode, score, time) {
+ 
+function enregistrerFin(pseudo, mode, score, time, postes) {
   fetch("https://script.google.com/macros/s/AKfycbz0qSFPCtj8jorBf8A-YHINxIpVF7RrJeNhb_nbxGFMep4Wl9cF0vcFVciQYfPTaW_-sA/exec", {
     method: "POST",
-    headers: { "Content-Type": "text/plain;charset=UTF-8" },
-    body: JSON.stringify({ pseudo: pseudo, mode: mode, score: score, time: time })
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ 
+      pseudo, 
+      mode, 
+      score, 
+      time, 
+      postes 
+    })
   })
-  .then(r => r.json()).then(res => console.log("Enregistrement fin OK", res))
-  .catch(err => console.error("Erreur enregistrement fin", err));
+  .then(r => r.json()).then(res => console.log("Enregistrement OK", res))
+  .catch(err => console.error("Erreur enregistrement", err));
 }
 
     // ✅ Gestion du choix de mode
@@ -432,6 +479,8 @@
   if (!input) { toast('Veuillez entrer un pseudo'); return; }
   state.pseudo = input; 
   state.mode = modeChoice;
+     state.postesJoues = []; // ✅ on repart avec une liste vide de postes
+     localStorage.setItem("pseudoJeuPostes", state.pseudo);
 
   if (modeChoice !== 'Découverte') {
     enregistrerDebut(state.pseudo, state.mode);
@@ -481,10 +530,19 @@ document.getElementById('btn-exit').onclick = () => {
   window.location.href = "index.html"; // adapte le chemin selon ta structure
 };
 
-    function afficherFin(score, time) {
+function afficherFin(score, time) {
+  $('#round-result').style.display = 'none'; // masque le dernier résultat
   $('#end-details').textContent = `${state.pseudo} en mode ${state.mode} – ${score} pts – ${time}s`;
   $('#end-screen').style.display = 'flex';
+
+  // ✅ Envoi Sheet dès qu’on affiche la fin
+  if(state.mode === "Découverte"){
+    enregistrerFin(state.pseudo, state.mode, 0, 0, state.postesJoues);
+  } else {
+    enregistrerFin(state.pseudo, state.mode, score, time, state.postesJoues);
+  }
 }
+    
     // Boutons écran de fin
 document.getElementById('btn-replay').onclick = () => {
   $('#end-screen').style.display = 'none';
@@ -566,6 +624,11 @@ document.getElementById("btn-leaderboard").onclick = ()=>{
 };
 document.getElementById("btn-close-leaderboard").onclick = ()=>{
   document.getElementById("leaderboard").style.display = "none";
+};
+    // ✅ Bouton "Suivant" après une manche
+document.getElementById('btn-round-next').onclick = ()=>{
+  $('#round-result').style.display = 'none';
+  pickRandom();
 };
     
   </script>
