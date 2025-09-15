@@ -220,6 +220,7 @@
     #overlay h1{font-size:1.5rem; margin-bottom:.5rem;}
     #overlay p{color:var(--muted); margin-bottom:1.2rem;}
 
+    .bottombar { display: none; }
     /* HUD bas */
     .bottombar{
       position:fixed; bottom:0; left:0; right:0;
@@ -556,6 +557,7 @@ if(modeChoice === "Hard"){
 }
 
   document.getElementById('welcome-screen').style.display = 'none';
+     document.querySelector('.bottombar').style.display = 'flex';
   pickRandom(); // démarre directement une manche
 }
 
@@ -565,6 +567,7 @@ document.getElementById('btn-change-mode').onclick = () => {
   resetRound();
   state = {target:null, guess:null, guessMarker:null, realMarker:null, line:null, locked:false, pseudo:null, mode:null};
   document.getElementById('welcome-screen').style.display = 'flex';
+  document.querySelector('.bottombar').style.display = 'none';
   document.getElementById('overlay').style.display = 'none';
   toast("Mode réinitialisé");
 };
@@ -683,11 +686,17 @@ document.querySelectorAll("#zone-select .btn-choice").forEach(btn=>{
   };
 });
 
-// ✅ Gestion boutons MODE
+// ✅ Gestion boutons MODE (visuel + lancement du jeu)
 document.querySelectorAll("#mode-decouverte, #mode-normal, #mode-hard").forEach(btn=>{
   btn.onclick = ()=>{
+    // reset visuel
     document.querySelectorAll("#mode-decouverte, #mode-normal, #mode-hard").forEach(b=>b.classList.remove("active"));
     btn.classList.add("active");
+
+    // lancer la partie selon le bouton
+    if(btn.id === "mode-decouverte") startWithMode("Découverte");
+    if(btn.id === "mode-normal") startWithMode("Normal");
+    if(btn.id === "mode-hard") startWithMode("Hard"); // affiché Crazy mais en interne = Hard
   };
 });
     
