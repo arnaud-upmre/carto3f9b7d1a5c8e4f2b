@@ -351,9 +351,15 @@ function formatNomCompletLieu(obj) {
     
   async function init(){
     const r=await fetch(LIEUX_JSON_URL); const raw=await r.json();
-    lieux=(Array.isArray(raw)?raw:(raw.lieux||raw.data||[])).map(l=>({
-      nom:l.nom||'',type:l.type||'',SAT:l.SAT||'',latitude:+(l.latitude),longitude:+(l.longitude)
-    })).filter(l=>l.nom && Number.isFinite(l.latitude) && Number.isFinite(l.longitude));
+ lieux=(Array.isArray(raw)?raw:(raw.lieux||raw.data||[])).map(l=>({
+  nom: l.nom || '',
+  type: l.type || '',
+  SAT: l.SAT || '',
+  accès: l.accès || '',
+  latitude: +(l.latitude),
+  longitude: +(l.longitude)
+}))
+      .filter(l=>l.nom && Number.isFinite(l.latitude) && Number.isFinite(l.longitude));
   fuse = new Fuse(lieux, {
   keys: [
     { name: "nom", weight: 0.8 },
