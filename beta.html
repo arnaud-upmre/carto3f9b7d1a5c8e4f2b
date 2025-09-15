@@ -600,11 +600,11 @@ main {
 }
   
   </style>
-  <script type="module">
+ <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
   import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-messaging.js";
 
-  // Configuration copiée depuis Firebase
+  // Configuration Firebase
   const firebaseConfig = {
     apiKey: "AIzaSyDe7lEGbcqztNmgpqfd7jm5qbq5Z4MG8Wg",
     authDomain: "upmre-f9b70.firebaseapp.com",
@@ -619,23 +619,31 @@ main {
   const app = initializeApp(firebaseConfig);
   const messaging = getMessaging(app);
 
-    // Récupérer le token unique de l'appareil
-getToken(messaging, { vapidKey: "BNu9oGMLUmA5nMkquTWZIu_t6yc5vAQTqpdYMSqk7rHlS5mSgTBI2gaxzOS5Ye3Ui8aUCTCUZtb-GcgjMIrz1QI" })
-  .then((currentToken) => {
-    if (currentToken) {
-      console.log("Token de cet appareil :", currentToken);
-    } else {
-      console.warn("⚠️ Aucun token reçu");
-    }
-  })
-  .catch((err) => {
-    console.error("❌ Erreur lors de la récupération du token :", err);
-  });
-
   // Demander la permission de recevoir des notifications
-  Notification.requestPermission().then((permission) => {
+  Notification.requestPermission().then(async (permission) => {
     if (permission === "granted") {
       console.log("✅ Notifications autorisées");
+
+      try {
+        // On enregistre explicitement le Service Worker à la racine
+        const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+        console.log("✅ Service Worker enregistré");
+
+        // On récupère le token unique de l'appareil
+        const currentToken = await getToken(messaging, { 
+          vapidKey: "BNu9oGMLUmA5nMkquTWZIu_t6yc5vAQTqpdYMSqk7rHlS5mSgTBI2gaxzOS5Ye3Ui8aUCTCUZtb-GcgjMIrz1QI",
+          serviceWorkerRegistration: registration
+        });
+
+        if (currentToken) {
+          console.log("📱 Token de cet appareil :", currentToken);
+        } else {
+          console.warn("⚠️ Aucun token reçu");
+        }
+      } catch (err) {
+        console.error("❌ Erreur lors de la récupération du token :", err);
+      }
+
     } else {
       console.warn("❌ Notifications refusées");
     }
