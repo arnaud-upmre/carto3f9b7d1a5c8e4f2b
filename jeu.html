@@ -492,7 +492,7 @@ function pickRandom(){
           if (p.SAT && p.SAT.trim() !== "") fullName += " " + p.SAT.trim();
           return { nom: fullName, latitude: +p.poste_latitude, longitude: +p.poste_longitude, type: p.type };
         });
-        toast(`${DATA.length} postes chargés`);
+        console.log(`${DATA.length} postes chargés`);
       } catch(e){
         console.error(e);
         toast('Erreur chargement postes.json');
@@ -671,28 +671,43 @@ document.getElementById('btn-round-next').onclick = ()=>{
   pickRandom();
 };
  
-    // ✅ Gestion boutons ZONE
+// ✅ Nouvelle fonction : lance seulement si pseudo + mode + zone sont choisis
+function tryStart(){
+  const input = document.getElementById('input-pseudo').value.trim();
+  if (!input) return;
+  if (!state.mode) return;
+  if (!state.zone) return;
+
+  state.pseudo = input;
+  localStorage.setItem("pseudoJeuPostes", state.pseudo);
+  startWithMode(state.mode);
+}
+
+// ✅ Gestion boutons ZONE (juste sélection, puis tentative de start)
 document.querySelectorAll("#zone-select .btn-choice").forEach(btn=>{
   btn.onclick = ()=>{
     document.querySelectorAll("#zone-select .btn-choice").forEach(b=>b.classList.remove("active"));
     btn.classList.add("active");
     state.zone = btn.dataset.zone || null;
     toast(state.zone ? "Zone choisie : "+state.zone : "Toutes zones activées");
+    tryStart();
   };
 });
 
-// ✅ Gestion boutons MODE (visuel + lancement du jeu)
+// ✅ Gestion boutons MODE (juste sélection, puis tentative de start)
 document.querySelectorAll("#mode-decouverte, #mode-normal, #mode-hard").forEach(btn=>{
   btn.onclick = ()=>{
-    // reset visuel
     document.querySelectorAll("#mode-decouverte, #mode-normal, #mode-hard").forEach(b=>b.classList.remove("active"));
     btn.classList.add("active");
-
-    // lancer la partie selon le bouton
-    if(btn.id === "mode-decouverte") startWithMode("Découverte");
-    if(btn.id === "mode-normal") startWithMode("Normal");
-    if(btn.id === "mode-hard") startWithMode("Hard"); // affiché Crazy mais en interne = Hard
+    state.mode = (btn.id === "mode-decouverte") ? "Découverte" :
+                 (btn.id === "mode-normal") ? "Normal" : "Hard"; // affiché Crazy mais interne = Hard
+    tryStart();
   };
+});
+
+// ✅ Pseudo : à chaque saisie → tentative de start
+document.getElementById("input-pseudo").addEventListener("input", ()=>{
+  tryStart();
 });
     
   </script>
