@@ -959,6 +959,41 @@ function incrementCounterAppareil() {
 
 function showLieu(lieu) {
     currentItem = lieu; // ✅ mémorise le poste affiché
+// 🔹 Cas spécial : accès générique → affichage réduit
+if (lieu.special === true) {
+  const result = document.getElementById("result");
+  document.getElementById("suggestions").innerHTML = "";
+  result.style.display = "block";
+
+  let html = `<h2>
+  📍 ${lieu.nom}
+</h2>`;
+
+  // Bloc Repérer l’accès
+  html += `
+  <div class="rep-block">
+    <p><span class="emoji">🛣️</span> Repérer l’accès :</p>
+    <div class="inline-links pills-3">
+      <a href="${myMapsViewer(lieu.latitude, lieu.longitude, 19)}" target="_blank" rel="noopener">🛰️ Vue satellite</a>
+      <a href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">👁️ Street View</a>
+    </div>
+  </div>`;
+
+  // Bloc Itinéraires
+  html += `
+  <div class="rep-block">
+    <p><span class="emoji">🚙</span> Itinéraires disponibles :</p>
+    <div class="inline-links pills-3">
+      <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🗺️ Maps</a>
+      <a href="https://maps.apple.com/?daddr=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🍎 Plans</a>
+      <a href="https://waze.com/ul?ll=${lieu.latitude},${lieu.longitude}&navigate=yes" target="_blank" rel="noopener">🚗 Waze</a>
+    </div>
+  </div>`;
+
+  result.innerHTML = html;
+  return; // ⛔ stoppe ici → pas d’affichage PK / RSS / Portail etc.
+}
+  
   const result = document.getElementById("result");
   document.getElementById("suggestions").innerHTML = "";
   result.style.display = "block";
