@@ -1,6 +1,6 @@
 {
   "name": "Cartographie des Postes",
-  "short_name": "Carto Postes",
+  "short_name": "Nono Maps",
   "start_url": "index.html",
   "display": "standalone",
   "background_color": "#ffffff",
