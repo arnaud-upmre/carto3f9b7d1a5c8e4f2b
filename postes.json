@@ -4966,5 +4966,22 @@
     "pk": "159,0800",
     "poste_latitude": "50.04567",
     "poste_longitude": "2.6627"
+  },
+  {
+    "nom": "Arras",
+    "type": "SSPA",
+    "SAT": "",
+    "accès": "",
+    "latitude": 50.28651,
+    "longitude": 2.77976,
+    "description": "",
+    "rss": "C",
+    "contact": "",
+    "portail": "",
+    "lignes": "PARIS-NORD à LILLE",
+    "numero_ligne": 272000,
+    "pk": "191,0912",
+    "poste_latitude": "50.28566",
+    "poste_longitude": "2.77903"
   }
 ]
