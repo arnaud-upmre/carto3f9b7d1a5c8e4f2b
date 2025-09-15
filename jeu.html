@@ -245,8 +245,17 @@
     <button class="btn primary" id="mode-decouverte">Découverte</button>
     <button class="btn primary" id="mode-normal">Normal</button>
     <button class="btn primary" id="mode-hard">Hard</button>
-  </div>
 
+    <!-- ✅ la sélection de zone doit être ici -->
+    <p>Choisissez une zone :</p>
+    <div id="zone-select">
+      <button class="btn" data-zone="">🌍 Toutes</button>
+      <button class="btn" data-zone="Hazebrouck">Hazebrouck</button>
+      <button class="btn" data-zone="Amiens">Amiens</button>
+      <button class="btn" data-zone="Valenciennes">Valenciennes</button>
+    </div>
+  </div> <!-- fin de #welcome-screen -->
+  
   <!-- Overlay consigne -->
   <div id="overlay" style="display:none">
     <h1 id="consigne">Chargement…</h1>
@@ -300,6 +309,13 @@
    const $=s=>document.querySelector(s);
 const toast=(m,ms=1600)=>{const t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(toast._to);toast._to=setTimeout(()=>t.style.display='none',ms);};
 
+// ✅ Zones géographiques (centre + rayon 90 km)
+const ZONES = {
+  "Hazebrouck":   { lat: 50.727, lon: 2.537, rayon: 90000 },
+  "Amiens":       { lat: 49.894, lon: 2.295, rayon: 90000 },
+  "Valenciennes": { lat: 50.357, lon: 3.525, rayon: 90000 }
+};
+    
 // ✅ Pré-remplir le pseudo si déjà enregistré
 const savedPseudo = localStorage.getItem("pseudoJeuPostes");
 if(savedPseudo){
@@ -331,7 +347,7 @@ if(savedPseudo){
 }
     const formatMeters=m=>m<1000?`${m.toFixed(1)} m`:`${(m/1000).toFixed(3)} km`;
 
-  let DATA=[], state={
+let DATA=[], state={
   target:null, 
   guess:null, 
   guessMarker:null, 
@@ -340,7 +356,8 @@ if(savedPseudo){
   locked:false, 
   pseudo:null, 
   mode:null,
-  postesJoues: []  // ✅ nouveau tableau pour enregistrer les postes joués
+  postesJoues: [],
+  zone:null   // ✅ nouvelle propriété
 };
 
     const map=L.map('map',{minZoom:3,maxZoom:19}).setView([46.7,2.3],6);
@@ -365,7 +382,7 @@ if(savedPseudo){
       if(state.realMarker) map.removeLayer(state.realMarker);
       if(state.line) map.removeLayer(state.line);
       state.guess=state.guessMarker=state.realMarker=state.line=null; state.locked=false;
-      $('#btn-validate').disabled=true; $('#btn-next').style.display='none';
+      $('#btn-validate').disabled=true;
       $('#scorePts').textContent='— pts'; $('#scoreDist').textContent='Clique sur la carte pour placer ta réponse';
     }
 
@@ -423,11 +440,25 @@ enregistrerFin(state.pseudo, state.mode, state.scoreTotal, 60, state.postesJoues
     $('#btn-next').onclick=()=>{ pickRandom(); };
     $('#btn-start').onclick=startRound;
 
-    function pickRandom(){
-      if(!DATA.length){toast('Pas de données chargées');return;}
-      const i=Math.floor(Math.random()*DATA.length);
-      showOverlayFor(DATA[i]);
-    }
+function pickRandom(){
+  if(!DATA.length){toast('Pas de données chargées');return;}
+
+  let pool = DATA;
+
+  // ✅ Filtrage si une zone est choisie
+  if(state.zone && ZONES[state.zone]){
+    const { lat, lon, rayon } = ZONES[state.zone];
+    pool = DATA.filter(p => {
+      const d = L.latLng(p.latitude,p.longitude)
+                  .distanceTo(L.latLng(lat,lon));
+      return d <= rayon;
+    });
+    if(pool.length === 0) pool = DATA; // fallback si aucun poste trouvé
+  }
+
+  const i=Math.floor(Math.random()*pool.length);
+  showOverlayFor(pool[i]);
+}
 
     async function loadData(){
       try{
@@ -482,10 +513,6 @@ function enregistrerFin(pseudo, mode, score, time, postes) {
      state.postesJoues = []; // ✅ on repart avec une liste vide de postes
      localStorage.setItem("pseudoJeuPostes", state.pseudo);
 
-  if (modeChoice !== 'Découverte') {
-    enregistrerDebut(state.pseudo, state.mode);
-  }
-
   // Initialisation spécifique aux modes
   if(modeChoice === "Normal"){
     state.manches = 0;
@@ -506,7 +533,6 @@ if(modeChoice === "Hard"){
       clearInterval(state.timer);
       enregistrerFin(state.pseudo, state.mode, state.scoreTotal, 60);
      afficherFin(state.scoreTotal, 60);
-      $('#btn-next').style.display='none';
       $('#scoreTimer').textContent = ""; // on efface le chrono
     }
   },1000);
@@ -562,7 +588,6 @@ document.getElementById('btn-replay').onclick = () => {
         clearInterval(state.timer);
         enregistrerFin(state.pseudo, state.mode, state.scoreTotal, 60);
         afficherFin(state.scoreTotal, 60);
-        $('#btn-next').style.display='none';
         $('#scoreTimer').textContent = "";
       }
     },1000);
@@ -630,6 +655,13 @@ document.getElementById('btn-round-next').onclick = ()=>{
   $('#round-result').style.display = 'none';
   pickRandom();
 };
+    // ✅ Gestion des boutons de zones
+document.querySelectorAll("#zone-select button").forEach(btn=>{
+  btn.onclick = ()=>{
+    state.zone = btn.dataset.zone || null;
+    toast(state.zone ? "Zone choisie : "+state.zone : "Toutes zones activées");
+  };
+});
     
   </script>
 </body>
