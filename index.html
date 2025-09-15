@@ -936,8 +936,12 @@ function generateAlias(appareil, nom, sat, posteType) {
 } // ← ferme bien generateAlias
 
 
+function incrementCounter() {
+  fetch(compteurURL + "?increment=true").catch(() => {});
+}
+
 function incrementCounterAppareil() {
-  fetch(compteurAppareilURL + "?increment=true").then(updateCounterAppareil);
+  fetch(compteurAppareilURL + "?increment=true").catch(() => {});
 }
 
 function showLieu(lieu) {
