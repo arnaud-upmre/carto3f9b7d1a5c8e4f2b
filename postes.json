@@ -1093,8 +1093,8 @@
     "type": "SP",
     "SAT": "",
     "accès": "",
-    "latitude": 50.33529,
-    "longitude": 3.408592,
+    "latitude": 50.33367,
+    "longitude": 3.4146,
     "description": "",
     "rss": "B",
     "contact": "",
@@ -1102,8 +1102,8 @@
     "lignes": "",
     "numero_ligne": "",
     "pk": "",
-    "poste_latitude": "50.3334085",
-    "poste_longitude": "3.4148316"
+    "poste_latitude": "50.33344",
+    "poste_longitude": "3.41484"
   },
   {
     "nom": "Don Sainghin",
@@ -4881,22 +4881,5 @@
     "pk": "146,800",
     "poste_latitude": "49.95541",
     "poste_longitude": "2.57239"
-  },
-  {
-    "nom": "Denain",
-    "type": "SSP",
-    "SAT": "",
-    "accès": "",
-    "latitude": 50.33367,
-    "longitude": 3.4146,
-    "description": "",
-    "rss": "B",
-    "contact": "",
-    "portail": "",
-    "lignes": "LOURCHES à VALENCIENNES",
-    "numero_ligne": 254000,
-    "pk": "230,0298",
-    "poste_latitude": "50.33344",
-    "poste_longitude": "3.41484"
   }
 ]
