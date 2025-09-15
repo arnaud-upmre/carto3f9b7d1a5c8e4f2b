@@ -4830,5 +4830,22 @@
     "poste_latitude": "",
     "poste_longitude": "",
     "special": true
+  },
+  {
+    "nom": "Blangy Est",
+    "type": "L",
+    "SAT": "",
+    "accès": "",
+    "latitude": 50.29656,
+    "longitude": 2.82482,
+    "description": "",
+    "rss": "",
+    "contact": "",
+    "portail": "",
+    "lignes": "PARIS-NORD à LILLE",
+    "numero_ligne": 272000,
+    "pk": "195,001",
+    "poste_latitude": "50.29494",
+    "poste_longitude": "2.82708"
   }
 ]
