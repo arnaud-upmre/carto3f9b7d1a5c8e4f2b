@@ -6,6 +6,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
   <style>
+    
+    /* Style commun pour les boutons de mode et de zone */
+.btn-choice {
+  border-radius: 9999px;
+  padding: .6rem 1.2rem;
+  font-weight: 600;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.2);
+  transition: all .2s ease;
+  margin: .2rem;
+}
+
+/* Bouton sélectionné (quand on clique dessus) */
+.btn-choice.active {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+}
 
     /* ✅ Résultat d’une manche */
 #round-result {
@@ -241,20 +259,19 @@
     <h1>Bienvenue 👋</h1>
     <p>Entrez votre pseudo :</p>
     <input type="text" id="input-pseudo" placeholder="Votre nom ou pseudo" />
-    <p>Choisissez un mode :</p>
-    <button class="btn primary" id="mode-decouverte">Découverte</button>
-    <button class="btn primary" id="mode-normal">Normal</button>
-    <button class="btn primary" id="mode-hard">Hard</button>
+   
+   <p>Choisissez un mode :</p>
+<button class="btn btn-choice" id="mode-decouverte">Découverte</button>
+<button class="btn btn-choice" id="mode-normal">Normal</button>
+<button class="btn btn-choice" id="mode-hard">Crazy</button>
 
-    <!-- ✅ la sélection de zone doit être ici -->
-    <p>Choisissez une zone :</p>
-    <div id="zone-select">
-      <button class="btn" data-zone="">🌍 Toutes</button>
-      <button class="btn" data-zone="Hazebrouck">Hazebrouck</button>
-      <button class="btn" data-zone="Amiens">Amiens</button>
-      <button class="btn" data-zone="Valenciennes">Valenciennes</button>
-    </div>
-  </div> <!-- fin de #welcome-screen -->
+<p>Choisissez une zone :</p>
+<div id="zone-select">
+  <button class="btn btn-choice" data-zone="">🌍 Toutes</button>
+  <button class="btn btn-choice" data-zone="Hazebrouck">Hazebrouck</button>
+  <button class="btn btn-choice" data-zone="Amiens">Amiens</button>
+  <button class="btn btn-choice" data-zone="Valenciennes">Valenciennes</button>
+</div>
   
   <!-- Overlay consigne -->
   <div id="overlay" style="display:none">
@@ -282,7 +299,7 @@
   <div id="leaderboard-tabs">
     <button class="btn tab-btn" data-mode="Découverte">Découverte</button>
     <button class="btn tab-btn" data-mode="Normal">Normal</button>
-    <button class="btn tab-btn" data-mode="Hard">Hard</button>
+    <button class="btn tab-btn" data-mode="Hard">Crazy</button>
   </div>
   <table id="leaderboard-table"></table>
   <button class="btn" id="btn-close-leaderboard">Fermer</button>
@@ -558,7 +575,7 @@ document.getElementById('btn-exit').onclick = () => {
 
 function afficherFin(score, time) {
   $('#round-result').style.display = 'none'; // masque le dernier résultat
-  $('#end-details').textContent = `${state.pseudo} en mode ${state.mode} – ${score} pts – ${time}s`;
+  $('#end-details').textContent = `${state.pseudo} en mode ${state.mode === "Hard" ? "Crazy" : state.mode} – ${score} pts – ${time}s`;
   $('#end-screen').style.display = 'flex';
 
   // ✅ Envoi Sheet dès qu’on affiche la fin
@@ -655,11 +672,22 @@ document.getElementById('btn-round-next').onclick = ()=>{
   $('#round-result').style.display = 'none';
   pickRandom();
 };
-    // ✅ Gestion des boutons de zones
-document.querySelectorAll("#zone-select button").forEach(btn=>{
+ 
+    // ✅ Gestion boutons ZONE
+document.querySelectorAll("#zone-select .btn-choice").forEach(btn=>{
   btn.onclick = ()=>{
+    document.querySelectorAll("#zone-select .btn-choice").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
     state.zone = btn.dataset.zone || null;
     toast(state.zone ? "Zone choisie : "+state.zone : "Toutes zones activées");
+  };
+});
+
+// ✅ Gestion boutons MODE
+document.querySelectorAll("#mode-decouverte, #mode-normal, #mode-hard").forEach(btn=>{
+  btn.onclick = ()=>{
+    document.querySelectorAll("#mode-decouverte, #mode-normal, #mode-hard").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
   };
 });
     
