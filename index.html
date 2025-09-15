@@ -978,6 +978,17 @@ if (lieu.special === true) {
     </div>
   </div>`;
 
+    // Ajoute description et portail
+  const blocs = [];
+
+  blocs.push(formatDescription(lieu.description));
+  blocs.push(formatPortail(lieu.portail));
+
+  if (blocs.length > 0) {
+    html += `<hr class="separator" />` +
+            blocs.map((b,i)=> i===0 ? b : `<hr class="separator" />${b}`).join("");
+  }
+
   result.innerHTML = html;
   return; // ⛔ stoppe ici → pas d’affichage PK / RSS / Portail etc.
 }
