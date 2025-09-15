@@ -4898,5 +4898,22 @@
     "pk": "232,557",
     "poste_latitude": "50.36813",
     "poste_longitude": "3.31787"
+  },
+  {
+    "nom": "Faubourg",
+    "type": "SSP",
+    "SAT": "",
+    "accès": "",
+    "latitude": 50.35178,
+    "longitude": 3.51599,
+    "description": "",
+    "rss": "B",
+    "contact": "",
+    "portail": "",
+    "lignes": "FIVES à HIRSON ",
+    "numero_ligne": 267000,
+    "pk": "48,000",
+    "poste_latitude": "50.35285",
+    "poste_longitude": "3.51631"
   }
 ]
