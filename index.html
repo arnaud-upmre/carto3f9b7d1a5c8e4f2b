@@ -27,9 +27,10 @@
   <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0b0c0e">
 
-  <!-- iOS WebApp -->
-<meta name="apple-mobile-web-app-capable" content="yes">
- <meta name="apple-mobile-web-app-status-bar-style" content="default">
+ <!-- WebApp -->
+  <meta name="mobile-web-app-capable" content="yes"> <!-- Android -->
+  <meta name="apple-mobile-web-app-capable" content="yes"> <!-- iOS -->
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
   <!-- Police & Scripts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
@@ -1971,7 +1972,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 <!-- Footer classique en dessous -->
 <div id="about-footer">
   🔧 <a href="arnaud.html">À propos</a> – 
-  <span class="footer-version">Nono Maps V1.001</span>
+  <span class="footer-version">Nono Maps V1.01</span>
 </div>
 <script>
 (function(){
