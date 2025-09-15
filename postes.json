@@ -4983,5 +4983,41 @@
     "pk": "191,0912",
     "poste_latitude": "50.28566",
     "poste_longitude": "2.77903"
+  },
+  {
+    "nom": "C2MI",
+    "type": "",
+    "SAT": "",
+    "accès": "",
+    "latitude": 50.28057,
+    "longitude": 2.77277,
+    "description": "",
+    "rss": "",
+    "contact": "",
+    "portail": "Code 5962",
+    "lignes": "",
+    "numero_ligne": "",
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": "",
+    "special": true
+  },
+  {
+    "nom": "Formation Arras",
+    "type": "",
+    "SAT": "",
+    "accès": "",
+    "latitude": 50.28375,
+    "longitude": 2.77413,
+    "description": "Accès salle de formation",
+    "rss": "",
+    "contact": "",
+    "portail": "Code 0103",
+    "lignes": "",
+    "numero_ligne": "",
+    "pk": "",
+    "poste_latitude": "",
+    "poste_longitude": "",
+    "special": true
   }
 ]
