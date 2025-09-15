@@ -1998,7 +1998,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 }
 </script> </main>
 <div id="about-footer">
-
+<a id="installLink" href="#" style="display:none;">📲 Installer l’app</a> – 
   🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V2</span>
 </div>
 
@@ -2088,6 +2088,46 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
     if (shouldShowIntro()) mountIntro();
   }
 })();
+</script>
+  <script>
+let deferredPrompt;
+const installLink = document.getElementById("installLink");
+
+// Vérifie si l'app est déjà installée
+const isStandalone = window.matchMedia('(display-mode: standalone)').matches 
+                  || window.navigator.standalone === true;
+
+if (!isStandalone) {
+  // --- Android / Chrome ---
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    installLink.style.display = "inline"; // montrer le lien
+
+    installLink.addEventListener("click", async (evt) => {
+      evt.preventDefault();
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const choice = await deferredPrompt.userChoice;
+        if (choice.outcome === "accepted") {
+          console.log("PWA installée ✅");
+        }
+        deferredPrompt = null;
+        installLink.style.display = "none"; 
+      }
+    });
+  });
+
+  // --- iOS ---
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  if (isIOS) {
+    installLink.style.display = "inline";
+    installLink.addEventListener("click", (evt) => {
+      evt.preventDefault();
+      alert("ℹ️ Sur iPhone : touchez le bouton de partage Safari (carré avec flèche ↑), puis « Ajouter à l’écran d’accueil ».");
+    });
+  }
+}
 </script>
   <div id="notification"></div>
 </body>
