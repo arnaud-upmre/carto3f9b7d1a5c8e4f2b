@@ -619,6 +619,19 @@ main {
   const app = initializeApp(firebaseConfig);
   const messaging = getMessaging(app);
 
+    // Récupérer le token unique de l'appareil
+getToken(messaging, { vapidKey: "TA_CLE_VAPID" })
+  .then((currentToken) => {
+    if (currentToken) {
+      console.log("Token de cet appareil :", currentToken);
+    } else {
+      console.warn("⚠️ Aucun token reçu");
+    }
+  })
+  .catch((err) => {
+    console.error("❌ Erreur lors de la récupération du token :", err);
+  });
+
   // Demander la permission de recevoir des notifications
   Notification.requestPermission().then((permission) => {
     if (permission === "granted") {
