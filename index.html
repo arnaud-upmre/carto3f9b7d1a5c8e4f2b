@@ -5,7 +5,14 @@
   <meta charset="UTF-8" />
   <title>Cartographie des postes</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
-
+ 
+  <!-- Open Graph (aperçu lors du partage) -->
+  <meta property="og:title" content="Nono Maps">
+  <meta property="og:description" content="Cartographie collaborative des postes et accès.">
+  <meta property="og:image" content="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/icon-512.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/index.html">
+  
 <!-- Favicon -->
 <link rel="icon" href="favicon.ico" type="image/x-icon">
 
@@ -21,7 +28,6 @@
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0b0c0e">
 
   <!-- iOS WebApp -->
-  <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
  <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
@@ -619,12 +625,7 @@ main {
 <input type="text" id="search" placeholder="Entrer un poste ou un appareil" autocomplete="off" />
 <ul id="suggestions"></ul>
 <div id="result"></div>
-  <!-- Compteurs invisibles (utiles uniquement pour le JS) -->
-<div id="counters" style="display:none;">
-  <span id="counterPostes"></span>
-  <span id="counterAppareils"></span>
-  <span id="compteur-valeur"></span>
-</div>
+
 
   <!-- Boutons flottants pour édition -->
 <div id="edit-buttons" style="display:none;">
@@ -933,43 +934,7 @@ function generateAlias(appareil, nom, sat, posteType) {
   return Array.from(alias);
 } // ← ferme bien generateAlias
 
- function updateCounter() {
-  // 1) Affiche d'abord le cache si dispo
-  const cached = localStorage.getItem("counterPostes");
-  if (cached) {
-    document.getElementById("counterPostes").textContent = cached;
-  }
 
-  // 2) Mets à jour depuis le serveur
-  fetch(compteurURL).then(res => res.json()).then(data => {
-    if (data && typeof data.count !== "undefined") {
-      document.getElementById("counterPostes").textContent = data.count;
-      localStorage.setItem("counterPostes", data.count); 
-      // sauvegarde local
-    }
-  });
-}
-    
-function incrementCounter() {
-  fetch(compteurURL + "?increment=true").then(updateCounter);
-}
-
-function updateCounterAppareil() {
-  // 1) Affiche d'abord le cache si dispo
-  const cached = localStorage.getItem("counterAppareils");
-  if (cached) {
-    document.getElementById("counterAppareils").textContent = cached;
-  }
-
-  // 2) Mets à jour depuis le serveur
-  fetch(compteurAppareilURL).then(res => res.json()).then(data => {
-    if (data && typeof data.count !== "undefined") {
-      document.getElementById("counterAppareils").textContent = data.count;
-      localStorage.setItem("counterAppareils", data.count); // sauvegarde local
-    }
-  });
-}
-    
 function incrementCounterAppareil() {
   fetch(compteurAppareilURL + "?increment=true").then(updateCounterAppareil);
 }
@@ -1418,10 +1383,7 @@ function showAppareil(app) {
 
   result.innerHTML = html;
 }
-    updateCounter();
-updateCounterAppareil();
-setInterval(updateCounter, 3000);
-setInterval(updateCounterAppareil, 3000);
+
   /* === Train aléatoire + changement au clic ===
    Mets le nombre EXACT d'images => train1.gif ... trainN.gif */
 const TOTAL_TRAINS = 11; // ⬅️ change ce nombre selon tes fichiers
@@ -1600,8 +1562,6 @@ if (el2) el2.textContent = `(${data.count})`;
   }).catch(() => {});
 }
 
-updateContrib();
-setInterval(updateContrib, 3000);
     // === Édition Nom + Type ===
 let editMode = false;
 let originalValues = {};
@@ -2011,7 +1971,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 <!-- Footer classique en dessous -->
 <div id="about-footer">
   🔧 <a href="arnaud.html">À propos</a> – 
-  <span class="footer-version">Nono Maps V1.01</span>
+  <span class="footer-version">Nono Maps V1.001</span>
 </div>
 <script>
 (function(){
