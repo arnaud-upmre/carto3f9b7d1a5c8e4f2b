@@ -197,35 +197,74 @@
     input.dispatchEvent(new Event('selected'));
   }
 
-  function attachAutocomplete(inputEl){
-    inputEl.addEventListener('input', ()=>{
-      const q = inputEl.value.trim();
-      if(!q || !fuse){ closePortal(); return; }
-      const results = fuse.search(q, { limit: 20 }).map(r=>r.item);
-      if(!results.length){ closePortal(); return; }
-      results.sort((a, b) => {
-        const queryLower = q.toLowerCase();
-        const aNom = (a.nom || '').toLowerCase();
-        const bNom = (b.nom || '').toLowerCase();
-        const aStarts = aNom.startsWith(queryLower);
-        const bStarts = bNom.startsWith(queryLower);
-        if (aStarts && !bStarts) return -1;
-        if (!aStarts && bStarts) return 1;
-        return 0;
-      });
-      const html = results.map(l=>(
-        `<li data-lat="${l.latitude}" data-lng="${l.longitude}" data-label="${escapeHtml(l.nom)}">`+
-        `${escapeHtml(l.nom)}${l.type?' '+escapeHtml(l.type):''}${l.SAT?' / '+escapeHtml(l.SAT):''}</li>`
-      )).join('');
-      openPortalFor(inputEl, html);
-    });
-  }
-
   portalUL.addEventListener('click', (e)=>{
     const li = e.target.closest('li'); if(!li || !portalOwner) return;
     setInputSelection(portalOwner, li.dataset.lat, li.dataset.lng, li.dataset.label);
     closePortal();
   });
+
+    function attachAutocomplete(inputEl) {
+  inputEl.addEventListener("input", () => {
+    const qRaw = inputEl.value.trim();
+    const q = normalize(qRaw);
+
+    if (!q || !fuse) {
+      closePortal();
+      return;
+    }
+
+    // Résultats bruts
+    let results = fuse.search(q).map(r => r.item);
+
+    // -------- TRI AVANCÉ ----------
+    results.sort((a, b) => {
+      const norm = s => (s || "").toString().toLowerCase()
+        .normalize("NFD").replace(/[̀-ͯ]/g, "").trim().replace(/\s+/g, " ");
+      const qNorm = q;
+
+      const aNom = norm(a.nom || "");
+      const bNom = norm(b.nom || "");
+
+      // 0 : le nom qui COMMENCE par la requête
+      const aStarts = aNom.startsWith(qNorm);
+      const bStarts = bNom.startsWith(qNorm);
+      if (aStarts && !bStarts) return -1;
+      if (bStarts && !aStarts) return 1;
+
+      // 1 : correspondance exacte sur le nom
+      const aExact = aNom === qNorm;
+      const bExact = bNom === qNorm;
+      if (aExact && !bExact) return -1;
+      if (bExact && !aExact) return 1;
+
+      // 2 : postes simples avant accès
+      const aIsPoste = !a.accès;
+      const bIsPoste = !b.accès;
+      if (aIsPoste && !bIsPoste) return -1;
+      if (bIsPoste && !aIsPoste) return 1;
+
+      // 3 : tri alphabétique
+      return formatNomCompletLieu(a).localeCompare(formatNomCompletLieu(b), "fr", { sensitivity: "base" });
+    });
+    // -------- fin TRI AVANCÉ ----------
+
+    // Construit HTML
+    if (!results.length) {
+      closePortal();
+      return;
+    }
+
+    const html = results.map(lieu => {
+      const icon = `🚙${lieu.latitude && lieu.longitude ? " 📍" : ""}`;
+      return `<li data-lat="${lieu.latitude}" data-lng="${lieu.longitude}" 
+                   data-label="${escapeHtml(formatNomCompletLieu(lieu))}">
+                ${icon} ${escapeHtml(formatNomCompletLieu(lieu))}
+              </li>`;
+    }).join("");
+
+    openPortalFor(inputEl, html);
+  });
+}
 
   async function fetchRoute(f,t){
     const url=`https://router.project-osrm.org/route/v1/driving/${f.lng},${f.lat};${t.lng},${t.lat}?overview=full&geometries=geojson&alternatives=false&steps=false`;
@@ -283,13 +322,51 @@
       $('#kpiDistance').textContent='—'; $('#kpiDuration').textContent='—';
     }
   }
+function normalize(str) {
+  return (str || "")
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")     // supprime accents
+    .replace(/[^a-z0-9\s]/gi, "") // garde lettres/chiffres/espaces
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, " ");    // réduit espaces multiples
+}
 
+function normalizeNomPoste(name) {
+  if (!name) return "";
+  return name
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .toLowerCase()
+    .trim()
+    // supprime suffixes connus
+    .replace(/\b(?:a|p|sp|ssp|sspa|l|l-a|prci|lgv|ss|sst)\b$/i, "")
+    .trim();
+}
+
+function formatNomCompletLieu(obj) {
+  const base = `${obj.nom || ""} ${obj.type || ""} ${obj.SAT || ""}`.trim();
+  return obj.accès ? `${base} – accès ${obj.accès}` : base;
+}
+    
   async function init(){
     const r=await fetch(LIEUX_JSON_URL); const raw=await r.json();
     lieux=(Array.isArray(raw)?raw:(raw.lieux||raw.data||[])).map(l=>({
       nom:l.nom||'',type:l.type||'',SAT:l.SAT||'',latitude:+(l.latitude),longitude:+(l.longitude)
     })).filter(l=>l.nom && Number.isFinite(l.latitude) && Number.isFinite(l.longitude));
-    fuse=new Fuse(lieux,{keys:[{name:'nom',weight:.5},{name:'type',weight:.3},{name:'SAT',weight:.2}],threshold:.3});
+  fuse = new Fuse(lieux, {
+  keys: [
+    { name: "nom", weight: 0.8 },
+    { name: "type", weight: 0.2 },
+    { name: "SAT",  weight: 0.2 },
+    { name: "accès", getFn: o => o.accès?.toString?.() || "", weight: 0.2 }
+  ],
+  includeScore: true,
+  threshold: 0.30,
+  distance: 50,
+  minMatchCharLength: 2,
+  ignoreLocation: true
+});
     attachAutocomplete($('#inputFrom'));
     attachAutocomplete($('#inputTo'));
     $('#inputFrom').addEventListener('selected', onSelectionChange);
