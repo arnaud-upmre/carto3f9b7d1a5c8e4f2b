@@ -4915,5 +4915,22 @@
     "pk": "48,000",
     "poste_latitude": "50.35285",
     "poste_longitude": "3.51631"
+  },
+  {
+    "nom": "Le Quesnoy",
+    "type": "SSP",
+    "SAT": "",
+    "accès": "",
+    "latitude": 50.25302,
+    "longitude": 3.64478,
+    "description": "",
+    "rss": "B",
+    "contact": "",
+    "portail": "",
+    "lignes": "FIVES à HIRSON ",
+    "numero_ligne": 267000,
+    "pk": "65,890",
+    "poste_latitude": "50.25073",
+    "poste_longitude": "3.64578"
   }
 ]
