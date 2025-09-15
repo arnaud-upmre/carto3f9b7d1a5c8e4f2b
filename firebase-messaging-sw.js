@@ -1,8 +1,8 @@
-// Import des scripts Firebase
-importScripts("https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js");
-importScripts("https://www.gstatic.com/firebasejs/12.2.1/firebase-messaging.js");
+// Import des scripts Firebase (version compat pour Service Worker)
+importScripts("https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js");
+importScripts("https://www.gstatic.com/firebasejs/9.6.10/firebase-messaging-compat.js");
 
-// Config Firebase (copie ta config ici aussi)
+// Config Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyDe7lEGbcqztNmgpqfd7jm5qbq5Z4MG8Wg",
   authDomain: "upmre-f9b70.firebaseapp.com",
@@ -13,14 +13,15 @@ const firebaseConfig = {
   measurementId: "G-EMSCVXG71V"
 };
 
+// Initialiser Firebase
 firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
 // Quand une notif arrive en arrière-plan
 messaging.onBackgroundMessage((payload) => {
-  console.log("Notification reçue en arrière-plan: ", payload);
+  console.log("📩 Notification reçue en arrière-plan:", payload);
   self.registration.showNotification(payload.notification.title, {
     body: payload.notification.body,
-    icon: "/icon-192.png" // ton icône
+    icon: "/icon-192.png"
   });
 });
