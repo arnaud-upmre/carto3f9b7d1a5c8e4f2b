@@ -458,22 +458,31 @@ enregistrerFin(state.pseudo, state.mode, state.scoreTotal, 60, state.postesJoues
     $('#btn-start').onclick=startRound;
 
 function pickRandom(){
-  if(!DATA.length){toast('Pas de données chargées');return;}
+  if(!DATA.length){ toast('Pas de données chargées'); return; }
 
   let pool = DATA;
 
-  // ✅ Filtrage si une zone est choisie
+  // ✅ Filtrage par zone
   if(state.zone && ZONES[state.zone]){
     const { lat, lon, rayon } = ZONES[state.zone];
     pool = DATA.filter(p => {
-      const d = L.latLng(p.latitude,p.longitude)
-                  .distanceTo(L.latLng(lat,lon));
+      const d = L.latLng(p.latitude, p.longitude)
+                   .distanceTo(L.latLng(lat, lon));
       return d <= rayon;
     });
-    if(pool.length === 0) pool = DATA; // fallback si aucun poste trouvé
+    if(pool.length === 0) pool = DATA;
   }
 
-  const i=Math.floor(Math.random()*pool.length);
+  // ✅ On enlève les postes déjà joués dans cette partie
+  pool = pool.filter(p => !state.postesJoues.includes(p.nom));
+
+  if(pool.length === 0){
+    toast("Plus de postes disponibles dans cette zone !");
+    afficherFin(state.scoreTotal || 0, Math.round((Date.now() - state.startTime)/1000));
+    return;
+  }
+
+  const i = Math.floor(Math.random()*pool.length);
   showOverlayFor(pool[i]);
 }
 
@@ -481,17 +490,20 @@ function pickRandom(){
       try{
         const res = await fetch('postes.json');
         const arr = await res.json();
-        DATA = arr.filter(p =>
-          p && p.nom && p.nom.trim() !== "" &&
-          p.type && p.type.trim() !== "" &&
-          p.poste_latitude && p.poste_longitude &&
-          !/acc[eè]s/i.test(p.type) &&
-          !/acc[eè]s/i.test(p.nom||"")
-        ).map(p => {
-          let fullName = p.nom;
-          if (p.SAT && p.SAT.trim() !== "") fullName += " " + p.SAT.trim();
-          return { nom: fullName, latitude: +p.poste_latitude, longitude: +p.poste_longitude, type: p.type };
-        });
+   DATA = arr.filter(p =>
+  p && p.nom && p.nom.trim() !== "" &&
+  p.type && p.type.trim() !== "" &&   // garder que si type est rempli
+  p.poste_latitude && p.poste_longitude
+).map(p => {
+  let fullName = p.nom;
+  if (p.SAT && p.SAT.trim() !== "") fullName += " " + p.SAT.trim();
+  return { 
+    nom: fullName, 
+    latitude: +p.poste_latitude, 
+    longitude: +p.poste_longitude, 
+    type: p.type 
+  };
+});
         console.log(`${DATA.length} postes chargés`);
       } catch(e){
         console.error(e);
