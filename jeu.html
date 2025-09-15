@@ -518,10 +518,6 @@ function enregistrerFin(pseudo, mode, score, time, postes) {
   .catch(err => console.error("Erreur enregistrement", err));
 }
 
-    // ✅ Gestion du choix de mode
-    document.getElementById('mode-decouverte').onclick = () => startWithMode('Découverte');
-    document.getElementById('mode-normal').onclick = () => startWithMode('Normal');
-    document.getElementById('mode-hard').onclick = () => startWithMode('Hard');
 
    function startWithMode(modeChoice) {
   const input = document.getElementById('input-pseudo').value.trim();
