@@ -626,7 +626,7 @@ main {
 
       try {
         // On enregistre explicitement le Service Worker à la racine
-        const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+        const registration = await navigator.serviceWorker.register('./firebase-messaging-sw.js');
         console.log("✅ Service Worker enregistré");
 
         // On récupère le token unique de l'appareil
