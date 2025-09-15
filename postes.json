@@ -4932,5 +4932,39 @@
     "pk": "65,890",
     "poste_latitude": "50.25073",
     "poste_longitude": "3.64578"
+  },
+  {
+    "nom": "Corbie",
+    "type": "SS",
+    "SAT": "",
+    "accès": "",
+    "latitude": 49.91218,
+    "longitude": 2.5001,
+    "description": "",
+    "rss": "C",
+    "contact": "",
+    "portail": "",
+    "lignes": "PARIS-NORD à LILLE",
+    "numero_ligne": 272000,
+    "pk": "139,400",
+    "poste_latitude": "49.91202",
+    "poste_longitude": "2.49975"
+  },
+  {
+    "nom": "Aveluy",
+    "type": "SP",
+    "SAT": "",
+    "accès": "",
+    "latitude": 50.04619,
+    "longitude": 2.66314,
+    "description": "",
+    "rss": "C",
+    "contact": "",
+    "portail": "",
+    "lignes": "PARIS-NORD à LILLE",
+    "numero_ligne": 272000,
+    "pk": "159,0800",
+    "poste_latitude": "50.04567",
+    "poste_longitude": "2.6627"
   }
 ]
