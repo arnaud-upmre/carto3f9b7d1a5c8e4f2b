@@ -1,6 +1,33 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+  <meta name="robots" content="noindex, nofollow" />
+  <meta charset="UTF-8" />
+  <title>Cartographie des postes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+
+<!-- Favicon -->
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+
+<!-- Icônes pour mobiles et PWA -->
+<link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" sizes="512x512" href="icon-512.png">
+
+<!-- Manifest PWA -->
+<link rel="manifest" href="manifest.json">
+
+  <!-- Couleur adaptative -->
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0b0c0e">
+
+  <!-- iOS WebApp -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+ <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+  <!-- Police & Scripts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+   
   <style id="eale-intro-styles">
     #counters {
   text-align: center;
@@ -16,7 +43,7 @@
     z-index:99999; user-select:none; touch-action:none;
   }
   .eale-intro-img{
-    width:min(42vw,180px); height:auto; object-fit:contain; pointer-events:none;
+    width:min(60vw,260px); height:auto; object-fit:contain; pointer-events:none;
     animation:eale-zoomIn 1.8s ease-out forwards;
   }
   .eale-intro-text{
@@ -170,14 +197,6 @@ ul#suggestions:not(:empty){
 }
     
 </style>
-  <meta name="robots" content="noindex, nofollow" />
-  <meta charset="UTF-8" />
-  <title>Recherche de lieux</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
-  
-
   <style>
 body {
   font-family: 'Inter', sans-serif;
@@ -581,9 +600,6 @@ main {
 }
   
   </style>
-  <meta name="color-scheme" content="light dark">
-<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
-<meta name="theme-color" media="(prefers-color-scheme: dark)"  content="#121212">
 </head>
 <body> <main>
   <div id="train-container">
@@ -1986,11 +2002,16 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
   }, 4000);
 }
 </script> </main>
-<div id="about-footer">
-
-  🔧 <a href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/arnaud.html">À propos</a> – <span class="footer-version">Arnaud V2</span>
+<!-- Lien installer au-dessus du footer -->
+<div id="install-container" style="text-align:center; margin:10px 0;">
+  <a id="installLink" href="#" style="display:none;">📲 Installer l’app</a>
 </div>
 
+<!-- Footer classique en dessous -->
+<div id="about-footer">
+  🔧 <a href="arnaud.html">À propos</a> – 
+  <span class="footer-version">Nono Maps V1.01</span>
+</div>
 <script>
 (function(){
   // ===== Config =====
@@ -2077,6 +2098,46 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
     if (shouldShowIntro()) mountIntro();
   }
 })();
+</script>
+  <script>
+let deferredPrompt;
+const installLink = document.getElementById("installLink");
+
+// Vérifie si l'app est déjà installée
+const isStandalone = window.matchMedia('(display-mode: standalone)').matches 
+                  || window.navigator.standalone === true;
+
+if (!isStandalone) {
+  // --- Android / Chrome ---
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    installLink.style.display = "inline"; // montrer le lien
+
+    installLink.addEventListener("click", async (evt) => {
+      evt.preventDefault();
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const choice = await deferredPrompt.userChoice;
+        if (choice.outcome === "accepted") {
+          console.log("PWA installée ✅");
+        }
+        deferredPrompt = null;
+        installLink.style.display = "none"; 
+      }
+    });
+  });
+
+  // --- iOS ---
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  if (isIOS) {
+    installLink.style.display = "inline";
+    installLink.addEventListener("click", (evt) => {
+      evt.preventDefault();
+      alert("ℹ️ Sur iPhone : touchez le bouton de partage Safari (carré avec flèche ↑), puis « Ajouter à l’écran d’accueil ».");
+    });
+  }
+}
 </script>
   <div id="notification"></div>
 </body>
