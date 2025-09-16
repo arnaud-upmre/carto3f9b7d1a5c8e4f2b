@@ -176,22 +176,36 @@ L.control.zoom({ position: 'topright' }).addTo(map);
   const m = L.marker([lat, lon], {icon: iconAcces}).bindPopup(content).addTo(accesLayer);
   allMarkers.push(m);
 }
-          if (item.poste_latitude && item.poste_longitude) {
-            let content = `<b>${item.nom || "Sans nom"}</b><br>`;
-            if (item.type)      content += `Type: ${item.type}<br>`;
-            if (item.SAT)       content += `SAT: ${item.SAT}<br>`;
-            if (item.lignes)    content += `Ligne: ${item.lignes}<br>`;
-            if (item.pk)        content += `PK: ${item.pk}<br>`;
-            if (item.rss)       content += `RSS: ${item.rss}<br>`;
-            if (item.contact)   content += `Contact: ${item.contact}<br>`;
-            if (item.portail)   content += `Portail: ${item.portail}<br>`;
-            if (item.description) content += `<i>${item.description}</i><br>`;
-            if (item.nom)       content += `<br><a href="index.html?nom=${encodeURIComponent(item.nom)}" target="_blank">↩️ Retour fiche</a>`;
-            const m = L.marker([item.poste_latitude, item.poste_longitude], {icon: iconPoste}).bindPopup(content).addTo(postesLayer);
-            allMarkers.push(m);
-          }
-        });
-      });
+         if (item.poste_latitude && item.poste_longitude) {
+  let content = `
+    <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
+                font-size:14px; color:#111; line-height:1.4; max-width:240px;">
+      <div style="font-weight:600; font-size:15px; margin-bottom:4px;">
+        📍 ${item.nom || "Sans nom"} 
+        ${item.type ? item.type : ""} 
+        ${item.SAT ? " " + item.SAT : ""}
+      </div>
+
+      <div style="margin-bottom:6px; color:#333;">
+        ${item.pk 
+          ? `🚄 PK ${item.pk} sur la ligne n°${item.numero_ligne || ""} – ${item.lignes || ""}`
+          : `🚄 ligne n°${item.numero_ligne || ""} – ${item.lignes || ""}`}
+      </div>
+
+      ${item.portail ? `<div>🔑 Portail : ${item.portail}</div>` : ""}
+      ${item.contact ? `<div>📞 <a href="tel:${item.contact}" style="color:#007aff; text-decoration:none;">${item.contact}</a></div>` : ""}
+      ${item.description ? `<div>ℹ️ ${item.description}</div>` : ""}
+
+      <div style="margin-top:6px;">
+        <a href="index.html?nom=${encodeURIComponent(item.nom)}" target="_blank"
+           style="color:#007aff; text-decoration:none;">↩️ Retour fiche</a>
+      </div>
+    </div>
+  `;
+
+  const m = L.marker([item.poste_latitude, item.poste_longitude], {icon: iconPoste}).bindPopup(content).addTo(postesLayer);
+  allMarkers.push(m);
+}
 
     // Appareils
     fetch("appareils.json")
