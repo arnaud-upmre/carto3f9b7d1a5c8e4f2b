@@ -111,15 +111,13 @@
   <script>
     const map = L.map('map').setView([46.8, 2.5], 6);
 
-const ignOrtho = L.tileLayer.wmts(
-  "https://data.geopf.fr/wmts",
+const ignOrtho = L.tileLayer(
+  "https://data.geopf.fr/wmts/ORTHOIMAGERY.ORTHOPHOTOS/1.0.0/" +
+  "ORTHOIMAGERY.ORTHOPHOTOS/default/PM/{z}/{y}/{x}.jpeg",
   {
-    layer: "ORTHOIMAGERY.ORTHOPHOTOS",
-    tilematrixSet: "PM",
-    format: "image/jpeg",
-    style: "normal",
     attribution: "© IGN – Géoplateforme",
-    maxZoom: 19
+    maxZoom: 19,
+    tileSize: 256
   }
 ).addTo(map);
 
