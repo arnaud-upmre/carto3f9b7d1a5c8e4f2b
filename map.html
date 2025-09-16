@@ -163,9 +163,15 @@ L.control.zoom({ position: 'topright' }).addTo(map);
 
     // --- COUCHES MÉTIER ------------------------------------------------------
 
-const postesLayer = L.markerClusterGroup();
-const appareilsLayer = L.markerClusterGroup();
-const accesLayer = L.markerClusterGroup();
+const postesLayer = L.markerClusterGroup({
+  disableClusteringAtZoom: 18
+});
+const appareilsLayer = L.markerClusterGroup({
+  disableClusteringAtZoom: 18
+});
+const accesLayer = L.markerClusterGroup({
+  disableClusteringAtZoom: 18
+});
 
 map.addLayer(postesLayer);
 map.addLayer(appareilsLayer);
