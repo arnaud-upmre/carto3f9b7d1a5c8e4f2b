@@ -12,18 +12,15 @@
 <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
   <style>
 
-    /* === CLUSTERS PERSONNALISÉS iOS style === */
+/* === CLUSTERS LIQUID GLASS iOS === */
 .marker-cluster {
-  background: rgba(255, 255, 255, 0.08);
+  background: transparent !important; /* pas de fond autour */
   border-radius: 50%;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
 }
 
 .marker-cluster div {
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -31,17 +28,19 @@
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
   font-weight: 600;
   font-size: 14px;
-  color: #fff;
-  background: rgba(17, 19, 23, 0.7); /* fond sombre semi-translucide */
-  border: 1px solid rgba(255,255,255,0.15);
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.15);   /* bulle translucide claire */
+  backdrop-filter: blur(10px);             /* effet verre dépoli */
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.25);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+  transition: transform 0.25s ease, background 0.3s ease;
 }
 
-/* Animation subtile au zoom */
-.marker-cluster div {
-  transition: transform 0.25s ease;
-}
+/* Survol / tap → bulle légèrement plus claire et grossit */
 .marker-cluster:hover div {
   transform: scale(1.12);
+  background: rgba(255, 255, 255, 0.25);
 }
 
     .control-group {
