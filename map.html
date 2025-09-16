@@ -11,7 +11,20 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
   <style>
+    
+.icon-wrapper {
+  display: inline-block;
+  border-radius: 50%;          /* halo arrondi */
+  padding: 4px;                /* espace autour */
+  background: white;           /* halo blanc */
+  box-shadow: 0 0 6px rgba(0,0,0,0.4); /* ombre discrète */
+}
 
+.icon-wrapper img {
+  width: 44px;
+  height: 44px;
+  display: block;
+}
 /* === CLUSTERS LIQUID GLASS iOS === */
 .marker-cluster {
   background: transparent !important; /* pas de fond autour */
@@ -226,12 +239,13 @@ map.addLayer(appareilsLayer);
 map.addLayer(accesLayer);
     const allMarkers = [];
 
-// Icône guérite personnalisée
-const iconPoste = L.icon({
-  iconUrl: "ico/poste.png",
-  iconSize: [48, 48],   // largeur x hauteur de l’image
-  iconAnchor: [16, 32], // la "pointe" est en bas-centre
-  popupAnchor: [0, -32] // bulle au-dessus de l’icône
+// Icône guérite personnalisée avec halo blanc
+const iconPoste = L.divIcon({
+  html: `<div class="icon-wrapper"><img src="ico/poste.png" /></div>`,
+  className: "", // neutralise styles Leaflet par défaut
+  iconSize: [52, 52], 
+  iconAnchor: [26, 52], 
+  popupAnchor: [0, -52]
 });
 
 // On garde les autres en bulles colorées
