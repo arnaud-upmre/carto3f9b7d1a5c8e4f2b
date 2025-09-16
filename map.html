@@ -4,99 +4,25 @@
   <meta charset="UTF-8" />
   <title>Carte — Postes & Appareils</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-
-  <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <style>
-    :root {
-      --accent: #4f46e5;
-      --bg: #0b0c0e;
-      --ink: #f9fafb;
-      --glass: rgba(17, 19, 23, 0.65);
-      --border: rgba(255, 255, 255, 0.12);
-    }
-    html, body {
-      height: 100%;
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
-      background: var(--bg);
-      color: var(--ink);
-    }
-    #map { width: 100%; height: 100%; }
-
-    /* Barre style iOS */
-    .topbar {
-      position: fixed;
-      top: 12px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: var(--glass);
-      backdrop-filter: blur(10px);
-      padding: .4rem .6rem;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      box-shadow: 0 4px 12px rgba(0,0,0,.3);
-      width: calc(100% - 24px);
-      max-width: 500px;
-      z-index: 1000;
-    }
-    .left, .right {
-      display: flex;
-      align-items: center;
-      gap: .4rem;
-    }
-    .topbar button {
-      border: none;
-      font-size: 1.1rem;
-      cursor: pointer;
-      border-radius: 9999px;
-      padding: .4rem .8rem;
-      transition: all .2s ease;
-    }
-    .topbar button.active {
-      background: var(--accent);
-      color: #fff;
-    }
-    .topbar button:hover {
-      background: rgba(255,255,255,0.15);
-    }
-
-    /* Icônes rondes */
-    .icon-circle {
-      width: 26px; height: 26px;
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      color: white; font-size: 15px; font-weight: bold;
-    }
-    .poste { background: #e11d48; }    /* rouge */
-    .appareil { background: #facc15; } /* jaune */
-    .acces { background: #3b82f6; }    /* bleu */
-
-    /* Boutons extra (recentrer & ma position) */
-    .leaflet-control-custom {
-      background: var(--glass);
-      border: 1px solid var(--border);
-      border-radius: 50%;
-      width: 38px; height: 38px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 18px;
-      color: var(--ink);
-      cursor: pointer;
-      margin: 5px;
-    }
+    :root { --accent:#4f46e5; --bg:#0b0c0e; --ink:#f9fafb; --glass:rgba(17,19,23,.65); --border:rgba(255,255,255,.12); }
+    html, body { height:100%; margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,sans-serif; background:var(--bg); color:var(--ink); }
+    #map { width:100%; height:100%; }
+    .topbar { position:fixed; top:12px; left:50%; transform:translateX(-50%); display:flex; align-items:center; justify-content:space-between; background:var(--glass); backdrop-filter:blur(10px); padding:.4rem .6rem; border-radius:14px; border:1px solid var(--border); box-shadow:0 4px 12px rgba(0,0,0,.3); width:calc(100% - 24px); max-width:500px; z-index:1000; }
+    .left,.right { display:flex; align-items:center; gap:.4rem; }
+    .topbar button { border:none; font-size:1.1rem; cursor:pointer; border-radius:9999px; padding:.4rem .8rem; transition:all .2s ease; }
+    .topbar button.active { background:var(--accent); color:#fff; }
+    .topbar button:hover { background:rgba(255,255,255,.15); }
+    .icon-circle { width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:15px; font-weight:bold; }
+    .poste { background:#e11d48; } .appareil { background:#facc15; } .acces { background:#3b82f6; }
+    .leaflet-control-custom { background:var(--glass); border:1px solid var(--border); border-radius:50%; width:38px; height:38px; display:flex; align-items:center; justify-content:center; font-size:18px; color:var(--ink); cursor:pointer; margin:5px; }
   </style>
 </head>
 <body>
-
-  <!-- Barre supérieure -->
   <div class="topbar">
-    <div class="left">
-      <button onclick="window.location.href='index.html'">🔍</button>
-    </div>
+    <div class="left"><button onclick="window.location.href='index.html'">🔍</button></div>
     <div class="right">
       <button id="btn-postes" class="active">📍</button>
       <button id="btn-appareils" class="active">⚡</button>
@@ -104,171 +30,136 @@
     </div>
   </div>
 
-  <!-- Carte -->
   <div id="map"></div>
 
   <script>
     const map = L.map('map').setView([46.8, 2.5], 6);
 
-// Plan IGN
-const planIGN = L.tileLayer(
-  "https://data.geopf.fr/wmts/PLANIGNV2/1.0.0/PLANIGNV2/default/GoogleMapsCompatible/{z}/{y}/{x}.png",
-  {
-    attribution: "© IGN – Géoplateforme",
-    maxZoom: 19
-  }
-);
+    // --- FONDS DE CARTE ------------------------------------------------------
 
-// Ortho IGN (satellite)
-const orthoIGN = L.tileLayer(
-  "https://data.geopf.fr/wmts/ORTHOIMAGERY.ORTHOPHOTOS/1.0.0/ORTHOIMAGERY.ORTHOPHOTOS/default/GoogleMapsCompatible/{z}/{y}/{x}.jpeg",
-  {
-    attribution: "© IGN – Géoplateforme",
-    maxZoom: 19
-  }
-);
+    // PLAN IGN (WMTS GetTile)
+    const planIGN = L.tileLayer(
+      "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
+      + "&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&STYLE=normal&FORMAT=image/png"
+      + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
+      {
+        attribution: "© IGN – Géoplateforme",
+        maxZoom: 19,
+        tileSize: 256,
+        crossOrigin: 'anonymous'
+      }
+    );
 
-// OpenStreetMap (sécurité si IGN plante)
-const osm = L.tileLayer(
-  "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-  {
-    attribution: "© OpenStreetMap contributors",
-    maxZoom: 19
-  }
-);
+    // ORTHO IGN (vue aérienne)
+    const orthoIGN = L.tileLayer(
+      "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
+      + "&LAYER=ORTHOIMAGERY.ORTHOPHOTOS&STYLE=normal&FORMAT=image/jpeg"
+      + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
+      {
+        attribution: "© IGN – Géoplateforme",
+        maxZoom: 19,
+        tileSize: 256,
+        crossOrigin: 'anonymous'
+      }
+    );
 
-// Ajoute Plan IGN par défaut
-planIGN.addTo(map);
+    // OpenStreetMap (secours)
+    const osm = L.tileLayer(
+      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+      { attribution: "© OpenStreetMap contributors", maxZoom: 19 }
+    );
 
-// Contrôleur pour basculer entre fonds
-L.control.layers(
-  {
-    "Plan IGN": planIGN,
-    "Ortho IGN": orthoIGN,
-    "OpenStreetMap": osm
-  },
-  {}
-).addTo(map);
+    // Afficher PLAN IGN par défaut
+    planIGN.addTo(map);
 
-// (optionnel) log si un tile ne charge pas
-ignOrtho.on("tileerror", e => console.warn("IGN tile error", e));
+    // Sélecteur de fonds
+    L.control.layers(
+      { "Plan IGN": planIGN, "Ortho IGN": orthoIGN, "OpenStreetMap": osm },
+      {}
+    ).addTo(map);
 
-    // Groupes
+    // Logs d'erreurs de tuiles (debug)
+    planIGN.on("tileerror", e => console.warn("IGN PLAN tile error", e));
+    orthoIGN.on("tileerror", e => console.warn("IGN ORTHO tile error", e));
+
+    // --- COUCHES MÉTIER ------------------------------------------------------
+
     const postesLayer = L.layerGroup().addTo(map);
     const appareilsLayer = L.layerGroup().addTo(map);
     const accesLayer = L.layerGroup().addTo(map);
-    const allMarkers = []; // pour recentrage
+    const allMarkers = [];
 
-    // Icônes
-    const iconPoste = L.divIcon({className:"icon-circle poste", html:"📍"});
-    const iconAppareil = L.divIcon({className:"icon-circle appareil", html:"⚡"});
-    const iconAcces = L.divIcon({className:"icon-circle acces", html:"🚙"});
+    const iconPoste   = L.divIcon({className:"icon-circle poste",   html:"📍"});
+    const iconAppareil= L.divIcon({className:"icon-circle appareil",html:"⚡"});
+    const iconAcces   = L.divIcon({className:"icon-circle acces",   html:"🚙"});
 
-    // Charger postes.json (accès + guérite)
+    // Postes (accès + guérite)
     fetch("postes.json")
       .then(r => r.json())
       .then(data => {
         data.forEach(item => {
-     if(item.latitude && item.longitude) {
-  const lat = item.latitude;
-  const lon = item.longitude;
-
-  let content = `<b>${item.nom || "Sans nom"}</b><br>Accès`;
-  if(item.lignes) content += `<br>Ligne: ${item.lignes}`;
-  if(item.pk) content += `<br>PK: ${item.pk}`;
-
-  // Street View
-  content += `<br><a href="https://www.google.com/maps?q=&layer=c&cbll=${lat},${lon}" target="_blank">📷 Voir en Street View</a>`;
-
-  // Retour fiche poste
-  if(item.nom) {
-    content += `<br><a href="index.html?nom=${encodeURIComponent(item.nom)}" target="_blank">↩️ Retour à la fiche du poste</a>`;
-  }
-
-  const m = L.marker([lat, lon], {icon: iconAcces})
-    .bindPopup(content)
-    .addTo(accesLayer);
-
-  allMarkers.push(m);
-}
-if(item.poste_latitude && item.poste_longitude) {
-  let content = `<b>${item.nom || "Sans nom"}</b><br>`;
-
-  if(item.type) content += `Type: ${item.type}<br>`;
-  if(item.SAT) content += `SAT: ${item.SAT}<br>`;
-  if(item.lignes) content += `Ligne: ${item.lignes}<br>`;
-  if(item.pk) content += `PK: ${item.pk}<br>`;
-  if(item.rss) content += `RSS: ${item.rss}<br>`;
-  if(item.contact) content += `Contact: ${item.contact}<br>`;
-  if(item.portail) content += `Portail: ${item.portail}<br>`;
-  if(item.description) content += `<i>${item.description}</i><br>`;
-
-if(item.nom) {
-  content += `<br><a href="index.html?nom=${encodeURIComponent(item.nom)}" target="_blank">↩️ Retour à la fiche du poste</a>`;
-}
-
-const m = L.marker([item.poste_latitude, item.poste_longitude], {icon: iconPoste})
-  .bindPopup(content)
-  .addTo(postesLayer);
-
-allMarkers.push(m);
-}
+          if (item.latitude && item.longitude) {
+            const lat = item.latitude, lon = item.longitude;
+            let content = `<b>${item.nom || "Sans nom"}</b><br>Accès`;
+            if (item.lignes) content += `<br>Ligne: ${item.lignes}`;
+            if (item.pk)     content += `<br>PK: ${item.pk}`;
+            content += `<br><a href="https://www.google.com/maps?q=&layer=c&cbll=${lat},${lon}" target="_blank">📷 Street View</a>`;
+            if (item.nom)    content += `<br><a href="index.html?nom=${encodeURIComponent(item.nom)}" target="_blank">↩️ Retour fiche</a>`;
+            const m = L.marker([lat, lon], {icon: iconAcces}).bindPopup(content).addTo(accesLayer);
+            allMarkers.push(m);
+          }
+          if (item.poste_latitude && item.poste_longitude) {
+            let content = `<b>${item.nom || "Sans nom"}</b><br>`;
+            if (item.type)      content += `Type: ${item.type}<br>`;
+            if (item.SAT)       content += `SAT: ${item.SAT}<br>`;
+            if (item.lignes)    content += `Ligne: ${item.lignes}<br>`;
+            if (item.pk)        content += `PK: ${item.pk}<br>`;
+            if (item.rss)       content += `RSS: ${item.rss}<br>`;
+            if (item.contact)   content += `Contact: ${item.contact}<br>`;
+            if (item.portail)   content += `Portail: ${item.portail}<br>`;
+            if (item.description) content += `<i>${item.description}</i><br>`;
+            if (item.nom)       content += `<br><a href="index.html?nom=${encodeURIComponent(item.nom)}" target="_blank">↩️ Retour fiche</a>`;
+            const m = L.marker([item.poste_latitude, item.poste_longitude], {icon: iconPoste}).bindPopup(content).addTo(postesLayer);
+            allMarkers.push(m);
+          }
         });
       });
 
-// Charger appareils.json
-fetch("appareils.json")
-  .then(r => r.json())
-  .then(data => {
-    data.forEach(item => {
-      if(item.latitude && item.longitude) {
-        let content = `<b>${item.nom || "Sans nom"}</b><br>`;
+    // Appareils
+    fetch("appareils.json")
+      .then(r => r.json())
+      .then(data => {
+        data.forEach(item => {
+          if (item.latitude && item.longitude) {
+            let content = `<b>${item.nom || "Sans nom"}</b><br>`;
+            if (item.type)      content += `Type: ${item.type}<br>`;
+            if (item.SAT)       content += `SAT: ${item.SAT}<br>`;
+            if (item.appareil)  content += `Appareil: ${item.appareil}<br>`;
+            if (item.lignes)    content += `Ligne: ${item.lignes}<br>`;
+            if (item.pk)        content += `PK: ${item.pk}<br>`;
+            if (item.description) content += `<i>${item.description}</i><br>`;
+            if (item.nom)       content += `<br><a href="index.html?nom=${encodeURIComponent(item.nom)}" target="_blank">↩️ Retour fiche</a>`;
+            const m = L.marker([item.latitude, item.longitude], {icon: iconAppareil}).bindPopup(content).addTo(appareilsLayer);
+            allMarkers.push(m);
+          }
+        });
+      });
 
-        if(item.type) content += `Type: ${item.type}<br>`;
-        if(item.SAT) content += `SAT: ${item.SAT}<br>`;
-        if(item.appareil) content += `Appareil: ${item.appareil}<br>`;
-        if(item.lignes) content += `Ligne: ${item.lignes}<br>`;
-        if(item.pk) content += `PK: ${item.pk}<br>`;
-        if(item.description) content += `<i>${item.description}</i><br>`;
-
-     if(item.nom) {
-  content += `<br><a href="index.html?nom=${encodeURIComponent(item.nom)}" target="_blank">↩️ Retour à la fiche du poste</a>`;
-}
-
-const m = L.marker([item.latitude, item.longitude], {icon: iconAppareil})
-  .bindPopup(content)
-  .addTo(appareilsLayer);
-
-allMarkers.push(m);
-      }
-    });
-  });
-
-    // Filtres
+    // Filtres (boutons topbar)
     const btnPostes = document.getElementById("btn-postes");
     const btnAppareils = document.getElementById("btn-appareils");
     const btnAcces = document.getElementById("btn-acces");
+    btnPostes.onclick = () => { if (map.hasLayer(postesLayer)) { map.removeLayer(postesLayer); btnPostes.classList.remove("active"); } else { map.addLayer(postesLayer); btnPostes.classList.add("active"); } };
+    btnAppareils.onclick = () => { if (map.hasLayer(appareilsLayer)) { map.removeLayer(appareilsLayer); btnAppareils.classList.remove("active"); } else { map.addLayer(appareilsLayer); btnAppareils.classList.add("active"); } };
+    btnAcces.onclick = () => { if (map.hasLayer(accesLayer)) { map.removeLayer(accesLayer); btnAcces.classList.remove("active"); } else { map.addLayer(accesLayer); btnAcces.classList.add("active"); } };
 
-    btnPostes.onclick = () => {
-      if(map.hasLayer(postesLayer)) { map.removeLayer(postesLayer); btnPostes.classList.remove("active"); }
-      else { map.addLayer(postesLayer); btnPostes.classList.add("active"); }
-    };
-    btnAppareils.onclick = () => {
-      if(map.hasLayer(appareilsLayer)) { map.removeLayer(appareilsLayer); btnAppareils.classList.remove("active"); }
-      else { map.addLayer(appareilsLayer); btnAppareils.classList.add("active"); }
-    };
-    btnAcces.onclick = () => {
-      if(map.hasLayer(accesLayer)) { map.removeLayer(accesLayer); btnAcces.classList.remove("active"); }
-      else { map.addLayer(accesLayer); btnAcces.classList.add("active"); }
-    };
-
-    // Bouton recentrer
+    // Recentrer
     const recenterControl = L.control({position: "topleft"});
     recenterControl.onAdd = function() {
       const div = L.DomUtil.create("div", "leaflet-control-custom");
       div.innerHTML = "🎯";
       div.onclick = () => {
-        if(allMarkers.length > 0) {
+        if (allMarkers.length > 0) {
           const group = L.featureGroup(allMarkers);
           map.fitBounds(group.getBounds().pad(0.2));
         }
@@ -277,27 +168,18 @@ allMarkers.push(m);
     };
     recenterControl.addTo(map);
 
-    // Bouton localisation
+    // Localisation
     let userMarker;
     const locateControl = L.control({position: "topleft"});
     locateControl.onAdd = function() {
       const div = L.DomUtil.create("div", "leaflet-control-custom");
       div.innerHTML = "📍";
       div.onclick = () => {
-        if(navigator.geolocation) {
+        if (navigator.geolocation) {
           navigator.geolocation.watchPosition(pos => {
-            const lat = pos.coords.latitude;
-            const lng = pos.coords.longitude;
-            if(userMarker) {
-              userMarker.setLatLng([lat, lng]);
-            } else {
-              userMarker = L.circleMarker([lat, lng], {
-                radius: 8,
-                color: "#3b82f6",
-                fillColor: "#3b82f6",
-                fillOpacity: 0.6
-              }).addTo(map);
-            }
+            const lat = pos.coords.latitude, lng = pos.coords.longitude;
+            if (userMarker) userMarker.setLatLng([lat, lng]);
+            else userMarker = L.circleMarker([lat, lng], {radius:8, color:"#3b82f6", fillColor:"#3b82f6", fillOpacity:0.6}).addTo(map);
             map.setView([lat, lng], 15);
           });
         } else {
