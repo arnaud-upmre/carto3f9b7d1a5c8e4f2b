@@ -41,17 +41,21 @@
       border-radius: 14px;
       border: 1px solid var(--border);
       box-shadow: 0 4px 12px rgba(0,0,0,.3);
+      width: calc(100% - 24px);
+      max-width: 500px;
       z-index: 1000;
+    }
+    .left, .right {
+      display: flex;
+      align-items: center;
+      gap: .4rem;
     }
     .topbar button {
       border: none;
-      background: transparent;
-      color: var(--ink);
-      font-size: 1.2rem;
-      margin: 0 .2rem;
-      padding: .4rem .8rem;
-      border-radius: 9999px;
+      font-size: 1.1rem;
       cursor: pointer;
+      border-radius: 9999px;
+      padding: .4rem .8rem;
       transition: all .2s ease;
     }
     .topbar button.active {
@@ -61,14 +65,27 @@
     .topbar button:hover {
       background: rgba(255,255,255,0.15);
     }
+
+    /* Icônes rondes */
+    .icon-circle {
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-size: 15px; font-weight: bold;
+    }
+    .poste { background: #e11d48; }    /* rouge */
+    .appareil { background: #facc15; } /* jaune */
+    .acces { background: #3b82f6; }    /* bleu */
   </style>
 </head>
 <body>
 
   <!-- Barre supérieure -->
   <div class="topbar">
-    <button onclick="window.location.href='index.html'">🏠</button>
-    <div>
+    <div class="left">
+      <button onclick="window.location.href='index.html'">🏠</button>
+    </div>
+    <div class="right">
       <button id="btn-postes" class="active">📍</button>
       <button id="btn-appareils" class="active">⚡</button>
       <button id="btn-acces" class="active">🚙</button>
@@ -79,47 +96,67 @@
   <div id="map"></div>
 
   <script>
-    // Initialisation carte Leaflet
+    // Initialisation carte
     const map = L.map('map').setView([46.8, 2.5], 6);
 
-    // Fond IGN Orthophotos (libre accès)
-    L.tileLayer("https://wxs.ign.fr/ortho/geoportail/wmts?layer=ORTHOIMAGERY.ORTHOPHOTOS&style=normal&tilematrixset=PM&Service=WMTS&Request=GetTile&Version=1.0.0&Format=image/jpeg&TileMatrix={z}&TileCol={x}&TileRow={y}", {
-      attribution: "© IGN",
-      tileSize: 256
-    }).addTo(map);
+    // Fond IGN Orthophotos (clé publique "ortho")
+    L.tileLayer(
+      "https://data.geopf.fr/wmts/orthophotos/1.0.0/ORTHOIMAGERY.ORTHOPHOTOS/default/PM/{z}/{x}/{y}.jpeg",
+      {
+        attribution: "© IGN",
+        tileSize: 256,
+        minZoom: 0,
+        maxZoom: 19
+      }
+    ).addTo(map);
 
-    // Groupes de couches
+    // Groupes
     const postesLayer = L.layerGroup().addTo(map);
     const appareilsLayer = L.layerGroup().addTo(map);
     const accesLayer = L.layerGroup().addTo(map);
 
-    // Icônes personnalisées
-    const iconPoste = L.divIcon({className:"", html:"📍", iconSize:[24,24], popupAnchor:[0,-12]});
-    const iconAppareil = L.divIcon({className:"", html:"⚡", iconSize:[24,24], popupAnchor:[0,-12]});
-    const iconAcces = L.divIcon({className:"", html:"🚙", iconSize:[24,24], popupAnchor:[0,-12]});
+    // Icônes
+    const iconPoste = L.divIcon({className:"icon-circle poste", html:"📍"});
+    const iconAppareil = L.divIcon({className:"icon-circle appareil", html:"⚡"});
+    const iconAcces = L.divIcon({className:"icon-circle acces", html:"🚙"});
 
-    // Charger les données JSON
-    fetch("data.json")
+    // Charger postes.json (accès + guérite)
+    fetch("postes.json")
       .then(r => r.json())
       .then(data => {
         data.forEach(item => {
-          if(!item.latitude || !item.longitude) return;
-          const coords = [item.latitude, item.longitude];
-          let marker, popup = `<b>${item.nom || "Sans nom"}</b><br>Type: ${item.type || ""}<br>Ligne: ${item.lignes || ""}<br>PK: ${item.pk || ""}`;
-
-          if(item.type && item.type.toLowerCase().includes("poste")) {
-            marker = L.marker(coords, {icon: iconPoste}).bindPopup(popup).addTo(postesLayer);
+          // Accès
+          if(item.latitude && item.longitude) {
+            const popupAcces = `<b>${item.nom || "Sans nom"}</b><br>Accès<br>Ligne: ${item.lignes || ""}<br>PK: ${item.pk || ""}`;
+            L.marker([item.latitude, item.longitude], {icon: iconAcces})
+              .bindPopup(popupAcces)
+              .addTo(accesLayer);
           }
-          else if(item.type && (item.type.toLowerCase().includes("accès") || item.type.toLowerCase().includes("acces"))) {
-            marker = L.marker(coords, {icon: iconAcces}).bindPopup(popup).addTo(accesLayer);
-          }
-          else {
-            marker = L.marker(coords, {icon: iconAppareil}).bindPopup(popup).addTo(appareilsLayer);
+          // Guérite / Poste
+          if(item.poste_latitude && item.poste_longitude) {
+            const popupPoste = `<b>${item.nom || "Sans nom"}</b><br>Poste / Guérite<br>Ligne: ${item.lignes || ""}<br>PK: ${item.pk || ""}`;
+            L.marker([item.poste_latitude, item.poste_longitude], {icon: iconPoste})
+              .bindPopup(popupPoste)
+              .addTo(postesLayer);
           }
         });
       });
 
-    // Gestion des filtres
+    // Charger appareils.json
+    fetch("appareils.json")
+      .then(r => r.json())
+      .then(data => {
+        data.forEach(item => {
+          if(item.latitude && item.longitude) {
+            const popup = `<b>${item.nom || "Sans nom"}</b><br>Appareil (${item.type || ""})<br>Ligne: ${item.lignes || ""}<br>PK: ${item.pk || ""}`;
+            L.marker([item.latitude, item.longitude], {icon: iconAppareil})
+              .bindPopup(popup)
+              .addTo(appareilsLayer);
+          }
+        });
+      });
+
+    // Filtres
     const btnPostes = document.getElementById("btn-postes");
     const btnAppareils = document.getElementById("btn-appareils");
     const btnAcces = document.getElementById("btn-acces");
