@@ -8,7 +8,7 @@
   <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-
+<script src="https://unpkg.com/leaflet-tilelayer-wmts@1.0.1/leaflet-tilelayer-wmts.js"></script>
   <style>
     :root {
       --accent: #4f46e5;
@@ -111,10 +111,14 @@
   <script>
     const map = L.map('map').setView([46.8, 2.5], 6);
 
-const ignOrtho = L.tileLayer(
-  "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+const ignOrtho = L.tileLayer.wmts(
+  "https://data.geopf.fr/wmts",
   {
-    attribution: "Tiles © Esri & the GIS User Community",
+    layer: "ORTHOIMAGERY.ORTHOPHOTOS",
+    tilematrixSet: "PM",
+    format: "image/jpeg",
+    style: "normal",
+    attribution: "© IGN – Géoplateforme",
     maxZoom: 19
   }
 ).addTo(map);
