@@ -182,8 +182,8 @@ function makeTelHtml(labelEmoji, value) {
     // Vue mixte = satellite IGN + labels OSM
     const mixte = L.layerGroup([orthoIGN, osmLabels]);
 
-    // Afficher PLAN IGN par défaut
-    planIGN.addTo(map);
+ // Afficher ORTHO IGN (satellite) par défaut
+orthoIGN.addTo(map);
 
     // Sélecteur de fonds
     L.control.layers(
@@ -428,7 +428,10 @@ leftControls.addTo(map);
 map.whenReady(() => {
   if (allMarkers.length > 0) {
     const group = L.featureGroup(allMarkers);
-    map.fitBounds(group.getBounds().pad(0.2));
+    map.fitBounds(group.getBounds(), {
+      paddingTopLeft: [0, 100],   // décale la vue vers le bas
+      paddingBottomRight: [0, 0]  // aucune marge inutile
+    });
   }
 });
     
