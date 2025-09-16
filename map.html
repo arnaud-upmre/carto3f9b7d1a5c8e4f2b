@@ -105,7 +105,10 @@
 <body>
   <div id="map"></div>
   <script>
-const map = L.map('map', { zoomControl: false }).setView([46.8, 2.5], 6);
+const defaultCenter = [49.8, 2.5]; // ajuste latitude/longitude
+const defaultZoom = 7;             // ajuste niveau de zoom
+
+const map = L.map('map', { zoomControl: false }).setView(defaultCenter, defaultZoom);
 
     // --- FONDS DE CARTE ------------------------------------------------------
 
@@ -300,8 +303,7 @@ recenterBtn.innerHTML = "🎯";
 recenterBtn.onclick = () => {
   if (allMarkers.length > 0) {
     recenterBtn.classList.add("active"); // ON → bouton blanc
-    const group = L.featureGroup(allMarkers);
-    map.fitBounds(group.getBounds().pad(0.2));
+ map.setView(defaultCenter, defaultZoom);
 
     // après un court délai, on désactive pour revenir en noir
     setTimeout(() => {
