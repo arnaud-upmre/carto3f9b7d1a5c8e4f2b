@@ -110,6 +110,26 @@ const defaultZoom = 9;             // ajuste niveau de zoom
 
 const map = L.map('map', { zoomControl: false }).setView(defaultCenter, defaultZoom);
 
+    // helper : crée un HTML cliquable si la valeur ressemble à un vrai téléphone
+function makeTelHtml(labelEmoji, value) {
+  if (!value) return "";
+  // si contient # => on refuse (ex: 4242#)
+  if (value.indexOf("#") !== -1) return `<div>${labelEmoji} ${value}</div>`;
+
+  // compter les chiffres pour s'assurer que c'est bien un numéro (min 10 chiffres)
+  const digitsOnly = ("" + value).replace(/\D/g, "");
+  if (digitsOnly.length < 10) return `<div>${labelEmoji} ${value}</div>`;
+
+  // autoriser dans le href : chiffres, +, comma (,) et étoile (*)
+  // retirer tout le reste (espaces, points, slash, parenthèses, etc.)
+  const hrefSafe = ("" + value).replace(/[^\d,+*+]/g, "").replace(/\s+/g, "");
+
+  // si après nettoyage on a rien -> afficher texte simple
+  if (!hrefSafe) return `<div>${labelEmoji} ${value}</div>`;
+
+  return `<div>${labelEmoji} <a href="tel:${hrefSafe}" style="color:#007aff; text-decoration:none;">${value}</a></div>`;
+}
+
     // --- FONDS DE CARTE ------------------------------------------------------
 
     // PLAN IGN (WMTS GetTile)
@@ -208,11 +228,9 @@ map.addLayer(accesLayer);
           : `🚄 ligne n°${item.numero_ligne || ""} – ${item.lignes || ""}`}
       </div>
 
-      ${item.portail 
-  ? `<div>🔑 <a href="tel:${item.portail}" style="color:#007aff; text-decoration:none;">${item.portail}</a></div>` 
-  : ""}
-      ${item.contact ? `<div>📞 <a href="tel:${item.contact}" style="color:#007aff; text-decoration:none;">${item.contact}</a></div>` : ""}
-      ${item.description ? `<div>ℹ️ ${item.description}</div>` : ""}
+${ makeTelHtml("🔑", item.portail) }
+${ makeTelHtml("📞", item.contact) }
+${item.description ? `<div>ℹ️ ${item.description}</div>` : ""}
 
       <div style="margin-top:6px;">
         <a href="https://www.google.com/maps?q=&layer=c&cbll=${lat},${lon}" target="_blank"
@@ -243,9 +261,9 @@ map.addLayer(accesLayer);
           : `🚄 ligne n°${item.numero_ligne || ""} – ${item.lignes || ""}`}
       </div>
 
-      ${item.portail ? `<div>🔑 <a href="tel:${item.portail}" style="color:#007aff; text-decoration:none;">${item.portail}</a></div>` : ""}
-      ${item.contact ? `<div>📞 <a href="tel:${item.contact}" style="color:#007aff; text-decoration:none;">${item.contact}</a></div>` : ""}
-      ${item.description ? `<div>ℹ️ ${item.description}</div>` : ""}
+   ${ makeTelHtml("🔑", item.portail) }
+${ makeTelHtml("📞", item.contact) }
+${item.description ? `<div>ℹ️ ${item.description}</div>` : ""}
 
       <div style="margin-top:6px;">
         <a href="index.html?nom=${encodeURIComponent(item.nom)}" target="_blank"
