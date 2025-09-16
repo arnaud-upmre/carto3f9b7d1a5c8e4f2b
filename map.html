@@ -261,15 +261,22 @@ map.addLayer(accesLayer);
       .then(r => r.json())
       .then(data => {
         data.forEach(item => {
-          if (item.latitude && item.longitude) {
-            let content = `<b>${item.nom || "Sans nom"}</b><br>`;
-            if (item.type)      content += `Type: ${item.type}<br>`;
-            if (item.SAT)       content += `SAT: ${item.SAT}<br>`;
-            if (item.appareil)  content += `Appareil: ${item.appareil}<br>`;
-            if (item.lignes)    content += `Ligne: ${item.lignes}<br>`;
-            if (item.pk)        content += `PK: ${item.pk}<br>`;
-            if (item.description) content += `<i>${item.description}</i><br>`;
-            if (item.nom)       content += `<br><a href="index.html?nom=${encodeURIComponent(item.nom)}" target="_blank">↩️ Retour fiche</a>`;
+let content = `
+  <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
+              font-size:14px; color:#111; line-height:1.4; max-width:240px;">
+    <div style="font-weight:600; font-size:15px; margin-bottom:6px;">
+      ⚡️ ${item.appareil || "Sans référence"} 
+      ${item.nom || ""} ${item.type || ""} ${item.SAT ? "(" + item.SAT + ")" : ""}
+    </div>
+
+    ${item.description ? `<div style="margin-bottom:6px;">ℹ️ ${item.description}</div>` : ""}
+
+    <div style="margin-top:6px;">
+      <a href="index.html?nom=${encodeURIComponent(item.nom)}" target="_blank"
+         style="color:#007aff; text-decoration:none;">↩️ Retour fiche</a>
+    </div>
+  </div>
+`;
             const m = L.marker([item.latitude, item.longitude], {icon: iconAppareil}).bindPopup(content).addTo(appareilsLayer);
             allMarkers.push(m);
           }
