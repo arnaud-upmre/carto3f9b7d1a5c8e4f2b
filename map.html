@@ -110,14 +110,44 @@
   <script>
     const map = L.map('map').setView([46.8, 2.5], 6);
 
-const ignOrtho = L.tileLayer(
+// Plan IGN
+const planIGN = L.tileLayer(
   "https://data.geopf.fr/wmts/PLANIGNV2/1.0.0/PLANIGNV2/default/GoogleMapsCompatible/{z}/{y}/{x}.png",
   {
     attribution: "© IGN – Géoplateforme",
-    minZoom: 0,
-    maxZoom: 19,
-    tileSize: 256
+    maxZoom: 19
   }
+);
+
+// Ortho IGN (satellite)
+const orthoIGN = L.tileLayer(
+  "https://data.geopf.fr/wmts/ORTHOIMAGERY.ORTHOPHOTOS/1.0.0/ORTHOIMAGERY.ORTHOPHOTOS/default/GoogleMapsCompatible/{z}/{y}/{x}.jpeg",
+  {
+    attribution: "© IGN – Géoplateforme",
+    maxZoom: 19
+  }
+);
+
+// OpenStreetMap (sécurité si IGN plante)
+const osm = L.tileLayer(
+  "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+  {
+    attribution: "© OpenStreetMap contributors",
+    maxZoom: 19
+  }
+);
+
+// Ajoute Plan IGN par défaut
+planIGN.addTo(map);
+
+// Contrôleur pour basculer entre fonds
+L.control.layers(
+  {
+    "Plan IGN": planIGN,
+    "Ortho IGN": orthoIGN,
+    "OpenStreetMap": osm
+  },
+  {}
 ).addTo(map);
 
 // (optionnel) log si un tile ne charge pas
