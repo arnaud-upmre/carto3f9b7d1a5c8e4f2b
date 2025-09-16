@@ -196,14 +196,22 @@ function makeTelHtml(labelEmoji, value) {
       }
     );
 
-    // Labels OSM ultra léger pour mixte
-    const osmLabels = L.tileLayer(
-      "https://{s}.tile.openstreetmap.fr/openriverboatmap/{z}/{x}/{y}.png",
-      { attribution: "© OpenStreetMap contributors", maxZoom: 19, opacity: 0.5 }
-    );
-
-    // Vue mixte = satellite IGN + labels OSM
-    const mixte = L.layerGroup([orthoIGN, osmLabels]);
+// Vue mixte = satellite IGN + Plan IGN en transparence
+const mixte = L.layerGroup([
+  orthoIGN,
+  L.tileLayer(
+    "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
+    + "&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&STYLE=normal&FORMAT=image/png"
+    + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
+    {
+      attribution: "© IGN – Géoplateforme",
+      maxZoom: 19,
+      tileSize: 256,
+      crossOrigin: 'anonymous',
+      opacity: 0.4  // 👈 ajuste la transparence
+    }
+  )
+]);
 
  // Afficher ORTHO IGN (satellite) par défaut
 orthoIGN.addTo(map);
