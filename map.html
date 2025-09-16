@@ -130,7 +130,7 @@ function makeTelHtml(labelEmoji, value) {
   return `<div>${labelEmoji} <a href="tel:${hrefSafe}" style="color:#007aff; text-decoration:none;">${value}</a></div>`;
 }
 
-    // --- FONDS DE CARTE ------------------------------------------------------
+        // --- FONDS DE CARTE ------------------------------------------------------
 
     // PLAN IGN (WMTS GetTile)
     const planIGN = L.tileLayer(
@@ -158,28 +158,49 @@ function makeTelHtml(labelEmoji, value) {
       }
     );
 
-    // OpenStreetMap (secours)
+    // OpenStreetMap (plan secours)
     const osm = L.tileLayer(
       "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
       { attribution: "© OpenStreetMap contributors", maxZoom: 19 }
     );
 
-// Afficher ORTHO IGN (vue satellite) par défaut
-orthoIGN.addTo(map);
+    // Satellite Open (Esri World Imagery)
+    const esriSat = L.tileLayer(
+      "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+      {
+        attribution: "© Esri, Maxar, Earthstar Geographics",
+        maxZoom: 19
+      }
+    );
 
-// Sélecteur de fonds (ordre : Satellite, Plan, OSM)
-L.control.layers(
-  { 
-    "Vue satellite IGN": orthoIGN,
-    "Plan IGN": planIGN,
-    "OpenStreetMap": osm
-  },
-  {}
-).addTo(map);
+    // Labels OSM ultra léger pour mixte
+    const osmLabels = L.tileLayer(
+      "https://{s}.tile.openstreetmap.fr/openriverboatmap/{z}/{x}/{y}.png",
+      { attribution: "© OpenStreetMap contributors", maxZoom: 19, opacity: 0.5 }
+    );
+
+    // Vue mixte = satellite IGN + labels OSM
+    const mixte = L.layerGroup([orthoIGN, osmLabels]);
+
+    // Afficher PLAN IGN par défaut
+    planIGN.addTo(map);
+
+    // Sélecteur de fonds
+    L.control.layers(
+      { 
+        "🛰️ Satellite IGN": orthoIGN,
+        "🛰️ Satellite Open": esriSat,
+        "🗺️ Plan IGN (défaut)": planIGN,
+        "🌍 Plan Open": osm,
+        "🛰️+🗺️ Mixte": mixte
+      },
+      {}
+    ).addTo(map);
 
     // Zoom sous le sélecteur de fonds (même coin)
-L.control.zoom({ position: 'topright' }).addTo(map);
+    L.control.zoom({ position: 'topright' }).addTo(map);
 
+    
     // Logs d'erreurs de tuiles (debug)
     planIGN.on("tileerror", e => console.warn("IGN PLAN tile error", e));
     orthoIGN.on("tileerror", e => console.warn("IGN ORTHO tile error", e));
