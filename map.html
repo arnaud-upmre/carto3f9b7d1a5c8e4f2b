@@ -8,6 +8,20 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <style>
 
+    .control-group {
+  margin-bottom: 10px; /* espace entre localisation et filtres */
+}
+    
+#version-label {
+  position: fixed;
+  bottom: 6px;
+  right: 8px;
+  font-size: 11px;
+  color: rgba(255,255,255,0.45); /* discret, légèrement visible */
+  font-family: system-ui, sans-serif;
+  pointer-events: none; /* clics passent à travers */
+  user-select: none;   /* non sélectionnable */
+}
     /* Boutons ronds à gauche (ON = blanc, OFF = noir translucide) */
 .btn-toggle{
   background: rgba(0,0,0,.7);
@@ -92,14 +106,18 @@ const map = L.map('map', { zoomControl: false }).setView([46.8, 2.5], 6);
       { attribution: "© OpenStreetMap contributors", maxZoom: 19 }
     );
 
-    // Afficher PLAN IGN par défaut
-    planIGN.addTo(map);
+// Afficher ORTHO IGN (vue satellite) par défaut
+orthoIGN.addTo(map);
 
-    // Sélecteur de fonds
-    L.control.layers(
-      { "Plan IGN": planIGN, "Ortho IGN": orthoIGN, "OpenStreetMap": osm },
-      {}
-    ).addTo(map);
+// Sélecteur de fonds (ordre : Satellite, Plan, OSM)
+L.control.layers(
+  { 
+    "Vue satellite IGN": orthoIGN,
+    "Plan IGN": planIGN,
+    "OpenStreetMap": osm
+  },
+  {}
+).addTo(map);
 
     // Zoom sous le sélecteur de fonds (même coin)
 L.control.zoom({ position: 'topright' }).addTo(map);
@@ -171,33 +189,82 @@ L.control.zoom({ position: 'topright' }).addTo(map);
         });
       });
 
- // Recentrer
-const recenterControl = L.control({position: "topleft"});
-recenterControl.onAdd = function() {
-  const div = L.DomUtil.create("div", "leaflet-control-custom");
-  div.innerHTML = "🎯";
-  div.onclick = () => {
-    if (allMarkers.length > 0) {
-      const group = L.featureGroup(allMarkers);
-      map.fitBounds(group.getBounds().pad(0.2));
-    }
-  };
+// Colonne de gauche : recentrer + localisation + filtres
+const leftControls = L.control({ position: "topleft" });
+leftControls.onAdd = function() {
+  const container = L.DomUtil.create("div");
 
-  // Empêche la propagation des clics/scroll sur ce bouton
-  L.DomEvent.disableClickPropagation(div);
-  L.DomEvent.disableScrollPropagation(div);
+  // Groupe haut : 🎯 recentrer + 📍 localisation
+  const topGroup = L.DomUtil.create("div", "control-group", container);
 
-  return div;
+// 🎯 Recentrer (bouton clignote actif le temps du centrage)
+const recenterBtn = L.DomUtil.create("div", "btn-toggle", topGroup);
+recenterBtn.innerHTML = "🎯";
+
+recenterBtn.onclick = () => {
+  if (allMarkers.length > 0) {
+    recenterBtn.classList.add("active"); // ON → bouton blanc
+    const group = L.featureGroup(allMarkers);
+    map.fitBounds(group.getBounds().pad(0.2));
+
+    // après un court délai, on désactive pour revenir en noir
+    setTimeout(() => {
+      recenterBtn.classList.remove("active");
+    }, 800); // 0.8s = assez pour voir l'effet
+  }
 };
-recenterControl.addTo(map);
-    
- // Boutons de visibilité des couches à gauche
-const toggleControls = L.control({ position: "topleft" });
-toggleControls.onAdd = function() {
-  const div = L.DomUtil.create("div");
+
+L.DomEvent.disableClickPropagation(recenterBtn);
+L.DomEvent.disableScrollPropagation(recenterBtn);
+
+// 📍 Localisation (toggle ON/OFF avec bouton actif/inactif)
+let userMarker;
+let geoWatchId = null;
+const locateBtn = L.DomUtil.create("div", "btn-toggle", topGroup);
+locateBtn.innerHTML = "📍";
+
+locateBtn.onclick = () => {
+  if (!navigator.geolocation) return alert("Géolocalisation non supportée.");
+
+  if (geoWatchId !== null) {
+    // 🔴 Désactivation
+    navigator.geolocation.clearWatch(geoWatchId);
+    geoWatchId = null;
+    if (userMarker) {
+      map.removeLayer(userMarker);
+      userMarker = null;
+    }
+    locateBtn.classList.remove("active");
+    return;
+  }
+
+  // 🟢 Activation
+  geoWatchId = navigator.geolocation.watchPosition(pos => {
+    const lat = pos.coords.latitude, lng = pos.coords.longitude;
+    if (userMarker) {
+      userMarker.setLatLng([lat, lng]);
+    } else {
+      userMarker = L.circleMarker([lat, lng], {
+        radius: 8,
+        color: "#3b82f6",
+        fillColor: "#3b82f6",
+        fillOpacity: 0.6
+      }).addTo(map);
+    }
+    map.setView([lat, lng], 15);
+  });
+
+  locateBtn.classList.add("active");
+};
+
+L.DomEvent.disableClickPropagation(locateBtn);
+L.DomEvent.disableScrollPropagation(locateBtn);
+
+  // Groupe bas : 🚙, 📍, ⚡
+  const bottomGroup = L.DomUtil.create("div", "control-group", container);
 
   function makeBtn(emoji, layer, initiallyOn = true) {
-    const b = L.DomUtil.create("div", "btn-toggle" + (initiallyOn ? " active" : ""), div);
+    const b = L.DomUtil.create("div", "btn-toggle" + (initiallyOn ? " active" : ""), bottomGroup);
     b.innerHTML = emoji;
     b.onclick = () => {
       if (map.hasLayer(layer)) {
@@ -211,55 +278,24 @@ toggleControls.onAdd = function() {
     return b;
   }
 
-  // boutons (l'ordre = vertical, de haut en bas)
+  makeBtn("🚙", accesLayer, true);
   makeBtn("📍", postesLayer, true);
   makeBtn("⚡", appareilsLayer, true);
-  makeBtn("🚙", accesLayer, true);
 
-  // Empêche la propagation
-  L.DomEvent.disableClickPropagation(div);
-  L.DomEvent.disableScrollPropagation(div);
-
-  return div;
+  return container;
 };
-toggleControls.addTo(map);
+leftControls.addTo(map);
+
     
-   // Localisation (avec toggle ON/OFF)
-let userMarker;
-let geoWatchId = null; // évite empilement
-
-const locateControl = L.control({position: "topleft"});
-locateControl.onAdd = function() {
-  const div = L.DomUtil.create("div", "leaflet-control-custom");
-  div.innerHTML = "📍";
-  div.onclick = () => {
-    if (!navigator.geolocation) return alert("Géolocalisation non supportée.");
-
-    if (geoWatchId !== null) {
-      // si déjà en cours → stop
-      navigator.geolocation.clearWatch(geoWatchId);
-      geoWatchId = null;
-      return;
-    }
-
-    geoWatchId = navigator.geolocation.watchPosition(pos => {
-      const lat = pos.coords.latitude, lng = pos.coords.longitude;
-      if (userMarker) userMarker.setLatLng([lat, lng]);
-      else userMarker = L.circleMarker([lat, lng], {
-        radius: 8, color: "#3b82f6", fillColor: "#3b82f6", fillOpacity: 0.6
-      }).addTo(map);
-      map.setView([lat, lng], 15);
-    });
-  };
-
-  // bloque propagation
-  L.DomEvent.disableClickPropagation(div);
-  L.DomEvent.disableScrollPropagation(div);
-
-  return div;
-};
-locateControl.addTo(map);
+    // Au chargement → centrer automatiquement comme 🎯
+map.whenReady(() => {
+  if (allMarkers.length > 0) {
+    const group = L.featureGroup(allMarkers);
+    map.fitBounds(group.getBounds().pad(0.2));
+  }
+});
     
   </script>
+  <div id="version-label">Nono Maps V1</div>
 </body>
 </html>
