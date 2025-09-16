@@ -29,8 +29,9 @@
   font-weight: 600;
   font-size: 14px;
   color: #ffffff;
+  text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 0 6px rgba(0,0,0,0.6); /* contour autour des chiffres */
   background: rgba(255, 255, 255, 0.15);   /* bulle translucide claire */
-  backdrop-filter: blur(10px);             /* effet verre dépoli */
+  backdrop-filter: blur(10px);             
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255,255,255,0.25);
   box-shadow: 0 6px 18px rgba(0,0,0,0.2);
@@ -429,8 +430,8 @@ map.whenReady(() => {
   if (allMarkers.length > 0) {
     const group = L.featureGroup(allMarkers);
     map.fitBounds(group.getBounds(), {
-      paddingTopLeft: [0, 100],   // décale la vue vers le bas
-      paddingBottomRight: [0, 0]  // aucune marge inutile
+      paddingTopLeft: [50, 250],   // marge gauche, haut → décale la carte vers le bas
+      paddingBottomRight: [50, 50] // marge droite, bas
     });
   }
 });
