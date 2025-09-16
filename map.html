@@ -239,13 +239,13 @@ map.addLayer(appareilsLayer);
 map.addLayer(accesLayer);
     const allMarkers = [];
 
-// Icône guérite personnalisée avec halo blanc
+// Icône guérite personnalisée avec halo
 const iconPoste = L.divIcon({
-  html: `<div class="icon-wrapper"><img src="ico/poste.png" /></div>`,
-  className: "", // neutralise styles Leaflet par défaut
-  iconSize: [52, 52], 
-  iconAnchor: [26, 52], 
-  popupAnchor: [0, -52]
+  html: `<img src="ico/poste.png" class="icon-halo">`,
+  className: "",
+  iconSize: [48, 48],
+  iconAnchor: [24, 48],
+  popupAnchor: [0, -48]
 });
 
 // On garde les autres en bulles colorées
