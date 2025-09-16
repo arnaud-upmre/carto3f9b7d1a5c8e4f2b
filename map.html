@@ -111,16 +111,14 @@
   <script>
     const map = L.map('map').setView([46.8, 2.5], 6);
 
-    // Fond IGN Orthophotos (nouvelle URL)
-    L.tileLayer(
-      "https://data.geopf.fr/wmts/orthophotos/ORTHOIMAGERY.ORTHOPHOTOS/default/PM/{z}/{x}/{y}.jpeg",
-      {
-        attribution: "© IGN",
-        tileSize: 256,
-        minZoom: 0,
-        maxZoom: 19
-      }
-    ).addTo(map);
+L.tileLayer(
+  "https://wxs.ign.fr/ortho/geoportail/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&STYLE=normal&FORMAT=image/jpeg&LAYER=ORTHOIMAGERY.ORTHOPHOTOS&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
+  {
+    attribution: "© IGN – Geoportail",
+    tileSize: 256,
+    maxZoom: 19
+  }
+).addTo(map);
 
     // Groupes
     const postesLayer = L.layerGroup().addTo(map);
