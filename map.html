@@ -136,34 +136,80 @@ L.tileLayer(
       .then(r => r.json())
       .then(data => {
         data.forEach(item => {
-          if(item.latitude && item.longitude) {
-            const m = L.marker([item.latitude, item.longitude], {icon: iconAcces})
-              .bindPopup(`<b>${item.nom||"Sans nom"}</b><br>Accès<br>Ligne: ${item.lignes||""}<br>PK: ${item.pk||""}`)
-              .addTo(accesLayer);
-            allMarkers.push(m);
-          }
-          if(item.poste_latitude && item.poste_longitude) {
-            const m = L.marker([item.poste_latitude, item.poste_longitude], {icon: iconPoste})
-              .bindPopup(`<b>${item.nom||"Sans nom"}</b><br>Poste/Guérite<br>Ligne: ${item.lignes||""}<br>PK: ${item.pk||""}`)
-              .addTo(postesLayer);
-            allMarkers.push(m);
-          }
+     if(item.latitude && item.longitude) {
+  const lat = item.latitude;
+  const lon = item.longitude;
+
+  let content = `<b>${item.nom || "Sans nom"}</b><br>Accès`;
+  if(item.lignes) content += `<br>Ligne: ${item.lignes}`;
+  if(item.pk) content += `<br>PK: ${item.pk}`;
+
+  // Street View
+  content += `<br><a href="https://www.google.com/maps?q=&layer=c&cbll=${lat},${lon}" target="_blank">📷 Voir en Street View</a>`;
+
+  // Retour fiche poste
+  if(item.nom) {
+    content += `<br><a href="index.html?nom=${encodeURIComponent(item.nom)}" target="_blank">↩️ Retour à la fiche du poste</a>`;
+  }
+
+  const m = L.marker([lat, lon], {icon: iconAcces})
+    .bindPopup(content)
+    .addTo(accesLayer);
+
+  allMarkers.push(m);
+}
+if(item.poste_latitude && item.poste_longitude) {
+  let content = `<b>${item.nom || "Sans nom"}</b><br>`;
+
+  if(item.type) content += `Type: ${item.type}<br>`;
+  if(item.SAT) content += `SAT: ${item.SAT}<br>`;
+  if(item.lignes) content += `Ligne: ${item.lignes}<br>`;
+  if(item.pk) content += `PK: ${item.pk}<br>`;
+  if(item.rss) content += `RSS: ${item.rss}<br>`;
+  if(item.contact) content += `Contact: ${item.contact}<br>`;
+  if(item.portail) content += `Portail: ${item.portail}<br>`;
+  if(item.description) content += `<i>${item.description}</i><br>`;
+
+if(item.nom) {
+  content += `<br><a href="index.html?nom=${encodeURIComponent(item.nom)}" target="_blank">↩️ Retour à la fiche du poste</a>`;
+}
+
+const m = L.marker([item.poste_latitude, item.poste_longitude], {icon: iconPoste})
+  .bindPopup(content)
+  .addTo(postesLayer);
+
+allMarkers.push(m);
+}
         });
       });
 
-    // Charger appareils.json
-    fetch("appareils.json")
-      .then(r => r.json())
-      .then(data => {
-        data.forEach(item => {
-          if(item.latitude && item.longitude) {
-            const m = L.marker([item.latitude, item.longitude], {icon: iconAppareil})
-              .bindPopup(`<b>${item.nom||"Sans nom"}</b><br>Appareil (${item.type||""})<br>Ligne: ${item.lignes||""}<br>PK: ${item.pk||""}`)
-              .addTo(appareilsLayer);
-            allMarkers.push(m);
-          }
-        });
-      });
+// Charger appareils.json
+fetch("appareils.json")
+  .then(r => r.json())
+  .then(data => {
+    data.forEach(item => {
+      if(item.latitude && item.longitude) {
+        let content = `<b>${item.nom || "Sans nom"}</b><br>`;
+
+        if(item.type) content += `Type: ${item.type}<br>`;
+        if(item.SAT) content += `SAT: ${item.SAT}<br>`;
+        if(item.appareil) content += `Appareil: ${item.appareil}<br>`;
+        if(item.lignes) content += `Ligne: ${item.lignes}<br>`;
+        if(item.pk) content += `PK: ${item.pk}<br>`;
+        if(item.description) content += `<i>${item.description}</i><br>`;
+
+     if(item.nom) {
+  content += `<br><a href="index.html?nom=${encodeURIComponent(item.nom)}" target="_blank">↩️ Retour à la fiche du poste</a>`;
+}
+
+const m = L.marker([item.latitude, item.longitude], {icon: iconAppareil})
+  .bindPopup(content)
+  .addTo(appareilsLayer);
+
+allMarkers.push(m);
+      }
+    });
+  });
 
     // Filtres
     const btnPostes = document.getElementById("btn-postes");
