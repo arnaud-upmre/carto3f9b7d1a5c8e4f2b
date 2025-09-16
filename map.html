@@ -107,7 +107,7 @@
   <div id="map"></div>
   <script>
 const defaultCenter = [49.8, 2.5]; // ajuste latitude/longitude
-const defaultZoom = 9;             // ajuste niveau de zoom
+const defaultZoom = 8;             // ajuste niveau de zoom
 
 const map = L.map('map', { zoomControl: false }).setView(defaultCenter, defaultZoom);
 
@@ -429,10 +429,7 @@ leftControls.addTo(map);
 map.whenReady(() => {
   if (allMarkers.length > 0) {
     const group = L.featureGroup(allMarkers);
-    map.fitBounds(group.getBounds(), {
-      paddingTopLeft: [50, 250],   // marge gauche, haut → décale la carte vers le bas
-      paddingBottomRight: [50, 50] // marge droite, bas
-    });
+    map.fitBounds(group.getBounds()); // auto pur
   }
 });
     
