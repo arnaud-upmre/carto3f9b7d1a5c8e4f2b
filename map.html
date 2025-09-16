@@ -160,7 +160,9 @@ L.control.zoom({ position: 'topright' }).addTo(map);
           : `🚄 ligne n°${item.numero_ligne || ""} – ${item.lignes || ""}`}
       </div>
 
-      ${item.portail ? `<div>🔑 Portail : ${item.portail}</div>` : ""}
+      ${item.portail 
+  ? `<div>🔑 <a href="tel:${item.portail}" style="color:#007aff; text-decoration:none;">${item.portail}</a></div>` 
+  : ""}
       ${item.contact ? `<div>📞 <a href="tel:${item.contact}" style="color:#007aff; text-decoration:none;">${item.contact}</a></div>` : ""}
       ${item.description ? `<div>ℹ️ ${item.description}</div>` : ""}
 
