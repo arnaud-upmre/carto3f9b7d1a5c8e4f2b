@@ -7,33 +7,56 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <style>
+
+    /* Boutons ronds à gauche (ON = blanc, OFF = noir translucide) */
+.btn-toggle{
+  background: rgba(0,0,0,.7);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 50%;
+  width: 44px; height: 44px;          /* taille identique */
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;                    /* emoji inchangé */
+  color: #fff;
+  cursor: pointer;
+  margin: 10px 5px;                   /* ↑ plus d’espace vertical */
+  box-shadow: 0 4px 12px rgba(0,0,0,.25);
+  user-select: none;
+  line-height: 1;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.btn-toggle.active {
+  background: #fff;
+  color: #111;
+}
+    
     :root { --accent:#4f46e5; --bg:#0b0c0e; --ink:#f9fafb; --glass:rgba(17,19,23,.65); --border:rgba(255,255,255,.12); }
     html, body { height:100%; margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,sans-serif; background:var(--bg); color:var(--ink); }
     #map { width:100%; height:100%; }
-    .topbar { position:fixed; top:12px; left:50%; transform:translateX(-50%); display:flex; align-items:center; justify-content:space-between; background:var(--glass); backdrop-filter:blur(10px); padding:.4rem .6rem; border-radius:14px; border:1px solid var(--border); box-shadow:0 4px 12px rgba(0,0,0,.3); width:calc(100% - 24px); max-width:500px; z-index:1000; }
-    .left,.right { display:flex; align-items:center; gap:.4rem; }
-    .topbar button { border:none; font-size:1.1rem; cursor:pointer; border-radius:9999px; padding:.4rem .8rem; transition:all .2s ease; }
-    .topbar button.active { background:var(--accent); color:#fff; }
-    .topbar button:hover { background:rgba(255,255,255,.15); }
+
     .icon-circle { width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:15px; font-weight:bold; }
     .poste { background:#e11d48; } .appareil { background:#facc15; } .acces { background:#3b82f6; }
-    .leaflet-control-custom { background:var(--glass); border:1px solid var(--border); border-radius:50%; width:38px; height:38px; display:flex; align-items:center; justify-content:center; font-size:18px; color:var(--ink); cursor:pointer; margin:5px; }
+   .leaflet-control-custom{
+  background: rgba(0,0,0,0.7);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 50%;
+  width: 44px; height: 44px;             /* + grand = touch friendly */
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  color: #fff;
+  cursor: pointer;
+  margin: 5px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.25);
+  user-select: none;
+  line-height: 1;                         /* évite l’emoji coupé */
+  -webkit-tap-highlight-color: transparent;
+}
   </style>
 </head>
 <body>
-  <div class="topbar">
-    <div class="left"><button onclick="window.location.href='index.html'">🔍</button></div>
-    <div class="right">
-      <button id="btn-postes" class="active">📍</button>
-      <button id="btn-appareils" class="active">⚡</button>
-      <button id="btn-acces" class="active">🚙</button>
-    </div>
-  </div>
-
   <div id="map"></div>
-
   <script>
-    const map = L.map('map').setView([46.8, 2.5], 6);
+const map = L.map('map', { zoomControl: false }).setView([46.8, 2.5], 6);
 
     // --- FONDS DE CARTE ------------------------------------------------------
 
@@ -77,6 +100,9 @@
       { "Plan IGN": planIGN, "Ortho IGN": orthoIGN, "OpenStreetMap": osm },
       {}
     ).addTo(map);
+
+    // Zoom sous le sélecteur de fonds (même coin)
+L.control.zoom({ position: 'topright' }).addTo(map);
 
     // Logs d'erreurs de tuiles (debug)
     planIGN.on("tileerror", e => console.warn("IGN PLAN tile error", e));
@@ -145,50 +171,95 @@
         });
       });
 
-    // Filtres (boutons topbar)
-    const btnPostes = document.getElementById("btn-postes");
-    const btnAppareils = document.getElementById("btn-appareils");
-    const btnAcces = document.getElementById("btn-acces");
-    btnPostes.onclick = () => { if (map.hasLayer(postesLayer)) { map.removeLayer(postesLayer); btnPostes.classList.remove("active"); } else { map.addLayer(postesLayer); btnPostes.classList.add("active"); } };
-    btnAppareils.onclick = () => { if (map.hasLayer(appareilsLayer)) { map.removeLayer(appareilsLayer); btnAppareils.classList.remove("active"); } else { map.addLayer(appareilsLayer); btnAppareils.classList.add("active"); } };
-    btnAcces.onclick = () => { if (map.hasLayer(accesLayer)) { map.removeLayer(accesLayer); btnAcces.classList.remove("active"); } else { map.addLayer(accesLayer); btnAcces.classList.add("active"); } };
+ // Recentrer
+const recenterControl = L.control({position: "topleft"});
+recenterControl.onAdd = function() {
+  const div = L.DomUtil.create("div", "leaflet-control-custom");
+  div.innerHTML = "🎯";
+  div.onclick = () => {
+    if (allMarkers.length > 0) {
+      const group = L.featureGroup(allMarkers);
+      map.fitBounds(group.getBounds().pad(0.2));
+    }
+  };
 
-    // Recentrer
-    const recenterControl = L.control({position: "topleft"});
-    recenterControl.onAdd = function() {
-      const div = L.DomUtil.create("div", "leaflet-control-custom");
-      div.innerHTML = "🎯";
-      div.onclick = () => {
-        if (allMarkers.length > 0) {
-          const group = L.featureGroup(allMarkers);
-          map.fitBounds(group.getBounds().pad(0.2));
-        }
-      };
-      return div;
-    };
-    recenterControl.addTo(map);
+  // Empêche la propagation des clics/scroll sur ce bouton
+  L.DomEvent.disableClickPropagation(div);
+  L.DomEvent.disableScrollPropagation(div);
 
-    // Localisation
-    let userMarker;
-    const locateControl = L.control({position: "topleft"});
-    locateControl.onAdd = function() {
-      const div = L.DomUtil.create("div", "leaflet-control-custom");
-      div.innerHTML = "📍";
-      div.onclick = () => {
-        if (navigator.geolocation) {
-          navigator.geolocation.watchPosition(pos => {
-            const lat = pos.coords.latitude, lng = pos.coords.longitude;
-            if (userMarker) userMarker.setLatLng([lat, lng]);
-            else userMarker = L.circleMarker([lat, lng], {radius:8, color:"#3b82f6", fillColor:"#3b82f6", fillOpacity:0.6}).addTo(map);
-            map.setView([lat, lng], 15);
-          });
-        } else {
-          alert("Géolocalisation non supportée.");
-        }
-      };
-      return div;
+  return div;
+};
+recenterControl.addTo(map);
+    
+ // Boutons de visibilité des couches à gauche
+const toggleControls = L.control({ position: "topleft" });
+toggleControls.onAdd = function() {
+  const div = L.DomUtil.create("div");
+
+  function makeBtn(emoji, layer, initiallyOn = true) {
+    const b = L.DomUtil.create("div", "btn-toggle" + (initiallyOn ? " active" : ""), div);
+    b.innerHTML = emoji;
+    b.onclick = () => {
+      if (map.hasLayer(layer)) {
+        map.removeLayer(layer);
+        b.classList.remove("active");
+      } else {
+        map.addLayer(layer);
+        b.classList.add("active");
+      }
     };
-    locateControl.addTo(map);
+    return b;
+  }
+
+  // boutons (l'ordre = vertical, de haut en bas)
+  makeBtn("📍", postesLayer, true);
+  makeBtn("⚡", appareilsLayer, true);
+  makeBtn("🚙", accesLayer, true);
+
+  // Empêche la propagation
+  L.DomEvent.disableClickPropagation(div);
+  L.DomEvent.disableScrollPropagation(div);
+
+  return div;
+};
+toggleControls.addTo(map);
+    
+   // Localisation (avec toggle ON/OFF)
+let userMarker;
+let geoWatchId = null; // évite empilement
+
+const locateControl = L.control({position: "topleft"});
+locateControl.onAdd = function() {
+  const div = L.DomUtil.create("div", "leaflet-control-custom");
+  div.innerHTML = "📍";
+  div.onclick = () => {
+    if (!navigator.geolocation) return alert("Géolocalisation non supportée.");
+
+    if (geoWatchId !== null) {
+      // si déjà en cours → stop
+      navigator.geolocation.clearWatch(geoWatchId);
+      geoWatchId = null;
+      return;
+    }
+
+    geoWatchId = navigator.geolocation.watchPosition(pos => {
+      const lat = pos.coords.latitude, lng = pos.coords.longitude;
+      if (userMarker) userMarker.setLatLng([lat, lng]);
+      else userMarker = L.circleMarker([lat, lng], {
+        radius: 8, color: "#3b82f6", fillColor: "#3b82f6", fillOpacity: 0.6
+      }).addTo(map);
+      map.setView([lat, lng], 15);
+    });
+  };
+
+  // bloque propagation
+  L.DomEvent.disableClickPropagation(div);
+  L.DomEvent.disableScrollPropagation(div);
+
+  return div;
+};
+locateControl.addTo(map);
+    
   </script>
 </body>
 </html>
