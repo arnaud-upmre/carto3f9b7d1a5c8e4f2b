@@ -226,9 +226,17 @@ map.addLayer(appareilsLayer);
 map.addLayer(accesLayer);
     const allMarkers = [];
 
-    const iconPoste   = L.divIcon({className:"icon-circle poste",   html:"📍"});
-    const iconAppareil= L.divIcon({className:"icon-circle appareil",html:"⚡"});
-    const iconAcces   = L.divIcon({className:"icon-circle acces",   html:"🚙"});
+// Icône guérite personnalisée
+const iconPoste = L.icon({
+  iconUrl: "ico/poste.png",
+  iconSize: [32, 32],   // largeur x hauteur de l’image
+  iconAnchor: [16, 32], // la "pointe" est en bas-centre
+  popupAnchor: [0, -32] // bulle au-dessus de l’icône
+});
+
+// On garde les autres en bulles colorées
+const iconAppareil= L.divIcon({className:"icon-circle appareil",html:"⚡"});
+const iconAcces   = L.divIcon({className:"icon-circle acces",   html:"🚙"});
 
     // Postes (accès + guérite)
     fetch("postes.json")
