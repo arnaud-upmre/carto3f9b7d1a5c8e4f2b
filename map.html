@@ -255,7 +255,14 @@ const iconPoste = L.divIcon({
 
 // On garde les autres en bulles colorées
 const iconAppareil= L.divIcon({className:"icon-circle appareil",html:"⚡"});
-const iconAcces   = L.divIcon({className:"icon-circle acces",   html:"🚙"});
+
+    // Icône accès personnalisée avec halo
+const iconAcces = L.divIcon({
+  html: `<img src="ico/acces.png" class="icon-halo">`,
+  className: "",
+  iconAnchor: [24, 48],
+  popupAnchor: [0, -48]
+});
 
     // Postes (accès + guérite)
     fetch("postes.json")
