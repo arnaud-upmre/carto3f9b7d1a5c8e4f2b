@@ -11,6 +11,12 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
   <style>
+  
+    .icon-halo {
+  width: 32px;   /* 👈 adapte la taille ici */
+  height: 32px;
+  filter: drop-shadow(0 0 2px white) drop-shadow(0 0 4px white);
+}
     
 .icon-wrapper {
   display: inline-block;
@@ -242,8 +248,7 @@ map.addLayer(accesLayer);
 // Icône guérite personnalisée avec halo
 const iconPoste = L.divIcon({
   html: `<img src="ico/poste.png" class="icon-halo">`,
-  className: "",
-  iconSize: [48, 48],
+  className: "",  // pas de CSS par défaut
   iconAnchor: [24, 48],
   popupAnchor: [0, -48]
 });
