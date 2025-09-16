@@ -76,6 +76,19 @@
     .poste { background: #e11d48; }    /* rouge */
     .appareil { background: #facc15; } /* jaune */
     .acces { background: #3b82f6; }    /* bleu */
+
+    /* Boutons extra (recentrer & ma position) */
+    .leaflet-control-custom {
+      background: var(--glass);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      width: 38px; height: 38px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      color: var(--ink);
+      cursor: pointer;
+      margin: 5px;
+    }
   </style>
 </head>
 <body>
@@ -96,12 +109,11 @@
   <div id="map"></div>
 
   <script>
-    // Initialisation carte
     const map = L.map('map').setView([46.8, 2.5], 6);
 
-    // Fond IGN Orthophotos (clé publique "ortho")
+    // Fond IGN Orthophotos (nouvelle URL)
     L.tileLayer(
-      "https://data.geopf.fr/wmts/orthophotos/1.0.0/ORTHOIMAGERY.ORTHOPHOTOS/default/PM/{z}/{x}/{y}.jpeg",
+      "https://data.geopf.fr/wmts/orthophotos/ORTHOIMAGERY.ORTHOPHOTOS/default/PM/{z}/{x}/{y}.jpeg",
       {
         attribution: "© IGN",
         tileSize: 256,
@@ -114,6 +126,7 @@
     const postesLayer = L.layerGroup().addTo(map);
     const appareilsLayer = L.layerGroup().addTo(map);
     const accesLayer = L.layerGroup().addTo(map);
+    const allMarkers = []; // pour recentrage
 
     // Icônes
     const iconPoste = L.divIcon({className:"icon-circle poste", html:"📍"});
@@ -125,19 +138,17 @@
       .then(r => r.json())
       .then(data => {
         data.forEach(item => {
-          // Accès
           if(item.latitude && item.longitude) {
-            const popupAcces = `<b>${item.nom || "Sans nom"}</b><br>Accès<br>Ligne: ${item.lignes || ""}<br>PK: ${item.pk || ""}`;
-            L.marker([item.latitude, item.longitude], {icon: iconAcces})
-              .bindPopup(popupAcces)
+            const m = L.marker([item.latitude, item.longitude], {icon: iconAcces})
+              .bindPopup(`<b>${item.nom||"Sans nom"}</b><br>Accès<br>Ligne: ${item.lignes||""}<br>PK: ${item.pk||""}`)
               .addTo(accesLayer);
+            allMarkers.push(m);
           }
-          // Guérite / Poste
           if(item.poste_latitude && item.poste_longitude) {
-            const popupPoste = `<b>${item.nom || "Sans nom"}</b><br>Poste / Guérite<br>Ligne: ${item.lignes || ""}<br>PK: ${item.pk || ""}`;
-            L.marker([item.poste_latitude, item.poste_longitude], {icon: iconPoste})
-              .bindPopup(popupPoste)
+            const m = L.marker([item.poste_latitude, item.poste_longitude], {icon: iconPoste})
+              .bindPopup(`<b>${item.nom||"Sans nom"}</b><br>Poste/Guérite<br>Ligne: ${item.lignes||""}<br>PK: ${item.pk||""}`)
               .addTo(postesLayer);
+            allMarkers.push(m);
           }
         });
       });
@@ -148,10 +159,10 @@
       .then(data => {
         data.forEach(item => {
           if(item.latitude && item.longitude) {
-            const popup = `<b>${item.nom || "Sans nom"}</b><br>Appareil (${item.type || ""})<br>Ligne: ${item.lignes || ""}<br>PK: ${item.pk || ""}`;
-            L.marker([item.latitude, item.longitude], {icon: iconAppareil})
-              .bindPopup(popup)
+            const m = L.marker([item.latitude, item.longitude], {icon: iconAppareil})
+              .bindPopup(`<b>${item.nom||"Sans nom"}</b><br>Appareil (${item.type||""})<br>Ligne: ${item.lignes||""}<br>PK: ${item.pk||""}`)
               .addTo(appareilsLayer);
+            allMarkers.push(m);
           }
         });
       });
@@ -173,6 +184,52 @@
       if(map.hasLayer(accesLayer)) { map.removeLayer(accesLayer); btnAcces.classList.remove("active"); }
       else { map.addLayer(accesLayer); btnAcces.classList.add("active"); }
     };
+
+    // Bouton recentrer
+    const recenterControl = L.control({position: "topleft"});
+    recenterControl.onAdd = function() {
+      const div = L.DomUtil.create("div", "leaflet-control-custom");
+      div.innerHTML = "🎯";
+      div.onclick = () => {
+        if(allMarkers.length > 0) {
+          const group = L.featureGroup(allMarkers);
+          map.fitBounds(group.getBounds().pad(0.2));
+        }
+      };
+      return div;
+    };
+    recenterControl.addTo(map);
+
+    // Bouton localisation
+    let userMarker;
+    const locateControl = L.control({position: "topleft"});
+    locateControl.onAdd = function() {
+      const div = L.DomUtil.create("div", "leaflet-control-custom");
+      div.innerHTML = "📍";
+      div.onclick = () => {
+        if(navigator.geolocation) {
+          navigator.geolocation.watchPosition(pos => {
+            const lat = pos.coords.latitude;
+            const lng = pos.coords.longitude;
+            if(userMarker) {
+              userMarker.setLatLng([lat, lng]);
+            } else {
+              userMarker = L.circleMarker([lat, lng], {
+                radius: 8,
+                color: "#3b82f6",
+                fillColor: "#3b82f6",
+                fillOpacity: 0.6
+              }).addTo(map);
+            }
+            map.setView([lat, lng], 15);
+          });
+        } else {
+          alert("Géolocalisation non supportée.");
+        }
+      };
+      return div;
+    };
+    locateControl.addTo(map);
   </script>
 </body>
 </html>
