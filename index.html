@@ -1009,7 +1009,12 @@ const _lonPoste = (lieu.poste_longitude ?? "").toString();
 const usePoste = _latPoste !== "" && _lonPoste !== "";
 const targetLat = usePoste ? _latPoste : lieu.latitude;
 const targetLon = usePoste ? _lonPoste : lieu.longitude;
-const urlMyMapsPoste = myMapsViewer(targetLat, targetLon, 20, lieu.nom + " (poste)");
+const urlMyMapsPoste = myMapsViewer(
+  targetLat,
+  targetLon,
+  20,
+  [lieu.nom, lieu.type, lieu.SAT, "poste"].filter(Boolean).join(" ")
+);
 
 let html = `<h2>
   📍 <span id="editable-nom">${lieu.nom}</span> 
@@ -1036,7 +1041,12 @@ html += `
 <div class="rep-block">
   <p id="editable-rep-acces"><span class="emoji">🛣️</span> Repérer l’accès :</p>
   <div class="inline-links pills-3">
-    <a href="${myMapsViewer(lieu.latitude, lieu.longitude, 19, lieu.nom)}">🛰️ Vue satellite</a>
+<a href="${myMapsViewer(
+  lieu.latitude,
+  lieu.longitude,
+  19,
+  [lieu.nom, lieu.type, lieu.SAT, lieu.accès].filter(Boolean).join(" ")
+)}">🛰️ Vue satellite</a>
     <a href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">👁️ Street View</a>
   </div>
 </div>`;
@@ -1360,7 +1370,12 @@ function showAppareil(app) {
   </h2>
 
 <div class="inline-links pills-3" style="margin-top:10px; margin-bottom:1.5rem;">
-<a href="${myMapsViewer(app.latitude, app.longitude, 19, app.appareil)}">🛰️ Vue satellite</a>`;
+<a href="${myMapsViewer(
+  app.latitude,
+  app.longitude,
+  19,
+  [app.nom, app.type, app.SAT, app.appareil].filter(Boolean).join(" ")
+)}">🛰️ Vue satellite</a>`;
 
   // 🔗 Cherche le poste correspondant
   const posteTrouvé = lieux.find(l => 
@@ -1996,9 +2011,22 @@ if (id) {
       return;
     }
 
- const found = allItems.find(it =>
-  (it.category === "poste"   && normalize(it.nom) === normalize(id.replace(" (poste)", ""))) ||
-  (it.category === "appareil" && normalize(it.appareil) === normalize(id))
+function buildCustomId(it) {
+  if (it.category === "poste") {
+    // guérite
+    return [it.nom, it.type, it.SAT, "poste"].filter(Boolean).join(" ");
+  } else if (it.category === "acces") {
+    // accès
+    return [it.nom, it.type, it.SAT, it.accès].filter(Boolean).join(" ");
+  } else if (it.category === "appareil") {
+    // appareils
+    return [it.nom, it.type, it.SAT, it.appareil].filter(Boolean).join(" ");
+  }
+  return it.nom || "";
+}
+
+const found = allItems.find(it =>
+  normalize(buildCustomId(it)) === normalize(id)
 );
 
     if (found) {
@@ -2022,7 +2050,7 @@ if (id) {
 <!-- Footer classique en dessous -->
 <div id="about-footer">
   🔧 <a href="arnaud.html">À propos</a> – 
-  <span class="footer-version">Nono Maps V1.02</span>
+  <span class="footer-version">Nono Maps V1.03</span>
 </div>
 <script>
 (function(){
