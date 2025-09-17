@@ -765,7 +765,7 @@ function isPosteLike(raw){
 
 function formatNomCompletLieu(obj) {
   const base = `${obj.nom || ''} ${obj.type || ''} ${obj.SAT || ''}`.trim();
-  return obj.accès ? `${base} – accès ${obj.accès}` : base;
+return obj["accès"] ? `${base} – accès ${obj["accès"]}` : base;
 }
 
 function formatNomComplet(obj) {
@@ -967,7 +967,13 @@ if (lieu.special === true) {
   <div class="rep-block">
     <p><span class="emoji">🛣️</span> Repérer l’accès :</p>
     <div class="inline-links pills-3">
-      <a href="${myMapsViewer(lieu.latitude, lieu.longitude, 19)}" target="_blank" rel="noopener">🛰️ Vue satellite</a>
+<a href="${myMapsViewer(
+  lieu.latitude,
+  lieu.longitude,
+  19,
+  [lieu.nom, lieu.type, lieu.SAT, lieu["accès"]].filter(Boolean).join(" ")
+)}">🛰️ Vue satellite</a>
+
       <a href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">👁️ Street View</a>
     </div>
   </div>`;
@@ -1045,7 +1051,7 @@ html += `
   lieu.latitude,
   lieu.longitude,
   19,
-  [lieu.nom, lieu.type, lieu.SAT, lieu.accès].filter(Boolean).join(" ")
+ [lieu.nom, lieu.type, lieu.SAT, lieu["accès"]].filter(Boolean).join(" ")
 )}">🛰️ Vue satellite</a>
     <a href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">👁️ Street View</a>
   </div>
@@ -2016,9 +2022,9 @@ function buildCustomId(it) {
   if (it.category === "poste" && !it.accès) {
     // Poste (guérite)
     return [it.nom, it.type, it.SAT, "poste"].filter(Boolean).join(" ");
-  } else if (it.category === "poste" && it.accès) {
+  } else if (it.category === "poste" && it["accès"]) {
     // Accès → on prend bien "accès" (avec accent)
-    return [it.nom, it.type, it.SAT, it.accès].filter(Boolean).join(" ");
+    return [it.nom, it.type, it.SAT, it["accès"]].filter(Boolean).join(" ");
   } else if (it.category === "appareil") {
     // Appareil
     return [it.nom, it.type, it.SAT, "appareil", it.appareil].filter(Boolean).join(" ");
