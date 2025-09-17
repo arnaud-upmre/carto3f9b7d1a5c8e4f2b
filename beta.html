@@ -1009,7 +1009,7 @@ const _lonPoste = (lieu.poste_longitude ?? "").toString();
 const usePoste = _latPoste !== "" && _lonPoste !== "";
 const targetLat = usePoste ? _latPoste : lieu.latitude;
 const targetLon = usePoste ? _lonPoste : lieu.longitude;
-const urlMyMapsPoste = myMapsViewer(targetLat, targetLon, 20);
+const urlMyMapsPoste = myMapsViewer(targetLat, targetLon, 20, lieu.nom);
 
 let html = `<h2>
   📍 <span id="editable-nom">${lieu.nom}</span> 
@@ -1036,7 +1036,7 @@ html += `
 <div class="rep-block">
   <p id="editable-rep-acces"><span class="emoji">🛣️</span> Repérer l’accès :</p>
   <div class="inline-links pills-3">
-    <a href="${myMapsViewer(lieu.latitude, lieu.longitude, 19)}" target="_blank" rel="noopener">🛰️ Vue satellite</a>
+    <a href="${myMapsViewer(lieu.latitude, lieu.longitude, 19, lieu.nom)}" target="_blank" rel="noopener">🛰️ Vue satellite</a>
     <a href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">👁️ Street View</a>
   </div>
 </div>`;
@@ -1360,7 +1360,7 @@ function showAppareil(app) {
   </h2>
 
 <div class="inline-links pills-3" style="margin-top:10px; margin-bottom:1.5rem;">
-<a href="${myMapsViewer(app.latitude, app.longitude, 19)}" target="_blank" rel="noopener">🛰️ Vue satellite</a>`;
+<a href="${myMapsViewer(app.latitude, app.longitude, 19, app.appareil)}" target="_blank" rel="noopener">🛰️ Vue satellite</a>`;
 
   // 🔗 Cherche le poste correspondant
   const posteTrouvé = lieux.find(l => 
@@ -1984,6 +1984,29 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
     notif.style.display = "none";
   }, 4000);
 }
+    // --- Lecture paramètres URL ---
+const params = new URLSearchParams(window.location.search);
+const id = params.get("id");
+
+// Si un ID est fourni → chercher le poste ou appareil correspondant et ouvrir sa fiche
+if (id) {
+  setTimeout(() => {
+    const found =
+      allItems.find(it =>
+        (it.category === "poste"   && normalize(it.nom) === normalize(id)) ||
+        (it.category === "appareil" && normalize(it.appareil) === normalize(id))
+      );
+
+    if (found) {
+      if (found.category === "poste") {
+        showLieu(found);
+      } else {
+        showAppareil(found);
+      }
+    }
+  }, 600); // attend un peu que tout soit chargé
+}
+    
 </script> </main>
 <!-- Lien installer au-dessus du footer -->
 <div id="install-container" style="text-align:center; margin:10px 0;">
