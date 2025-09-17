@@ -366,7 +366,20 @@ fetch("appareils.json")
         </div>
       `;
 
-      const m = L.marker([item.latitude, item.longitude], {icon: iconAppareil})
+// Choix de l’icône selon le type d’appareil
+let appareilIcon;
+if (item.appareil && item.appareil.toUpperCase().startsWith("I")) {
+  appareilIcon = L.divIcon({
+    html: `<img src="ico/int.png" class="icon-halo">`,
+    className: "",
+    iconAnchor: [24, 48],
+    popupAnchor: [0, -48]
+  });
+} else {
+  appareilIcon = iconAppareil; // ⚡ par défaut
+}
+
+const m = L.marker([item.latitude, item.longitude], {icon: appareilIcon})
                   .bindPopup(content)
                   .addTo(appareilsLayer);
       allMarkers.push(m);
