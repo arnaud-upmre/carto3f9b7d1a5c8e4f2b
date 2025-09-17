@@ -174,16 +174,16 @@ if (!isNaN(lat) && !isNaN(lon)) {
 map.whenReady(() => {
   if (id) {
     setTimeout(() => {
-allMarkers.forEach(m => {
-   if (
-     id &&
-     m.options.customId &&
-     m.options.customId.trim().toLowerCase() === id.trim().toLowerCase()
-   ) {
-      m.openPopup();
-      map.setView(m.getLatLng(), zoom);
-   }
-});
+      allMarkers.forEach(m => {
+        if (
+          m.options.customId &&
+          id &&
+          m.options.customId.trim().toLowerCase() === id.trim().toLowerCase()
+        ) {
+          m.openPopup();
+          map.setView(m.getLatLng(), zoom);
+        }
+      });
     }, 800); // petit délai le temps que tout se charge
   }
 });
