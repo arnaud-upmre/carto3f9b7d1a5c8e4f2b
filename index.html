@@ -967,11 +967,8 @@ if (lieu.special === true) {
   <div class="rep-block">
     <p><span class="emoji">🛣️</span> Repérer l’accès :</p>
     <div class="inline-links pills-3">
-<a href="${myMapsViewer(
-  lieu.latitude,
-  lieu.longitude,
-  19,
- [lieu.nom, lieu.type, lieu.SAT, "acces", lieu["accès"]].filter(Boolean).join(" ")
+<a href="map.html?id=${encodeURIComponent(
+  [lieu.nom, lieu.type, lieu.SAT, "acces", lieu["accès"]].filter(Boolean).join(" ")
 )}">🛰️ Vue satellite</a>
 
       <a href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">👁️ Street View</a>
@@ -1037,7 +1034,9 @@ html += `
   <div class="inline-links pills-3">
     ${
       usePoste
-        ? `<a href="${urlMyMapsPoste}">🛰️ Vue satellite</a>`
+     ? `<a href="map.html?id=${encodeURIComponent(
+    [lieu.nom, lieu.type, lieu.SAT, "poste"].filter(Boolean).join(" ")
+  )}">🛰️ Vue satellite</a>`
         : `<span class="placeholder">(non renseigné – fournir un lien Maps)</span>`
     }
   </div>
@@ -1047,11 +1046,8 @@ html += `
 <div class="rep-block">
   <p id="editable-rep-acces"><span class="emoji">🛣️</span> Repérer l’accès :</p>
   <div class="inline-links pills-3">
-<a href="${myMapsViewer(
-  lieu.latitude,
-  lieu.longitude,
-  19,
- [lieu.nom, lieu.type, lieu.SAT, lieu["accès"]].filter(Boolean).join(" ")
+<a href="map.html?id=${encodeURIComponent(
+  [lieu.nom, lieu.type, lieu.SAT, "acces", lieu["accès"]].filter(Boolean).join(" ")
 )}">🛰️ Vue satellite</a>
     <a href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">👁️ Street View</a>
   </div>
@@ -1376,12 +1372,9 @@ function showAppareil(app) {
   </h2>
 
 <div class="inline-links pills-3" style="margin-top:10px; margin-bottom:1.5rem;">
-<a href="${myMapsViewer(
-  app.latitude,
-  app.longitude,
-  19,
-  [app.nom, app.type, app.SAT, app.appareil].filter(Boolean).join(" ")
-)}">🛰️ Vue satellite</a>`;
+<a href="map.html?id=${encodeURIComponent(
+  [app.nom, app.type, app.SAT, "appareil", app.appareil].filter(Boolean).join(" ")
+)}">🛰️ Vue satellite</a>
 
   // 🔗 Cherche le poste correspondant
   const posteTrouvé = lieux.find(l => 
@@ -1965,18 +1958,22 @@ if (repPosteInput) {
   const usePoste = latPoste !== "" && lonPoste !== "";
   const targetLat = usePoste ? latPoste : currentItem.latitude;
   const targetLon = usePoste ? lonPoste : currentItem.longitude;
-  bloc.innerHTML = usePoste
-    ? `<a href="${myMapsViewer(targetLat, targetLon, 20)}" target="_blank" rel="noopener">🛰️ Vue satellite</a>`
-    : `<span class="placeholder">(non renseigné – fournir un lien Maps)</span>`;
+bloc.innerHTML = usePoste
+  ? `<a href="map.html?id=${encodeURIComponent(
+      [currentItem.nom, currentItem.type, currentItem.SAT, "poste"].filter(Boolean).join(" ")
+    )}" target="_blank" rel="noopener">🛰️ Vue satellite</a>`
+  : `<span class="placeholder">(non renseigné – fournir un lien Maps)</span>`;
 }
 
 const repAccesInput = document.getElementById("input-acces-link");
 if (repAccesInput) {
   const bloc = repAccesInput.closest(".inline-links");
-  bloc.innerHTML = `
-    <a href="${myMapsViewer(currentItem.latitude, currentItem.longitude, 19)}" target="_blank" rel="noopener">🛰️ Vue satellite</a>
-    <a href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${currentItem.latitude},${currentItem.longitude}" target="_blank" rel="noopener">👁️ Street View</a>
-  `;
+bloc.innerHTML = `
+  <a href="map.html?id=${encodeURIComponent(
+    [currentItem.nom, currentItem.type, currentItem.SAT, "acces", currentItem["accès"]].filter(Boolean).join(" ")
+  )}" target="_blank" rel="noopener">🛰️ Vue satellite</a>
+  <a href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${currentItem.latitude},${currentItem.longitude}" target="_blank" rel="noopener">👁️ Street View</a>
+`;
 }
     // Nettoie tous les halos/vibrations restants
   document.querySelectorAll(".editable-halo, .editable-wiggle").forEach(el => {
@@ -2061,7 +2058,7 @@ if (!found && id.trim().toLowerCase().endsWith(" poste")) {
 <!-- Footer classique en dessous -->
 <div id="about-footer">
   🔧 <a href="arnaud.html">À propos</a> – 
-  <span class="footer-version">Nono Maps V1.02</span>
+  <span class="footer-version">Nono Maps V1.03</span>
 </div>
 <script>
 (function(){
