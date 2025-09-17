@@ -165,7 +165,6 @@ const params = new URLSearchParams(window.location.search);
 const lat = parseFloat(params.get("lat"));
 const lon = parseFloat(params.get("lon"));
 const zoom = parseInt(params.get("z")) || 19;
-const id = params.get("id") ? decodeURIComponent(params.get("id")) : null;
 
 // Si coordonnées fournies → recentrer la carte
 if (!isNaN(lat) && !isNaN(lon)) {
@@ -328,8 +327,14 @@ const cid = accesVal
       ${item.description ? `<div>ℹ️ ${item.description}</div>` : ""}
 
 <div style="margin-top:6px;">
- <a href="index.html?id=${encodeURIComponent(cid)}"
-   style="color:#007aff; text-decoration:none;">↩️ Retour fiche</a>
+<a href="#" onclick="
+  if (document.referrer && document.referrer.includes('index.html')) {
+    history.back();
+  } else {
+    window.location.href='index.html';
+  }
+  return false;
+" style="color:#007aff; text-decoration:none;">↩️ Retour</a>
 </div>
     </div>
   `;
@@ -366,8 +371,14 @@ const cid = accesVal
             ${item.description ? `<div>ℹ️ ${item.description}</div>` : ""}
 
         <div style="margin-top:6px;">
-<a href="index.html?id=${encodeURIComponent(cid)}"
-   style="color:#007aff; text-decoration:none;">↩️ Retour fiche</a>
+<a href="#" onclick="
+  if (document.referrer && document.referrer.includes('index.html')) {
+    history.back();
+  } else {
+    window.location.href='index.html';
+  }
+  return false;
+" style="color:#007aff; text-decoration:none;">↩️ Retour</a>
 </div>
           </div>
         `;
@@ -408,8 +419,14 @@ fetch("appareils.json")
       ${item.description ? `<div style="margin-bottom:6px;">ℹ️ ${item.description}</div>` : ""}
 
     <div style="margin-top:6px;">
-<a href="index.html?id=${encodeURIComponent(cid)}"
-   style="color:#007aff; text-decoration:none;">↩️ Retour fiche</a>
+<a href="#" onclick="
+  if (document.referrer && document.referrer.includes('index.html')) {
+    history.back();
+  } else {
+    window.location.href='index.html';
+  }
+  return false;
+" style="color:#007aff; text-decoration:none;">↩️ Retour</a>
 </div>
     </div>
   `;
@@ -469,43 +486,6 @@ fetch("appareils.json")
   allMarkers.push(m);
 });
 
-    // Une fois que tous les markers (postes + appareils) sont chargés
-    if (id) {
-   setTimeout(() => {
-  let found = false;
-
-  // 🔄 Force l’affichage des clusters avant de chercher ton marker
-  postesLayer.refreshClusters();
-  accesLayer.refreshClusters();
-  appareilsLayer.refreshClusters();
-
-  allMarkers.forEach(m => {
-    const cid = (m.options.customId || "").trim().toLowerCase();
-    const targetId = (id || "").trim().toLowerCase();
-
-    if (cid === targetId) {
-      const ll = m.getLatLng();
-      if (ll) {
-        map.setView(ll, zoom);
-       if (postesLayer.hasLayer(m)) {
-  postesLayer.zoomToShowLayer(m, () => m.openPopup());
-} else if (accesLayer.hasLayer(m)) {
-  accesLayer.zoomToShowLayer(m, () => m.openPopup());
-} else if (appareilsLayer.hasLayer(m)) {
-  appareilsLayer.zoomToShowLayer(m, () => m.openPopup());
-} else {
-  m.openPopup(); // fallback
-}
-        found = true;
-      }
-    }
-  });
-  if (!found) {
-    console.warn("⚠️ Aucun marker trouvé pour id=", id);
-  }
-}, 300);
-    }
-      }); 
 
 // Colonne de gauche : recentrer + localisation + filtres
 const leftControls = L.control({ position: "topleft" });
@@ -614,15 +594,13 @@ L.DomEvent.disableScrollPropagation(locateBtn);
 };
 leftControls.addTo(map);
 
-// Au chargement → centrer automatiquement UNIQUEMENT si pas d'ID dans l'URL
-if (!id) {
-  map.whenReady(() => {
-    if (allMarkers.length > 0) {
-      const group = L.featureGroup(allMarkers);
-      map.fitBounds(group.getBounds());
-    }
-  });
-}
+// Au chargement → toujours centrer automatiquement sur tous les marqueurs
+map.whenReady(() => {
+  if (allMarkers.length > 0) {
+    const group = L.featureGroup(allMarkers);
+    map.fitBounds(group.getBounds());
+  }
+});
     
   </script>
 </body>
