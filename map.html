@@ -250,7 +250,10 @@ const appareilsLayer = L.markerClusterGroup({
   disableClusteringAtZoom: 18
 });
 const accesLayer = L.markerClusterGroup({
-  disableClusteringAtZoom: 18
+  spiderfyOnMaxZoom: true,   // cercle éclaté même au max zoom
+  showCoverageOnHover: false,
+  zoomToBoundsOnClick: false
+  // ⚠️ on ne met pas disableClusteringAtZoom
 });
 
 map.addLayer(postesLayer);
