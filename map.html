@@ -158,6 +158,33 @@ function makeTelHtml(labelEmoji, value) {
   return `<div>${labelEmoji} <a href="tel:${hrefSafe}" style="color:#007aff; text-decoration:none;">${value}</a></div>`;
 }
 
+    // --- Lecture paramètres URL ---
+const params = new URLSearchParams(window.location.search);
+const lat = parseFloat(params.get("lat"));
+const lon = parseFloat(params.get("lon"));
+const zoom = parseInt(params.get("z")) || 19;
+const id = params.get("id");
+
+// Si coordonnées fournies → recentrer la carte
+if (!isNaN(lat) && !isNaN(lon)) {
+  map.setView([lat, lon], zoom);
+}
+
+// Si un ID est fourni → après chargement des markers, ouvrir le bon popup
+map.whenReady(() => {
+  if (id) {
+    setTimeout(() => {
+      allMarkers.forEach(m => {
+        const content = m.getPopup()?.getContent() || "";
+        if (content.includes(id)) {
+          m.openPopup();
+          map.setView(m.getLatLng(), zoom);
+        }
+      });
+    }, 800); // petit délai le temps que tout se charge
+  }
+});
+    
         // --- FONDS DE CARTE ------------------------------------------------------
 
     // PLAN IGN (WMTS GetTile)
