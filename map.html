@@ -163,7 +163,7 @@ const params = new URLSearchParams(window.location.search);
 const lat = parseFloat(params.get("lat"));
 const lon = parseFloat(params.get("lon"));
 const zoom = parseInt(params.get("z")) || 19;
-const id = params.get("id");
+const id = params.get("id") ? decodeURIComponent(params.get("id")) : null;
 
 // Si coordonnées fournies → recentrer la carte
 if (!isNaN(lat) && !isNaN(lon)) {
@@ -175,7 +175,7 @@ map.whenReady(() => {
   if (id) {
     setTimeout(() => {
       allMarkers.forEach(m => {
-        if (m.options.customId && m.options.customId === id) {
+       if (m.options.customId && m.options.customId.trim().toLowerCase() === id.trim().toLowerCase()) {
           m.openPopup();
           map.setView(m.getLatLng(), zoom);
         }
