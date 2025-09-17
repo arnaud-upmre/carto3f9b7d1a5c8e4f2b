@@ -366,11 +366,13 @@ const m = L.marker([item.poste_latitude, item.poste_longitude], {
   icon: iconPoste,
   customId: item.nom + " (poste)"
 }).bindPopup(content).addTo(postesLayer);
+
 allMarkers.push(m);
 }
 });
 });
-  // Appareils
+
+// Appareils
 fetch("appareils.json")
   .then(r => r.json())
   .then(data => {
