@@ -331,7 +331,7 @@ fetch("postes.json")
 
         const m = L.marker([lat, lon], {
           icon: iconAcces,
-          customId: item.nom
+          customId: [item.nom, item.type, item.SAT, item.acces].filter(Boolean).join(" ")
         }).bindPopup(content).addTo(accesLayer);
         allMarkers.push(m);
       }
@@ -365,7 +365,7 @@ fetch("postes.json")
 
         const m = L.marker([item.poste_latitude, item.poste_longitude], {
           icon: iconPoste,
-          customId: item.nom + " (poste)"
+        customId: [item.nom, item.type, item.SAT, "poste"].filter(Boolean).join(" ")
         }).bindPopup(content).addTo(postesLayer);
 
         allMarkers.push(m);
@@ -459,7 +459,7 @@ if (item.appareil && item.appareil.toUpperCase().startsWith("I")) {
 
 const m = L.marker([item.latitude, item.longitude], {
   icon: appareilIcon,
-  customId: item.appareil
+customId: [item.nom, item.type, item.SAT, item.appareil].filter(Boolean).join(" ")
 }).bindPopup(content).addTo(appareilsLayer);
 allMarkers.push(m);
     });
