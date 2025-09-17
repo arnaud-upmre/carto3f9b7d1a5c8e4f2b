@@ -137,6 +137,7 @@ const defaultCenter = [49.8, 2.5]; // ajuste latitude/longitude
 const defaultZoom = 8;             // ajuste niveau de zoom
 
 const map = L.map('map', { zoomControl: false }).setView(defaultCenter, defaultZoom);
+    const allMarkers = [];
 
     // helper : crée un HTML cliquable si la valeur ressemble à un vrai téléphone
 function makeTelHtml(labelEmoji, value) {
@@ -169,24 +170,6 @@ const id = params.get("id") ? decodeURIComponent(params.get("id")) : null;
 if (!isNaN(lat) && !isNaN(lon)) {
   map.setView([lat, lon], zoom);
 }
-
-// Si un ID est fourni → après chargement des markers, ouvrir le bon popup
-map.whenReady(() => {
-  if (id) {
-    setTimeout(() => {
-      allMarkers.forEach(m => {
-        if (
-          m.options.customId &&
-          id &&
-          m.options.customId.trim().toLowerCase() === id.trim().toLowerCase()
-        ) {
-          m.openPopup();
-          map.setView(m.getLatLng(), zoom);
-        }
-      });
-    }, 800); // petit délai le temps que tout se charge
-  }
-});
     
         // --- FONDS DE CARTE ------------------------------------------------------
 
@@ -289,7 +272,7 @@ const accesLayer = L.markerClusterGroup({
 map.addLayer(postesLayer);
 map.addLayer(appareilsLayer);
 map.addLayer(accesLayer);
-    const allMarkers = [];
+
 
 // Icône guérite personnalisée avec halo
 const iconPoste = L.divIcon({
@@ -477,6 +460,22 @@ const m = L.marker([item.latitude, item.longitude], {
 }).bindPopup(content).addTo(appareilsLayer);
 allMarkers.push(m);
     });
+
+    // Une fois que tous les markers (postes + appareils) sont chargés
+    if (id) {
+      setTimeout(() => {
+        allMarkers.forEach(m => {
+          if (
+            m.options.customId &&
+            id &&
+            m.options.customId.trim().toLowerCase() === id.trim().toLowerCase()
+          ) {
+            m.openPopup();
+            map.setView(m.getLatLng(), zoom);
+          }
+        });
+      }, 300); // petit délai pour être sûr que tout est en place
+    }
   });
 
 // Colonne de gauche : recentrer + localisation + filtres
