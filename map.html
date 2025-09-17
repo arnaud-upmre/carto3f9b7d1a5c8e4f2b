@@ -11,6 +11,17 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
   <style>
+
+    .btn-return {
+  position: relative;
+  animation: pulseHalo 1.8s infinite;
+}
+
+@keyframes pulseHalo {
+  0%   { box-shadow: 0 0 0px rgba(79,70,229,0.6); }
+  50%  { box-shadow: 0 0 15px rgba(79,70,229,0.9), 0 0 30px rgba(79,70,229,0.4); }
+  100% { box-shadow: 0 0 0px rgba(79,70,229,0.6); }
+}
   
     .icon-halo {
   width: 48px;   /* 👈 adapte la taille ici */
@@ -526,6 +537,22 @@ leftControls.onAdd = function() {
 
   // Groupe haut : 🎯 recentrer + 📍 localisation
   const topGroup = L.DomUtil.create("div", "control-group", container);
+
+
+  // ↩️ Bouton retour
+const backBtn = L.DomUtil.create("div", "btn-toggle btn-return", topGroup);
+backBtn.innerHTML = "↩️";
+
+backBtn.onclick = () => {
+  if (document.referrer && document.referrer.includes("index.html")) {
+    history.back();
+  } else {
+    window.location.href = "index.html";
+  }
+};
+L.DomEvent.disableClickPropagation(backBtn);
+L.DomEvent.disableScrollPropagation(backBtn);
+  
 // 🔍 Retour à l’index
 const searchBtn = L.DomUtil.create("div", "btn-toggle", topGroup);
 searchBtn.innerHTML = "🔍";
