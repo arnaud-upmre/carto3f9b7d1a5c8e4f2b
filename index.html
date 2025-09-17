@@ -1375,6 +1375,7 @@ function showAppareil(app) {
 <a href="map.html?id=${encodeURIComponent(
   [app.nom, app.type, app.SAT, "appareil", app.appareil].filter(Boolean).join(" ")
 )}">🛰️ Vue satellite</a>
+</div>`;   // 👈 ferme bien le HTML ici
 
   // 🔗 Cherche le poste correspondant
   const posteTrouvé = lieux.find(l => 
@@ -1383,7 +1384,7 @@ function showAppareil(app) {
     normalize(l.SAT || "") === normalize(app.SAT || "")
   );
 
-  // 🔗 Cherche un accès correspondant (compare avec app.accès puis app.appareil)
+  // 🔗 Cherche un accès correspondant
   const accesTrouvé = lieux.find(l => {
     const sameBase = normalize(l.nom) === normalize(app.nom)
       && normalize(l.type) === normalize(app.type)
@@ -1394,21 +1395,18 @@ function showAppareil(app) {
     const accFromApp = normalize(String(app.accès || ""));
     const accFromId  = normalize(String(app.appareil || ""));
 
-    // 1) Priorité: app.accès (cas Haute Loge "sectionneur" ou Hondeghem si présent)
     if (accFromApp && accLieu === accFromApp) return true;
-
-    // 2) Fallback: accès == code appareil (cas Hondeghem "I608")
     return accLieu === accFromId;
   });
 
   const lieuCible = accesTrouvé || posteTrouvé;
   if (lieuCible) {
     html += `
-      <a href="#" onclick='showLieu(${JSON.stringify(lieuCible)})'>🚗 Infos & itinéraire</a>
+      <div class="inline-links pills-3">
+        <a href="#" onclick='showLieu(${JSON.stringify(lieuCible)})'>🚗 Infos & itinéraire</a>
+      </div>
     `;
   }
-
-  html += `</div>`;
 
   const blocs = [];
   if (app.description) blocs.push(`<p>${app.description}</p>`);
