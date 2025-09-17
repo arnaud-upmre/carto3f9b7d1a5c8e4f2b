@@ -2006,50 +2006,45 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
   }, 4000);
 }
 
-    // --- Lecture paramètres URL ---
-const params = new URLSearchParams(window.location.search);
-const id = params.get("id");
+<!-- Gestion ouverture fiche par ?id= -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get("id");  // URLSearchParams décode déjà
 
-// Ouvrir directement la fiche si un ID est fourni
-if (id) {
+  if (!id) return;
+
   const tryShow = () => {
     if (!allItems || allItems.length === 0) {
       setTimeout(tryShow, 200);
       return;
     }
 
-function buildCustomId(it) {
-  if (it.category === "poste" && !it["accès"]) {
-    // Poste (guérite)
-    return [it.nom, it.type, it.SAT, "poste"].filter(Boolean).join(" ");
-  } else if (it.category === "poste" && it["accès"]) {
-    // Accès
-    return [it.nom, it.type, it.SAT, it["accès"]].filter(Boolean).join(" ");
-  } else if (it.category === "appareil") {
-    // Appareil
-    return [it.nom, it.type, it.SAT, "appareil", it.appareil].filter(Boolean).join(" ");
-  }
-  return it.nom || "";
-}
+    function buildCustomId(it) {
+      if (it.category === "poste") {
+        const accesVal = (it["accès"] ?? it.acces ?? "").toString().trim();
+        return accesVal
+          ? [it.nom, it.type, it.SAT, accesVal].filter(Boolean).join(" ")
+          : [it.nom, it.type, it.SAT, "poste"].filter(Boolean).join(" ");
+      }
+      if (it.category === "appareil") {
+        return [it.nom, it.type, it.SAT, "appareil", it.appareil].filter(Boolean).join(" ");
+      }
+      return it.nom || "";
+    }
 
-    // Recherche l’item dont l’id correspond
-    const found = allItems.find(it =>
-      normalize(buildCustomId(it)) === normalize(id)
-    );
+    const target = normalize(id);
+    const found = allItems.find(it => normalize(buildCustomId(it)) === target);
 
     if (found) {
-      if (found.category === "appareil") {
-        showAppareil(found);
-      } else {
-        showLieu(found);
-      }
+      if (found.category === "appareil") showAppareil(found);
+      else showLieu(found);
     }
   };
 
   tryShow();
-}
-    
-</script> </main>
+});
+</script></main>
 <!-- Lien installer au-dessus du footer -->
 <div id="install-container" style="text-align:center; margin:10px 0;">
   <a id="installLink" href="#" style="display:none;">📲 Installer l’app</a>
