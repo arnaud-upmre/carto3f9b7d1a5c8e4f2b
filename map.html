@@ -449,6 +449,20 @@ if (item.appareil && item.appareil.toUpperCase().startsWith("I")) {
     iconAnchor: [16, 32],
     popupAnchor: [0, -32]
   });
+  } else if (item.appareil && item.appareil.toUpperCase().startsWith("ALIM")) {
+  appareilIcon = L.divIcon({
+    html: `<img src="ico/alim.png" class="icon-halo-appareil">`,
+    className: "",
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32]
+  });
+  } else if (item.appareil && item.appareil.toUpperCase().startsWith("DU")) {
+  appareilIcon = L.divIcon({
+    html: `<img src="ico/stop.png" class="icon-halo-appareil">`,
+    className: "",
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32]
+  });
 } else if (item.appareil && item.appareil.toUpperCase().startsWith("SI")) {
   appareilIcon = L.divIcon({
     html: `<img src="ico/int.png" class="icon-halo-appareil">`,
