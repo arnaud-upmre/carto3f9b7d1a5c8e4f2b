@@ -1026,7 +1026,7 @@ html += `
   <div class="inline-links pills-3">
     ${
       usePoste
-        ? `<a href="${urlMyMapsPoste}" target="_blank" rel="noopener">🛰️ Vue satellite</a>`
+        ? `<a href="${urlMyMapsPoste}">🛰️ Vue satellite</a>`
         : `<span class="placeholder">(non renseigné – fournir un lien Maps)</span>`
     }
   </div>
@@ -1036,7 +1036,7 @@ html += `
 <div class="rep-block">
   <p id="editable-rep-acces"><span class="emoji">🛣️</span> Repérer l’accès :</p>
   <div class="inline-links pills-3">
-    <a href="${myMapsViewer(lieu.latitude, lieu.longitude, 19, lieu.nom)}" target="_blank" rel="noopener">🛰️ Vue satellite</a>
+    <a href="${myMapsViewer(lieu.latitude, lieu.longitude, 19, lieu.nom)}">🛰️ Vue satellite</a>
     <a href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">👁️ Street View</a>
   </div>
 </div>`;
@@ -1360,7 +1360,7 @@ function showAppareil(app) {
   </h2>
 
 <div class="inline-links pills-3" style="margin-top:10px; margin-bottom:1.5rem;">
-<a href="${myMapsViewer(app.latitude, app.longitude, 19, app.appareil)}" target="_blank" rel="noopener">🛰️ Vue satellite</a>`;
+<a href="${myMapsViewer(app.latitude, app.longitude, 19, app.appareil)}">🛰️ Vue satellite</a>`;
 
   // 🔗 Cherche le poste correspondant
   const posteTrouvé = lieux.find(l => 
