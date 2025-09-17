@@ -2013,14 +2013,11 @@ if (id) {
 
 function buildCustomId(it) {
   if (it.category === "poste") {
-    // guérite
     return [it.nom, it.type, it.SAT, "poste"].filter(Boolean).join(" ");
   } else if (it.category === "acces") {
-    // accès
-    return [it.nom, it.type, it.SAT, it.accès].filter(Boolean).join(" ");
+    return [it.nom, it.type, it.SAT, "acces", it.accès].filter(Boolean).join(" ");
   } else if (it.category === "appareil") {
-    // appareils
-    return [it.nom, it.type, it.SAT, it.appareil].filter(Boolean).join(" ");
+    return [it.nom, it.type, it.SAT, "appareil", it.appareil].filter(Boolean).join(" ");
   }
   return it.nom || "";
 }
