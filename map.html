@@ -300,44 +300,45 @@ fetch("postes.json")
   .then(data => {
     data.forEach(item => {
 
-      // === Bloc ACCÈS ===
-      if (item.latitude && item.longitude) {
-      const cid = [item.nom, item.type, item.SAT, item["accès"]].filter(Boolean).join(" ");
+     // === Bloc ACCÈS ===
+if (item.latitude && item.longitude) {
+  const accesVal = (item["accès"] ?? item.acces ?? "").toString().trim();
+  const cid = [item.nom, item.type, item.SAT, accesVal].filter(Boolean).join(" ");
 
-        let content = `
-          <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
-                      font-size:14px; color:#111; line-height:1.4; max-width:240px;">
-<div style="font-weight:600; font-size:15px; margin-bottom:4px;">
-  📍 ${item.nom || "Sans nom"} 
-  ${item.type ? " " + item.type : ""} 
-  ${item.SAT ? " " + item.SAT : ""} 
-  ${item["accès"] ? " – accès " + item["accès"] : ""}
-</div>
+  let content = `
+    <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
+                font-size:14px; color:#111; line-height:1.4; max-width:240px;">
+      <div style="font-weight:600; font-size:15px; margin-bottom:4px;">
+        📍 ${item.nom || "Sans nom"}
+        ${item.type ? " " + item.type : ""}
+        ${item.SAT ? " " + item.SAT : ""}
+        ${accesVal ? " – accès " + accesVal : ""}
+      </div>
 
-            <div style="margin-bottom:6px; color:#333;">
-              ${item.pk 
-                ? `🚄 PK ${item.pk} sur la ligne n°${item.numero_ligne || ""} – ${item.lignes || ""}`
-                : `🚄 ligne n°${item.numero_ligne || ""} – ${item.lignes || ""}`}
-            </div>
+      <div style="margin-bottom:6px; color:#333;">
+        ${item.pk 
+          ? `🚄 PK ${item.pk} sur la ligne n°${item.numero_ligne || ""} – ${item.lignes || ""}`
+          : `🚄 ligne n°${item.numero_ligne || ""} – ${item.lignes || ""}`}
+      </div>
 
-            ${ makeTelHtml("🔑", item.portail) }
-            ${ makeTelHtml("📞", item.contact) }
-            ${item.description ? `<div>ℹ️ ${item.description}</div>` : ""}
+      ${ makeTelHtml("🔑", item.portail) }
+      ${ makeTelHtml("📞", item.contact) }
+      ${item.description ? `<div>ℹ️ ${item.description}</div>` : ""}
 
-            <div style="margin-top:6px;">
-              <a href="index.html?id=${encodeURIComponent(cid)}"
-                 style="color:#007aff; text-decoration:none;">↩️ Retour fiche</a>
-            </div>
-          </div>
-        `;
+      <div style="margin-top:6px;">
+        <a href="index.html?id=${encodeURIComponent(cid)}"
+           style="color:#007aff; text-decoration:none;">↩️ Retour fiche</a>
+      </div>
+    </div>
+  `;
 
-        const m = L.marker([item.latitude, item.longitude], {
-          icon: iconAcces,
-          customId: cid
-        }).bindPopup(content).addTo(accesLayer);
+  const m = L.marker([item.latitude, item.longitude], {
+    icon: iconAcces,
+    customId: cid
+  }).bindPopup(content).addTo(accesLayer);
 
-        allMarkers.push(m);
-      }
+  allMarkers.push(m);
+}
 
       // === Bloc POSTE (guérite) ===
       if (item.poste_latitude && item.poste_longitude) {
