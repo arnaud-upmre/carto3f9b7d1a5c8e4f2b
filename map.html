@@ -178,15 +178,6 @@ const lon = parseFloat(params.get("lon"));
 const zoom = parseInt(params.get("z")) || 19;
 const id = params.get("id") ? decodeURIComponent(params.get("id")) : null;
 
-  // Ouvrir automatiquement la popup du marker à ces coordonnées
-  setTimeout(() => {
-    allMarkers.forEach(m => {
-      const ll = m.getLatLng();
-      if (ll.lat === lat && ll.lng === lon) {
-        m.openPopup();
-      }
-    });
-  }, 300);
     
         // --- FONDS DE CARTE ------------------------------------------------------
 
@@ -473,34 +464,23 @@ fetch("appareils.json")
   allMarkers.push(m);
 });
 
-    // Une fois que tous les markers (postes + appareils) sont chargés
-    if (id) {
-   setTimeout(() => {
-  let found = false;
+   // Une fois que tous les markers (postes + appareils) sont chargés
+if (!isNaN(lat) && !isNaN(lon)) {
+  setTimeout(() => {
+    // 🔄 on force le recalcul des clusters avant de chercher
+    postesLayer.refreshClusters();
+    accesLayer.refreshClusters();
+    appareilsLayer.refreshClusters();
 
-  // 🔄 Force l’affichage des clusters avant de chercher ton marker
-  postesLayer.refreshClusters();
-  accesLayer.refreshClusters();
-  appareilsLayer.refreshClusters();
-
-  allMarkers.forEach(m => {
-    const cid = (m.options.customId || "").trim().toLowerCase();
-    const targetId = (id || "").trim().toLowerCase();
-
-    if (cid === targetId) {
+    allMarkers.forEach(m => {
       const ll = m.getLatLng();
-      if (ll) {
+      if (ll && ll.lat === lat && ll.lng === lon) {
         map.setView(ll, zoom);
-        m.openPopup();  // ✅ ouverture garantie
-        found = true;
+        m.openPopup(); // ✅ ouvre automatiquement la popup
       }
-    }
-  });
-  if (!found) {
-    console.warn("⚠️ Aucun marker trouvé pour id=", id);
-  }
-}, 300);
-    }
+    });
+  }, 300);
+}
       }); 
 
 // Colonne de gauche : recentrer + localisation + filtres
