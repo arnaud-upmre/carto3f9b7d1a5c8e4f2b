@@ -473,17 +473,19 @@ fetch("appareils.json")
     if (id) {
       setTimeout(() => {
         let found = false;
-        allMarkers.forEach(m => {
-          const cid = (m.options.customId || "").trim().toLowerCase();
-          if (cid === id.trim().toLowerCase()) {
-            const ll = m.getLatLng();
-            if (ll) {
-              m.openPopup();
-              map.setView(ll, zoom);
-              found = true;
-            }
-          }
-        });
+ allMarkers.forEach(m => {
+  const cid = (m.options.customId || "").trim().toLowerCase();
+  const targetId = (id || "").trim().toLowerCase();
+
+  if (cid === targetId) {
+    const ll = m.getLatLng();
+    if (ll) {
+      map.setView(ll, zoom);
+      m.openPopup();  // ✅ ouverture garantie
+      found = true;
+    }
+  }
+});
         if (!found) {
           console.warn("⚠️ Aucun marker trouvé pour id=", id);
         }
