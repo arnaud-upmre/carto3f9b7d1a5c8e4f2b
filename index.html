@@ -971,7 +971,7 @@ if (lieu.special === true) {
   lieu.latitude,
   lieu.longitude,
   19,
-  [lieu.nom, lieu.type, lieu.SAT, lieu["accès"]].filter(Boolean).join(" ")
+  [lieu.nom, lieu.type, lieu.SAT, "acces", lieu["accès"]].filter(Boolean).join(" ")
 )}">🛰️ Vue satellite</a>
 
       <a href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">👁️ Street View</a>
@@ -2055,7 +2055,7 @@ document.addEventListener("DOMContentLoaded", () => {
 <!-- Footer classique en dessous -->
 <div id="about-footer">
   🔧 <a href="arnaud.html">À propos</a> – 
-  <span class="footer-version">Nono Maps V1.06</span>
+  <span class="footer-version">Nono Maps V1.07</span>
 </div>
 <script>
 (function(){
