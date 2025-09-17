@@ -657,9 +657,10 @@ const compteurAppareilURL = "https://script.google.com/macros/s/AKfycbwJIlvcfNYR
 let lieux = [], appareils = [];
     let currentItem = null; // ✅ mémorise la fiche affichée
 
-function myMapsViewer(lat, lon, z = 19) {
-  const mid = "1GgHJAojpocAVqJb5uaw8mDoEVlc_0m9r"; // ID de ta carte MyMaps
-  return `https://www.google.com/maps/d/u/0/edit?mid=${mid}&ll=${lat},${lon}&z=${z}`;
+function myMapsViewer(lat, lon, z = 19, id = "") {
+  let url = `map.html?lat=${lat}&lon=${lon}&z=${z}`;
+  if (id) url += `&id=${encodeURIComponent(id)}`;
+  return url;
 }
     
 // Pagination proximité
@@ -1008,7 +1009,7 @@ const _lonPoste = (lieu.poste_longitude ?? "").toString();
 const usePoste = _latPoste !== "" && _lonPoste !== "";
 const targetLat = usePoste ? _latPoste : lieu.latitude;
 const targetLon = usePoste ? _lonPoste : lieu.longitude;
-const urlMyMapsPoste = myMapsViewer(targetLat, targetLon, 20);
+const urlMyMapsPoste = myMapsViewer(targetLat, targetLon, 20, lieu.nom + " (poste)");
 
 let html = `<h2>
   📍 <span id="editable-nom">${lieu.nom}</span> 
@@ -1025,7 +1026,7 @@ html += `
   <div class="inline-links pills-3">
     ${
       usePoste
-        ? `<a href="${urlMyMapsPoste}" target="_blank" rel="noopener">🛰️ Vue satellite</a>`
+        ? `<a href="${urlMyMapsPoste}">🛰️ Vue satellite</a>`
         : `<span class="placeholder">(non renseigné – fournir un lien Maps)</span>`
     }
   </div>
@@ -1035,7 +1036,7 @@ html += `
 <div class="rep-block">
   <p id="editable-rep-acces"><span class="emoji">🛣️</span> Repérer l’accès :</p>
   <div class="inline-links pills-3">
-    <a href="${myMapsViewer(lieu.latitude, lieu.longitude, 19)}" target="_blank" rel="noopener">🛰️ Vue satellite</a>
+    <a href="${myMapsViewer(lieu.latitude, lieu.longitude, 19, lieu.nom)}">🛰️ Vue satellite</a>
     <a href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">👁️ Street View</a>
   </div>
 </div>`;
@@ -1359,7 +1360,7 @@ function showAppareil(app) {
   </h2>
 
 <div class="inline-links pills-3" style="margin-top:10px; margin-bottom:1.5rem;">
-<a href="${myMapsViewer(app.latitude, app.longitude, 19)}" target="_blank" rel="noopener">🛰️ Vue satellite</a>`;
+<a href="${myMapsViewer(app.latitude, app.longitude, 19, app.appareil)}">🛰️ Vue satellite</a>`;
 
   // 🔗 Cherche le poste correspondant
   const posteTrouvé = lieux.find(l => 
@@ -1983,6 +1984,35 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
     notif.style.display = "none";
   }, 4000);
 }
+// --- Lecture paramètres URL ---
+const params = new URLSearchParams(window.location.search);
+const id = params.get("id");
+
+// Ouvrir directement la fiche si un ID est fourni
+if (id) {
+  const tryShow = () => {
+    if (!allItems || allItems.length === 0) {
+      setTimeout(tryShow, 200); // réessaie tant que les données ne sont pas chargées
+      return;
+    }
+
+ const found = allItems.find(it =>
+  (it.category === "poste"   && normalize(it.nom) === normalize(id.replace(" (poste)", ""))) ||
+  (it.category === "appareil" && normalize(it.appareil) === normalize(id))
+);
+
+    if (found) {
+      if (found.category === "poste") {
+        showLieu(found);
+      } else {
+        showAppareil(found);
+      }
+    }
+  };
+
+  tryShow();
+}
+    
 </script> </main>
 <!-- Lien installer au-dessus du footer -->
 <div id="install-container" style="text-align:center; margin:10px 0;">
