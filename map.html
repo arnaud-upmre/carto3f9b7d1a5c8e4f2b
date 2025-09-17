@@ -175,8 +175,7 @@ map.whenReady(() => {
   if (id) {
     setTimeout(() => {
       allMarkers.forEach(m => {
-        const content = m.getPopup()?.getContent() || "";
-        if (content.includes(id)) {
+        if (m.options.customId && m.options.customId === id) {
           m.openPopup();
           map.setView(m.getLatLng(), zoom);
         }
@@ -343,9 +342,11 @@ ${item.description ? `<div>ℹ️ ${item.description}</div>` : ""}
     </div>
   `;
 
-  const m = L.marker([lat, lon], {icon: iconAcces}).bindPopup(content).addTo(accesLayer);
-  allMarkers.push(m);
-}
+const m = L.marker([lat, lon], {
+  icon: iconAcces,
+  customId: item.nom
+}).bindPopup(content).addTo(accesLayer);
+allMarkers.push(m);
           
          if (item.poste_latitude && item.poste_longitude) {
   let content = `
@@ -374,8 +375,11 @@ ${item.description ? `<div>ℹ️ ${item.description}</div>` : ""}
     </div>
   `;
 
-  const m = L.marker([item.poste_latitude, item.poste_longitude], {icon: iconPoste}).bindPopup(content).addTo(postesLayer);
-  allMarkers.push(m);
+const m = L.marker([item.poste_latitude, item.poste_longitude], {
+  icon: iconPoste,
+  customId: item.nom + " (poste)"
+}).bindPopup(content).addTo(postesLayer);
+allMarkers.push(m);
 }
  });
       });
@@ -463,10 +467,11 @@ if (item.appareil && item.appareil.toUpperCase().startsWith("I")) {
   appareilIcon = iconAppareil;
 }
 
-const m = L.marker([item.latitude, item.longitude], {icon: appareilIcon})
-                  .bindPopup(content)
-                  .addTo(appareilsLayer);
-      allMarkers.push(m);
+const m = L.marker([item.latitude, item.longitude], {
+  icon: appareilIcon,
+  customId: item.appareil
+}).bindPopup(content).addTo(appareilsLayer);
+allMarkers.push(m);
     });
   });
 
