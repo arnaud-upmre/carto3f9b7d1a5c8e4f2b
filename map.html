@@ -17,6 +17,11 @@
   height: 48px;
   filter: drop-shadow(0 0 2px white) drop-shadow(0 0 4px white);
 }
+    .icon-halo-appareil {
+  width: 32px;   /* 👈 taille réduite seulement pour les appareils */
+  height: 32px;
+  filter: drop-shadow(0 0 2px white) drop-shadow(0 0 4px white);
+}
     
 .icon-wrapper {
   display: inline-block;
@@ -369,12 +374,12 @@ fetch("appareils.json")
 // Choix de l’icône selon le type d’appareil
 let appareilIcon;
 if (item.appareil && item.appareil.toUpperCase().startsWith("I")) {
-  appareilIcon = L.divIcon({
-    html: `<img src="ico/int.png" class="icon-halo">`,
-    className: "",
-    iconAnchor: [24, 48],
-    popupAnchor: [0, -48]
-  });
+appareilIcon = L.divIcon({
+  html: `<img src="ico/int.png" class="icon-halo-appareil">`,
+  className: "",
+  iconAnchor: [16, 32],  // 👈 adapté à la nouvelle taille
+  popupAnchor: [0, -32]
+});
 } else {
   appareilIcon = iconAppareil; // ⚡ par défaut
 }
