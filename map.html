@@ -487,7 +487,15 @@ fetch("appareils.json")
       const ll = m.getLatLng();
       if (ll) {
         map.setView(ll, zoom);
-        m.openPopup();  // ✅ ouverture garantie
+       if (postesLayer.hasLayer(m)) {
+  postesLayer.zoomToShowLayer(m, () => m.openPopup());
+} else if (accesLayer.hasLayer(m)) {
+  accesLayer.zoomToShowLayer(m, () => m.openPopup());
+} else if (appareilsLayer.hasLayer(m)) {
+  appareilsLayer.zoomToShowLayer(m, () => m.openPopup());
+} else {
+  m.openPopup(); // fallback
+}
         found = true;
       }
     }
