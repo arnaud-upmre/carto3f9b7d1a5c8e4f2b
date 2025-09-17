@@ -151,21 +151,18 @@ const map = L.map('map', { zoomControl: false, attributionControl: false })
              .setView(defaultCenter, defaultZoom);
     const allMarkers = [];
 
-    // helper : crée un HTML cliquable si la valeur ressemble à un vrai téléphone
+
 function makeTelHtml(labelEmoji, value) {
   if (!value) return "";
-  // si contient # => on refuse (ex: 4242#)
+
   if (value.indexOf("#") !== -1) return `<div>${labelEmoji} ${value}</div>`;
 
-  // compter les chiffres pour s'assurer que c'est bien un numéro (min 10 chiffres)
+
   const digitsOnly = ("" + value).replace(/\D/g, "");
   if (digitsOnly.length < 10) return `<div>${labelEmoji} ${value}</div>`;
 
-  // autoriser dans le href : chiffres, +, comma (,) et étoile (*)
-  // retirer tout le reste (espaces, points, slash, parenthèses, etc.)
-  const hrefSafe = ("" + value).replace(/[^\d,+*+]/g, "").replace(/\s+/g, "");
+ const hrefSafe = ("" + value).replace(/[^\d+]/g, "");
 
-  // si après nettoyage on a rien -> afficher texte simple
   if (!hrefSafe) return `<div>${labelEmoji} ${value}</div>`;
 
   return `<div>${labelEmoji} <a href="tel:${hrefSafe}" style="color:#007aff; text-decoration:none;">${value}</a></div>`;
