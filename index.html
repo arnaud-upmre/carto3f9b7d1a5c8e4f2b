@@ -2036,7 +2036,13 @@ function buildCustomId(it) {
 }
 
     const target = normalize(id);
-    const found = allItems.find(it => normalize(buildCustomId(it)) === normalize(id));
+   let found = allItems.find(it => normalize(buildCustomId(it)) === normalize(id));
+
+// ✅ Correction spéciale pour les postes simples (ex: Alleux SP)
+if (!found && id.trim().toLowerCase().endsWith(" poste")) {
+  const idSansPoste = id.trim().toLowerCase().replace(/\s+poste$/, "");
+  found = allItems.find(it => normalize(buildCustomId(it)).replace(/\sposte$/, "") === idSansPoste);
+}
 
     if (found) {
       if (found.category === "appareil") showAppareil(found);
@@ -2055,7 +2061,7 @@ function buildCustomId(it) {
 <!-- Footer classique en dessous -->
 <div id="about-footer">
   🔧 <a href="arnaud.html">À propos</a> – 
-  <span class="footer-version">Nono Maps V1.01</span>
+  <span class="footer-version">Nono Maps V1.02</span>
 </div>
 <script>
 (function(){
