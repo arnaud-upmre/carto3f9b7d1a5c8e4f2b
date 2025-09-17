@@ -374,12 +374,21 @@ fetch("appareils.json")
 // Choix de l’icône selon le type d’appareil
 let appareilIcon;
 if (item.appareil && item.appareil.toUpperCase().startsWith("I")) {
-appareilIcon = L.divIcon({
-  html: `<img src="ico/int.png" class="icon-halo-appareil">`,
-  className: "",
-  iconAnchor: [16, 32],  // 👈 adapté à la nouvelle taille
-  popupAnchor: [0, -32]
-});
+  // Interrupteurs
+  appareilIcon = L.divIcon({
+    html: `<img src="ico/int.png" class="icon-halo-appareil">`,
+    className: "",
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32]
+  });
+} else if (item.appareil && item.appareil.toUpperCase().startsWith("TT")) {
+  // Transformateurs
+  appareilIcon = L.divIcon({
+    html: `<img src="ico/TT.png" class="icon-halo-appareil">`,
+    className: "",
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32]
+  });
 } else {
   appareilIcon = iconAppareil; // ⚡ par défaut
 }
