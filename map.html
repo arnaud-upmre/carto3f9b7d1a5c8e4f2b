@@ -307,7 +307,7 @@ fetch("postes.json")
               📍 ${item.nom || "Sans nom"} 
               ${item.type ? item.type : ""} 
               ${item.SAT ? " " + item.SAT : ""} 
-              ${item.acces ? " " + item.acces : ""}
+             ${item.acces || item["accès"] ? " " + (item.acces || item["accès"]) : ""}
             </div>
 
             <div style="margin-bottom:6px; color:#333;">
