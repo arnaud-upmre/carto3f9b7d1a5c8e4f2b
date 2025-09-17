@@ -464,19 +464,23 @@ allMarkers.push(m);
     // Une fois que tous les markers (postes + appareils) sont chargés
     if (id) {
       setTimeout(() => {
+        let found = false;
         allMarkers.forEach(m => {
-          if (
-            m.options.customId &&
-            id &&
-            m.options.customId.trim().toLowerCase() === id.trim().toLowerCase()
-          ) {
-            m.openPopup();
-            map.setView(m.getLatLng(), zoom);
+          const cid = (m.options.customId || "").trim().toLowerCase();
+          if (cid === id.trim().toLowerCase()) {
+            const ll = m.getLatLng();
+            if (ll) {
+              m.openPopup();
+              map.setView(ll, zoom);
+              found = true;
+            }
           }
         });
-      }, 300); // petit délai pour être sûr que tout est en place
+        if (!found) {
+          console.warn("⚠️ Aucun marker trouvé pour id=", id);
+        }
+      }, 300); // délai pour être sûr que tout est chargé
     }
-  });
 
 // Colonne de gauche : recentrer + localisation + filtres
 const leftControls = L.control({ position: "topleft" });
