@@ -1999,7 +1999,8 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
     notif.style.display = "none";
   }, 4000);
 }
-// --- Lecture paramètres URL ---
+
+    // --- Lecture paramètres URL ---
 const params = new URLSearchParams(window.location.search);
 const id = params.get("id");
 
@@ -2007,30 +2008,35 @@ const id = params.get("id");
 if (id) {
   const tryShow = () => {
     if (!allItems || allItems.length === 0) {
-      setTimeout(tryShow, 200); // réessaie tant que les données ne sont pas chargées
+      setTimeout(tryShow, 200);
       return;
     }
 
-function buildCustomId(it) {
-  if (it.category === "poste") {
-    return [it.nom, it.type, it.SAT, "poste"].filter(Boolean).join(" ");
-  } else if (it.category === "acces") {
-    return [it.nom, it.type, it.SAT, "acces", it.accès].filter(Boolean).join(" ");
-  } else if (it.category === "appareil") {
-    return [it.nom, it.type, it.SAT, "appareil", it.appareil].filter(Boolean).join(" ");
-  }
-  return it.nom || "";
-}
+    // Construit le même customId que dans map.html
+    function buildCustomId(it) {
+      if (it.category === "poste" && !it.accès) {
+        // Poste (guérite)
+        return [it.nom, it.type, it.SAT, "poste"].filter(Boolean).join(" ");
+      } else if (it.category === "poste" && it.accès) {
+        // Accès
+        return [it.nom, it.type, it.SAT, "acces", it.accès].filter(Boolean).join(" ");
+      } else if (it.category === "appareil") {
+        // Appareil
+        return [it.nom, it.type, it.SAT, "appareil", it.appareil].filter(Boolean).join(" ");
+      }
+      return it.nom || "";
+    }
 
-const found = allItems.find(it =>
-  normalize(buildCustomId(it)) === normalize(id)
-);
+    // Recherche l’item dont l’id correspond
+    const found = allItems.find(it =>
+      normalize(buildCustomId(it)) === normalize(id)
+    );
 
     if (found) {
-      if (found.category === "poste") {
-        showLieu(found);
-      } else {
+      if (found.category === "appareil") {
         showAppareil(found);
+      } else {
+        showLieu(found);
       }
     }
   };
