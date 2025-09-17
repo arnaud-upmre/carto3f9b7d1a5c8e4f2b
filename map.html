@@ -178,10 +178,15 @@ const lon = parseFloat(params.get("lon"));
 const zoom = parseInt(params.get("z")) || 19;
 const id = params.get("id") ? decodeURIComponent(params.get("id")) : null;
 
-// Si coordonnées fournies → recentrer la carte
-if (!isNaN(lat) && !isNaN(lon)) {
-  map.setView([lat, lon], zoom);
-}
+  // Ouvrir automatiquement la popup du marker à ces coordonnées
+  setTimeout(() => {
+    allMarkers.forEach(m => {
+      const ll = m.getLatLng();
+      if (ll.lat === lat && ll.lng === lon) {
+        m.openPopup();
+      }
+    });
+  }, 300);
     
         // --- FONDS DE CARTE ------------------------------------------------------
 
