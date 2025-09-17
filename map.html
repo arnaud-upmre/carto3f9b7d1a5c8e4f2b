@@ -136,7 +136,8 @@
 const defaultCenter = [49.8, 2.5]; // ajuste latitude/longitude
 const defaultZoom = 8;             // ajuste niveau de zoom
 
-const map = L.map('map', { zoomControl: false }).setView(defaultCenter, defaultZoom);
+const map = L.map('map', { zoomControl: false, attributionControl: false })
+             .setView(defaultCenter, defaultZoom);
     const allMarkers = [];
 
     // helper : crée un HTML cliquable si la valeur ressemble à un vrai téléphone
@@ -179,7 +180,7 @@ if (!isNaN(lat) && !isNaN(lon)) {
       + "&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&STYLE=normal&FORMAT=image/png"
       + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
       {
-        attribution: "© IGN – Géoplateforme",
+        attribution: "",
         maxZoom: 19,
         tileSize: 256,
         crossOrigin: 'anonymous'
