@@ -2013,19 +2013,19 @@ if (id) {
     }
 
     // Construit le même customId que dans map.html
-    function buildCustomId(it) {
-      if (it.category === "poste" && !it.accès) {
-        // Poste (guérite)
-        return [it.nom, it.type, it.SAT, "poste"].filter(Boolean).join(" ");
-      } else if (it.category === "poste" && it.accès) {
-        // Accès
-        return [it.nom, it.type, it.SAT, "acces", it.accès].filter(Boolean).join(" ");
-      } else if (it.category === "appareil") {
-        // Appareil
-        return [it.nom, it.type, it.SAT, "appareil", it.appareil].filter(Boolean).join(" ");
-      }
-      return it.nom || "";
-    }
+function buildCustomId(it) {
+  if (it.category === "poste" && !it.accès) {
+    // Poste (guérite)
+    return [it.nom, it.type, it.SAT, "poste"].filter(Boolean).join(" ");
+  } else if (it.category === "poste" && it.accès) {
+    // Accès
+    return [it.nom, it.type, it.SAT, it.accès].filter(Boolean).join(" ");
+  } else if (it.category === "appareil") {
+    // Appareil
+    return [it.nom, it.type, it.SAT, "appareil", it.appareil].filter(Boolean).join(" ");
+  }
+  return it.nom || "";
+}
 
     // Recherche l’item dont l’id correspond
     const found = allItems.find(it =>
