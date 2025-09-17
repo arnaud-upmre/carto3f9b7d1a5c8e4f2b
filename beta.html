@@ -1984,18 +1984,22 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
     notif.style.display = "none";
   }, 4000);
 }
-    // --- Lecture paramètres URL ---
+// --- Lecture paramètres URL ---
 const params = new URLSearchParams(window.location.search);
 const id = params.get("id");
 
-// Si un ID est fourni → chercher le poste ou appareil correspondant et ouvrir sa fiche
+// Ouvrir directement la fiche si un ID est fourni
 if (id) {
-  setTimeout(() => {
-    const found =
-      allItems.find(it =>
-        (it.category === "poste"   && normalize(it.nom) === normalize(id)) ||
-        (it.category === "appareil" && normalize(it.appareil) === normalize(id))
-      );
+  const tryShow = () => {
+    if (!allItems || allItems.length === 0) {
+      setTimeout(tryShow, 200); // réessaie tant que les données ne sont pas chargées
+      return;
+    }
+
+    const found = allItems.find(it =>
+      (it.category === "poste"   && normalize(it.nom) === normalize(id)) ||
+      (it.category === "appareil" && normalize(it.appareil) === normalize(id))
+    );
 
     if (found) {
       if (found.category === "poste") {
@@ -2004,7 +2008,9 @@ if (id) {
         showAppareil(found);
       }
     }
-  }, 600); // attend un peu que tout soit chargé
+  };
+
+  tryShow();
 }
     
 </script> </main>
