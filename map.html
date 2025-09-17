@@ -327,10 +327,10 @@ const cid = accesVal
       ${ makeTelHtml("📞", item.contact) }
       ${item.description ? `<div>ℹ️ ${item.description}</div>` : ""}
 
-      <div style="margin-top:6px;">
-        <a href="index.html?id=${encodeURIComponent(cid)}"
-           style="color:#007aff; text-decoration:none;">↩️ Retour fiche</a>
-      </div>
+<div style="margin-top:6px;">
+  <a href="#" onclick="goBack('${cid}')"
+     style="color:#007aff; text-decoration:none;">↩️ Retour fiche</a>
+</div>
     </div>
   `;
 
@@ -365,10 +365,10 @@ const cid = accesVal
             ${ makeTelHtml("📞", item.contact) }
             ${item.description ? `<div>ℹ️ ${item.description}</div>` : ""}
 
-            <div style="margin-top:6px;">
-              <a href="index.html?id=${encodeURIComponent(cid)}"
-                 style="color:#007aff; text-decoration:none;">↩️ Retour fiche</a>
-            </div>
+        <div style="margin-top:6px;">
+  <a href="#" onclick="goBack('${cid}')"
+     style="color:#007aff; text-decoration:none;">↩️ Retour fiche</a>
+</div>
           </div>
         `;
 
@@ -407,10 +407,10 @@ fetch("appareils.json")
 
       ${item.description ? `<div style="margin-bottom:6px;">ℹ️ ${item.description}</div>` : ""}
 
-      <div style="margin-top:6px;">
-        <a href="index.html?id=${encodeURIComponent(cid)}"
-           style="color:#007aff; text-decoration:none;">↩️ Retour fiche</a>
-      </div>
+    <div style="margin-top:6px;">
+  <a href="#" onclick="goBack('${cid}')"
+     style="color:#007aff; text-decoration:none;">↩️ Retour fiche</a>
+</div>
     </div>
   `;
 
@@ -609,6 +609,14 @@ if (!id) {
 }
     
   </script>
-  <div id="version-label">Nono Maps V1.01</div>
+  <script>
+function goBack(cid) {
+  if (document.referrer && document.referrer.includes("index.html")) {
+    history.back(); // 🔙 retour normal
+  } else {
+    window.location.href = "index.html?id=" + encodeURIComponent(cid); // 🏠 accueil avec la fiche
+  }
+}
+</script>
 </body>
 </html>
