@@ -578,8 +578,7 @@ L.DomEvent.disableScrollPropagation(locateBtn);
 leftControls.addTo(map);
 
 // Au chargement → centrer automatiquement UNIQUEMENT si pas d'ID dans l'URL
-const params = new URLSearchParams(window.location.search);
-if (!params.get("id")) {
+if (!id) {
   map.whenReady(() => {
     if (allMarkers.length > 0) {
       const group = L.featureGroup(allMarkers);
