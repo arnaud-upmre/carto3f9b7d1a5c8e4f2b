@@ -423,6 +423,7 @@ fetch("appareils.json")
     (item.appareil.toUpperCase().startsWith("TT") ||
      item.appareil.toUpperCase().startsWith("TSA") ||
      item.appareil.toUpperCase().startsWith("TC"))
+     item.appareil.toUpperCase().startsWith("TRA"))
   ) {
     appareilIcon = L.divIcon({
       html: `<img src="ico/TT.png" class="icon-halo-appareil">`,
@@ -438,6 +439,8 @@ fetch("appareils.json")
       item.appareil.toUpperCase().startsWith("ST") ||
       item.appareil.toUpperCase().startsWith("F IL") ||
       /^P[0-9]+/i.test(item.appareil)
+      item.appareil.toUpperCase().startsWith("FB") ||
+      item.appareil.toUpperCase().startsWith("B")
     )
   ) {
     appareilIcon = L.divIcon({
