@@ -657,10 +657,8 @@ const compteurAppareilURL = "https://script.google.com/macros/s/AKfycbwJIlvcfNYR
 let lieux = [], appareils = [];
     let currentItem = null; // ✅ mémorise la fiche affichée
 
-function myMapsViewer(lat, lon, z = 19, id = "") {
-  let url = `map.html?lat=${lat}&lon=${lon}&z=${z}`;
-  if (id) url += `&id=${encodeURIComponent(id)}`;
-  return url;
+function myMapsViewer(lat, lon, z = 19) {
+  return `map.html?lat=${lat}&lon=${lon}&z=${z}`;
 }
     
 // Pagination proximité
@@ -967,9 +965,7 @@ if (lieu.special === true) {
   <div class="rep-block">
     <p><span class="emoji">🛣️</span> Repérer l’accès :</p>
     <div class="inline-links pills-3">
-<a href="map.html?id=${encodeURIComponent(
-  [lieu.nom, lieu.type, lieu.SAT, "acces", lieu["accès"]].filter(Boolean).join(" ")
-)}">🛰️ Vue satellite</a>
+<a href="${myMapsViewer(lieu.latitude, lieu.longitude)}">🛰️ Vue satellite</a>
 
       <a href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">👁️ Street View</a>
     </div>
@@ -1012,12 +1008,7 @@ const _lonPoste = (lieu.poste_longitude ?? "").toString();
 const usePoste = _latPoste !== "" && _lonPoste !== "";
 const targetLat = usePoste ? _latPoste : lieu.latitude;
 const targetLon = usePoste ? _lonPoste : lieu.longitude;
-const urlMyMapsPoste = myMapsViewer(
-  targetLat,
-  targetLon,
-  20,
-  [lieu.nom, lieu.type, lieu.SAT, "poste"].filter(Boolean).join(" ")
-);
+const urlMyMapsPoste = myMapsViewer(targetLat, targetLon, 20);
 
 let html = `<h2>
   📍 <span id="editable-nom">${lieu.nom}</span> 
@@ -1034,9 +1025,7 @@ html += `
   <div class="inline-links pills-3">
     ${
       usePoste
-     ? `<a href="map.html?id=${encodeURIComponent(
-    [lieu.nom, lieu.type, lieu.SAT, "poste"].filter(Boolean).join(" ")
-  )}">🛰️ Vue satellite</a>`
+     ? `<a href="${myMapsViewer(lieu.poste_latitude || lieu.latitude, lieu.poste_longitude || lieu.longitude)}">🛰️ Vue satellite</a>`
         : `<span class="placeholder">(non renseigné – fournir un lien Maps)</span>`
     }
   </div>
@@ -1046,9 +1035,7 @@ html += `
 <div class="rep-block">
   <p id="editable-rep-acces"><span class="emoji">🛣️</span> Repérer l’accès :</p>
   <div class="inline-links pills-3">
-<a href="map.html?id=${encodeURIComponent(
-  [lieu.nom, lieu.type, lieu.SAT, "acces", lieu["accès"]].filter(Boolean).join(" ")
-)}">🛰️ Vue satellite</a>
+<a href="${myMapsViewer(lieu.latitude, lieu.longitude)}">🛰️ Vue satellite</a>
     <a href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">👁️ Street View</a>
   </div>
 </div>`;
@@ -1372,9 +1359,7 @@ function showAppareil(app) {
   </h2>
 
 <div class="inline-links pills-3" style="margin-top:10px; margin-bottom:1.5rem;">
-<a href="map.html?id=${encodeURIComponent(
-  [app.nom, app.type, app.SAT, "appareil", app.appareil].filter(Boolean).join(" ")
-)}">🛰️ Vue satellite</a>
+<a href="${myMapsViewer(app.latitude, app.longitude)}">🛰️ Vue satellite</a>
 </div>`;   // 👈 ferme bien le HTML ici
 
   // 🔗 Cherche le poste correspondant
@@ -1957,9 +1942,7 @@ if (repPosteInput) {
   const targetLat = usePoste ? latPoste : currentItem.latitude;
   const targetLon = usePoste ? lonPoste : currentItem.longitude;
 bloc.innerHTML = usePoste
-  ? `<a href="map.html?id=${encodeURIComponent(
-      [currentItem.nom, currentItem.type, currentItem.SAT, "poste"].filter(Boolean).join(" ")
-    )}" target="_blank" rel="noopener">🛰️ Vue satellite</a>`
+  ? `<a href="${myMapsViewer(currentItem.poste_latitude || currentItem.latitude, currentItem.poste_longitude || currentItem.longitude)}" target="_blank" rel="noopener">🛰️ Vue satellite</a>`
   : `<span class="placeholder">(non renseigné – fournir un lien Maps)</span>`;
 }
 
@@ -1967,9 +1950,7 @@ const repAccesInput = document.getElementById("input-acces-link");
 if (repAccesInput) {
   const bloc = repAccesInput.closest(".inline-links");
 bloc.innerHTML = `
-  <a href="map.html?id=${encodeURIComponent(
-    [currentItem.nom, currentItem.type, currentItem.SAT, "acces", currentItem["accès"]].filter(Boolean).join(" ")
-  )}" target="_blank" rel="noopener">🛰️ Vue satellite</a>
+<a href="${myMapsViewer(currentItem.latitude, currentItem.longitude)}" target="_blank" rel="noopener">🛰️ Vue satellite</a>
   <a href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${currentItem.latitude},${currentItem.longitude}" target="_blank" rel="noopener">👁️ Street View</a>
 `;
 }
@@ -2003,51 +1984,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 
 </script> <!-- ✅ on ferme la balise correctement -->
 
-<!-- Gestion ouverture fiche par ?id= -->
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  const params = new URLSearchParams(window.location.search);
-  const id = params.get("id");  // URLSearchParams décode déjà
-
-  if (!id) return;
-
-  const tryShow = () => {
-    if (!allItems || allItems.length === 0) {
-      setTimeout(tryShow, 200);
-      return;
-    }
-
-function buildCustomId(it) {
-  if (it.category === "poste") {
-    const accesVal = (it["accès"] ?? it.acces ?? "").toString().trim();
-    return accesVal
-      ? [it.nom, it.type, it.SAT, "acces", accesVal].filter(Boolean).join(" ")
-      : [it.nom, it.type, it.SAT, "poste"].filter(Boolean).join(" ");
-  }
-  if (it.category === "appareil") {
-    return [it.nom, it.type, it.SAT, "appareil", it.appareil].filter(Boolean).join(" ");
-  }
-  return it.nom || "";
-}
-
-    const target = normalize(id);
-   let found = allItems.find(it => normalize(buildCustomId(it)) === normalize(id));
-
-// ✅ Correction spéciale pour les postes simples (ex: Alleux SP)
-if (!found && id.trim().toLowerCase().endsWith(" poste")) {
-  const idSansPoste = id.trim().toLowerCase().replace(/\s+poste$/, "");
-  found = allItems.find(it => normalize(buildCustomId(it)).replace(/\sposte$/, "") === idSansPoste);
-}
-
-    if (found) {
-      if (found.category === "appareil") showAppareil(found);
-      else showLieu(found);
-    }
-  };
-
-  tryShow();
-});
-</script></main>
+</main>
 <!-- Lien installer au-dessus du footer -->
 <div id="install-container" style="text-align:center; margin:10px 0;">
   <a id="installLink" href="#" style="display:none;">📲 Installer l’app</a>
