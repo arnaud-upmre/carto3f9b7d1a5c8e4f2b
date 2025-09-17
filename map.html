@@ -421,9 +421,20 @@ const leftControls = L.control({ position: "topleft" });
 leftControls.onAdd = function() {
   const container = L.DomUtil.create("div");
 
+  
+
   // Groupe haut : 🎯 recentrer + 📍 localisation
   const topGroup = L.DomUtil.create("div", "control-group", container);
+// 🔍 Retour à l’index
+const searchBtn = L.DomUtil.create("div", "btn-toggle", topGroup);
+searchBtn.innerHTML = "🔍";
 
+searchBtn.onclick = () => {
+  window.location.href = "index.html";  // redirection vers la page d’accueil
+};
+
+L.DomEvent.disableClickPropagation(searchBtn);
+L.DomEvent.disableScrollPropagation(searchBtn);
 // 🎯 Recentrer (bouton clignote actif le temps du centrage)
 const recenterBtn = L.DomUtil.create("div", "btn-toggle", topGroup);
 recenterBtn.innerHTML = "🎯";
