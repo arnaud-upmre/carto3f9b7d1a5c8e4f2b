@@ -2036,7 +2036,7 @@ function buildCustomId(it) {
 }
 
     const target = normalize(id);
-    const found = allItems.find(it => normalize(buildCustomId(it)) === target);
+    const found = allItems.find(it => normalize(buildCustomId(it)) === normalize(id));
 
     if (found) {
       if (found.category === "appareil") showAppareil(found);
@@ -2055,7 +2055,7 @@ function buildCustomId(it) {
 <!-- Footer classique en dessous -->
 <div id="about-footer">
   🔧 <a href="arnaud.html">À propos</a> – 
-  <span class="footer-version">Nono Maps V1.08</span>
+  <span class="footer-version">Nono Maps V1.01</span>
 </div>
 <script>
 (function(){
