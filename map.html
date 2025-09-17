@@ -396,9 +396,9 @@ if (item.appareil && item.appareil.toUpperCase().startsWith("I")) {
   });
 } else if (
   item.appareil &&
-  (/^\d+$/.test(item.appareil) || item.appareil.toUpperCase().startsWith("S"))
+  (/^[0-9]/.test(item.appareil) || item.appareil.toUpperCase().startsWith("S"))
 ) {
-  // Sectionneurs (uniquement chiffres OU commençant par S)
+  // Sectionneurs (commencent par un chiffre OU par S)
   appareilIcon = L.divIcon({
     html: `<img src="ico/sect.png" class="icon-halo-appareil">`,
     className: "",
