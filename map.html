@@ -12,15 +12,15 @@
 <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
   <style>
 
-    .btn-return {
+.btn-return {
   position: relative;
   animation: pulseHalo 1.8s infinite;
 }
 
 @keyframes pulseHalo {
-  0%   { box-shadow: 0 0 0px rgba(79,70,229,0.6); }
-  50%  { box-shadow: 0 0 15px rgba(79,70,229,0.9), 0 0 30px rgba(79,70,229,0.4); }
-  100% { box-shadow: 0 0 0px rgba(79,70,229,0.6); }
+  0%   { box-shadow: 0 0 0px rgba(255,255,255,0.6); }
+  50%  { box-shadow: 0 0 15px rgba(255,255,255,0.9), 0 0 30px rgba(255,255,255,0.4); }
+  100% { box-shadow: 0 0 0px rgba(255,255,255,0.6); }
 }
   
     .icon-halo {
@@ -338,16 +338,6 @@ const cid = accesVal
       ${ makeTelHtml("📞", item.contact) }
       ${item.description ? `<div>ℹ️ ${item.description}</div>` : ""}
 
-<div style="margin-top:6px;">
-<a href="#" onclick="
-  if (document.referrer && document.referrer.includes('index.html')) {
-    history.back();
-  } else {
-    window.location.href='index.html';
-  }
-  return false;
-" style="color:#007aff; text-decoration:none;">↩️ Retour</a>
-</div>
     </div>
   `;
 
@@ -383,15 +373,6 @@ const cid = accesVal
             ${item.description ? `<div>ℹ️ ${item.description}</div>` : ""}
 
         <div style="margin-top:6px;">
-<a href="#" onclick="
-  if (document.referrer && document.referrer.includes('index.html')) {
-    history.back();
-  } else {
-    window.location.href='index.html';
-  }
-  return false;
-" style="color:#007aff; text-decoration:none;">↩️ Retour</a>
-</div>
           </div>
         `;
 
@@ -429,17 +410,6 @@ fetch("appareils.json")
       </div>
 
       ${item.description ? `<div style="margin-bottom:6px;">ℹ️ ${item.description}</div>` : ""}
-
-    <div style="margin-top:6px;">
-<a href="#" onclick="
-  if (document.referrer && document.referrer.includes('index.html')) {
-    history.back();
-  } else {
-    window.location.href='index.html';
-  }
-  return false;
-" style="color:#007aff; text-decoration:none;">↩️ Retour</a>
-</div>
     </div>
   `;
 
@@ -553,16 +523,6 @@ backBtn.onclick = () => {
 L.DomEvent.disableClickPropagation(backBtn);
 L.DomEvent.disableScrollPropagation(backBtn);
   
-// 🔍 Retour à l’index
-const searchBtn = L.DomUtil.create("div", "btn-toggle", topGroup);
-searchBtn.innerHTML = "🔍";
-
-searchBtn.onclick = () => {
-  window.location.href = "index.html";  // redirection vers la page d’accueil
-};
-
-L.DomEvent.disableClickPropagation(searchBtn);
-L.DomEvent.disableScrollPropagation(searchBtn);
 // 🎯 Recentrer (bouton clignote actif le temps du centrage)
 const recenterBtn = L.DomUtil.create("div", "btn-toggle", topGroup);
 recenterBtn.innerHTML = "🎯";
