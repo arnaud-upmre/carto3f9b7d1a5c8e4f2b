@@ -409,56 +409,56 @@ fetch("appareils.json")
     </div>
   `;
 
-  // Choix de l’icône selon le type d’appareil
-  let appareilIcon;
-  if (item.appareil && item.appareil.toUpperCase().startsWith("I")) {
-    appareilIcon = L.divIcon({
-      html: `<img src="ico/int.png" class="icon-halo-appareil">`,
-      className: "",
-      iconAnchor: [16, 32],
-      popupAnchor: [0, -32]
-    });
-  } else if (
-    item.appareil &&
-    (item.appareil.toUpperCase().startsWith("TT") ||
-     item.appareil.toUpperCase().startsWith("TSA") ||
-     item.appareil.toUpperCase().startsWith("TC"))
-     item.appareil.toUpperCase().startsWith("TRA"))
-  ) {
-    appareilIcon = L.divIcon({
-      html: `<img src="ico/TT.png" class="icon-halo-appareil">`,
-      className: "",
-      iconAnchor: [16, 32],
-      popupAnchor: [0, -32]
-    });
-  } else if (
-    item.appareil &&
-    (
-      /^[0-9]/.test(item.appareil) ||
-      item.appareil.toUpperCase().startsWith("S") ||
-      item.appareil.toUpperCase().startsWith("ST") ||
-      item.appareil.toUpperCase().startsWith("F IL") ||
-      /^P[0-9]+/i.test(item.appareil)
-      item.appareil.toUpperCase().startsWith("FB") ||
-      item.appareil.toUpperCase().startsWith("B")
-    )
-  ) {
-    appareilIcon = L.divIcon({
-      html: `<img src="ico/sect.png" class="icon-halo-appareil">`,
-      className: "",
-      iconAnchor: [16, 32],
-      popupAnchor: [0, -32]
-    });
-  } else if (item.appareil && item.appareil.toUpperCase().startsWith("SI")) {
-    appareilIcon = L.divIcon({
-      html: `<img src="ico/int.png" class="icon-halo-appareil">`,
-      className: "",
-      iconAnchor: [16, 32],
-      popupAnchor: [0, -32]
-    });
-  } else {
-    appareilIcon = iconAppareil;
-  }
+// Choix de l’icône selon le type d’appareil
+let appareilIcon;
+if (item.appareil && item.appareil.toUpperCase().startsWith("I")) {
+  appareilIcon = L.divIcon({
+    html: `<img src="ico/int.png" class="icon-halo-appareil">`,
+    className: "",
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32]
+  });
+} else if (
+  item.appareil &&
+  (item.appareil.toUpperCase().startsWith("TT") ||
+   item.appareil.toUpperCase().startsWith("TSA") ||
+   item.appareil.toUpperCase().startsWith("TC")  ||
+   item.appareil.toUpperCase().startsWith("TRA"))
+) {
+  appareilIcon = L.divIcon({
+    html: `<img src="ico/TT.png" class="icon-halo-appareil">`,
+    className: "",
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32]
+  });
+} else if (
+  item.appareil &&
+  (
+    /^[0-9]/.test(item.appareil) ||
+    item.appareil.toUpperCase().startsWith("S") ||
+    item.appareil.toUpperCase().startsWith("ST") ||
+    item.appareil.toUpperCase().startsWith("F IL") ||
+    /^P[0-9]+/i.test(item.appareil) ||
+    item.appareil.toUpperCase().startsWith("FB") ||
+    item.appareil.toUpperCase().startsWith("B")
+  )
+) {
+  appareilIcon = L.divIcon({
+    html: `<img src="ico/sect.png" class="icon-halo-appareil">`,
+    className: "",
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32]
+  });
+} else if (item.appareil && item.appareil.toUpperCase().startsWith("SI")) {
+  appareilIcon = L.divIcon({
+    html: `<img src="ico/int.png" class="icon-halo-appareil">`,
+    className: "",
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32]
+  });
+} else {
+  appareilIcon = iconAppareil;
+}
 
   const m = L.marker([item.latitude, item.longitude], {
     icon: appareilIcon,
