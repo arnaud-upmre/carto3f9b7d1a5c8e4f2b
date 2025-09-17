@@ -471,25 +471,31 @@ fetch("appareils.json")
 
     // Une fois que tous les markers (postes + appareils) sont chargés
     if (id) {
-      setTimeout(() => {
-        let found = false;
- allMarkers.forEach(m => {
-  const cid = (m.options.customId || "").trim().toLowerCase();
-  const targetId = (id || "").trim().toLowerCase();
+   setTimeout(() => {
+  let found = false;
 
-  if (cid === targetId) {
-    const ll = m.getLatLng();
-    if (ll) {
-      map.setView(ll, zoom);
-      m.openPopup();  // ✅ ouverture garantie
-      found = true;
+  // 🔄 Force l’affichage des clusters avant de chercher ton marker
+  postesLayer.refreshClusters();
+  accesLayer.refreshClusters();
+  appareilsLayer.refreshClusters();
+
+  allMarkers.forEach(m => {
+    const cid = (m.options.customId || "").trim().toLowerCase();
+    const targetId = (id || "").trim().toLowerCase();
+
+    if (cid === targetId) {
+      const ll = m.getLatLng();
+      if (ll) {
+        map.setView(ll, zoom);
+        m.openPopup();  // ✅ ouverture garantie
+        found = true;
+      }
     }
+  });
+  if (!found) {
+    console.warn("⚠️ Aucun marker trouvé pour id=", id);
   }
-});
-        if (!found) {
-          console.warn("⚠️ Aucun marker trouvé pour id=", id);
-        }
-      }, 300); // délai pour être sûr que tout est chargé
+}, 300);
     }
       }); 
 
