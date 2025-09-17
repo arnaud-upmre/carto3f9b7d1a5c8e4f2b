@@ -2017,7 +2017,7 @@ function buildCustomId(it) {
     // Poste (guérite)
     return [it.nom, it.type, it.SAT, "poste"].filter(Boolean).join(" ");
   } else if (it.category === "poste" && it.accès) {
-    // Accès
+    // Accès → on prend bien "accès" (avec accent)
     return [it.nom, it.type, it.SAT, it.accès].filter(Boolean).join(" ");
   } else if (it.category === "appareil") {
     // Appareil
@@ -2052,7 +2052,7 @@ function buildCustomId(it) {
 <!-- Footer classique en dessous -->
 <div id="about-footer">
   🔧 <a href="arnaud.html">À propos</a> – 
-  <span class="footer-version">Nono Maps V1.04</span>
+  <span class="footer-version">Nono Maps V1.05</span>
 </div>
 <script>
 (function(){
