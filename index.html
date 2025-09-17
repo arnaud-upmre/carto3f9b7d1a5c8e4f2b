@@ -2022,18 +2022,18 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    function buildCustomId(it) {
-      if (it.category === "poste") {
-        const accesVal = (it["accès"] ?? it.acces ?? "").toString().trim();
-        return accesVal
-          ? [it.nom, it.type, it.SAT, accesVal].filter(Boolean).join(" ")
-          : [it.nom, it.type, it.SAT, "poste"].filter(Boolean).join(" ");
-      }
-      if (it.category === "appareil") {
-        return [it.nom, it.type, it.SAT, "appareil", it.appareil].filter(Boolean).join(" ");
-      }
-      return it.nom || "";
-    }
+function buildCustomId(it) {
+  if (it.category === "poste") {
+    const accesVal = (it["accès"] ?? it.acces ?? "").toString().trim();
+    return accesVal
+      ? [it.nom, it.type, it.SAT, "acces", accesVal].filter(Boolean).join(" ")
+      : [it.nom, it.type, it.SAT, "poste"].filter(Boolean).join(" ");
+  }
+  if (it.category === "appareil") {
+    return [it.nom, it.type, it.SAT, "appareil", it.appareil].filter(Boolean).join(" ");
+  }
+  return it.nom || "";
+}
 
     const target = normalize(id);
     const found = allItems.find(it => normalize(buildCustomId(it)) === target);
@@ -2055,7 +2055,7 @@ document.addEventListener("DOMContentLoaded", () => {
 <!-- Footer classique en dessous -->
 <div id="about-footer">
   🔧 <a href="arnaud.html">À propos</a> – 
-  <span class="footer-version">Nono Maps V1.07</span>
+  <span class="footer-version">Nono Maps V1.08</span>
 </div>
 <script>
 (function(){
