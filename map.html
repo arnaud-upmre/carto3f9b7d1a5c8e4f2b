@@ -368,8 +368,8 @@ const m = L.marker([item.poste_latitude, item.poste_longitude], {
 }).bindPopup(content).addTo(postesLayer);
 allMarkers.push(m);
 }
- });
-      });
+});
+});
   // Appareils
 fetch("appareils.json")
   .then(r => r.json())
@@ -481,6 +481,7 @@ allMarkers.push(m);
         }
       }, 300); // délai pour être sûr que tout est chargé
     }
+      }); 
 
 // Colonne de gauche : recentrer + localisation + filtres
 const leftControls = L.control({ position: "topleft" });
