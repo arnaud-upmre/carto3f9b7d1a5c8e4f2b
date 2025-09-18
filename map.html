@@ -317,12 +317,58 @@ const accesLayer = L.markerClusterGroup({
   spiderfyOnMaxZoom: true,   
   showCoverageOnHover: false,
   zoomToBoundsOnClick: true
-  
 });
 
-map.addLayer(postesLayer);
-map.addLayer(appareilsLayer);
+// Gestion du clic sur cluster d'accès
+accesLayer.on('clusterclick', function (e) {
+  const currentZoom = map.getZoom();
+
+  if (currentZoom < 17) {
+    // comportement normal : zoom sur le cluster
+    return; // on laisse Leaflet gérer
+  }
+
+  // === Ici on est déjà proche ===
+  const markers = e.layer.getAllChildMarkers();
+  let html = `
+    <div style="font-family:system-ui, sans-serif; font-size:14px; max-width:240px;">
+      <div style="font-weight:600; margin-bottom:6px;">📍 ${markers.length} accès :</div>
+  `;
+
+  markers.forEach(m => {
+    const titreMatch = m.getPopup().getContent().match(/📍([^<]+)/);
+    const titre = titreMatch ? titreMatch[1].trim() : "Accès";
+
+    html += `
+      <div style="margin:4px 0; display:flex; align-items:center;">
+        <img src="ico/acces.png" style="width:18px;height:18px;margin-right:6px;" />
+        <a href="#" onclick="focusMarker('${m.options.customId}');return false;" 
+           style="color:#007aff; text-decoration:none;">
+          ${titre}
+        </a>
+      </div>
+    `;
+  });
+
+  html += `</div>`;
+
+  L.popup()
+    .setLatLng(e.latlng)
+    .setContent(html)
+    .openOn(map);
+});
+
 map.addLayer(accesLayer);
+
+// Fonction pour centrer/ouvrir la popup d'un accès choisi
+function focusMarker(customId) {
+  const m = allMarkers.find(x => x.options.customId === customId);
+  if (m) {
+    map.setView(m.getLatLng(), 19);
+    m.openPopup();
+  }
+}
+map.addLayer(appareilsLayer);
 
 
 const iconPoste = L.divIcon({
