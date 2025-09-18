@@ -188,6 +188,14 @@
 </head>
 <body>
   <div id="map"></div>
+  
+<!-- 👇 HTML de l’overlay placé AVANT le script -->
+<div id="streetview-overlay">
+  <div id="streetview-box">
+    <button id="streetview-close">❌</button>
+    <iframe id="streetview-frame"></iframe>
+  </div>
+</div>
   <script>
 const defaultCenter = [49.8, 2.5]; // ajuste latitude/longitude
 const defaultZoom = 8;             // ajuste niveau de zoom
@@ -691,12 +699,5 @@ if (!id) {
   };
 </script>
 
-<!-- 👇 HTML de l’overlay placé APRÈS le script -->
-<div id="streetview-overlay">
-  <div id="streetview-box">
-    <button id="streetview-close">❌</button>
-    <iframe id="streetview-frame"></iframe>
-  </div>
-</div>
 </body>
 </html>
