@@ -366,10 +366,14 @@ accesLayer.on('clusterclick', function (a) {
   const tempMarker = L.marker(first, { icon: iconAcces }).addTo(map);
   tempMarker.bindPopup(html).openPopup();
 
-  // Quand la popup se ferme → on remet le cluster et on retire le temporaire
-  tempMarker.on("popupclose", () => {
+// Quand la popup se ferme → seulement si elle affichait la liste
+tempMarker.on("popupclose", () => {
+  const isListPopup = document.querySelector(".cluster-link"); 
+  if (isListPopup) {
     map.removeLayer(tempMarker);
-  });
+    accesLayer.addLayer(a.layer);
+  }
+});
 
   // Brancher les clics sur les liens
   setTimeout(() => {
