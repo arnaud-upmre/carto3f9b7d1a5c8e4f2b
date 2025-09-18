@@ -12,6 +12,24 @@
 <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
   <style>
 
+    .leaflet-popup-content a.cluster-link {
+  display: block;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: #f3f4f6;
+  color: #007aff;
+  text-decoration: none;
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,sans-serif;
+  font-size: 14px;
+  margin: 2px 0;
+  transition: background 0.2s;
+}
+
+.leaflet-popup-content a.cluster-link:hover,
+.leaflet-popup-content a.cluster-link:active {
+  background: #e5e7eb; /* gris clair au survol */
+}
+
 #streetview-overlay {
   position: fixed;
   top: 0; left: 0;
@@ -335,25 +353,32 @@ accesLayer.on('clusterclick', function (a) {
     // Empêcher le zoom auto
     a.originalEvent.preventDefault();
 
-    // Construire le contenu de la popup
-    let html = "<div style='max-height:200px;overflow:auto'><ul>";
-    childMarkers.forEach((m, i) => {
-      html += `<li><a href='#' data-idx='${i}'>${m.options.customId || "Accès " + (i+1)}</a></li>`;
-    });
-    html += "</ul></div>";
+let html = "<div style='min-width:200px;display:flex;flex-direction:column;gap:4px'>";
+childMarkers.forEach((m, i) => {
+  let label = m.options.customId || "Accès " + (i+1);
+  label = label.replace(/\bposte\b/gi, "").trim(); // supprime "poste"
+
+  html += `<a href='#' data-idx='${i}' class='cluster-link'>${label}</a>`;
+});
+html += "</div>";
+
 
 // Fermer d’éventuelles popups existantes
 map.closePopup();
 
+// Retirer la bulle cluster de la carte
+accesLayer.removeLayer(a.layer);
+
 // Créer un marker temporaire à la même position
 const tempMarker = L.marker(first, { icon: iconAcces }).addTo(map);
 
-// Attacher et ouvrir la popup sur ce marker
+// Attacher et ouvrir la popup liste
 tempMarker.bindPopup(html).openPopup();
 
-// Quand la popup se ferme, retirer le marker temporaire
+// Quand la popup se ferme → on retire le marker temporaire et on remet le cluster
 tempMarker.on("popupclose", () => {
   map.removeLayer(tempMarker);
+  accesLayer.addLayer(a.layer);
 });
 
     // Brancher les clics sur les liens
