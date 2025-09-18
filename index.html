@@ -1082,12 +1082,23 @@ const params = new URLSearchParams(window.location.search);
 const idParam = params.get("id");
 
 if (idParam) {
+  console.log("🔍 Paramètre id =", idParam);
+
+  lieux.forEach(l => {
+    const cid = [l.nom, l.type, l.SAT, l["accès"]].filter(Boolean).join(" ");
+    console.log("→ candidat:", cid);
+  });
+
   const match = lieux.find(l => {
     const cid = [l.nom, l.type, l.SAT, l["accès"]].filter(Boolean).join(" ");
     return cid === idParam;
   });
+
   if (match) {
+    console.log("✅ Match trouvé:", match);
     showLieu(match);
+  } else {
+    console.warn("❌ Aucun match pour", idParam);
   }
 }
 
@@ -1877,7 +1888,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 
 <div id="about-footer">
   🔧 <a href="arnaud.html">À propos</a> – 
-  <span class="footer-version">Nono Maps V1.02</span>
+  <span class="footer-version">Nono Maps V1.03</span>
 </div>
 <script>
 (function(){
