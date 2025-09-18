@@ -393,18 +393,24 @@ tempMarker.on("popupclose", () => {
       setTimeout(() => {
       const links = document.querySelectorAll(".leaflet-popup-content a.cluster-link");
       links.forEach((link) => {
-        link.addEventListener("click", (e) => {
-          e.preventDefault();
-          const idx = e.target.getAttribute("data-idx");
-          const marker = childMarkers[idx];
+link.addEventListener("click", (e) => {
+  e.preventDefault();
+  const idx = e.target.getAttribute("data-idx");
+  const marker = childMarkers[idx];
 
-          // Fermer la popup temporaire
-          map.closePopup();
+  // Fermer la popup temporaire
+  map.closePopup();
 
-          // Recentrer sur le marker et ouvrir sa popup
-          map.panTo(marker.getLatLng()); // animation douce
-          marker.openPopup();
-        });
+  // ⚡ Remettre immédiatement le cluster
+  map.removeLayer(tempMarker);
+  accesLayer.addLayer(a.layer);
+
+  // Forcer une petite pause pour que Leaflet recalcule le DOM
+  setTimeout(() => {
+    map.panTo(marker.getLatLng()); // animation douce
+    marker.openPopup();
+  }, 50);
+});
       });
     }, 50);
   }
