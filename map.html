@@ -546,14 +546,10 @@ leftControls.onAdd = function() {
   const container = L.DomUtil.create("div");
   const topGroup = L.DomUtil.create("div", "control-group", container);
 const backBtn = L.DomUtil.create("div", "btn-toggle btn-return", topGroup);
-backBtn.innerHTML = "↩️";
+backBtn.innerHTML = "🔍";
 
 backBtn.onclick = () => {
-  if (document.referrer && document.referrer.includes("index.html")) {
-    history.back();
-  } else {
-    window.location.href = "index.html";
-  }
+  window.location.href = "index.html";
 };
 L.DomEvent.disableClickPropagation(backBtn);
 L.DomEvent.disableScrollPropagation(backBtn);
