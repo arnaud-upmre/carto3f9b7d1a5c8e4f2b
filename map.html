@@ -376,17 +376,16 @@ accesLayer.on('clusterclick', function (a) {
   // Brancher les clics sur les liens
   setTimeout(() => {
     document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
-      link.addEventListener("click", (e) => {
-        e.preventDefault();
-        const idx = +e.currentTarget.dataset.idx;
-        const target = childMarkers[idx];
+link.addEventListener("click", (e) => {
+  e.preventDefault();
+  const idx = +e.currentTarget.dataset.idx;
+  const target = childMarkers[idx];
 
- map.closePopup(); // ferme la liste
-const content = target.getPopup() ? target.getPopup().getContent() : "";
-tempMarker.setLatLng(target.getLatLng());
-tempMarker.bindPopup(content).openPopup();
-map.panTo(target.getLatLng());
-      }, { passive: false });
+  const content = target.getPopup() ? target.getPopup().getContent() : "";
+  tempMarker.setLatLng(target.getLatLng());
+  tempMarker.bindPopup(content).openPopup();
+  map.panTo(target.getLatLng());
+}, { passive: false });
     });
   }, 0);
 });
