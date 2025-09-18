@@ -178,46 +178,53 @@ const id = params.get("id") ? decodeURIComponent(params.get("id")) : null;
     
         // --- FONDS DE CARTE ------------------------------------------------------
 
-    // PLAN IGN (WMTS GetTile)
-    const planIGN = L.tileLayer(
-      "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
-      + "&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&STYLE=normal&FORMAT=image/png"
-      + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
-      {
-        attribution: "",
-        maxZoom: 19,
-        tileSize: 256,
-        crossOrigin: 'anonymous'
-      }
-    );
+  const planIGN = L.tileLayer(
+  "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
+  + "&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&STYLE=normal&FORMAT=image/png"
+  + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
+  {
+    attribution: "",
+    maxZoom: 21,        // 👈 zoom artificiel jusque 21
+    maxNativeZoom: 19,  // 👈 vrai max fourni par IGN
+    tileSize: 256,
+    crossOrigin: 'anonymous'
+  }
+);
 
     // ORTHO IGN (vue aérienne)
-    const orthoIGN = L.tileLayer(
-      "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
-      + "&LAYER=ORTHOIMAGERY.ORTHOPHOTOS&STYLE=normal&FORMAT=image/jpeg"
-      + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
-      {
-        attribution: "© IGN – Géoplateforme",
-        maxZoom: 19,
-        tileSize: 256,
-        crossOrigin: 'anonymous'
-      }
-    );
+const orthoIGN = L.tileLayer(
+  "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
+  + "&LAYER=ORTHOIMAGERY.ORTHOPHOTOS&STYLE=normal&FORMAT=image/jpeg"
+  + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
+  {
+    attribution: "© IGN – Géoplateforme",
+    maxZoom: 21,       // 👈 pareil : zoom artificiel jusqu’à 21
+    maxNativeZoom: 19, // 👈 vrai max fourni par IGN
+    tileSize: 256,
+    crossOrigin: 'anonymous'
+  }
+);
 
-    // OpenStreetMap (plan secours)
-    const osm = L.tileLayer(
-      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-      { attribution: "© OpenStreetMap contributors", maxZoom: 19 }
-    );
+// OpenStreetMap (plan secours)
+const osm = L.tileLayer(
+  "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+  { 
+    attribution: "© OpenStreetMap contributors", 
+    maxZoom: 21,        // 👈 zoom artificiel jusque 21
+    maxNativeZoom: 19   // 👈 vrai max OSM
+  }
+);
 
-    // Satellite Open (Esri World Imagery)
-    const esriSat = L.tileLayer(
-      "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-      {
-        attribution: "© Esri, Maxar, Earthstar Geographics",
-        maxZoom: 19
-      }
-    );
+// Satellite Open (Esri World Imagery)
+const esriSat = L.tileLayer(
+  "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+  {
+    attribution: "© Esri, Maxar, Earthstar Geographics",
+    maxZoom: 21,        // 👈 utilisateur peut aller jusqu’à 21
+    maxNativeZoom: 19,  // 👈 Esri ne fournit que jusqu’à 19
+    tileSize: 256
+  }
+);
 
 // Vue mixte = satellite IGN + Plan IGN en transparence
 const mixte = L.layerGroup([
