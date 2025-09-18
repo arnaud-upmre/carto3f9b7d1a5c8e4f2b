@@ -314,10 +314,50 @@ const appareilsLayer = L.markerClusterGroup({
   disableClusteringAtZoom: 18
 });
 const accesLayer = L.markerClusterGroup({
-  spiderfyOnMaxZoom: true,   
+  spiderfyOnMaxZoom: true,
   showCoverageOnHover: false,
   zoomToBoundsOnClick: true
-  
+});
+
+// === Gestion des clusters d'accès ===
+accesLayer.on('clusterclick', function (a) {
+  const currentZoom = map.getZoom();
+  const childMarkers = a.layer.getAllChildMarkers();
+
+  // Vérifier si tous les enfants ont les mêmes coordonnées
+  const first = childMarkers[0].getLatLng();
+  const allSameCoords = childMarkers.every(m => {
+    const ll = m.getLatLng();
+    return ll.lat === first.lat && ll.lng === first.lng;
+  });
+
+  if (currentZoom >= 18 && allSameCoords) {
+    // Empêcher le zoom auto
+    a.originalEvent.preventDefault();
+
+    // Construire le contenu de la popup
+    let html = "<div style='max-height:200px;overflow:auto'><ul>";
+    childMarkers.forEach((m, i) => {
+      html += `<li><a href='#' data-idx='${i}'>${m.options.customId || "Accès " + (i+1)}</a></li>`;
+    });
+    html += "</ul></div>";
+
+    // Afficher la popup sur le cluster
+    a.layer.bindPopup(html).openPopup();
+
+    // Brancher les clics sur les liens
+    setTimeout(() => {
+      const links = document.querySelectorAll(".leaflet-popup-content a");
+      links.forEach((link) => {
+        link.addEventListener("click", (e) => {
+          e.preventDefault();
+          const idx = e.target.getAttribute("data-idx");
+          const marker = childMarkers[idx];
+          marker.openPopup();
+        });
+      });
+    }, 50);
+  }
 });
 
 map.addLayer(postesLayer);
