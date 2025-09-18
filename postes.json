@@ -5019,5 +5019,22 @@
     "poste_latitude": "",
     "poste_longitude": "",
     "special": true
+  },
+  {
+    "nom": "Namps",
+    "type": "SP",
+    "SAT": "",
+    "accès": "",
+    "latitude": 49.80947,
+    "longitude": 2.11521,
+    "description": "",
+    "rss": "C",
+    "contact": "",
+    "portail": "",
+    "lignes": "Saint-Roch à Darnétal-Bifurcation",
+    "numero_ligne": 321000,
+    "pk": "",
+    "poste_latitude": "49.80964",
+    "poste_longitude": "2.1155",
   }
 ]
