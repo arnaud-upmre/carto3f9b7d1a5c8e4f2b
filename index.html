@@ -1076,38 +1076,26 @@ Promise.all([
     minMatchCharLength: 2,
     ignoreLocation: true
   });
-});
-const params = new URLSearchParams(window.location.search);
-const idParam = params.get("id");
 
-if (idParam) {
-  console.log("🔍 Paramètre id =", JSON.stringify(idParam));
-  console.log("📦 Nombre de lieux chargés =", lieux.length);
+  const params = new URLSearchParams(window.location.search);
+  const idParam = params.get("id");
 
-  lieux.forEach(l => {
-    const cid = [l.nom, l.type, l.SAT, l["accès"]].filter(Boolean).join(" ");
-    if (l.nom === "Alleux") {
-      console.log("→ Alleux trouvé:", JSON.stringify(cid), {
-        nom: l.nom,
-        type: l.type,
-        SAT: l.SAT,
-        acces: l["accès"]
-      });
+  if (idParam) {
+    console.log("🔍 Paramètre id =", JSON.stringify(idParam));
+
+    const match = lieux.find(l => {
+      const cid = [l.nom, l.type, l.SAT, l["accès"]].filter(Boolean).join(" ");
+      return cid === idParam;
+    });
+
+    if (match) {
+      console.log("✅ Match trouvé:", match);
+      showLieu(match);
+    } else {
+      console.warn("❌ Aucun match pour", JSON.stringify(idParam));
     }
-  });
-
-  const match = lieux.find(l => {
-    const cid = [l.nom, l.type, l.SAT, l["accès"]].filter(Boolean).join(" ");
-    return cid === idParam;
-  });
-
-  if (match) {
-    console.log("✅ Match trouvé:", match);
-    showLieu(match);
-  } else {
-    console.warn("❌ Aucun match pour", JSON.stringify(idParam));
   }
-}
+  });
 
 document.getElementById("search").addEventListener("input", e => {
   const query = normalize(e.target.value.trim());
@@ -1895,7 +1883,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 
 <div id="about-footer">
   🔧 <a href="arnaud.html">À propos</a> – 
-  <span class="footer-version">Nono Maps V1.02</span>
+  <span class="footer-version">Nono Maps V1.04</span>
 </div>
 <script>
 (function(){
