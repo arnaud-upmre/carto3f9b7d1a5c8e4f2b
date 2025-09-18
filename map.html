@@ -368,10 +368,10 @@ accesLayer.on('clusterclick', function (a) {
 
 // Quand la popup se ferme → seulement si elle affichait la liste
 tempMarker.on("popupclose", () => {
-  const isListPopup = document.querySelector(".cluster-link"); 
-  if (isListPopup) {
+  // Supprimer le marker seulement si la popup affichait la liste
+  const popupContent = tempMarker.getPopup() ? tempMarker.getPopup().getContent() : "";
+  if (popupContent.includes("cluster-link")) {
     map.removeLayer(tempMarker);
-    accesLayer.addLayer(a.layer);
   }
 });
 
