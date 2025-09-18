@@ -1083,10 +1083,7 @@ Promise.all([
   if (idParam) {
     console.log("🔍 Paramètre id =", JSON.stringify(idParam));
 
-    const match = lieux.find(l => {
-      const cid = [l.nom, l.type, l.SAT, l["accès"]].filter(Boolean).join(" ");
-      return cid === idParam;
-    });
+  const match = lieux.find(l => formatNomCompletLieu(l) === idParam);
 
     if (match) {
       console.log("✅ Match trouvé:", match);
@@ -1883,7 +1880,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 
 <div id="about-footer">
   🔧 <a href="arnaud.html">À propos</a> – 
-  <span class="footer-version">Nono Maps V1.04</span>
+  <span class="footer-version">Nono Maps V1.02</span>
 </div>
 <script>
 (function(){
