@@ -5036,5 +5036,22 @@
     "pk": "",
     "poste_latitude": "49.80964",
     "poste_longitude": "2.1155"
+},
+ {
+    "nom": "Maurois",
+    "type": "L",
+    "SAT": "",
+    "accès": "",
+    "latitude": "",
+    "longitude": "",
+    "description": "",
+    "rss": "",
+    "contact": "",
+    "portail": "",
+    "lignes": "BUSIGNY à SOMAIN",
+    "numero_ligne": 250000,
+    "pk": "183,210",
+    "poste_latitude": "50.06712",
+    "poste_longitude": "3.45626"
 }
 ]
