@@ -1078,6 +1078,19 @@ Promise.all([
   });
 });
 
+const params = new URLSearchParams(window.location.search);
+const idParam = params.get("id");
+
+if (idParam) {
+  const match = lieux.find(l => {
+    const cid = [l.nom, l.type, l.SAT, l["accès"]].filter(Boolean).join(" ");
+    return cid === idParam;
+  });
+  if (match) {
+    showLieu(match);
+  }
+}
+
 document.getElementById("search").addEventListener("input", e => {
   const query = normalize(e.target.value.trim());
   const suggestionsEl = document.getElementById("suggestions");
