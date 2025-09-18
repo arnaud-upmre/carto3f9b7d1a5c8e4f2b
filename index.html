@@ -1858,7 +1858,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
     function showNotification(message, type = "info") {
   const notif = document.getElementById("notification");
   notif.textContent = message;
-  notif.className = type; // "success", "error" ou "info"
+  notif.className = type; 
   notif.style.display = "block";
 
   setTimeout(() => {
