@@ -376,7 +376,9 @@ if (item.latitude && item.longitude) {
 
       <div style="margin-top:6px;">
      <a href="index.html?id=${encodeURIComponent(
-  `${item.nom || ''} ${item.type || ''} ${item.SAT || ''}${accesVal ? ' – accès ' + accesVal : ''}`.trim()
+ (`${item.nom || ''} ${item.type || ''} ${item.SAT || ''}${accesVal ? ' – accès ' + accesVal : ''}`)
+  .replace(/\s+/g, " ")
+  .trim()
 )}"
         style="color:#007aff; text-decoration:underline;" target="_blank">
           🔗 Fiche détaillée
