@@ -362,8 +362,8 @@
     "type": "L",
     "SAT": "",
     "accès": "",
-    "latitude": 50.93497,
-    "longitude": 1.85668,
+    "latitude": 50.93494,
+    "longitude": 1.85672,
     "description": "",
     "rss": "A",
     "contact": "",
@@ -371,8 +371,8 @@
     "lignes": "LILLE à LES FONTINETTES",
     "numero_ligne": 295000,
     "pk": "103,900",
-    "poste_latitude": "50.9346815",
-    "poste_longitude": "1.8582382"
+    "poste_latitude": "50.93477",
+    "poste_longitude": "1.85811"
   },
   {
     "nom": "Bif Coupvent",
@@ -1263,8 +1263,8 @@
     "type": "SSP",
     "SAT": "SAT1",
     "accès": "",
-    "latitude": 50.51284,
-    "longitude": 1.64414,
+    "latitude": 50.51287,
+    "longitude": 1.64404,
     "description": "",
     "rss": "A",
     "contact": "",
@@ -1272,8 +1272,8 @@
     "lignes": "LONGUEAU à BOULOGNE-VILLE",
     "numero_ligne": 311000,
     "pk": "",
-    "poste_latitude": "50.5069278",
-    "poste_longitude": "1.6444343"
+    "poste_latitude": "50.50692",
+    "poste_longitude": "1.64443"
   },
   {
     "nom": "Etaples",
@@ -1281,7 +1281,7 @@
     "SAT": "SAT2",
     "accès": "",
     "latitude": 50.51287,
-    "longitude": 1.64414,
+    "longitude": 1.64404,
     "description": "",
     "rss": "A",
     "contact": "",
@@ -1289,8 +1289,8 @@
     "lignes": "LONGUEAU à BOULOGNE-VILLE",
     "numero_ligne": 311000,
     "pk": "",
-    "poste_latitude": "50.5069278",
-    "poste_longitude": "1.6444343"
+    "poste_latitude": "50.51214",
+    "poste_longitude": "1.64452"
   },
   {
     "nom": "Etinchelle",
