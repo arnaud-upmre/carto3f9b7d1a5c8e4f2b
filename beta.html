@@ -185,7 +185,7 @@ const id = params.get("id") ? decodeURIComponent(params.get("id")) : null;
       + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
       {
         attribution: "",
-        maxZoom: 19,
+        maxZoom: 21,
         tileSize: 256,
         crossOrigin: 'anonymous'
       }
@@ -198,7 +198,7 @@ const id = params.get("id") ? decodeURIComponent(params.get("id")) : null;
       + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
       {
         attribution: "© IGN – Géoplateforme",
-        maxZoom: 19,
+        maxZoom: 21,
         tileSize: 256,
         crossOrigin: 'anonymous'
       }
@@ -207,7 +207,7 @@ const id = params.get("id") ? decodeURIComponent(params.get("id")) : null;
     // OpenStreetMap (plan secours)
     const osm = L.tileLayer(
       "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-      { attribution: "© OpenStreetMap contributors", maxZoom: 19 }
+      { attribution: "© OpenStreetMap contributors", maxZoom: 21 }
     );
 
     // Satellite Open (Esri World Imagery)
@@ -215,7 +215,7 @@ const id = params.get("id") ? decodeURIComponent(params.get("id")) : null;
       "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
       {
         attribution: "© Esri, Maxar, Earthstar Geographics",
-        maxZoom: 19
+        maxZoom: 21
       }
     );
 
@@ -228,7 +228,7 @@ const mixte = L.layerGroup([
     + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
     {
       attribution: "© IGN – Géoplateforme",
-      maxZoom: 19,
+      maxZoom: 21,
       tileSize: 256,
       crossOrigin: 'anonymous',
       opacity: 0.4  // 👈 ajuste la transparence
