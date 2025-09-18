@@ -342,8 +342,19 @@ accesLayer.on('clusterclick', function (a) {
     });
     html += "</ul></div>";
 
-    // Afficher la popup sur le cluster
-    a.layer.bindPopup(html).openPopup();
+// Fermer d’éventuelles popups existantes
+map.closePopup();
+
+// Créer un marker temporaire à la même position
+const tempMarker = L.marker(first, { icon: iconAcces }).addTo(map);
+
+// Attacher et ouvrir la popup sur ce marker
+tempMarker.bindPopup(html).openPopup();
+
+// Quand la popup se ferme, retirer le marker temporaire
+tempMarker.on("popupclose", () => {
+  map.removeLayer(tempMarker);
+});
 
     // Brancher les clics sur les liens
     setTimeout(() => {
