@@ -718,12 +718,8 @@ function isPosteLike(raw){
 }
 
 function formatNomCompletLieu(obj) {
-  const base = (`${obj.nom || ''} ${obj.type || ''} ${obj.SAT || ''}`)
-    .replace(/\s+/g, " ")
-    .trim();
-  return obj["accès"]
-    ? `${base} – accès ${obj["accès"]}`.replace(/\s+/g, " ").trim()
-    : base;
+  const base = `${obj.nom || ''} ${obj.type || ''} ${obj.SAT || ''}`.trim();
+return obj["accès"] ? `${base} – accès ${obj["accès"]}` : base;
 }
 
 function formatNomComplet(obj) {
@@ -1081,23 +1077,22 @@ Promise.all([
     ignoreLocation: true
   });
 
- const params = new URLSearchParams(window.location.search);
-let idParam = params.get("id");
+  const params = new URLSearchParams(window.location.search);
+const idParam = decodeURIComponent(params.get("id") || "");
 
-if (idParam) {
-  idParam = decodeURIComponent(idParam).replace(/\s+/g, " ").trim();
-
-  console.log("🔍 Paramètre id =", JSON.stringify(idParam));
+  if (idParam) {
+    console.log("🔍 Paramètre id =", JSON.stringify(idParam));
 
   const match = lieux.find(l => formatNomCompletLieu(l) === idParam);
 
-  if (match) {
-    console.log("✅ Match trouvé:", match);
-    showLieu(match);
-  } else {
-    console.warn("❌ Aucun match pour", JSON.stringify(idParam));
+    if (match) {
+      console.log("✅ Match trouvé:", match);
+      showLieu(match);
+    } else {
+      console.warn("❌ Aucun match pour", JSON.stringify(idParam));
+    }
   }
-}
+  });
 
 document.getElementById("search").addEventListener("input", e => {
   const query = normalize(e.target.value.trim());
@@ -1875,9 +1870,9 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
   }, 4000);
 }
 
-</main>
+</script> 
 
-</script>
+</main>
 
 <div id="install-container" style="text-align:center; margin:10px 0;">
   <a id="installLink" href="#" style="display:none;">📲 Installer l’app</a>
@@ -1885,7 +1880,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 
 <div id="about-footer">
   🔧 <a href="arnaud.html">À propos</a> – 
-  <span class="footer-version">Nono Maps V1.02</span>
+  <span class="footer-version">Nono Maps V1.01</span>
 </div>
 <script>
 (function(){
