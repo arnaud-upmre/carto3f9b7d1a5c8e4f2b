@@ -17,12 +17,12 @@
   top: 0; left: 0;
   width: 100%; height: 100%;
   background: rgba(0,0,0,0.6);
-  backdrop-filter: blur(6px);      /* flou du fond */
+  backdrop-filter: blur(6px);     
   -webkit-backdrop-filter: blur(6px);
   display: none;
   z-index: 9999;
 
-  display: flex;                  /* centrage */
+  display: flex;             
   align-items: center;
   justify-content: center;
 }
@@ -69,22 +69,22 @@
 }
   
     .icon-halo {
-  width: 48px;   /* 👈 adapte la taille ici */
+  width: 48px;  
   height: 48px;
   filter: drop-shadow(0 0 2px white) drop-shadow(0 0 4px white);
 }
     .icon-halo-appareil {
-  width: 24px;   /* 👈 taille réduite seulement pour les appareils */
+  width: 24px;  
   height: 24px;
   filter: drop-shadow(0 0 4px white) drop-shadow(0 0 8px white);
 }
     
 .icon-wrapper {
   display: inline-block;
-  border-radius: 50%;          /* halo arrondi */
-  padding: 4px;                /* espace autour */
-  background: white;           /* halo blanc */
-  box-shadow: 0 0 6px rgba(0,0,0,0.4); /* ombre discrète */
+  border-radius: 50%;         
+  padding: 4px;            
+  background: white;       
+  box-shadow: 0 0 6px rgba(0,0,0,0.4); 
 }
 
 .icon-wrapper img {
@@ -92,9 +92,9 @@
   height: 44px;
   display: block;
 }
-/* === CLUSTERS LIQUID GLASS iOS === */
+
 .marker-cluster {
-  background: transparent !important; /* pas de fond autour */
+  background: transparent !important; 
   border-radius: 50%;
 }
 
@@ -109,8 +109,8 @@
   font-weight: 600;
   font-size: 14px;
   color: #ffffff;
-  text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 0 6px rgba(0,0,0,0.6); /* contour autour des chiffres */
-  background: rgba(255, 255, 255, 0.15);   /* bulle translucide claire */
+  text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 0 6px rgba(0,0,0,0.6); 
+  background: rgba(255, 255, 255, 0.15);   
   backdrop-filter: blur(10px);             
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255,255,255,0.25);
@@ -118,40 +118,39 @@
   transition: transform 0.25s ease, background 0.3s ease;
 }
 
-/* Survol / tap → bulle légèrement plus claire et grossit */
 .marker-cluster:hover div {
   transform: scale(1.12);
   background: rgba(255, 255, 255, 0.25);
 }
 
     .control-group {
-  margin-bottom: 10px; /* espace entre localisation et filtres */
+  margin-bottom: 10px; 
 }
     .control-group + .control-group {
-  margin-top: 45px; /* espace entre le groupe haut et le groupe bas */
+  margin-top: 45px; 
 }
     
 #version-label {
   position: fixed;
   bottom: 6px;
-  left: 8px;    /* 👈 affichage à gauche */
+  left: 8px;   
   font-size: 11px;
   color: rgba(255,255,255,0.45);
   font-family: system-ui, sans-serif;
   pointer-events: none;
   user-select: none;
 }
-    /* Boutons ronds à gauche (ON = blanc, OFF = noir translucide) */
+
 .btn-toggle{
   background: rgba(0,0,0,.7);
   border: 1px solid rgba(255,255,255,.12);
   border-radius: 50%;
-  width: 44px; height: 44px;          /* taille identique */
+  width: 44px; height: 44px;       
   display: flex; align-items: center; justify-content: center;
-  font-size: 20px;                    /* emoji inchangé */
+  font-size: 20px;                
   color: #fff;
   cursor: pointer;
-  margin: 10px 5px;                   /* ↑ plus d’espace vertical */
+  margin: 10px 5px;              
   box-shadow: 0 4px 12px rgba(0,0,0,.25);
   user-select: none;
   line-height: 1;
@@ -173,7 +172,7 @@
   background: rgba(0,0,0,0.7);
   border: 1px solid rgba(255,255,255,.12);
   border-radius: 50%;
-  width: 44px; height: 44px;             /* + grand = touch friendly */
+  width: 44px; height: 44px;          
   display: flex; align-items: center; justify-content: center;
   font-size: 20px;
   color: #fff;
@@ -181,7 +180,7 @@
   margin: 5px;
   box-shadow: 0 4px 12px rgba(0,0,0,.25);
   user-select: none;
-  line-height: 1;                         /* évite l’emoji coupé */
+  line-height: 1;                   
   -webkit-tap-highlight-color: transparent;
 }
   </style>
@@ -189,7 +188,7 @@
 <body>
   <div id="map"></div>
   
-<!-- 👇 HTML de l’overlay placé AVANT le script -->
+
 <div id="streetview-overlay">
   <div id="streetview-box">
     <button id="streetview-close">❌</button>
@@ -197,8 +196,8 @@
   </div>
 </div>
   <script>
-const defaultCenter = [49.8, 2.5]; // ajuste latitude/longitude
-const defaultZoom = 8;             // ajuste niveau de zoom
+const defaultCenter = [49.8, 2.5]; 
+const defaultZoom = 8;          
 
 const map = L.map('map', { zoomControl: false, attributionControl: false })
              .setView(defaultCenter, defaultZoom);
@@ -237,8 +236,8 @@ const id = params.get("id") ? decodeURIComponent(params.get("id")) : null;
   + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
   {
     attribution: "",
-    maxZoom: 21,        // 👈 zoom artificiel jusque 21
-    maxNativeZoom: 19,  // 👈 vrai max fourni par IGN
+    maxZoom: 21,       
+    maxNativeZoom: 19, 
     tileSize: 256,
     crossOrigin: 'anonymous'
   }
@@ -251,8 +250,8 @@ const orthoIGN = L.tileLayer(
   + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
   {
     attribution: "© IGN – Géoplateforme",
-    maxZoom: 21,       // 👈 pareil : zoom artificiel jusqu’à 21
-    maxNativeZoom: 19, // 👈 vrai max fourni par IGN
+    maxZoom: 21,      
+    maxNativeZoom: 19, 
     tileSize: 256,
     crossOrigin: 'anonymous'
   }
@@ -263,8 +262,8 @@ const osm = L.tileLayer(
   "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
   { 
     attribution: "© OpenStreetMap contributors", 
-    maxZoom: 21,        // 👈 zoom artificiel jusque 21
-    maxNativeZoom: 19   // 👈 vrai max OSM
+    maxZoom: 21,        
+    maxNativeZoom: 19   
   }
 );
 
@@ -273,8 +272,8 @@ const esriSat = L.tileLayer(
   "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
   {
     attribution: "© Esri, Maxar, Earthstar Geographics",
-    maxZoom: 21,        // 👈 utilisateur peut aller jusqu’à 21
-    maxNativeZoom: 19,  // 👈 Esri ne fournit que jusqu’à 19
+    maxZoom: 21,       
+    maxNativeZoom: 19, 
     tileSize: 256
   }
 );
@@ -291,7 +290,7 @@ const mixte = L.layerGroup([
       maxZoom: 19,
       tileSize: 256,
       crossOrigin: 'anonymous',
-      opacity: 0.4  // 👈 ajuste la transparence
+      opacity: 0.4  
     }
   )
 ]);
@@ -328,10 +327,10 @@ const appareilsLayer = L.markerClusterGroup({
   disableClusteringAtZoom: 18
 });
 const accesLayer = L.markerClusterGroup({
-  spiderfyOnMaxZoom: true,   // cercle éclaté même au max zoom
+  spiderfyOnMaxZoom: true,   
   showCoverageOnHover: false,
   zoomToBoundsOnClick: false
-  // ⚠️ on ne met pas disableClusteringAtZoom
+  
 });
 
 map.addLayer(postesLayer);
@@ -339,7 +338,6 @@ map.addLayer(appareilsLayer);
 map.addLayer(accesLayer);
 
 
-// Icône guérite personnalisée avec halo
 const iconPoste = L.divIcon({
   html: `<img src="ico/poste.png" class="icon-halo">`,
   className: "",  // pas de CSS par défaut
@@ -347,10 +345,8 @@ const iconPoste = L.divIcon({
   popupAnchor: [0, -48]
 });
 
-// On garde les autres en bulles colorées
 const iconAppareil= L.divIcon({className:"icon-circle appareil",html:"⚡"});
 
-    // Icône accès personnalisée avec halo
 const iconAcces = L.divIcon({
   html: `<img src="ico/acces.png" class="icon-halo">`,
   className: "",
@@ -358,7 +354,6 @@ const iconAcces = L.divIcon({
   popupAnchor: [0, -48]
 });
 
-// Postes (accès + guérite)
 fetch("postes.json")
   .then(r => r.json())
   .then(data => {
@@ -408,7 +403,6 @@ if (item.latitude && item.longitude) {
   allMarkers.push(m);
 }
 
-      // === Bloc POSTE (guérite) ===
       if (item.poste_latitude && item.poste_longitude) {
         const cid = [item.nom, item.type, item.SAT, "poste"].filter(Boolean).join(" ");
 
@@ -446,7 +440,6 @@ if (item.latitude && item.longitude) {
     });
   });
 
-// Appareils
 fetch("appareils.json")
   .then(r => r.json())
   .then(data => {
@@ -472,7 +465,6 @@ fetch("appareils.json")
     </div>
   `;
 
-// Choix de l’icône selon le type d’appareil
 let appareilIcon;
 if (item.appareil && item.appareil.toUpperCase().startsWith("I")) {
   appareilIcon = L.divIcon({
@@ -544,10 +536,8 @@ if (item.appareil && item.appareil.toUpperCase().startsWith("I")) {
   allMarkers.push(m);
 });
 
-   // Une fois que tous les markers (postes + appareils) sont chargés
 if (!isNaN(lat) && !isNaN(lon)) {
   setTimeout(() => {
-    // 🔄 on force le recalcul des clusters avant de chercher
     postesLayer.refreshClusters();
     accesLayer.refreshClusters();
     appareilsLayer.refreshClusters();
@@ -556,25 +546,18 @@ if (!isNaN(lat) && !isNaN(lon)) {
       const ll = m.getLatLng();
       if (ll && ll.lat === lat && ll.lng === lon) {
         map.setView(ll, zoom);
-        m.openPopup(); // ✅ ouvre automatiquement la popup
+        m.openPopup(); 
       }
     });
   }, 300);
 }
       }); 
 
-// Colonne de gauche : recentrer + localisation + filtres
+
 const leftControls = L.control({ position: "topleft" });
 leftControls.onAdd = function() {
   const container = L.DomUtil.create("div");
-
-  
-
-  // Groupe haut : 🎯 recentrer + 📍 localisation
   const topGroup = L.DomUtil.create("div", "control-group", container);
-
-
-  // ↩️ Bouton retour
 const backBtn = L.DomUtil.create("div", "btn-toggle btn-return", topGroup);
 backBtn.innerHTML = "↩️";
 
@@ -588,26 +571,25 @@ backBtn.onclick = () => {
 L.DomEvent.disableClickPropagation(backBtn);
 L.DomEvent.disableScrollPropagation(backBtn);
   
-// 🎯 Recentrer (bouton clignote actif le temps du centrage)
+
 const recenterBtn = L.DomUtil.create("div", "btn-toggle", topGroup);
 recenterBtn.innerHTML = "🎯";
 
 recenterBtn.onclick = () => {
   if (allMarkers.length > 0) {
-    recenterBtn.classList.add("active"); // ON → bouton blanc
+    recenterBtn.classList.add("active"); 
  map.setView(defaultCenter, defaultZoom);
 
-    // après un court délai, on désactive pour revenir en noir
+
     setTimeout(() => {
       recenterBtn.classList.remove("active");
-    }, 800); // 0.8s = assez pour voir l'effet
+    }, 800); // 
   }
 };
 
 L.DomEvent.disableClickPropagation(recenterBtn);
 L.DomEvent.disableScrollPropagation(recenterBtn);
 
-// 📍 Localisation (toggle ON/OFF avec bouton actif/inactif)
 let userMarker;
 let geoWatchId = null;
 const locateBtn = L.DomUtil.create("div", "btn-toggle", topGroup);
@@ -617,7 +599,6 @@ locateBtn.onclick = () => {
   if (!navigator.geolocation) return alert("Géolocalisation non supportée.");
 
   if (geoWatchId !== null) {
-    // 🔴 Désactivation
     navigator.geolocation.clearWatch(geoWatchId);
     geoWatchId = null;
     if (userMarker) {
@@ -628,7 +609,6 @@ locateBtn.onclick = () => {
     return;
   }
 
-  // 🟢 Activation
   geoWatchId = navigator.geolocation.watchPosition(pos => {
     const lat = pos.coords.latitude, lng = pos.coords.longitude;
     if (userMarker) {
@@ -650,7 +630,6 @@ locateBtn.onclick = () => {
 L.DomEvent.disableClickPropagation(locateBtn);
 L.DomEvent.disableScrollPropagation(locateBtn);
 
-  // Groupe bas : 🚙, 📍, ⚡
   const bottomGroup = L.DomUtil.create("div", "control-group", container);
 
   function makeBtn(emoji, layer, initiallyOn = true) {
@@ -676,7 +655,7 @@ L.DomEvent.disableScrollPropagation(locateBtn);
 };
 leftControls.addTo(map);
 
-// Au chargement → centrer automatiquement UNIQUEMENT si pas d'ID dans l'URL
+
 if (!id) {
   map.whenReady(() => {
     if (allMarkers.length > 0) {
@@ -692,12 +671,12 @@ if (!id) {
     document.getElementById("streetview-overlay").style.display = "flex";
   }
 
-  // Bouton fermer
+
   document.getElementById("streetview-close").onclick = () => {
     document.getElementById("streetview-overlay").style.display = "none";
-    document.getElementById("streetview-frame").src = ""; // coupe Street View
+    document.getElementById("streetview-frame").src = ""; 
   };
-    // Toujours masquer l’overlay au démarrage
+
 document.getElementById("streetview-overlay").style.display = "none";
 document.getElementById("streetview-frame").src = "";
 </script>
