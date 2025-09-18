@@ -147,7 +147,7 @@
 const defaultCenter = [49.8, 2.5]; // ajuste latitude/longitude
 const defaultZoom = 8;             // ajuste niveau de zoom
 
-const map = L.map('map', { zoomControl: false, attributionControl: false, maxZoom: 21 })
+const map = L.map('map', { zoomControl: false, attributionControl: false })
              .setView(defaultCenter, defaultZoom);
     const allMarkers = [];
 
@@ -178,31 +178,28 @@ const id = params.get("id") ? decodeURIComponent(params.get("id")) : null;
     
         // --- FONDS DE CARTE ------------------------------------------------------
 
-// PLAN IGN (WMTS GetTile)
-const planIGN = L.tileLayer(
-  "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
-  + "&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&STYLE=normal&FORMAT=image/png"
-  + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
-  {
-    attribution: "",
-    tms: false,
-    zoomOffset: 0,
-    maxZoom: 21,
-    tileSize: 256,
-    crossOrigin: 'anonymous'
-  }
-);
+    // PLAN IGN (WMTS GetTile)
+    const planIGN = L.tileLayer(
+      "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
+      + "&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&STYLE=normal&FORMAT=image/png"
+      + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
+      {
+        attribution: "",
+        maxZoom: 19,
+        tileSize: 256,
+        crossOrigin: 'anonymous'
+      }
+    );
 
-// ORTHO IGN (vue aérienne)
+    // ORTHO IGN (vue aérienne)
 const orthoIGN = L.tileLayer(
   "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
   + "&LAYER=ORTHOIMAGERY.ORTHOPHOTOS&STYLE=normal&FORMAT=image/jpeg"
   + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
   {
     attribution: "© IGN – Géoplateforme",
-    tms: false,
-    zoomOffset: 0,
-    maxZoom: 21,
+    maxZoom: 21,       // 👈 pareil : zoom artificiel jusqu’à 21
+    maxNativeZoom: 19, // 👈 vrai max fourni par IGN
     tileSize: 256,
     crossOrigin: 'anonymous'
   }
@@ -211,7 +208,7 @@ const orthoIGN = L.tileLayer(
     // OpenStreetMap (plan secours)
     const osm = L.tileLayer(
       "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-      { attribution: "© OpenStreetMap contributors", maxZoom: 21 }
+      { attribution: "© OpenStreetMap contributors", maxZoom: 19 }
     );
 
     // Satellite Open (Esri World Imagery)
@@ -219,7 +216,7 @@ const orthoIGN = L.tileLayer(
       "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
       {
         attribution: "© Esri, Maxar, Earthstar Geographics",
-        maxZoom: 21
+        maxZoom: 19
       }
     );
 
@@ -232,7 +229,7 @@ const mixte = L.layerGroup([
     + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
     {
       attribution: "© IGN – Géoplateforme",
-      maxZoom: 21,
+      maxZoom: 19,
       tileSize: 256,
       crossOrigin: 'anonymous',
       opacity: 0.4  // 👈 ajuste la transparence
