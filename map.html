@@ -397,7 +397,7 @@ data.forEach(item => {
     const lat = parseFloat(item.poste_latitude);
     const lon = parseFloat(item.poste_longitude);
     if (!isNaN(lat) && !isNaN(lon)) {
-      const key = `${lat.toFixed(5)},${lon.toFixed(5)}`;
+      const key = `${lat},${lon}`;
       if (!markersByPosPoste[key]) markersByPosPoste[key] = [];
       markersByPosPoste[key].push(item);
     }
