@@ -1087,7 +1087,12 @@ if (idParam) {
   lieux.forEach(l => {
     const cid = [l.nom, l.type, l.SAT, l["accès"]].filter(Boolean).join(" ");
     if (cid.includes("Alleux")) {
-      console.log("→ candidat:", JSON.stringify(cid));
+      console.log("→ candidat:", JSON.stringify(cid), {
+        nom: l.nom,
+        type: l.type,
+        SAT: l.SAT,
+        acces: l["accès"]
+      });
     }
   });
 
@@ -1890,7 +1895,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 
 <div id="about-footer">
   🔧 <a href="arnaud.html">À propos</a> – 
-  <span class="footer-version">Nono Maps V1.02</span>
+  <span class="footer-version">Nono Maps V1.03</span>
 </div>
 <script>
 (function(){
