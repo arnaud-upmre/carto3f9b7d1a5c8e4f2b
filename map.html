@@ -353,12 +353,20 @@ accesLayer.on('clusterclick', function (a) {
     // Empêcher le zoom auto
     a.originalEvent.preventDefault();
 
-let html = "<div style='min-width:200px;display:flex;flex-direction:column;gap:4px'>";
-childMarkers.forEach((m, i) => {
+// Construire un tableau {label, index}
+let items = childMarkers.map((m, i) => {
   let label = m.options.customId || "Accès " + (i+1);
   label = label.replace(/\bposte\b/gi, "").trim(); // supprime "poste"
+  return { label, idx: i };
+});
 
-  html += `<a href='#' data-idx='${i}' class='cluster-link'>${label}</a>`;
+// Trier alphabétiquement
+items.sort((a, b) => a.label.localeCompare(b.label, 'fr', {numeric:true,sensitivity:'base'}));
+
+// Construire le HTML
+let html = "<div style='min-width:200px;display:flex;flex-direction:column;gap:4px'>";
+items.forEach(item => {
+  html += `<a href='#' data-idx='${item.idx}' class='cluster-link'>${item.label}</a>`;
 });
 html += "</div>";
 
@@ -382,13 +390,19 @@ tempMarker.on("popupclose", () => {
 });
 
     // Brancher les clics sur les liens
-    setTimeout(() => {
-      const links = document.querySelectorAll(".leaflet-popup-content a");
+      setTimeout(() => {
+      const links = document.querySelectorAll(".leaflet-popup-content a.cluster-link");
       links.forEach((link) => {
         link.addEventListener("click", (e) => {
           e.preventDefault();
           const idx = e.target.getAttribute("data-idx");
           const marker = childMarkers[idx];
+
+          // Fermer la popup temporaire
+          map.closePopup();
+
+          // Recentrer sur le marker et ouvrir sa popup
+          map.panTo(marker.getLatLng()); // animation douce
           marker.openPopup();
         });
       });
