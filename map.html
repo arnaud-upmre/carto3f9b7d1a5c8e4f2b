@@ -220,15 +220,11 @@ function makeTelHtml(labelEmoji, value) {
   return `<div>${labelEmoji} <a href="tel:${hrefSafe}" style="color:#007aff; text-decoration:none;">${value}</a></div>`;
 }
 
-    // --- Lecture paramètres URL ---
 const params = new URLSearchParams(window.location.search);
 const lat = parseFloat(params.get("lat"));
 const lon = parseFloat(params.get("lon"));
 const zoom = parseInt(params.get("z")) || 19;
 const id = params.get("id") ? decodeURIComponent(params.get("id")) : null;
-
-    
-        // --- FONDS DE CARTE ------------------------------------------------------
 
   const planIGN = L.tileLayer(
   "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
@@ -243,7 +239,6 @@ const id = params.get("id") ? decodeURIComponent(params.get("id")) : null;
   }
 );
 
-    // ORTHO IGN (vue aérienne)
 const orthoIGN = L.tileLayer(
   "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
   + "&LAYER=ORTHOIMAGERY.ORTHOPHOTOS&STYLE=normal&FORMAT=image/jpeg"
@@ -257,7 +252,6 @@ const orthoIGN = L.tileLayer(
   }
 );
 
-// OpenStreetMap (plan secours)
 const osm = L.tileLayer(
   "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
   { 
@@ -267,7 +261,6 @@ const osm = L.tileLayer(
   }
 );
 
-// Satellite Open (Esri World Imagery)
 const esriSat = L.tileLayer(
   "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
   {
@@ -278,7 +271,6 @@ const esriSat = L.tileLayer(
   }
 );
 
-// Vue mixte = satellite IGN + Plan IGN en transparence
 const mixte = L.layerGroup([
   orthoIGN,
   L.tileLayer(
@@ -295,10 +287,9 @@ const mixte = L.layerGroup([
   )
 ]);
 
- // Afficher ORTHO IGN (satellite) par défaut
 orthoIGN.addTo(map);
 
-    // Sélecteur de fonds
+
     L.control.layers(
       { 
         "🛰️ Satellite IGN": orthoIGN,
@@ -310,15 +301,11 @@ orthoIGN.addTo(map);
       {}
     ).addTo(map);
 
-    // Zoom sous le sélecteur de fonds (même coin)
     L.control.zoom({ position: 'topright' }).addTo(map);
 
-    
-    // Logs d'erreurs de tuiles (debug)
     planIGN.on("tileerror", e => console.warn("IGN PLAN tile error", e));
     orthoIGN.on("tileerror", e => console.warn("IGN ORTHO tile error", e));
 
-    // --- COUCHES MÉTIER ------------------------------------------------------
 
 const postesLayer = L.markerClusterGroup({
   disableClusteringAtZoom: 18
@@ -329,7 +316,7 @@ const appareilsLayer = L.markerClusterGroup({
 const accesLayer = L.markerClusterGroup({
   spiderfyOnMaxZoom: true,   
   showCoverageOnHover: false,
-  zoomToBoundsOnClick: false
+  zoomToBoundsOnClick: true
   
 });
 
