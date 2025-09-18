@@ -394,9 +394,13 @@ if (item.latitude && item.longitude) {
 const markersByPosPoste = {};
 data.forEach(item => {
   if (item.poste_latitude && item.poste_longitude) {
-    const key = `${item.poste_latitude},${item.poste_longitude}`;
-    if (!markersByPosPoste[key]) markersByPosPoste[key] = [];
-    markersByPosPoste[key].push(item);
+    const lat = parseFloat(item.poste_latitude);
+    const lon = parseFloat(item.poste_longitude);
+    if (!isNaN(lat) && !isNaN(lon)) {
+      const key = `${lat.toFixed(5)},${lon.toFixed(5)}`;
+      if (!markersByPosPoste[key]) markersByPosPoste[key] = [];
+      markersByPosPoste[key].push(item);
+    }
   }
 });
 
