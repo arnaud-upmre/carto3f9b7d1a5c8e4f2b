@@ -70,26 +70,23 @@
 .inline-links.pills-3 {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;   /* centre horizontalement */
-  align-items: center;       /* centre verticalement */
+  justify-content: center;  
+  align-items: center;       
   text-align: center;
   gap: 8px;
 }
 
 .inline-links.pills-3 a {
-  display: inline-flex;       /* ✅ force l’emoji et le texte à s’aligner */
-  align-items: center;        /* ✅ centrage vertical dans le bouton */
-  vertical-align: middle;     /* ✅ élimine le flottement */
+  display: inline-flex;       
+  align-items: center;        
+  vertical-align: middle;     
   padding: 6px 10px;
 }
   
-    
-/* Force une seule ligne dès qu’il y a la place */
 @media (min-width: 420px){
   .inline-links.pills-3{ flex-wrap: nowrap; }
 }
 
-/* Ultra compact sur écrans ≤ 390px */
 @media (max-width: 390px){
   .inline-links.pills-3 a{
     padding: 6px 8px;
@@ -97,12 +94,11 @@
   }
 }
     
-    /* Supprime l’espace vertical quand il n’y a aucune suggestion */
 ul#suggestions:empty {
   margin: 0;
   padding: 0;
 }
-    /* Marges compactes quand il y a des suggestions */
+
 ul#suggestions:not(:empty){
   margin: .4rem 0 .6rem 0;
 }
@@ -113,15 +109,12 @@ ul#suggestions:not(:empty){
   border-radius: 6px;
   position: relative;
 
-  /* ✅ halo fin + lumineux */
   box-shadow: 0 0 6px rgba(26,115,232,0.8),
               0 0 12px rgba(26,115,232,0.5);
 
-  /* ✅ pulsation plus douce */
   animation: pulseHalo 1.6s ease-in-out infinite;
 }
 
-/* 🔄 nouvelle animation plus fluide */
 @keyframes pulseHalo {
   0%   { box-shadow: 0 0 4px rgba(26,115,232,0.6), 0 0 8px rgba(26,115,232,0.4); }
   50%  { box-shadow: 0 0 10px rgba(26,115,232,0.9), 0 0 18px rgba(26,115,232,0.6); }
@@ -132,13 +125,11 @@ ul#suggestions:not(:empty){
   animation: wiggle 0.3s infinite; /* wiggle seul */
 }
 
-/* Tremblement façon iOS */
 @keyframes wiggle {
   0%, 100% { transform: rotate(-2deg); }
   50% { transform: rotate(2deg); }
 }
     
-/* Style discret façon Wikipédia pour le lien [modifier] */
 #edit-toggle {
   font-size: 13px;
   font-style: italic;
@@ -149,10 +140,10 @@ ul#suggestions:not(:empty){
 }
 
 #edit-toggle:hover {
-  color: #1a73e8;  /* bleu Google */
+  color: #1a73e8;  
   text-decoration: underline;
 }
-    /* Barre d’édition centrée en bas */
+
 #edit-buttons {
   display: none;
   position: fixed;
@@ -161,9 +152,9 @@ ul#suggestions:not(:empty){
   transform: translateX(-50%);
   z-index: 9999;
 
-  background: rgba(255, 255, 255, 0.8); /* fond translucide clair */
-  backdrop-filter: blur(8px);            /* effet flou derrière */
-  -webkit-backdrop-filter: blur(8px);    /* compatibilité iOS */
+  background: rgba(255, 255, 255, 0.8); 
+  backdrop-filter: blur(8px);         
+  -webkit-backdrop-filter: blur(8px);   
 
   border-radius: 16px;
   box-shadow: 0 6px 20px rgba(0,0,0,0.15);
@@ -174,30 +165,29 @@ ul#suggestions:not(:empty){
   border: 1px solid #ddd;
 }
 
-/* Mode sombre */
 @media (prefers-color-scheme: dark) {
   #edit-buttons {
-    background: rgba(30, 30, 30, 0.8);  /* translucide foncé */
+    background: rgba(30, 30, 30, 0.8); 
     border: 1px solid #444;
     box-shadow: 0 6px 20px rgba(0,0,0,0.6);
   }
 }
-/* Centrer proprement les titres "Repérer..." */
+
 .rep-block {
-  display: block;              /* ⬅️ plus de flex ici */
+  display: block;            
   margin: 1.5rem 0 0.5rem 0;
-  text-align: center;          /* ⬅️ centre juste le contenu */
+  text-align: center;        
 }
 
 .rep-block p {
   font-weight: 600;
   margin: 0 0 6px 0;
-  text-align: center;   /* ✅ centrage simple et propre */
+  text-align: center; 
 }
 
     .rep-block p .emoji {
   display: inline-block;
-  width: 1.6em;   /* ✅ même largeur pour tous */
+  width: 1.6em;  
   text-align: center;
 }
 
@@ -219,9 +209,9 @@ body {
   margin: 0;
   display: flex;
   flex-direction: column;
-  align-items: stretch;   /* ✅ laisse les éléments prendre leur largeur */
+  align-items: stretch;   
   width: 100%;
-  max-width: 100%;        /* ✅ empêche le centrage forcé */
+  max-width: 100%;      
   box-sizing: border-box;
 }
     #train-container {
@@ -232,7 +222,7 @@ body {
       margin-bottom: 3rem;
       position: relative;
     }
-    /* Réduit l’espace sous le train sur petits écrans */
+   
 @media (max-width: 600px){
   #train-container { margin-bottom: .8rem; }
   h1 { margin-bottom: .4rem; }
@@ -260,7 +250,7 @@ body {
     }
 input[type="text"] {
   width: 100%;
-  max-width: 600px;   /* ✅ limite à 600px comme avant */
+  max-width: 600px;   
   padding: 12px 16px;
   font-size: 16px;
   border-radius: 10px;
@@ -292,27 +282,25 @@ input[type="text"] {
   font-size: 22px;
   font-weight: 700;
   color: #1a73e8;
-  text-align: left;   /* ✅ remet le titre à gauche */
+  text-align: left; 
 }
 
-    /* ——— Uniformiser exactement la largeur avec le champ ——— */
+  
 #search,
 #suggestions,
 #result,
 #counters {
   width: 100%;
-  max-width: 600px;     /* même limite partout */
+  max-width: 600px;     
 }
 
-/* Les paddings ne doivent PAS élargir visuellement le bloc */
 #suggestions,
 #result {
   box-sizing: border-box;
 }
 
-/* Optionnel : même « bordure » visuelle que le champ */
 #result {
-  border: 1px solid transparent; /* évite les micro-décalages sur mobile */
+  border: 1px solid transparent; 
 }
     
     .inline-links {
@@ -342,7 +330,6 @@ input[type="text"] {
       margin: .8rem 0;
     }
 
-    /* Style de la liste de suggestions */
 ul#suggestions {
   list-style: none;
   padding: 0;
@@ -365,7 +352,7 @@ ul#suggestions li:hover {
   background-color: #f0f8ff;
   color: #1a73e8;
 }
-/* Variante sombre */
+
 @media (prefers-color-scheme: dark){
   ul#suggestions {
     background-color: #1e1e1e;
@@ -375,7 +362,7 @@ ul#suggestions li:hover {
   ul#suggestions li { border-bottom:1px solid #333; }
   ul#suggestions li:hover { background-color:#1e2a36; color:#90caf9; }
 }
-        /* surbrillance du meilleur résultat */
+    
 li.best {
   background-color: #e6f0ff;
   font-weight: 600;
@@ -392,7 +379,7 @@ li.best {
     box-shadow: 0 8px 24px rgba(255,255,255,0.05); /* ombre douce */
   }
 }
-    /* --- MODE SOMBRE AUTOMATIQUE --- */
+
 @media (prefers-color-scheme: dark) {
   body {
     background-color: #121212;
@@ -419,9 +406,8 @@ li.best {
     background-color: #90caf9;
     color: #121212;
   }
-}/* === Liens : même couleur en normal / visited === */
+}
 
-  /* Lien de titre invisible visuellement */
 .titre-lien{
   color:inherit;
   text-decoration:none;
@@ -429,8 +415,6 @@ li.best {
 .titre-lien:hover,
 .titre-lien:focus{ opacity:.85; }
 
-
-/* Encadré "Appareil manquant" */
 .missing-box {
   background-color:#e6f0ff;
   border-radius:12px;
@@ -449,7 +433,7 @@ li.best {
   text-align: center;
   padding: 15px 0;
   font-size: 13px;
-  background: #121212; /* sera écrasé par le mode clair/sombre */
+  background: #121212; 
   border-top: 1px solid #333;
   margin-top: 40px; /* espace avant le footer */
 }
@@ -459,7 +443,6 @@ li.best {
   font-size: 11px;
 }
 
-/* Si la page est très courte, pousse le footer en bas */
 html, body {
   height: 100%;
   margin: 0;
@@ -468,13 +451,12 @@ html, body {
 }
 
 main {
-  flex: 1; /* pousse le footer vers le bas */
+  flex: 1; 
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-/* Variante claire / sombre pour lisibilité */
 @media (prefers-color-scheme: light) {
   #about-footer {
     background: #fff;
@@ -490,7 +472,7 @@ main {
     border-top: 1px solid #333;
   }
 }
-/* --- Dark mode spécial liens et box --- */
+
 @media (prefers-color-scheme: dark){
   a, a:visited { 
     color:#90caf9; 
@@ -509,7 +491,7 @@ main {
     color:#90caf9; 
   }
 }
-    /* Style des boutons */
+
 .btn-primary {
   margin: 8px 0;
   padding: 10px 16px;
@@ -529,12 +511,10 @@ main {
   color: #fff;
 }
 
-    
-/* 🌙 Mode sombre */
 @media (prefers-color-scheme: dark) {
   .btn-primary {
-    background: #1e1e1e;   /* gris très foncé */
-    color: #90caf9;        /* bleu clair */
+    background: #1e1e1e;  
+    color: #90caf9;       
     border: 1px solid #90caf9;
   }
   .btn-primary:hover {
@@ -542,7 +522,7 @@ main {
     color: #121212;
   }
 }
-    #btn-localiser { margin-top: 4rem; }  /* plus d’espace au-dessus */
+    #btn-localiser { margin-top: 4rem; } 
 
   #notification {
   position: fixed;
@@ -561,28 +541,24 @@ main {
   box-shadow: 0 6px 20px rgba(0,0,0,0.15);
 }
 
-/* Succès */
 #notification.success {
   background: #e6f4ea;
   color: #137333;
   border: 1px solid #137333;
 }
 
-/* Erreur */
 #notification.error {
   background: #fce8e6;
   color: #b00020;
   border: 1px solid #b00020;
 }
 
-/* Info (pour annulation) */
 #notification.info {
   background: #e8f0fe;
   color: #174ea6;
   border: 1px solid #174ea6;
 }
 
-/* Mode sombre */
 @media (prefers-color-scheme: dark) {
   #notification.success {
     background: #1e2a21;
@@ -632,15 +608,11 @@ main {
 <ul id="suggestions"></ul>
 <div id="result"></div>
 
-
-  <!-- Boutons flottants pour édition -->
 <div id="edit-buttons" style="display:none;">
   <button id="btn-save" class="btn-primary">💾 Sauvegarder</button>
   <button id="btn-cancel" class="btn-primary">❌ Annuler édition</button>
 </div>
 
-
-<!-- Bouton localiser -->
 <button id="btn-localiser" class="btn-primary">
   📍 À proximité
 </button>
@@ -655,13 +627,12 @@ const compteurURL = "https://script.google.com/macros/s/AKfycbzUFaek89LYosR0FSw9
 const compteurAppareilURL = "https://script.google.com/macros/s/AKfycbwJIlvcfNYREJn1oPiVAhQqHACXXar8ZbRl6aChwYw4TFSAaMTFEHTT5X2T7BKLJ3gsJw/exec";
 
 let lieux = [], appareils = [];
-    let currentItem = null; // ✅ mémorise la fiche affichée
+    let currentItem = null;
 
 function myMapsViewer(lat, lon, z = 19) {
   return `map.html?lat=${lat}&lon=${lon}&z=${z}`;
 }
     
-// Pagination proximité
 let proximiteIndex = 0;
 const PROX_STEP = 10;
 let proximiteSorted = [];
@@ -689,7 +660,6 @@ function formatContact(val) {
 function formatPortail(val) {
   if (!val) return `<p><strong id="editable-portail">🚧 Portail :</strong> <span class="placeholder">(non renseigné)</span></p>`;
 
-  // Cherche une URL dans la chaîne
   const urlRegex = /(https?:\/\/[^\s]+)/;
   const urlMatch = val.match(urlRegex);
   const video = urlMatch ? urlMatch[0] : null;
@@ -722,39 +692,35 @@ function formatPortail(val) {
 function normalize(str) {
   return str
     .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")     // supprime accents
-    .replace(/[^a-z0-9\s]/gi, "") // conserve les espaces !
+    .replace(/[̀-ͯ]/g, "")    
+    .replace(/[^a-z0-9\s]/gi, "") 
     .toLowerCase()
     .trim()
-    .replace(/\s+/g, " ");    // réduit multiples espaces en un seul
+    .replace(/\s+/g, " ");  
 }
 
-    // Normalisation spéciale pour comparer les noms de postes sans tenir compte du type
 function normalizeNomPoste(name) {
   if (!name) return "";
   return name
     .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")       // supprime accents
+    .replace(/[̀-ͯ]/g, "")     
     .toLowerCase()
     .trim()
     
-    // supprime les suffixes en fin de nom (SP, SSP, PRCI, etc.)
     .replace(/\b(?:a|p|sp|ssp|sspa|l|l-a|prci|lgv|ss|sst)\b$/i, "")
     .trim();
 }
 
-    
-// Requête qui ressemble à un APPAREIL ? (préfixe connu ou présence de chiffres)
+
 function isAppareilLike(raw){
   if(!raw) return false;
   const s = raw.trim().toLowerCase();
-  const prefixes = ["tt","i","tc","tsa","il","ip","imp","s"]; // mêmes que ton filtre
+  const prefixes = ["tt","i","tc","tsa","il","ip","imp","s"]; 
   const first = s.split(/\s+/)[0];
   const hasDigits = /\d/.test(s);
   return prefixes.includes(first) || hasDigits;
 }
 
-// Requête qui ressemble à un POSTE ? (≥3 caractères et pas « appareil-like »)
 function isPosteLike(raw){
   if(!raw) return false;
   const s = raw.trim();
@@ -800,12 +766,11 @@ function generateAppareilListHTML(currentLieu) {
 
   const isSAT = currentLieu.SAT && currentLieu.SAT !== "";
 
-  // ✅ Si on est dans un SAT, on ne compte que les appareils de CE SAT
   const matchingAppsForScope = isSAT
     ? matchingApps.filter(app => (app.SAT || "") === currentLieu.SAT)
     : matchingApps;
 
-  // Aucun appareil trouvé dans le scope (SAT précis ou poste entier)
+
   if (matchingAppsForScope.length === 0) {
     return `
       <div class="missing-box">
@@ -815,7 +780,7 @@ function generateAppareilListHTML(currentLieu) {
     `;
   }
 
-  // Il y a au moins un appareil dans le scope → titre + liste
+
   let grouped = {};
   matchingAppsForScope.forEach(app => {
     const sat = app.SAT || 'Poste';
@@ -836,7 +801,6 @@ function generateAppareilListHTML(currentLieu) {
       .join(", ") + `</p>`;
   }
 
-  // Carte bleue toujours présente en dessous
   html += `
     <div class="missing-box">
       🤝 Appareil manquant ?
@@ -856,17 +820,17 @@ function generateAlias(appareil, nom, sat, posteType) {
   const s = norm(sat);
   const t = norm(posteType);
 
-  // Sépare lettres et chiffres
+
   const match = a.match(/^([a-z]+)(\d+)?$/i);
-  const letters = match ? match[1].toLowerCase() : a; // ex. "tt"
-  const root = a.split(/[\s\-]/)[0]; // ex. "tt5631"
+  const letters = match ? match[1].toLowerCase() : a; 
+  const root = a.split(/[\s\-]/)[0]; 
 
-  // --- alias de base ---
-  alias.add(a);                                // tt5631
-  alias.add(a.replace(/([a-z]+)(\d+)/, "$1 $2")); // tt 5631
-  alias.add(letters);                          // tt
+ 
+  alias.add(a);                          
+  alias.add(a.replace(/([a-z]+)(\d+)/, "$1 $2"));
+  alias.add(letters);                          
 
-  // --- combinaisons appareil + nom complet ---
+
   if (n) {
     alias.add(`${a} ${n}`);
     alias.add(`${n} ${a}`);
@@ -876,40 +840,36 @@ function generateAlias(appareil, nom, sat, posteType) {
     alias.add(`${n} ${letters}`);
   }
 
-  // --- alias automatiques pour les interrupteurs ---
   if (/^(i|ia|il|ip|imp)/i.test(a)) {
     alias.add("interrupteur");
-    alias.add("inter");                       // ✅ abréviation
+    alias.add("inter");                       
     alias.add(`interrupteur ${a}`);
-    alias.add(`inter ${a}`);                  // ✅ abréviation + code
+    alias.add(`inter ${a}`);               
     if (n) {
       alias.add(`interrupteur ${n}`);
-      alias.add(`inter ${n}`);                // ✅ abréviation + nom du poste
+      alias.add(`inter ${n}`);               
     }
   }
 
-  // --- alias automatiques pour les transformateurs ---
   if (/^(tt|tc|tsa)/i.test(a)) {
     alias.add("transformateur");
-    alias.add("transfo");                        // ✅ abréviation
+    alias.add("transfo");                       
     alias.add(`transformateur ${a}`);
-    alias.add(`transfo ${a}`);                   // ✅ variante abrégée
+    alias.add(`transfo ${a}`);                   
     if (n) {
       alias.add(`transformateur ${n}`);
-      alias.add(`transfo ${n}`);                 // ✅ abréviation + nom
+      alias.add(`transfo ${n}`);           
     }
   }
 
-  // --- alias automatiques pour les sectionneurs ---
-  if (/^s?\d+$/i.test(a) || /^sm/i.test(a) || /^st/i.test(a)) {   // ex: "5068", "S5068", "SM123", "ST45"
+  if (/^s?\d+$/i.test(a) || /^sm/i.test(a) || /^st/i.test(a)) {   
     alias.add("sectionneur");
     alias.add(`sectionneur ${a}`);
     if (n) alias.add(`sectionneur ${n}`);
   }
 
-  // --- combinaisons appareil + chaque mot du nom ---
   if (n) {
-    const mots = n.split(/\s+/); // sépare chaque mot
+    const mots = n.split(/\s+/);
     mots.forEach(m => {
       alias.add(`${letters} ${m}`);
       alias.add(`${m} ${letters}`);
@@ -918,7 +878,6 @@ function generateAlias(appareil, nom, sat, posteType) {
     });
   }
 
-  // --- combinaisons avec SAT ---
   if (s) {
     alias.add(`${a} ${s}`);
     alias.add(`${s} ${a}`);
@@ -930,14 +889,13 @@ function generateAlias(appareil, nom, sat, posteType) {
     }
   }
 
-  // --- combinaisons avec type de poste ---
   if (t && n) {
     alias.add(`${n} ${t}`);
     alias.add(`${t} ${n}`);
   }
 
   return Array.from(alias);
-} // ← ferme bien generateAlias
+} 
 
 
 function incrementCounter() {
@@ -949,8 +907,8 @@ function incrementCounterAppareil() {
 }
 
 function showLieu(lieu) {
-    currentItem = lieu; // ✅ mémorise le poste affiché
-// 🔹 Cas spécial : accès générique → affichage réduit
+    currentItem = lieu; //
+
 if (lieu.special === true) {
   const result = document.getElementById("result");
   document.getElementById("suggestions").innerHTML = "";
@@ -960,7 +918,6 @@ if (lieu.special === true) {
   📍 ${lieu.nom}
 </h2>`;
 
-  // Bloc Repérer l’accès
   html += `
   <div class="rep-block">
     <p><span class="emoji">🛣️</span> Repérer l’accès :</p>
@@ -971,7 +928,6 @@ if (lieu.special === true) {
     </div>
   </div>`;
 
-  // Bloc Itinéraires
   html += `
   <div class="rep-block">
     <p><span class="emoji">🚙</span> Itinéraires disponibles :</p>
@@ -982,7 +938,6 @@ if (lieu.special === true) {
     </div>
   </div>`;
 
-    // Ajoute description et portail
   const blocs = [];
 
   blocs.push(formatDescription(lieu.description));
@@ -994,7 +949,7 @@ if (lieu.special === true) {
   }
 
   result.innerHTML = html;
-  return; // ⛔ stoppe ici → pas d’affichage PK / RSS / Portail etc.
+  return; 
 }
   
   const result = document.getElementById("result");
@@ -1002,7 +957,6 @@ if (lieu.special === true) {
   result.style.display = "block";
   incrementCounter();
 
-// URL MyMaps : priorité aux coords guérite si présentes, sinon accès
 const _latPoste = (lieu.poste_latitude ?? "").toString();
 const _lonPoste = (lieu.poste_longitude ?? "").toString();
 const usePoste = _latPoste !== "" && _lonPoste !== "";
@@ -1018,7 +972,6 @@ let html = `<h2>
   <a href="#" id="edit-toggle">[modifier]</a>
 </h2>`;
     
-// ✅ Affiche "Repérer le poste" seulement si les coordonnées poste sont présentes
 html += `
 <div class="rep-block poste-only">
   <p id="editable-rep-poste"><span class="emoji">⚡️</span> Repérer le poste (sat/guérite)</p>
@@ -1052,12 +1005,10 @@ html += `
 
 const blocs = [];
 
-// RSS → s’il existe, on le met en premier
 if (lieu.rss) {
 blocs.push(formatRSS(lieu.rss, true));
 }
 
-// 🚄 PK + Ligne (même si incomplet)
 const pk = lieu.pk 
   ? `<strong id="editable-pk">${lieu.pk}</strong>` 
   : `<span id="editable-pk" class="placeholder">(non renseigné)</span>`;
@@ -1077,16 +1028,13 @@ blocs.push(`
   </p>
 `);
 
-// Informations
 blocs.push(formatDescription(lieu.description));
   
-// Contact
 blocs.push(
   formatContact(lieu.contact) ||
   `<p><strong id="editable-contact">👤 Contact :</strong> <span class="contact-value"><span class="placeholder">(non renseigné)</span></span></p>`
 );
 
-// Portail
 blocs.push(
   formatPortail(lieu.portail) ||
   `<p><strong id="editable-portail">🚧 Portail :</strong> <span class="portail-value"><span class="placeholder">(non renseigné)</span></span></p>`
@@ -1108,7 +1056,6 @@ blocs.push(
 
   let allItems = [], fuseMix;
 
-// Charger postes + appareils
 Promise.all([
   fetch(jsonUrl).then(r => r.json()),
   fetch(appareilsUrl).then(r => r.json())
@@ -1116,13 +1063,10 @@ Promise.all([
   lieux = postes;
   appareils = apps;
 
-  // Génère dynamiquement les alias pour les appareils
   appareils.forEach(app => {
     app.alias = generateAlias(app.appareil, app.nom, app.SAT, app.type);
   });
 
-
-  // --- FUSE mixte (postes + appareils) ---
   const postesTagged = postes.map(p => ({ ...p, category: "poste" }));
   const appsTagged   = apps.map(a => ({ ...a, category: "appareil" }));
   allItems = [...postesTagged, ...appsTagged];
@@ -1149,19 +1093,15 @@ document.getElementById("search").addEventListener("input", e => {
   const suggestionsEl = document.getElementById("suggestions");
   const resultEl = document.getElementById("result");
 
-  // Nettoyage affichage
   suggestionsEl.innerHTML = "";
   resultEl.innerHTML = "";
   resultEl.style.display = "none";
 
-  // N'affiche qu'à partir de 2 lettres
   if (!query || query.length < 2 || !fuseMix) return;
 
-  // Résultats bruts
 let results = fuseMix.search(query).map(r => r.item);
   const cleanedQuery = query.replace(/\s+/g, "").toLowerCase();
 
-// -------- Filtre spécial préfixe appareils --------
 const queryWords = query.split(/\s+/);
 const prefixes = ["tt","i","tc","tsa","il","ip","imp","s"];
 const lowerWords = queryWords.map(w => w.toLowerCase());
@@ -1169,7 +1109,6 @@ const lowerWords = queryWords.map(w => w.toLowerCase());
 const prefixWord = lowerWords.find(w => prefixes.includes(w));
 
 if (prefixWord) {
-  // Sépare préfixe et autres mots
   const otherWords = lowerWords.filter(w => w !== prefixWord);
 
   results = results.filter(item => {
@@ -1178,32 +1117,27 @@ if (prefixWord) {
     return appareilOk && nomOk;
   });
 }
-// -------- Fin filtre spécial --------
-// Boost si la requête correspond exactement à un alias
+
 results.forEach(it => {
   const aliases = Array.isArray(it.alias) ? it.alias : [];
   it.__directAliasHit = aliases.some(a => normalize(a) === query);
 });
-// -------- TRI AVANCÉ ----------
+
 results.sort((a, b) => {
   const q = query.toLowerCase();
 
-  // Normalisations utiles
+ 
   const norm = s => (s || "").toString().toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").trim().replace(/\s+/g, " ");
-  const id = x => (x.appareil || "").toString().replace(/\s+/g, "").toLowerCase();     // ex: "i7216"
-  const idDigits = x => id(x).replace(/\D/g, "");                                       // ex: "7216"
+  const id = x => (x.appareil || "").toString().replace(/\s+/g, "").toLowerCase();    
+  const idDigits = x => id(x).replace(/\D/g, "");                                   
 
-  // Utilise la cleanedQuery définie plus haut
-  const qId = cleanedQuery;             // ex: "i7216" ou "7216"
+  const qId = cleanedQuery;          
   const qDigits = cleanedQuery.replace(/\D/g, "");
-
-  // --- priorité -2 : correspondance EXACTE sur l'identifiant d'appareil (avec ou sans lettre) ---
   const aExactId = a.category === "appareil" && (id(a) === qId || (qDigits && idDigits(a) === qDigits));
   const bExactId = b.category === "appareil" && (id(b) === qId || (qDigits && idDigits(b) === qDigits));
   if (aExactId && !bExactId) return -1;
   if (bExactId && !aExactId) return 1;
 
-  // --- priorité -1 : correspondance EXACTE sur un alias normalisé ---
   const aliasHit = (x) => Array.isArray(x.alias) && x.alias
       .map(s => s.replace(/\s+/g, "").toLowerCase())
       .some(s => s === qId || (qDigits && s.replace(/\D/g, "") === qDigits));
@@ -1212,39 +1146,31 @@ results.sort((a, b) => {
   if (aAlias && !bAlias) return -1;
   if (bAlias && !aAlias) return 1;
 
-  // --- le reste comme avant ---
   const aNom = norm(a.nom || "");
   const bNom = norm(b.nom || "");
-
-  // 0 : le nom qui COMMENCE par la requête
   const aStarts = aNom.startsWith(q);
   const bStarts = bNom.startsWith(q);
   if (aStarts && !bStarts) return -1;
   if (bStarts && !aStarts) return 1;
 
-  // 1 : correspondance exacte sur le nom
   const aExact = aNom === q;
   const bExact = bNom === q;
   if (aExact && !bExact) return -1;
   if (bExact && !aExact) return 1;
 
-  // 2 : postes simples avant tout
   const aIsPoste = a.category === "poste" && !a.accès;
   const bIsPoste = b.category === "poste" && !b.accès;
   if (aIsPoste && !bIsPoste) return -1;
   if (bIsPoste && !aIsPoste) return 1;
 
-  // 3 : postes avec accès ensuite
   const aIsAcces = a.category === "poste" && !!a.accès;
   const bIsAcces = b.category === "poste" && !!b.accès;
   if (aIsAcces && !bIsAcces) return -1;
   if (bIsAcces && !aIsAcces) return 1;
 
-  // 4 : appareils en dernier vis-à-vis des postes
   if (a.category === "appareil" && b.category !== "appareil") return 1;
   if (b.category === "appareil" && a.category !== "appareil") return -1;
 
-  // 5 : tri alphabétique stable
   const label = x =>
     x.category === "poste"
       ? `${x.nom || ""} ${x.type || ""} ${x.SAT || ""}`.trim()
@@ -1252,12 +1178,11 @@ results.sort((a, b) => {
 
   return label(a).localeCompare(label(b), "fr", { sensitivity: "base" });
 });
-  // -------- fin TRI AVANCÉ ----------
-  // ——— 0 résultat : proposer l’ajout ———
-const rawQuery = e.target.value.trim();  // on garde tel quel pour l’affichage + préremplissage
+
+const rawQuery = e.target.value.trim();  
 if (results.length === 0 && rawQuery.length >= 3) {
   const li = document.createElement("li");
-  li.style.fontStyle = "italic"; // léger pour signaler que c'est une action spéciale
+  li.style.fontStyle = "italic"; 
 
   if (isAppareilLike(rawQuery)) {
     li.textContent = `➕ Ajouter cet appareil « ${rawQuery} »`;
@@ -1270,14 +1195,14 @@ if (results.length === 0 && rawQuery.length >= 3) {
     location.href = `ajout_poste.html?poste=${encodeURIComponent(rawQuery)}`;
   };
 } else {
-    // Trop court / bruit → on ne propose rien
+  
     return;
   }
 
   suggestionsEl.appendChild(li);
-  return; // on s'arrête ici : pas d’autres lignes à afficher
+  return; 
 }
-// --- Affichage des résultats (avec icônes) ---
+
 suggestionsEl.innerHTML = "";
 
 const labelFor = (item) =>
@@ -1303,7 +1228,6 @@ li.innerHTML = `${icon} ${labelFor(item)}`;
   suggestionsEl.appendChild(li);
 });
 
-// ➕ Ajouter seulement si aucun résultat n’est un match exact
 if (rawQuery.length >= 3) {
   const queryNorm = normalizeNomPoste(rawQuery);
 
@@ -1317,11 +1241,10 @@ if (rawQuery.length >= 3) {
 
   if (!exactMatch) {
     const liAdd = document.createElement("li");
-      // Vérifie si un poste ou appareil existe déjà (après normalisation)
+  
   const posteExiste = lieux.some(l => normalizeNomPoste(l.nom) === queryNorm);
   const appareilExiste = appareils.some(a => normalize(a.appareil) === normalize(rawQuery));
 
-  // Si un match exact existe déjà → on ne propose pas l’ajout
   if (posteExiste || appareilExiste) return;
     liAdd.style.fontStyle = "italic";
 
@@ -1341,11 +1264,8 @@ if (rawQuery.length >= 3) {
   }
 }
 
-  
-// ✅ ici on ferme correctement l’event listener
 });
 
-// maintenant seulement on déclare la fonction
 function showAppareil(app) {
   incrementCounterAppareil();
   const result = document.getElementById("result");
@@ -1360,16 +1280,14 @@ function showAppareil(app) {
 
 <div class="inline-links pills-3" style="margin-top:10px; margin-bottom:1.5rem;">
 <a href="${myMapsViewer(app.latitude, app.longitude)}">🛰️ Vue satellite</a>
-</div>`;   // 👈 ferme bien le HTML ici
+</div>`;  
 
-  // 🔗 Cherche le poste correspondant
   const posteTrouvé = lieux.find(l => 
     normalize(l.nom) === normalize(app.nom) &&
     normalize(l.type) === normalize(app.type) &&
     normalize(l.SAT || "") === normalize(app.SAT || "")
   );
 
-  // 🔗 Cherche un accès correspondant
   const accesTrouvé = lieux.find(l => {
     const sameBase = normalize(l.nom) === normalize(app.nom)
       && normalize(l.type) === normalize(app.type)
@@ -1405,15 +1323,13 @@ function showAppareil(app) {
 
   /* === Train aléatoire + changement au clic ===
    Mets le nombre EXACT d'images => train1.gif ... trainN.gif */
-const TOTAL_TRAINS = 11; // ⬅️ change ce nombre selon tes fichiers
+const TOTAL_TRAINS = 11; 
 
 const trainImg = document.getElementById('train');
-  // Fallback global si une image manque
 trainImg.onerror = () => { trainImg.src = 'images/train1.gif'; };
 let lastN = null;
 
 function pickRandomTrain() {
-  // Tire un nombre entre 1 et TOTAL_TRAINS, différent du précédent si possible
   let n;
   do {
     n = Math.floor(Math.random() * TOTAL_TRAINS) + 1;
@@ -1424,28 +1340,26 @@ function pickRandomTrain() {
 
 }
 
-// 1) Tirage au chargement
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', pickRandomTrain);
 } else {
   pickRandomTrain();
 }
 
-// 2) Tirage au clic (sans recharger la page)
 trainImg.addEventListener('click', pickRandomTrain);
-// === Calcul de distance (Haversine) ===
+
 function getDistance(lat1, lon1, lat2, lon2) {
-  const R = 6371; // rayon Terre en km
+  const R = 6371; 
   const dLat = (lat2 - lat1) * Math.PI / 180;
   const dLon = (lon2 - lon1) * Math.PI / 180;
   const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
             Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
             Math.sin(dLon/2) * Math.sin(dLon/2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-  return R * c; // distance en km
+  return R * c; 
 }
-// --- Utilitaires d'affichage pour la proximité ---
-const km = d => d.toFixed(2).replace(".", ","); // format FR
+
+const km = d => d.toFixed(2).replace(".", ","); 
 
 const labelPoste = p =>
   (`${p.nom || ""}${p.type ? " " + p.type : ""}${p.SAT ? " " + p.SAT : ""}`.trim()) +
@@ -1454,7 +1368,6 @@ const labelPoste = p =>
 const labelAppareil = p =>
   `${p.appareil} (${p.nom}${p.type ? " " + p.type : ""}${p.SAT ? " / " + p.SAT : ""})`;
     
-    // Masquer le bouton sur PC, afficher uniquement sur mobile
 function isMobile() {
   return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 }
@@ -1462,7 +1375,7 @@ function isMobile() {
 if (!isMobile()) {
   document.getElementById("btn-localiser").style.display = "none";
 }
-// === Bouton "Me localiser" ===
+
 document.getElementById("btn-localiser").addEventListener("click", () => {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
@@ -1484,7 +1397,6 @@ document.getElementById("btn-localiser").addEventListener("click", () => {
   }
 });
 
-    // Affiche la page suivante de résultats (+10)
 function renderProximitePage() {
   const container = document.getElementById("proximite");
   const ul = container.querySelector("ul");
@@ -1508,7 +1420,6 @@ function renderProximitePage() {
 
     a.addEventListener("click", ev => {
       ev.preventDefault();
-      // Nettoie la zone proximité et masque "Voir plus"
       container.innerHTML = "";
       btnVoirPlus.style.display = "none";
       if (p.category === "poste") {
@@ -1524,7 +1435,6 @@ function renderProximitePage() {
 
   proximiteIndex += slice.length;
 
-  // Affiche / masque le bouton "Voir plus"
   if (proximiteIndex < proximiteSorted.length) {
     btnVoirPlus.style.display = "inline-block";
   } else {
@@ -1532,7 +1442,6 @@ function renderProximitePage() {
   }
 }
 
-// === À proximité avec pagination par 10 ===
 function showNearby(position) {
   const lat = position.coords.latitude;
   const lon = position.coords.longitude;
@@ -1542,50 +1451,42 @@ function showNearby(position) {
     return;
   }
 
-  // Calcule & trie toute la liste une fois
   proximiteSorted = allItems
     .map(it => ({ ...it, distance: getDistance(lat, lon, it.latitude, it.longitude) }))
     .sort((a, b) => a.distance - b.distance);
 
   proximiteIndex = 0;
 
-  // Prépare le conteneur
   const container = document.getElementById("proximite");
   container.innerHTML = `<h3>📍 À proximité :</h3><ul style="margin:0; padding-left:20px;"></ul>`;
 
-  // Branche le bouton "Voir plus"
   const btnVoirPlus = document.getElementById("voir-plus");
   btnVoirPlus.onclick = renderProximitePage;
 
-  // Affiche la première page (10)
   renderProximitePage();
 }
 
 const compteurContributionURL = "https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec";
 
 function updateContrib() {
-  // 1) Lecture du cache
   const cached = localStorage.getItem("counterContrib");
   if (cached) {
   const el1 = document.getElementById("compteur-valeur");
 if (el1) el1.textContent = `(${cached})`;
   }
 
-  // 2) Mise à jour depuis le serveur
   fetch(compteurContributionURL).then(r => r.json()).then(data => {
     if (data && typeof data.count !== "undefined") {
       const el2 = document.getElementById("compteur-valeur");
 if (el2) el2.textContent = `(${data.count})`;
-      localStorage.setItem("counterContrib", data.count); // ✅ sauvegarde en cache
+      localStorage.setItem("counterContrib", data.count);
     }
   }).catch(() => {});
 }
 
-    // === Édition Nom + Type ===
 let editMode = false;
 let originalValues = {};
 
-// Quand on clique sur (modifier)
 document.addEventListener("click", function(e){
   if (e.target.id === "edit-toggle") {
     e.preventDefault();
@@ -1593,9 +1494,9 @@ document.addEventListener("click", function(e){
       editMode = true;
       originalValues.nom = document.getElementById("editable-nom").textContent;
       originalValues.type = document.getElementById("editable-type").textContent;
-      // ✅ Forcer RSS en lettre (A/B/C) dès le départ
+ 
 if (currentItem.rss) {
-  originalValues.rss = currentItem.rss;  // déjà A/B/C
+  originalValues.rss = currentItem.rss;  
 } else {
   originalValues.rss = "";
 }
@@ -1612,11 +1513,10 @@ if (currentItem.rss) {
     originalValues.description = document.getElementById("editable-description").textContent.trim();
   }
 
-      // ⚡️ On prend la valeur brute du JSON affiché, pas le rendu cliquable
+
 originalValues.contact = currentItem.contact || "";
 originalValues.portail = currentItem.portail || "";
 
-      // Ajoute halo + vibration sur les zones modifiables existantes
 ["editable-nom","editable-type","editable-sat","editable-acces",
  "editable-description","editable-contact","editable-portail",
  "editable-pk","editable-numero_ligne","editable-rss"].forEach(id=>{
@@ -1632,7 +1532,6 @@ originalValues.portail = currentItem.portail || "";
   }
 });
 
-// Masque le nom de ligne pendant l’édition
 const ligneNomEl = document.getElementById("ligne-nom");
 if (ligneNomEl) ligneNomEl.style.display = "none";
 
@@ -1642,7 +1541,6 @@ if (ligneNomEl) ligneNomEl.style.display = "none";
   }
 });
 
-// Quand on clique sur une zone modifiable
 document.addEventListener("click", function(e){
   if (editMode && (
       ["editable-nom","editable-type","editable-sat","editable-acces","editable-rss",
@@ -1651,20 +1549,18 @@ document.addEventListener("click", function(e){
       e.target.closest("#editable-rss")
   )) {
 
-    // 👉 Stoppe la vibration mais garde le halo pour certains champs
+ 
 if (["editable-nom","editable-type","editable-sat","editable-acces","editable-pk","editable-numero_ligne"].includes(e.target.id)) {
   e.target.classList.remove("editable-wiggle");
 }
     
-// Cas spécial RSS → choix direct A / B / C
 if (e.target.id === "editable-rss" || e.target.closest("#editable-rss")) {
 const rssEl = document.getElementById("editable-rss");
 if (!rssEl) return;
 
-// ➡️ On remplace uniquement le bloc RSS (le <p> + les numéros) par les boutons
-const rssBlock = rssEl.closest("p"); // juste le <p> contenant 📞 RSS
-const phonesEl = document.getElementById("rss-phones"); // la ligne avec les numéros
-if (phonesEl) phonesEl.remove(); // on supprime la ligne numéros
+const rssBlock = rssEl.closest("p"); 
+const phonesEl = document.getElementById("rss-phones"); 
+if (phonesEl) phonesEl.remove(); 
 
 rssBlock.outerHTML = `
   <div id="editable-rss" class="inline-links">
@@ -1677,20 +1573,19 @@ rssBlock.outerHTML = `
 document.querySelectorAll(".btn-rss").forEach(btn => {
   btn.addEventListener("click", () => {
     const code = btn.dataset.code;
-    currentItem.rssTemp = code;          // ✅ valeur temporaire
-    currentItem.rssChanged = true;       // ✅ on note que l’utilisateur a modifié
+    currentItem.rssTemp = code;         
+    currentItem.rssChanged = true;    
     document.querySelector("#editable-rss").innerHTML =
       `<strong>📞 RSS Table ${code === "A" ? "1" : code === "B" ? "2" : "3"}</strong>`;
   });
 });
 
-  return; // ⛔ stoppe ici pour éviter le reste
+  return; 
 }
   
-// Description (cliquable sur tout le bloc)
 if (editMode && (e.target.id === "editable-description" || e.target.closest("#editable-description"))) {
   const parent = document.getElementById("editable-description").parentNode;
-  const val = currentItem.description || ""; // ✅ valeur brute du JSON
+  const val = currentItem.description || "";
 
   parent.innerHTML = `
     <strong id="editable-description">ℹ️ Informations :</strong>
@@ -1715,7 +1610,7 @@ if (e.target.id === "editable-portail") {
   return;
 }
   if (e.target.id === "editable-contact") {
-  const val = currentItem.contact || ""; // ✅ valeur brute du JSON
+  const val = currentItem.contact || ""; 
   const parent = e.target.parentNode;
 
   parent.innerHTML = `
@@ -1729,15 +1624,14 @@ if (e.target.id === "editable-portail") {
   return;
 }
   
-    // Cas normal (nom, type, sat, accès)
+
     const field = e.target.id.replace("editable-","");
     let currentVal = e.target.textContent.replace("– accès ","").trim();
     e.target.innerHTML = `<input type="text" id="input-${field}" value="${currentVal}" style="border:2px solid #1a73e8; padding:3px; border-radius:6px;" />`;
     document.getElementById("edit-buttons").style.display = "block";
     navigator.vibrate?.(50);
   }
-   // 🔹 AJOUT ICI
-// Bloc POSTE → remplacer boutons par champ texte
+
 if (editMode && e.target.id === "editable-rep-poste") {
   const bloc = e.target.closest(".rep-block").querySelector(".inline-links");
   bloc.innerHTML = `
@@ -1749,7 +1643,6 @@ if (editMode && e.target.id === "editable-rep-poste") {
   return;
 }
 
-// Bloc ACCES → remplacer boutons par champ texte
 if (editMode && e.target.id === "editable-rep-acces") {
   const bloc = e.target.closest(".rep-block").querySelector(".inline-links");
   bloc.innerHTML = `
@@ -1775,16 +1668,14 @@ function getDemandeur() {
     }
   }
 
-  // ✅ On garde le nom en mémoire dans le navigateur
   localStorage.setItem("demandeur", demandeur);
   return demandeur;
 }
     
-// Sauvegarde
 document.getElementById("btn-save").addEventListener("click", function(){
   const btnSave = document.getElementById("btn-save");
   btnSave.disabled = true;
-  btnSave.textContent = "⏳ Envoi..."; // sablier qui tourne
+  btnSave.textContent = "⏳ Envoi..."; 
 
   const newNom   = document.getElementById("input-nom")?.value   || originalValues.nom;
   const newType  = document.getElementById("input-type")?.value  || originalValues.type;
@@ -1803,14 +1694,13 @@ const newNumLigne = document.getElementById("input-numero_ligne")?.value || curr
     ? `${currentItem.nom || ''} ${currentItem.type || ''} ${currentItem.SAT || ''} ${currentItem.accès || ''}`.trim()
     : "";
 
-  // ✅ Ne garde que les vraies modifications
   const payload = {
     demandeur,
     ficheOrigine
   };
 if (currentItem.rssTemp) {
   payload.rss = currentItem.rssTemp;
-  payload.rssChanged = true;   // ✅ indique au serveur que RSS a été modifié
+  payload.rssChanged = true;   
   originalValues.rss = currentItem.rssTemp;
   delete currentItem.rssTemp;
 }
@@ -1835,25 +1725,23 @@ fetch("https://script.google.com/macros/s/AKfycbyxh3HGR6iHcn0ynwfGzSzOm5Djc7o2e1
   body: JSON.stringify(payload)
 })
 .then(() => {
-  showNotification("✅ Modification envoyée (en attente d’approbation)", "success");
-  // ⚡️ Mets à jour l’affichage avec les nouvelles valeurs locales
+  showNotification(" Modification envoyée (en attente d’approbation)", "success");
   originalValues.description = newDescription;
   originalValues.contact = newContact;
   originalValues.portail = newPortail;
   quitEditMode(newNom, newType, newSat, newAcces);
 
-  // ➕ Incrémente le compteur de contributions (⚠️ bien à l’intérieur du .then)
   return fetch("https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec?increment=true");
 })
-.then(() => console.log("✅ Contribution créditée"))
+.then(() => console.log(" Contribution créditée"))
 .catch(() => showNotification("❌ Échec d’envoi (réseau)", "error"))
 .finally(() => {
   setTimeout(() => {
     btnSave.disabled = false;
-    btnSave.textContent = "💾 Sauvegarder"; // retour normal
+    btnSave.textContent = "💾 Sauvegarder"; 
   }, 3000);
 });
-  });  // ← fin du addEventListener("click", ...)
+  }); 
 
 function quitEditMode(nom, type, sat = "", acces = ""){
   document.getElementById("editable-nom").textContent = nom;
@@ -1864,7 +1752,7 @@ function quitEditMode(nom, type, sat = "", acces = ""){
   if (document.getElementById("editable-acces")) {
     document.getElementById("editable-acces").textContent = " – accès " + acces;
   }
-  // ➡️ Reconstruit le bloc PK + ligne
+
 const pkVal = originalValues.pk || currentItem.pk || "(non renseigné)";
 const numVal = originalValues.numero_ligne || currentItem.numero_ligne || "(non renseigné)";
 const ligneNomEl = document.getElementById("ligne-nom");
@@ -1887,7 +1775,6 @@ if (pkParent) {
   const el = document.getElementById(id);
   if (el) {
     el.classList.remove("editable-halo", "editable-wiggle"); 
-    // ✅ On enlève les effets
   }
 });
 
@@ -1895,9 +1782,8 @@ if (pkParent) {
  
 if (document.getElementById("input-description")) {
   const descVal = document.getElementById("input-description").value.trim();
-  originalValues.description = descVal; // on garde la valeur locale
+  originalValues.description = descVal; 
 
-  // ➡️ remplace le textarea par le bloc normal formaté
   document.getElementById("input-description").parentNode.outerHTML =
     formatDescription(descVal);
 }
@@ -1915,24 +1801,22 @@ if (document.getElementById("editable-portail")) {
 }
   
 
-  // Réaffiche le nom de la ligne après édition
 if (ligneNomEl) ligneNomEl.style.display = "inline";
 
-// ➡️ Restaurer le RSS si modifié OU si resté en mode boutons
 const rssEl = document.getElementById("editable-rss");
 if (rssEl) {
   if (currentItem.rssChanged) {
-    // cas : l’utilisateur a vraiment choisi une table
+
     const rssVal = originalValues.rss || currentItem.rss || "";
 rssEl.outerHTML = formatRSS(rssVal, true);
     delete currentItem.rssChanged;
   } else if (rssEl.querySelector(".btn-rss")) {
-    // cas : le bloc est resté sous forme de boutons sans choix
+    
     const rssVal = originalValues.rss || currentItem.rss || "";
 rssEl.outerHTML = formatRSS(rssVal, true);
   }
 }
-  // 🔁 Remet les blocs "Repérer..." si on les avait passés en champ texte
+
 const repPosteInput = document.getElementById("input-poste-link");
 if (repPosteInput) {
   const bloc = repPosteInput.closest(".inline-links");
@@ -1954,13 +1838,13 @@ bloc.innerHTML = `
   <a href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${currentItem.latitude},${currentItem.longitude}" target="_blank" rel="noopener">👁️ Street View</a>
 `;
 }
-    // Nettoie tous les halos/vibrations restants
+
   document.querySelectorAll(".editable-halo, .editable-wiggle").forEach(el => {
     el.classList.remove("editable-halo", "editable-wiggle");
   });
   editMode = false;
 }
-    // Annuler édition
+
 document.getElementById("btn-cancel").addEventListener("click", function(){
   quitEditMode(
     originalValues.nom,
@@ -1982,26 +1866,25 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
   }, 4000);
 }
 
-</script> <!-- ✅ on ferme la balise correctement -->
+</script> 
 
 </main>
-<!-- Lien installer au-dessus du footer -->
+
 <div id="install-container" style="text-align:center; margin:10px 0;">
   <a id="installLink" href="#" style="display:none;">📲 Installer l’app</a>
 </div>
 
-<!-- Footer classique en dessous -->
 <div id="about-footer">
   🔧 <a href="arnaud.html">À propos</a> – 
   <span class="footer-version">Nono Maps V1.01</span>
 </div>
 <script>
 (function(){
-  // ===== Config =====
-  var INTRO_DURATION_MS = 3000;             // Durée d’affichage (ms)
-  var STORAGE_KEY       = 'eale_intro_last_day'; // Clé de mémo 1/jour
+  
+  var INTRO_DURATION_MS = 3000;             
+  var STORAGE_KEY       = 'eale_intro_last_day'; 
 
-  // Date locale AAAA-MM-JJ (pas en UTC, évite les décalages)
+
   function todayLocal(){
     var d=new Date();
     var y=d.getFullYear();
@@ -2010,7 +1893,6 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
     return y+'-'+m+'-'+day;
   }
 
-  // Afficher 1 fois par jour
   function shouldShowIntro(){
     try{
       var last = localStorage.getItem(STORAGE_KEY);
@@ -2018,7 +1900,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
       if (last === today) return false;
       localStorage.setItem(STORAGE_KEY, today);
       return true;
-    }catch(e){ return true; } // si stockage bloqué, on affiche
+    }catch(e){ return true; } 
   }
 
   function pickPhrase(){
@@ -2074,7 +1956,6 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
     }, INTRO_DURATION_MS);
   }
 
-  // Lance dès que le DOM est prêt
   if (document.readyState === 'loading'){
     document.addEventListener('DOMContentLoaded', function(){ if (shouldShowIntro()) mountIntro(); });
   } else {
@@ -2086,16 +1967,14 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 let deferredPrompt;
 const installLink = document.getElementById("installLink");
 
-// Vérifie si l'app est déjà installée
 const isStandalone = window.matchMedia('(display-mode: standalone)').matches 
                   || window.navigator.standalone === true;
 
 if (!isStandalone) {
-  // --- Android / Chrome ---
   window.addEventListener("beforeinstallprompt", (e) => {
     e.preventDefault();
     deferredPrompt = e;
-    installLink.style.display = "inline"; // montrer le lien
+    installLink.style.display = "inline"; 
 
     installLink.addEventListener("click", async (evt) => {
       evt.preventDefault();
@@ -2103,7 +1982,7 @@ if (!isStandalone) {
         deferredPrompt.prompt();
         const choice = await deferredPrompt.userChoice;
         if (choice.outcome === "accepted") {
-          console.log("PWA installée ✅");
+          console.log("PWA installée ");
         }
         deferredPrompt = null;
         installLink.style.display = "none"; 
@@ -2111,7 +1990,7 @@ if (!isStandalone) {
     });
   });
 
-  // --- iOS ---
+
   const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
   if (isIOS) {
     installLink.style.display = "inline";
