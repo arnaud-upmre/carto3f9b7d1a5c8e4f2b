@@ -362,18 +362,22 @@ accesLayer.on('clusterclick', function (a) {
     ${items.map(it => `<a href="#" class="cluster-link" data-idx="${it.idx}">${it.label}</a>`).join("")}
   </div>`;
 
-  // Retirer le cluster et ajouter un marker temporaire
-  const tempMarker = L.marker(first, { icon: iconAcces }).addTo(map);
-  tempMarker.bindPopup(html).openPopup();
+a.layer.bindPopup(html).openPopup();
 
-// Quand la popup se ferme → seulement si elle affichait la liste
-tempMarker.on("popupclose", () => {
-  // Supprimer le marker seulement si la popup affichait la liste
-  const popupContent = tempMarker.getPopup() ? tempMarker.getPopup().getContent() : "";
-  if (popupContent.includes("cluster-link")) {
-    map.removeLayer(tempMarker);
-  }
-});
+// Brancher les clics sur les liens
+setTimeout(() => {
+  document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      const idx = +e.currentTarget.dataset.idx;
+      const target = childMarkers[idx];
+
+      const content = target.getPopup() ? target.getPopup().getContent() : "";
+      a.layer.bindPopup(content).openPopup();
+      map.panTo(target.getLatLng());
+    }, { passive: false });
+  });
+}, 0);
 
   // Brancher les clics sur les liens
   setTimeout(() => {
