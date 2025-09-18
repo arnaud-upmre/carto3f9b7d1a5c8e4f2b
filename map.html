@@ -373,8 +373,12 @@ setTimeout(() => {
       const target = childMarkers[idx];
 
       const content = target.getPopup() ? target.getPopup().getContent() : "";
-      a.layer.bindPopup(content).openPopup();
-      map.panTo(target.getLatLng());
+   const popup = L.popup({ maxWidth: 240 })
+  .setLatLng(target.getLatLng())
+  .setContent(content)
+  .openOn(map);
+
+map.panTo(target.getLatLng());
     }, { passive: false });
   });
 }, 0);
