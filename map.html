@@ -362,12 +362,6 @@ if (item.latitude && item.longitude) {
         ${accesVal ? " – accès " + accesVal : ""}
       </div>
 
-      <div style="margin-bottom:6px; color:#333;">
-        ${item.pk 
-          ? `🚄 PK ${item.pk} sur la ligne n°${item.numero_ligne || ""} – ${item.lignes || ""}`
-          : `🚄 ligne n°${item.numero_ligne || ""} – ${item.lignes || ""}`}
-      </div>
-
       ${ makeTelHtml("🔑", item.portail) }
       ${ makeTelHtml("📞", item.contact) }
       ${item.description ? `<div>ℹ️ ${item.description}</div>` : ""}
