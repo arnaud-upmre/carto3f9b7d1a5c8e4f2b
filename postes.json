@@ -371,8 +371,8 @@
     "lignes": "LILLE à LES FONTINETTES",
     "numero_ligne": 295000,
     "pk": "103,900",
-    "poste_latitude": "50.93477",
-    "poste_longitude": "1.85811"
+    "poste_latitude": "50.9346815",
+    "poste_longitude": "1.8582382"
   },
   {
     "nom": "Bif Coupvent",
@@ -1289,8 +1289,8 @@
     "lignes": "LONGUEAU à BOULOGNE-VILLE",
     "numero_ligne": 311000,
     "pk": "",
-    "poste_latitude": "50.5121415",
-    "poste_longitude": "1.644521"
+    "poste_latitude": "50.5069278",
+    "poste_longitude": "1.6444343"
   },
   {
     "nom": "Etinchelle",
