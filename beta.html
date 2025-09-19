@@ -221,38 +221,6 @@ const map = L.map('map', { zoomControl: false, attributionControl: false })
              .setView(defaultCenter, defaultZoom);
     const allMarkers = [];
 
-let _datasetsLoaded = 0;
-function _tryOpenFromURL() {
-  _datasetsLoaded++;
-  if (_datasetsLoaded < 2) return; // attendre postes + appareils
-
-  if (!isNaN(lat) && !isNaN(lon)) {
-    const matches = allMarkers.filter(m => {
-      const ll = m.getLatLng();
-      return ll.lat === lat && ll.lng === lon;
-    });
-
-    if (matches.length > 0) {
-      const target = matches[0];
-      map.setView(target.getLatLng(), Math.max(zoom, 21));
-
-      setTimeout(() => {
-        if (!map.hasLayer(target)) {
-          const parentCluster = target.__parent;
-          if (parentCluster && parentCluster.spiderfy) {
-            parentCluster.spiderfy();
-            setTimeout(() => target.openPopup(), 400);
-          }
-        } else {
-          target.openPopup();
-        }
-      }, 300);
-
-    } else {
-      map.setView([lat, lon], zoom);
-    }
-  }
-}
 
 function makeTelHtml(labelEmoji, value) {
   if (!value) return "";
@@ -477,33 +445,25 @@ fetch("postes.json")
           style="cursor:pointer; font-size:20px; line-height:1; margin-left:6px;">📷</span>
   </div>
 
-<!-- Portail -->
-<div style="margin-bottom:10px;">
-  🔑 Portail : ${
-    item.portail
-      ? (
-          item.portail.includes("http")
-            ? `<a href="${item.portail.match(/https?:\/\/\S+/)[0]}" target="_blank" style="color:#007aff; text-decoration:none;">Voir vidéo explicative ICI</a>`
-          : (item.portail.includes("#") || item.portail.toLowerCase().includes("code"))
-            ? item.portail
-          : `<a href="tel:${item.portail.replace(/[^\d+]/g, "")}" style="color:#007aff; text-decoration:none;">${item.portail}</a>`
-        )
-      : `<span style="color:#777;font-style:italic;">Non renseigné</span>`
-  }
-</div>
+  <!-- Portail -->
+  <div style="margin-bottom:10px;">
+    🔑 Portail : ${
+      item.portail
+        ? (item.portail.match(/^[0-9+ ]+$/)
+            ? `<a href="tel:${item.portail.replace(/[^\d+]/g, "")}" style="color:#007aff; text-decoration:none;">${item.portail}</a>`
+            : item.portail)
+        : `<span style="color:#777;font-style:italic;">Non renseigné</span>`
+    }
+  </div>
 
-<!-- Information -->
-<div style="margin-bottom:14px;">
-  ✍🏻 Information : ${
-    item.description
-      ? (
-          item.description.startsWith("http")
-            ? `<a href="${item.description}" target="_blank" style="color:#007aff; text-decoration:none;">Voir vidéo explicative ICI</a>`
-            : item.description
-        )
-      : `<span style="color:#777;font-style:italic;">Non renseignée</span>`
-  }
-</div>
+  <!-- Information -->
+  <div style="margin-bottom:14px;">
+    ✍🏻 Information : ${
+      item.description
+        ? item.description
+        : `<span style="color:#777;font-style:italic;">Non renseignée</span>`
+    }
+  </div>
 
   <!-- Fiche détaillée -->
   <a href="index.html?id=${encodeURIComponent(
@@ -568,7 +528,6 @@ fetch("postes.json")
       }
 
     });
-_tryOpenFromURL();
   });
     
     
@@ -770,7 +729,20 @@ _tryOpenFromURL();
                appareilsLayer.addLayer(subGroup);
       }
     });
-    _tryOpenFromURL();
+
+    if (!isNaN(lat) && !isNaN(lon)) {
+      map.setView([lat, lon], zoom);
+
+      const target = allMarkers.find(m => {
+        const ll = m.getLatLng();
+        return Math.abs(ll.lat - lat) < 1e-5 && Math.abs(ll.lng - lon) < 1e-5;
+      });
+
+      if (target) {
+        target.openPopup();
+      }
+    }
+
   });
 
 
@@ -879,7 +851,6 @@ if (!id) {
     }
   });
 }
-    
  function openStreetView(lat, lng) {
     const iframe = document.getElementById("streetview-frame");
     iframe.src = `https://www.google.com/maps?q=&layer=c&cbll=${lat},${lng}&cbp=11,0,0,0,0&output=svembed`;
@@ -890,9 +861,9 @@ if (!id) {
     document.getElementById("streetview-overlay").style.display = "none";
     document.getElementById("streetview-frame").src = ""; 
   };
+
 document.getElementById("streetview-overlay").style.display = "none";
 document.getElementById("streetview-frame").src = "";
-    
 </script>
 
 </body>
