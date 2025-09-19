@@ -241,12 +241,16 @@ function _tryOpenFromURL() {
       const target = matches[0];
       map.setView(target.getLatLng(), zoom);
 
-      if (target.__parent && target.__parent.spiderfy) {
-        target.__parent.spiderfy();
-        setTimeout(() => target.openPopup(), 300);
-      } else {
-        target.openPopup();
-      }
+ if (target.__parent && target.__parent.spiderfy) {
+  target.__parent.spiderfy();
+  setTimeout(() => {
+    // re-filtre après spiderfy (les enfants sont éclatés)
+    const again = allMarkers.find(m => m.options.customId === id);
+    if (again) again.openPopup();
+  }, 400);
+} else {
+  target.openPopup();
+}
     } else {
       map.setView([lat, lon], zoom);
     }
@@ -671,6 +675,8 @@ const key = `${item.latitude}_${item.longitude}`;
   icon: appareilIcon, 
   customId: item.appareil  
 }).bindPopup(content);
+        appareilsLayer.addLayer(m);
+allMarkers.push(m);
 
       } else {
 
