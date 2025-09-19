@@ -450,9 +450,8 @@ fetch("postes.json")
   🔑 Portail : ${
     item.portail
       ? (
-
-          item.portail.startsWith("http")
-            ? `<a href="${item.portail}" target="_blank" style="color:#007aff; text-decoration:none;">Voir vidéo explicative ICI</a>`
+          item.portail.includes("http")
+            ? `<a href="${item.portail.match(/https?:\/\/\S+/)[0]}" target="_blank" style="color:#007aff; text-decoration:none;">Voir vidéo explicative ICI</a>`
           : (item.portail.includes("#") || item.portail.toLowerCase().includes("code"))
             ? item.portail
           : `<a href="tel:${item.portail.replace(/[^\d+]/g, "")}" style="color:#007aff; text-decoration:none;">${item.portail}</a>`
