@@ -347,33 +347,50 @@ accesLayer.on('clusterclick', function (e) {
   const allSameCoords = childMarkers.every(m => m.getLatLng().equals(first));
 
   if (allSameCoords) {
+    // Construire la liste triée avec icône
+    const items = childMarkers.map((m, i) => {
+      let label = m.options.customId || `Accès ${i + 1}`;
+      return { label: label.replace(/\bposte\b/gi, "").trim(), idx: i };
+    }).sort((a, b) => a.label.localeCompare(b.label, "fr", { numeric: true, sensitivity: "base" }));
+
+    const html = `<div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
+      ${items.map(it => `
+        <a href="#" class="cluster-link" data-idx="${it.idx}" 
+           style="display:flex;align-items:center;gap:6px;">
+          <img src="ico/acces.png" style="width:16px;height:16px;">
+          <span>${it.label}</span>
+        </a>`).join("")}
+    </div>`;
+
     // juste ouvrir la popup → pas de zoom
     L.popup()
       .setLatLng(first)
-     // Construire la liste triée avec icône
-const items = childMarkers.map((m, i) => {
-  let label = m.options.customId || `Accès ${i + 1}`;
-  return { label: label.replace(/\bposte\b/gi, "").trim(), idx: i };
-}).sort((a, b) => a.label.localeCompare(b.label, "fr", { numeric: true, sensitivity: "base" }));
-
-const html = `<div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
-  ${items.map(it => `
-    <a href="#" class="cluster-link" data-idx="${it.idx}" 
-       style="display:flex;align-items:center;gap:6px;">
-      <img src="ico/acces.png" style="width:16px;height:16px;">
-      <span>${it.label}</span>
-    </a>`).join("")}
-</div>`;
-
-L.popup()
-  .setLatLng(first)
-  .setContent(html)
-  .openOn(map);
+      .setContent(html)
       .openOn(map);
+
+    // Après openOn(map)
+setTimeout(() => {
+  document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
+    link.addEventListener("click", (ev) => {
+      ev.preventDefault();
+      const idx = +ev.currentTarget.dataset.idx;
+      const target = childMarkers[idx];
+
+      const content = target.getPopup() ? target.getPopup().getContent() : "";
+      L.popup({ maxWidth: 240 })
+        .setLatLng(target.getLatLng())
+        .setContent(content)
+        .openOn(map);
+
+      // pas de zoom → juste recentrer
+      map.panTo(target.getLatLng());
+    });
+  });
+}, 0);
+
   } else {
-
+    // comportement normal quand coords différentes : zoomer sur l’ensemble
     map.fitBounds(e.layer.getBounds());
-
   }
 });
 
