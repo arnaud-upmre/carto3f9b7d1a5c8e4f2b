@@ -1034,7 +1034,7 @@ html += `
   <div class="inline-links pills-3">
     ${
       usePoste
-     ? `<a href="${myMapsViewer(lieu.poste_latitude || lieu.latitude, lieu.poste_longitude || lieu.longitude, 19, formatNomCompletLieu(lieu))}">🛰️ Vue satellite</a>`
+     ? `<a href="${myMapsViewer(lieu.poste_latitude || lieu.latitude, lieu.poste_longitude || lieu.longitude, 19, null)}">🛰️ Vue satellite</a>`
         : `<span class="placeholder">(non renseigné – fournir un lien Maps)</span>`
     }
   </div>
@@ -1044,7 +1044,7 @@ html += `
 <div class="rep-block">
   <p id="editable-rep-acces"><span class="emoji">🛣️</span> Repérer l’accès :</p>
   <div class="inline-links pills-3">
-<a href="${myMapsViewer(lieu.latitude, lieu.longitude, 19, formatNomCompletLieu(lieu))}">🛰️ Vue satellite</a>
+<a href="${myMapsViewer(lieu.latitude, lieu.longitude, 19, null)}">🛰️ Vue satellite</a>
 <a href="#" onclick="openStreetView(${lieu.latitude}, ${lieu.longitude}); return false;">👁️ Street View</a> </div>
 </div>`;
   
@@ -1350,8 +1350,8 @@ function showAppareil(app) {
   </h2>
 
 <div class="inline-links pills-3" style="margin-top:10px; margin-bottom:1.5rem;">
-<a href="${myMapsViewer(app.latitude, app.longitude)}">🛰️ Vue satellite</a>
-</div>`;  
+<a href="${myMapsViewer(app.latitude, app.longitude, 19, app.appareil)}">🛰️ Vue satellite</a>
+</div>
 
   const posteTrouvé = lieux.find(l => 
     normalize(l.nom) === normalize(app.nom) &&
@@ -1897,7 +1897,7 @@ if (repPosteInput) {
   const targetLat = usePoste ? latPoste : currentItem.latitude;
   const targetLon = usePoste ? lonPoste : currentItem.longitude;
 bloc.innerHTML = usePoste
-  ? `<a href="${myMapsViewer(currentItem.poste_latitude || currentItem.latitude, currentItem.poste_longitude || currentItem.longitude)}" target="_blank" rel="noopener">🛰️ Vue satellite</a>`
+  ? `<a href="${myMapsViewer(currentItem.poste_latitude || currentItem.latitude, currentItem.poste_longitude || currentItem.longitude, 19, null)}" target="_blank" rel="noopener">🛰️ Vue satellite</a>`
   : `<span class="placeholder">(non renseigné – fournir un lien Maps)</span>`;
 }
 
@@ -1905,7 +1905,7 @@ const repAccesInput = document.getElementById("input-acces-link");
 if (repAccesInput) {
   const bloc = repAccesInput.closest(".inline-links");
 bloc.innerHTML = `
-<a href="${myMapsViewer(currentItem.latitude, currentItem.longitude)}">🛰️ Vue satellite</a>
+<a href="${myMapsViewer(currentItem.latitude, currentItem.longitude, 19, null)}">🛰️ Vue satellite</a>
 <a href="#" onclick="openStreetView(${currentItem.latitude}, ${currentItem.longitude}); return false;">👁️ Street View</a>
 `;
 }
