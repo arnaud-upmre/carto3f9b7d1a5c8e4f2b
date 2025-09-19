@@ -737,20 +737,6 @@ fetch("postes.json")
                appareilsLayer.addLayer(subGroup);
       }
     });
-
-    if (!isNaN(lat) && !isNaN(lon)) {
-      map.setView([lat, lon], zoom);
-
-      const target = allMarkers.find(m => {
-        const ll = m.getLatLng();
-        return Math.abs(ll.lat - lat) < 1e-5 && Math.abs(ll.lng - lon) < 1e-5;
-      });
-
-      if (target) {
-        target.openPopup();
-      }
-    }
-
   });
 
 
@@ -859,6 +845,31 @@ if (!id) {
     }
   });
 }
+   if (!isNaN(lat) && !isNaN(lon)) {
+  map.whenReady(() => {
+    map.setView([lat, lon], zoom);
+
+    let target;
+
+    // Si un id est fourni → priorité à la recherche par customId
+    if (id) {
+      target = allMarkers.find(m => m.options.customId && m.options.customId === id);
+    }
+
+    // Sinon on cherche par coordonnées
+    if (!target) {
+      target = allMarkers.find(m => {
+        const ll = m.getLatLng();
+        return Math.abs(ll.lat - lat) < 1e-5 && Math.abs(ll.lng - lon) < 1e-5;
+      });
+    }
+
+    if (target) {
+      target.openPopup();
+    }
+  });
+}
+    
  function openStreetView(lat, lng) {
     const iframe = document.getElementById("streetview-frame");
     iframe.src = `https://www.google.com/maps?q=&layer=c&cbll=${lat},${lng}&cbp=11,0,0,0,0&output=svembed`;
