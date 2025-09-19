@@ -221,38 +221,6 @@ const map = L.map('map', { zoomControl: false, attributionControl: false })
              .setView(defaultCenter, defaultZoom);
     const allMarkers = [];
 
-let _datasetsLoaded = 0;
-function _tryOpenFromURL() {
-  _datasetsLoaded++;
-  if (_datasetsLoaded < 2) return; // attendre postes + appareils
-
-  if (!isNaN(lat) && !isNaN(lon)) {
-    const matches = allMarkers.filter(m => {
-      const ll = m.getLatLng();
-      return ll.lat === lat && ll.lng === lon;
-    });
-
-    if (matches.length > 0) {
-      const target = matches[0];
-      map.setView(target.getLatLng(), Math.max(zoom, 21));
-
-      setTimeout(() => {
-        if (!map.hasLayer(target)) {
-          const parentCluster = target.__parent;
-          if (parentCluster && parentCluster.spiderfy) {
-            parentCluster.spiderfy();
-            setTimeout(() => target.openPopup(), 400);
-          }
-        } else {
-          target.openPopup();
-        }
-      }, 300);
-
-    } else {
-      map.setView([lat, lon], zoom);
-    }
-  }
-}
 
 function makeTelHtml(labelEmoji, value) {
   if (!value) return "";
@@ -568,7 +536,18 @@ fetch("postes.json")
       }
 
     });
-_tryOpenFromURL();
+     if (!isNaN(lat) && !isNaN(lon)) {
+      const targetMarker = allMarkers.find(m => {
+        const ll = m.getLatLng();
+        return ll.lat === lat && ll.lng === lon;
+      });
+      if (targetMarker) {
+        map.setView(targetMarker.getLatLng(), zoom);
+        targetMarker.openPopup();
+      } else {
+        map.setView([lat, lon], zoom);
+      }
+    }
   });
     
     
@@ -770,7 +749,6 @@ _tryOpenFromURL();
                appareilsLayer.addLayer(subGroup);
       }
     });
-    _tryOpenFromURL();
   });
 
 
