@@ -536,6 +536,18 @@ fetch("postes.json")
       }
 
     });
+     if (!isNaN(lat) && !isNaN(lon)) {
+      const targetMarker = allMarkers.find(m => {
+        const ll = m.getLatLng();
+        return ll.lat === lat && ll.lng === lon;
+      });
+      if (targetMarker) {
+        map.setView(targetMarker.getLatLng(), zoom);
+        targetMarker.openPopup();
+      } else {
+        map.setView([lat, lon], zoom);
+      }
+    }
   });
     
     
@@ -858,29 +870,6 @@ if (!id) {
   };
 document.getElementById("streetview-overlay").style.display = "none";
 document.getElementById("streetview-frame").src = "";
-
-// ✅ Bloc unique
-map.whenReady(() => {
-  if (!isNaN(lat) && !isNaN(lon)) {
-    const targetMarker = allMarkers.find(m => {
-      const ll = m.getLatLng();
-      return Math.abs(ll.lat - lat) < 1e-5 && Math.abs(ll.lng - lon) < 1e-5;
-    });
-    if (targetMarker) {
-      map.setView(targetMarker.getLatLng(), zoom);
-      targetMarker.openPopup();
-    } else {
-      // Si aucun marker exact trouvé → on centre quand même
-      map.setView([lat, lon], zoom);
-    }
-  } else {
-    // Cas normal sans lat/lon → fitBounds
-    if (allMarkers.length > 0) {
-      const group = L.featureGroup(allMarkers);
-      map.fitBounds(group.getBounds());
-    }
-  }
-});
     
 </script>
 
