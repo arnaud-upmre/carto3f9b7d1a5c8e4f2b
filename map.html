@@ -234,20 +234,21 @@ function _tryOpenFromURL() {
 
     if (matches.length > 0) {
       const target = matches[0];
- map.setView(target.getLatLng(), Math.max(zoom, 21));
+      map.setView(target.getLatLng(), Math.max(zoom, 21));
 
-      // Si le marker n’est pas encore affiché (dans un cluster)
-      if (!map.hasLayer(target)) {
-        const parentCluster = target.__parent;
-        if (parentCluster && parentCluster.spiderfy) {
-          parentCluster.spiderfy();
-          setTimeout(() => target.openPopup(), 300);
+      setTimeout(() => {
+        if (!map.hasLayer(target)) {
+          const parentCluster = target.__parent;
+          if (parentCluster && parentCluster.spiderfy) {
+            parentCluster.spiderfy();
+            setTimeout(() => target.openPopup(), 400);
+          }
+        } else {
+          target.openPopup();
         }
-      } else {
-        target.openPopup();
-      }
+      }, 300);
+
     } else {
-      // Aucun marker trouvé → on centre juste
       map.setView([lat, lon], zoom);
     }
   }
