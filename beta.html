@@ -1936,7 +1936,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 
 <div id="about-footer">
   🔧 <a href="arnaud.html">À propos</a> – 
-  <span class="footer-version">Nono Maps V1.02</span>
+  <span class="footer-version">Nono Maps V1.03</span>
 </div>
 <script>
 (function(){
@@ -2000,16 +2000,16 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
     return phrases[Math.floor(Math.random()*phrases.length)];
   }
 
-  function openStreetView(lat, lon) {
-  const url = `https://www.google.com/maps/embed?pb=!1m0!3m2!1sen!2sfr!4v0!6m8!1m7!1sCAoSLEFGMVFpcE9oQnZjbFZKLV9VR2x5N0Zyb1pyc3J3bmh1YVRfUUtjTzZBZjFh!2m2!1d${lat}!2d${lon}!3f0!4f0!5f0.7820865974627469`;
-  document.getElementById("streetview-frame").src = url;
+function openStreetView(lat, lng) {
+  const iframe = document.getElementById("streetview-frame");
+  iframe.src = `https://www.google.com/maps?q=&layer=c&cbll=${lat},${lng}&cbp=11,0,0,0,0&output=svembed`;
   document.getElementById("streetview-overlay").style.display = "flex";
 }
 
-document.getElementById("streetview-close").addEventListener("click", () => {
-  document.getElementById("streetview-frame").src = "";
+document.getElementById("streetview-close").onclick = () => {
   document.getElementById("streetview-overlay").style.display = "none";
-});
+  document.getElementById("streetview-frame").src = ""; 
+};
 
   function mountIntro(){
     var overlay = document.createElement('div');
