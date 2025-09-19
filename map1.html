@@ -244,14 +244,13 @@ if (matches.length > 0) {
 
   let target = matches[0];
 
-  if (sel) {
-    const wanted = normalize(sel);
-    const found = matches.find(m => {
-      const content = m.getPopup()?.getContent() || "";
-      return normalize(content).includes(wanted);
-    });
-    if (found) target = found;
-  }
+if (sel) {
+  const wanted = normalize(sel);
+  const found = matches.find(m => {
+    return normalize(m.options.customId || "") === wanted;
+  });
+  if (found) target = found;
+}
 
   if (matches.length > 1 && !sel) {
     // Construire une popup combinée
@@ -715,8 +714,10 @@ _tryOpenFromURL();
           </div>
         `;
 
-        const m = L.marker([lat, lng], { icon: appareilIcon }).bindPopup(content);
-        appareilsLayer.addLayer(m);
+const m = L.marker([lat, lng], { 
+  icon: appareilIcon, 
+  customId: item.appareil 
+}).bindPopup(content);
         allMarkers.push(m);
 
       } else {
@@ -809,7 +810,10 @@ _tryOpenFromURL();
             </div>
           `;
 
-          const m = L.marker([lat, lng], { icon: appareilIcon }).bindPopup(content);
+         const m = L.marker([lat, lng], { 
+  icon: appareilIcon, 
+  customId: item.appareil 
+}).bindPopup(content);
           subGroup.addLayer(m);
           allMarkers.push(m);
         });
