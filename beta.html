@@ -576,7 +576,7 @@ _tryOpenFromURL();
   .then(data => {
     const grouped = {};
     data.forEach(item => {
-      const key = `${item.latitude}_${item.longitude}`;
+ const key = `${item.latitude}_${item.longitude}_${item.appareil}`;
       if (!grouped[key]) grouped[key] = [];
       grouped[key].push(item);
     });
