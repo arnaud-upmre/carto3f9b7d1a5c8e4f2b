@@ -237,26 +237,30 @@ function _tryOpenFromURL() {
       matches = matches.filter(m => m.options.customId === id);
     }
 
-    if (matches.length > 0) {
-      const target = matches[0];
-      map.setView(target.getLatLng(), zoom);
+   if (matches.length > 0) {
+  const target = matches[0];
+  map.setView(target.getLatLng(), zoom);
 
- if (target.__parent && target.__parent.spiderfy) {
-  target.__parent.spiderfy();
-  setTimeout(() => {
-    // re-filtre après spiderfy (les enfants sont éclatés)
-    const again = allMarkers.find(m => m.options.customId === id);
-    if (again) again.openPopup();
-  }, 400);
-} else {
-  target.openPopup();
-}
-    } else {
-      map.setView([lat, lon], zoom);
-    }
+  // 💡 remonter dans la hiérarchie de clusters
+  let parentCluster = target.__parent;
+  while (parentCluster && parentCluster.__parent) {
+    parentCluster = parentCluster.__parent;
+  }
+
+  if (parentCluster && parentCluster.spiderfy) {
+    parentCluster.spiderfy();
+    setTimeout(() => {
+      const again = allMarkers.find(m => m.options.customId === id);
+      if (again) {
+        map.panTo(again.getLatLng());
+        again.openPopup();
+      }
+    }, 400);
+  } else {
+    target.openPopup();
   }
 }
-
+    } 
 function makeTelHtml(labelEmoji, value) {
   if (!value) return "";
 
