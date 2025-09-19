@@ -339,67 +339,57 @@ const accesLayer = L.markerClusterGroup({
   zoomToBoundsOnClick: true
 });
 
-accesLayer.on('clusterclick', function (a) {
-  const currentZoom = map.getZoom();
-  const childMarkers = a.layer.getAllChildMarkers();
+accesLayer.on('clusterclick', function (e) {
+  const childMarkers = e.layer.getAllChildMarkers();
+
+  if (childMarkers.length === 0) return;
 
   const first = childMarkers[0].getLatLng();
-  const allSameCoords = childMarkers.every(m => {
-    const ll = m.getLatLng();
-    return ll.lat === first.lat && ll.lng === first.lng;
-  });
+  const allSameCoords = childMarkers.every(m => m.getLatLng().equals(first));
 
-  if (!(currentZoom >= 18 && allSameCoords)) return;
+  if (allSameCoords) {
+    // Empêche le zoom automatique
+    L.DomEvent.stop(e);
 
-  // Empêcher le zoom auto
-  a.originalEvent.preventDefault();
+    // Construire la liste triée
+    const items = childMarkers.map((m, i) => {
+      let label = m.options.customId || `Accès ${i + 1}`;
+      return { label: label.replace(/\bposte\b/gi, "").trim(), idx: i };
+    }).sort((a, b) => a.label.localeCompare(b.label, "fr", { numeric: true, sensitivity: "base" }));
 
-  // Construire la liste triée
-  const items = childMarkers.map((m, i) => {
-    let label = m.options.customId || `Accès ${i + 1}`;
-    return { label: label.replace(/\bposte\b/gi, "").trim(), idx: i };
-  }).sort((a, b) => a.label.localeCompare(b.label, "fr", { numeric: true, sensitivity: "base" }));
+    const html = `<div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
+      ${items.map(it => `<a href="#" class="cluster-link" data-idx="${it.idx}">${it.label}</a>`).join("")}
+    </div>`;
 
-  const html = `<div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
-    ${items.map(it => `<a href="#" class="cluster-link" data-idx="${it.idx}">${it.label}</a>`).join("")}
-  </div>`;
+    L.popup()
+      .setLatLng(first)
+      .setContent(html)
+      .openOn(map);
 
-a.layer.bindPopup(html).openPopup();
+    // Brancher les clics sur les liens
+    setTimeout(() => {
+      document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
+        link.addEventListener("click", (ev) => {
+          ev.preventDefault();
+          const idx = +ev.currentTarget.dataset.idx;
+          const target = childMarkers[idx];
 
-// Brancher les clics sur les liens
-setTimeout(() => {
-  document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
-    link.addEventListener("click", (e) => {
-      e.preventDefault();
-      const idx = +e.currentTarget.dataset.idx;
-      const target = childMarkers[idx];
+          const content = target.getPopup() ? target.getPopup().getContent() : "";
+          L.popup({ maxWidth: 240 })
+            .setLatLng(target.getLatLng())
+            .setContent(content)
+            .openOn(map);
 
-      const content = target.getPopup() ? target.getPopup().getContent() : "";
-   const popup = L.popup({ maxWidth: 240 })
-  .setLatLng(target.getLatLng())
-  .setContent(content)
-  .openOn(map);
+          map.panTo(target.getLatLng());
+        });
+      });
+    }, 0);
 
-map.panTo(target.getLatLng());
-    }, { passive: false });
-  });
-}, 0);
-
-  // Brancher les clics sur les liens
-  setTimeout(() => {
-    document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
-link.addEventListener("click", (e) => {
-  e.preventDefault();
-  const idx = +e.currentTarget.dataset.idx;
-  const target = childMarkers[idx];
-
-  const content = target.getPopup() ? target.getPopup().getContent() : "";
-  tempMarker.setLatLng(target.getLatLng());
-  tempMarker.bindPopup(content).openPopup();
-  map.panTo(target.getLatLng());
-}, { passive: false });
-    });
-  }, 0);
+  } else {
+    // Comportement normal : zoom sur le cluster
+    e.layer.spiderfy(); 
+    // ou : map.fitBounds(e.layer.getBounds());
+  }
 });
 
 
