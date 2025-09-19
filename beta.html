@@ -1037,7 +1037,7 @@ html += `
   <p id="editable-rep-acces"><span class="emoji">🛣️</span> Repérer l’accès :</p>
   <div class="inline-links pills-3">
 <a href="${myMapsViewer(lieu.latitude, lieu.longitude)}">🛰️ Vue satellite</a>
-    <a href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">👁️ Street View</a>
+    <a href="#" onclick="openStreetView(${lieu.latitude}, ${lieu.longitude})">👁️ Street View</a>
   </div>
 </div>`;
   
