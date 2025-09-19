@@ -224,17 +224,29 @@ const map = L.map('map', { zoomControl: false, attributionControl: false })
 let _datasetsLoaded = 0;
 function _tryOpenFromURL() {
   _datasetsLoaded++;
-  if (_datasetsLoaded < 2) return; // attendre les 2 fetch
+  if (_datasetsLoaded < 2) return; // attendre postes + appareils
 
   if (!isNaN(lat) && !isNaN(lon)) {
-    const targetMarker = allMarkers.find(m => {
+    const matches = allMarkers.filter(m => {
       const ll = m.getLatLng();
-      return ll.lat === lat && ll.lng === lon; // comparaison exacte
+      return ll.lat === lat && ll.lng === lon;
     });
-    if (targetMarker) {
-      map.setView(targetMarker.getLatLng(), zoom);
-      targetMarker.openPopup();
+
+    if (matches.length > 0) {
+      const target = matches[0];
+      map.setView(target.getLatLng(), zoom);
+
+      // Si c’est un cluster (plusieurs marqueurs superposés)
+      if (target.__parent && target.__parent.spiderfy) {
+        target.__parent.spiderfy();
+        setTimeout(() => {
+          target.openPopup();
+        }, 300); // petit délai pour laisser la spiderfication s’animer
+      } else {
+        target.openPopup();
+      }
     } else {
+      // Aucun marker trouvé → on centre juste
       map.setView([lat, lon], zoom);
     }
   }
