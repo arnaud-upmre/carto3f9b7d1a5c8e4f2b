@@ -674,9 +674,18 @@ const compteurAppareilURL = "https://script.google.com/macros/s/AKfycbwJIlvcfNYR
 let lieux = [], appareils = [];
     let currentItem = null;
 
-function myMapsViewer(lat, lon, z = 19, id = null) {
-  let url = `map.html?lat=${lat}&lon=${lon}&z=${z}`;
-  if (id) url += `&id=${encodeURIComponent(id)}`;
+function myMapsViewer(lat, lon, z = 19, sel = null) {
+  let url = `map1.html?lat=${lat}&lon=${lon}&z=${z}`;
+  if (sel) {
+    const normalized = sel
+      .normalize("NFD")
+      .replace(/[̀-ͯ]/g, "")
+      .replace(/[^a-z0-9\s]/gi, "")
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, " ");
+    url += `&sel=${encodeURIComponent(normalized)}`;
+  }
   return url;
 }
     
