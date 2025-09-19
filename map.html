@@ -234,7 +234,7 @@ function _tryOpenFromURL() {
 
     if (matches.length > 0) {
       const target = matches[0];
-      map.setView(target.getLatLng(), zoom);
+ map.setView(target.getLatLng(), Math.max(zoom, 21));
 
       // Si le marker n’est pas encore affiché (dans un cluster)
       if (!map.hasLayer(target)) {
