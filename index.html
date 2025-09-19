@@ -674,10 +674,8 @@ const compteurAppareilURL = "https://script.google.com/macros/s/AKfycbwJIlvcfNYR
 let lieux = [], appareils = [];
     let currentItem = null;
 
-function myMapsViewer(lat, lon, z = 19, id = null) {
-  let url = `map.html?lat=${lat}&lon=${lon}&z=${z}`;
-  if (id) url += `&id=${encodeURIComponent(id)}`;
-  return url;
+function myMapsViewer(lat, lon, z = 19) {
+  return `map.html?lat=${lat}&lon=${lon}&z=${z}`;
 }
     
 let proximiteIndex = 0;
@@ -969,7 +967,7 @@ if (lieu.special === true) {
   <div class="rep-block">
     <p><span class="emoji">🛣️</span> Repérer l’accès :</p>
     <div class="inline-links pills-3">
-<a href="${myMapsViewer(lieu.latitude, lieu.longitude, 19, formatNomCompletLieu(lieu))}">🛰️ Vue satellite</a>
+<a href="${myMapsViewer(lieu.latitude, lieu.longitude)}">🛰️ Vue satellite</a>
 
 <a href="#" onclick="openStreetView(${lieu.latitude}, ${lieu.longitude}); return false;">👁️ Street View</a>
     </div>
@@ -1025,7 +1023,7 @@ html += `
   <div class="inline-links pills-3">
     ${
       usePoste
-     ? `<a href="${myMapsViewer(lieu.poste_latitude || lieu.latitude, lieu.poste_longitude || lieu.longitude, 19, formatNomCompletLieu(lieu))}">🛰️ Vue satellite</a>`
+     ? `<a href="${myMapsViewer(lieu.poste_latitude || lieu.latitude, lieu.poste_longitude || lieu.longitude)}">🛰️ Vue satellite</a>`
         : `<span class="placeholder">(non renseigné – fournir un lien Maps)</span>`
     }
   </div>
@@ -1035,7 +1033,7 @@ html += `
 <div class="rep-block">
   <p id="editable-rep-acces"><span class="emoji">🛣️</span> Repérer l’accès :</p>
   <div class="inline-links pills-3">
-<a href="${myMapsViewer(lieu.latitude, lieu.longitude, 19, formatNomCompletLieu(lieu))}">🛰️ Vue satellite</a>
+<a href="${myMapsViewer(lieu.latitude, lieu.longitude)}">🛰️ Vue satellite</a>
 <a href="#" onclick="openStreetView(${lieu.latitude}, ${lieu.longitude}); return false;">👁️ Street View</a> </div>
 </div>`;
   
