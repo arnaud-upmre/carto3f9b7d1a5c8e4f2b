@@ -445,25 +445,34 @@ fetch("postes.json")
           style="cursor:pointer; font-size:20px; line-height:1; margin-left:6px;">📷</span>
   </div>
 
-  <!-- Portail -->
-  <div style="margin-bottom:10px;">
-    🔑 Portail : ${
-      item.portail
-        ? (item.portail.match(/^[0-9+ ]+$/)
-            ? `<a href="tel:${item.portail.replace(/[^\d+]/g, "")}" style="color:#007aff; text-decoration:none;">${item.portail}</a>`
-            : item.portail)
-        : `<span style="color:#777;font-style:italic;">Non renseigné</span>`
-    }
-  </div>
+<!-- Portail -->
+<div style="margin-bottom:10px;">
+  🔑 Portail : ${
+    item.portail
+      ? (
 
-  <!-- Information -->
-  <div style="margin-bottom:14px;">
-    ✍🏻 Information : ${
-      item.description
-        ? item.description
-        : `<span style="color:#777;font-style:italic;">Non renseignée</span>`
-    }
-  </div>
+          item.portail.startsWith("http")
+            ? `<a href="${item.portail}" target="_blank" style="color:#007aff; text-decoration:none;">Voir vidéo explicative ICI</a>`
+          : (item.portail.includes("#") || item.portail.toLowerCase().includes("code"))
+            ? item.portail
+          : `<a href="tel:${item.portail.replace(/[^\d+]/g, "")}" style="color:#007aff; text-decoration:none;">${item.portail}</a>`
+        )
+      : `<span style="color:#777;font-style:italic;">Non renseigné</span>`
+  }
+</div>
+
+<!-- Information -->
+<div style="margin-bottom:14px;">
+  ✍🏻 Information : ${
+    item.description
+      ? (
+          item.description.startsWith("http")
+            ? `<a href="${item.description}" target="_blank" style="color:#007aff; text-decoration:none;">Voir vidéo explicative ICI</a>`
+            : item.description
+        )
+      : `<span style="color:#777;font-style:italic;">Non renseignée</span>`
+  }
+</div>
 
   <!-- Fiche détaillée -->
   <a href="index.html?id=${encodeURIComponent(
