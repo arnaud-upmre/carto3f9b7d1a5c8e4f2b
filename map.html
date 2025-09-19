@@ -234,21 +234,19 @@ function _tryOpenFromURL() {
 
     if (matches.length > 0) {
       const target = matches[0];
-      map.setView(target.getLatLng(), zoom);
+      map.setView(target.getLatLng(), Math.max(zoom, 21));
 
-      function ensureVisibleAndOpen(m) {
-        if (map.hasLayer(m)) {
-          m.openPopup();
-          return;
+      setTimeout(() => {
+        if (!map.hasLayer(target)) {
+          const parentCluster = target.__parent;
+          if (parentCluster && parentCluster.spiderfy) {
+            parentCluster.spiderfy();
+            setTimeout(() => target.openPopup(), 400);
+          }
+        } else {
+          target.openPopup();
         }
-        const parentCluster = m.__parent;
-        if (parentCluster && parentCluster.spiderfy) {
-          parentCluster.spiderfy();
-          setTimeout(() => ensureVisibleAndOpen(m), 300);
-        }
-      }
-
-      setTimeout(() => ensureVisibleAndOpen(target), 300);
+      }, 300);
 
     } else {
       map.setView([lat, lon], zoom);
