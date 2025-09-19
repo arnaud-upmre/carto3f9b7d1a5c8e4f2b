@@ -434,9 +434,9 @@ fetch("postes.json")
             font-size:14px; color:#111; line-height:1.4; max-width:240px; word-wrap:break-word;">
 
   <!-- Titre + icône Street View -->
-  <div style="font-weight:600; font-size:16px; margin-bottom:10px; display:flex; align-items:center; justify-content:space-between;">
+  <div style="font-weight:600; font-size:16px; margin-bottom:14px; display:flex; align-items:center; justify-content:space-between;">
     <span>
-      🚗 ${item.nom || "Sans nom"}
+      🚙 ${item.nom || "Sans nom"}
       ${item.type ? " " + item.type : ""}
       ${item.SAT ? " " + item.SAT : ""}
       ${accesVal ? " – accès " + accesVal : ""}
@@ -446,7 +446,7 @@ fetch("postes.json")
   </div>
 
   <!-- Portail -->
-  <div style="margin-bottom:6px;">
+  <div style="margin-bottom:10px;">
     🔑 Portail : ${
       item.portail
         ? (item.portail.match(/^[0-9+ ]+$/)
@@ -457,7 +457,7 @@ fetch("postes.json")
   </div>
 
   <!-- Information -->
-  <div style="margin-bottom:10px;">
+  <div style="margin-bottom:14px;">
     ✍🏻 Information : ${
       item.description
         ? item.description
@@ -474,7 +474,7 @@ fetch("postes.json")
     style="display:flex;align-items:center;justify-content:center;gap:6px;
            background:#007aff;color:#fff;padding:8px 14px;border-radius:8px;
            text-decoration:none;width:100%;max-width:200px;font-size:14px;">
-    ℹ️ Fiche détaillée
+    ➕ Voir plus
   </a>
 </div>
 </div>
