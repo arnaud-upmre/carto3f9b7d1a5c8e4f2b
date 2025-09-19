@@ -221,6 +221,24 @@ const map = L.map('map', { zoomControl: false, attributionControl: false })
              .setView(defaultCenter, defaultZoom);
     const allMarkers = [];
 
+let _datasetsLoaded = 0;
+function _tryOpenFromURL() {
+  _datasetsLoaded++;
+  if (_datasetsLoaded < 2) return; // attendre les 2 fetch
+
+  if (!isNaN(lat) && !isNaN(lon)) {
+    const targetMarker = allMarkers.find(m => {
+      const ll = m.getLatLng();
+      return ll.lat === lat && ll.lng === lon; // comparaison exacte
+    });
+    if (targetMarker) {
+      map.setView(targetMarker.getLatLng(), zoom);
+      targetMarker.openPopup();
+    } else {
+      map.setView([lat, lon], zoom);
+    }
+  }
+}
 
 function makeTelHtml(labelEmoji, value) {
   if (!value) return "";
@@ -536,18 +554,7 @@ fetch("postes.json")
       }
 
     });
-     if (!isNaN(lat) && !isNaN(lon)) {
-      const targetMarker = allMarkers.find(m => {
-        const ll = m.getLatLng();
-        return ll.lat === lat && ll.lng === lon;
-      });
-      if (targetMarker) {
-        map.setView(targetMarker.getLatLng(), zoom);
-        targetMarker.openPopup();
-      } else {
-        map.setView([lat, lon], zoom);
-      }
-    }
+_tryOpenFromURL();
   });
     
     
@@ -749,6 +756,7 @@ fetch("postes.json")
                appareilsLayer.addLayer(subGroup);
       }
     });
+    _tryOpenFromURL();
   });
 
 
