@@ -221,83 +221,6 @@ const map = L.map('map', { zoomControl: false, attributionControl: false })
              .setView(defaultCenter, defaultZoom);
     const allMarkers = [];
 
-let _datasetsLoaded = 0;
-function _tryOpenFromURL() {
-  _datasetsLoaded++;
-  if (_datasetsLoaded < 2) return; // attendre postes + appareils
-
-  if (!isNaN(lat) && !isNaN(lon)) {
-    const matches = allMarkers.filter(m => {
-      const ll = m.getLatLng();
-      return ll.lat === lat && ll.lng === lon;
-    });
-
-if (matches.length > 0) {
-  // Normaliser sel pour comparer
-  const normalize = str => (str || "")
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .replace(/[^a-z0-9\s]/gi, "")
-    .toLowerCase()
-    .trim()
-    .replace(/\s+/g, " ");
-
-  let target = matches[0];
-
-if (sel) {
-  const wanted = normalize(sel);
-  const found = matches.find(m => {
-    return normalize(m.options.customId || "") === wanted;
-  });
-  if (found) target = found;
-}
-
-  if (matches.length > 1 && !sel) {
-    // Construire une popup combinée
-    const items = matches.map((m, i) => {
-      const label = (m.options.customId || `Appareil ${i + 1}`).trim();
-      return { label, idx: i };
-    }).sort((a, b) => a.label.localeCompare(b.label, "fr", { numeric: true, sensitivity: "base" }));
-
-    const html = `<div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
-      ${items.map(it => `
-        <a href="#" class="cluster-link" data-idx="${it.idx}" 
-           style="display:flex;align-items:center;gap:6px;">
-          ⚡ <span>${it.label}</span>
-        </a>`).join("")}
-    </div>`;
-
-    L.popup()
-      .setLatLng(target.getLatLng())
-      .setContent(html)
-      .openOn(map);
-
-    setTimeout(() => {
-      document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
-        link.addEventListener("click", (ev) => {
-          ev.preventDefault();
-          const idx = +ev.currentTarget.dataset.idx;
-          const chosen = matches[idx];
-          const content = chosen.getPopup() ? chosen.getPopup().getContent() : "";
-          L.popup({ maxWidth: 240 })
-            .setLatLng(chosen.getLatLng())
-            .setContent(content)
-            .openOn(map);
-          map.panTo(chosen.getLatLng());
-        });
-      });
-    }, 0);
-  } else {
-    // Affichage direct
-    map.setView(target.getLatLng(), Math.max(zoom, 21));
-    setTimeout(() => target.openPopup(), 300);
-  }
-
-    } else {
-      map.setView([lat, lon], zoom);
-    }
-  }
-}
 
 function makeTelHtml(labelEmoji, value) {
   if (!value) return "";
@@ -320,7 +243,6 @@ const lat = parseFloat(params.get("lat"));
 const lon = parseFloat(params.get("lon"));
 const zoom = parseInt(params.get("z")) || 19;
 const id = params.get("id") ? decodeURIComponent(params.get("id")) : null;
-    const sel = params.get("sel") ? decodeURIComponent(params.get("sel")) : null;
 
   const planIGN = L.tileLayer(
   "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
@@ -409,62 +331,75 @@ const postesLayer = L.markerClusterGroup({
 const appareilsLayer = L.markerClusterGroup({
   spiderfyOnMaxZoom: true, 
   showCoverageOnHover: false,
-  disableClusteringAtZoom: 19  
+  disableClusteringAtZoom: null  
 });
 const accesLayer = L.markerClusterGroup({
   spiderfyOnMaxZoom: false,
   showCoverageOnHover: false,
-  zoomToBoundsOnClick: false
+  zoomToBoundsOnClick: true
 });
 
-accesLayer.on('clusterclick', function (e) {
-  const childMarkers = e.layer.getAllChildMarkers();
-  if (childMarkers.length === 0) return;
+accesLayer.on('clusterclick', function (a) {
+  const currentZoom = map.getZoom();
+  const childMarkers = a.layer.getAllChildMarkers();
 
   const first = childMarkers[0].getLatLng();
-  const allSameCoords = childMarkers.every(m => m.getLatLng().equals(first));
+  const allSameCoords = childMarkers.every(m => {
+    const ll = m.getLatLng();
+    return ll.lat === first.lat && ll.lng === first.lng;
+  });
 
-  if (allSameCoords) {
-    const items = childMarkers.map((m, i) => {
-      let label = m.options.customId || `Accès ${i + 1}`;
-      return { label: label.replace(/\bposte\b/gi, "").trim(), idx: i };
-    }).sort((a, b) => a.label.localeCompare(b.label, "fr", { numeric: true, sensitivity: "base" }));
+  if (!(currentZoom >= 18 && allSameCoords)) return;
 
-    const html = `<div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
-      ${items.map(it => `
-        <a href="#" class="cluster-link" data-idx="${it.idx}" 
-           style="display:flex;align-items:center;gap:6px;">
-          <img src="ico/acces.png" style="width:16px;height:16px;">
-          <span>${it.label}</span>
-        </a>`).join("")}
-    </div>`;
+  // Empêcher le zoom auto
+  a.originalEvent.preventDefault();
 
-    L.popup()
-      .setLatLng(first)
-      .setContent(html)
-      .openOn(map);
+  // Construire la liste triée
+  const items = childMarkers.map((m, i) => {
+    let label = m.options.customId || `Accès ${i + 1}`;
+    return { label: label.replace(/\bposte\b/gi, "").trim(), idx: i };
+  }).sort((a, b) => a.label.localeCompare(b.label, "fr", { numeric: true, sensitivity: "base" }));
 
+  const html = `<div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
+    ${items.map(it => `<a href="#" class="cluster-link" data-idx="${it.idx}">${it.label}</a>`).join("")}
+  </div>`;
+
+a.layer.bindPopup(html).openPopup();
+
+// Brancher les clics sur les liens
 setTimeout(() => {
   document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
-    link.addEventListener("click", (ev) => {
-      ev.preventDefault();
-      const idx = +ev.currentTarget.dataset.idx;
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      const idx = +e.currentTarget.dataset.idx;
       const target = childMarkers[idx];
 
       const content = target.getPopup() ? target.getPopup().getContent() : "";
-      L.popup({ maxWidth: 240 })
-        .setLatLng(target.getLatLng())
-        .setContent(content)
-        .openOn(map);
+   const popup = L.popup({ maxWidth: 240 })
+  .setLatLng(target.getLatLng())
+  .setContent(content)
+  .openOn(map);
 
-      map.panTo(target.getLatLng());
-    });
+map.panTo(target.getLatLng());
+    }, { passive: false });
   });
 }, 0);
 
-  } else {
-    map.fitBounds(e.layer.getBounds());
-  }
+  // Brancher les clics sur les liens
+  setTimeout(() => {
+    document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
+link.addEventListener("click", (e) => {
+  e.preventDefault();
+  const idx = +e.currentTarget.dataset.idx;
+  const target = childMarkers[idx];
+
+  const content = target.getPopup() ? target.getPopup().getContent() : "";
+  tempMarker.setLatLng(target.getLatLng());
+  tempMarker.bindPopup(content).openPopup();
+  map.panTo(target.getLatLng());
+}, { passive: false });
+    });
+  }, 0);
 });
 
 
@@ -475,7 +410,7 @@ map.addLayer(accesLayer);
 
 const iconPoste = L.divIcon({
   html: `<img src="ico/poste.png" class="icon-halo">`,
-  className: "", 
+  className: "",  // pas de CSS par défaut
   iconAnchor: [24, 48],
   popupAnchor: [0, -48]
 });
@@ -496,6 +431,7 @@ fetch("postes.json")
 
     data.forEach(item => {
 
+      // === ACCÈS ===
       if (item.latitude && item.longitude) {
         const accesVal = (item["accès"] ?? item.acces ?? "").toString().trim();
         const cid = accesVal
@@ -505,65 +441,35 @@ fetch("postes.json")
         let content = `
           <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
                       font-size:14px; color:#111; line-height:1.4; max-width:240px;">
-<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
-            font-size:14px; color:#111; line-height:1.4; max-width:240px; word-wrap:break-word;">
+            <div style="font-weight:600; font-size:15px; margin-bottom:4px;">
+              📍 ${item.nom || "Sans nom"}
+              ${item.type ? " " + item.type : ""}
+              ${item.SAT ? " " + item.SAT : ""}
+              ${accesVal ? " – accès " + accesVal : ""}
+            </div>
 
-<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
-            font-size:14px; color:#111; line-height:1.4; max-width:240px; word-wrap:break-word;">
+            ${ makeTelHtml("🔑", item.portail) }
+            ${ makeTelHtml("📞", item.contact) }
+            ${item.description ? `<div>ℹ️ ${item.description}</div>` : ""}
 
-  <!-- Titre + icône Street View -->
-  <div style="font-weight:600; font-size:16px; margin-bottom:14px; display:flex; align-items:center; justify-content:space-between;">
-    <span>
-      🚙 ${item.nom || "Sans nom"}
-      ${item.type ? " " + item.type : ""}
-      ${item.SAT ? " " + item.SAT : ""}
-      ${accesVal ? " – accès " + accesVal : ""}
-    </span>
-    <span onclick="openStreetView(${item.latitude}, ${item.longitude})"
-          style="cursor:pointer; font-size:20px; line-height:1; margin-left:6px;">📷</span>
-  </div>
+            <div style="margin-top:8px;">
+              <button onclick="openStreetView(${item.latitude}, ${item.longitude})"
+                style="background:#007aff;color:#fff;padding:6px 12px;border:none;
+                       border-radius:6px;cursor:pointer;">
+                Street View
+              </button>
+            </div>
 
-<!-- Portail -->
-<div style="margin-bottom:10px;">
-  🔑 Portail : ${
-    item.portail
-      ? (
-          item.portail.includes("http")
-            ? `<a href="${item.portail.match(/https?:\/\/\S+/)[0]}" target="_blank" style="color:#007aff; text-decoration:none;">Voir vidéo explicative ICI</a>`
-          : (item.portail.includes("#") || item.portail.toLowerCase().includes("code"))
-            ? item.portail
-          : `<a href="tel:${item.portail.replace(/[^\d+]/g, "")}" style="color:#007aff; text-decoration:none;">${item.portail}</a>`
-        )
-      : `<span style="color:#777;font-style:italic;">Non renseigné</span>`
-  }
-</div>
-
-<!-- Information -->
-<div style="margin-bottom:14px;">
-  ✍🏻 Information : ${
-    item.description
-      ? (
-          item.description.startsWith("http")
-            ? `<a href="${item.description}" target="_blank" style="color:#007aff; text-decoration:none;">Voir vidéo explicative ICI</a>`
-            : item.description
-        )
-      : `<span style="color:#777;font-style:italic;">Non renseignée</span>`
-  }
-</div>
-
-  <!-- Fiche détaillée -->
-  <a href="index1.html?id=${encodeURIComponent(
+            <div style="margin-top:6px;">
+              <a href="index1.html?id=${encodeURIComponent(
    (`${item.nom || ''} ${item.type || ''} ${item.SAT || ''}${accesVal ? ' – accès ' + accesVal : ''}`)
     .replace(/\s+/g, " ")
     .trim()
   )}"
-    style="display:flex;align-items:center;justify-content:center;gap:6px;
-           background:#007aff;color:#fff;padding:8px 14px;border-radius:8px;
-           text-decoration:none;width:100%;max-width:200px;font-size:14px;">
-    ➕ Voir plus
-  </a>
-</div>
-</div>
+                style="color:#007aff; text-decoration:underline;">
+                🔗 Fiche détaillée
+              </a>
+            </div>
           </div>
         `;
 
@@ -575,6 +481,7 @@ fetch("postes.json")
         allMarkers.push(m);
       }
 
+      // === POSTES (on garde seulement le premier poste par coordonnées) ===
       if (item.poste_latitude && item.poste_longitude) {
         const key = `${item.poste_latitude}_${item.poste_longitude}`;
         
@@ -614,7 +521,6 @@ fetch("postes.json")
       }
 
     });
-_tryOpenFromURL();
   });
     
     
@@ -632,6 +538,7 @@ _tryOpenFromURL();
       const [lat, lng] = key.split("_").map(Number);
 
       if (items.length === 1) {
+        // ==== cas normal : un seul appareil ====
         const item = items[0];
         let appareilIcon;
         if (item.appareil && item.appareil.toUpperCase().startsWith("I")) {
@@ -714,14 +621,12 @@ _tryOpenFromURL();
           </div>
         `;
 
-const m = L.marker([lat, lng], { 
-  icon: appareilIcon, 
-  customId: item.appareil 
-}).bindPopup(content);
+        const m = L.marker([lat, lng], { icon: appareilIcon }).bindPopup(content);
+        appareilsLayer.addLayer(m);
         allMarkers.push(m);
 
       } else {
-
+        // ==== cas plusieurs appareils sur la même coordonnée ====
         const subGroup = L.markerClusterGroup({
           spiderfyOnMaxZoom: true,
           showCoverageOnHover: false,
@@ -810,10 +715,7 @@ const m = L.marker([lat, lng], {
             </div>
           `;
 
-         const m = L.marker([lat, lng], { 
-  icon: appareilIcon, 
-  customId: item.appareil 
-}).bindPopup(content);
+          const m = L.marker([lat, lng], { icon: appareilIcon }).bindPopup(content);
           subGroup.addLayer(m);
           allMarkers.push(m);
         });
@@ -821,7 +723,22 @@ const m = L.marker([lat, lng], {
                appareilsLayer.addLayer(subGroup);
       }
     });
-    _tryOpenFromURL();
+
+    // Vérifier si on a des paramètres lat/lon dans l'URL
+    if (!isNaN(lat) && !isNaN(lon)) {
+      map.setView([lat, lon], zoom);
+
+      // Chercher le marker correspondant (poste, appareil ou accès)
+      const target = allMarkers.find(m => {
+        const ll = m.getLatLng();
+        return Math.abs(ll.lat - lat) < 1e-5 && Math.abs(ll.lng - lon) < 1e-5;
+      });
+
+      if (target) {
+        target.openPopup();
+      }
+    }
+
   });
 
 
@@ -850,7 +767,7 @@ recenterBtn.onclick = () => {
 
     setTimeout(() => {
       recenterBtn.classList.remove("active");
-    }, 800); 
+    }, 800); // 
   }
 };
 
@@ -922,6 +839,7 @@ L.DomEvent.disableScrollPropagation(locateBtn);
 };
 leftControls.addTo(map);
 
+
 if (!id) {
   map.whenReady(() => {
     if (allMarkers.length > 0) {
@@ -930,20 +848,21 @@ if (!id) {
     }
   });
 }
-    
+
  function openStreetView(lat, lng) {
     const iframe = document.getElementById("streetview-frame");
     iframe.src = `https://www.google.com/maps?q=&layer=c&cbll=${lat},${lng}&cbp=11,0,0,0,0&output=svembed`;
     document.getElementById("streetview-overlay").style.display = "flex";
   }
 
+
   document.getElementById("streetview-close").onclick = () => {
     document.getElementById("streetview-overlay").style.display = "none";
     document.getElementById("streetview-frame").src = ""; 
   };
+
 document.getElementById("streetview-overlay").style.display = "none";
 document.getElementById("streetview-frame").src = "";
-    
 </script>
 
 </body>
