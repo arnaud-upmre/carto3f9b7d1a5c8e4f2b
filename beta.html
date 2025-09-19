@@ -232,8 +232,8 @@ function _tryOpenFromURL() {
       return ll.lat === lat && ll.lng === lon;
     });
 
-
-    if (id && matches.length > 1) {
+    // 🔍 Si on a un id → on filtre encore par customId
+    if (id) {
       matches = matches.filter(m => m.options.customId === id);
     }
 
@@ -576,7 +576,7 @@ _tryOpenFromURL();
   .then(data => {
     const grouped = {};
     data.forEach(item => {
- const key = `${item.latitude}_${item.longitude}_${item.appareil}`;
+const key = `${item.latitude}_${item.longitude}`;
       if (!grouped[key]) grouped[key] = [];
       grouped[key].push(item);
     });
