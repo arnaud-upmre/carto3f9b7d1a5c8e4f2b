@@ -336,29 +336,29 @@ const appareilsLayer = L.markerClusterGroup({
 const accesLayer = L.markerClusterGroup({
   spiderfyOnMaxZoom: false,
   showCoverageOnHover: false,
-  zoomToBoundsOnClick: true
+  zoomToBoundsOnClick: false
 });
 
 accesLayer.on('clusterclick', function (e) {
   const childMarkers = e.layer.getAllChildMarkers();
-
   if (childMarkers.length === 0) return;
 
   const first = childMarkers[0].getLatLng();
   const allSameCoords = childMarkers.every(m => m.getLatLng().equals(first));
 
   if (allSameCoords) {
-    // Empêche le zoom automatique
-    L.DomEvent.stop(e);
-
-    // Construire la liste triée
     const items = childMarkers.map((m, i) => {
       let label = m.options.customId || `Accès ${i + 1}`;
       return { label: label.replace(/\bposte\b/gi, "").trim(), idx: i };
     }).sort((a, b) => a.label.localeCompare(b.label, "fr", { numeric: true, sensitivity: "base" }));
 
     const html = `<div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
-      ${items.map(it => `<a href="#" class="cluster-link" data-idx="${it.idx}">${it.label}</a>`).join("")}
+      ${items.map(it => `
+        <a href="#" class="cluster-link" data-idx="${it.idx}" 
+           style="display:flex;align-items:center;gap:6px;">
+          <img src="ico/acces.png" style="width:16px;height:16px;">
+          <span>${it.label}</span>
+        </a>`).join("")}
     </div>`;
 
     L.popup()
@@ -366,29 +366,26 @@ accesLayer.on('clusterclick', function (e) {
       .setContent(html)
       .openOn(map);
 
-    // Brancher les clics sur les liens
-    setTimeout(() => {
-      document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
-        link.addEventListener("click", (ev) => {
-          ev.preventDefault();
-          const idx = +ev.currentTarget.dataset.idx;
-          const target = childMarkers[idx];
+setTimeout(() => {
+  document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
+    link.addEventListener("click", (ev) => {
+      ev.preventDefault();
+      const idx = +ev.currentTarget.dataset.idx;
+      const target = childMarkers[idx];
 
-          const content = target.getPopup() ? target.getPopup().getContent() : "";
-          L.popup({ maxWidth: 240 })
-            .setLatLng(target.getLatLng())
-            .setContent(content)
-            .openOn(map);
+      const content = target.getPopup() ? target.getPopup().getContent() : "";
+      L.popup({ maxWidth: 240 })
+        .setLatLng(target.getLatLng())
+        .setContent(content)
+        .openOn(map);
 
-          map.panTo(target.getLatLng());
-        });
-      });
-    }, 0);
+      map.panTo(target.getLatLng());
+    });
+  });
+}, 0);
 
   } else {
-    // Comportement normal : zoom sur le cluster
-    e.layer.spiderfy(); 
-    // ou : map.fitBounds(e.layer.getBounds());
+    map.fitBounds(e.layer.getBounds());
   }
 });
 
@@ -400,7 +397,7 @@ map.addLayer(accesLayer);
 
 const iconPoste = L.divIcon({
   html: `<img src="ico/poste.png" class="icon-halo">`,
-  className: "",  // pas de CSS par défaut
+  className: "", 
   iconAnchor: [24, 48],
   popupAnchor: [0, -48]
 });
@@ -421,7 +418,6 @@ fetch("postes.json")
 
     data.forEach(item => {
 
-      // === ACCÈS ===
       if (item.latitude && item.longitude) {
         const accesVal = (item["accès"] ?? item.acces ?? "").toString().trim();
         const cid = accesVal
@@ -471,7 +467,6 @@ fetch("postes.json")
         allMarkers.push(m);
       }
 
-      // === POSTES (on garde seulement le premier poste par coordonnées) ===
       if (item.poste_latitude && item.poste_longitude) {
         const key = `${item.poste_latitude}_${item.poste_longitude}`;
         
@@ -528,7 +523,6 @@ fetch("postes.json")
       const [lat, lng] = key.split("_").map(Number);
 
       if (items.length === 1) {
-        // ==== cas normal : un seul appareil ====
         const item = items[0];
         let appareilIcon;
         if (item.appareil && item.appareil.toUpperCase().startsWith("I")) {
@@ -616,7 +610,7 @@ fetch("postes.json")
         allMarkers.push(m);
 
       } else {
-        // ==== cas plusieurs appareils sur la même coordonnée ====
+
         const subGroup = L.markerClusterGroup({
           spiderfyOnMaxZoom: true,
           showCoverageOnHover: false,
@@ -714,11 +708,9 @@ fetch("postes.json")
       }
     });
 
-    // Vérifier si on a des paramètres lat/lon dans l'URL
     if (!isNaN(lat) && !isNaN(lon)) {
       map.setView([lat, lon], zoom);
 
-      // Chercher le marker correspondant (poste, appareil ou accès)
       const target = allMarkers.find(m => {
         const ll = m.getLatLng();
         return Math.abs(ll.lat - lat) < 1e-5 && Math.abs(ll.lng - lon) < 1e-5;
@@ -757,7 +749,7 @@ recenterBtn.onclick = () => {
 
     setTimeout(() => {
       recenterBtn.classList.remove("active");
-    }, 800); // 
+    }, 800); 
   }
 };
 
@@ -829,7 +821,6 @@ L.DomEvent.disableScrollPropagation(locateBtn);
 };
 leftControls.addTo(map);
 
-
 if (!id) {
   map.whenReady(() => {
     if (allMarkers.length > 0) {
@@ -838,13 +829,11 @@ if (!id) {
     }
   });
 }
-
  function openStreetView(lat, lng) {
     const iframe = document.getElementById("streetview-frame");
     iframe.src = `https://www.google.com/maps?q=&layer=c&cbll=${lat},${lng}&cbp=11,0,0,0,0&output=svembed`;
     document.getElementById("streetview-overlay").style.display = "flex";
   }
-
 
   document.getElementById("streetview-close").onclick = () => {
     document.getElementById("streetview-overlay").style.display = "none";
