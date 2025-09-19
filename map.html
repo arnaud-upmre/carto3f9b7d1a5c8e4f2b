@@ -427,35 +427,42 @@ fetch("postes.json")
         let content = `
           <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
                       font-size:14px; color:#111; line-height:1.4; max-width:240px;">
-       <div style="font-weight:600; font-size:16px; margin-bottom:6px;">
-  🚗 ${item.nom || "Sans nom"}
-  ${item.type ? " " + item.type : ""}
-  ${item.SAT ? " " + item.SAT : ""}
-  ${accesVal ? " – accès " + accesVal : ""}
-</div>
+<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
+            font-size:14px; color:#111; line-height:1.4; max-width:240px; word-wrap:break-word;">
 
-<div style="margin-top:10px; display:flex; flex-direction:column; align-items:center; gap:8px;">
-  <button onclick="openStreetView(${item.latitude}, ${item.longitude})"
-    style="background:#007aff;color:#fff;padding:8px 14px;border:none;
-           border-radius:8px;cursor:pointer;width:100%;max-width:200px;
-           font-size:14px;display:flex;align-items:center;justify-content:center;gap:6px;">
-    📷 Street View
-  </button>
+  <!-- Titre + icône Street View -->
+  <div style="font-weight:600; font-size:16px; margin-bottom:6px; display:flex; align-items:center; justify-content:space-between;">
+    <span>
+      🚗 ${item.nom || "Sans nom"}
+      ${item.type ? " " + item.type : ""}
+      ${item.SAT ? " " + item.SAT : ""}
+      ${accesVal ? " – accès " + accesVal : ""}
+    </span>
+    <span onclick="openStreetView(${item.latitude}, ${item.longitude})"
+          style="cursor:pointer; font-size:18px; line-height:1; margin-left:6px;">📷</span>
+  </div>
 
-  <div style="width:100%;max-width:200px;font-size:14px;">
+  <!-- Portail -->
+  <div style="margin-bottom:4px;">
     🔑 Portail : ${
       item.portail
         ? (item.portail.match(/^[0-9+ ]+$/)
             ? `<a href="tel:${item.portail.replace(/[^\d+]/g, "")}" style="color:#007aff; text-decoration:none;">${item.portail}</a>`
             : item.portail)
-        : "Non renseigné"
+        : `<span style="color:#777;font-style:italic;">Non renseigné</span>`
     }
   </div>
 
-  <div style="width:100%;max-width:200px;font-size:14px;">
-    ✍🏻 Information : ${item.description ? item.description : "Non renseignée"}
+  <!-- Information -->
+  <div style="margin-bottom:8px;">
+    ✍🏻 Information : ${
+      item.description
+        ? item.description
+        : `<span style="color:#777;font-style:italic;">Non renseignée</span>`
+    }
   </div>
 
+  <!-- Fiche détaillée -->
   <a href="index.html?id=${encodeURIComponent(
    (`${item.nom || ''} ${item.type || ''} ${item.SAT || ''}${accesVal ? ' – accès ' + accesVal : ''}`)
     .replace(/\s+/g, " ")
