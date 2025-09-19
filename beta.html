@@ -12,17 +12,35 @@
 <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
   <style>
 
+    .leaflet-popup-content a.cluster-link {
+  display: block;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: #f3f4f6;
+  color: #007aff;
+  text-decoration: none;
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,sans-serif;
+  font-size: 14px;
+  margin: 2px 0;
+  transition: background 0.2s;
+}
+
+.leaflet-popup-content a.cluster-link:hover,
+.leaflet-popup-content a.cluster-link:active {
+  background: #e5e7eb; /* gris clair au survol */
+}
+
 #streetview-overlay {
   position: fixed;
   top: 0; left: 0;
   width: 100%; height: 100%;
   background: rgba(0,0,0,0.6);
-  backdrop-filter: blur(6px);      /* flou du fond */
+  backdrop-filter: blur(6px);     
   -webkit-backdrop-filter: blur(6px);
   display: none;
   z-index: 9999;
 
-  display: flex;                  /* centrage */
+  display: flex;             
   align-items: center;
   justify-content: center;
 }
@@ -69,22 +87,22 @@
 }
   
     .icon-halo {
-  width: 48px;   /* 👈 adapte la taille ici */
+  width: 48px;  
   height: 48px;
   filter: drop-shadow(0 0 2px white) drop-shadow(0 0 4px white);
 }
     .icon-halo-appareil {
-  width: 24px;   /* 👈 taille réduite seulement pour les appareils */
+  width: 24px;  
   height: 24px;
   filter: drop-shadow(0 0 4px white) drop-shadow(0 0 8px white);
 }
     
 .icon-wrapper {
   display: inline-block;
-  border-radius: 50%;          /* halo arrondi */
-  padding: 4px;                /* espace autour */
-  background: white;           /* halo blanc */
-  box-shadow: 0 0 6px rgba(0,0,0,0.4); /* ombre discrète */
+  border-radius: 50%;         
+  padding: 4px;            
+  background: white;       
+  box-shadow: 0 0 6px rgba(0,0,0,0.4); 
 }
 
 .icon-wrapper img {
@@ -92,9 +110,9 @@
   height: 44px;
   display: block;
 }
-/* === CLUSTERS LIQUID GLASS iOS === */
+
 .marker-cluster {
-  background: transparent !important; /* pas de fond autour */
+  background: transparent !important; 
   border-radius: 50%;
 }
 
@@ -109,8 +127,8 @@
   font-weight: 600;
   font-size: 14px;
   color: #ffffff;
-  text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 0 6px rgba(0,0,0,0.6); /* contour autour des chiffres */
-  background: rgba(255, 255, 255, 0.15);   /* bulle translucide claire */
+  text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 0 6px rgba(0,0,0,0.6); 
+  background: rgba(255, 255, 255, 0.15);   
   backdrop-filter: blur(10px);             
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255,255,255,0.25);
@@ -118,40 +136,39 @@
   transition: transform 0.25s ease, background 0.3s ease;
 }
 
-/* Survol / tap → bulle légèrement plus claire et grossit */
 .marker-cluster:hover div {
   transform: scale(1.12);
   background: rgba(255, 255, 255, 0.25);
 }
 
     .control-group {
-  margin-bottom: 10px; /* espace entre localisation et filtres */
+  margin-bottom: 10px; 
 }
     .control-group + .control-group {
-  margin-top: 45px; /* espace entre le groupe haut et le groupe bas */
+  margin-top: 45px; 
 }
     
 #version-label {
   position: fixed;
   bottom: 6px;
-  left: 8px;    /* 👈 affichage à gauche */
+  left: 8px;   
   font-size: 11px;
   color: rgba(255,255,255,0.45);
   font-family: system-ui, sans-serif;
   pointer-events: none;
   user-select: none;
 }
-    /* Boutons ronds à gauche (ON = blanc, OFF = noir translucide) */
+
 .btn-toggle{
   background: rgba(0,0,0,.7);
   border: 1px solid rgba(255,255,255,.12);
   border-radius: 50%;
-  width: 44px; height: 44px;          /* taille identique */
+  width: 44px; height: 44px;       
   display: flex; align-items: center; justify-content: center;
-  font-size: 20px;                    /* emoji inchangé */
+  font-size: 20px;                
   color: #fff;
   cursor: pointer;
-  margin: 10px 5px;                   /* ↑ plus d’espace vertical */
+  margin: 10px 5px;              
   box-shadow: 0 4px 12px rgba(0,0,0,.25);
   user-select: none;
   line-height: 1;
@@ -173,7 +190,7 @@
   background: rgba(0,0,0,0.7);
   border: 1px solid rgba(255,255,255,.12);
   border-radius: 50%;
-  width: 44px; height: 44px;             /* + grand = touch friendly */
+  width: 44px; height: 44px;          
   display: flex; align-items: center; justify-content: center;
   font-size: 20px;
   color: #fff;
@@ -181,7 +198,7 @@
   margin: 5px;
   box-shadow: 0 4px 12px rgba(0,0,0,.25);
   user-select: none;
-  line-height: 1;                         /* évite l’emoji coupé */
+  line-height: 1;                   
   -webkit-tap-highlight-color: transparent;
 }
   </style>
@@ -189,7 +206,7 @@
 <body>
   <div id="map"></div>
   
-<!-- 👇 HTML de l’overlay placé AVANT le script -->
+
 <div id="streetview-overlay">
   <div id="streetview-box">
     <button id="streetview-close">❌</button>
@@ -197,8 +214,8 @@
   </div>
 </div>
   <script>
-const defaultCenter = [49.8, 2.5]; // ajuste latitude/longitude
-const defaultZoom = 8;             // ajuste niveau de zoom
+const defaultCenter = [49.8, 2.5]; 
+const defaultZoom = 8;          
 
 const map = L.map('map', { zoomControl: false, attributionControl: false })
              .setView(defaultCenter, defaultZoom);
@@ -221,15 +238,11 @@ function makeTelHtml(labelEmoji, value) {
   return `<div>${labelEmoji} <a href="tel:${hrefSafe}" style="color:#007aff; text-decoration:none;">${value}</a></div>`;
 }
 
-    // --- Lecture paramètres URL ---
 const params = new URLSearchParams(window.location.search);
 const lat = parseFloat(params.get("lat"));
 const lon = parseFloat(params.get("lon"));
 const zoom = parseInt(params.get("z")) || 19;
 const id = params.get("id") ? decodeURIComponent(params.get("id")) : null;
-
-    
-        // --- FONDS DE CARTE ------------------------------------------------------
 
   const planIGN = L.tileLayer(
   "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
@@ -237,49 +250,45 @@ const id = params.get("id") ? decodeURIComponent(params.get("id")) : null;
   + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
   {
     attribution: "",
-    maxZoom: 21,        // 👈 zoom artificiel jusque 21
-    maxNativeZoom: 19,  // 👈 vrai max fourni par IGN
+    maxZoom: 21,       
+    maxNativeZoom: 19, 
     tileSize: 256,
     crossOrigin: 'anonymous'
   }
 );
 
-    // ORTHO IGN (vue aérienne)
 const orthoIGN = L.tileLayer(
   "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
   + "&LAYER=ORTHOIMAGERY.ORTHOPHOTOS&STYLE=normal&FORMAT=image/jpeg"
   + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
   {
     attribution: "© IGN – Géoplateforme",
-    maxZoom: 21,       // 👈 pareil : zoom artificiel jusqu’à 21
-    maxNativeZoom: 19, // 👈 vrai max fourni par IGN
+    maxZoom: 21,      
+    maxNativeZoom: 19, 
     tileSize: 256,
     crossOrigin: 'anonymous'
   }
 );
 
-// OpenStreetMap (plan secours)
 const osm = L.tileLayer(
   "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
   { 
     attribution: "© OpenStreetMap contributors", 
-    maxZoom: 21,        // 👈 zoom artificiel jusque 21
-    maxNativeZoom: 19   // 👈 vrai max OSM
+    maxZoom: 21,        
+    maxNativeZoom: 19   
   }
 );
 
-// Satellite Open (Esri World Imagery)
 const esriSat = L.tileLayer(
   "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
   {
     attribution: "© Esri, Maxar, Earthstar Geographics",
-    maxZoom: 21,        // 👈 utilisateur peut aller jusqu’à 21
-    maxNativeZoom: 19,  // 👈 Esri ne fournit que jusqu’à 19
+    maxZoom: 21,       
+    maxNativeZoom: 19, 
     tileSize: 256
   }
 );
 
-// Vue mixte = satellite IGN + Plan IGN en transparence
 const mixte = L.layerGroup([
   orthoIGN,
   L.tileLayer(
@@ -291,15 +300,14 @@ const mixte = L.layerGroup([
       maxZoom: 19,
       tileSize: 256,
       crossOrigin: 'anonymous',
-      opacity: 0.4  // 👈 ajuste la transparence
+      opacity: 0.4  
     }
   )
 ]);
 
- // Afficher ORTHO IGN (satellite) par défaut
 orthoIGN.addTo(map);
 
-    // Sélecteur de fonds
+
     L.control.layers(
       { 
         "🛰️ Satellite IGN": orthoIGN,
@@ -311,35 +319,95 @@ orthoIGN.addTo(map);
       {}
     ).addTo(map);
 
-    // Zoom sous le sélecteur de fonds (même coin)
     L.control.zoom({ position: 'topright' }).addTo(map);
 
-    
-    // Logs d'erreurs de tuiles (debug)
     planIGN.on("tileerror", e => console.warn("IGN PLAN tile error", e));
     orthoIGN.on("tileerror", e => console.warn("IGN ORTHO tile error", e));
 
-    // --- COUCHES MÉTIER ------------------------------------------------------
 
 const postesLayer = L.markerClusterGroup({
   disableClusteringAtZoom: 18
 });
 const appareilsLayer = L.markerClusterGroup({
-  disableClusteringAtZoom: 18
+  disableClusteringAtZoom: 18,
+  spiderfyOnMaxZoom: true,   
+  showCoverageOnHover: false
 });
 const accesLayer = L.markerClusterGroup({
-  spiderfyOnMaxZoom: true,   // cercle éclaté même au max zoom
+  spiderfyOnMaxZoom: false,
   showCoverageOnHover: false,
-  zoomToBoundsOnClick: false
-  // ⚠️ on ne met pas disableClusteringAtZoom
+  zoomToBoundsOnClick: true
 });
+
+accesLayer.on('clusterclick', function (a) {
+  const currentZoom = map.getZoom();
+  const childMarkers = a.layer.getAllChildMarkers();
+
+  const first = childMarkers[0].getLatLng();
+  const allSameCoords = childMarkers.every(m => {
+    const ll = m.getLatLng();
+    return ll.lat === first.lat && ll.lng === first.lng;
+  });
+
+  if (!(currentZoom >= 18 && allSameCoords)) return;
+
+  // Empêcher le zoom auto
+  a.originalEvent.preventDefault();
+
+  // Construire la liste triée
+  const items = childMarkers.map((m, i) => {
+    let label = m.options.customId || `Accès ${i + 1}`;
+    return { label: label.replace(/\bposte\b/gi, "").trim(), idx: i };
+  }).sort((a, b) => a.label.localeCompare(b.label, "fr", { numeric: true, sensitivity: "base" }));
+
+  const html = `<div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
+    ${items.map(it => `<a href="#" class="cluster-link" data-idx="${it.idx}">${it.label}</a>`).join("")}
+  </div>`;
+
+a.layer.bindPopup(html).openPopup();
+
+// Brancher les clics sur les liens
+setTimeout(() => {
+  document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      const idx = +e.currentTarget.dataset.idx;
+      const target = childMarkers[idx];
+
+      const content = target.getPopup() ? target.getPopup().getContent() : "";
+   const popup = L.popup({ maxWidth: 240 })
+  .setLatLng(target.getLatLng())
+  .setContent(content)
+  .openOn(map);
+
+map.panTo(target.getLatLng());
+    }, { passive: false });
+  });
+}, 0);
+
+  // Brancher les clics sur les liens
+  setTimeout(() => {
+    document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
+link.addEventListener("click", (e) => {
+  e.preventDefault();
+  const idx = +e.currentTarget.dataset.idx;
+  const target = childMarkers[idx];
+
+  const content = target.getPopup() ? target.getPopup().getContent() : "";
+  tempMarker.setLatLng(target.getLatLng());
+  tempMarker.bindPopup(content).openPopup();
+  map.panTo(target.getLatLng());
+}, { passive: false });
+    });
+  }, 0);
+});
+
 
 map.addLayer(postesLayer);
 map.addLayer(appareilsLayer);
 map.addLayer(accesLayer);
 
 
-// Icône guérite personnalisée avec halo
 const iconPoste = L.divIcon({
   html: `<img src="ico/poste.png" class="icon-halo">`,
   className: "",  // pas de CSS par défaut
@@ -347,10 +415,8 @@ const iconPoste = L.divIcon({
   popupAnchor: [0, -48]
 });
 
-// On garde les autres en bulles colorées
 const iconAppareil= L.divIcon({className:"icon-circle appareil",html:"⚡"});
 
-    // Icône accès personnalisée avec halo
 const iconAcces = L.divIcon({
   html: `<img src="ico/acces.png" class="icon-halo">`,
   className: "",
@@ -358,96 +424,107 @@ const iconAcces = L.divIcon({
   popupAnchor: [0, -48]
 });
 
-// Postes (accès + guérite)
 fetch("postes.json")
   .then(r => r.json())
   .then(data => {
+    const seenPostes = new Set();
+
     data.forEach(item => {
 
-if (item.latitude && item.longitude) {
-  const accesVal = (item["accès"] ?? item.acces ?? "").toString().trim();
-  const cid = accesVal
-    ? [item.nom, item.type, item.SAT, "acces", accesVal].filter(Boolean).join(" ")
-    : [item.nom, item.type, item.SAT, "poste"].filter(Boolean).join(" ");
-  
-  let content = `
-    <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
-                font-size:14px; color:#111; line-height:1.4; max-width:240px;">
-      <div style="font-weight:600; font-size:15px; margin-bottom:4px;">
-        📍 ${item.nom || "Sans nom"}
-        ${item.type ? " " + item.type : ""}
-        ${item.SAT ? " " + item.SAT : ""}
-        ${accesVal ? " – accès " + accesVal : ""}
-      </div>
-
-      <div style="margin-bottom:6px; color:#333;">
-        ${item.pk 
-          ? `🚄 PK ${item.pk} sur la ligne n°${item.numero_ligne || ""} – ${item.lignes || ""}`
-          : `🚄 ligne n°${item.numero_ligne || ""} – ${item.lignes || ""}`}
-      </div>
-
-      ${ makeTelHtml("🔑", item.portail) }
-      ${ makeTelHtml("📞", item.contact) }
-      ${item.description ? `<div>ℹ️ ${item.description}</div>` : ""}
-
-      <div style="margin-top:8px;">
-        <button onclick="openStreetView(${item.latitude}, ${item.longitude})"
-          style="background:#007aff;color:#fff;padding:6px 12px;border:none;
-                 border-radius:6px;cursor:pointer;">
-          Street View
-        </button>
-      </div>
-    </div>
-  `;
-
-  const m = L.marker([item.latitude, item.longitude], {
-    icon: iconAcces,
-    customId: cid
-  }).bindPopup(content).addTo(accesLayer);
-
-  allMarkers.push(m);
-}
-
-      // === Bloc POSTE (guérite) ===
-      if (item.poste_latitude && item.poste_longitude) {
-        const cid = [item.nom, item.type, item.SAT, "poste"].filter(Boolean).join(" ");
-
+      // === ACCÈS ===
+      if (item.latitude && item.longitude) {
+        const accesVal = (item["accès"] ?? item.acces ?? "").toString().trim();
+        const cid = accesVal
+          ? [item.nom, item.type, item.SAT, "acces", accesVal].filter(Boolean).join(" ")
+          : [item.nom, item.type, item.SAT, "poste"].filter(Boolean).join(" ");
+        
         let content = `
           <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
                       font-size:14px; color:#111; line-height:1.4; max-width:240px;">
-        <div style="font-weight:600; font-size:15px; margin-bottom:4px;">
-  📍 ${item.nom || "Sans nom"} 
-  ${item.type ? " " + item.type : ""} 
-  ${item.SAT ? " " + item.SAT : ""}
-</div>
-
-            <div style="margin-bottom:6px; color:#333;">
-              ${item.pk 
-                ? `🚄 PK ${item.pk} sur la ligne n°${item.numero_ligne || ""} – ${item.lignes || ""}`
-                : `🚄 ligne n°${item.numero_ligne || ""} – ${item.lignes || ""}`}
+            <div style="font-weight:600; font-size:15px; margin-bottom:4px;">
+              📍 ${item.nom || "Sans nom"}
+              ${item.type ? " " + item.type : ""}
+              ${item.SAT ? " " + item.SAT : ""}
+              ${accesVal ? " – accès " + accesVal : ""}
             </div>
 
             ${ makeTelHtml("🔑", item.portail) }
             ${ makeTelHtml("📞", item.contact) }
             ${item.description ? `<div>ℹ️ ${item.description}</div>` : ""}
 
-        <div style="margin-top:6px;">
+            <div style="margin-top:8px;">
+              <button onclick="openStreetView(${item.latitude}, ${item.longitude})"
+                style="background:#007aff;color:#fff;padding:6px 12px;border:none;
+                       border-radius:6px;cursor:pointer;">
+                Street View
+              </button>
+            </div>
+
+            <div style="margin-top:6px;">
+              <a href="index.html?id=${encodeURIComponent(
+   (`${item.nom || ''} ${item.type || ''} ${item.SAT || ''}${accesVal ? ' – accès ' + accesVal : ''}`)
+    .replace(/\s+/g, " ")
+    .trim()
+  )}"
+                style="color:#007aff; text-decoration:underline;">
+                🔗 Fiche détaillée
+              </a>
+            </div>
           </div>
         `;
 
-        const m = L.marker([item.poste_latitude, item.poste_longitude], {
-          icon: iconPoste,
+        const m = L.marker([item.latitude, item.longitude], {
+          icon: iconAcces,
           customId: cid
-        }).bindPopup(content).addTo(postesLayer);
+        }).bindPopup(content).addTo(accesLayer);
 
         allMarkers.push(m);
       }
 
+      // === POSTES (on garde seulement le premier poste par coordonnées) ===
+      if (item.poste_latitude && item.poste_longitude) {
+        const key = `${item.poste_latitude}_${item.poste_longitude}`;
+        
+        if (!seenPostes.has(key)) {
+          seenPostes.add(key);
+
+          const cid = [item.nom, item.type, item.SAT, "poste"].filter(Boolean).join(" ");
+
+          let content = `
+            <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
+                        font-size:14px; color:#111; line-height:1.4; max-width:240px;">
+              <div style="font-weight:600; font-size:15px; margin-bottom:4px;">
+                📍 ${item.nom || "Sans nom"} 
+                ${item.type ? " " + item.type : ""} 
+                ${item.SAT ? " " + item.SAT : ""}
+              </div>
+
+              <div style="margin-bottom:6px; color:#333;">
+                ${item.pk 
+                  ? `🚄 PK ${item.pk} sur la ligne n°${item.numero_ligne || ""} – ${item.lignes || ""}`
+                  : `🚄 ligne n°${item.numero_ligne || ""} – ${item.lignes || ""}`}
+              </div>
+
+              ${ makeTelHtml("🔑", item.portail) }
+              ${ makeTelHtml("📞", item.contact) }
+              ${item.description ? `<div>ℹ️ ${item.description}</div>` : ""}
+            </div>
+          `;
+
+          const m = L.marker([item.poste_latitude, item.poste_longitude], {
+            icon: iconPoste,
+            customId: cid
+          }).bindPopup(content).addTo(postesLayer);
+
+          allMarkers.push(m);
+        }
+      }
+
     });
   });
-
-// Appareils
-fetch("appareils.json")
+    
+    
+    fetch("appareils.json")
   .then(r => r.json())
   .then(data => {
 
@@ -472,7 +549,6 @@ fetch("appareils.json")
     </div>
   `;
 
-// Choix de l’icône selon le type d’appareil
 let appareilIcon;
 if (item.appareil && item.appareil.toUpperCase().startsWith("I")) {
   appareilIcon = L.divIcon({
@@ -544,10 +620,8 @@ if (item.appareil && item.appareil.toUpperCase().startsWith("I")) {
   allMarkers.push(m);
 });
 
-   // Une fois que tous les markers (postes + appareils) sont chargés
 if (!isNaN(lat) && !isNaN(lon)) {
   setTimeout(() => {
-    // 🔄 on force le recalcul des clusters avant de chercher
     postesLayer.refreshClusters();
     accesLayer.refreshClusters();
     appareilsLayer.refreshClusters();
@@ -556,58 +630,46 @@ if (!isNaN(lat) && !isNaN(lon)) {
       const ll = m.getLatLng();
       if (ll && ll.lat === lat && ll.lng === lon) {
         map.setView(ll, zoom);
-        m.openPopup(); // ✅ ouvre automatiquement la popup
+        m.openPopup(); 
       }
     });
   }, 300);
 }
       }); 
 
-// Colonne de gauche : recentrer + localisation + filtres
+
 const leftControls = L.control({ position: "topleft" });
 leftControls.onAdd = function() {
   const container = L.DomUtil.create("div");
-
-  
-
-  // Groupe haut : 🎯 recentrer + 📍 localisation
   const topGroup = L.DomUtil.create("div", "control-group", container);
-
-
-  // ↩️ Bouton retour
 const backBtn = L.DomUtil.create("div", "btn-toggle btn-return", topGroup);
-backBtn.innerHTML = "↩️";
+backBtn.innerHTML = "🔍";
 
 backBtn.onclick = () => {
-  if (document.referrer && document.referrer.includes("index.html")) {
-    history.back();
-  } else {
-    window.location.href = "index.html";
-  }
+  window.location.href = "index.html";
 };
 L.DomEvent.disableClickPropagation(backBtn);
 L.DomEvent.disableScrollPropagation(backBtn);
   
-// 🎯 Recentrer (bouton clignote actif le temps du centrage)
+
 const recenterBtn = L.DomUtil.create("div", "btn-toggle", topGroup);
 recenterBtn.innerHTML = "🎯";
 
 recenterBtn.onclick = () => {
   if (allMarkers.length > 0) {
-    recenterBtn.classList.add("active"); // ON → bouton blanc
+    recenterBtn.classList.add("active"); 
  map.setView(defaultCenter, defaultZoom);
 
-    // après un court délai, on désactive pour revenir en noir
+
     setTimeout(() => {
       recenterBtn.classList.remove("active");
-    }, 800); // 0.8s = assez pour voir l'effet
+    }, 800); // 
   }
 };
 
 L.DomEvent.disableClickPropagation(recenterBtn);
 L.DomEvent.disableScrollPropagation(recenterBtn);
 
-// 📍 Localisation (toggle ON/OFF avec bouton actif/inactif)
 let userMarker;
 let geoWatchId = null;
 const locateBtn = L.DomUtil.create("div", "btn-toggle", topGroup);
@@ -617,7 +679,6 @@ locateBtn.onclick = () => {
   if (!navigator.geolocation) return alert("Géolocalisation non supportée.");
 
   if (geoWatchId !== null) {
-    // 🔴 Désactivation
     navigator.geolocation.clearWatch(geoWatchId);
     geoWatchId = null;
     if (userMarker) {
@@ -628,7 +689,6 @@ locateBtn.onclick = () => {
     return;
   }
 
-  // 🟢 Activation
   geoWatchId = navigator.geolocation.watchPosition(pos => {
     const lat = pos.coords.latitude, lng = pos.coords.longitude;
     if (userMarker) {
@@ -650,7 +710,6 @@ locateBtn.onclick = () => {
 L.DomEvent.disableClickPropagation(locateBtn);
 L.DomEvent.disableScrollPropagation(locateBtn);
 
-  // Groupe bas : 🚙, 📍, ⚡
   const bottomGroup = L.DomUtil.create("div", "control-group", container);
 
   function makeBtn(emoji, layer, initiallyOn = true) {
@@ -676,7 +735,7 @@ L.DomEvent.disableScrollPropagation(locateBtn);
 };
 leftControls.addTo(map);
 
-// Au chargement → centrer automatiquement UNIQUEMENT si pas d'ID dans l'URL
+
 if (!id) {
   map.whenReady(() => {
     if (allMarkers.length > 0) {
@@ -692,12 +751,12 @@ if (!id) {
     document.getElementById("streetview-overlay").style.display = "flex";
   }
 
-  // Bouton fermer
+
   document.getElementById("streetview-close").onclick = () => {
     document.getElementById("streetview-overlay").style.display = "none";
-    document.getElementById("streetview-frame").src = ""; // coupe Street View
+    document.getElementById("streetview-frame").src = ""; 
   };
-    // Toujours masquer l’overlay au démarrage
+
 document.getElementById("streetview-overlay").style.display = "none";
 document.getElementById("streetview-frame").src = "";
 </script>
