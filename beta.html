@@ -1936,7 +1936,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 
 <div id="about-footer">
   🔧 <a href="arnaud.html">À propos</a> – 
-  <span class="footer-version">Nono Maps V1.03</span>
+  <span class="footer-version">Nono Maps V1.04</span>
 </div>
 <script>
 (function(){
@@ -1999,17 +1999,6 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
     ];
     return phrases[Math.floor(Math.random()*phrases.length)];
   }
-
-function openStreetView(lat, lng) {
-  const iframe = document.getElementById("streetview-frame");
-  iframe.src = `https://www.google.com/maps?q=&layer=c&cbll=${lat},${lng}&cbp=11,0,0,0,0&output=svembed`;
-  document.getElementById("streetview-overlay").style.display = "flex";
-}
-
-document.getElementById("streetview-close").onclick = () => {
-  document.getElementById("streetview-overlay").style.display = "none";
-  document.getElementById("streetview-frame").src = ""; 
-};
 
   function mountIntro(){
     var overlay = document.createElement('div');
