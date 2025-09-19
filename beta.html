@@ -224,30 +224,29 @@ const map = L.map('map', { zoomControl: false, attributionControl: false })
 let _datasetsLoaded = 0;
 function _tryOpenFromURL() {
   _datasetsLoaded++;
-  if (_datasetsLoaded < 2) return; // attendre postes + appareils
+  if (_datasetsLoaded < 2) return; 
 
   if (!isNaN(lat) && !isNaN(lon)) {
-    const matches = allMarkers.filter(m => {
+    let matches = allMarkers.filter(m => {
       const ll = m.getLatLng();
       return ll.lat === lat && ll.lng === lon;
     });
 
+
+    if (id && matches.length > 1) {
+      matches = matches.filter(m => m.options.customId === id);
+    }
+
     if (matches.length > 0) {
       const target = matches[0];
-      map.setView(target.getLatLng(), Math.max(zoom, 21));
+      map.setView(target.getLatLng(), zoom);
 
-      setTimeout(() => {
-        if (!map.hasLayer(target)) {
-          const parentCluster = target.__parent;
-          if (parentCluster && parentCluster.spiderfy) {
-            parentCluster.spiderfy();
-            setTimeout(() => target.openPopup(), 400);
-          }
-        } else {
-          target.openPopup();
-        }
-      }, 300);
-
+      if (target.__parent && target.__parent.spiderfy) {
+        target.__parent.spiderfy();
+        setTimeout(() => target.openPopup(), 300);
+      } else {
+        target.openPopup();
+      }
     } else {
       map.setView([lat, lon], zoom);
     }
@@ -668,9 +667,10 @@ _tryOpenFromURL();
           </div>
         `;
 
-        const m = L.marker([lat, lng], { icon: appareilIcon }).bindPopup(content);
-        appareilsLayer.addLayer(m);
-        allMarkers.push(m);
+    const m = L.marker([lat, lng], { 
+  icon: appareilIcon, 
+  customId: item.appareil  
+}).bindPopup(content);
 
       } else {
 
