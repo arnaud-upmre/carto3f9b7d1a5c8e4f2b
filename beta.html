@@ -762,9 +762,13 @@ _tryOpenFromURL();
             </div>
           `;
 
-          const m = L.marker([lat, lng], { icon: appareilIcon }).bindPopup(content);
-          subGroup.addLayer(m);
-          allMarkers.push(m);
+   const m = L.marker([lat, lng], { 
+  icon: appareilIcon,
+  customId: item.appareil   // 👈 ajout important
+}).bindPopup(content);
+
+subGroup.addLayer(m);
+allMarkers.push(m);
         });
 
                appareilsLayer.addLayer(subGroup);
