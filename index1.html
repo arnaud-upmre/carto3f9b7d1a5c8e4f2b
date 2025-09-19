@@ -32,57 +32,6 @@
   <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
    
   <style id="eale-intro-styles">
-
-    #streetview-overlay {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.6);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  display: none;
-  z-index: 9999;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-#streetview-box {
-  width: 90%;
-  max-width: 900px;
-  height: 70%;
-  background: rgba(20,20,20,0.95);
-  border-radius: 16px;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.5);
-  overflow: hidden;
-  position: relative;
-}
-
-#streetview-box iframe {
-  width: 100%;
-  height: 100%;
-  border: none;
-}
-
-#streetview-close {
-  position: absolute;
-  top: 12px; right: 12px;
-  font-size: 24px;
-  background: rgba(0,0,0,0.6);
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 40px; height: 40px;
-  cursor: pointer;
-  z-index: 2;
-}
-
-#btn-carte { 
-  margin-top: 4rem; 
-  display: inline-block; /* pour être traité comme un bouton */
-}
-    
     #counters {
   text-align: center;
 }
@@ -658,7 +607,7 @@ main {
   📍 À proximité
 </button>
   <!-- Nouveau bouton pour PC -->
-<a id="btn-carte" class="btn-primary" href="map1.html" style="display:none;">
+<a id="btn-carte" class="btn-primary" href="map.html" style="display:none;">
   🗺️ Afficher la carte
 </a>
 <div id="proximite" style="margin-top:1rem; font-size:14px;"></div>
@@ -674,19 +623,8 @@ const compteurAppareilURL = "https://script.google.com/macros/s/AKfycbwJIlvcfNYR
 let lieux = [], appareils = [];
     let currentItem = null;
 
-function myMapsViewer(lat, lon, z = 19, sel = null) {
-  let url = `map1.html?lat=${lat}&lon=${lon}&z=${z}`;
-  if (sel) {
-    const normalized = sel
-      .normalize("NFD")
-      .replace(/[̀-ͯ]/g, "")
-      .replace(/[^a-z0-9\s]/gi, "")
-      .toLowerCase()
-      .trim()
-      .replace(/\s+/g, " ");
-    url += `&sel=${encodeURIComponent(normalized)}`;
-  }
-  return url;
+function myMapsViewer(lat, lon, z = 19) {
+  return `map.html?lat=${lat}&lon=${lon}&z=${z}`;
 }
     
 let proximiteIndex = 0;
@@ -978,9 +916,9 @@ if (lieu.special === true) {
   <div class="rep-block">
     <p><span class="emoji">🛣️</span> Repérer l’accès :</p>
     <div class="inline-links pills-3">
-<a href="${myMapsViewer(lieu.latitude, lieu.longitude, 19, formatNomCompletLieu(lieu))}">🛰️ Vue satellite</a>
+<a href="${myMapsViewer(lieu.latitude, lieu.longitude)}">🛰️ Vue satellite</a>
 
-<a href="#" onclick="openStreetView(${lieu.latitude}, ${lieu.longitude}); return false;">👁️ Street View</a>
+      <a href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">👁️ Street View</a>
     </div>
   </div>`;
 
@@ -1034,7 +972,7 @@ html += `
   <div class="inline-links pills-3">
     ${
       usePoste
-     ? `<a href="${myMapsViewer(lieu.poste_latitude || lieu.latitude, lieu.poste_longitude || lieu.longitude, 19, null)}">🛰️ Vue satellite</a>`
+     ? `<a href="${myMapsViewer(lieu.poste_latitude || lieu.latitude, lieu.poste_longitude || lieu.longitude)}">🛰️ Vue satellite</a>`
         : `<span class="placeholder">(non renseigné – fournir un lien Maps)</span>`
     }
   </div>
@@ -1044,8 +982,9 @@ html += `
 <div class="rep-block">
   <p id="editable-rep-acces"><span class="emoji">🛣️</span> Repérer l’accès :</p>
   <div class="inline-links pills-3">
-<a href="${myMapsViewer(lieu.latitude, lieu.longitude, 19, null)}">🛰️ Vue satellite</a>
-<a href="#" onclick="openStreetView(${lieu.latitude}, ${lieu.longitude}); return false;">👁️ Street View</a> </div>
+<a href="${myMapsViewer(lieu.latitude, lieu.longitude)}">🛰️ Vue satellite</a>
+    <a href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">👁️ Street View</a>
+  </div>
 </div>`;
   
 html += `
@@ -1350,8 +1289,8 @@ function showAppareil(app) {
   </h2>
 
 <div class="inline-links pills-3" style="margin-top:10px; margin-bottom:1.5rem;">
-<a href="${myMapsViewer(app.latitude, app.longitude, 19, app.appareil)}">🛰️ Vue satellite</a>
-</div>
+<a href="${myMapsViewer(app.latitude, app.longitude)}">🛰️ Vue satellite</a>
+</div>`;  
 
   const posteTrouvé = lieux.find(l => 
     normalize(l.nom) === normalize(app.nom) &&
@@ -1897,7 +1836,7 @@ if (repPosteInput) {
   const targetLat = usePoste ? latPoste : currentItem.latitude;
   const targetLon = usePoste ? lonPoste : currentItem.longitude;
 bloc.innerHTML = usePoste
-  ? `<a href="${myMapsViewer(currentItem.poste_latitude || currentItem.latitude, currentItem.poste_longitude || currentItem.longitude, 19, null)}" target="_blank" rel="noopener">🛰️ Vue satellite</a>`
+  ? `<a href="${myMapsViewer(currentItem.poste_latitude || currentItem.latitude, currentItem.poste_longitude || currentItem.longitude)}" target="_blank" rel="noopener">🛰️ Vue satellite</a>`
   : `<span class="placeholder">(non renseigné – fournir un lien Maps)</span>`;
 }
 
@@ -1905,8 +1844,8 @@ const repAccesInput = document.getElementById("input-acces-link");
 if (repAccesInput) {
   const bloc = repAccesInput.closest(".inline-links");
 bloc.innerHTML = `
-<a href="${myMapsViewer(currentItem.latitude, currentItem.longitude, 19, null)}">🛰️ Vue satellite</a>
-<a href="#" onclick="openStreetView(${currentItem.latitude}, ${currentItem.longitude}); return false;">👁️ Street View</a>
+<a href="${myMapsViewer(currentItem.latitude, currentItem.longitude)}" target="_blank" rel="noopener">🛰️ Vue satellite</a>
+  <a href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${currentItem.latitude},${currentItem.longitude}" target="_blank" rel="noopener">👁️ Street View</a>
 `;
 }
 
@@ -1947,7 +1886,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 
 <div id="about-footer">
   🔧 <a href="arnaud.html">À propos</a> – 
-  <span class="footer-version">Nono Maps V1.03a</span>
+  <span class="footer-version">Nono Maps V1.02</span>
 </div>
 <script>
 (function(){
@@ -2073,24 +2012,5 @@ if (!isStandalone) {
 }
 </script>
   <div id="notification"></div>
-<div id="streetview-overlay" style="display:none;">
-  <div id="streetview-box">
-    <button id="streetview-close">❌</button>
-    <iframe id="streetview-frame"></iframe>
-  </div>
-</div>
-
-<script>
-function openStreetView(lat, lon) {
-  const iframe = document.getElementById("streetview-frame");
-  iframe.src = `https://www.google.com/maps?q=&layer=c&cbll=${lat},${lon}&cbp=11,0,0,0,0&output=svembed`;
-  document.getElementById("streetview-overlay").style.display = "flex";
-}
-
-document.getElementById("streetview-close").onclick = () => {
-  document.getElementById("streetview-overlay").style.display = "none";
-  document.getElementById("streetview-frame").src = "";
-};
-</script>
 </body>
 </html>
