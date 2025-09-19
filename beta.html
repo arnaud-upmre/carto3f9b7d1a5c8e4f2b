@@ -224,44 +224,36 @@ const map = L.map('map', { zoomControl: false, attributionControl: false })
 let _datasetsLoaded = 0;
 function _tryOpenFromURL() {
   _datasetsLoaded++;
-  if (_datasetsLoaded < 2) return; 
+  if (_datasetsLoaded < 2) return; // attendre postes + appareils
 
   if (!isNaN(lat) && !isNaN(lon)) {
-    let matches = allMarkers.filter(m => {
+    const matches = allMarkers.filter(m => {
       const ll = m.getLatLng();
       return ll.lat === lat && ll.lng === lon;
     });
 
-    // 🔍 Si on a un id → on filtre encore par customId
-    if (id) {
-      matches = matches.filter(m => m.options.customId === id);
-    }
-
     if (matches.length > 0) {
       const target = matches[0];
-      map.setView(target.getLatLng(), zoom);
+      map.setView(target.getLatLng(), Math.max(zoom, 21));
 
-      // 💡 remonter dans la hiérarchie de clusters
-      let parentCluster = target.__parent;
-      while (parentCluster && parentCluster.__parent) {
-        parentCluster = parentCluster.__parent;
-      }
-
-      if (parentCluster && parentCluster.spiderfy) {
-        parentCluster.spiderfy();
-        setTimeout(() => {
-          const again = allMarkers.find(m => m.options.customId === id);
-          if (again) {
-            map.panTo(again.getLatLng());
-            again.openPopup();
+      setTimeout(() => {
+        if (!map.hasLayer(target)) {
+          const parentCluster = target.__parent;
+          if (parentCluster && parentCluster.spiderfy) {
+            parentCluster.spiderfy();
+            setTimeout(() => target.openPopup(), 400);
           }
-        }, 400);
-      } else {
-        target.openPopup();
-      }
+        } else {
+          target.openPopup();
+        }
+      }, 300);
+
+    } else {
+      map.setView([lat, lon], zoom);
     }
   }
-} 
+}
+
 function makeTelHtml(labelEmoji, value) {
   if (!value) return "";
 
@@ -585,7 +577,7 @@ _tryOpenFromURL();
   .then(data => {
     const grouped = {};
     data.forEach(item => {
-const key = `${item.latitude}_${item.longitude}`;
+      const key = `${item.latitude}_${item.longitude}`;
       if (!grouped[key]) grouped[key] = [];
       grouped[key].push(item);
     });
@@ -676,12 +668,9 @@ const key = `${item.latitude}_${item.longitude}`;
           </div>
         `;
 
-    const m = L.marker([lat, lng], { 
-  icon: appareilIcon, 
-  customId: item.appareil  
-}).bindPopup(content);
+        const m = L.marker([lat, lng], { icon: appareilIcon }).bindPopup(content);
         appareilsLayer.addLayer(m);
-allMarkers.push(m);
+        allMarkers.push(m);
 
       } else {
 
@@ -773,13 +762,9 @@ allMarkers.push(m);
             </div>
           `;
 
-   const m = L.marker([lat, lng], { 
-  icon: appareilIcon,
-  customId: item.appareil   // 👈 ajout important
-}).bindPopup(content);
-
-subGroup.addLayer(m);
-allMarkers.push(m);
+          const m = L.marker([lat, lng], { icon: appareilIcon }).bindPopup(content);
+          subGroup.addLayer(m);
+          allMarkers.push(m);
         });
 
                appareilsLayer.addLayer(subGroup);
