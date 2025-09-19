@@ -720,9 +720,25 @@ fetch("postes.json")
           allMarkers.push(m);
         });
 
-        appareilsLayer.addLayer(subGroup);
+               appareilsLayer.addLayer(subGroup);
       }
     });
+
+    // Vérifier si on a des paramètres lat/lon dans l'URL
+    if (!isNaN(lat) && !isNaN(lon)) {
+      map.setView([lat, lon], zoom);
+
+      // Chercher le marker correspondant (poste, appareil ou accès)
+      const target = allMarkers.find(m => {
+        const ll = m.getLatLng();
+        return Math.abs(ll.lat - lat) < 1e-5 && Math.abs(ll.lng - lon) < 1e-5;
+      });
+
+      if (target) {
+        target.openPopup();
+      }
+    }
+
   });
 
 
