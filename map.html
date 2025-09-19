@@ -845,30 +845,6 @@ if (!id) {
     }
   });
 }
-   if (!isNaN(lat) && !isNaN(lon)) {
-  map.whenReady(() => {
-    map.setView([lat, lon], zoom);
-
-    let target;
-
-    // Si un id est fourni → priorité à la recherche par customId
-    if (id) {
-      target = allMarkers.find(m => m.options.customId && m.options.customId === id);
-    }
-
-    // Sinon on cherche par coordonnées
-    if (!target) {
-      target = allMarkers.find(m => {
-        const ll = m.getLatLng();
-        return Math.abs(ll.lat - lat) < 1e-5 && Math.abs(ll.lng - lon) < 1e-5;
-      });
-    }
-
-    if (target) {
-      target.openPopup();
-    }
-  });
-}
     
  function openStreetView(lat, lng) {
     const iframe = document.getElementById("streetview-frame");
@@ -880,9 +856,31 @@ if (!id) {
     document.getElementById("streetview-overlay").style.display = "none";
     document.getElementById("streetview-frame").src = ""; 
   };
-
 document.getElementById("streetview-overlay").style.display = "none";
 document.getElementById("streetview-frame").src = "";
+
+// ✅ Bloc unique
+map.whenReady(() => {
+  if (id) {
+    const targetMarker = allMarkers.find(m => (m.options.customId || "").trim() === id.trim());
+    if (targetMarker) {
+      map.setView(targetMarker.getLatLng(), zoom);
+      targetMarker.openPopup();
+    } else {
+      console.warn("⚠️ Aucun marker trouvé pour id =", id);
+    }
+  } else if (!isNaN(lat) && !isNaN(lon)) {
+    const targetMarker = allMarkers.find(m => {
+      const ll = m.getLatLng();
+      return Math.abs(ll.lat - lat) < 1e-5 && Math.abs(ll.lng - lon) < 1e-5;
+    });
+    if (targetMarker) {
+      map.setView(targetMarker.getLatLng(), zoom);
+      targetMarker.openPopup();
+    }
+  }
+});
+    
 </script>
 
 </body>
