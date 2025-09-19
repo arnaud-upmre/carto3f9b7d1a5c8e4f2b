@@ -506,7 +506,7 @@ fetch("postes.json")
 </div>
 
   <!-- Fiche détaillée -->
-  <a href="index.html?id=${encodeURIComponent(
+  <a href="index1.html?id=${encodeURIComponent(
    (`${item.nom || ''} ${item.type || ''} ${item.SAT || ''}${accesVal ? ' – accès ' + accesVal : ''}`)
     .replace(/\s+/g, " ")
     .trim()
@@ -782,7 +782,7 @@ const backBtn = L.DomUtil.create("div", "btn-toggle btn-return", topGroup);
 backBtn.innerHTML = "🔍";
 
 backBtn.onclick = () => {
-  window.location.href = "index.html";
+  window.location.href = "index1.html";
 };
 L.DomEvent.disableClickPropagation(backBtn);
 L.DomEvent.disableScrollPropagation(backBtn);
