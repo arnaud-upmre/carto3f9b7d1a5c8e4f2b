@@ -1431,6 +1431,7 @@ function isMobile() {
 }
 
 if (!isMobile()) {
+  // PC → on cache le bouton géolocalisation et on montre le bouton carte
   document.getElementById("btn-localiser").style.display = "none";
   document.getElementById("btn-carte").style.display = "inline-block";
 }
@@ -1935,7 +1936,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 
 <div id="about-footer">
   🔧 <a href="arnaud.html">À propos</a> – 
-  <span class="footer-version">Nono Maps V1.04</span>
+  <span class="footer-version">Nono Maps V1.03a</span>
 </div>
 <script>
 (function(){
@@ -2061,11 +2062,24 @@ if (!isStandalone) {
 }
 </script>
   <div id="notification"></div>
-  <div id="streetview-overlay" style="display:none;">
+<div id="streetview-overlay" style="display:none;">
   <div id="streetview-box">
     <button id="streetview-close">❌</button>
     <iframe id="streetview-frame"></iframe>
   </div>
 </div>
+
+<script>
+function openStreetView(lat, lon) {
+  const iframe = document.getElementById("streetview-frame");
+  iframe.src = `https://www.google.com/maps?q=&layer=c&cbll=${lat},${lon}&cbp=11,0,0,0,0&output=svembed`;
+  document.getElementById("streetview-overlay").style.display = "flex";
+}
+
+document.getElementById("streetview-close").onclick = () => {
+  document.getElementById("streetview-overlay").style.display = "none";
+  document.getElementById("streetview-frame").src = "";
+};
+</script>
 </body>
 </html>
