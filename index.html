@@ -606,6 +606,10 @@ main {
 <button id="btn-localiser" class="btn-primary">
   📍 À proximité
 </button>
+  <!-- Nouveau bouton pour PC -->
+<a id="btn-carte" class="btn-primary" href="map.html" style="display:none;">
+  🗺️ Afficher la carte
+</a>
 <div id="proximite" style="margin-top:1rem; font-size:14px;"></div>
 <div id="proximite-actions" style="text-align:center; margin:10px 0;">
   <button id="voir-plus" class="btn-primary" style="display:none;">➕ Voir plus</button>
@@ -1377,7 +1381,9 @@ function isMobile() {
 }
 
 if (!isMobile()) {
+  // PC → on cache le bouton géolocalisation et on montre le bouton carte
   document.getElementById("btn-localiser").style.display = "none";
+  document.getElementById("btn-carte").style.display = "inline-block";
 }
 
 document.getElementById("btn-localiser").addEventListener("click", () => {
