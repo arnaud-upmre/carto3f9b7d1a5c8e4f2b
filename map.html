@@ -427,22 +427,23 @@ fetch("postes.json")
         let content = `
           <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
                       font-size:14px; color:#111; line-height:1.4; max-width:240px;">
-            <div style="font-weight:600; font-size:15px; margin-bottom:4px;">
-              📍 ${item.nom || "Sans nom"}
-              ${item.type ? " " + item.type : ""}
-              ${item.SAT ? " " + item.SAT : ""}
-              ${accesVal ? " – accès " + accesVal : ""}
-            </div>
+          <div style="font-weight:600; font-size:16px; margin-bottom:6px;">
+  🚗 ${item.nom || "Sans nom"}
+  ${item.type ? " " + item.type : ""}
+  ${item.SAT ? " " + item.SAT : ""}
+  ${accesVal ? " – accès " + accesVal : ""}
+</div>
 
             ${ makeTelHtml("🔑", item.portail) }
             ${ makeTelHtml("📞", item.contact) }
             ${item.description ? `<div>ℹ️ ${item.description}</div>` : ""}
 
-<div style="margin-top:8px; display:flex; flex-direction:column; align-items:center; gap:6px;">
+<div style="margin-top:10px; display:flex; flex-direction:column; align-items:center; gap:8px;">
   <button onclick="openStreetView(${item.latitude}, ${item.longitude})"
-    style="background:#007aff;color:#fff;padding:6px 12px;border:none;
-           border-radius:6px;cursor:pointer;width:100%;max-width:180px;">
-    Street View
+    style="background:#007aff;color:#fff;padding:8px 14px;border:none;
+           border-radius:8px;cursor:pointer;width:100%;max-width:200px;
+           font-size:14px;display:flex;align-items:center;justify-content:center;gap:6px;">
+    📷 Street View
   </button>
 
   <a href="index.html?id=${encodeURIComponent(
@@ -450,9 +451,9 @@ fetch("postes.json")
     .replace(/\s+/g, " ")
     .trim()
   )}"
-    style="display:inline-block;text-align:center;background:#007aff;
-           color:#fff;padding:6px 12px;border-radius:6px;text-decoration:none;
-           width:100%;max-width:180px;">
+    style="display:flex;align-items:center;justify-content:center;gap:6px;
+           background:#007aff;color:#fff;padding:8px 14px;border-radius:8px;
+           text-decoration:none;width:100%;max-width:200px;font-size:14px;">
     ℹ️ Fiche détaillée
   </a>
 </div>
