@@ -640,14 +640,12 @@ let content = `
     ${item.SAT ? " " + item.SAT : ""}
   </div>
 
-  <!-- PK + Ligne -->
-  <div style="margin-bottom:10px;">
-    🚄 ${
-      item.pk 
-        ? `PK ${item.pk} sur la ligne n°${item.numero_ligne || ""} – ${item.lignes || ""}`
-        : `Ligne n°${item.numero_ligne || ""} – ${item.lignes || ""}`
-    }
-  </div>
+<!-- PK + Ligne -->
+<div style="margin-bottom:10px;">
+  🚄 PK ${item.pk || "(non renseigné)"}
+  sur la ligne n°${item.numero_ligne || "(non renseigné)"}
+  ${item.lignes ? " – " + item.lignes : ""}
+</div>
 
  <!-- Information -->
 <div style="margin-bottom:10px;">
