@@ -238,85 +238,84 @@ if (matches.length > 0) {
 
   map.setView(first, Math.max(zoom, 21));
 
-  setTimeout(() => {
-    if (matches.length === 1) {
-      // 👉 Cas : un seul marker → popup normale
-      matches[0].openPopup();
+ setTimeout(() => {
+  if (matches.length === 1) {
+    // 👉 Cas : un seul marker → popup normale
+    matches[0].openPopup();
 
-   } else if (allSameCoords) {
-  // 👉 Cas : plusieurs markers exactement au même endroit → liste
-  const items = matches.map((m, i) => {
-    let label = m.options.customId || `Élément ${i + 1}`;
-    return { label: label.replace(/\bposte\b/gi, "").trim(), idx: i };
-  }).sort((a, b) => a.label.localeCompare(b.label, "fr", { numeric: true, sensitivity: "base" }));
+  } else if (allSameCoords) {
+    // 👉 Cas : plusieurs markers exactement au même endroit → liste
+    const items = matches.map((m, i) => {
+      let label = m.options.customId || `Élément ${i + 1}`;
+      return { label: label.replace(/\bposte\b/gi, "").trim(), idx: i };
+    }).sort((a, b) => a.label.localeCompare(b.label, "fr", { numeric: true, sensitivity: "base" }));
 
-  const html = `<div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
-    ${items.map(it => {
-      const marker = matches[it.idx];
-      const id = (marker.options.customId || "").toUpperCase();
-      
-      let iconFile = null;
+    const html = `<div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
+      ${items.map(it => {
+        const marker = matches[it.idx];
+        const id = (marker.options.customId || "").toUpperCase();
+        
+        let iconFile = null;
 
-      // 🔎 règle appareils
-      if (id.startsWith("I") || id.startsWith("SI")) {
-        iconFile = "int.png";
-      } else if (id.startsWith("TT") || id.startsWith("TSA") || id.startsWith("TC") || id.startsWith("TRA")) {
-        iconFile = "TT.png";
-      } else if (/^[0-9]/.test(id) || id.startsWith("S") || id.startsWith("ST") || id.startsWith("FIL") || id.startsWith("P") || id.startsWith("FB") || id.startsWith("B")) {
-        iconFile = "sect.png";
-      } else if (id.startsWith("ALIM")) {
-        iconFile = "alim.png";
-      } else if (id.startsWith("DU")) {
-        iconFile = "stop.png";
-      }
+        // 🔎 règle appareils
+        if (id.startsWith("I") || id.startsWith("SI")) {
+          iconFile = "int.png";
+        } else if (id.startsWith("TT") || id.startsWith("TSA") || id.startsWith("TC") || id.startsWith("TRA")) {
+          iconFile = "TT.png";
+        } else if (/^[0-9]/.test(id) || id.startsWith("S") || id.startsWith("ST") || id.startsWith("FIL") || id.startsWith("P") || id.startsWith("FB") || id.startsWith("B")) {
+          iconFile = "sect.png";
+        } else if (id.startsWith("ALIM")) {
+          iconFile = "alim.png";
+        } else if (id.startsWith("DU")) {
+          iconFile = "stop.png";
+        }
 
-      // 🔎 règle accès
-      if (!iconFile && id.includes("ACCES")) {
-        iconFile = "acces.png";
-      }
+        // 🔎 règle accès
+        if (!iconFile && id.includes("ACCES")) {
+          iconFile = "acces.png";
+        }
 
-      // 🔎 règle poste
-      if (!iconFile && id.includes("POSTE")) {
-        iconFile = "poste.png";
-      }
+        // 🔎 règle poste
+        if (!iconFile && id.includes("POSTE")) {
+          iconFile = "poste.png";
+        }
 
-      return `
-        <a href="#" class="cluster-link" data-idx="${it.idx}" style="display:flex;align-items:center;gap:6px;">
-          ${iconFile ? `<img src="ico/${iconFile}" style="width:16px;height:16px;">` : ""}
-          <span>${it.label}</span>
-        </a>`;
-    }).join("")}
-  </div>`;
+        return `
+          <a href="#" class="cluster-link" data-idx="${it.idx}" style="display:flex;align-items:center;gap:6px;">
+            ${iconFile ? `<img src="ico/${iconFile}" style="width:16px;height:16px;">` : ""}
+            <span>${it.label}</span>
+          </a>`;
+      }).join("")}
+    </div>`;
 
-  L.popup()
-    .setLatLng(first)
-    .setContent(html)
-    .openOn(map);
+    L.popup()
+      .setLatLng(first)
+      .setContent(html)
+      .openOn(map);
 
-  setTimeout(() => {
-    document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
-      link.addEventListener("click", (ev) => {
-        ev.preventDefault();
-        const idx = +ev.currentTarget.dataset.idx;
-        const target = matches[idx];
-        const content = target.getPopup() ? target.getPopup().getContent() : "";
-        L.popup({ maxWidth: 240 })
-          .setLatLng(target.getLatLng())
-          .setContent(content)
-          .openOn(map);
-        map.panTo(target.getLatLng());
+    setTimeout(() => {
+      document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
+        link.addEventListener("click", (ev) => {
+          ev.preventDefault();
+          const idx = +ev.currentTarget.dataset.idx;
+          const target = matches[idx];
+          const content = target.getPopup() ? target.getPopup().getContent() : "";
+          L.popup({ maxWidth: 240 })
+            .setLatLng(target.getLatLng())
+            .setContent(content)
+            .openOn(map);
+          map.panTo(target.getLatLng());
+        });
       });
-    });
-  }, 0);
-}
+    }, 0);
+  } else {
+    // 👉 Cas : markers proches mais pas identiques
+    const group = L.featureGroup(matches);
+    map.fitBounds(group.getBounds());
+  }
+}, 300);
 
-    } else {
-      // 👉 Cas : markers proches mais pas tous identiques → zoom sur le groupe
-      const group = L.featureGroup(matches);
-      map.fitBounds(group.getBounds());
-    }
-  }, 300);
-
+   
 } else {
   map.setView([lat, lon], zoom);
 }
