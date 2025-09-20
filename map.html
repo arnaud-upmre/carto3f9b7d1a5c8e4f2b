@@ -232,25 +232,64 @@ function _tryOpenFromURL() {
       return ll.lat === lat && ll.lng === lon;
     });
 
-    if (matches.length > 0) {
-      const target = matches[0];
-      map.setView(target.getLatLng(), Math.max(zoom, 21));
+if (matches.length > 0) {
+  const first = matches[0].getLatLng();
+  const allSameCoords = matches.every(m => m.getLatLng().equals(first));
+
+  map.setView(first, Math.max(zoom, 21));
+
+  setTimeout(() => {
+    if (matches.length === 1) {
+      // 👉 Cas : un seul marker → popup normale
+      matches[0].openPopup();
+
+    } else if (allSameCoords) {
+      // 👉 Cas : plusieurs markers exactement au même endroit → liste
+      const items = matches.map((m, i) => {
+        let label = m.options.customId || `Accès ${i + 1}`;
+        return { label: label.replace(/\bposte\b/gi, "").trim(), idx: i };
+      }).sort((a, b) => a.label.localeCompare(b.label, "fr", { numeric: true, sensitivity: "base" }));
+
+      const html = `<div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
+        ${items.map(it => `
+          <a href="#" class="cluster-link" data-idx="${it.idx}" 
+             style="display:flex;align-items:center;gap:6px;">
+            <img src="ico/acces.png" style="width:16px;height:16px;">
+            <span>${it.label}</span>
+          </a>`).join("")}
+      </div>`;
+
+      L.popup()
+        .setLatLng(first)
+        .setContent(html)
+        .openOn(map);
 
       setTimeout(() => {
-        if (!map.hasLayer(target)) {
-          const parentCluster = target.__parent;
-          if (parentCluster && parentCluster.spiderfy) {
-            parentCluster.spiderfy();
-            setTimeout(() => target.openPopup(), 400);
-          }
-        } else {
-          target.openPopup();
-        }
-      }, 300);
+        document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
+          link.addEventListener("click", (ev) => {
+            ev.preventDefault();
+            const idx = +ev.currentTarget.dataset.idx;
+            const target = matches[idx];
+            const content = target.getPopup() ? target.getPopup().getContent() : "";
+            L.popup({ maxWidth: 240 })
+              .setLatLng(target.getLatLng())
+              .setContent(content)
+              .openOn(map);
+            map.panTo(target.getLatLng());
+          });
+        });
+      }, 0);
 
     } else {
-      map.setView([lat, lon], zoom);
+      // 👉 Cas : markers proches mais pas tous identiques → zoom sur le groupe
+      const group = L.featureGroup(matches);
+      map.fitBounds(group.getBounds());
     }
+  }, 300);
+
+} else {
+  map.setView([lat, lon], zoom);
+}
   }
 }
 
