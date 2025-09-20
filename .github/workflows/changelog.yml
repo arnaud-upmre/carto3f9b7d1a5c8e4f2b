@@ -1,0 +1,27 @@
+name: Generate Changelog
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  changelog:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Generate changelog
+        uses: scottbrenner/generate-changelog-action@v1.3.3
+        id: changelog
+
+      - name: Save changelog
+        run: |
+          echo "${{ steps.changelog.outputs.changelog }}" > CHANGELOG.md
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git add CHANGELOG.md
+          git commit -m "chore: update changelog [skip ci]" || echo "No changes"
+          git push
