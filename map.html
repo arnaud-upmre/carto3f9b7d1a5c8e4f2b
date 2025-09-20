@@ -711,103 +711,51 @@ _tryOpenFromURL();
         appareilsLayer.addLayer(m);
         allMarkers.push(m);
 
-      } else {
+     } else {
+  // Plusieurs appareils exactement au même point → liste
+  const itemsHtml = items.map((item, i) => {
+    let label = `${item.appareil || "Sans référence"} ${item.nom || ""} ${item.type || ""} ${item.SAT ? "(" + item.SAT + ")" : ""}`.trim();
+    return `<a href="#" class="cluster-link" data-idx="${i}" 
+              style="display:flex;align-items:center;gap:6px;">
+              <img src="ico/sect.png" style="width:16px;height:16px;">
+              <span>${label}</span>
+            </a>`;
+  }).join("");
 
-        const subGroup = L.markerClusterGroup({
-          spiderfyOnMaxZoom: true,
-          showCoverageOnHover: false,
-          disableClusteringAtZoom: 21
-        });
+  const html = `<div style="min-width:220px;display:flex;flex-direction:column;gap:6px">${itemsHtml}</div>`;
 
-        items.forEach(item => {
-          let appareilIcon;
-          if (item.appareil && item.appareil.toUpperCase().startsWith("I")) {
-            appareilIcon = L.divIcon({
-              html: `<img src="ico/int.png" class="icon-halo-appareil">`,
-              className: "",
-              iconAnchor: [16, 32],
-              popupAnchor: [0, -32]
-            });
-          } else if (
-            item.appareil &&
-            (item.appareil.toUpperCase().startsWith("TT") ||
-             item.appareil.toUpperCase().startsWith("TSA") ||
-             item.appareil.toUpperCase().startsWith("TC")  ||
-             item.appareil.toUpperCase().startsWith("TRA"))
-          ) {
-            appareilIcon = L.divIcon({
-              html: `<img src="ico/TT.png" class="icon-halo-appareil">`,
-              className: "",
-              iconAnchor: [16, 32],
-              popupAnchor: [0, -32]
-            });
-          } else if (
-            item.appareil &&
-            (
-              /^[0-9]/.test(item.appareil) ||
-              item.appareil.toUpperCase().startsWith("S") ||
-              item.appareil.toUpperCase().startsWith("ST") ||
-              item.appareil.toUpperCase().startsWith("F IL") ||
-              /^P[0-9]+/i.test(item.appareil) ||
-              item.appareil.toUpperCase().startsWith("FB") ||
-              item.appareil.toUpperCase().startsWith("B")
-            )
-          ) {
-            appareilIcon = L.divIcon({
-              html: `<img src="ico/sect.png" class="icon-halo-appareil">`,
-              className: "",
-              iconAnchor: [16, 32],
-              popupAnchor: [0, -32]
-            });
-          } else if (item.appareil && item.appareil.toUpperCase().startsWith("ALIM")) {
-            appareilIcon = L.divIcon({
-              html: `<img src="ico/alim.png" class="icon-halo-appareil">`,
-              className: "",
-              iconAnchor: [16, 32],
-              popupAnchor: [0, -32]
-            });
-          } else if (item.appareil && item.appareil.toUpperCase().startsWith("DU")) {
-            appareilIcon = L.divIcon({
-              html: `<img src="ico/stop.png" class="icon-halo-appareil">`,
-              className: "",
-              iconAnchor: [16, 32],
-              popupAnchor: [0, -32]
-            });
-          } else if (item.appareil && item.appareil.toUpperCase().startsWith("SI")) {
-            appareilIcon = L.divIcon({
-              html: `<img src="ico/int.png" class="icon-halo-appareil">`,
-              className: "",
-              iconAnchor: [16, 32],
-              popupAnchor: [0, -32]
-            });
-          } else {
-            appareilIcon = iconAppareil;
-          }
+  const marker = L.marker([lat, lng], { icon: iconAppareil })
+    .bindPopup(html);
 
-          let content = `
-            <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
-                        font-size:14px; color:#111; line-height:1.4; max-width:240px;">
-              <div style="font-size:15px; margin-bottom:6px;">
-                <span style="font-weight:600;">
-                  ${item.appareil || "Sans référence"}
-                </span>
-                <span>
-                  ${item.nom ? " " + item.nom : ""} 
-                  ${item.type ? " " + item.type : ""} 
-                  ${item.SAT ? " (" + item.SAT + ")" : ""}
-                </span>
-              </div>
-              ${item.description ? `<div style="margin-bottom:6px;">ℹ️ ${item.description}</div>` : ""}
+  marker.on("popupopen", () => {
+    document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
+      link.addEventListener("click", (ev) => {
+        ev.preventDefault();
+        const idx = +ev.currentTarget.dataset.idx;
+        const item = items[idx];
+
+        let content = `
+          <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
+                      font-size:14px; color:#111; line-height:1.4; max-width:240px;">
+            <div style="font-size:15px; margin-bottom:6px;">
+              <span style="font-weight:600;">${item.appareil || "Sans référence"}</span>
+              <span>${item.nom ? " " + item.nom : ""} ${item.type ? " " + item.type : ""} ${item.SAT ? " (" + item.SAT + ")" : ""}</span>
             </div>
-          `;
+            ${item.description ? `<div style="margin-bottom:6px;">ℹ️ ${item.description}</div>` : ""}
+          </div>
+        `;
 
-          const m = L.marker([lat, lng], { icon: appareilIcon }).bindPopup(content);
-          subGroup.addLayer(m);
-          allMarkers.push(m);
-        });
+        L.popup({ maxWidth: 240 })
+          .setLatLng(marker.getLatLng())
+          .setContent(content)
+          .openOn(map);
+      });
+    });
+  });
 
-               appareilsLayer.addLayer(subGroup);
-      }
+  appareilsLayer.addLayer(marker);
+  allMarkers.push(marker);
+}
     });
     _tryOpenFromURL();
   });
