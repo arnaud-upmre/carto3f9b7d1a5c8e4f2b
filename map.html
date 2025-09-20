@@ -419,16 +419,18 @@ const accesLayer = L.markerClusterGroup({
 
 accesLayer.on('clusterclick', function (e) {
   const childMarkers = e.layer.getAllChildMarkers();
+  console.log("CLUSTER CLICK:", childMarkers.map(m => m.options.customId));
   if (childMarkers.length === 0) return;
 
   const first = childMarkers[0].getLatLng();
   const allSameCoords = childMarkers.every(m => m.getLatLng().equals(first));
 
   if (allSameCoords) {
-    const items = childMarkers.map((m, i) => {
-      let label = m.options.customId || `Accès ${i + 1}`;
-      return { label: label.replace(/\bposte\b/gi, "").trim(), idx: i };
-    }).sort((a, b) => a.label.localeCompare(b.label, "fr", { numeric: true, sensitivity: "base" }));
+ const items = childMarkers.map((m, i) => {
+  let label = m.options.customId || `Accès ${i + 1}`;
+  console.log(" -> Item", i, "label:", label);
+  return { label: label.replace(/\bposte\b/gi, "").trim(), idx: i };
+});
 
     const html = `<div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
       ${items.map(it => `
