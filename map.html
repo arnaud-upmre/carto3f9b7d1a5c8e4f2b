@@ -254,10 +254,11 @@ const html = `<div style="min-width:220px;display:flex;flex-direction:column;gap
   ${items.map(it => {
  const marker = matches[it.idx];
     const id = (marker.options.customId || "").toUpperCase();
+let iconFile = null;
 
-let iconFile = "sect.png"; // défaut
-
-if (id.startsWith("I") || id.startsWith("SI")) {
+if (id.includes("ACCES")) {
+  iconFile = "acces.png";   // 👉 forcer acces
+} else if (id.startsWith("I") || id.startsWith("SI")) {
   iconFile = "int.png";
 } else if (id.startsWith("TT") || id.startsWith("TSA") || id.startsWith("TC") || id.startsWith("TRA")) {
   iconFile = "TT.png";
@@ -269,11 +270,11 @@ if (id.startsWith("I") || id.startsWith("SI")) {
   iconFile = "stop.png";
 }
 
-    return `
-      <a href="#" class="cluster-link" data-idx="${it.idx}" style="display:flex;align-items:center;gap:6px;">
-        <img src="ico/${iconFile}" style="width:16px;height:16px;">
-        <span>${it.label}</span>
-      </a>`;
+return `
+  <a href="#" class="cluster-link" data-idx="${it.idx}" style="display:flex;align-items:center;gap:6px;">
+    ${iconFile ? `<img src="ico/${iconFile}" style="width:16px;height:16px;">` : ""}
+    <span>${it.label}</span>
+  </a>`;
   }).join("")}
 </div>`;
 
