@@ -870,7 +870,29 @@ if (!id) {
   };
 document.getElementById("streetview-overlay").style.display = "none";
 document.getElementById("streetview-frame").src = "";
-    
+
+  // 👉 Spiderfy automatique uniquement pour les appareils (layer principal + sous-groupes) au zoom 21
+map.on("zoomend", () => {
+  if (map.getZoom() === 21) {
+    // Pour le layer principal
+    appareilsLayer.eachLayer(layer => {
+      if (layer instanceof L.MarkerCluster && layer.getChildCount() > 1) {
+        layer.spiderfy();
+      }
+    });
+
+    // Pour les sous-groupes créés (subGroup)
+    appareilsLayer.eachLayer(group => {
+      if (group instanceof L.MarkerClusterGroup || group instanceof L.LayerGroup) {
+        group.eachLayer(layer => {
+          if (layer instanceof L.MarkerCluster && layer.getChildCount() > 1) {
+            layer.spiderfy();
+          }
+        });
+      }
+    });
+  }
+});
 </script>
 
 </body>
