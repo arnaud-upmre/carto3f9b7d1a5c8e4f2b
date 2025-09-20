@@ -575,18 +575,19 @@ let content = `
 <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
             font-size:14px; color:#111; line-height:1.4; position:relative;">
 
-  <!-- Titre -->
-  <div style="font-weight:600; font-size:16px; margin-bottom:14px;">
-    🚙 ${item.nom || "Sans nom"}
-    ${item.type ? " " + item.type : ""}
-    ${item.SAT ? " " + item.SAT : ""}
-    ${accesVal ? " – accès " + accesVal : ""}
-  </div>
+<!-- Titre -->
+<div style="font-weight:600; font-size:16px; margin-bottom:14px; padding-right:32px;">
+  🚙 ${item.nom || "Sans nom"}
+  ${item.type ? " " + item.type : ""}
+  ${item.SAT ? " " + item.SAT : ""}
+  ${accesVal ? " – accès " + accesVal : ""}
+</div>
 
-  <!-- Icône Street View -->
-  <span onclick="openStreetView(${item.latitude}, ${item.longitude})"
-        style="cursor:pointer; position:absolute; top:10px; right:12px;
-               font-size:26px; line-height:1;">📷</span>
+<!-- Icône Street View -->
+<span onclick="openStreetView(${item.latitude}, ${item.longitude})"
+      style="cursor:pointer; position:absolute; top:10px; right:12px;
+             font-size:26px; line-height:1;">📷</span>
+             
 <!-- Information -->
 <div style="margin-bottom:10px;">
   ✍🏻 <strong>Information :</strong> ${ renderPortail(item.description) }
