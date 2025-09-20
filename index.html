@@ -1134,18 +1134,30 @@ Promise.all([
   const params = new URLSearchParams(window.location.search);
 const idParam = decodeURIComponent(params.get("id") || "");
 
-  if (idParam) {
-    console.log("🔍 Paramètre id =", JSON.stringify(idParam));
+if (idParam) {
+  console.log("🔍 Paramètre id =", JSON.stringify(idParam));
 
-  const match = lieux.find(l => formatNomCompletLieu(l) === idParam);
+  // 1. Chercher dans les postes / accès
+  const matchPoste = lieux.find(l => formatNomCompletLieu(l) === idParam);
 
-    if (match) {
-      console.log("✅ Match trouvé:", match);
-      showLieu(match);
+  if (matchPoste) {
+    console.log("✅ Poste/Accès trouvé:", matchPoste);
+    showLieu(matchPoste);
+  } else {
+    // 2. Chercher dans les appareils
+    const matchApp = appareils.find(a => {
+      const candidate = `${a.appareil} ${a.nom || ""} ${a.type || ""} ${a.SAT || ""}`.trim();
+      return candidate === idParam;
+    });
+
+    if (matchApp) {
+      console.log("✅ Appareil trouvé:", matchApp);
+      showAppareil(matchApp);
     } else {
       console.warn("❌ Aucun match pour", JSON.stringify(idParam));
     }
   }
+}
   });
 
 document.getElementById("search").addEventListener("input", e => {
