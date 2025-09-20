@@ -745,8 +745,20 @@ _tryOpenFromURL();
 
   const html = `<div style="min-width:220px;display:flex;flex-direction:column;gap:6px">${itemsHtml}</div>`;
 
-  const marker = L.marker([lat, lng], { icon: iconAppareil })
-    .bindPopup(html);
+const countIcon = L.divIcon({
+  html: `<div style="width:32px;height:32px;border-radius:50%;
+                 background:#facc15;display:flex;align-items:center;justify-content:center;
+                 font-weight:600;color:#000;font-size:14px;box-shadow:0 0 6px rgba(0,0,0,0.4);">
+           ${items.length}
+         </div>`,
+  className: "", 
+  iconSize: [32, 32],
+  iconAnchor: [16, 32],
+  popupAnchor: [0, -32]
+});
+
+const marker = L.marker([lat, lng], { icon: countIcon })
+  .bindPopup(html);
 
   marker.on("popupopen", () => {
     document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
