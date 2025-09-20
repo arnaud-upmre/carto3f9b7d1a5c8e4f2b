@@ -1822,8 +1822,8 @@
   {
     "nom": "Hauteville",
     "type": "SSPA",
-    "SAT": "",
-    "accès": "SAT1",
+    "SAT": "SAT1",
+    "accès": "",
     "appareil": "I5737",
     "latitude": 50.7057357,
     "longitude": 1.6043009,
