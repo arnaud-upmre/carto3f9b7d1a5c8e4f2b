@@ -638,24 +638,85 @@ const m = L.marker([item.latitude, item.longitude], {
           const cid = [item.nom, item.type, item.SAT, "poste"].filter(Boolean).join(" ");
 
 let content = `
-  <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
-              font-size:14px; color:#111; line-height:1.4;">
-    <div style="font-weight:600; font-size:15px; margin-bottom:4px;">
-      📍 ${item.nom || "Sans nom"} 
-      ${item.type ? " " + item.type : ""} 
-      ${item.SAT ? " " + item.SAT : ""}
-    </div>
+<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
+            font-size:14px; color:#111; line-height:1.4;">
 
-    <div style="margin-bottom:6px; color:#333;">
-      ${item.pk 
-        ? `🚄 PK ${item.pk} sur la ligne n°${item.numero_ligne || ""} – ${item.lignes || ""}`
-        : `🚄 ligne n°${item.numero_ligne || ""} – ${item.lignes || ""}`}
-    </div>
-
-    ${ makeTelHtml("🔑", item.portail) }
-    ${ makeTelHtml("📞", item.contact) }
-    ${item.description ? `<div>ℹ️ ${item.description}</div>` : ""}
+  <!-- Nom + type + SAT -->
+  <div style="font-weight:600; font-size:16px; margin-bottom:14px;">
+    📍 ${item.nom || "Sans nom"} 
+    ${item.type ? " " + item.type : ""} 
+    ${item.SAT ? " " + item.SAT : ""}
   </div>
+
+  <!-- PK + Ligne -->
+  <div style="margin-bottom:10px;">
+    🚄 ${
+      item.pk 
+        ? `PK ${item.pk} sur la ligne n°${item.numero_ligne || ""} – ${item.lignes || ""}`
+        : `Ligne n°${item.numero_ligne || ""} – ${item.lignes || ""}`
+    }
+  </div>
+
+  <!-- Information -->
+  <div style="margin-bottom:10px;">
+    ✍🏻 Information : ${
+      item.description
+        ? (
+            item.description.startsWith("http")
+              ? `<a href="${item.description}" target="_blank" style="color:#007aff; text-decoration:none;">Voir vidéo explicative ICI</a>`
+              : ((item.description.replace(/\D/g, "").length >= 10)
+                  ? `<a href="tel:${item.description.replace(/[^\d+]/g, "")}" style="color:#007aff; text-decoration:none;">${item.description}</a>`
+                  : item.description
+                )
+          )
+        : `<span style="color:#777;font-style:italic;">Non renseignée</span>`
+    }
+  </div>
+
+  <!-- Contact -->
+  <div style="margin-bottom:10px;">
+    📞 ${
+      item.contact
+        ? (
+            item.contact.startsWith("http")
+              ? `<a href="${item.contact}" target="_blank" style="color:#007aff; text-decoration:none;">Voir vidéo explicative ICI</a>`
+              : ((item.contact.replace(/\D/g, "").length >= 10)
+                  ? `<a href="tel:${item.contact.replace(/[^\d+]/g, "")}" style="color:#007aff; text-decoration:none;">${item.contact}</a>`
+                  : item.contact
+                )
+          )
+        : `<span style="color:#777;font-style:italic;">Non renseigné</span>`
+    }
+  </div>
+
+  <!-- Portail -->
+  <div style="margin-bottom:10px;">
+    🔑 Portail : ${
+      item.portail
+        ? (
+            item.portail.startsWith("http")
+              ? `<a href="${item.portail}" target="_blank" style="color:#007aff; text-decoration:none;">Voir vidéo explicative ICI</a>`
+              : ((item.portail.replace(/\D/g, "").length >= 10)
+                  ? `<a href="tel:${item.portail.replace(/[^\d+]/g, "")}" style="color:#007aff; text-decoration:none;">${item.portail}</a>`
+                  : item.portail
+                )
+          )
+        : `<span style="color:#777;font-style:italic;">Non renseigné</span>`
+    }
+  </div>
+
+  <!-- Bouton Voir plus -->
+  <a href="index.html?id=${encodeURIComponent(
+    (`${item.nom || ''} ${item.type || ''} ${item.SAT || ''}`)
+      .replace(/\s+/g, " ")
+      .trim()
+  )}"
+     style="display:flex;align-items:center;justify-content:center;gap:6px;
+            background:#007aff;color:#fff;padding:10px 14px;border-radius:8px;
+            text-decoration:none;width:100%;font-size:15px;font-weight:500;">
+    ➕ Voir plus
+  </a>
+</div>
 `;
 
           const m = L.marker([item.poste_latitude, item.poste_longitude], {
