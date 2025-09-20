@@ -656,7 +656,7 @@ let content = `
 
 <!-- Contact -->
 <div style="margin-bottom:10px;">
-  📞 ${ renderPortail(item.contact) }
+📞 ${ renderContact(item.contact) }
 </div>
 
 <!-- Portail -->
@@ -1028,6 +1028,25 @@ document.getElementById("video-close").onclick = () => {
   document.getElementById("video-overlay").style.display = "none";
   document.getElementById("video-frame").src = "";
 };
+
+    function renderContact(value) {
+  if (!value) {
+    return `<span style="color:#777;font-style:italic;">Non renseigné</span>`;
+  }
+
+  const str = String(value);
+
+  // On découpe le texte en séparant les numéros (format français 10 chiffres)
+  return str.split(/(\d{2}(?:\s?\d{2}){4})/g).map(part => {
+    const digits = part.replace(/\D/g, "");
+    if (digits.length === 10) {
+      // C'est un numéro → rendre cliquable
+      return `<a href="tel:${digits}" style="color:#007aff; text-decoration:none;">${part.trim()}</a>`;
+    }
+    return part; // Sinon on garde tel quel
+  }).join("");
+}
+    
 </script>
 
 </body>
