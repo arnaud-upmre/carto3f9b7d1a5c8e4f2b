@@ -574,37 +574,15 @@ let content = `
         style="cursor:pointer; position:absolute; top:10px; right:12px;
                font-size:26px; line-height:1;">📷</span>
 
-  <!-- Portail -->
-  <div style="margin-bottom:10px;">
-    🔑 Portail : ${
-      item.portail
-        ? (
-            item.portail.startsWith("http")
-              ? `<a href="${item.portail}" target="_blank" style="color:#007aff; text-decoration:none;">Voir vidéo explicative ICI</a>`
-              : ((item.portail.replace(/\D/g, "").length >= 10)
-                  ? `<a href="tel:${item.portail.replace(/[^\d+]/g, "")}" style="color:#007aff; text-decoration:none;">${item.portail}</a>`
-                  : item.portail
-                )
-          )
-        : `<span style="color:#777;font-style:italic;">Non renseigné</span>`
-    }
-  </div>
+<!-- Portail -->
+<div style="margin-bottom:10px;">
+  🔑 Portail : ${ renderPortail(item.portail) }
+</div>
 
-  <!-- Information -->
-  <div style="margin-bottom:14px;">
-    ✍🏻 Information : ${
-      item.description
-        ? (
-            item.description.startsWith("http")
-              ? `<a href="${item.description}" target="_blank" style="color:#007aff; text-decoration:none;">Voir vidéo explicative ICI</a>`
-              : ((item.description.replace(/\D/g, "").length >= 10)
-                  ? `<a href="tel:${item.description.replace(/[^\d+]/g, "")}" style="color:#007aff; text-decoration:none;">${item.description}</a>`
-                  : item.description
-                )
-          )
-        : `<span style="color:#777;font-style:italic;">Non renseignée</span>`
-    }
-  </div>
+<!-- Information -->
+<div style="margin-bottom:14px;">
+  ✍🏻 Information : ${ renderPortail(item.description) }
+</div>
 
   <!-- Bouton Voir plus -->
   <a href="index.html?id=${encodeURIComponent(
@@ -657,53 +635,20 @@ let content = `
     }
   </div>
 
-  <!-- Information -->
-  <div style="margin-bottom:10px;">
-    ✍🏻 Information : ${
-      item.description
-        ? (
-            item.description.startsWith("http")
-              ? `<a href="${item.description}" target="_blank" style="color:#007aff; text-decoration:none;">Voir vidéo explicative ICI</a>`
-              : ((item.description.replace(/\D/g, "").length >= 10)
-                  ? `<a href="tel:${item.description.replace(/[^\d+]/g, "")}" style="color:#007aff; text-decoration:none;">${item.description}</a>`
-                  : item.description
-                )
-          )
-        : `<span style="color:#777;font-style:italic;">Non renseignée</span>`
-    }
-  </div>
+ <!-- Information -->
+<div style="margin-bottom:10px;">
+  ✍🏻 Information : ${ renderPortail(item.description) }
+</div>
 
-  <!-- Contact -->
-  <div style="margin-bottom:10px;">
-    📞 ${
-      item.contact
-        ? (
-            item.contact.startsWith("http")
-              ? `<a href="${item.contact}" target="_blank" style="color:#007aff; text-decoration:none;">Voir vidéo explicative ICI</a>`
-              : ((item.contact.replace(/\D/g, "").length >= 10)
-                  ? `<a href="tel:${item.contact.replace(/[^\d+]/g, "")}" style="color:#007aff; text-decoration:none;">${item.contact}</a>`
-                  : item.contact
-                )
-          )
-        : `<span style="color:#777;font-style:italic;">Non renseigné</span>`
-    }
-  </div>
+<!-- Contact -->
+<div style="margin-bottom:10px;">
+  📞 ${ renderPortail(item.contact) }
+</div>
 
-  <!-- Portail -->
-  <div style="margin-bottom:10px;">
-    🔑 Portail : ${
-      item.portail
-        ? (
-            item.portail.startsWith("http")
-              ? `<a href="${item.portail}" target="_blank" style="color:#007aff; text-decoration:none;">Voir vidéo explicative ICI</a>`
-              : ((item.portail.replace(/\D/g, "").length >= 10)
-                  ? `<a href="tel:${item.portail.replace(/[^\d+]/g, "")}" style="color:#007aff; text-decoration:none;">${item.portail}</a>`
-                  : item.portail
-                )
-          )
-        : `<span style="color:#777;font-style:italic;">Non renseigné</span>`
-    }
-  </div>
+<!-- Portail -->
+<div style="margin-bottom:10px;">
+  🔑 Portail : ${ renderPortail(item.portail) }
+</div>
 
   <!-- Bouton Voir plus -->
   <a href="index.html?id=${encodeURIComponent(
@@ -1000,7 +945,52 @@ Promise.allSettled([
 
 // Petite garde anti-NaN dans l’URL (évite des comportements bizarres)
 if (isNaN(lat) || isNaN(lon)) { console.warn("URL lat/lon invalides", {lat, lon}); }
-    
+
+
+
+    function makeTelHtml(labelEmoji, value) {
+  if (!value) return "";
+
+  if (value.indexOf("#") !== -1) return `<div>${labelEmoji} ${value}</div>`;
+
+  const digitsOnly = ("" + value).replace(/\D/g, "");
+  if (digitsOnly.length < 10) return `<div>${labelEmoji} ${value}</div>`;
+
+  const hrefSafe = ("" + value).replace(/[^\d+]/g, "");
+  if (!hrefSafe) return `<div>${labelEmoji} ${value}</div>`;
+
+  return `<div>${labelEmoji} <a href="tel:${hrefSafe}" style="color:#007aff; text-decoration:none;">${value}</a></div>`;
+}
+
+
+function renderPortail(value) {
+  if (!value) {
+    return `<span style="color:#777;font-style:italic;">Non renseigné</span>`;
+  }
+  const str = String(value);
+
+  // Cas avec #
+  if (str.includes("#")) return str;
+
+  // Cas avec un lien http(s)
+  const urlMatch = str.match(/https?:\/\/[^\s]+/i);
+  if (urlMatch) {
+    const url = urlMatch[0];
+    const withoutUrl = str.replace(url, "").trim(); // ex: "Code 594"
+    const link = `<a href="${url}" target="_blank" style="color:#007aff; text-decoration:none;">Voir vidéo explicative ICI</a>`;
+    return withoutUrl ? `${withoutUrl} – ${link}` : link;
+  }
+
+  // Cas numéro de téléphone
+  const digits = str.replace(/\D/g, "");
+  if (digits.length >= 10) {
+    const tel = str.replace(/[^\d+]/g, "");
+    return `<a href="tel:${tel}" style="color:#007aff; text-decoration:none;">${str}</a>`;
+  }
+
+  // Sinon afficher brut
+  return str;
+}
 </script>
 
 </body>
