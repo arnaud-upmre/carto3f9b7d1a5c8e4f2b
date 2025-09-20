@@ -255,30 +255,28 @@ if (matches.length > 0) {
         const marker = matches[it.idx];
         const id = (marker.options.customId || "").toUpperCase();
         
-        let iconFile = null;
+      let iconFile = null;
 
-        // 🔎 règle appareils
-        if (id.startsWith("I") || id.startsWith("SI")) {
-          iconFile = "int.png";
-        } else if (id.startsWith("TT") || id.startsWith("TSA") || id.startsWith("TC") || id.startsWith("TRA")) {
-          iconFile = "TT.png";
-        } else if (/^[0-9]/.test(id) || id.startsWith("S") || id.startsWith("ST") || id.startsWith("FIL") || id.startsWith("P") || id.startsWith("FB") || id.startsWith("B")) {
-          iconFile = "sect.png";
-        } else if (id.startsWith("ALIM")) {
-          iconFile = "alim.png";
-        } else if (id.startsWith("DU")) {
-          iconFile = "stop.png";
-        }
+// 🔎 règle accès (toujours acces.png si marker issu de postes.json avec latitude/longitude)
+if (id.includes("ACCES")) {
+  iconFile = "acces.png";
 
-        // 🔎 règle accès
-        if (!iconFile && id.includes("ACCES")) {
-          iconFile = "acces.png";
-        }
+// 🔎 règle poste
+} else if (id.includes("POSTE")) {
+  iconFile = "poste.png";
 
-        // 🔎 règle poste
-        if (!iconFile && id.includes("POSTE")) {
-          iconFile = "poste.png";
-        }
+// 🔎 règle appareils (uniquement si ce n’est ni accès ni poste)
+} else if (id.startsWith("I") || id.startsWith("SI")) {
+  iconFile = "int.png";
+} else if (id.startsWith("TT") || id.startsWith("TSA") || id.startsWith("TC") || id.startsWith("TRA")) {
+  iconFile = "TT.png";
+} else if (/^[0-9]/.test(id) || id.startsWith("S") || id.startsWith("ST") || id.startsWith("FIL") || id.startsWith("P") || id.startsWith("FB") || id.startsWith("B")) {
+  iconFile = "sect.png";
+} else if (id.startsWith("ALIM")) {
+  iconFile = "alim.png";
+} else if (id.startsWith("DU")) {
+  iconFile = "stop.png";
+}
 
         return `
           <a href="#" class="cluster-link" data-idx="${it.idx}" style="display:flex;align-items:center;gap:6px;">
