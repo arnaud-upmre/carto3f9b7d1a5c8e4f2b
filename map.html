@@ -252,7 +252,7 @@ if (matches.length > 0) {
 
     const html = `<div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
       ${items.map(it => {
-        const marker = childMarkers[it.idx];
+       const marker = matches[it.idx];
         const id = (marker.options.customId || "").toUpperCase();
         
 let iconFile = null;
@@ -690,7 +690,7 @@ appareilsLayer.on('clusterclick', function (e) {
 
    const html = `<div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
   ${items.map(it => {
-const marker = childMarkers[it.idx];
+const marker = matches[it.idx];
 
     let iconFile = null;
     if (postesLayer.hasLayer(marker)) {
