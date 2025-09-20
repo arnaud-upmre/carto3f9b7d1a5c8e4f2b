@@ -711,13 +711,34 @@ _tryOpenFromURL();
         appareilsLayer.addLayer(m);
         allMarkers.push(m);
 
-     } else {
+ } else {
   // Plusieurs appareils exactement au même point → liste
   const itemsHtml = items.map((item, i) => {
+    // Déterminer l’icône en fonction du type d’appareil
+    let iconSrc = "ico/sect.png";
+    if (item.appareil && item.appareil.toUpperCase().startsWith("I")) {
+      iconSrc = "ico/int.png";
+    } else if (
+      item.appareil &&
+      (item.appareil.toUpperCase().startsWith("TT") ||
+       item.appareil.toUpperCase().startsWith("TSA") ||
+       item.appareil.toUpperCase().startsWith("TC")  ||
+       item.appareil.toUpperCase().startsWith("TRA"))
+    ) {
+      iconSrc = "ico/TT.png";
+    } else if (item.appareil && item.appareil.toUpperCase().startsWith("ALIM")) {
+      iconSrc = "ico/alim.png";
+    } else if (item.appareil && item.appareil.toUpperCase().startsWith("DU")) {
+      iconSrc = "ico/stop.png";
+    } else if (item.appareil && item.appareil.toUpperCase().startsWith("SI")) {
+      iconSrc = "ico/int.png";
+    }
+
     let label = `${item.appareil || "Sans référence"} ${item.nom || ""} ${item.type || ""} ${item.SAT ? "(" + item.SAT + ")" : ""}`.trim();
+
     return `<a href="#" class="cluster-link" data-idx="${i}" 
               style="display:flex;align-items:center;gap:6px;">
-              <img src="ico/sect.png" style="width:16px;height:16px;">
+              <img src="${iconSrc}" style="width:16px;height:16px;">
               <span>${label}</span>
             </a>`;
   }).join("");
