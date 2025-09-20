@@ -690,7 +690,7 @@ appareilsLayer.on('clusterclick', function (e) {
 
    const html = `<div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
   ${items.map(it => {
-const marker = matches[it.idx];
+const marker = childMarkers[it.idx];
 
     let iconFile = null;
     if (postesLayer.hasLayer(marker)) {
@@ -865,6 +865,34 @@ if (!id) {
   };
 document.getElementById("streetview-overlay").style.display = "none";
 document.getElementById("streetview-frame").src = "";
+
+// --- KIT DEBUG ÉCLAIR ---
+console.info("[Nono Maps] boot", {
+  leaflet: L.version,
+  clusters: { postes: !!postesLayer, appareils: !!appareilsLayer, acces: !!accesLayer }
+});
+
+// Attrape toutes les erreurs JS et les affiche joliment à l'écran
+window.onerror = function(msg, src, line, col, err){
+  const box = document.createElement("div");
+  box.style = "position:fixed;z-index:10000;left:8px;bottom:8px;max-width:90%;"+
+              "background:#111;color:#fff;padding:10px 12px;border:1px solid #333;"+
+              "font:12px/1.4 system-ui;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,.4)";
+  box.textContent = "❗ "+ msg + " [" + (src||"inline") + ":" + line + ":" + col + "]";
+  document.body.appendChild(box);
+  console.error("❗ Uncaught error", {msg, src, line, col, err});
+};
+
+// Vérifie qu’on charge bien les jeux de données et combien de marqueurs arrivent
+Promise.allSettled([
+  fetch("postes.json").then(r => r.json()).then(d => { console.log("postes.json OK", d.length); return d; })
+    .catch(e => { console.error("postes.json KO", e); return []; }),
+  fetch("appareils.json").then(r => r.json()).then(d => { console.log("appareils.json OK", d.length); return d; })
+    .catch(e => { console.error("appareils.json KO", e); return []; })
+]);
+
+// Petite garde anti-NaN dans l’URL (évite des comportements bizarres)
+if (isNaN(lat) || isNaN(lon)) { console.warn("URL lat/lon invalides", {lat, lon}); }
     
 </script>
 
