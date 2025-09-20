@@ -257,12 +257,12 @@ if (matches.length > 0) {
         
 let iconFile = null;
 
-if (id.includes("ACCES")) {
+if (marker.options.isAcces) {
   iconFile = "acces.png";
 } else if (id.includes("POSTE")) {
   iconFile = "poste.png";
 } else {
-  // règles appareils UNIQUEMENT si ce n’est ni accès ni poste
+  // règles appareils
   if (id.startsWith("I") || id.startsWith("SI")) {
     iconFile = "int.png";
   } else if (id.startsWith("TT") || id.startsWith("TSA") || id.startsWith("TC") || id.startsWith("TRA")) {
@@ -574,10 +574,11 @@ const cid = [item.nom, item.type, item.SAT, accesVal]
     </div>
   `;
 
-  const m = L.marker([item.latitude, item.longitude], {
-    icon: iconAcces,
-    customId: cid
-  }).bindPopup(content).addTo(accesLayer);
+const m = L.marker([item.latitude, item.longitude], {
+  icon: iconAcces,
+  customId: cid,
+  isAcces: true   
+}).bindPopup(content).addTo(accesLayer);
 
   allMarkers.push(m);
 }
