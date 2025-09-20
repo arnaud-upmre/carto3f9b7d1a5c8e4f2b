@@ -1211,7 +1211,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "",
     "accès": "",
     "appareil": "IL5",
@@ -1371,7 +1371,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "SAT4",
     "accès": "",
     "appareil": "B-IA2",
@@ -1381,7 +1381,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "SAT4",
     "accès": "",
     "appareil": "B-S IA2",
@@ -1421,7 +1421,7 @@
   },
   {
     "nom": "Fives",
-    "type": "SSPA",
+    "type": "SSP",
     "SAT": "SAT4",
     "accès": "",
     "appareil": "IA2",
