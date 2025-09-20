@@ -1,0 +1,36 @@
+{
+  "versions": [
+    {
+      "num": "v1.2",
+      "date": "20.09.2025",
+      "modifs": [
+        "🔧 Stabilisation des événements mouseover/mousemove/mouseout → meilleure gestion de l’affichage/masquage des popups",
+        "🎨 Améliorations CSS ciblées → marges internes, arrondis et ombre portée homogène",
+        "⚡ Optimisation du script → suppression de variables redondantes et simplification des listeners",
+        "🗂️ Nettoyage du changelog → format standardisé pour faciliter le fetch et l’affichage"
+      ]
+    },
+    {
+      "num": "v1.02",
+      "date": "19.09.2025",
+      "modifs": [
+        "🌍 Ajout d’un lien vers la carte (PC uniquement) Id VC",
+        "🔒 Sécurisation du bouton “Proximité” (iOS et Android)",
+        "📍 Amélioration de l’affichage des appareils dans les clusters",
+        "🔎 Ajustement des niveaux de zoom pour une navigation plus fluide ",
+        "📝 Corrections et nettoyage du code feetch"
+      ]
+    },
+    {
+      "num": "v1.01",
+      "date": "20.09.2025",
+      "modifs": [
+        "🖼️ Mise en place des icônes “appareils” (ajout visuel dédié)",
+        "🎨 Personnalisation du style des icônes (taille, couleurs, halo)",
+        "🗂️ Organisation des calques par type d’objet (meilleure lisibilité sur la carte)",
+        "⚡ Optimisation du rendu Leaflet (chargement plus fluide avec plusieurs appareils)",
+        "📝 Petits ajustements de code liés à l’intégration des nouveaux marqueurs"
+      ]
+    }
+  ]
+}
