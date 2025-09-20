@@ -587,15 +587,14 @@ let content = `
   <span onclick="openStreetView(${item.latitude}, ${item.longitude})"
         style="cursor:pointer; position:absolute; top:10px; right:12px;
                font-size:26px; line-height:1;">📷</span>
+<!-- Information -->
+<div style="margin-bottom:10px;">
+  ✍🏻 <strong>Information :</strong> ${ renderPortail(item.description) }
+</div>
 
 <!-- Portail -->
 <div style="margin-bottom:10px;">
-  🔑 Portail : ${ renderPortail(item.portail) }
-</div>
-
-<!-- Information -->
-<div style="margin-bottom:14px;">
-  ✍🏻 Information : ${ renderPortail(item.description) }
+  🔑 <strong>Portail :</strong> ${ renderPortail(item.portail) }
 </div>
 
   <!-- Bouton Voir plus -->
@@ -642,25 +641,25 @@ let content = `
 
 <!-- PK + Ligne -->
 <div style="margin-bottom:10px;">
-  🚄 PK ${item.pk || "(non renseigné)"}
-  sur la ligne n°${item.numero_ligne || "(non renseigné)"}
+  🚄 PK <strong>${item.pk || "(non renseigné)"}</strong>
+  sur la ligne n°<strong>${item.numero_ligne || "(non renseigné)"}</strong>
   ${item.lignes ? " – " + item.lignes : ""}
 </div>
 
  <!-- Information -->
-<div style="margin-bottom:10px;">
-  ✍🏻 Information : ${ renderPortail(item.description) }
-</div>
+  <div style="margin-bottom:10px;">
+    ✍🏻 <strong>Information :</strong> ${ renderPortail(item.description) }
+  </div>
 
-<!-- Contact -->
-<div style="margin-bottom:10px;">
-📞 ${ renderContact(item.contact) }
-</div>
+  <!-- Contact -->
+  <div style="margin-bottom:10px;">
+    📞 <strong>Contact :</strong> ${ renderContact(item.contact) }
+  </div>
 
-<!-- Portail -->
-<div style="margin-bottom:10px;">
-  🔑 Portail : ${ renderPortail(item.portail) }
-</div>
+  <!-- Portail -->
+  <div style="margin-bottom:10px;">
+    🔑 <strong>Portail :</strong> ${ renderPortail(item.portail) }
+  </div>
 
   <!-- Bouton Voir plus -->
   <a href="index.html?id=${encodeURIComponent(
