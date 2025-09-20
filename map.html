@@ -728,27 +728,30 @@ if (ref.startsWith("I") || ref.startsWith("SI")) {
   <!-- Description -->
   ${item.description ? `<div style="margin-bottom:14px;">✍🏻 <strong>Information :</strong> ${item.description}</div>` : ""}
 
-  <!-- Bouton Voir le poste -->
-  <a 
-    href="map.html?id=${encodeURIComponent(
-      (`${item.nom || ''} ${item.type || ''} ${item.SAT || ''}`)
-        .replace(/\s+/g, " ")
-        .trim()
-    )}"
-    style="display:flex;align-items:center;justify-content:center;gap:6px;
-           background:#10b981;color:#fff;padding:10px 14px;border-radius:8px;
-           text-decoration:none;width:100%;font-size:15px;font-weight:500;margin-bottom:8px;">
-    📍 Voir le poste
-  </a>
+  <!-- Boutons Voir -->
+  <div style="display:flex;flex-direction:column;gap:8px;margin-top:10px;">
+    <!-- Lien fiche appareil -->
+    <a 
+      href="index.html?id=${encodeURIComponent(
+        [item.appareil, item.nom, item.type, item.SAT].filter(Boolean).join(" ").trim()
+      )}"
+      style="display:flex;align-items:center;justify-content:center;gap:6px;
+             background:#007aff;color:#fff;padding:10px 14px;border-radius:8px;
+             text-decoration:none;width:100%;font-size:15px;font-weight:500;">
+      ➕ Voir plus
+    </a>
 
-  <!-- Bouton Voir plus (appareil) -->
-  <a 
-    href="index.html?id=${encodeURIComponent((item.appareil || '').trim())}"
-    style="display:flex;align-items:center;justify-content:center;gap:6px;
-           background:#007aff;color:#fff;padding:10px 14px;border-radius:8px;
-           text-decoration:none;width:100%;font-size:15px;font-weight:500;">
- ➕ Voir plus
-  </a>
+    <!-- Lien poste -->
+    <a 
+      href="map.html?id=${encodeURIComponent(
+        [item.nom, item.type, item.SAT].filter(Boolean).join(" ").trim()
+      )}"
+      style="display:flex;align-items:center;justify-content:center;gap:6px;
+             background:#10b981;color:#fff;padding:10px 14px;border-radius:8px;
+             text-decoration:none;width:100%;font-size:15px;font-weight:500;">
+      📍 Voir le poste
+    </a>
+  </div>
 </div>
 `;
       const cid = [item.appareil, item.nom, item.type, item.SAT].filter(Boolean).join(" ");
