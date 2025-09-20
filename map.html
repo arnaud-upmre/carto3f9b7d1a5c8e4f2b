@@ -717,7 +717,6 @@ if (ref.startsWith("I") || ref.startsWith("SI")) {
 <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
             font-size:14px; color:#111; line-height:1.4;">
 
-  <!-- Titre appareil -->
   <div style="font-size:15px; margin-bottom:10px; font-weight:600;">
     ⚡ ${item.appareil || "Sans référence"}
     ${item.nom ? " (" + item.nom : ""}
@@ -725,33 +724,21 @@ if (ref.startsWith("I") || ref.startsWith("SI")) {
     ${item.SAT ? " / " + item.SAT : ""}${item.nom ? ")" : ""}
   </div>
 
-  <!-- Description -->
   ${item.description ? `<div style="margin-bottom:14px;">✍🏻 <strong>Information :</strong> ${item.description}</div>` : ""}
 
-  <!-- Boutons Voir -->
-  <div style="display:flex;flex-direction:column;gap:8px;margin-top:10px;">
-    <!-- Lien fiche appareil -->
-    <a 
-      href="index.html?id=${encodeURIComponent(
-        [item.appareil, item.nom, item.type, item.SAT].filter(Boolean).join(" ").trim()
-      )}"
-      style="display:flex;align-items:center;justify-content:center;gap:6px;
-             background:#007aff;color:#fff;padding:10px 14px;border-radius:8px;
-             text-decoration:none;width:100%;font-size:15px;font-weight:500;">
-      ➕ Voir plus
-    </a>
 
-    <!-- Lien poste -->
-    <a 
-      href="map.html?id=${encodeURIComponent(
-        [item.nom, item.type, item.SAT].filter(Boolean).join(" ").trim()
-      )}"
-      style="display:flex;align-items:center;justify-content:center;gap:6px;
-             background:#10b981;color:#fff;padding:10px 14px;border-radius:8px;
-             text-decoration:none;width:100%;font-size:15px;font-weight:500;">
-      📍 Voir le poste
-    </a>
-  </div>
+  <div style="display:flex;flex-direction:column;gap:8px;margin-top:10px;">
+   
+<div style="display:flex;justify-content:center;margin-top:10px;">
+  <a 
+    href="index.html?id=${encodeURIComponent(
+      [item.appareil, item.nom, item.type, item.SAT].filter(Boolean).join(" ").trim()
+    )}"
+    style="background:#007aff;color:#fff;padding:10px 14px;border-radius:8px;
+           text-decoration:none;font-size:15px;font-weight:500;">
+    ➕ Voir plus
+  </a>
+</div>
 </div>
 `;
       const cid = [item.appareil, item.nom, item.type, item.SAT].filter(Boolean).join(" ");
@@ -766,7 +753,7 @@ if (ref.startsWith("I") || ref.startsWith("SI")) {
 
     _tryOpenFromURL();
   });
-// 👉 Gestion cluster appareils comme pour accès
+
 appareilsLayer.on('clusterclick', function (e) {
   const childMarkers = e.layer.getAllChildMarkers();
   if (childMarkers.length === 0) return;
