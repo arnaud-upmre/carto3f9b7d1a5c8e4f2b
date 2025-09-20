@@ -227,10 +227,12 @@ function _tryOpenFromURL() {
   if (_datasetsLoaded < 2) return; // attendre postes + appareils
 
   if (!isNaN(lat) && !isNaN(lon)) {
-    const matches = allMarkers.filter(m => {
-      const ll = m.getLatLng();
-      return ll.lat === lat && ll.lng === lon;
-    });
+const tolerance = 2e-6; // ~0.22 m
+const matches = allMarkers.filter(m => {
+  const ll = m.getLatLng();
+  return Math.abs(ll.lat - lat) < tolerance &&
+         Math.abs(ll.lng - lon) < tolerance;
+});
 
 if (matches.length > 0) {
   const first = matches[0].getLatLng();
