@@ -1534,7 +1534,17 @@
     "type": "SSP",
     "SAT": "SAT6",
     "accès": "",
-    "appareil": "TT + TC de l’IA5",
+    "appareil": "TT IA5",
+    "latitude": 50.6277968,
+    "longitude": 3.0843901,
+    "description": ""
+  },
+  {
+    "nom": "Fives",
+    "type": "SSP",
+    "SAT": "SAT6",
+    "accès": "",
+    "appareil": "TC IA5",
     "latitude": 50.6277968,
     "longitude": 3.0843901,
     "description": ""
