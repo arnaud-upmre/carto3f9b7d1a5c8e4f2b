@@ -691,26 +691,26 @@ appareilsLayer.on('clusterclick', function (e) {
    const html = `<div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
   ${items.map(it => {
 const marker = childMarkers[it.idx];
-
+const id = (marker.options.customId || "").toUpperCase();
     let iconFile = null;
-    if (postesLayer.hasLayer(marker)) {
-      iconFile = "poste.png";
-    } else if (accesLayer.hasLayer(marker)) {
-      iconFile = "acces.png";
-    } else if (appareilsLayer.hasLayer(marker)) {
-      const id = (marker.options.customId || "").toUpperCase();
-      if (id.startsWith("I") || id.startsWith("SI")) {
-        iconFile = "int.png";
-      } else if (id.startsWith("TT") || id.startsWith("TSA") || id.startsWith("TC") || id.startsWith("TRA")) {
-        iconFile = "TT.png";
-      } else if (/^[0-9]/.test(id) || id.startsWith("S") || id.startsWith("ST") || id.startsWith("FIL") || id.startsWith("P") || id.startsWith("FB") || id.startsWith("B")) {
-        iconFile = "sect.png";
-      } else if (id.startsWith("ALIM")) {
-        iconFile = "alim.png";
-      } else if (id.startsWith("DU")) {
-        iconFile = "stop.png";
-      }
-    }
+   if (marker.options.isAcces) {
+  iconFile = "acces.png";
+} else if (id.includes("POSTE")) {
+  iconFile = "poste.png";
+} else {
+  // règles appareils
+  if (id.startsWith("I") || id.startsWith("SI")) {
+    iconFile = "int.png";
+  } else if (id.startsWith("TT") || id.startsWith("TSA") || id.startsWith("TC") || id.startsWith("TRA")) {
+    iconFile = "TT.png";
+  } else if (/^[0-9]/.test(id) || id.startsWith("S") || id.startsWith("ST") || id.startsWith("FIL") || id.startsWith("P") || id.startsWith("FB") || id.startsWith("B")) {
+    iconFile = "sect.png";
+  } else if (id.startsWith("ALIM")) {
+    iconFile = "alim.png";
+  } else if (id.startsWith("DU")) {
+    iconFile = "stop.png";
+  }
+}
 
     return `
       <a href="#" class="cluster-link" data-idx="${it.idx}" style="display:flex;align-items:center;gap:6px;">
