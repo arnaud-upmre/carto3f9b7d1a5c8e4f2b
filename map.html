@@ -252,7 +252,7 @@ if (matches.length > 0) {
 
     const html = `<div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
       ${items.map(it => {
-        const marker = matches[it.idx];
+        const marker = childMarkers[it.idx];
         const id = (marker.options.customId || "").toUpperCase();
         
 let iconFile = null;
@@ -514,84 +514,74 @@ fetch("postes.json")
 
     data.forEach(item => {
 
-      if (item.latitude && item.longitude) {
-        const accesVal = (item["accès"] ?? item.acces ?? "").toString().trim();
-        const cid = accesVal
-          ? [item.nom, item.type, item.SAT, "acces", accesVal].filter(Boolean).join(" ")
-          : [item.nom, item.type, item.SAT, "poste"].filter(Boolean).join(" ");
-        
-        let content = `
-          <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
-                      font-size:14px; color:#111; line-height:1.4; max-width:240px;">
-<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
-            font-size:14px; color:#111; line-height:1.4; max-width:240px; word-wrap:break-word;">
+     if (item.latitude && item.longitude) {
+  const accesVal = (item["accès"] ?? item.acces ?? "").toString().trim();
 
-<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
-            font-size:14px; color:#111; line-height:1.4; max-width:240px; word-wrap:break-word;">
+  // 👉 Toujours "acces" car ce bloc est uniquement pour les accès routiers
+  const cid = [item.nom, item.type, item.SAT, "acces", accesVal]
+    .filter(Boolean)
+    .join(" ");
 
-  <!-- Titre + icône Street View -->
-  <div style="font-weight:600; font-size:16px; margin-bottom:14px; display:flex; align-items:center; justify-content:space-between;">
-    <span>
-      🚙 ${item.nom || "Sans nom"}
-      ${item.type ? " " + item.type : ""}
-      ${item.SAT ? " " + item.SAT : ""}
-      ${accesVal ? " – accès " + accesVal : ""}
-    </span>
-    <span onclick="openStreetView(${item.latitude}, ${item.longitude})"
-          style="cursor:pointer; font-size:20px; line-height:1; margin-left:6px;">📷</span>
-  </div>
+  let content = `
+    <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
+                font-size:14px; color:#111; line-height:1.4; max-width:240px;">
+      <div style="font-weight:600; font-size:16px; margin-bottom:14px; display:flex; align-items:center; justify-content:space-between;">
+        <span>
+          🚙 ${item.nom || "Sans nom"}
+          ${item.type ? " " + item.type : ""}
+          ${item.SAT ? " " + item.SAT : ""}
+          ${accesVal ? " – accès " + accesVal : ""}
+        </span>
+        <span onclick="openStreetView(${item.latitude}, ${item.longitude})"
+              style="cursor:pointer; font-size:20px; line-height:1; margin-left:6px;">📷</span>
+      </div>
 
-<!-- Portail -->
-<div style="margin-bottom:10px;">
-  🔑 Portail : ${
-    item.portail
-      ? (
-          item.portail.includes("http")
-            ? `<a href="${item.portail.match(/https?:\/\/\S+/)[0]}" target="_blank" style="color:#007aff; text-decoration:none;">Voir vidéo explicative ICI</a>`
-          : (item.portail.includes("#") || item.portail.toLowerCase().includes("code"))
-            ? item.portail
-          : `<a href="tel:${item.portail.replace(/[^\d+]/g, "")}" style="color:#007aff; text-decoration:none;">${item.portail}</a>`
-        )
-      : `<span style="color:#777;font-style:italic;">Non renseigné</span>`
-  }
-</div>
+      <div style="margin-bottom:10px;">
+        🔑 Portail : ${
+          item.portail
+            ? (
+                item.portail.includes("http")
+                  ? `<a href="${item.portail.match(/https?:\/\/\S+/)[0]}" target="_blank" style="color:#007aff; text-decoration:none;">Voir vidéo explicative ICI</a>`
+                : (item.portail.includes("#") || item.portail.toLowerCase().includes("code"))
+                  ? item.portail
+                  : `<a href="tel:${item.portail.replace(/[^\d+]/g, "")}" style="color:#007aff; text-decoration:none;">${item.portail}</a>`
+              )
+            : `<span style="color:#777;font-style:italic;">Non renseigné</span>`
+        }
+      </div>
 
-<!-- Information -->
-<div style="margin-bottom:14px;">
-  ✍🏻 Information : ${
-    item.description
-      ? (
-          item.description.startsWith("http")
-            ? `<a href="${item.description}" target="_blank" style="color:#007aff; text-decoration:none;">Voir vidéo explicative ICI</a>`
-            : item.description
-        )
-      : `<span style="color:#777;font-style:italic;">Non renseignée</span>`
-  }
-</div>
+      <div style="margin-bottom:14px;">
+        ✍🏻 Information : ${
+          item.description
+            ? (
+                item.description.startsWith("http")
+                  ? `<a href="${item.description}" target="_blank" style="color:#007aff; text-decoration:none;">Voir vidéo explicative ICI</a>`
+                  : item.description
+              )
+            : `<span style="color:#777;font-style:italic;">Non renseignée</span>`
+        }
+      </div>
 
-  <!-- Fiche détaillée -->
-  <a href="index.html?id=${encodeURIComponent(
-   (`${item.nom || ''} ${item.type || ''} ${item.SAT || ''}${accesVal ? ' – accès ' + accesVal : ''}`)
-    .replace(/\s+/g, " ")
-    .trim()
-  )}"
-    style="display:flex;align-items:center;justify-content:center;gap:6px;
-           background:#007aff;color:#fff;padding:8px 14px;border-radius:8px;
-           text-decoration:none;width:100%;max-width:200px;font-size:14px;">
-    ➕ Voir plus
-  </a>
-</div>
-</div>
-          </div>
-        `;
+      <a href="index.html?id=${encodeURIComponent(
+        (`${item.nom || ''} ${item.type || ''} ${item.SAT || ''}${accesVal ? ' – accès ' + accesVal : ''}`)
+          .replace(/\s+/g, " ")
+          .trim()
+      )}"
+        style="display:flex;align-items:center;justify-content:center;gap:6px;
+               background:#007aff;color:#fff;padding:8px 14px;border-radius:8px;
+               text-decoration:none;width:100%;max-width:200px;font-size:14px;">
+        ➕ Voir plus
+      </a>
+    </div>
+  `;
 
-        const m = L.marker([item.latitude, item.longitude], {
-          icon: iconAcces,
-          customId: cid
-        }).bindPopup(content).addTo(accesLayer);
+  const m = L.marker([item.latitude, item.longitude], {
+    icon: iconAcces,
+    customId: cid
+  }).bindPopup(content).addTo(accesLayer);
 
-        allMarkers.push(m);
-      }
+  allMarkers.push(m);
+}
 
       if (item.poste_latitude && item.poste_longitude) {
         const key = `${item.poste_latitude}_${item.poste_longitude}`;
@@ -698,32 +688,37 @@ appareilsLayer.on('clusterclick', function (e) {
       return { label: label.trim(), idx: i };
     }).sort((a, b) => a.label.localeCompare(b.label, "fr", { numeric:true, sensitivity:"base" }));
 
-    const html = `<div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
-      ${items.map(it => {
-        const marker = childMarkers[it.idx];
-        const id = (marker.options.customId || "").toUpperCase();
+   const html = `<div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
+  ${items.map(it => {
+const marker = childMarkers[it.idx];
 
-let iconFile = "sect.png"; // défaut
+    let iconFile = null;
+    if (postesLayer.hasLayer(marker)) {
+      iconFile = "poste.png";
+    } else if (accesLayer.hasLayer(marker)) {
+      iconFile = "acces.png";
+    } else if (appareilsLayer.hasLayer(marker)) {
+      const id = (marker.options.customId || "").toUpperCase();
+      if (id.startsWith("I") || id.startsWith("SI")) {
+        iconFile = "int.png";
+      } else if (id.startsWith("TT") || id.startsWith("TSA") || id.startsWith("TC") || id.startsWith("TRA")) {
+        iconFile = "TT.png";
+      } else if (/^[0-9]/.test(id) || id.startsWith("S") || id.startsWith("ST") || id.startsWith("FIL") || id.startsWith("P") || id.startsWith("FB") || id.startsWith("B")) {
+        iconFile = "sect.png";
+      } else if (id.startsWith("ALIM")) {
+        iconFile = "alim.png";
+      } else if (id.startsWith("DU")) {
+        iconFile = "stop.png";
+      }
+    }
 
-if (id.startsWith("I") || id.startsWith("SI")) {
-  iconFile = "int.png";
-} else if (id.startsWith("TT") || id.startsWith("TSA") || id.startsWith("TC") || id.startsWith("TRA")) {
-  iconFile = "TT.png";
-} else if (/^[0-9]/.test(id) || id.startsWith("S") || id.startsWith("ST") || id.startsWith("FIL") || id.startsWith("P") || id.startsWith("FB") || id.startsWith("B")) {
-  iconFile = "sect.png";
-} else if (id.startsWith("ALIM")) {
-  iconFile = "alim.png";
-} else if (id.startsWith("DU")) {
-  iconFile = "stop.png";
-}
-
-        return `
-          <a href="#" class="cluster-link" data-idx="${it.idx}" style="display:flex;align-items:center;gap:6px;">
-            <img src="ico/${iconFile}" style="width:16px;height:16px;">
-            <span>${it.label}</span>
-          </a>`;
-      }).join("")}
-    </div>`;
+    return `
+      <a href="#" class="cluster-link" data-idx="${it.idx}" style="display:flex;align-items:center;gap:6px;">
+        ${iconFile ? `<img src="ico/${iconFile}" style="width:16px;height:16px;">` : ""}
+        <span>${it.label}</span>
+      </a>`;
+  }).join("")}
+</div>`;
 
     L.popup()
       .setLatLng(first)
