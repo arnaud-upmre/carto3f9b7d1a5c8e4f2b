@@ -504,7 +504,10 @@ const postesLayer = L.markerClusterGroup({
 const appareilsLayer = L.markerClusterGroup({
   spiderfyOnMaxZoom: true, 
   showCoverageOnHover: false,
-  disableClusteringAtZoom: null  
+  disableClusteringAtZoom: null,
+  maxClusterRadius: function(zoom) {
+    return zoom > 18 ? 20 : 60;
+  }
 });
 const accesLayer = L.markerClusterGroup({
   spiderfyOnMaxZoom: false,
