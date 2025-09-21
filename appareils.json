@@ -1385,8 +1385,8 @@
     "SAT": "SAT4",
     "accès": "",
     "appareil": "B-S IA2",
-    "latitude": 50.6219164,
-    "longitude": 3.1108935,
+    "latitude": 50.621925,
+    "longitude": 3.1108802,
     "description": ""
   },
   {
@@ -1444,9 +1444,9 @@
     "type": "SSP",
     "SAT": "SAT4",
     "accès": "",
-    "appareil": "SIA2",
-    "latitude": 50.6219131,
-    "longitude": 3.1108734,
+    "appareil": "S IA2",
+    "latitude": 50.621925,
+    "longitude": 3.1108802,
     "description": ""
   },
   {
@@ -1485,16 +1485,6 @@
     "SAT": "SAT4",
     "accès": "",
     "appareil": "TT IA2",
-    "latitude": 50.621925,
-    "longitude": 3.1108802,
-    "description": ""
-  },
-  {
-    "nom": "Fives",
-    "type": "SSP",
-    "SAT": "SAT4",
-    "accès": "",
-    "appareil": "TC + TT de l’IA2",
     "latitude": 50.621925,
     "longitude": 3.1108802,
     "description": ""
