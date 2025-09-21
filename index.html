@@ -1350,9 +1350,9 @@ function showAppareil(app) {
     💡 ${app.appareil} (${app.nom}${app.type ? ' ' + app.type : ''}${app.SAT ? ' / ' + app.SAT : ''})
   </h2>`;
 
-html += `
-  <div class="rep-block">
-    <p><span class="emoji">💡</span> Repérer l’appareil</p>
+  html += `
+  <div class="rep-block horizontal">
+    <p id="editable-rep-appareil"><span class="emoji">💡</span> Repérer l’appareil</p>
     <div class="inline-links pills-3">
       <a href="${myMapsViewer(app.latitude, app.longitude)}">🛰️ Vue satellite</a>
     </div>
