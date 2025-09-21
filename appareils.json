@@ -4328,5 +4328,55 @@
     "latitude": 50.62857,
     "longitude": 3.084737,
     "description": ""
+  },
+  {
+    "nom": "Saint Sauveur",
+    "type": "A",
+    "SAT": "",
+    "accès": "",
+    "appareil": "IA1",
+    "latitude": 50.61503,
+    "longitude": 3.08983,
+    "description": "IA1 : demande à l'agent E pour manoeuvre de l'appareil, secours par S 5067-102 "
+  },
+  {
+    "nom": "Saint Sauveur",
+    "type": "A",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT IA1",
+    "latitude": 50.61503,
+    "longitude": 3.08983,
+    "description": ""
+  },
+  {
+    "nom": "Saint Sauveur",
+    "type": "A",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TC IA1",
+    "latitude": 50.61503,
+    "longitude": 3.08983,
+    "description": ""
+  },
+  {
+    "nom": "Saint Sauveur",
+    "type": "A",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TC IA1",
+    "latitude": 50.61503,
+    "longitude": 3.08983,
+    "description": ""
+  },
+  {
+    "nom": "Saint Sauveur",
+    "type": "A",
+    "SAT": "",
+    "accès": "",
+    "appareil": "B/IA1",
+    "latitude": 50.61503,
+    "longitude": 3.08983,
+    "description": ""
   }
 ]
