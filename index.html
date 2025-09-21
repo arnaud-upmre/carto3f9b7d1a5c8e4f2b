@@ -1389,7 +1389,15 @@ function showAppareil(app) {
   if (blocs.length > 0) {
     html += blocs.map((b,i)=> i===0 ? b : `<hr class="separator" />${b}`).join("");
   }
+  if (lieuCible) {
+    // Générer et afficher la fiche complète du poste/SAT/accès lié
+    const sauvegarde = html; // garder l’affichage appareil
+    showLieu(lieuCible);     // appelle la fonction qui construit la fiche poste
+    const fichePoste = document.getElementById("result").innerHTML;
 
+    // Recombine : appareil + fiche du poste
+    html = sauvegarde + "<hr class='separator' />" + fichePoste;
+  }
   result.innerHTML = html;
 }
 
