@@ -1474,6 +1474,26 @@
     "type": "SSP",
     "SAT": "SAT4",
     "accès": "",
+    "appareil": "TC IA2",
+    "latitude": 50.621925,
+    "longitude": 3.1108802,
+    "description": ""
+  },
+  {
+    "nom": "Fives",
+    "type": "SSP",
+    "SAT": "SAT4",
+    "accès": "",
+    "appareil": "TT IA2",
+    "latitude": 50.621925,
+    "longitude": 3.1108802,
+    "description": ""
+  },
+  {
+    "nom": "Fives",
+    "type": "SSP",
+    "SAT": "SAT4",
+    "accès": "",
     "appareil": "TC + TT de l’IA2",
     "latitude": 50.621925,
     "longitude": 3.1108802,
@@ -4174,7 +4194,27 @@
     "type": "A",
     "SAT": "",
     "accès": "",
-    "appareil": "IA + TT + TC",
+    "appareil": "IA1",
+    "latitude": 50.35516,
+    "longitude": 3.261817,
+    "description": "FSK"
+  },
+  {
+    "nom": "Somain",
+    "type": "A",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT IA1",
+    "latitude": 50.35516,
+    "longitude": 3.261817,
+    "description": "FSK"
+  },
+  {
+    "nom": "Somain",
+    "type": "A",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TC IA1",
     "latitude": 50.35516,
     "longitude": 3.261817,
     "description": "FSK"
