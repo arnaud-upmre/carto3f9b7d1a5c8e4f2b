@@ -1349,12 +1349,14 @@ function showAppareil(app) {
   let html = `<h2>
     💡 ${app.appareil} (${app.nom}${app.type ? ' ' + app.type : ''}${app.SAT ? ' / ' + app.SAT : ''})
   </h2>
-  
-<div style="text-align:center; margin-top:10px; margin-bottom:0.3rem;">
-  💡 Repérer l’appareil
-</div>
-<div class="inline-links pills-3" style="margin-bottom:1.5rem;">
-  <a href="${myMapsViewer(app.latitude, app.longitude)}">🛰️ Vue satellite</a>
+  <div style="text-align:center; margin-top:10px; margin-bottom:1.5rem;">
+  <span style="display:block; margin-bottom:6px; font-weight:600;">
+    💡 Repérer l’appareil
+  </span>
+  <a href="${myMapsViewer(app.latitude, app.longitude)}" 
+     style="display:inline-block; padding:6px 10px; border:1px solid #1a73e8; border-radius:10px; text-decoration:none; color:#1a73e8;">
+     🛰️ Vue satellite
+  </a>
 </div>`;
 
   const posteTrouvé = lieux.find(l => 
