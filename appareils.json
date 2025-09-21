@@ -2004,7 +2004,27 @@
     "type": "SSPA",
     "SAT": "SAT3",
     "accès": "",
-    "appareil": "IA1 + TTIA1 + TCIA1",
+    "appareil": "IA1",
+    "latitude": 50.7174073,
+    "longitude": 1.6124183,
+    "description": ""
+  },
+  {
+    "nom": "Hauteville",
+    "type": "SSPA",
+    "SAT": "SAT3",
+    "accès": "",
+    "appareil": "TT IA1",
+    "latitude": 50.7174073,
+    "longitude": 1.6124183,
+    "description": ""
+  },
+  {
+    "nom": "Hauteville",
+    "type": "SSPA",
+    "SAT": "SAT3",
+    "accès": "",
+    "appareil": "TC IA1",
     "latitude": 50.7174073,
     "longitude": 1.6124183,
     "description": ""
