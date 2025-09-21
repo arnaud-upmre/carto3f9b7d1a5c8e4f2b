@@ -33,6 +33,12 @@
    
   <style id="eale-intro-styles">
 
+    .rep-block.horizontal .inline-links {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
     #streetview-overlay {
   position: fixed;
   top: 0; left: 0;
@@ -616,12 +622,6 @@ main {
     color: #90caf9;
     border: 1px solid #90caf9;
   }
-}
-    .rep-block.horizontal {
-  flex-direction: row;          
-  justify-content: center;      
-  align-items: center;          
-  gap: 12px;                    
 }
 
 .rep-block.horizontal p {
@@ -1352,10 +1352,10 @@ function showAppareil(app) {
 
 html += `
   <div class="rep-block horizontal">
-    <p id="editable-rep-appareil">
+    <div class="inline-links pills-3">
       <span class="emoji">💡</span> Repérer l’appareil
-      <a href="${myMapsViewer(app.latitude, app.longitude)}" class="btn-primary">🛰️ Vue satellite</a>
-    </p>
+      <a href="${myMapsViewer(app.latitude, app.longitude)}">🛰️ Vue satellite</a>
+    </div>
   </div>`;
 
   const posteTrouvé = lieux.find(l => 
