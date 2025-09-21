@@ -623,9 +623,13 @@ main {
     border: 1px solid #90caf9;
   }
 }
-
-.rep-block.horizontal p {
-  margin: 0; 
+    
+.rep-block.horizontal.rep-appareil p {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  margin: 0;
   font-weight: 600;
 }
   
@@ -1351,11 +1355,11 @@ function showAppareil(app) {
   </h2>`;
 
 html += `
-  <div class="rep-block horizontal">
-    <div class="inline-links pills-3">
+  <div class="rep-block horizontal rep-appareil">
+    <p>
       <span class="emoji">💡</span> <strong>Repérer l’appareil :</strong>
       <a href="${myMapsViewer(app.latitude, app.longitude)}">🛰️ Vue satellite</a>
-    </div>
+    </p>
   </div>`;
 
   const posteTrouvé = lieux.find(l => 
