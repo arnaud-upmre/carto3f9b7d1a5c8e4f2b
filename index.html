@@ -1375,13 +1375,6 @@ function showAppareil(app) {
   });
 
   const lieuCible = accesTrouvé || posteTrouvé;
-  if (lieuCible) {
-    html += `
-      <div class="inline-links pills-3">
-        <a href="#" onclick='showLieu(${JSON.stringify(lieuCible)})'>🚗 Infos & itinéraire</a>
-      </div>
-    `;
-  }
 
   const blocs = [];
   if (app.description) blocs.push(`<p>${app.description}</p>`);
