@@ -261,58 +261,43 @@ if (pct > 100) pct = 100;
 progress.textContent = `${pct}%`;
   document.getElementById("progressbar-fill").style.width = ((i+1)/steps.length*100) + "%";
 
- if(i===10){
+// Recap = dernière étape de `steps`
+if (i === steps.length - 1) {
   const recap = $("recap");
   recap.innerHTML = "";
 
-  const data = [
-    { step: 0, label: "👤 Demandeur", value: $("demandeur").value },
-    { step: 1, label: "📌 Poste", value: $("poste").value + ( $("type").value ? " ("+$("type").value+")" : "" ) },
-    { step: 2, label: "📌 SAT", value: $("sat").value },
-    { step: 3, label: "💡 Appareil", value: $("appareil").value },
-    { step: 5, label: "📍 Localisation appareil", value: $("lien").value },
-    { step: 8, label: "📍 Localisation accès", value: $("accessValue").value==="oui" ? $("lienAccess").value : "" },
-    { step: 9, label: "📝 Notes", value: $("infos").value }
-  ];
+const data = [
+  { step: 0, label: "👤 Demandeur", value: $("demandeur").value },
+  { step: 1, label: "📌 Poste", value: $("poste").value + ( $("type").value ? " ("+$("type").value+")" : "" ) },
+  { step: 2, label: "📌 SAT", value: $("sat").value },
+  { step: 3, label: "💡 Appareil", value: $("appareil").value },
+  { step: 4, label: "📍 Localisation appareil", value: $("lien").value },
+  { step: 6, label: "📍 Localisation accès", value: $("accessValue").value==="oui" ? $("lienAccess").value : "" },
+  { step: 7, label: "📝 Notes", value: $("infos").value }
+];
 
   data.forEach(item=>{
     if(item.value && item.value.trim()!==""){
       const div = document.createElement("div");
-
       if(item.value.startsWith("http")){
         let url = item.value.trim();
         if (!/^https?:\/\//i.test(url)) url = "https://" + url;
-
         const span = document.createElement("span");
         span.textContent = item.label;
         div.appendChild(span);
-
         const link = document.createElement("a");
-        link.href = url; 
-        link.target = "_blank";
-        link.rel = "noopener";
+        link.href = url; link.target = "_blank"; link.rel = "noopener";
         link.textContent = " 🔎 Voir sur Google Maps";
-        link.style.marginLeft = "8px";
-        link.style.color = "#0b6cff";
-        link.style.textDecoration = "underline";
+        link.style.marginLeft = "8px"; link.style.color = "#0b6cff"; link.style.textDecoration = "underline";
         link.addEventListener("click", e => e.stopPropagation());
         div.appendChild(link);
       } else {
         div.textContent = `${item.label} : ${item.value}`;
       }
-
-      // ✅ Permet de revenir à l’étape correspondante
       div.style.cursor = "pointer";
-      div.style.margin = "6px 0";
-      div.style.padding = "6px";
-      div.style.border = "1px solid var(--border)";
-      div.style.borderRadius = "6px";
-      div.onclick = () => {
-        currentStep = item.step;
-        showStep(currentStep);
-        returnToRecap = true; 
-      };
-
+      div.style.margin = "6px 0"; div.style.padding = "6px";
+      div.style.border = "1px solid var(--border)"; div.style.borderRadius = "6px";
+      div.onclick = () => { currentStep = item.step; showStep(currentStep); returnToRecap = true; };
       recap.appendChild(div);
     }
   });
