@@ -1183,33 +1183,35 @@ map.on('click', function(e) {
   const lat = e.latlng.lat.toFixed(5);
   const lng = e.latlng.lng.toFixed(5);
 
+  const allText = `"latitude": ${lat},
+"longitude": ${lng},
+"poste_latitude": "${lat}",
+"poste_longitude": "${lng}"`;
+
+  const posteText = `"poste_latitude": "${lat}",
+"poste_longitude": "${lng}"`;
+
+  const accesText = `"latitude": ${lat},
+"longitude": ${lng}`;
+
   const popupContent = `
 <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;font-size:14px;min-width:220px;">
   <div style="font-weight:600; font-size:16px; margin-bottom:12px;">📍 Informations</div>
 
-  <pre style="margin:0; background:#f3f4f6; padding:8px; border-radius:6px; font-size:13px;">
-"latitude": ${lat},
-"longitude": ${lng},
-"poste_latitude": "${lat}",
-"poste_longitude": "${lng}"
-  </pre>
+  <pre style="margin:0; background:#f3f4f6; padding:8px; border-radius:6px; font-size:13px;">${allText}</pre>
 
   <div style="display:flex; flex-direction:column; gap:8px; margin-top:12px;">
-    <button onclick="navigator.clipboard.writeText(\`
-\"latitude\": ${lat},
-\"longitude\": ${lng},
-\"poste_latitude\": \"${lat}\",
-\"poste_longitude\": \"${lng}\`)" 
+    <button onclick="navigator.clipboard.writeText('${allText.replace(/\n/g, "\\n")}')" 
       style="padding:8px 12px; border:none; border-radius:6px; background:#007aff; color:white; cursor:pointer;">
       📋 Copier tout
     </button>
 
-    <button onclick="navigator.clipboard.writeText('\"poste_latitude\": \"${lat}\",\\n\"poste_longitude\": \"${lng}\"')" 
+    <button onclick="navigator.clipboard.writeText('${posteText.replace(/\n/g, "\\n")}')" 
       style="padding:8px 12px; border:none; border-radius:6px; background:#f59e0b; color:white; cursor:pointer;">
       🏢 Copier Poste
     </button>
 
-    <button onclick="navigator.clipboard.writeText('\"latitude\": ${lat},\\n\"longitude\": ${lng}')" 
+    <button onclick="navigator.clipboard.writeText('${accesText.replace(/\n/g, "\\n")}')" 
       style="padding:8px 12px; border:none; border-radius:6px; background:#3b82f6; color:white; cursor:pointer;">
       🚪 Copier Accès
     </button>
