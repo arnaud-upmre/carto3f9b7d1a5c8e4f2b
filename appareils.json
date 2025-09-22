@@ -560,6 +560,16 @@
     "description": ""
   },
   {
+    "nom": "Coulogne",
+    "type": "SP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT7233",
+    "latitude": 50.93469,
+    "longitude": 1.85835,
+    "description": "Support 103-47E + T3"
+  },
+  {
     "nom": "Curie",
     "type": "SSP",
     "SAT": "",
