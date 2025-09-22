@@ -504,9 +504,19 @@
     "type": "SP",
     "SAT": "",
     "accès": "",
-    "appareil": "IL4",
+    "appareil": "TSA2",
     "latitude": 50.93464,
     "longitude": 1.85831,
+    "description": ""
+  },
+  {
+    "nom": "Coulogne",
+    "type": "SP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "IL4",
+    "latitude": 50.93463,
+    "longitude": 1.85833,
     "description": ""
   },
   {
