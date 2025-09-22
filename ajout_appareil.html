@@ -16,26 +16,29 @@
     label{display:block;margin:12px 0 6px;font-weight:600}
     input,textarea{width:100%;padding:12px;font-size:16px;border:1px solid #d0d7de;border-radius:10px;min-height:44px}
     textarea{min-height:96px;resize:none}
-    .btn-row{display:flex;gap:12px;margin-top:18px}
-    .btn{flex:1;padding:12px;font-size:16px;border:none;border-radius:10px;cursor:pointer}
-    .btn.primary{background:#0b6cff;color:#fff}
-    .btn.secondary{background:#ccc}
-    .step{display:none}
-    .step.active{display:block}
-    #progress{margin-bottom:12px;text-align:center;color:#666}
-    #progressbar{width:100%;height:6px;background:#d0d7de;border-radius:4px;overflow:hidden;margin-bottom:8px}
-    #progressbar-fill{height:100%;width:0%;background:#0b6cff;transition:width .3s}
     .pill-group{display:flex;gap:10px;margin:12px 0}
     .pill{flex:1;text-align:center;padding:12px;border:1px solid #d0d7de;border-radius:999px;cursor:pointer}
     .pill.active{background:#0b6cff;color:#fff;border:1px solid #0b6cff}
     .pill.error{border:2px solid #c62828!important;background:#ffecec}
+    .btn-row{display:flex;gap:12px;margin-top:18px}
+    .btn{flex:1;padding:12px;font-size:16px;border:none;border-radius:10px;cursor:pointer}
+    .btn.primary{background:#0b6cff;color:#fff}
+    .btn.secondary{background:#ccc}
+    .step{display:none;animation:fade .3s ease}
+    .step.active{display:block}
+    @keyframes fade{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:translateX(0)}}
+    #progress{margin-bottom:12px;text-align:center;color:#666}
+    #progressbar{width:100%;height:6px;background:#d0d7de;border-radius:4px;overflow:hidden;margin-bottom:8px}
+    #progressbar-fill{height:100%;width:0%;background:#0b6cff;transition:width .3s}
+    /* ✅ Masquer le bouton Annuler uniquement à la confirmation */
+    #confirmationStep.active ~ #cancel-row {display:none;}
   </style>
 </head>
 <body>
   <h2>➕ Ajouter un appareil</h2>
   <div class="card">
     <div id="progressbar"><div id="progressbar-fill"></div></div>
-    <div id="progress">Étape 1/7</div>
+    <div id="progress">Étape 1/8</div>
 
     <form id="formAppareil" novalidate>
       <!-- Intro -->
@@ -92,7 +95,7 @@
       <div class="step">
         <label>🔗 Lien Google Maps de l’appareil :</label>
         <input id="lien" type="url" required placeholder="https://maps.app.goo.gl/…">
-        <div id="lienHelp" class="field-hint">⚠️ Lien requis</div>
+        <div id="lienHelp" class="field-hint">⚠️ Lien requis pour continuer</div>
         <div class="btn-row">
           <button type="button" class="btn secondary prev">⬅️ Retour</button>
           <button type="button" class="btn primary next">Suivant ➡️</button>
@@ -113,7 +116,7 @@
         </div>
       </div>
 
-      <!-- Étape 7 (si oui) -->
+      <!-- Étape 7 -->
       <div class="step" id="accessStep">
         <label>🔗 Lien Google Maps de l’accès :</label>
         <input id="lienAccess" type="url" placeholder="https://maps.app.goo.gl/…">
@@ -124,10 +127,15 @@
         </div>
       </div>
 
-      <!-- Notes -->
+      <!-- Étape 8 -->
       <div class="step">
-        <label>📝 Notes complémentaires :</label>
-        <textarea id="infos" placeholder="Accès, portail…"></textarea>
+        <p style="line-height:1.5">
+          🎉 Super, presque terminé !<br>
+          Vérifiez ci-dessous les informations saisies.<br>
+          Un détail à modifier ? Touchez la ligne correspondante.<br>
+          Sinon, envoyez votre contribution ✅
+        </p>
+        <div id="recap" style="margin:12px 0; font-size:15px; line-height:1.5"></div>
         <div class="btn-row">
           <button type="button" class="btn secondary prev">⬅️ Retour</button>
           <button type="submit" class="btn primary">📩 Envoyer</button>
@@ -138,21 +146,55 @@
       <div class="step" id="confirmationStep">
         <h3 style="text-align:center;margin:16px 0">✅ Merci ! Votre demande a bien été envoyée.</h3>
         <div class="btn-row">
-          <button type="button" class="btn secondary" onclick="window.location.href='index.html'">🏠 Retour</button>
-          <button type="button" class="btn primary" onclick="resetForm()">➕ Ajouter un autre</button>
+          <button type="button" class="btn secondary" onclick="window.location.href='index.html'">🏠 Retour à l’accueil</button>
+          <button type="button" class="btn primary" onclick="resetForm()">➕ Ajouter un autre appareil</button>
         </div>
+      </div>
+
+      <!-- Bouton annuler -->
+      <div id="cancel-row" class="btn-row" style="margin-top:12px">
+        <button type="button" class="btn secondary" onclick="window.location.href='index.html'">
+          ❌ Annuler et revenir à l’accueil
+        </button>
       </div>
     </form>
   </div>
 
 <script>
 let currentStep=0;
+let returnToRecap=false;
+
 const steps=document.querySelectorAll(".step:not(#introStep):not(#confirmationStep)");
 const progress=document.getElementById("progress");
+
 function showStep(i){
   steps.forEach((s,idx)=>s.classList.toggle("active",idx===i));
   progress.textContent=`Étape ${i+1}/${steps.length}`;
   document.getElementById("progressbar-fill").style.width=((i+1)/steps.length*100)+"%";
+
+  // recap
+  if(i===steps.length-1){
+    const recap=document.getElementById("recap");
+    recap.innerHTML="";
+    const data=[
+      {step:0,label:"👤 Demandeur",value:document.getElementById("demandeur").value},
+      {step:1,label:"📌 Poste",value:document.getElementById("poste").value+(document.getElementById("type").value?" ("+document.getElementById("type").value+")":"")},
+      {step:2,label:"📌 SAT",value:document.getElementById("sat").value},
+      {step:3,label:"💡 Appareil",value:document.getElementById("appareil").value},
+      {step:4,label:"📍 Lien appareil",value:document.getElementById("lien").value},
+      {step:5,label:"🚪 Accès",value:document.getElementById("accessValue").value==="oui"?document.getElementById("lienAccess").value:""},
+    ];
+    data.forEach(item=>{
+      if(item.value&&item.value.trim()!==""){
+        const div=document.createElement("div");
+        div.textContent=`${item.label} : ${item.value}`;
+        div.style.cursor="pointer";
+        div.style.margin="6px 0";div.style.padding="6px";div.style.border="1px solid #d0d7de";div.style.borderRadius="6px";
+        div.onclick=()=>{currentStep=item.step;showStep(currentStep);returnToRecap=true;};
+        recap.appendChild(div);
+      }
+    });
+  }
 }
 
 // navigation
@@ -160,43 +202,29 @@ document.querySelectorAll(".next").forEach(btn=>{
   btn.addEventListener("click",e=>{
     e.preventDefault();
     if(validateStep(currentStep)){
-      // si étape "accès routier"
-      if(currentStep===5){
-        if(document.getElementById("accessValue").value==="non"){
-          currentStep=steps.length-1; // sauter lien accès
-          showStep(currentStep);
-          return;
-        }
-      }
-      currentStep++; showStep(currentStep);
+      if(returnToRecap){returnToRecap=false;currentStep=steps.length-1;showStep(currentStep);return;}
+      if(currentStep===5&&document.getElementById("accessValue").value==="non"){currentStep=steps.length-1;showStep(currentStep);return;}
+      currentStep++;showStep(currentStep);
     }
   });
 });
 document.querySelectorAll(".prev").forEach(btn=>{
-  btn.addEventListener("click",e=>{
-    e.preventDefault();
-    if(currentStep>0){currentStep--;showStep(currentStep);}
-  });
+  btn.addEventListener("click",e=>{e.preventDefault();if(currentStep>0){currentStep--;showStep(currentStep);}});
 });
 
-// validation simple
+// validation
 function validateStep(i){
   const step=steps[i];
   const input=step.querySelector("input[required],input[type=url]");
   if(input){
-    if(!input.value.trim() || (input.type==="url" && !/^https?:\/\//i.test(input.value.trim()))){
-      input.classList.add("error");
-      return false;
+    if(!input.value.trim()||(input.type==="url"&&!/^https?:\/\//i.test(input.value.trim()))){
+      input.classList.add("error");return false;
     }
   }
   return true;
 }
-
-// correction en direct
 document.addEventListener("input",e=>{
-  if(e.target.matches("input.error, textarea.error")){
-    if(e.target.value.trim()!==""){e.target.classList.remove("error");}
-  }
+  if(e.target.matches("input.error,textarea.error")){if(e.target.value.trim()!==""){e.target.classList.remove("error");}}
 });
 
 // gestion pill
@@ -219,6 +247,8 @@ function resetForm(){
   progress.style.display="none";
   document.getElementById("progressbar").style.display="none";
   currentStep=0;
+  const savedDemandeur=localStorage.getItem("demandeur");
+  if(savedDemandeur)document.getElementById("demandeur").value=savedDemandeur;
 }
 
 // compteur + envoi
@@ -233,8 +263,6 @@ document.getElementById("formAppareil").onsubmit=e=>{
   data.append("appareil",document.getElementById("appareil").value.trim());
   data.append("localisation",document.getElementById("lien").value.trim());
   data.append("acces",document.getElementById("accessValue").value==="oui"?document.getElementById("lienAccess").value.trim():"");
-  data.append("notes",document.getElementById("infos").value.trim());
-
   fetch("https://script.google.com/macros/s/AKfycbz8lUhVMKOrRSdeNBeA0p4ZsQCNOesB0Y4DL27KAoHkHWS78hOqrW-t-9bC_azgN-mY/exec",{method:"POST",body:data})
   .then(r=>r.text()).then(()=>{
     fetch(COUNTER_URL+"?increment=true").catch(()=>{});
@@ -251,6 +279,16 @@ document.getElementById("startForm").addEventListener("click",()=>{
   progress.style.display="block";
   document.getElementById("progressbar").style.display="block";
   showStep(0);
+});
+
+// restore demandeur depuis localStorage
+document.addEventListener("DOMContentLoaded",()=>{
+  const savedDemandeur=localStorage.getItem("demandeur");
+  if(savedDemandeur){document.getElementById("demandeur").value=savedDemandeur;}
+  document.getElementById("demandeur").addEventListener("input",()=>{localStorage.setItem("demandeur",document.getElementById("demandeur").value.trim());});
+  const params=new URLSearchParams(window.location.search);
+  if(params.has("appareil"))document.getElementById("appareil").value=params.get("appareil").trim();
+  if(params.has("poste"))document.getElementById("poste").value=params.get("poste").trim();
 });
 </script>
 </body>
