@@ -246,7 +246,6 @@
 </div>
 </form>
 </div>
-
 <script>
 let currentStep=0;
 let returnToRecap = false;
@@ -256,91 +255,56 @@ const progress=document.getElementById("progress");
 
 function showStep(i){
   steps.forEach((s,idx)=>s.classList.toggle("active",idx===i));
-let pct = Math.round(((i+1) / (steps.length)) * 100);
-if (pct > 100) pct = 100; 
-progress.textContent = `${pct}%`;
+  let pct = Math.round(((i+1) / (steps.length)) * 100);
+  if (pct > 100) pct = 100; 
+  progress.textContent = `${pct}%`;
   document.getElementById("progressbar-fill").style.width = ((i+1)/steps.length*100) + "%";
-
-// Recap = dernière étape de `steps`
-if (i === steps.length - 1) {
-  const recap = $("recap");
-  recap.innerHTML = "";
-
-const data = [
-  { step: 0, label: "👤 Demandeur", value: $("demandeur").value },
-  { step: 1, label: "📌 Poste", value: $("poste").value + ( $("type").value ? " ("+$("type").value+")" : "" ) },
-  { step: 2, label: "📌 SAT", value: $("sat").value },
-  { step: 3, label: "💡 Appareil", value: $("appareil").value },
-  { step: 4, label: "📍 Localisation appareil", value: $("lien").value },
-  { step: 6, label: "📍 Localisation accès", value: $("accessValue").value==="oui" ? $("lienAccess").value : "" },
-  { step: 7, label: "📝 Notes", value: $("infos").value }
-];
-
-  data.forEach(item=>{
-    if(item.value && item.value.trim()!==""){
-      const div = document.createElement("div");
-      if(item.value.startsWith("http")){
-        let url = item.value.trim();
-        if (!/^https?:\/\//i.test(url)) url = "https://" + url;
-        const span = document.createElement("span");
-        span.textContent = item.label;
-        div.appendChild(span);
-        const link = document.createElement("a");
-        link.href = url; link.target = "_blank"; link.rel = "noopener";
-        link.textContent = " 🔎 Voir sur Google Maps";
-        link.style.marginLeft = "8px"; link.style.color = "#0b6cff"; link.style.textDecoration = "underline";
-        link.addEventListener("click", e => e.stopPropagation());
-        div.appendChild(link);
-      } else {
-        div.textContent = `${item.label} : ${item.value}`;
-      }
-      div.style.cursor = "pointer";
-      div.style.margin = "6px 0"; div.style.padding = "6px";
-      div.style.border = "1px solid var(--border)"; div.style.borderRadius = "6px";
-      div.onclick = () => { currentStep = item.step; showStep(currentStep); returnToRecap = true; };
-      recap.appendChild(div);
-    }
-  });
 }
-  }
 
 document.querySelectorAll(".next").forEach(btn=>{
   btn.addEventListener("click", e=>{
     e.preventDefault();
-    if (validateStep(currentStep)) {
-      if (returnToRecap) {
-        returnToRecap = false;
-        currentStep = steps.length - 1; 
+    if (!validateStep(currentStep)) return;
+
+    if (returnToRecap) {
+      returnToRecap = false;
+      currentStep = steps.length - 1; 
+      showStep(currentStep);
+      return;
+    }
+
+    // Étape Accès (index 5)
+    if (currentStep === 5) {
+      if (!$("accessValue").value) {
+        document.querySelectorAll("#pill-acces-oui, #pill-acces-non")
+          .forEach(p => p.classList.add("error"));
+        return;
+      }
+      if ($("accessValue").value === "non") {
+        $("lienAccess").value = "";
+        markError($("lienAccess"), $("lienAccessHelp"), false);
+        currentStep = 7; // saute lien accès et va aux Notes
         showStep(currentStep);
         return;
       }
-if (currentStep === 6) {
-  if (!$("accessValue").value) {
-    document.querySelectorAll("#pill-acces-oui, #pill-acces-non").forEach(p => p.classList.add("error"));
-    return; 
-  }
-  if ($("accessValue").value === "non") {
-    $("lienAccess").value = "";
-    markError($("lienAccess"), $("lienAccessHelp"), false);
-    currentStep = 7; // saute Étape 8 et va direct aux Notes
-    showStep(currentStep);
-    return;
-  }
-  // si "oui" → continuer normalement vers l’étape 8
-}
-      if (currentStep === 5) {
-        const ok = isValidUrl($("lien").value);
-        markError($("lien"), $("lienHelp"), !ok);
-        if (!ok) return;
-      }
-      if (currentStep === 8 && $("accessValue").value === "oui") {
-        const ok = isValidUrl($("lienAccess").value);
-        markError($("lienAccess"), $("lienAccessHelp"), !ok);
-        if (!ok) return;
-      }
-      currentStep++;
-      showStep(currentStep);
     }
+
+    // Vérif Lien appareil (index 4)
+    if (currentStep === 4) {
+      const ok = isValidUrl($("lien").value);
+      markError($("lien"), $("lienHelp"), !ok);
+      if (!ok) return;
+    }
+
+    // Vérif Lien accès (index 6 si oui)
+    if (currentStep === 6 && $("accessValue").value === "oui") {
+      const ok = isValidUrl($("lienAccess").value);
+      markError($("lienAccess"), $("lienAccessHelp"), !ok);
+      if (!ok) return;
+    }
+
+    currentStep++;
+    showStep(currentStep);
   });
 });
 
@@ -354,8 +318,8 @@ document.querySelectorAll(".prev").forEach(btn=>{
       return;
     }
     if(currentStep>0){
-      if(currentStep === 9 && $("accessValue").value === "non"){
-        currentStep = 6; 
+      if(currentStep === 7 && $("accessValue").value === "non"){
+        currentStep = 5; // revenir à Oui/Non
         showStep(currentStep);
         return;
       }
@@ -365,24 +329,15 @@ document.querySelectorAll(".prev").forEach(btn=>{
   });
 });
 
-document.addEventListener("input", (e)=>{
-  if(e.target.classList.contains("error")){
-    if(e.target.value.trim() !== ""){
-      e.target.classList.remove("error");
+function validateStep(i){
+  // Étape Accès (index 5)
+  if (i === 5) {
+    if (!$("accessValue").value) {
+      document.querySelectorAll("#pill-acces-oui, #pill-acces-non")
+        .forEach(p => p.classList.add("error"));
+      return false;
     }
   }
-});
-
-function validateStep(i){
-  // Étape Accès (step 6 dans ton code actuel)
-// Étape Accès (step 6)
-if (i === 6) {
-  if (!$("accessValue").value) {
-    document.querySelectorAll("#pill-acces-oui, #pill-acces-non").forEach(p => p.classList.add("error"));
-    return false; // bloque seulement si rien n’est choisi
-  }
-}
-
   const step = steps[i];
   const input = step.querySelector("input[required],textarea[required]");
   if (input && !input.value.trim()) {
@@ -395,8 +350,9 @@ if (i === 6) {
 function $(id){return document.getElementById(id);}
 function showHint(el, show){ el.classList.toggle("show", !!show); }
 function markError(input, helpEl, on){
+  if (!input) return;
   input.classList.toggle("error", !!on);
-  showHint(helpEl, !!on);
+  if (helpEl) showHint(helpEl, !!on);
 }
 function isValidUrl(str){return /^https?:\/\/.+/i.test((str||"").trim());}
 
@@ -404,142 +360,14 @@ $("pill-acces-oui").onclick=()=>{
   $("accessValue").value="oui";
   $("pill-acces-oui").classList.add("active");
   $("pill-acces-non").classList.remove("active");
-  markError($("lienAccess"), $("lienAccessHelp"), false);
   document.querySelectorAll("#pill-acces-oui, #pill-acces-non").forEach(p=>p.classList.remove("error"));
 };
-
 $("pill-acces-non").onclick=()=>{
   $("accessValue").value="non";
   $("pill-acces-non").classList.add("active");
   $("pill-acces-oui").classList.remove("active");
   document.querySelectorAll("#pill-acces-oui, #pill-acces-non").forEach(p=>p.classList.remove("error"));
 };
-
-
-$("lien").addEventListener("input", ()=>{
-  const ok = isValidUrl($("lien").value);
-  markError($("lien"), $("lienHelp"), !ok);
-});
-
-$("lienAccess").addEventListener("input", ()=>{
-  const ok = isValidUrl($("lienAccess").value);
-  markError($("lienAccess"), $("lienAccessHelp"), !ok && $("accessValue").value==="oui");
-});
-
-const COUNTER_URL = "https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec";
-
-  // ✅ Sauvegarde automatique du champ "demandeur"
-$("demandeur").addEventListener("input", () => {
-  localStorage.setItem("demandeur", $("demandeur").value.trim());
-});
-
-function resetForm(){
-  $("formAppareil").reset();
-  currentStep = 0;
-
-  const conf = document.getElementById("confirmationStep");
-  conf.classList.remove("active");
-  conf.style.display = ""; 
-
-  document.getElementById("introStep").style.display = "none";
-  document.getElementById("progress").style.display = "block";
-  document.getElementById("progressbar").style.display = "block";
-
-  showStep(currentStep);
-
-  const savedDemandeur = localStorage.getItem("demandeur");
-  if(savedDemandeur){
-    $("demandeur").value = savedDemandeur;
-  }
-}
-
-
-$("formAppareil").onsubmit = e => {
-  e.preventDefault();
-
-  let demandeur = $("demandeur").value.trim();
-  let poste = $("poste").value.trim();
-  let appareil = $("appareil").value.trim();
-  let infos = $("infos").value.trim();
-
-  let coordAppareil = "", coordAcces = "";
-
-  if (!isValidUrl($("lien").value)) {
-    markError($("lien"), $("lienHelp"), true);
-    return;
-  }
-  coordAppareil = $("lien").value;
-
-  if ($("accessValue").value === "oui") {
-    let lienAcces = $("lienAccess").value.trim();
-    if (!isValidUrl(lienAcces)) {
-      markError($("lienAccess"), $("lienAccessHelp"), true);
-      return;
-    }
-    coordAcces = lienAcces;
-  }
-
-  const formData = new URLSearchParams();
-  formData.append("demandeur", demandeur);
-  formData.append("poste", poste);
-  formData.append("type", $("type").value.trim());
-  formData.append("sat", $("sat").value.trim());
-  formData.append("appareil", appareil);
-  formData.append("localisation", coordAppareil);
-  formData.append("acces", coordAcces);
-  formData.append("notes", infos);
-
-  const submitBtn = document.querySelector('.btn.primary[type="submit"]');
-  const oldLabel = submitBtn.textContent;
-  submitBtn.disabled = true;
-  submitBtn.textContent = "⏳ Envoi en cours…";
-
-  fetch("https://script.google.com/macros/s/AKfycbz8lUhVMKOrRSdeNBeA0p4ZsQCNOesB0Y4DL27KAoHkHWS78hOqrW-t-9bC_azgN-mY/exec", {method:"POST", body:formData})
-    .then(r=>r.text())
-    .then(()=>{
-      fetch(COUNTER_URL+"?increment=true").catch(()=>{});
-      steps.forEach(s=>s.classList.remove("active"));
-      document.getElementById("confirmationStep").classList.add("active");
-      document.getElementById("confirmationStep").style.display = "block";
-      document.getElementById("progress").style.display = "none";
-      document.getElementById("progressbar").style.display = "none";
-    })
-    .catch(err=>{
-      console.error("Erreur d’envoi", err);
-      markError(submitBtn, null, true);
-    })
-    .finally(()=>{
-      submitBtn.disabled = false;
-      submitBtn.textContent = oldLabel;
-    });
-};
-
-steps.forEach(s => s.classList.remove("active"));
-
-  // Pré-remplissage du champ appareil depuis l'URL
-const urlParams = new URLSearchParams(window.location.search);
-if (urlParams.has("appareil")) {
-  $("appareil").value = urlParams.get("appareil");
-  $("appareil").setAttribute("readonly", "true");
-}
-  
-document.getElementById("introStep").classList.add("active");
-progress.style.display = "none"; 
-document.getElementById("progressbar").style.display = "none";
-
-  // ✅ Remplir automatiquement le champ "demandeur" si déjà enregistré
-const savedDemandeur = localStorage.getItem("demandeur");
-if (savedDemandeur) {
-  $("demandeur").value = savedDemandeur;
-}
-
-document.getElementById("startForm").addEventListener("click", () => {
-  document.getElementById("introStep").style.display = "none";
-  progress.style.display = "block";
-  document.getElementById("progressbar").style.display = "block";
-  showStep(0); 
-});
-
 </script>
 </body>
 </html>
