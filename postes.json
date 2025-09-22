@@ -921,6 +921,23 @@
   {
     "nom": "Coulogne",
     "type": "SP",
+    "SAT": "SAT1",
+    "accès": "I5429",
+    "latitude": 50.931910,
+    "longitude": 1.862499,
+    "description": "Alim du SAT1 dans le poste",
+    "rss": "A",
+    "contact": "",
+    "portail": "Clé 590",
+    "lignes": "LILLE à LES FONTINETTES",
+    "numero_ligne": 295000,
+    "pk": "",
+    "poste_latitude": "50.93227",
+    "poste_longitude": "1.86169"
+  },
+  {
+    "nom": "Coulogne",
+    "type": "SP",
     "SAT": "SAT2",
     "accès": "",
     "latitude": 50.93525,
