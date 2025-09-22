@@ -490,6 +490,26 @@
     "description": ""
   },
   {
+    "nom": "Coulogne",
+    "type": "SP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "IL3",
+    "latitude": 50.93460,
+    "longitude": 1.85821,
+    "description": "Bipolaire"
+  },
+  {
+    "nom": "Coulogne",
+    "type": "SP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "IL1",
+    "latitude": 50.93461,
+    "longitude": 1.8583,
+    "description": ""
+  },
+  {
     "nom": "Curie",
     "type": "SSP",
     "SAT": "",
