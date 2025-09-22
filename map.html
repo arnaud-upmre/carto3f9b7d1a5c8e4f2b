@@ -1149,14 +1149,16 @@ document.getElementById("video-close").onclick = () => {
   }).join("");
 }
 
-map.on('mousedown', function(e) {
+let activeEditPopup = null; // référence au popup édition actif
+
+// --- Clic simple sur la carte en mode édition ---
+map.on('click', function(e) {
   if (!editMode) return; // pas activé → rien
 
-  holdTimeout = setTimeout(() => {
-    const lat = e.latlng.lat.toFixed(5);
-    const lng = e.latlng.lng.toFixed(5);
+  const lat = e.latlng.lat.toFixed(5);
+  const lng = e.latlng.lng.toFixed(5);
 
-    const popupContent = `
+  const popupContent = `
 <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;font-size:14px;min-width:220px;">
   <div style="font-weight:600; font-size:16px; margin-bottom:12px;">📍 Informations</div>
 
@@ -1190,13 +1192,16 @@ map.on('mousedown', function(e) {
 </div>
 `;
 
-    L.popup().setLatLng(e.latlng).setContent(popupContent).openOn(map);
-  }, 1000); // 1000ms = 1 seconde
-});
+  // Fermer l'ancien popup s'il existe
+  if (activeEditPopup) {
+    map.closePopup(activeEditPopup);
+  }
 
-// Si on relâche avant 1s → annule
-map.on('mouseup', function() {
-  clearTimeout(holdTimeout);
+  // Créer un nouveau popup
+  activeEditPopup = L.popup({ autoClose: false, closeOnClick: false })
+    .setLatLng(e.latlng)
+    .setContent(popupContent)
+    .openOn(map);
 });
     
 </script>
