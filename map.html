@@ -335,7 +335,13 @@ document.body.appendChild(editIcon);
 
 
 document.addEventListener("keydown", function(e) {
-  if (e.ctrlKey && e.altKey && e.key.toLowerCase() === "e") {
+if (
+  e.key.toLowerCase() === "e" &&
+  (
+    (e.ctrlKey && e.altKey) ||   
+    (e.metaKey && e.altKey)     
+  )
+) {
     editMode = !editMode;
 
     editBanner.textContent = editMode ? "✏️ Mode édition activé" : "❌ Mode édition désactivé";
