@@ -402,6 +402,26 @@
   {
     "nom": "Coulogne",
     "type": "SP",
+    "SAT": "SAT1",
+    "accès": "",
+    "appareil": "I5428",
+    "latitude": 50.932211,
+    "longitude": 1.861803,
+    "description": "Bipolaire - support 103-26A"
+  },
+  {
+    "nom": "Coulogne",
+    "type": "SP",
+    "SAT": "SAT1",
+    "accès": "",
+    "appareil": "I5429",
+    "latitude": 50.931910,
+    "longitude": 1.862499,
+    "description": "Bipolaire - support 103-17A"
+  },
+  {
+    "nom": "Coulogne",
+    "type": "SP",
     "SAT": "SAT2",
     "accès": "",
     "appareil": "I7229",
