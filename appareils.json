@@ -200,6 +200,16 @@
     "description": ""
   },
   {
+    "nom": "Bif coulogne",
+    "type": "L",
+    "SAT": "",
+    "accès": "",
+    "appareil": "S7233-7250",
+    "latitude": 50.935040,
+    "longitude": 1.857725,
+    "description": "Support 103-51B"
+  },
+  {
     "nom": "Bif puyt houck ouest",
     "type": "L",
     "SAT": "",
@@ -535,8 +545,8 @@
     "SAT": "",
     "accès": "",
     "appareil": "TSA1",
-    "latitude": 50.93457,
-    "longitude": 1.85842,
+    "latitude": 50.93458,
+    "longitude": 1.85844,
     "description": ""
   },
   {
