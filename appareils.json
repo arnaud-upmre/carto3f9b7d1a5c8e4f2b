@@ -536,7 +536,7 @@
     "accès": "",
     "appareil": "TSA1",
     "latitude": 50.93458,
-    "longitude": 1.85844,
+    "longitude": 1.85843,
     "description": ""
   },
   {
@@ -588,6 +588,26 @@
     "latitude": 50.93467,
     "longitude": 1.85839,
     "description": "Support 103-47D + T4"
+  },
+  {
+    "nom": "Coulogne",
+    "type": "SP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT5428",
+    "latitude": 50.93461,
+    "longitude": 1.8585,
+    "description": "Support 103-47C + T2"
+  },
+  {
+    "nom": "Coulogne",
+    "type": "SP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT5429",
+    "latitude": 50.93459,
+    "longitude": 1.85854,
+    "description": "Support 103-47B + T1"
   },
   {
     "nom": "Curie",
