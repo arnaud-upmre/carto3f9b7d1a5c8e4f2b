@@ -407,7 +407,7 @@
     "appareil": "I7229",
     "latitude": 50.935767,
     "longitude": 1.8496034,
-    "description": ""
+    "description": "Support 292 8A"
   },
   {
     "nom": "Coulogne",
@@ -417,7 +417,7 @@
     "appareil": "I7228",
     "latitude": 50.935232,
     "longitude": 1.8495269,
-    "description": ""
+    "description": "Support 292 11YB"
   },
   {
     "nom": "Coulogne",
@@ -427,7 +427,17 @@
     "appareil": "I7230",
     "latitude": 50.9355599,
     "longitude": 1.8500969,
-    "description": ""
+    "description": "Support 292 5YB"
+  },
+  {
+    "nom": "Coulogne",
+    "type": "SP",
+    "SAT": "SAT3",
+    "accès": "",
+    "appareil": "TT7230",
+    "latitude": 50.9355599,
+    "longitude": 1.8500969,
+    "description": "Support 292 5YB - remplacement du TT possible avec nacelle"
   },
   {
     "nom": "Coulogne",
