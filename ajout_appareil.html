@@ -426,6 +426,10 @@ $("lienAccess").addEventListener("input", ()=>{
 
 const COUNTER_URL = "https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec";
 
+  // ✅ Sauvegarde automatique du champ "demandeur"
+$("demandeur").addEventListener("input", () => {
+  localStorage.setItem("demandeur", $("demandeur").value.trim());
+});
 
 function resetForm(){
   $("formAppareil").reset();
@@ -521,6 +525,12 @@ document.getElementById("introStep").classList.add("active");
 progress.style.display = "none"; 
 document.getElementById("progressbar").style.display = "none";
 
+  // ✅ Remplir automatiquement le champ "demandeur" si déjà enregistré
+const savedDemandeur = localStorage.getItem("demandeur");
+if (savedDemandeur) {
+  $("demandeur").value = savedDemandeur;
+}
+
 document.getElementById("startForm").addEventListener("click", () => {
   document.getElementById("introStep").style.display = "none";
   progress.style.display = "block";
@@ -528,13 +538,6 @@ document.getElementById("startForm").addEventListener("click", () => {
   showStep(0); 
 });
 
-document.addEventListener("input", (e)=>{
-  if (e.target.classList.contains("error")) {
-    if (e.target.value.trim() !== "") {
-      e.target.classList.remove("error");
-    }
-  }
-});
 </script>
 </body>
 </html>
