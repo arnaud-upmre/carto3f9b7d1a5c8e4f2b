@@ -60,25 +60,25 @@ input.error{border:2px solid #c62828!important;background:#ffecec}
   border: 2px solid #c62828 !important;
   background: #ffecec;
 }
-    /* ✅ L'état actif doit écraser l'état erreur */
+
 .pill.active {
   background: var(--accent) !important;
   color: var(--accent-ink) !important;
   border: 1px solid var(--accent) !important;
 }
-    /* 🔧 Amélioration lisibilité en dark mode */
+    
 @media (prefers-color-scheme: dark) {
   .pill.error {
-    border: 2px solid #ff6b6b !important;   /* rouge vif */
-    background: rgba(198, 40, 40, 0.25);    /* rouge transparent */
-    color: #fff;                            /* texte blanc */
+    border: 2px solid #ff6b6b !important;   
+    background: rgba(198, 40, 40, 0.25);   
+    color: #fff;                          
   }
 
   input.error,
   textarea.error {
     border: 2px solid #ff6b6b !important;
-    background: rgba(198, 40, 40, 0.25);    /* même fond que les pills */
-    color: #fff;                            /* texte blanc */
+    background: rgba(198, 40, 40, 0.25);    
+    color: #fff;                           
   }
 }
     
@@ -321,7 +321,7 @@ Remplir uniquement si l’appareil dépend d’un SAT
   </div>
 </div>
 
-<!-- ✅ Bouton Annuler replacé à l’intérieur du form -->
+
 <div id="cancel-row" class="btn-row" style="margin-top:12px">
   <button type="button" class="btn secondary" onclick="window.location.href='index.html'">
     ❌ Annuler et revenir à l’accueil
@@ -333,8 +333,7 @@ Remplir uniquement si l’appareil dépend d’un SAT
 <script>
 let currentStep=0;
   let returnToRecap = false;
-  // Coordonnées par défaut pour centrer la carte (Hazebrouck)
-// ⚠️ Ne seront PAS enregistrées tant que l’utilisateur ne clique pas sur Localiser
+
 const HAZE = [50.72384, 2.54924];
 const steps=document.querySelectorAll(".step:not(#introStep):not(#confirmationStep)");
 const progress=document.getElementById("progress");
@@ -344,14 +343,13 @@ function showStep(i){
 progress.textContent = `${pct}%`;
   document.getElementById("progressbar-fill").style.width = ((i+1)/steps.length*100) + "%";
 
-  // 🔧 Initialisation + redessin des cartes Leaflet
-  if(i===5){ // étape 6 = carte appareil
+  if(i===5){ 
   if(!mapDevice){
-    startLocDevice(); // initialise la carte si pas déjà fait
+    startLocDevice(); 
   }
   setTimeout(() => mapDevice && mapDevice.invalidateSize(), 300);
 
-  // 🔥 Relance localisation précise dès qu’on arrive sur la carte
+
   if (navigator.geolocation && $("presentValue").value === "oui") {
     navigator.geolocation.getCurrentPosition(
       p => {
@@ -364,7 +362,7 @@ progress.textContent = `${pct}%`;
     );
   }
 }
-if(i===8){ // étape 9 = détails accès (carte/lien)
+if(i===8){ 
   const m = $("accessMethod").value;
   toggle($("mapAccessWrap"), m === "gps");
   toggle($("lienAccessField"), m === "lien");
@@ -375,7 +373,6 @@ if(i===8){ // étape 9 = détails accès (carte/lien)
     }
     requestAnimationFrame(()=> mapAccess && mapAccess.invalidateSize());
 
-    // 🔥 Relance localisation précise à l'ouverture
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         p => {
@@ -390,7 +387,6 @@ if(i===8){ // étape 9 = détails accès (carte/lien)
   }
 }
 
-  // Étape 10 = affichage du récapitulatif
   if(i===10){
     const recap = $("recap");
     recap.innerHTML = "";
@@ -410,7 +406,6 @@ if(i===8){ // étape 9 = détails accès (carte/lien)
   if(item.value && item.value.trim()!==""){
     const div = document.createElement("div");
 
- // Si coordonnées GPS → texte simplifié + lien
 if(item.value.includes(",") && !item.value.startsWith("http")){
   const [lat, lon] = item.value.split(",");
   const span = document.createElement("span");
@@ -428,11 +423,9 @@ if(item.value.includes(",") && !item.value.startsWith("http")){
   link.addEventListener("click", e => e.stopPropagation());
   div.appendChild(link);
 
-// Si lien Google Maps → texte simplifié + lien
 } else if(item.value.startsWith("http")){
   let url = item.value.trim();
 
-  // 👉 Si l'utilisateur a oublié https:// on l'ajoute
   if (!/^https?:\/\//i.test(url)) {
     url = "https://" + url;
   }
@@ -442,7 +435,7 @@ if(item.value.includes(",") && !item.value.startsWith("http")){
   div.appendChild(span);
 
   const link = document.createElement("a");
-  link.href = url; // on garde l'URL telle quelle
+  link.href = url; 
   link.target = "_blank";
   link.rel = "noopener";
   link.textContent = " 🔎 Voir sur Google Maps";
@@ -452,7 +445,6 @@ if(item.value.includes(",") && !item.value.startsWith("http")){
   link.addEventListener("click", e => e.stopPropagation());
   div.appendChild(link);
 
-// Sinon texte normal
 } else {
   div.textContent = `${item.label} : ${item.value}`;
 }
@@ -465,7 +457,7 @@ if(item.value.includes(",") && !item.value.startsWith("http")){
    div.onclick = () => {
   currentStep = item.step;
   showStep(currentStep);
-  returnToRecap = true; // ✅ on note qu’on vient du récap
+  returnToRecap = true; 
 };
     recap.appendChild(div);
   }
@@ -477,27 +469,25 @@ document.querySelectorAll(".next").forEach(btn=>{
   btn.addEventListener("click", e=>{
     e.preventDefault();
     if (validateStep(currentStep)) {
-      // ✅ Si on vient du récap, retour direct au récap
+
 if (returnToRecap) {
   returnToRecap = false;
-  currentStep = steps.length - 1; // dernière étape = récap
+  currentStep = steps.length - 1; 
   showStep(currentStep);
   return;
 }
 
-      // Étape 5 (localiser l’appareil) → obligatoire
       if (currentStep === 4 && !$("presentValue").value) {
         document.querySelectorAll("#pill-oui, #pill-non").forEach(p => p.classList.add("error"));
-        return; // empêche d’avancer
+        return; 
       }
 
-      // Étape 7 (accès distinct) → obligatoire
       if (currentStep === 6 && !$("accessValue").value) {
         document.querySelectorAll("#pill-acces-oui, #pill-acces-non").forEach(p => p.classList.add("error"));
-        return; // empêche d’avancer
+        return; 
       }
 
-      // Cas particulier étape 7 (si Non → on saute directement aux notes)
+
       if (currentStep === 6) {
         if ($("accessValue").value === "non") {
           currentStep = 9; 
@@ -506,23 +496,20 @@ if (returnToRecap) {
         }
       }
 
-      // Étape 8 = choix méthode d’accès
       if (currentStep === 7 && $("accessValue").value === "oui") {
         if (!$("accessMethod").value) {
-          // 👉 plus d'alert(), on marque les boutons en rouge
+       
           document.querySelectorAll("#pill-access-gps, #pill-access-lien").forEach(p => p.classList.add("error"));
           return;
         }
       }
 
-      // Étape 6 => appareil via LIEN
       if (currentStep === 5 && $("presentValue").value === "non") {
         const ok = isValidUrl($("lien").value);
         markError($("lien"), $("lienHelp"), !ok);
         if (!ok) return;
       }
 
-      // Étape 6 => appareil via GPS
       if (currentStep === 5 && $("presentValue").value === "oui") {
         if (!DEVICE_CONFIRMED || !$("latDevice").value || !$("lonDevice").value) {
           $("mapDeviceWrap").classList.add("error");
@@ -532,14 +519,12 @@ if (returnToRecap) {
         }
       }
 
-      // Étape 9 => accès via LIEN
       if (currentStep === 8 && $("accessValue").value === "oui" && $("accessMethod").value === "lien") {
         const ok = isValidUrl($("lienAccess").value);
         markError($("lienAccess"), $("lienAccessHelp"), !ok);
         if (!ok) return;
       }
 
-      // Étape 9 => accès via GPS
       if (currentStep === 8 && $("accessValue").value === "oui" && $("accessMethod").value === "gps") {
         if (!ACCESS_CONFIRMED || !$("coordsAccessDisplay").textContent.includes(",")) {
           $("mapAccessWrap").classList.add("error");
@@ -549,7 +534,7 @@ if (returnToRecap) {
         }
       }
 
-           // 👉 si tout est ok → on avance
+
       currentStep++;
       showStep(currentStep);
     }
@@ -560,18 +545,16 @@ document.querySelectorAll(".prev").forEach(btn=>{
   btn.addEventListener("click", e=>{
     e.preventDefault();
 
-    // ✅ Si on vient du récap, retour direct au récap
     if (returnToRecap) {
       returnToRecap = false;
-      currentStep = steps.length - 1; // dernière étape = récap
+      currentStep = steps.length - 1; 
       showStep(currentStep);
       return;
     }
 
     if(currentStep>0){
-      // 🔧 Cas particulier : retour depuis Notes (index 9) avec accès = non
       if(currentStep === 9 && $("accessValue").value === "non"){
-        currentStep = 6; // retour direct à l’étape 7
+        currentStep = 6; 
         showStep(currentStep);
         return;
       }
@@ -589,7 +572,7 @@ function validateStep(i){
   }
   return true;
 }
-  // 🔧 Retirer le rouge dès que l'utilisateur tape quelque chose
+
 document.addEventListener("input", (e)=>{
   if(e.target.matches("input.error, textarea.error")){
     if(e.target.value.trim() !== ""){
@@ -598,7 +581,6 @@ document.addEventListener("input", (e)=>{
   }
 });
 
-// GPS / lien logique simplifiée
 function $(id){return document.getElementById(id);}
 function toggle(el,show){el.style.display=show?"block":"none";}
   function showHint(el, show){ 
@@ -615,7 +597,6 @@ $("pill-oui").onclick = () => {
   toggle($("mapDeviceWrap"), 1);
   toggle($("lienField"), 0);
 
-  // 👇 redimensionner la carte si déjà créée
   setTimeout(() => mapDevice && mapDevice.invalidateSize(), 300);
   markError($("lien"), $("lienHelp"), false);
   document.querySelectorAll("#pill-oui, #pill-non").forEach(p => p.classList.remove("error"));
@@ -626,7 +607,6 @@ $("pill-oui").onclick = () => {
   $("coordsDeviceDisplay").style.display = "none";
   $("mapDeviceWrap").classList.remove("error");
 
-  // 🔥 Localisation rapide dès le clic
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
       p => {
@@ -647,7 +627,6 @@ $("pill-non").onclick = () => {
   toggle($("mapDeviceWrap"), 0);
   toggle($("lienField"), 1);
 
-  // 🔒 masquer coordonnées + vider lat/lon + reset état
   $("coordsDeviceDisplay").style.display = "none";
   $("latDevice").value = "";
   $("lonDevice").value = "";
@@ -656,7 +635,6 @@ $("pill-non").onclick = () => {
 
   document.querySelectorAll("#pill-oui, #pill-non").forEach(p => p.classList.remove("error"));
 
-  // 👉 confort : focus sans scroll + sélectionner le texte existant
   setTimeout(() => { 
     $("lien").focus({ preventScroll:true }); 
     $("lien").select(); 
@@ -669,7 +647,6 @@ $("pill-acces-oui").onclick=()=>{
   $("pill-acces-non").classList.remove("active");
   toggle($("mapAccessWrap"),1);
 
-  // 👇 ajout
   setTimeout(()=>mapAccess && mapAccess.invalidateSize(),300);
   markError($("lienAccess"), $("lienAccessHelp"), false);
   document.querySelectorAll("#pill-acces-oui, #pill-acces-non").forEach(p=>p.classList.remove("error"));
@@ -679,18 +656,17 @@ $("pill-acces-non").onclick=()=>{
   $("accessValue").value="non";
   $("pill-acces-non").classList.add("active");
   $("pill-acces-oui").classList.remove("active");
-  toggle($("mapAccessWrap"),0); // cache la carte
+  toggle($("mapAccessWrap"),0); 
   document.querySelectorAll("#pill-acces-oui, #pill-acces-non").forEach(p=>p.classList.remove("error"));
 };
 
-  // --- Étape 8 (choix méthode d’accès) ---
 $("pill-access-gps").onclick = () => {
   $("accessMethod").value = "gps";
   $("pill-access-gps").classList.add("active");
   $("pill-access-lien").classList.remove("active");
-    // ✅ Retirer l’état rouge des deux boutons
+  
   document.querySelectorAll("#pill-access-gps, #pill-access-lien").forEach(p => p.classList.remove("error"));
-  // On prépare l'étape suivante : afficher carte, cacher lien
+
   toggle($("mapAccessWrap"), 1);
   toggle($("lienAccessField"), 0);
   setTimeout(()=>mapAccess && mapAccess.invalidateSize(),300);
@@ -700,7 +676,7 @@ $("pill-access-gps").onclick = () => {
   $("coordsAccessDisplay").style.display = "none";
   $("mapAccessWrap").classList.remove("error");
 
-  // 🔥 Localisation rapide dès le clic
+
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
       p => {
@@ -719,19 +695,17 @@ $("pill-access-lien").onclick = () => {
   $("accessMethod").value = "lien";
   $("pill-access-lien").classList.add("active");
   $("pill-access-gps").classList.remove("active");
-    // ✅ Retirer l’état rouge des deux boutons
+
   document.querySelectorAll("#pill-access-gps, #pill-access-lien").forEach(p => p.classList.remove("error"));
   toggle($("mapAccessWrap"), 0);
   toggle($("lienAccessField"), 1);
 
-  // 🔒 masquer l’affichage des coordonnées d’accès
   $("coordsAccessDisplay").style.display = "none";
 
   markError($("lienAccess"), $("lienAccessHelp"), false);
   ACCESS_CONFIRMED = false;
   $("mapAccessWrap").classList.remove("error");
 
-  // 👉 confort : focus sans scroll + sélectionner le texte existant
   setTimeout(() => { 
     $("lienAccess").focus({ preventScroll:true }); 
     $("lienAccess").select(); 
@@ -747,13 +721,41 @@ $("lienAccess").addEventListener("input", ()=>{
   const ok = isValidUrl($("lienAccess").value);
   markError($("lienAccess"), $("lienAccessHelp"), !ok && $("accessMethod").value === "lien");
 });
-// ---------------- LOGIQUE COMPLÈTE LEAFLET + ENVOI ----------------
+
 
 const COUNTER_URL = "https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec";
 
 let mapDevice,mapAccess,markerDevice,markerAccess;
-  let DEVICE_CONFIRMED = false;   // l’utilisateur a cliqué Localiser pour l’appareil
-let ACCESS_CONFIRMED = false;   // l’utilisateur a cliqué Localiser pour l’accès
+
+
+const planIGN = L.tileLayer(
+  "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
+  + "&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&STYLE=normal&FORMAT=image/png"
+  + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
+  {
+    attribution: "© IGN – Géoplateforme",
+    maxZoom: 21,
+    maxNativeZoom: 19,
+    tileSize: 256,
+    crossOrigin: "anonymous"
+  }
+);
+
+const orthoIGN = L.tileLayer(
+  "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
+  + "&LAYER=ORTHOIMAGERY.ORTHOPHOTOS&STYLE=normal&FORMAT=image/jpeg"
+  + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
+  {
+    attribution: "© IGN – Géoplateforme",
+    maxZoom: 21,
+    maxNativeZoom: 19,
+    tileSize: 256,
+    crossOrigin: "anonymous"
+  }
+);
+  
+  let DEVICE_CONFIRMED = false;  
+let ACCESS_CONFIRMED = false;  
 let lastFix=null; let GEO_BLOCKED=false;
 const GEO_OPTS={enableHighAccuracy:true,timeout:7000,maximumAge:15000};
 
@@ -799,12 +801,11 @@ function onGeoDenied(target){
   GEO_BLOCKED = true;
 
   if (target === "device") {
-    // on bascule proprement en mode lien pour l'appareil
+
     $("presentValue").value = "non";
     toggle($("mapDeviceWrap"), 0);
     toggle($("lienField"), 1);
 
-    // 🔒 reset visuel + données
     $("coordsDeviceDisplay").style.display = "none";
     $("latDevice").value = "";
     $("lonDevice").value = "";
@@ -813,13 +814,11 @@ function onGeoDenied(target){
   }
 
   if (target === "access") {
-    // ❗️ne PAS mettre accessValue="non"
-    // si l'utilisateur voulait un accès distinct, on le garde et on le passe en mode lien
+
     $("accessMethod").value = "lien";
     toggle($("mapAccessWrap"), 0);
     toggle($("lienAccessField"), 1);
 
-    // 🔒 reset visuel + état
     $("coordsAccessDisplay").style.display = "none";
     ACCESS_CONFIRMED = false;
     $("mapAccessWrap").classList.remove("error");
@@ -829,10 +828,26 @@ function onGeoDenied(target){
 function ensureMap(mapId,btnToggle,btnRecenter,lat,lon){
   let map=L.map(mapId).setView([lat,lon],18);
   setTimeout(()=>map.invalidateSize(),300);
-  const esri=L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}");
-  const osm=L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png");
-  osm.addTo(map);
-  $(btnToggle).textContent = "🛰️ Satellite"; // par défaut on propose de passer en satellite
+
+    planIGN.addTo(map); 
+  $(btnToggle).textContent = "🛰️ Satellite"; 
+
+  let isPlan = true;
+  $(btnToggle).onclick = () => {
+    if (isPlan) {
+      map.removeLayer(planIGN);
+      orthoIGN.addTo(map);
+      $(btnToggle).textContent = "🗺️ Plan";
+    } else {
+      map.removeLayer(orthoIGN);
+      planIGN.addTo(map);
+      $(btnToggle).textContent = "🛰️ Satellite";
+    }
+    isPlan = !isPlan;
+    map.invalidateSize();
+  };
+
+  
   let marker=L.marker([lat,lon],{draggable:true}).addTo(map);
 
 let p = marker.getLatLng();
@@ -845,7 +860,7 @@ if (mapId === "mapDevice") {
       $("coordsDeviceDisplay").style.display = "block";
     }
   }
-} else { // accès
+} else { 
   if (ACCESS_CONFIRMED && $("accessMethod").value === "gps") {
     $("coordsAccessDisplay").textContent = `Coordonnées relevées (accès) : ${p.lat.toFixed(6)}, ${p.lng.toFixed(6)}`;
     $("coordsAccessDisplay").style.display = "block";
@@ -854,17 +869,12 @@ if (mapId === "mapDevice") {
   }
 }
   
-  $(btnToggle).onclick=()=>{
-    if(map.hasLayer(osm)){map.removeLayer(osm); esri.addTo(map); $(btnToggle).textContent="🗺️ Plan";}
-    else{map.removeLayer(esri); osm.addTo(map); $(btnToggle).textContent="🛰️ Satellite";}
-    map.invalidateSize();
-  };
+
 $(btnRecenter).onclick = () => {
   if (GEO_BLOCKED) { onGeoDenied(mapId === "mapDevice" ? "device" : "access"); return; }
 
   const kind = (mapId === "mapDevice") ? "device" : "access";
 
-  // Fonction utilitaire : applique le fix et confirme
   const confirmFromFix = (fix) => {
     if (!fix) return false;
     if (kind === "device") {
@@ -907,57 +917,49 @@ function startLocAccess(){
 }
 
 document.addEventListener("DOMContentLoaded",()=>{
-  // Préremplir poste/appareil si passés en paramètres d'URL
   const params = new URLSearchParams(window.location.search);
 
- // Préremplir le nom de l’appareil si passé en paramètre
 if (params.has("appareil")) {
   $("appareil").value = params.get("appareil").trim();
 }
 
 if (params.has("poste")) {
-  // Types reconnus à la fin du libellé
+  
   const TYPES = ["A","L","L-A","LGV","P","PRCI","S","SP","ST","SST","SS","SSP","SSPA","SSP-A"];
 
   const esc = s => s.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
   const TYPES_RE = new RegExp("\\b(" + TYPES.map(esc).join("|") + ")\\b\\s*$", "i");
 
-  // 0) Nettoyage
   let raw = (params.get("poste") || "")
-    .replace(/^📍\s*/,"")     // enlève l’emoji éventuel
-    .replace(/\u00A0/g," ")   // nbsp -> espace
-    .replace(/\s+/g," ")      // espaces multiples
+    .replace(/^📍\s*/,"")    
+    .replace(/\u00A0/g," ")   
+    .replace(/\s+/g," ")      
     .trim();
 
   let foundType = "";
   let foundSat  = "";
 
-  // 1) SAT : capter "SAT3", "SAT-3", "SAT 3" puis couper TOUT après
   const satM = raw.match(/\bSAT[\s-]*\d+\b/i);
   if (satM) {
-    foundSat = satM[0].replace(/\s+/g,"").toUpperCase(); // "SAT3"
-    raw = raw.slice(0, satM.index).trim();               // on garde seulement avant le SAT
+    foundSat = satM[0].replace(/\s+/g,"").toUpperCase(); 
+    raw = raw.slice(0, satM.index).trim();            
   }
 
-  // 2) Si pas de SAT, couper tout suffixe après un séparateur
   if (!satM) {
     raw = raw.split(/(?:—|–|-|,|;|\/|\(|\[|\baccès\b|\bacces\b|\baccess\b)/i)[0].trim();
   }
-
-  // 3) Extraire le TYPE en fin de chaîne (SP, SSP, SSP-A…)
+  
   const typeM = raw.match(TYPES_RE);
   if (typeM) {
     foundType = typeM[1].toUpperCase();
-    raw = raw.replace(TYPES_RE, "").trim(); // enlever le type du nom
+    raw = raw.replace(TYPES_RE, "").trim(); 
   }
 
-  // 4) Remplir les champs
-  $("poste").value = raw;            // NOM seulement
+  $("poste").value = raw;           
   if (foundType) $("type").value = foundType;
   if (foundSat)  $("sat").value  = foundSat;
 }
   
-  // (la suite de ton code inchangée : géoloc, demandeur depuis localStorage, etc.)
   if(navigator.geolocation){
     navigator.geolocation.getCurrentPosition(
       p=>applyFix(p.coords.latitude,p.coords.longitude),
@@ -978,26 +980,22 @@ function resetForm(){
   $("formAppareil").reset();
   currentStep = 0;
 
-  // Masquer l'écran de confirmation
  const conf = document.getElementById("confirmationStep");
 conf.classList.remove("active");
-// ⚠️ surtout pas de display:none inline
-conf.style.display = ""; // on nettoie tout inline pour laisser le CSS gérer
 
-  // Réaffiche le formulaire normal
+conf.style.display = ""; 
+
   document.getElementById("introStep").style.display = "none";
   document.getElementById("progress").style.display = "block";
   document.getElementById("progressbar").style.display = "block";
 
   showStep(currentStep);
 
-  // ✅ Réinjecter automatiquement le demandeur depuis localStorage
   const savedDemandeur = localStorage.getItem("demandeur");
   if(savedDemandeur){
     $("demandeur").value = savedDemandeur;
   }
 }
-// Soumission finale
 
 $("formAppareil").onsubmit = e => {
   e.preventDefault();
@@ -1009,12 +1007,11 @@ $("formAppareil").onsubmit = e => {
 
   let coordAppareil = "", coordAcces = "";
 
-  // Vérif appareil obligatoire
   if ($("presentValue").value === "oui") {
     let la = sanitizeCoord($("latDevice").value),
         lo = sanitizeCoord($("lonDevice").value);
     if (!isValidLatLon(la, lo)) {
-      markError($("latDevice"), null, true); // rouge
+      markError($("latDevice"), null, true); 
       return;
     }
     coordAppareil = la + "," + lo;
@@ -1025,17 +1022,16 @@ $("formAppareil").onsubmit = e => {
     }
     coordAppareil = $("lien").value;
   } else {
-    // pas de choix → force étape 5 en erreur
+
     document.querySelectorAll("#pill-oui, #pill-non").forEach(p=>p.classList.add("error"));
     return;
   }
 
-  // Vérif accès
   if ($("accessValue").value === "oui") {
     if ($("accessMethod").value === "gps") {
       let la = $("coordsAccessDisplay").textContent;
       if (!la.includes(",")) {
-        // rien positionné
+     
         document.querySelectorAll("#pill-access-gps").forEach(p=>p.classList.add("error"));
         return;
       }
@@ -1053,7 +1049,6 @@ $("formAppareil").onsubmit = e => {
     }
   }
 
-  // Données prêtes
   const formData = new URLSearchParams();
   formData.append("demandeur", demandeur);
   formData.append("poste", poste);
@@ -1089,18 +1084,16 @@ $("formAppareil").onsubmit = e => {
     });
 };
 
-// Au départ : n’afficher que l’intro
 steps.forEach(s => s.classList.remove("active"));
 document.getElementById("introStep").classList.add("active");
-progress.style.display = "none"; // cacher la barre au départ
+progress.style.display = "none"; 
 document.getElementById("progressbar").style.display = "none";
 
-// Quand on clique sur "Commencer"
 document.getElementById("startForm").addEventListener("click", () => {
   document.getElementById("introStep").style.display = "none";
   progress.style.display = "block";
   document.getElementById("progressbar").style.display = "block";
-  showStep(0); // affiche la vraie étape 1
+  showStep(0); 
 });
 </script>
 </body>
