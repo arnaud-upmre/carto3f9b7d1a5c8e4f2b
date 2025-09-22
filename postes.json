@@ -906,8 +906,8 @@
     "type": "SP",
     "SAT": "SAT1",
     "accès": "",
-    "latitude": 50.93228,
-    "longitude": 1.86179,
+    "latitude": 50.93233,
+    "longitude": 1.86172
     "description": "Alim du SAT1 dans le poste",
     "rss": "A",
     "contact": "",
@@ -915,8 +915,8 @@
     "lignes": "LILLE à LES FONTINETTES",
     "numero_ligne": 295000,
     "pk": "",
-    "poste_latitude": "",
-    "poste_longitude": ""
+    "poste_latitude": "50.93227",
+    "poste_longitude": "1.86169"
   },
   {
     "nom": "Coulogne",
