@@ -172,24 +172,35 @@ function showStep(i){
   progress.textContent=`Étape ${i+1}/${steps.length}`;
   document.getElementById("progressbar-fill").style.width=((i+1)/steps.length*100)+"%";
 
-  // recap
   if(i===steps.length-1){
     const recap=document.getElementById("recap");
     recap.innerHTML="";
     const data=[
-      {step:0,label:"👤 Demandeur",value:document.getElementById("demandeur").value},
-      {step:1,label:"📌 Poste",value:document.getElementById("poste").value+(document.getElementById("type").value?" ("+document.getElementById("type").value+")":"")},
-      {step:2,label:"📌 SAT",value:document.getElementById("sat").value},
-      {step:3,label:"💡 Appareil",value:document.getElementById("appareil").value},
-      {step:4,label:"📍 Lien appareil",value:document.getElementById("lien").value},
-      {step:5,label:"🚪 Accès",value:document.getElementById("accessValue").value==="oui"?document.getElementById("lienAccess").value:""},
+      {step:0,label:"👤 Demandeur",value:demandeur.value},
+      {step:1,label:"📌 Poste",value:poste.value+(type.value?" ("+type.value+")":"")},
+      {step:2,label:"📌 SAT",value:sat.value},
+      {step:3,label:"💡 Appareil",value:appareil.value},
+      {step:4,label:"📍 Lien appareil",value:lien.value},
+      {step:5,label:"🚪 Accès",value:accessValue.value==="oui"?lienAccess.value:""}
     ];
     data.forEach(item=>{
       if(item.value&&item.value.trim()!==""){
         const div=document.createElement("div");
-        div.textContent=`${item.label} : ${item.value}`;
-        div.style.cursor="pointer";
-        div.style.margin="6px 0";div.style.padding="6px";div.style.border="1px solid #d0d7de";div.style.borderRadius="6px";
+        if(item.value.startsWith("http")){
+          const span=document.createElement("span");
+          span.textContent=item.label+" (par lien)";
+          div.appendChild(span);
+          const link=document.createElement("a");
+          link.href=item.value;link.target="_blank";link.rel="noopener";
+          link.textContent=" 🔎 Voir sur Google Maps";
+          link.style.marginLeft="8px";link.style.color="#0b6cff";link.style.textDecoration="underline";
+          link.addEventListener("click",e=>e.stopPropagation());
+          div.appendChild(link);
+        } else {
+          div.textContent=`${item.label} : ${item.value}`;
+        }
+        div.style.cursor="pointer";div.style.margin="6px 0";div.style.padding="6px";
+        div.style.border="1px solid #d0d7de";div.style.borderRadius="6px";
         div.onclick=()=>{currentStep=item.step;showStep(currentStep);returnToRecap=true;};
         recap.appendChild(div);
       }
@@ -202,8 +213,13 @@ document.querySelectorAll(".next").forEach(btn=>{
   btn.addEventListener("click",e=>{
     e.preventDefault();
     if(validateStep(currentStep)){
+      // 🚪 Accès obligatoire
+      if(currentStep===5 && !accessValue.value){
+        document.querySelectorAll("#pill-acces-oui, #pill-acces-non").forEach(p=>p.classList.add("error"));
+        return;
+      }
       if(returnToRecap){returnToRecap=false;currentStep=steps.length-1;showStep(currentStep);return;}
-      if(currentStep===5&&document.getElementById("accessValue").value==="non"){currentStep=steps.length-1;showStep(currentStep);return;}
+      if(currentStep===5 && accessValue.value==="non"){currentStep=steps.length-1;showStep(currentStep);return;}
       currentStep++;showStep(currentStep);
     }
   });
@@ -228,67 +244,53 @@ document.addEventListener("input",e=>{
 });
 
 // gestion pill
-document.getElementById("pill-acces-oui").onclick=()=>{
-  document.getElementById("accessValue").value="oui";
-  document.getElementById("pill-acces-oui").classList.add("active");
-  document.getElementById("pill-acces-non").classList.remove("active");
-};
-document.getElementById("pill-acces-non").onclick=()=>{
-  document.getElementById("accessValue").value="non";
-  document.getElementById("pill-acces-non").classList.add("active");
-  document.getElementById("pill-acces-oui").classList.remove("active");
-};
+pill-acces-oui.onclick=()=>{accessValue.value="oui";pill-acces-oui.classList.add("active");pill-acces-non.classList.remove("active");document.querySelectorAll("#pill-acces-oui,#pill-acces-non").forEach(p=>p.classList.remove("error"));}
+pill-acces-non.onclick=()=>{accessValue.value="non";pill-acces-non.classList.add("active");pill-acces-oui.classList.remove("active");document.querySelectorAll("#pill-acces-oui,#pill-acces-non").forEach(p=>p.classList.remove("error"));}
 
 // reset
 function resetForm(){
-  document.getElementById("formAppareil").reset();
+  formAppareil.reset();currentStep=0;
   steps.forEach(s=>s.classList.remove("active"));
-  document.getElementById("introStep").classList.add("active");
-  progress.style.display="none";
-  document.getElementById("progressbar").style.display="none";
-  currentStep=0;
-  const savedDemandeur=localStorage.getItem("demandeur");
-  if(savedDemandeur)document.getElementById("demandeur").value=savedDemandeur;
+  introStep.classList.add("active");progress.style.display="none";progressbar.style.display="none";
+  const saved=localStorage.getItem("demandeur");if(saved)demandeur.value=saved;
 }
 
 // compteur + envoi
 const COUNTER_URL="https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec";
-document.getElementById("formAppareil").onsubmit=e=>{
+formAppareil.onsubmit=e=>{
   e.preventDefault();
+  const submitBtn=document.querySelector('.btn.primary[type="submit"]');
+  const oldLabel=submitBtn.textContent;
+  submitBtn.disabled=true;submitBtn.textContent="⏳ Envoi en cours…";
+
   const data=new URLSearchParams();
-  data.append("demandeur",document.getElementById("demandeur").value.trim());
-  data.append("poste",document.getElementById("poste").value.trim());
-  data.append("type",document.getElementById("type").value.trim());
-  data.append("sat",document.getElementById("sat").value.trim());
-  data.append("appareil",document.getElementById("appareil").value.trim());
-  data.append("localisation",document.getElementById("lien").value.trim());
-  data.append("acces",document.getElementById("accessValue").value==="oui"?document.getElementById("lienAccess").value.trim():"");
+  data.append("demandeur",demandeur.value.trim());
+  data.append("poste",poste.value.trim());
+  data.append("type",type.value.trim());
+  data.append("sat",sat.value.trim());
+  data.append("appareil",appareil.value.trim());
+  data.append("localisation",lien.value.trim());
+  data.append("acces",accessValue.value==="oui"?lienAccess.value.trim():"");
+
   fetch("https://script.google.com/macros/s/AKfycbz8lUhVMKOrRSdeNBeA0p4ZsQCNOesB0Y4DL27KAoHkHWS78hOqrW-t-9bC_azgN-mY/exec",{method:"POST",body:data})
   .then(r=>r.text()).then(()=>{
     fetch(COUNTER_URL+"?increment=true").catch(()=>{});
     steps.forEach(s=>s.classList.remove("active"));
-    document.getElementById("confirmationStep").classList.add("active");
-    document.getElementById("progress").style.display="none";
-    document.getElementById("progressbar").style.display="none";
-  });
+    confirmationStep.classList.add("active");progress.style.display="none";progressbar.style.display="none";
+  })
+  .finally(()=>{submitBtn.disabled=false;submitBtn.textContent=oldLabel;});
 };
 
 // intro → étapes
-document.getElementById("startForm").addEventListener("click",()=>{
-  document.getElementById("introStep").style.display="none";
-  progress.style.display="block";
-  document.getElementById("progressbar").style.display="block";
-  showStep(0);
-});
+startForm.addEventListener("click",()=>{introStep.style.display="none";progress.style.display="block";progressbar.style.display="block";showStep(0);});
 
-// restore demandeur depuis localStorage
+// sauvegarde demandeur
 document.addEventListener("DOMContentLoaded",()=>{
-  const savedDemandeur=localStorage.getItem("demandeur");
-  if(savedDemandeur){document.getElementById("demandeur").value=savedDemandeur;}
-  document.getElementById("demandeur").addEventListener("input",()=>{localStorage.setItem("demandeur",document.getElementById("demandeur").value.trim());});
+  const saved=localStorage.getItem("demandeur");if(saved)demandeur.value=saved;
+  demandeur.addEventListener("input",()=>{localStorage.setItem("demandeur",demandeur.value.trim());});
   const params=new URLSearchParams(window.location.search);
-  if(params.has("appareil"))document.getElementById("appareil").value=params.get("appareil").trim();
-  if(params.has("poste"))document.getElementById("poste").value=params.get("poste").trim();
+  if(params.has("appareil"))appareil.value=params.get("appareil").trim();
+  if(params.has("poste"))poste.value=params.get("poste").trim();
 });
 </script>
 </body>
