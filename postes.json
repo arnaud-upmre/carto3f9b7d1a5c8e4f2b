@@ -922,9 +922,8 @@
     "nom": "Coulogne",
     "type": "SP",
     "SAT": "SAT1",
-    "accès": "I5429",
-    "latitude": 50.931910,
-    "longitude": 1.862499,
+    "latitude": 50.93185,
+    "longitude": 1.86229
     "description": "Alim du SAT1 dans le poste",
     "rss": "A",
     "contact": "",
