@@ -650,6 +650,66 @@
     "description": "Sectionneur Catenaire - Support 291-84A"
   },
   {
+    "nom": "Coulogne",
+    "type": "SP",
+    "SAT": "SAT4",
+    "accès": "",
+    "appareil": "I7231",
+    "latitude": 50.936103,
+    "longitude": 1.854313,
+    "description": "Bipolaire - Support 292-27YC"
+  },
+  {
+    "nom": "Coulogne",
+    "type": "SP",
+    "SAT": "SAT4",
+    "accès": "",
+    "appareil": "I7232",
+    "latitude": 50.936237,
+    "longitude": 1.854411,
+    "description": "Support 292-28Y"
+  },
+  {
+    "nom": "Coulogne",
+    "type": "SP",
+    "SAT": "SAT4",
+    "accès": "",
+    "appareil": "I7406",
+    "latitude": 50.936244,
+    "longitude": 1.854670,
+    "description": "Support 104-9A"
+  },
+  {
+    "nom": "Coulogne",
+    "type": "SP",
+    "SAT": "SAT4",
+    "accès": "",
+    "appareil": "I7237",
+    "latitude": 50.936220,
+    "longitude": 1.854722,
+    "description": "Support 104-9"
+  },
+  {
+    "nom": "Coulogne",
+    "type": "SP",
+    "SAT": "SAT4",
+    "accès": "",
+    "appareil": "TT7237",
+    "latitude": 50.936071,
+    "longitude": 1.854729,
+    "description": "Support 292-30Y"
+  },
+  {
+    "nom": "Coulogne",
+    "type": "SP",
+    "SAT": "SAT4",
+    "accès": "",
+    "appareil": "S7233-7237",
+    "latitude": 50.935763,
+    "longitude": 1.855760,
+    "description": "Support 104-5A"
+  },
+  {
     "nom": "Curie",
     "type": "SSP",
     "SAT": "",
