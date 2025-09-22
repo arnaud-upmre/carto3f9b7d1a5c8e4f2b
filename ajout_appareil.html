@@ -363,22 +363,23 @@ document.querySelectorAll(".prev").forEach(btn=>{
 });
 
 function validateStep(i){
-  const step=steps[i];
-  const input=step.querySelector("input[required],textarea[required]");
-  if(input && !input.value.trim()){
+  // Étape Accès (step 6 dans ton code actuel)
+  if (i === 6) {
+    if (!$("accessValue").value) {
+      document.querySelectorAll("#pill-acces-oui, #pill-acces-non").forEach(p => p.classList.add("error"));
+      alert("⚠️ Merci d’indiquer si l’appareil a un accès routier distinct (Oui ou Non).");
+      return false;
+    }
+  }
+
+  const step = steps[i];
+  const input = step.querySelector("input[required],textarea[required]");
+  if (input && !input.value.trim()) {
     input.classList.add("error");
     return false;
   }
   return true;
 }
-
-document.addEventListener("input", (e)=>{
-  if(e.target.matches("input.error, textarea.error")){
-    if(e.target.value.trim() !== ""){
-      e.target.classList.remove("error");
-    }
-  }
-});
 
 function $(id){return document.getElementById(id);}
 function showHint(el, show){ el.classList.toggle("show", !!show); }
