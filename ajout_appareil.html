@@ -362,6 +362,15 @@ document.querySelectorAll(".prev").forEach(btn=>{
   });
 });
 
+  // ✅ Enlever le rouge quand on commence à écrire
+document.addEventListener("input", (e)=>{
+  if(e.target.classList.contains("error")){
+    if(e.target.value.trim() !== ""){
+      e.target.classList.remove("error");
+    }
+  }
+});
+
 function validateStep(i){
   // Étape Accès (step 6 dans ton code actuel)
   if (i === 6) {
@@ -404,7 +413,7 @@ $("pill-acces-non").onclick=()=>{
   document.querySelectorAll("#pill-acces-oui, #pill-acces-non").forEach(p=>p.classList.remove("error"));
 };
 
-// ✅ Validation dynamique des champs
+
 $("lien").addEventListener("input", ()=>{
   const ok = isValidUrl($("lien").value);
   markError($("lien"), $("lienHelp"), !ok);
@@ -415,10 +424,9 @@ $("lienAccess").addEventListener("input", ()=>{
   markError($("lienAccess"), $("lienAccessHelp"), !ok && $("accessValue").value==="oui");
 });
 
-// ✅ Compteur contributions
 const COUNTER_URL = "https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec";
 
-// ✅ Reset du formulaire
+
 function resetForm(){
   $("formAppareil").reset();
   currentStep = 0;
@@ -439,7 +447,7 @@ function resetForm(){
   }
 }
 
-// ✅ Soumission
+
 $("formAppareil").onsubmit = e => {
   e.preventDefault();
 
@@ -500,7 +508,6 @@ $("formAppareil").onsubmit = e => {
     });
 };
 
-// ✅ Initialisation
 steps.forEach(s => s.classList.remove("active"));
 
   // Pré-remplissage du champ appareil depuis l'URL
@@ -519,6 +526,14 @@ document.getElementById("startForm").addEventListener("click", () => {
   progress.style.display = "block";
   document.getElementById("progressbar").style.display = "block";
   showStep(0); 
+});
+
+document.addEventListener("input", (e)=>{
+  if (e.target.classList.contains("error")) {
+    if (e.target.value.trim() !== "") {
+      e.target.classList.remove("error");
+    }
+  }
 });
 </script>
 </body>
