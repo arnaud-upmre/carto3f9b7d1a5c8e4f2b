@@ -333,25 +333,50 @@ editIcon.style = `
 `;
 document.body.appendChild(editIcon);
 
+let sequence = [];
+let sequenceTime = 0;
 
 document.addEventListener("keydown", function(e) {
-if (
-  e.key.toLowerCase() === "e" &&
-  (
-    (e.ctrlKey && e.altKey) ||   
-    (e.metaKey && e.altKey)     
-  )
-) {
+  const key = e.key.toLowerCase();
+  const now = Date.now();
+
+  // Si plus d'1 seconde entre deux touches → reset
+  if (now - sequenceTime > 1000) {
+    sequence = [];
+  }
+
+  sequence.push(key);
+  sequenceTime = now;
+
+  // Garder max 3 touches
+  if (sequence.length > 3) {
+    sequence.shift();
+  }
+
+  // Vérifie séquence E+D+I
+  if (sequence.join("") === "edi") {
     editMode = !editMode;
 
     editBanner.textContent = editMode ? "✏️ Mode édition activé" : "❌ Mode édition désactivé";
     editBanner.style.display = "block";
     setTimeout(() => { editBanner.style.display = "none"; }, 2000);
 
-    // Afficher ou cacher le crayon permanent
     editIcon.style.display = editMode ? "block" : "none";
+
+    sequence = []; // reset après activation
+  }
+
+  // Vérifie ESC → quitte mode édition
+  if (e.key === "Escape" && editMode) {
+    editMode = false;
+    editBanner.textContent = "❌ Mode édition désactivé";
+    editBanner.style.display = "block";
+    setTimeout(() => { editBanner.style.display = "none"; }, 2000);
+    editIcon.style.display = "none";
+    sequence = [];
   }
 });
+
     
     const allMarkers = [];
 
