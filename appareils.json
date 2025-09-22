@@ -480,6 +480,16 @@
     "description": ""
   },
   {
+    "nom": "Coulogne",
+    "type": "SP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "SAT2",
+    "latitude": 50.934669,
+    "longitude": 1.858207,
+    "description": ""
+  },
+  {
     "nom": "Curie",
     "type": "SSP",
     "SAT": "",
