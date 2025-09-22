@@ -2,372 +2,256 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
-  />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"/>
   <title>➕ Ajouter un appareil</title>
 
   <style>
     .field-hint{font-size:13px;color:#c62828;margin-top:6px;display:none}
     .field-hint.show{display:block}
-    input.error{border:2px solid #c62828!important;background:#ffecec}
-    
+    input.error, textarea.error{border:2px solid #c62828!important;background:#ffecec}
     *,*::before,*::after{box-sizing:border-box}
-    html{-webkit-text-size-adjust:100%}
-    body{
-      margin:0; padding:16px;
-      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;
-      background:var(--bg); color:var(--fg);
-    }
-    :root{
-      --bg:#f7f7f8; --fg:#202124; --card:#fff; --border:#d0d7de;
-      --accent:#0b6cff; --accent-ink:#fff; --muted:#666;
-    }
-    @media(prefers-color-scheme:dark){
-      :root{
-        --bg:#0b0b0b; --fg:#eceff1; --card:#141414; --border:#2a2a2a;
-        --accent:#5aa3ff; --accent-ink:#081018; --muted:#999;
-      }
-    }
+    body{margin:0;padding:16px;font-family:Inter,system-ui,Roboto,Arial;background:#f7f7f8;color:#202124}
     h2{text-align:center;margin:0 0 12px}
-    .card{
-      max-width:640px;margin:auto;
-      background:var(--card);
-      padding:16px;border-radius:14px;
-      box-shadow:0 2px 6px rgba(0,0,0,.15);
-    }
+    .card{max-width:640px;margin:auto;background:#fff;padding:16px;border-radius:14px;box-shadow:0 2px 6px rgba(0,0,0,.15)}
     label{display:block;margin:12px 0 6px;font-weight:600}
-    input,textarea{
-      width:100%;padding:12px;font-size:16px;
-      border:1px solid var(--border);border-radius:10px;
-      background:var(--card);color:var(--fg);
-      min-height:44px;
-    }
+    input,textarea{width:100%;padding:12px;font-size:16px;border:1px solid #d0d7de;border-radius:10px;min-height:44px}
     textarea{min-height:96px;resize:none}
-    .pill-group{display:flex;gap:10px;margin:12px 0}
-    .pill{
-      flex:1;text-align:center;padding:12px;
-      border:1px solid var(--border);border-radius:999px;cursor:pointer;
-    }
-    .pill.active{background:var(--accent);color:var(--accent-ink)}
-    .pill.error {
-      border: 2px solid #c62828 !important;
-      background: #ffecec;
-    }
-    .pill.active {
-      background: var(--accent) !important;
-      color: var(--accent-ink) !important;
-      border: 1px solid var(--accent) !important;
-    }
-    @media (prefers-color-scheme: dark) {
-      .pill.error {
-        border: 2px solid #ff6b6b !important;   
-        background: rgba(198, 40, 40, 0.25);   
-        color: #fff;                          
-      }
-      input.error,
-      textarea.error {
-        border: 2px solid #ff6b6b !important;
-        background: rgba(198, 40, 40, 0.25);    
-        color: #fff;                           
-      }
-    }
     .btn-row{display:flex;gap:12px;margin-top:18px}
-    .btn{
-      flex:1;padding:12px;font-size:16px;border:none;border-radius:10px;cursor:pointer;
-    }
-    .btn.primary{background:var(--accent);color:var(--accent-ink)}
+    .btn{flex:1;padding:12px;font-size:16px;border:none;border-radius:10px;cursor:pointer}
+    .btn.primary{background:#0b6cff;color:#fff}
     .btn.secondary{background:#ccc}
-    @media(prefers-color-scheme:dark){
-      .btn.secondary{background:#2a2f36;color:#eee}
-    }
-    .step{display:none;animation:fade .3s ease}
+    .step{display:none}
     .step.active{display:block}
-    @keyframes fade{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:translateX(0)}}
-    #progress{margin-bottom:12px;text-align:center;color:var(--muted)}
-    #progressbar {
-      width: 100%;
-      height: 6px;
-      background: var(--border);
-      border-radius: 4px;
-      overflow: hidden;
-      margin-bottom: 8px;
-    }
-    #progressbar-fill {
-      height: 100%;
-      width: 0%;
-      background: var(--accent);
-      transition: width 0.3s ease;
-    }
-    input.error,textarea.error{border:2px solid red!important;background:#ffecec}
-    /* ✅ Masquer le bouton Annuler uniquement à la confirmation */
-    #confirmationStep.active ~ #cancel-row { display: none; }
+    #progress{margin-bottom:12px;text-align:center;color:#666}
+    #progressbar{width:100%;height:6px;background:#d0d7de;border-radius:4px;overflow:hidden;margin-bottom:8px}
+    #progressbar-fill{height:100%;width:0%;background:#0b6cff;transition:width .3s}
+    .pill-group{display:flex;gap:10px;margin:12px 0}
+    .pill{flex:1;text-align:center;padding:12px;border:1px solid #d0d7de;border-radius:999px;cursor:pointer}
+    .pill.active{background:#0b6cff;color:#fff;border:1px solid #0b6cff}
+    .pill.error{border:2px solid #c62828!important;background:#ffecec}
   </style>
 </head>
 <body>
   <h2>➕ Ajouter un appareil</h2>
   <div class="card">
     <div id="progressbar"><div id="progressbar-fill"></div></div>
-    <div id="progress">Étape 1/10</div>
+    <div id="progress">Étape 1/7</div>
+
     <form id="formAppareil" novalidate>
+      <!-- Intro -->
+      <div class="step active" id="introStep">
+        <p style="text-align:center;color:#666;margin-bottom:20px;line-height:1.5">
+          ⏱️ Quelques secondes suffisent pour ajouter un appareil.</p>
+        <div class="btn-row">
+          <button type="button" class="btn primary" id="startForm">🚀 Commencer</button>
+        </div>
+      </div>
 
-<!-- Étape intro -->
-<div class="step active" id="introStep">
-  <p style="text-align:center;color:var(--muted);margin-bottom:20px;line-height:1.5">
-    ⏱️ Quelques secondes suffisent pour ajouter un appareil.</p>
-  <div class="btn-row">
-    <button type="button" class="btn primary" id="startForm">🚀 Commencer</button>
-  </div>
-</div>
+      <!-- Étape 1 -->
+      <div class="step">
+        <label>👤 Demandeur :</label>
+        <input id="demandeur" required>
+        <div class="btn-row">
+          <button type="button" class="btn primary next">Suivant ➡️</button>
+        </div>
+      </div>
 
-<!-- Étape 1 -->
-<div class="step">
-  <label>👤 Demandeur :</label>
-  <input id="demandeur" required>
-  <div class="btn-row">
-    <button type="button" class="btn primary next">Suivant ➡️</button>
-  </div>
-</div>
+      <!-- Étape 2 -->
+      <div class="step">
+        <label>📌 Poste :</label>
+        <input id="poste" required placeholder="Ex : Hazebrouck">
+        <label>📌 Type (optionnel) :</label>
+        <input id="type" placeholder="Ex : SP, SSP, PRCI....">
+        <div class="btn-row">
+          <button type="button" class="btn secondary prev">⬅️ Retour</button>
+          <button type="button" class="btn primary next">Suivant ➡️</button>
+        </div>
+      </div>
 
-<!-- Étape 2 -->
-<div class="step">
-  <label>📌 Poste :</label>
-  <input id="poste" required placeholder="Ex : Hazebrouck">
-  <label>📌 Type (optionnel) :</label>
-  <input id="type" placeholder="Ex : SP, SSP, PRCI....">
-  <div class="btn-row">
-    <button type="button" class="btn secondary prev">⬅️ Retour</button>
-    <button type="button" class="btn primary next">Suivant ➡️</button>
-  </div>
-</div>
+      <!-- Étape 3 -->
+      <div class="step">
+        <label>📌 SAT associé :</label>
+        <input id="sat" placeholder="Exemple : SAT1, SAT2">
+        <div class="btn-row">
+          <button type="button" class="btn secondary prev">⬅️ Retour</button>
+          <button type="button" class="btn primary next">Suivant ➡️</button>
+        </div>
+      </div>
 
-<!-- Étape 3 -->
-<div class="step">
-  <label>📌 SAT associé :</label>
-  <span style="font-weight:normal;color:var(--muted);font-size:14px">
-  Remplir uniquement si l’appareil dépend d’un SAT
-  </span>
-  <input id="sat" placeholder="Exemple : SAT1, SAT2">
-  <div class="btn-row">
-    <button type="button" class="btn secondary prev">⬅️ Retour</button>
-    <button type="button" class="btn primary next">Suivant ➡️</button>
-  </div>
-</div>
+      <!-- Étape 4 -->
+      <div class="step">
+        <label>💡 Nom de l’appareil :</label>
+        <input id="appareil" required placeholder="Ex : I7112">
+        <div class="btn-row">
+          <button type="button" class="btn secondary prev">⬅️ Retour</button>
+          <button type="button" class="btn primary next">Suivant ➡️</button>
+        </div>
+      </div>
 
-<!-- Étape 4 -->
-<div class="step">
-  <label>💡 Nom de l’appareil :</label>
-  <input id="appareil" required placeholder="Ex : I7112">
-  <div class="btn-row">
-    <button type="button" class="btn secondary prev">⬅️ Retour</button>
-    <button type="button" class="btn primary next">Suivant ➡️</button>
-  </div>
-</div>
+      <!-- Étape 5 -->
+      <div class="step">
+        <label>🔗 Lien Google Maps de l’appareil :</label>
+        <input id="lien" type="url" required placeholder="https://maps.app.goo.gl/…">
+        <div id="lienHelp" class="field-hint">⚠️ Lien requis</div>
+        <div class="btn-row">
+          <button type="button" class="btn secondary prev">⬅️ Retour</button>
+          <button type="button" class="btn primary next">Suivant ➡️</button>
+        </div>
+      </div>
 
-<!-- Étape 5 -->
-<div class="step">
-  <label>🔗 Lien Google Maps (appareil) :</label>
-  <input id="lien" type="url" required placeholder="https://maps.app.goo.gl/…">
-  <div id="lienHelp" class="field-hint">⚠️ Lien requis pour continuer</div>
-  <div class="btn-row">
-    <button type="button" class="btn secondary prev">⬅️ Retour</button>
-    <button type="button" class="btn primary next">Suivant ➡️</button>
-  </div>
-</div>
+      <!-- Étape 6 -->
+      <div class="step">
+        <label>🚪 L’appareil a-t-il un accès routier distinct ?</label>
+        <div class="pill-group">
+          <div class="pill" id="pill-acces-oui" data-value="oui">✅ Oui</div>
+          <div class="pill" id="pill-acces-non" data-value="non">❌ Non</div>
+        </div>
+        <input type="hidden" id="accessValue">
+        <div class="btn-row">
+          <button type="button" class="btn secondary prev">⬅️ Retour</button>
+          <button type="button" class="btn primary next">Suivant ➡️</button>
+        </div>
+      </div>
 
-<!-- Étape 7 -->
-<div class="step">
-  <label>🚪 L’appareil a-t-il un accès routier distinct ?<br>
-  <span style="font-weight:normal;color:var(--muted);font-size:14px">
-  Si vous répondez “Non”, l’accès du poste/SAT sera repris
-  </span>
-  </label>
-  <div class="pill-group">
-    <div class="pill" id="pill-acces-oui" data-value="oui">✅ Oui</div>
-    <div class="pill" id="pill-acces-non" data-value="non">❌ Non</div>
-  </div>
-  <input type="hidden" id="accessValue">
-  <div class="btn-row">
-    <button type="button" class="btn secondary prev">⬅️ Retour</button>
-    <button type="button" class="btn primary next">Suivant ➡️</button>
-  </div>
-</div>
+      <!-- Étape 7 (si oui) -->
+      <div class="step" id="accessStep">
+        <label>🔗 Lien Google Maps de l’accès :</label>
+        <input id="lienAccess" type="url" placeholder="https://maps.app.goo.gl/…">
+        <div id="lienAccessHelp" class="field-hint">⚠️ Lien requis</div>
+        <div class="btn-row">
+          <button type="button" class="btn secondary prev">⬅️ Retour</button>
+          <button type="button" class="btn primary next">Suivant ➡️</button>
+        </div>
+      </div>
 
-<!-- Étape 8 -->
-<div class="step" id="accessLienStep">
-  <label>🔗 Lien Google Maps (accès) :</label>
-  <input id="lienAccess" type="url" placeholder="https://maps.app.goo.gl/…">
-  <div id="lienAccessHelp" class="field-hint">⚠️ Lien requis pour continuer si vous avez indiqué “Oui”</div>
-  <div class="btn-row">
-    <button type="button" class="btn secondary prev">⬅️ Retour</button>
-    <button type="button" class="btn primary next">Suivant ➡️</button>
-  </div>
-</div>
-      
-<!-- Étape 9 -->
-<div class="step">
-  <label>📝 Notes complémentaires :</label>
-  <textarea id="infos" placeholder="Accès, portail…"></textarea>
-  <div class="btn-row">
-    <button type="button" class="btn secondary prev">⬅️ Retour</button>
-    <button type="button" class="btn primary next">Suivant ➡️</button>
-  </div>
-</div>
+      <!-- Notes -->
+      <div class="step">
+        <label>📝 Notes complémentaires :</label>
+        <textarea id="infos" placeholder="Accès, portail…"></textarea>
+        <div class="btn-row">
+          <button type="button" class="btn secondary prev">⬅️ Retour</button>
+          <button type="submit" class="btn primary">📩 Envoyer</button>
+        </div>
+      </div>
 
-<!-- Étape 10 recap -->
-<div class="step">
-  <p style="line-height:1.5">
-    🎉 Super, presque terminé !<br>
-    Vérifiez ci-dessous les informations saisies.<br>
-    Un détail à modifier ? Touchez la ligne correspondante.<br>
-    Sinon, envoyez votre contribution ✅
-  </p>
-  <div id="recap" style="margin:12px 0; font-size:15px; line-height:1.5"></div>
-  <div class="btn-row">
-    <button type="button" class="btn secondary prev">⬅️ Retour</button>
-    <button type="submit" class="btn primary">📩 Envoyer</button>
+      <!-- Confirmation -->
+      <div class="step" id="confirmationStep">
+        <h3 style="text-align:center;margin:16px 0">✅ Merci ! Votre demande a bien été envoyée.</h3>
+        <div class="btn-row">
+          <button type="button" class="btn secondary" onclick="window.location.href='index.html'">🏠 Retour</button>
+          <button type="button" class="btn primary" onclick="resetForm()">➕ Ajouter un autre</button>
+        </div>
+      </div>
+    </form>
   </div>
-</div>
 
-<!-- Confirmation -->
-<div class="step" id="confirmationStep">
-  <h3 style="text-align:center;margin:16px 0">✅ Merci ! Votre demande a bien été envoyée.</h3>
-  <div class="btn-row">
-    <button type="button" class="btn secondary" onclick="window.location.href='index.html'">🏠 Retour à l’accueil</button>
-    <button type="button" class="btn primary" onclick="resetForm()">➕ Ajouter un autre appareil</button>
-  </div>
-</div>
-
-<div id="cancel-row" class="btn-row" style="margin-top:12px">
-  <button type="button" class="btn secondary" onclick="window.location.href='index.html'">
-    ❌ Annuler et revenir à l’accueil
-  </button>
-</div>
-</form>
-</div>
 <script>
 let currentStep=0;
-let returnToRecap = false;
-
 const steps=document.querySelectorAll(".step:not(#introStep):not(#confirmationStep)");
 const progress=document.getElementById("progress");
-
 function showStep(i){
   steps.forEach((s,idx)=>s.classList.toggle("active",idx===i));
-  let pct = Math.round(((i+1) / (steps.length)) * 100);
-  if (pct > 100) pct = 100; 
-  progress.textContent = `${pct}%`;
-  document.getElementById("progressbar-fill").style.width = ((i+1)/steps.length*100) + "%";
+  progress.textContent=`Étape ${i+1}/${steps.length}`;
+  document.getElementById("progressbar-fill").style.width=((i+1)/steps.length*100)+"%";
 }
 
+// navigation
 document.querySelectorAll(".next").forEach(btn=>{
-  btn.addEventListener("click", e=>{
+  btn.addEventListener("click",e=>{
     e.preventDefault();
-    if (!validateStep(currentStep)) return;
-
-    if (returnToRecap) {
-      returnToRecap = false;
-      currentStep = steps.length - 1; 
-      showStep(currentStep);
-      return;
-    }
-
-    // Étape Accès (index 5)
-    if (currentStep === 5) {
-      if (!$("accessValue").value) {
-        document.querySelectorAll("#pill-acces-oui, #pill-acces-non")
-          .forEach(p => p.classList.add("error"));
-        return;
+    if(validateStep(currentStep)){
+      // si étape "accès routier"
+      if(currentStep===5){
+        if(document.getElementById("accessValue").value==="non"){
+          currentStep=steps.length-1; // sauter lien accès
+          showStep(currentStep);
+          return;
+        }
       }
-      if ($("accessValue").value === "non") {
-        $("lienAccess").value = "";
-        markError($("lienAccess"), $("lienAccessHelp"), false);
-        currentStep = 7; // saute lien accès et va aux Notes
-        showStep(currentStep);
-        return;
-      }
+      currentStep++; showStep(currentStep);
     }
-
-    // Vérif Lien appareil (index 4)
-    if (currentStep === 4) {
-      const ok = isValidUrl($("lien").value);
-      markError($("lien"), $("lienHelp"), !ok);
-      if (!ok) return;
-    }
-
-    // Vérif Lien accès (index 6 si oui)
-    if (currentStep === 6 && $("accessValue").value === "oui") {
-      const ok = isValidUrl($("lienAccess").value);
-      markError($("lienAccess"), $("lienAccessHelp"), !ok);
-      if (!ok) return;
-    }
-
-    currentStep++;
-    showStep(currentStep);
   });
 });
-
 document.querySelectorAll(".prev").forEach(btn=>{
-  btn.addEventListener("click", e=>{
+  btn.addEventListener("click",e=>{
     e.preventDefault();
-    if (returnToRecap) {
-      returnToRecap = false;
-      currentStep = steps.length - 1; 
-      showStep(currentStep);
-      return;
-    }
-    if(currentStep>0){
-      if(currentStep === 7 && $("accessValue").value === "non"){
-        currentStep = 5; // revenir à Oui/Non
-        showStep(currentStep);
-        return;
-      }
-      currentStep--;
-      showStep(currentStep);
-    }
+    if(currentStep>0){currentStep--;showStep(currentStep);}
   });
 });
 
+// validation simple
 function validateStep(i){
-  // Étape Accès (index 5)
-  if (i === 5) {
-    if (!$("accessValue").value) {
-      document.querySelectorAll("#pill-acces-oui, #pill-acces-non")
-        .forEach(p => p.classList.add("error"));
+  const step=steps[i];
+  const input=step.querySelector("input[required],input[type=url]");
+  if(input){
+    if(!input.value.trim() || (input.type==="url" && !/^https?:\/\//i.test(input.value.trim()))){
+      input.classList.add("error");
       return false;
     }
-  }
-  const step = steps[i];
-  const input = step.querySelector("input[required],textarea[required]");
-  if (input && !input.value.trim()) {
-    input.classList.add("error");
-    return false;
   }
   return true;
 }
 
-function $(id){return document.getElementById(id);}
-function showHint(el, show){ el.classList.toggle("show", !!show); }
-function markError(input, helpEl, on){
-  if (!input) return;
-  input.classList.toggle("error", !!on);
-  if (helpEl) showHint(helpEl, !!on);
-}
-function isValidUrl(str){return /^https?:\/\/.+/i.test((str||"").trim());}
+// correction en direct
+document.addEventListener("input",e=>{
+  if(e.target.matches("input.error, textarea.error")){
+    if(e.target.value.trim()!==""){e.target.classList.remove("error");}
+  }
+});
 
-$("pill-acces-oui").onclick=()=>{
-  $("accessValue").value="oui";
-  $("pill-acces-oui").classList.add("active");
-  $("pill-acces-non").classList.remove("active");
-  document.querySelectorAll("#pill-acces-oui, #pill-acces-non").forEach(p=>p.classList.remove("error"));
+// gestion pill
+document.getElementById("pill-acces-oui").onclick=()=>{
+  document.getElementById("accessValue").value="oui";
+  document.getElementById("pill-acces-oui").classList.add("active");
+  document.getElementById("pill-acces-non").classList.remove("active");
 };
-$("pill-acces-non").onclick=()=>{
-  $("accessValue").value="non";
-  $("pill-acces-non").classList.add("active");
-  $("pill-acces-oui").classList.remove("active");
-  document.querySelectorAll("#pill-acces-oui, #pill-acces-non").forEach(p=>p.classList.remove("error"));
+document.getElementById("pill-acces-non").onclick=()=>{
+  document.getElementById("accessValue").value="non";
+  document.getElementById("pill-acces-non").classList.add("active");
+  document.getElementById("pill-acces-oui").classList.remove("active");
 };
+
+// reset
+function resetForm(){
+  document.getElementById("formAppareil").reset();
+  steps.forEach(s=>s.classList.remove("active"));
+  document.getElementById("introStep").classList.add("active");
+  progress.style.display="none";
+  document.getElementById("progressbar").style.display="none";
+  currentStep=0;
+}
+
+// compteur + envoi
+const COUNTER_URL="https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec";
+document.getElementById("formAppareil").onsubmit=e=>{
+  e.preventDefault();
+  const data=new URLSearchParams();
+  data.append("demandeur",document.getElementById("demandeur").value.trim());
+  data.append("poste",document.getElementById("poste").value.trim());
+  data.append("type",document.getElementById("type").value.trim());
+  data.append("sat",document.getElementById("sat").value.trim());
+  data.append("appareil",document.getElementById("appareil").value.trim());
+  data.append("localisation",document.getElementById("lien").value.trim());
+  data.append("acces",document.getElementById("accessValue").value==="oui"?document.getElementById("lienAccess").value.trim():"");
+  data.append("notes",document.getElementById("infos").value.trim());
+
+  fetch("https://script.google.com/macros/s/AKfycbz8lUhVMKOrRSdeNBeA0p4ZsQCNOesB0Y4DL27KAoHkHWS78hOqrW-t-9bC_azgN-mY/exec",{method:"POST",body:data})
+  .then(r=>r.text()).then(()=>{
+    fetch(COUNTER_URL+"?increment=true").catch(()=>{});
+    steps.forEach(s=>s.classList.remove("active"));
+    document.getElementById("confirmationStep").classList.add("active");
+    document.getElementById("progress").style.display="none";
+    document.getElementById("progressbar").style.display="none";
+  });
+};
+
+// intro → étapes
+document.getElementById("startForm").addEventListener("click",()=>{
+  document.getElementById("introStep").style.display="none";
+  progress.style.display="block";
+  document.getElementById("progressbar").style.display="block";
+  showStep(0);
+});
 </script>
 </body>
 </html>
