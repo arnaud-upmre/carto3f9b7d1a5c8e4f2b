@@ -405,8 +405,8 @@
     "SAT": "SAT1",
     "accès": "",
     "appareil": "I5428",
-    "poste_latitude": "50.93222",
-    "poste_longitude": "1.86175",
+    "latitude": "50.93222",
+    "longitude": "1.86175",
     "description": "Bipolaire - support 103-26A"
   },
   {
@@ -415,8 +415,8 @@
     "SAT": "SAT1",
     "accès": "",
     "appareil": "I5429",
-    "latitude": 50.931910,
-    "longitude": 1.862499,
+    "latitude": 50.93118,
+    "longitude": 1.86276
     "description": "Bipolaire - support 103-17A"
   },
   {
