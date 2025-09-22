@@ -362,7 +362,6 @@ document.querySelectorAll(".prev").forEach(btn=>{
   });
 });
 
-  // ✅ Enlever le rouge quand on commence à écrire
 document.addEventListener("input", (e)=>{
   if(e.target.classList.contains("error")){
     if(e.target.value.trim() !== ""){
@@ -373,13 +372,13 @@ document.addEventListener("input", (e)=>{
 
 function validateStep(i){
   // Étape Accès (step 6 dans ton code actuel)
-  if (i === 6) {
-    if (!$("accessValue").value) {
-      document.querySelectorAll("#pill-acces-oui, #pill-acces-non").forEach(p => p.classList.add("error"));
-      alert("⚠️ Merci d’indiquer si l’appareil a un accès routier distinct (Oui ou Non).");
-      return false;
-    }
+// Étape Accès (step 6)
+if (i === 6) {
+  if (!$("accessValue").value) {
+    document.querySelectorAll("#pill-acces-oui, #pill-acces-non").forEach(p => p.classList.add("error"));
+    return false; // bloque seulement si rien n’est choisi
   }
+}
 
   const step = steps[i];
   const input = step.querySelector("input[required],textarea[required]");
