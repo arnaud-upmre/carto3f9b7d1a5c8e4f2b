@@ -620,6 +620,36 @@
     "description": "Support 103-47B + T1"
   },
   {
+    "nom": "Coulogne",
+    "type": "SP",
+    "SAT": "SAT3",
+    "accès": "",
+    "appareil": "TT7231",
+    "latitude": 50.936035,
+    "longitude": 1.851151,
+    "description": "Poteau 292-11Y"
+  },
+  {
+    "nom": "Coulogne",
+    "type": "SP",
+    "SAT": "SAT3",
+    "accès": "",
+    "appareil": "TT7232",
+    "latitude": 50.936133,
+    "longitude": 1.851073,
+    "description": "Annonce obligatoire (courbe) - TT avec grillage - Support 292-11Y"
+  },
+  {
+    "nom": "Coulogne",
+    "type": "SP",
+    "SAT": "SAT3",
+    "accès": "",
+    "appareil": "S7402/7230",
+    "latitude": 50.934908,
+    "longitude": 1.849081,
+    "description": "Sectionneur Catenaire - Support 291-84A"
+  },
+  {
     "nom": "Curie",
     "type": "SSP",
     "SAT": "",
