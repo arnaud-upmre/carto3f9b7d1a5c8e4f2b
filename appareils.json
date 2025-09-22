@@ -555,6 +555,16 @@
     "SAT": "",
     "accès": "",
     "appareil": "IL1",
+    "latitude": 50.93456,
+    "longitude": 1.85846,
+    "description": ""
+  },
+  {
+    "nom": "Coulogne",
+    "type": "SP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "SAT1",
     "latitude": 50.93455,
     "longitude": 1.85848,
     "description": ""
@@ -568,6 +578,16 @@
     "latitude": 50.93469,
     "longitude": 1.85835,
     "description": "Support 103-47E + T3"
+  },
+  {
+    "nom": "Coulogne",
+    "type": "SP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT7234",
+    "latitude": 50.93467,
+    "longitude": 1.85839,
+    "description": "Support 103-47D + T4"
   },
   {
     "nom": "Curie",
