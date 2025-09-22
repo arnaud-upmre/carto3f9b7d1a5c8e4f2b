@@ -520,6 +520,36 @@
     "description": ""
   },
   {
+    "nom": "Coulogne",
+    "type": "SP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "IP",
+    "latitude": 50.9346,
+    "longitude": 1.85838,
+    "description": "Bipolaire"
+  },
+  {
+    "nom": "Coulogne",
+    "type": "SP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "IP",
+    "latitude": 50.93457,
+    "longitude": 1.85843,
+    "description": ""
+  },
+  {
+    "nom": "Coulogne",
+    "type": "SP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TSA1",
+    "latitude": 50.93458,
+    "longitude": 1.85843,
+    "description": ""
+  },
+  {
     "nom": "Curie",
     "type": "SSP",
     "SAT": "",
