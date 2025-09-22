@@ -1174,19 +1174,17 @@ document.getElementById("video-close").onclick = () => {
   }).join("");
 }
 
-let activeEditPopup = null; // référence au popup édition actif
+let activeEditPopup = null; // popup édition actif
+
+// petit helper pour afficher le texte dans <pre>
+function escHtml(s){return String(s).replace(/[&<>"]/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[m]));}
 
 // --- Clic simple sur la carte en mode édition ---
-map.on('click', function(e) {
-  if (!editMode) return; // pas activé → rien
+map.on('click', (e) => {
+  if (!editMode) return;
 
-  const lat = e.latlng.lat.toFixed(5);
-  const lng = e.latlng.lng.toFixed(5);
-
-  const allText = `"latitude": ${lat},
-"longitude": ${lng},
-"poste_latitude": "${lat}",
-"poste_longitude": "${lng}"`;
+  const lat = Number(e.latlng.lat.toFixed(5));
+  const lng = Number(e.latlng.lng.toFixed(5));
 
   const posteText = `"poste_latitude": "${lat}",
 "poste_longitude": "${lng}"`;
@@ -1194,41 +1192,58 @@ map.on('click', function(e) {
   const accesText = `"latitude": ${lat},
 "longitude": ${lng}`;
 
+  const previewText = `"latitude": ${lat},
+"longitude": ${lng},
+"poste_latitude": "${lat}",
+"poste_longitude": "${lng}"`;
+
   const popupContent = `
 <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;font-size:14px;min-width:220px;">
   <div style="font-weight:600; font-size:16px; margin-bottom:12px;">📍 Informations</div>
 
-  <pre style="margin:0; background:#f3f4f6; padding:8px; border-radius:6px; font-size:13px;">${allText}</pre>
+  <pre style="margin:0; background:#f3f4f6; padding:8px; border-radius:6px; font-size:13px;">${escHtml(previewText)}</pre>
 
   <div style="display:flex; flex-direction:column; gap:8px; margin-top:12px;">
-    <button onclick="navigator.clipboard.writeText('${allText.replace(/\n/g, "\\n")}')" 
-      style="padding:8px 12px; border:none; border-radius:6px; background:#007aff; color:white; cursor:pointer;">
-      📋 Copier tout
-    </button>
-
-    <button onclick="navigator.clipboard.writeText('${posteText.replace(/\n/g, "\\n")}')" 
+    <button id="btn-copy-poste"
       style="padding:8px 12px; border:none; border-radius:6px; background:#f59e0b; color:white; cursor:pointer;">
       🏢 Copier Poste
     </button>
 
-    <button onclick="navigator.clipboard.writeText('${accesText.replace(/\n/g, "\\n")}')" 
+    <button id="btn-copy-acces"
       style="padding:8px 12px; border:none; border-radius:6px; background:#3b82f6; color:white; cursor:pointer;">
       🚪 Copier Accès
     </button>
   </div>
-</div>
-`;
+</div>`;
 
   // Fermer l'ancien popup s'il existe
-  if (activeEditPopup) {
-    map.closePopup(activeEditPopup);
-  }
+  if (activeEditPopup) map.closePopup(activeEditPopup);
 
-  // Créer un nouveau popup
+  // Créer + ouvrir le popup
   activeEditPopup = L.popup({ autoClose: false, closeOnClick: false })
     .setLatLng(e.latlng)
     .setContent(popupContent)
     .openOn(map);
+
+  // Brancher les handlers après insertion dans le DOM
+  setTimeout(() => {
+    const flash = (txt) => {
+      editBanner.textContent = txt;
+      editBanner.style.display = "block";
+      setTimeout(() => { editBanner.style.display = "none"; }, 1200);
+    };
+
+    const safeCopy = (text) => {
+      if (!navigator.clipboard?.writeText) { alert("Copie non disponible dans ce navigateur."); return; }
+      navigator.clipboard.writeText(text).then(() => flash("✅ Copié")).catch(() => alert("Impossible de copier."));
+    };
+
+    const bPoste = document.getElementById('btn-copy-poste');
+    const bAcces = document.getElementById('btn-copy-acces');
+
+    bPoste && bPoste.addEventListener('click', () => safeCopy(posteText));
+    bAcces && bAcces.addEventListener('click', () => safeCopy(accesText));
+  }, 0);
 });
     
 </script>
