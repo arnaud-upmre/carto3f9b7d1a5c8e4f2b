@@ -534,7 +534,7 @@
     "type": "SP",
     "SAT": "",
     "accès": "",
-    "appareil": "IL1",
+    "appareil": "TSA1",
     "latitude": 50.93456,
     "longitude": 1.85845,
     "description": ""
@@ -544,7 +544,7 @@
     "type": "SP",
     "SAT": "",
     "accès": "",
-    "appareil": "TSA1",
+    "appareil": "IL2",
     "latitude": 50.93458,
     "longitude": 1.85842,
     "description": ""
