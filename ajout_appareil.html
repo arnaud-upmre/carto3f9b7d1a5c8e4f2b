@@ -314,16 +314,19 @@ document.querySelectorAll(".next").forEach(btn=>{
         showStep(currentStep);
         return;
       }
-      if (currentStep === 6 && !$("accessValue").value) {
-        document.querySelectorAll("#pill-acces-oui, #pill-acces-non").forEach(p => p.classList.add("error"));
-        return; 
-      }
-if (currentStep === 6 && $("accessValue").value === "non") {
-  $("lienAccess").value = "";
-  markError($("lienAccess"), $("lienAccessHelp"), false);
-  currentStep = 7; // saute directement aux Notes
-  showStep(currentStep);
-  return;
+if (currentStep === 6) {
+  if (!$("accessValue").value) {
+    document.querySelectorAll("#pill-acces-oui, #pill-acces-non").forEach(p => p.classList.add("error"));
+    return; 
+  }
+  if ($("accessValue").value === "non") {
+    $("lienAccess").value = "";
+    markError($("lienAccess"), $("lienAccessHelp"), false);
+    currentStep = 8; // saute Étape 8 et va direct aux Notes
+    showStep(currentStep);
+    return;
+  }
+  // si "oui" → continuer normalement vers l’étape 8
 }
       if (currentStep === 5) {
         const ok = isValidUrl($("lien").value);
