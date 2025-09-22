@@ -2,19 +2,23 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"/>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+  />
   <title>➕ Ajouter un appareil</title>
 
   <style>
     .field-hint{font-size:13px;color:#c62828;margin-top:6px;display:none}
     .field-hint.show{display:block}
-    input.error, textarea.error{border:2px solid #c62828!important;background:#ffecec}
+    input.error, textarea.error {border:2px solid #c62828!important;background:#ffecec}
+
     *,*::before,*::after{box-sizing:border-box}
-    body{margin:0;padding:16px;font-family:Inter,system-ui,Roboto,Arial;background:#f7f7f8;color:#202124}
+    body{margin:0;padding:16px;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;background:#f7f7f8;color:#202124}
     h2{text-align:center;margin:0 0 12px}
     .card{max-width:640px;margin:auto;background:#fff;padding:16px;border-radius:14px;box-shadow:0 2px 6px rgba(0,0,0,.15)}
     label{display:block;margin:12px 0 6px;font-weight:600}
-    input,textarea{width:100%;padding:12px;font-size:16px;border:1px solid #d0d7de;border-radius:10px;min-height:44px}
+    input,textarea{width:100%;padding:12px;font-size:16px;border:1px solid #d0d7de;border-radius:10px;background:#fff;color:#202124;min-height:44px}
     textarea{min-height:96px;resize:none}
     .pill-group{display:flex;gap:10px;margin:12px 0}
     .pill{flex:1;text-align:center;padding:12px;border:1px solid #d0d7de;border-radius:999px;cursor:pointer}
@@ -22,29 +26,28 @@
     .pill.error{border:2px solid #c62828!important;background:#ffecec}
     .btn-row{display:flex;gap:12px;margin-top:18px}
     .btn{flex:1;padding:12px;font-size:16px;border:none;border-radius:10px;cursor:pointer}
-    .btn.primary{background:#0b6cff;color:#fff}
+    .btn.primary{background:#0b6cff;color:#fff;transition:background 0.3s}
+    .btn.primary:disabled{opacity:0.6;cursor:not-allowed}
     .btn.secondary{background:#ccc}
     .step{display:none;animation:fade .3s ease}
     .step.active{display:block}
     @keyframes fade{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:translateX(0)}}
     #progress{margin-bottom:12px;text-align:center;color:#666}
     #progressbar{width:100%;height:6px;background:#d0d7de;border-radius:4px;overflow:hidden;margin-bottom:8px}
-    #progressbar-fill{height:100%;width:0%;background:#0b6cff;transition:width .3s}
-    /* ✅ Masquer le bouton Annuler uniquement à la confirmation */
-    #confirmationStep.active ~ #cancel-row {display:none;}
+    #progressbar-fill{height:100%;width:0%;background:#0b6cff;transition:width 0.3s ease}
+    #confirmationStep.active ~ #cancel-row {display:none}
   </style>
 </head>
 <body>
   <h2>➕ Ajouter un appareil</h2>
   <div class="card">
     <div id="progressbar"><div id="progressbar-fill"></div></div>
-    <div id="progress">Étape 1/8</div>
-
+    <div id="progress">Étape 1/9</div>
     <form id="formAppareil" novalidate>
+
       <!-- Intro -->
       <div class="step active" id="introStep">
-        <p style="text-align:center;color:#666;margin-bottom:20px;line-height:1.5">
-          ⏱️ Quelques secondes suffisent pour ajouter un appareil.</p>
+        <p style="text-align:center;color:#666;margin-bottom:20px;line-height:1.5">⏱️ Quelques secondes suffisent pour ajouter un appareil.</p>
         <div class="btn-row">
           <button type="button" class="btn primary" id="startForm">🚀 Commencer</button>
         </div>
@@ -54,9 +57,7 @@
       <div class="step">
         <label>👤 Demandeur :</label>
         <input id="demandeur" required>
-        <div class="btn-row">
-          <button type="button" class="btn primary next">Suivant ➡️</button>
-        </div>
+        <div class="btn-row"><button type="button" class="btn primary next">Suivant ➡️</button></div>
       </div>
 
       <!-- Étape 2 -->
@@ -64,7 +65,7 @@
         <label>📌 Poste :</label>
         <input id="poste" required placeholder="Ex : Hazebrouck">
         <label>📌 Type (optionnel) :</label>
-        <input id="type" placeholder="Ex : SP, SSP, PRCI....">
+        <input id="type" placeholder="Ex : SP, SSP, PRCI...">
         <div class="btn-row">
           <button type="button" class="btn secondary prev">⬅️ Retour</button>
           <button type="button" class="btn primary next">Suivant ➡️</button>
@@ -117,10 +118,10 @@
       </div>
 
       <!-- Étape 7 -->
-      <div class="step" id="accessStep">
-        <label>🔗 Lien Google Maps de l’accès :</label>
+      <div class="step" id="accessDetailsStep">
+        <label>🔗 Lien Google Maps accès :</label>
         <input id="lienAccess" type="url" placeholder="https://maps.app.goo.gl/…">
-        <div id="lienAccessHelp" class="field-hint">⚠️ Lien requis</div>
+        <div id="lienAccessHelp" class="field-hint">⚠️ Lien requis pour continuer</div>
         <div class="btn-row">
           <button type="button" class="btn secondary prev">⬅️ Retour</button>
           <button type="button" class="btn primary next">Suivant ➡️</button>
@@ -129,13 +130,18 @@
 
       <!-- Étape 8 -->
       <div class="step">
-        <p style="line-height:1.5">
-          🎉 Super, presque terminé !<br>
-          Vérifiez ci-dessous les informations saisies.<br>
-          Un détail à modifier ? Touchez la ligne correspondante.<br>
-          Sinon, envoyez votre contribution ✅
-        </p>
-        <div id="recap" style="margin:12px 0; font-size:15px; line-height:1.5"></div>
+        <label>📝 Notes complémentaires :</label>
+        <textarea id="infos" placeholder="Accès, portail…"></textarea>
+        <div class="btn-row">
+          <button type="button" class="btn secondary prev">⬅️ Retour</button>
+          <button type="button" class="btn primary next">Suivant ➡️</button>
+        </div>
+      </div>
+
+      <!-- Étape 9 -->
+      <div class="step">
+        <p>🎉 Super, presque terminé ! Vérifiez ci-dessous :</p>
+        <div id="recap"></div>
         <div class="btn-row">
           <button type="button" class="btn secondary prev">⬅️ Retour</button>
           <button type="submit" class="btn primary">📩 Envoyer</button>
@@ -144,154 +150,69 @@
 
       <!-- Confirmation -->
       <div class="step" id="confirmationStep">
-        <h3 style="text-align:center;margin:16px 0">✅ Merci ! Votre demande a bien été envoyée.</h3>
+        <h3 style="text-align:center">✅ Merci ! Votre demande a bien été envoyée.</h3>
         <div class="btn-row">
           <button type="button" class="btn secondary" onclick="window.location.href='index.html'">🏠 Retour à l’accueil</button>
           <button type="button" class="btn primary" onclick="resetForm()">➕ Ajouter un autre appareil</button>
         </div>
       </div>
 
-      <!-- Bouton annuler -->
       <div id="cancel-row" class="btn-row" style="margin-top:12px">
-        <button type="button" class="btn secondary" onclick="window.location.href='index.html'">
-          ❌ Annuler et revenir à l’accueil
-        </button>
+        <button type="button" class="btn secondary" onclick="window.location.href='index.html'">❌ Annuler et revenir à l’accueil</button>
       </div>
     </form>
   </div>
 
 <script>
-let currentStep=0;
-let returnToRecap=false;
-
+let currentStep=0, returnToRecap=false;
 const steps=document.querySelectorAll(".step:not(#introStep):not(#confirmationStep)");
 const progress=document.getElementById("progress");
 
 function showStep(i){
   steps.forEach((s,idx)=>s.classList.toggle("active",idx===i));
-  progress.textContent=`Étape ${i+1}/${steps.length}`;
   document.getElementById("progressbar-fill").style.width=((i+1)/steps.length*100)+"%";
-
-  if(i===steps.length-1){
-    const recap=document.getElementById("recap");
-    recap.innerHTML="";
-    const data=[
-      {step:0,label:"👤 Demandeur",value:demandeur.value},
-      {step:1,label:"📌 Poste",value:poste.value+(type.value?" ("+type.value+")":"")},
-      {step:2,label:"📌 SAT",value:sat.value},
-      {step:3,label:"💡 Appareil",value:appareil.value},
-      {step:4,label:"📍 Lien appareil",value:lien.value},
-      {step:5,label:"🚪 Accès",value:accessValue.value==="oui"?lienAccess.value:""}
-    ];
-    data.forEach(item=>{
-      if(item.value&&item.value.trim()!==""){
-        const div=document.createElement("div");
-        if(item.value.startsWith("http")){
-          const span=document.createElement("span");
-          span.textContent=item.label+" (par lien)";
-          div.appendChild(span);
-          const link=document.createElement("a");
-          link.href=item.value;link.target="_blank";link.rel="noopener";
-          link.textContent=" 🔎 Voir sur Google Maps";
-          link.style.marginLeft="8px";link.style.color="#0b6cff";link.style.textDecoration="underline";
-          link.addEventListener("click",e=>e.stopPropagation());
-          div.appendChild(link);
-        } else {
-          div.textContent=`${item.label} : ${item.value}`;
-        }
-        div.style.cursor="pointer";div.style.margin="6px 0";div.style.padding="6px";
-        div.style.border="1px solid #d0d7de";div.style.borderRadius="6px";
-        div.onclick=()=>{currentStep=item.step;showStep(currentStep);returnToRecap=true;};
-        recap.appendChild(div);
-      }
-    });
-  }
 }
 
-// navigation
+function $(id){return document.getElementById(id);}
+function markError(input, helpEl, on){input.classList.toggle("error",!!on);if(helpEl)helpEl.classList.toggle("show",!!on)}
+
 document.querySelectorAll(".next").forEach(btn=>{
   btn.addEventListener("click",e=>{
     e.preventDefault();
-    if(validateStep(currentStep)){
-      // 🚪 Accès obligatoire
-      if(currentStep===5 && !accessValue.value){
-        document.querySelectorAll("#pill-acces-oui, #pill-acces-non").forEach(p=>p.classList.add("error"));
-        return;
-      }
-      if(returnToRecap){returnToRecap=false;currentStep=steps.length-1;showStep(currentStep);return;}
-      if(currentStep===5 && accessValue.value==="non"){currentStep=steps.length-1;showStep(currentStep);return;}
-      currentStep++;showStep(currentStep);
-    }
+    if(currentStep===4 && !$("lien").value.trim()){markError($("lien"),$("lienHelp"),true);return;}
+    if(currentStep===5 && !$("accessValue").value){document.querySelectorAll("#pill-acces-oui,#pill-acces-non").forEach(p=>p.classList.add("error"));return;}
+    if(currentStep===6 && $("accessValue").value==="oui" && !$("lienAccess").value.trim()){markError($("lienAccess"),$("lienAccessHelp"),true);return;}
+    currentStep++;showStep(currentStep);
   });
 });
-document.querySelectorAll(".prev").forEach(btn=>{
-  btn.addEventListener("click",e=>{e.preventDefault();if(currentStep>0){currentStep--;showStep(currentStep);}});
-});
 
-// validation
-function validateStep(i){
-  const step=steps[i];
-  const input=step.querySelector("input[required],input[type=url]");
-  if(input){
-    if(!input.value.trim()||(input.type==="url"&&!/^https?:\/\//i.test(input.value.trim()))){
-      input.classList.add("error");return false;
-    }
-  }
-  return true;
-}
-document.addEventListener("input",e=>{
-  if(e.target.matches("input.error,textarea.error")){if(e.target.value.trim()!==""){e.target.classList.remove("error");}}
-});
+document.querySelectorAll(".prev").forEach(btn=>btn.addEventListener("click",()=>{if(currentStep>0){currentStep--;showStep(currentStep)}}));
 
-// gestion pill
-pill-acces-oui.onclick=()=>{accessValue.value="oui";pill-acces-oui.classList.add("active");pill-acces-non.classList.remove("active");document.querySelectorAll("#pill-acces-oui,#pill-acces-non").forEach(p=>p.classList.remove("error"));}
-pill-acces-non.onclick=()=>{accessValue.value="non";pill-acces-non.classList.add("active");pill-acces-oui.classList.remove("active");document.querySelectorAll("#pill-acces-oui,#pill-acces-non").forEach(p=>p.classList.remove("error"));}
+$("pill-acces-oui").onclick=()=>{$("accessValue").value="oui";$("pill-acces-oui").classList.add("active");$("pill-acces-non").classList.remove("active");document.querySelectorAll("#pill-acces-oui,#pill-acces-non").forEach(p=>p.classList.remove("error"))};
+$("pill-acces-non").onclick=()=>{$("accessValue").value="non";$("pill-acces-non").classList.add("active");$("pill-acces-oui").classList.remove("active");document.querySelectorAll("#pill-acces-oui,#pill-acces-non").forEach(p=>p.classList.remove("error"))};
 
-// reset
-function resetForm(){
-  formAppareil.reset();currentStep=0;
-  steps.forEach(s=>s.classList.remove("active"));
-  introStep.classList.add("active");progress.style.display="none";progressbar.style.display="none";
-  const saved=localStorage.getItem("demandeur");if(saved)demandeur.value=saved;
-}
-
-// compteur + envoi
-const COUNTER_URL="https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec";
-formAppareil.onsubmit=e=>{
+$("formAppareil").onsubmit=e=>{
   e.preventDefault();
+  const formData=new URLSearchParams();
+  formData.append("demandeur",$("demandeur").value.trim());
+  formData.append("poste",$("poste").value.trim());
+  formData.append("type",$("type").value.trim());
+  formData.append("sat",$("sat").value.trim());
+  formData.append("appareil",$("appareil").value.trim());
+  formData.append("localisation",$("lien").value.trim());
+  formData.append("acces",$("accessValue").value==="oui"?$("lienAccess").value.trim():"");
+  formData.append("notes",$("infos").value.trim());
+
   const submitBtn=document.querySelector('.btn.primary[type="submit"]');
   const oldLabel=submitBtn.textContent;
   submitBtn.disabled=true;submitBtn.textContent="⏳ Envoi en cours…";
 
-  const data=new URLSearchParams();
-  data.append("demandeur",demandeur.value.trim());
-  data.append("poste",poste.value.trim());
-  data.append("type",type.value.trim());
-  data.append("sat",sat.value.trim());
-  data.append("appareil",appareil.value.trim());
-  data.append("localisation",lien.value.trim());
-  data.append("acces",accessValue.value==="oui"?lienAccess.value.trim():"");
-
-  fetch("https://script.google.com/macros/s/AKfycbz8lUhVMKOrRSdeNBeA0p4ZsQCNOesB0Y4DL27KAoHkHWS78hOqrW-t-9bC_azgN-mY/exec",{method:"POST",body:data})
-  .then(r=>r.text()).then(()=>{
-    fetch(COUNTER_URL+"?increment=true").catch(()=>{});
-    steps.forEach(s=>s.classList.remove("active"));
-    confirmationStep.classList.add("active");progress.style.display="none";progressbar.style.display="none";
-  })
-  .finally(()=>{submitBtn.disabled=false;submitBtn.textContent=oldLabel;});
+  fetch("https://script.google.com/macros/s/AKfycbz8lUhVMKOrRSdeNBeA0p4ZsQCNOesB0Y4DL27KAoHkHWS78hOqrW-t-9bC_azgN-mY/exec",{method:"POST",body:formData})
+  .then(()=>{steps.forEach(s=>s.classList.remove("active"));document.getElementById("confirmationStep").classList.add("active")})
+  .finally(()=>{submitBtn.disabled=false;submitBtn.textContent=oldLabel});
 };
 
-// intro → étapes
-startForm.addEventListener("click",()=>{introStep.style.display="none";progress.style.display="block";progressbar.style.display="block";showStep(0);});
-
-// sauvegarde demandeur
-document.addEventListener("DOMContentLoaded",()=>{
-  const saved=localStorage.getItem("demandeur");if(saved)demandeur.value=saved;
-  demandeur.addEventListener("input",()=>{localStorage.setItem("demandeur",demandeur.value.trim());});
-  const params=new URLSearchParams(window.location.search);
-  if(params.has("appareil"))appareil.value=params.get("appareil").trim();
-  if(params.has("poste"))poste.value=params.get("poste").trim();
-});
+document.getElementById("startForm").onclick=()=>{document.getElementById("introStep").style.display="none";showStep(0)};
 </script>
 </body>
 </html>
