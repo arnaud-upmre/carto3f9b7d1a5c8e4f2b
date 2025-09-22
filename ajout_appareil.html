@@ -318,8 +318,8 @@ document.querySelectorAll(".next").forEach(btn=>{
         document.querySelectorAll("#pill-acces-oui, #pill-acces-non").forEach(p => p.classList.add("error"));
         return; 
       }
-if (currentStep === 5 && $("accessValue").value === "non") {
-  $("lienAccess").value = ""; // on vide le champ
+if (currentStep === 6 && $("accessValue").value === "non") {
+  $("lienAccess").value = "";
   markError($("lienAccess"), $("lienAccessHelp"), false);
   currentStep = 7; // saute directement aux Notes
   showStep(currentStep);
