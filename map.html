@@ -296,6 +296,57 @@ const defaultZoom = 8;
 
 const map = L.map('map', { zoomControl: false, attributionControl: false })
              .setView(defaultCenter, defaultZoom);
+let editMode = false;   
+let holdTimeout;       
+
+const editBanner = document.createElement("div");
+editBanner.style = `
+  position: fixed;
+  bottom: 10px; left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.8);
+  color: white;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  z-index: 9999;
+  display: none;
+`;
+document.body.appendChild(editBanner);
+
+const editIcon = document.createElement("div");
+editIcon.textContent = "✏️";
+editIcon.style = `
+  position: fixed;
+  bottom: 40px; left: 12px;
+  font-size: 18px;
+  background: rgba(0,0,0,0.75);
+  color: white;
+  padding: 6px 8px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  z-index: 9999;
+  display: none;
+  font-family: system-ui, sans-serif;
+`;
+document.body.appendChild(editIcon);
+
+
+document.addEventListener("keydown", function(e) {
+  if (e.ctrlKey && e.altKey && e.key.toLowerCase() === "e") {
+    editMode = !editMode;
+
+    editBanner.textContent = editMode ? "✏️ Mode édition activé" : "❌ Mode édition désactivé";
+    editBanner.style.display = "block";
+    setTimeout(() => { editBanner.style.display = "none"; }, 2000);
+
+    // Afficher ou cacher le crayon permanent
+    editIcon.style.display = editMode ? "block" : "none";
+  }
+});
+    
     const allMarkers = [];
 
 let _datasetsLoaded = 0;
@@ -1091,6 +1142,56 @@ document.getElementById("video-close").onclick = () => {
     return part; // Sinon on garde tel quel
   }).join("");
 }
+
+map.on('mousedown', function(e) {
+  if (!editMode) return; // pas activé → rien
+
+  holdTimeout = setTimeout(() => {
+    const lat = e.latlng.lat.toFixed(5);
+    const lng = e.latlng.lng.toFixed(5);
+
+    const popupContent = `
+<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;font-size:14px;min-width:220px;">
+  <div style="font-weight:600; font-size:16px; margin-bottom:12px;">📍 Informations</div>
+
+  <pre style="margin:0; background:#f3f4f6; padding:8px; border-radius:6px; font-size:13px;">
+"latitude": ${lat},
+"longitude": ${lng},
+"poste_latitude": "${lat}",
+"poste_longitude": "${lng}"
+  </pre>
+
+  <div style="display:flex; flex-direction:column; gap:8px; margin-top:12px;">
+    <button onclick="navigator.clipboard.writeText(\`
+\"latitude\": ${lat},
+\"longitude\": ${lng},
+\"poste_latitude\": \"${lat}\",
+\"poste_longitude\": \"${lng}\`)" 
+      style="padding:8px 12px; border:none; border-radius:6px; background:#007aff; color:white; cursor:pointer;">
+      📋 Copier tout
+    </button>
+
+    <button onclick="navigator.clipboard.writeText('\"poste_latitude\": \"${lat}\",\\n\"poste_longitude\": \"${lng}\"')" 
+      style="padding:8px 12px; border:none; border-radius:6px; background:#f59e0b; color:white; cursor:pointer;">
+      🏢 Copier Poste
+    </button>
+
+    <button onclick="navigator.clipboard.writeText('\"latitude\": ${lat},\\n\"longitude\": ${lng}')" 
+      style="padding:8px 12px; border:none; border-radius:6px; background:#3b82f6; color:white; cursor:pointer;">
+      🚪 Copier Accès
+    </button>
+  </div>
+</div>
+`;
+
+    L.popup().setLatLng(e.latlng).setContent(popupContent).openOn(map);
+  }, 1000); // 1000ms = 1 seconde
+});
+
+// Si on relâche avant 1s → annule
+map.on('mouseup', function() {
+  clearTimeout(holdTimeout);
+});
     
 </script>
 
