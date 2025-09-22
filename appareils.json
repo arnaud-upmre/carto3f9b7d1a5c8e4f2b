@@ -3414,6 +3414,16 @@
     "type": "SST",
     "SAT": "",
     "accès": "",
+    "appareil": "248-27B",
+    "latitude": 50.684199,
+    "longitude": 1.623762,
+    "description": ""
+  },
+  {
+    "nom": "Pont de briques",
+    "type": "SST",
+    "SAT": "",
+    "accès": "",
     "appareil": "P2",
     "latitude": 50.6838356,
     "longitude": 1.6247466,
