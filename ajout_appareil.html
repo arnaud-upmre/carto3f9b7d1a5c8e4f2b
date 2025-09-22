@@ -256,8 +256,9 @@ const progress=document.getElementById("progress");
 
 function showStep(i){
   steps.forEach((s,idx)=>s.classList.toggle("active",idx===i));
-  let pct = Math.round(((i+1) / steps.length) * 100);
-  progress.textContent = `${pct}%`;
+let pct = Math.round(((i+1) / (steps.length)) * 100);
+if (pct > 100) pct = 100; 
+progress.textContent = `${pct}%`;
   document.getElementById("progressbar-fill").style.width = ((i+1)/steps.length*100) + "%";
 
   if(i===10){
@@ -326,11 +327,13 @@ document.querySelectorAll(".next").forEach(btn=>{
         document.querySelectorAll("#pill-acces-oui, #pill-acces-non").forEach(p => p.classList.add("error"));
         return; 
       }
-      if (currentStep === 6 && $("accessValue").value === "non") {
-        currentStep = 9; 
-        showStep(currentStep);
-        return;
-      }
+if (currentStep === 6 && $("accessValue").value === "non") {
+  $("lienAccess").value = ""; // on vide le champ
+  markError($("lienAccess"), $("lienAccessHelp"), false);
+  currentStep = 9; 
+  showStep(currentStep);
+  return;
+}
       if (currentStep === 5) {
         const ok = isValidUrl($("lien").value);
         markError($("lien"), $("lienHelp"), !ok);
@@ -507,6 +510,14 @@ $("formAppareil").onsubmit = e => {
 
 // ✅ Initialisation
 steps.forEach(s => s.classList.remove("active"));
+
+  // Pré-remplissage du champ appareil depuis l'URL
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.has("appareil")) {
+  $("appareil").value = urlParams.get("appareil");
+  $("appareil").setAttribute("readonly", "true");
+}
+  
 document.getElementById("introStep").classList.add("active");
 progress.style.display = "none"; 
 document.getElementById("progressbar").style.display = "none";
