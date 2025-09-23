@@ -384,23 +384,26 @@ if (navigator.geolocation && $("presentValue").value === "oui") {
 }
   
 if (i === 8) { 
+  // 👉 d'abord on affiche le conteneur
+  toggle($("mapAccessWrap"), 1);
+
+  // 👉 puis seulement on crée la carte
   if (!mapAccess) {
     startLocAccess();
   }
 
-
+  // ✅ recalcul taille + centrage
   requestAnimationFrame(() => {
     if (mapAccess) {
       mapAccess.invalidateSize();
       mapAccess.setView(lastFix ? [lastFix.lat, lastFix.lon] : HAZE, 18);
     }
   });
-  setTimeout(() => mapAccess && mapAccess.invalidateSize(), 1000);
 
-  // 🚀 Localisation auto dès l’ouverture
+  // 🚀 Localisation auto dès l’ouverture (comme appareil)
   setTimeout(() => $("btnRecenterAccess").click(), 500);
 
-  // 💡 On force "Attente GPS…" dès qu’on est en mode GPS
+  // 💡 Texte "Attente GPS…" si mode GPS
   if (navigator.geolocation && $("accessMethod").value === "gps") {
     const btn = $("btnRecenterAccess");
     const oldTxt = btn.textContent;
