@@ -12,15 +12,6 @@
 <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
   <style>
 
-    .coords-box {
-  background: rgba(0,0,0,0.7);
-  color: #fff;
-  padding: 6px 10px;
-  border-radius: 6px;
-  font-size: 13px;
-  font-family: system-ui, sans-serif;
-}
-
 .leaflet-popup-content-wrapper {
   background: linear-gradient(
     135deg,
@@ -305,40 +296,6 @@ const defaultZoom = 8;
 
 const map = L.map('map', { zoomControl: false, attributionControl: false })
              .setView(defaultCenter, defaultZoom);
-
-    // Ajoute un contrôle Leaflet en bas à gauche
-const coordsDisplay = L.control({ position: "bottomleft" });
-
-coordsDisplay.onAdd = function () {
-  this._div = L.DomUtil.create("div", "coords-box");
-  this.update();
-  return this._div;
-};
-
-coordsDisplay.update = function (latlng) {
-  this._div.innerHTML = latlng
-    ? `📍 ${latlng.lat.toFixed(5)}, ${latlng.lng.toFixed(5)}`
-    : "📍 Cliquez ou déplacez le marqueur";
-};
-
-    // Création du marqueur draggable au centre
-const draggableMarker = L.marker(defaultCenter, { draggable: true }).addTo(map);
-
-// Quand on déplace le marqueur → maj coordonnées
-draggableMarker.on("drag", function (e) {
-  const { lat, lng } = e.latlng;
-  coordsDisplay.update({ lat, lng });
-});
-
-// Quand on clique sur la carte → on repositionne le marqueur
-map.on("click", function (e) {
-  draggableMarker.setLatLng(e.latlng);
-  coordsDisplay.update(e.latlng);
-});
-    
-
-coordsDisplay.addTo(map);
-
 let editMode = false;   
 let holdTimeout;       
 
