@@ -350,6 +350,8 @@ progress.textContent = `${pct}%`;
     startLocDevice(); 
   }
   setTimeout(() => mapDevice && mapDevice.invalidateSize(), 300);
+    // 🚀 Lancer la localisation GPS automatiquement
+$("btnRecenterDevice").click();
 
 if (navigator.geolocation && $("presentValue").value === "oui") {
   const btn = $("btnRecenterDevice");
@@ -627,6 +629,8 @@ $("pill-oui").onclick = () => {
   toggle($("lienField"), 0);
 
   setTimeout(() => mapDevice && mapDevice.invalidateSize(), 300);
+  // 🚀 Lancer la localisation GPS automatiquement
+$("btnRecenterAccess").click();
   markError($("lien"), $("lienHelp"), false);
   document.querySelectorAll("#pill-oui, #pill-non").forEach(p => p.classList.remove("error"));
 
