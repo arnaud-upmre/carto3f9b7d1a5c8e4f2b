@@ -971,12 +971,18 @@ if (confirmFromFix(lastFix)) {
   return;
 }
 
-  if (navigator.geolocation) {
+if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
       p => {
         applyFix(p.coords.latitude, p.coords.longitude);
         confirmFromFix({ lat: p.coords.latitude, lon: p.coords.longitude });
         map.invalidateSize();
+
+        // ✅ Réactive le bouton après 2 sec
+        setTimeout(() => {
+          btn.textContent = oldTxt;
+          btn.disabled = false;
+        }, 2000);
       },
       err => { 
         if (err.code === 1) onGeoDenied(kind); 
@@ -985,8 +991,7 @@ if (confirmFromFix(lastFix)) {
       },
       GEO_OPTS
     );
-  }
-};
+}
 
   
   if(mapId==="mapDevice"){mapDevice=map;markerDevice=marker;}
