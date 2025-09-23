@@ -391,21 +391,17 @@ if (i === 8) {
     startLocAccess();
   }
 
-  // ✅ force toujours une couche de fond
-  if (mapAccess && !mapAccess.hasLayer(orthoIGN)) {
-    orthoIGN.addTo(mapAccess);
-  }
-
-  // ✅ invalide et recadre
+  // ✅ double recalcul taille
+  setTimeout(() => mapAccess && mapAccess.invalidateSize(), 200);
   setTimeout(() => {
     if (mapAccess) {
       mapAccess.invalidateSize();
       mapAccess.setView(lastFix ? [lastFix.lat, lastFix.lon] : HAZE, 18);
     }
-  }, 300);
+  }, 800);
 
   // 🚀 auto-localisation
-  setTimeout(() => $("btnRecenterAccess").click(), 600);
+  setTimeout(() => $("btnRecenterAccess").click(), 1000);
 }
   
   if(i===10){
