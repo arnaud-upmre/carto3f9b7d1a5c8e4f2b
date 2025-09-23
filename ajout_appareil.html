@@ -385,30 +385,28 @@ if (navigator.geolocation && $("presentValue").value === "oui") {
   
 
 if (i === 8) {
-  // 👉 afficher le conteneur avant tout
   toggle($("mapAccessWrap"), 1);
 
-  // 👉 puis seulement créer la carte si pas déjà créée
   if (!mapAccess) {
     startLocAccess();
   }
 
-  // ✅ forcer plusieurs recalculs pour être sûr que la carte s’affiche
-  setTimeout(() => mapAccess && mapAccess.invalidateSize(), 100);
-  setTimeout(() => mapAccess && mapAccess.invalidateSize(), 400);
-  setTimeout(() => mapAccess && mapAccess.invalidateSize(), 800);
+  // ✅ force toujours une couche de fond
+  if (mapAccess && !mapAccess.hasLayer(orthoIGN)) {
+    orthoIGN.addTo(mapAccess);
+  }
 
-  // ✅ recentrer sur la dernière position connue ou Hazebrouck
+  // ✅ invalide et recadre
   setTimeout(() => {
     if (mapAccess) {
+      mapAccess.invalidateSize();
       mapAccess.setView(lastFix ? [lastFix.lat, lastFix.lon] : HAZE, 18);
     }
-  }, 900);
+  }, 300);
 
-  // 🚀 auto-localisation dès l’ouverture
-  setTimeout(() => $("btnRecenterAccess").click(), 1200);
+  // 🚀 auto-localisation
+  setTimeout(() => $("btnRecenterAccess").click(), 600);
 }
-  
   
   if(i===10){
     const recap = $("recap");
