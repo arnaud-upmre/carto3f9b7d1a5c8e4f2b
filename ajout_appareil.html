@@ -946,27 +946,27 @@ $(btnRecenter).onclick = () => {
 
   const kind = (mapId === "mapDevice") ? "device" : "access";
 
-  const confirmFromFix = (fix) => {
-    if (!fix) return false;
-    if (kind === "device") {
-      DEVICE_CONFIRMED = true;
-      $("mapDeviceWrap").classList.remove("error");
-      setMapTo(map, marker, fix.lat, fix.lon, "device");
-    } else {
-      ACCESS_CONFIRMED = true;
-      $("mapAccessWrap").classList.remove("error");
-      setMapTo(map, marker, fix.lat, fix.lon, "access");
-    }
-    btn.textContent = oldTxt;
-    btn.disabled = false;
-    return true;
-  };
+const confirmFromFix = (fix) => {
+  if (!fix) return false;
+  if (kind === "device") {
+    DEVICE_CONFIRMED = true;
+    $("mapDeviceWrap").classList.remove("error");
+    setMapTo(map, marker, fix.lat, fix.lon, "device");
+  } else {
+    ACCESS_CONFIRMED = true;
+    $("mapAccessWrap").classList.remove("error");
+    setMapTo(map, marker, fix.lat, fix.lon, "access");
+  }
+  // ❌ on ne remet pas encore le texte
+  return true;
+};
   
 if (confirmFromFix(lastFix)) {
+  // Force l’affichage du texte "🛰️ Attente GPS…" pendant 2 sec
   setTimeout(() => {
     btn.textContent = oldTxt; 
     btn.disabled = false;
-  }, 2000); 
+  }, 2000);
   map.invalidateSize();
   return;
 }
