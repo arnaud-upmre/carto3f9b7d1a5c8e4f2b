@@ -850,25 +850,42 @@ function ensureMap(mapId,btnToggle,btnRecenter,lat,lon){
   
   let marker=L.marker([lat,lon],{draggable:true}).addTo(map);
 
-let p = marker.getLatLng();
-if (mapId === "mapDevice") {
-  if (DEVICE_CONFIRMED) {
-    $("latDevice").value = p.lat.toFixed(6);
-    $("lonDevice").value = p.lng.toFixed(6);
+  function updateCoordsDisplay(lat, lon) {
+  const la = lat.toFixed(6), lo = lon.toFixed(6);
+  if (mapId === "mapDevice") {
+    $("latDevice").value = la;
+    $("lonDevice").value = lo;
     if ($("presentValue").value === "oui") {
-      $("coordsDeviceDisplay").textContent = `Coordonnées relevées : ${p.lat.toFixed(6)}, ${p.lng.toFixed(6)}`;
+      $("coordsDeviceDisplay").textContent = `Coordonnées relevées : ${la}, ${lo}`;
       $("coordsDeviceDisplay").style.display = "block";
     }
-  }
-} else { 
-  if (ACCESS_CONFIRMED && $("accessMethod").value === "gps") {
-    $("coordsAccessDisplay").textContent = `Coordonnées relevées (accès) : ${p.lat.toFixed(6)}, ${p.lng.toFixed(6)}`;
-    $("coordsAccessDisplay").style.display = "block";
   } else {
-    $("coordsAccessDisplay").style.display = "none";
+    if ($("accessMethod").value === "gps") {
+      $("coordsAccessDisplay").textContent = `Coordonnées relevées (accès) : ${la}, ${lo}`;
+      $("coordsAccessDisplay").style.display = "block";
+    }
   }
 }
-  
+
+// 1️⃣ Met à jour dès la création du marqueur
+updateCoordsDisplay(lat, lon);
+
+// 2️⃣ Met à jour quand on déplace le curseur
+marker.on("drag", e => {
+  const pos = e.target.getLatLng();
+  if (mapId === "mapDevice") DEVICE_CONFIRMED = true;
+  else ACCESS_CONFIRMED = true;
+  updateCoordsDisplay(pos.lat, pos.lng);
+});
+
+// 3️⃣ Met à jour aussi si on clique sur la carte
+map.on("click", e => {
+  marker.setLatLng(e.latlng);
+  map.panTo(e.latlng);
+  if (mapId === "mapDevice") DEVICE_CONFIRMED = true;
+  else ACCESS_CONFIRMED = true;
+  updateCoordsDisplay(e.latlng.lat, e.latlng.lng);
+});  
 
 $(btnRecenter).onclick = () => {
   if (GEO_BLOCKED) { onGeoDenied(mapId === "mapDevice" ? "device" : "access"); return; }
