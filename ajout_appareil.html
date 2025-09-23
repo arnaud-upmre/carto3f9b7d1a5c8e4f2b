@@ -391,16 +391,19 @@ if (i === 8) {
     startLocAccess();
   }
 
-  // ✅ double recalcul taille
-  setTimeout(() => mapAccess && mapAccess.invalidateSize(), 200);
+  // ⚡️ Recharge la couche pour éviter le fond gris
+  if (mapAccess) {
+    mapAccess.eachLayer(l => mapAccess.removeLayer(l));
+    orthoIGN.addTo(mapAccess);
+  }
+
   setTimeout(() => {
     if (mapAccess) {
       mapAccess.invalidateSize();
       mapAccess.setView(lastFix ? [lastFix.lat, lastFix.lon] : HAZE, 18);
     }
-  }, 800);
+  }, 500);
 
-  // 🚀 auto-localisation
   setTimeout(() => $("btnRecenterAccess").click(), 1000);
 }
   
