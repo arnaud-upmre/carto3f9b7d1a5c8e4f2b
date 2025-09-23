@@ -335,8 +335,7 @@ Remplir uniquement si l’appareil dépend d’un SAT
 <script>
 let currentStep=0;
   let returnToRecap = false;
-
-const HAZE = [50.72384, 2.54924];
+  
 const steps=document.querySelectorAll(".step:not(#introStep):not(#confirmationStep)");
 const progress=document.getElementById("progress");
 function showStep(i){
@@ -991,11 +990,12 @@ if (confirmFromFix(lastFix)) {
   else{mapAccess=map;markerAccess=marker;}
 }
 function startLocDevice(){
-  if(!mapDevice)ensureMap("mapDevice","btnToggleDevice","btnRecenterDevice",HAZE[0],HAZE[1]);
+  if(!mapDevice)ensureMap("mapDevice","btnToggleDevice","btnRecenterDevice",0,0);
   if(lastFix)setMapTo(mapDevice,markerDevice,lastFix.lat,lastFix.lon,"device");
 }
+
 function startLocAccess(){
-  if(!mapAccess)ensureMap("mapAccess","btnToggleAccess","btnRecenterAccess",HAZE[0],HAZE[1]);
+  if(!mapAccess)ensureMap("mapAccess","btnToggleAccess","btnRecenterAccess",0,0);
   if(lastFix)setMapTo(mapAccess,markerAccess,lastFix.lat,lastFix.lon,"access");
 }
 
