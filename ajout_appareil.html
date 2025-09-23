@@ -385,11 +385,13 @@ if (navigator.geolocation && $("presentValue").value === "oui") {
   
 if (i === 8) { 
   if (!mapAccess) {
-    startLocAccess(); 
+    startLocAccess();
   }
+
+  // recalcul taille + affichage
   setTimeout(() => mapAccess && mapAccess.invalidateSize(), 300);
 
-  // 🚀 Localisation auto dès l’ouverture
+  // 🚀 Localisation auto dès l’ouverture (comme appareil)
   setTimeout(() => $("btnRecenterAccess").click(), 500);
 
   if (navigator.geolocation && $("accessValue").value === "oui" && $("accessMethod").value === "gps") {
