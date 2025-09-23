@@ -729,60 +729,36 @@ $("pill-acces-non").onclick=()=>{
   document.querySelectorAll("#pill-acces-oui, #pill-acces-non").forEach(p=>p.classList.remove("error"));
 };
 
+
 $("pill-access-gps").onclick = () => {
   $("accessMethod").value = "gps";
   $("pill-access-gps").classList.add("active");
   $("pill-access-lien").classList.remove("active");
-  
+
   document.querySelectorAll("#pill-access-gps, #pill-access-lien").forEach(p => p.classList.remove("error"));
 
   toggle($("mapAccessWrap"), 1);
   toggle($("lienAccessField"), 0);
-// ✅ recalcul robuste pour forcer l’affichage
-requestAnimationFrame(() => {
-  if (mapAccess) {
-    mapAccess.invalidateSize();
-    if (lastFix) {
-      mapAccess.setView([lastFix.lat, lastFix.lon], 18);
-    } else {
-      mapAccess.setView(HAZE, 18);
+
+  // ✅ recalcul affichage
+  requestAnimationFrame(() => {
+    if (mapAccess) {
+      mapAccess.invalidateSize();
+      if (lastFix) {
+        mapAccess.setView([lastFix.lat, lastFix.lon], 18);
+      } else {
+        mapAccess.setView(HAZE, 18);
+      }
     }
-  }
-});
-setTimeout(() => mapAccess && mapAccess.invalidateSize(), 1000);
+  });
+
   markError($("lienAccess"), $("lienAccessHelp"), false);
 
   ACCESS_CONFIRMED = false;
   $("coordsAccessDisplay").style.display = "none";
   $("mapAccessWrap").classList.remove("error");
 
-
-if (navigator.geolocation) {
-const btn = $("btnRecenterAccess");
-const oldTxt = btn.textContent;
-btn.textContent = "🛰️ Attente GPS…";
-btn.disabled = true;
-
-navigator.geolocation.getCurrentPosition(
-  p => {
-    ACCESS_CONFIRMED = true;
-    $("mapAccessWrap").classList.remove("error");
-    applyFix(p.coords.latitude, p.coords.longitude);
-
-    setTimeout(() => {
-      btn.textContent = oldTxt;
-      btn.disabled = false;
-    }, 2000);
-  },
-  err => { 
-    if (err.code === 1) onGeoDenied("access"); 
-    btn.textContent = oldTxt;
-    btn.disabled = false;
-  },
-  { enableHighAccuracy: false, timeout: 4000, maximumAge: 10000 }
-);
-}
-};
+  
 
 $("pill-access-lien").onclick = () => {
   $("accessMethod").value = "lien";
