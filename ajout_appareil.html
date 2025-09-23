@@ -383,53 +383,29 @@ if (navigator.geolocation && $("presentValue").value === "oui") {
 }
 }
   
-if (i === 8) { 
+
+  if (i === 8) { 
   // 👉 afficher le conteneur avant tout
   toggle($("mapAccessWrap"), 1);
 
-  // 👉 puis seulement créer la carte
+  // 👉 puis seulement créer la carte si pas déjà créée
   if (!mapAccess) {
     startLocAccess();
   }
 
-  // ✅ recalcul taille + centrage
-  requestAnimationFrame(() => {
+  // ✅ recalcul taille juste après affichage
+  setTimeout(() => {
     if (mapAccess) {
       mapAccess.invalidateSize();
       mapAccess.setView(lastFix ? [lastFix.lat, lastFix.lon] : HAZE, 18);
     }
-  });
+  }, 400);
 
   // 🚀 auto-localisation dès l’ouverture
-  setTimeout(() => $("btnRecenterAccess").click(), 500);
-
-  // 🛰️ Attente GPS seulement si mode GPS
-  if (navigator.geolocation && $("accessMethod").value === "gps") {
-    const btn = $("btnRecenterAccess");
-    const oldTxt = btn.textContent;
-    btn.textContent = "🛰️ Attente GPS…";
-    btn.disabled = true;
-
-    navigator.geolocation.getCurrentPosition(
-      p => {
-        ACCESS_CONFIRMED = true;
-        $("mapAccessWrap").classList.remove("error");
-        applyFix(p.coords.latitude, p.coords.longitude);
-
-        setTimeout(() => {
-          btn.textContent = oldTxt;
-          btn.disabled = false;
-        }, 2000);
-      },
-      err => { 
-        if (err.code === 1) onGeoDenied("access"); 
-        btn.textContent = oldTxt;
-        btn.disabled = false;
-      },
-      { enableHighAccuracy: true, timeout: 7000, maximumAge: 0 }
-    );
-  }
+  setTimeout(() => $("btnRecenterAccess").click(), 600);
 }
+
+  
   
   if(i===10){
     const recap = $("recap");
