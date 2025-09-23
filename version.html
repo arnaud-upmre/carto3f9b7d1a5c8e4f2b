@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>Historique des versions – Nono Maps</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, sans-serif;
+      background: #f4f6f9;
+      color: #333;
+      line-height: 1.5;
+    }
+    header {
+      background: #0078d4;
+      color: #fff;
+      padding: 14px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 20px;
+    }
+    .btn-home {
+      background: #fff;
+      color: #0078d4;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-home:hover {
+      background: #e6f0fa;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 20px auto;
+      padding: 0 16px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin: 30px 0 10px;
+      color: #0078d4;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 18px 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      border-left: 5px solid #0078d4;
+    }
+    .card h2 {
+      margin: 0 0 10px;
+      font-size: 16px;
+      color: #0078d4;
+    }
+    .card ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+    .card li {
+      margin-bottom: 6px;
+    }
+    .emoji {
+      margin-right: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>📜 Historique des versions</h1>
+    <button class="btn-home" onclick="window.location.href='index.html'">🏠 Retour à l’accueil</button>
+  </header>
+
+  <div class="container">
+
+    <div class="section-title">🆕 Dernières mises à jour</div>
+
+    <div class="card">
+      <h2>v1.7.0 – 24/09/2025</h2>
+      <ul>
+        <li>🗂️ Nouvelle page historique des versions → consultation claire et centralisée</li>
+        <li>⚡ Amélioration de la rapidité et fiabilité lors de l’ajout d’appareils :
+          <ul>
+            <li>Chargement GPS en temps réel plus réactif</li>
+            <li>Validation instantanée des champs</li>
+            <li>Enregistrement plus stable même avec une connexion lente</li>
+          </ul>
+        </li>
+        <li>🛠️ Correctifs de stabilité :
+          <ul>
+            <li>Réduction de blocages lors du rechargement de la carte</li>
+            <li>Prise en compte du zoom utilisateur après ajout</li>
+            <li>Fiabilisation de l’affichage GPS dans le formulaire</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>v1.6.1 – 23/09/2025</h2>
+      <ul>
+        <li>📍 Correction des coordonnées lors de l’ajout d’appareils → mise à jour en continu</li>
+        <li>🛰️ Ajustement du rendu Ortho → précision améliorée</li>
+        <li>🗺️ Correction Leaflet → zoom ne se réinitialise plus</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>v1.6.0 – 22/09/2025</h2>
+      <ul>
+        <li>🗺️ Amélioration du fond IGN → meilleure netteté et zoom</li>
+        <li>📝 Nettoyage JSON → suppression de doublons, normalisation</li>
+        <li>🖊️ Formulaires postes/appareils → ergonomie améliorée</li>
+        <li>👁️ Overlay Street View ajouté dans les fiches postes (page principale)</li>
+        <li>🎨 Amélioration visuelle : transparence + effet glassmorphism</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>v1.5.4 – 21/09/2025</h2>
+      <ul>
+        <li>🛠️ Correctif CSS mineur sur les popups (alignement texte/icônes)</li>
+        <li>⚡ Amélioration du temps de chargement en réduisant le poids des icônes</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>v1.5.1 – 21/09/2025</h2>
+      <ul>
+        <li>🔎 Réglage du maxClusterRadius → séparation fiable des appareils proches</li>
+        <li>📱 Largeur forcée → affichage stabilisé sur smartphones</li>
+        <li>🎨 Popups : marges uniformisées et meilleure lisibilité</li>
+        <li>✨ Halo lumineux discret autour des icônes pour améliorer le contraste</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>v1.5.0 – 20/09/2025</h2>
+      <ul>
+        <li>👁️ Overlay Street View ajouté sur la carte (accès)</li>
+        <li>🗂️ Affichage automatique de la fiche du poste sous un appareil</li>
+        <li>🔧 Stabilisation des événements mouseover/mousemove/mouseout</li>
+        <li>🎨 Popups : coins arrondis, ombres adoucies, effet glass</li>
+        <li>⚡ Code optimisé → suppression de variables inutiles</li>
+        <li>💡 Animation pulse sur les boutons clés</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>v1.4.3 – 16/09/2025</h2>
+      <ul>
+        <li>🛠️ Correction d’un bug d’affichage sur la carte IGN (niveau de zoom incorrect au lancement)</li>
+        <li>🎨 Amélioration du style des boutons (padding + couleur hover)</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>v1.4.0 – mi septembre 2025</h2>
+      <ul>
+        <li>🌍 Création d’une carte personnalisée avec base IGN</li>
+        <li>➡️ Page itinéraires → calcul de trajet entre deux postes</li>
+        <li>🔗 Navigation interne optimisée → accès direct entre fiches (postes ↔ appareils)</li>
+        <li>🛠️ Divers ajustements de stabilité → temps de chargement réduit</li>
+        <li>🎨 Interface → boutons arrondis et design harmonisé</li>
+      </ul>
+    </div>
+
+    <div class="section-title">📅 Historique regroupé</div>
+
+    <div class="card">
+      <h2>Début septembre 2025</h2>
+      <ul>
+        <li>➕ Création des formulaires d’ajout postes/appareils</li>
+        <li>📍 Coordonnées GPS automatiques</li>
+        <li>🛠️ Validation renforcée (messages d’erreurs clairs)</li>
+        <li>📱 Corrections mobile (tailles de champs ajustées)</li>
+        <li>🎨 Polices et couleurs harmonisées</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>Août 2025</h2>
+      <ul>
+        <li>🔎 Fusion des champs de recherche (postes + appareils)</li>
+        <li>📄 Création des fiches poste & appareil</li>
+        <li>🔗 Liens internes entre page principale et fiches</li>
+        <li>📱 Améliorations d’affichage mobile</li>
+        <li>📝 Nettoyage JSON (corrections de syntaxe)</li>
+        <li>🎨 Ajustements visuels (icônes uniformisées, ombres, arrondis)</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>Juillet 2025</h2>
+      <ul>
+        <li>🚀 Création du projet avec page d’accueil et recherche</li>
+        <li>🗂️ Import des premiers jeux de données (postes, accès, appareils)</li>
+        <li>🎨 Mise en place de la structure HTML/CSS/JS</li>
+        <li>💡 Premier design des popups (présentation simple)</li>
+      </ul>
+    </div>
+
+  </div>
+</body>
+</html>
