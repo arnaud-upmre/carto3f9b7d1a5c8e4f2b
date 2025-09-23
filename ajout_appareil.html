@@ -897,11 +897,12 @@ $(btnRecenter).onclick = () => {
     btn.disabled = false;
     return true;
   };
-
-  if (confirmFromFix(lastFix)) {
-    map.invalidateSize();
-    return;
-  }
+if (confirmFromFix(lastFix)) {
+  btn.textContent = oldTxt; 
+  btn.disabled = false;
+  map.invalidateSize();
+  return;
+}
 
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
