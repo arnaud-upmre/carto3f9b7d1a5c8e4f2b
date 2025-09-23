@@ -78,6 +78,23 @@
     .emoji {
       margin-right: 6px;
     }
+
+    details {
+      background: #fff;
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    details summary {
+      cursor: pointer;
+      font-weight: 600;
+      color: #0078d4;
+      list-style: none;
+    }
+    details[open] {
+      border-left: 4px solid #0078d4;
+    }
   </style>
 </head>
 <body>
@@ -92,7 +109,7 @@
     <div class="section-title">🆕 Dernières mises à jour</div>
 
     <div class="card">
-      <h2>v1.7.0 – 24/09/2025</h2>
+      <h2>v1.7.0 – 23/09/2025</h2>
       <ul>
         <li>🗂️ Nouvelle page historique des versions → consultation claire et centralisée</li>
         <li>⚡ Amélioration de la rapidité et fiabilité lors de l’ajout d’appareils :
@@ -183,8 +200,8 @@
 
     <div class="section-title">📅 Historique regroupé</div>
 
-    <div class="card">
-      <h2>Début septembre 2025</h2>
+    <details>
+      <summary>Début septembre 2025</summary>
       <ul>
         <li>➕ Création des formulaires d’ajout postes/appareils</li>
         <li>📍 Coordonnées GPS automatiques</li>
@@ -192,10 +209,10 @@
         <li>📱 Corrections mobile (tailles de champs ajustées)</li>
         <li>🎨 Polices et couleurs harmonisées</li>
       </ul>
-    </div>
+    </details>
 
-    <div class="card">
-      <h2>Août 2025</h2>
+    <details>
+      <summary>Août 2025</summary>
       <ul>
         <li>🔎 Fusion des champs de recherche (postes + appareils)</li>
         <li>📄 Création des fiches poste & appareil</li>
@@ -204,17 +221,17 @@
         <li>📝 Nettoyage JSON (corrections de syntaxe)</li>
         <li>🎨 Ajustements visuels (icônes uniformisées, ombres, arrondis)</li>
       </ul>
-    </div>
+    </details>
 
-    <div class="card">
-      <h2>Juillet 2025</h2>
+    <details>
+      <summary>Juillet 2025</summary>
       <ul>
         <li>🚀 Création du projet avec page d’accueil et recherche</li>
         <li>🗂️ Import des premiers jeux de données (postes, accès, appareils)</li>
         <li>🎨 Mise en place de la structure HTML/CSS/JS</li>
         <li>💡 Premier design des popups (présentation simple)</li>
       </ul>
-    </div>
+    </details>
 
   </div>
 </body>
