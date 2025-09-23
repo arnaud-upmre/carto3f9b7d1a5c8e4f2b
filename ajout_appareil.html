@@ -897,9 +897,12 @@ $(btnRecenter).onclick = () => {
     btn.disabled = false;
     return true;
   };
+  
 if (confirmFromFix(lastFix)) {
-  btn.textContent = oldTxt; 
-  btn.disabled = false;
+  setTimeout(() => {
+    btn.textContent = oldTxt; 
+    btn.disabled = false;
+  }, 2000); 
   map.invalidateSize();
   return;
 }
