@@ -841,7 +841,7 @@ function isValidUrl(str){return /^https?:\/\/.+/i.test((str||"").trim());}
 
 function setMapTo(map, marker, lat, lon, kind){
   if(!map || !marker) return;
-  map.setView([lat, lon], 18);
+  map.setView([lat, lon], map.getZoom());
   marker.setLatLng([lat, lon]);
 
   const la = Number(lat).toFixed(6), lo = Number(lon).toFixed(6);
@@ -905,7 +905,7 @@ orthoIGN.addTo(map);
 $(btnToggle).textContent = "🗺️ Plan"; 
 setTimeout(() => {
   map.invalidateSize();
-  map.setView([lat, lon], 18);
+  map.setView([lat, lon], map.getZoom());
   orthoIGN.addTo(map);
 }, 600);
   let isPlan = false;
