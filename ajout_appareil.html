@@ -1051,6 +1051,10 @@ $("formAppareil").onsubmit = e => {
   formData.append("acces", coordAcces);
   formData.append("notes", infos);
 
+  console.log("📤 Données envoyées :");
+for (const [key, val] of formData.entries()) {
+  console.log(`${key} = ${val}`);
+}
   const submitBtn = document.querySelector('.btn.primary[type="submit"]');
   const oldLabel = submitBtn.textContent;
   submitBtn.disabled = true;
