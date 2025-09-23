@@ -1960,10 +1960,56 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
   <a id="installLink" href="#" style="display:none;">📲 Installer l’app</a>
 </div>
 
-<div id="about-footer">
-  🔧 <a href="arnaud.html">À propos</a> – 
-  <span class="footer-version">Nono Maps V1.21</span>
-</div>
+ <div id="about-footer">
+    🔧 <a href="arnaud.html">À propos</a> – 
+    <span class="footer-version">
+      <span id="version-hint">⬇️</span>
+      Nono Maps V1.7
+    </span>
+  </div>
+
+  <style>
+    .footer-version {
+      position: relative;
+      display: inline-block;
+      color: #999;
+      font-size: 11px;
+    }
+
+    /* Flèche animée au-dessus */
+    #version-hint {
+      position: absolute;
+      top: -18px;   /* hauteur au-dessus du texte */
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 13px;
+      opacity: 0.85;
+      animation: bounceArrow 1.6s ease-in-out infinite;
+    }
+
+    @keyframes bounceArrow {
+      0%, 100% { transform: translate(-50%, 0); opacity: 0.8; }
+      50% { transform: translate(-50%, 4px); opacity: 1; }
+    }
+  </style>
+
+  <script>
+    (function(){
+      const HINT_KEY = "seenVersionHint";
+      const version = "1.7"; // ⚡️ mets à jour à chaque release
+      const hint = document.getElementById("version-hint");
+
+      if (localStorage.getItem(HINT_KEY) === version) {
+        hint.style.display = "none"; // déjà vu → on cache
+      } else {
+        // visible une seule fois 6s
+        setTimeout(() => {
+          hint.style.display = "none";
+          localStorage.setItem(HINT_KEY, version);
+        }, 6000);
+      }
+    })();
+  </script>
 <script>
 (function(){
   
