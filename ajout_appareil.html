@@ -384,10 +384,10 @@ if (navigator.geolocation && $("presentValue").value === "oui") {
 }
   
 if (i === 8) { 
-  // 👉 d'abord on affiche le conteneur
+  // 👉 afficher le conteneur avant tout
   toggle($("mapAccessWrap"), 1);
 
-  // 👉 puis seulement on crée la carte
+  // 👉 puis seulement créer la carte
   if (!mapAccess) {
     startLocAccess();
   }
@@ -400,10 +400,10 @@ if (i === 8) {
     }
   });
 
-  // 🚀 Localisation auto dès l’ouverture (comme appareil)
+  // 🚀 auto-localisation dès l’ouverture
   setTimeout(() => $("btnRecenterAccess").click(), 500);
 
-  // 💡 Texte "Attente GPS…" si mode GPS
+  // 🛰️ Attente GPS seulement si mode GPS
   if (navigator.geolocation && $("accessMethod").value === "gps") {
     const btn = $("btnRecenterAccess");
     const oldTxt = btn.textContent;
