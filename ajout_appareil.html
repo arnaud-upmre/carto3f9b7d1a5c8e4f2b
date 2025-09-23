@@ -388,13 +388,20 @@ if (i === 8) {
     startLocAccess();
   }
 
-  // recalcul taille + affichage
-  setTimeout(() => mapAccess && mapAccess.invalidateSize(), 300);
 
-  // 🚀 Localisation auto dès l’ouverture (comme appareil)
+  requestAnimationFrame(() => {
+    if (mapAccess) {
+      mapAccess.invalidateSize();
+      mapAccess.setView(lastFix ? [lastFix.lat, lastFix.lon] : HAZE, 18);
+    }
+  });
+  setTimeout(() => mapAccess && mapAccess.invalidateSize(), 1000);
+
+  // 🚀 Localisation auto dès l’ouverture
   setTimeout(() => $("btnRecenterAccess").click(), 500);
 
-  if (navigator.geolocation && $("accessValue").value === "oui" && $("accessMethod").value === "gps") {
+  // 💡 On force "Attente GPS…" dès qu’on est en mode GPS
+  if (navigator.geolocation && $("accessMethod").value === "gps") {
     const btn = $("btnRecenterAccess");
     const oldTxt = btn.textContent;
     btn.textContent = "🛰️ Attente GPS…";
