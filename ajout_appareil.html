@@ -350,8 +350,9 @@ progress.textContent = `${pct}%`;
     startLocDevice(); 
   }
   setTimeout(() => mapDevice && mapDevice.invalidateSize(), 300);
-    // 🚀 Lancer la localisation GPS automatiquement
-$("btnRecenterDevice").click();
+// 🚀 Localisation auto dès l’ouverture
+setTimeout(() => $("btnRecenterDevice").click(), 500);
+
 
 if (navigator.geolocation && $("presentValue").value === "oui") {
   const btn = $("btnRecenterDevice");
@@ -388,36 +389,37 @@ if(i===8){
     if(!mapAccess){
       startLocAccess();
     }
- setTimeout(() => mapAccess && mapAccess.invalidateSize(), 300);
+    setTimeout(() => mapAccess && mapAccess.invalidateSize(), 300);
+    // 🚀 Localisation auto dès l’ouverture (accès)
+    setTimeout(() => $("btnRecenterAccess").click(), 500);
 
-if (navigator.geolocation) {
-  const btn = $("btnRecenterAccess");
-  const oldTxt = btn.textContent;
-  btn.textContent = "🛰️ Attente GPS…";
-  btn.disabled = true;
+    if (navigator.geolocation) {
+      const btn = $("btnRecenterAccess");
+      const oldTxt = btn.textContent;
+      btn.textContent = "🛰️ Attente GPS…";
+      btn.disabled = true;
 
-  navigator.geolocation.getCurrentPosition(
-    p => {
-      ACCESS_CONFIRMED = true;
-      $("mapAccessWrap").classList.remove("error");
-      applyFix(p.coords.latitude, p.coords.longitude);
+      navigator.geolocation.getCurrentPosition(
+        p => {
+          ACCESS_CONFIRMED = true;
+          $("mapAccessWrap").classList.remove("error");
+          applyFix(p.coords.latitude, p.coords.longitude);
 
-      setTimeout(() => {
-        btn.textContent = oldTxt;
-        btn.disabled = false;
-      }, 2000);
-    },
-    err => { 
-      if (err.code === 1) onGeoDenied("access"); 
-      btn.textContent = oldTxt;
-      btn.disabled = false;
-    },
-    { enableHighAccuracy: true, timeout: 7000, maximumAge: 0 }
-  );
-}
+          setTimeout(() => {
+            btn.textContent = oldTxt;
+            btn.disabled = false;
+          }, 2000);
+        },
+        err => { 
+          if (err.code === 1) onGeoDenied("access"); 
+          btn.textContent = oldTxt;
+          btn.disabled = false;
+        },
+        { enableHighAccuracy: true, timeout: 7000, maximumAge: 0 }
+      );
+    }
   }
 }
-
   if(i===10){
     const recap = $("recap");
     recap.innerHTML = "";
@@ -629,8 +631,9 @@ $("pill-oui").onclick = () => {
   toggle($("lienField"), 0);
 
   setTimeout(() => mapDevice && mapDevice.invalidateSize(), 300);
-  // 🚀 Lancer la localisation GPS automatiquement
-$("btnRecenterAccess").click();
+  // 🚀 Localisation auto dès l’ouverture
+setTimeout(() => $("btnRecenterDevice").click(), 500);
+
   markError($("lien"), $("lienHelp"), false);
   document.querySelectorAll("#pill-oui, #pill-non").forEach(p => p.classList.remove("error"));
 
