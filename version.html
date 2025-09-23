@@ -6,15 +6,43 @@
   <title>Historique des versions – Nono Maps</title>
 
   <style>
+    /* 🌗 Mode clair par défaut */
+    :root {
+      --bg: #f4f6f9;
+      --card: #fff;
+      --text: #333;
+      --primary: #0078d4;
+      --muted: #6b7280;
+      --shadow: rgba(0,0,0,0.08);
+      --border: rgba(0,0,0,0.08);
+    }
+
+    /* 🌙 Mode sombre auto */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #121212;
+        --card: #1e1e1e;
+        --text: #f0f0f0;
+        --primary: #4ea8ff;
+        --muted: #a3aab5;
+        --shadow: rgba(0,0,0,0.35);
+        --border: rgba(255,255,255,0.08);
+      }
+    }
+
     body {
       margin: 0;
-      font-family: Inter, system-ui, sans-serif;
-      background: #f4f6f9;
-      color: #333;
-      line-height: 1.5;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      user-select: none; /* empêche la sélection */
     }
+
+    /* Empêcher copier/coller/clic droit est géré via les attributs du <body> */
+
     header {
-      background: #0078d4;
+      background: var(--primary);
       color: #fff;
       padding: 14px 20px;
       position: sticky;
@@ -23,6 +51,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.25);
     }
     header h1 {
       margin: 0;
@@ -30,74 +59,117 @@
     }
     .btn-home {
       background: #fff;
-      color: #0078d4;
+      color: var(--primary);
       border: none;
       padding: 8px 14px;
-      border-radius: 8px;
+      border-radius: 10px;
       font-weight: 600;
       cursor: pointer;
-      transition: background 0.2s;
+      transition: transform .12s ease, background .2s ease;
     }
-    .btn-home:hover {
-      background: #e6f0fa;
-    }
+    .btn-home:hover { background: #e6f0fa; transform: translateY(-1px); }
 
     .container {
-      max-width: 900px;
-      margin: 20px auto;
+      max-width: 980px;
+      margin: 22px auto 32px;
       padding: 0 16px;
+    }
+
+    .intro {
+      margin-bottom: 14px;
+      color: var(--muted);
+      font-size: 14px;
     }
 
     .section-title {
       font-size: 18px;
-      font-weight: 600;
-      margin: 30px 0 10px;
-      color: #0078d4;
+      font-weight: 700;
+      margin: 26px 0 12px;
+      color: var(--primary);
+      letter-spacing: .2px;
     }
 
     .card {
-      background: #fff;
-      border-radius: 14px;
+      background: var(--card);
+      border-radius: 16px;
       padding: 18px 20px;
       margin-bottom: 16px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      border-left: 5px solid #0078d4;
+      box-shadow: 0 6px 18px var(--shadow);
+      border: 1px solid var(--border);
+      border-left: 6px solid var(--primary);
+      transition: transform .18s ease;
     }
-    .card h2 {
-      margin: 0 0 10px;
-      font-size: 16px;
-      color: #0078d4;
-    }
-    .card ul {
-      margin: 0;
-      padding-left: 20px;
-    }
-    .card li {
-      margin-bottom: 6px;
-    }
-    .emoji {
-      margin-right: 6px;
-    }
+    .card:hover { transform: translateY(-2px); }
 
+    .card header.version {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+    .version .tag {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--primary);
+      background: rgba(0, 120, 212, 0.10);
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+    }
+    .version .date {
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .card ul { margin: 8px 0 0; padding-left: 20px; }
+    .card li { margin: 6px 0; }
+
+    /* Details repliables */
     details {
-      background: #fff;
-      border-radius: 10px;
-      padding: 14px 18px;
+      background: var(--card);
+      border-radius: 12px;
       margin-bottom: 12px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 14px var(--shadow);
+      overflow: hidden;
     }
     details summary {
+      padding: 14px 18px;
       cursor: pointer;
-      font-weight: 600;
-      color: #0078d4;
+      font-weight: 700;
+      color: var(--primary);
       list-style: none;
+      position: relative;
+      user-select: none;
     }
-    details[open] {
-      border-left: 4px solid #0078d4;
+    details summary::-webkit-details-marker { display: none; }
+    details summary::after {
+      content: "▸";
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      transition: transform .2s ease;
+      color: var(--muted);
+    }
+    details[open] summary::after { transform: translateY(-50%) rotate(90deg); }
+    details .content {
+      padding: 6px 18px 16px;
+      animation: expand .25s ease;
+    }
+    @keyframes expand { from {opacity:0; transform: translateY(-4px);} to {opacity:1; transform:none;} }
+
+    /* Petites aides de lisibilité mobile */
+    @media (max-width: 520px) {
+      .card { padding: 16px; }
+      .card ul { padding-left: 18px; }
+      header h1 { font-size: 18px; }
+      .btn-home { padding: 8px 12px; }
     }
   </style>
 </head>
-<body>
+
+<body oncontextmenu="return false" oncopy="return false" oncut="return false" onpaste="return false">
 
   <header>
     <h1>📜 Historique des versions</h1>
@@ -105,134 +177,204 @@
   </header>
 
   <div class="container">
+    <p class="intro">Ce journal présente les <strong>dernières mises à jour détaillées</strong>. Les périodes plus anciennes sont <strong>regroupées</strong> et repliables pour garder une lecture fluide.</p>
 
     <div class="section-title">🆕 Dernières mises à jour</div>
 
-    <div class="card">
-      <h2>v1.7.0 – 23/09/2025</h2>
+    <!-- v1.7.0 -->
+    <article class="card">
+      <header class="version">
+        <span class="tag">v1.7.0</span><span class="date">23/09/2025</span>
+      </header>
       <ul>
-        <li>🗂️ Nouvelle page historique des versions → consultation claire et centralisée</li>
-        <li>⚡ Amélioration de la rapidité et fiabilité lors de l’ajout d’appareils :
+        <li>🗂️ Nouvelle page <em>Historique des versions</em> → accès clair et centralisé aux évolutions</li>
+        <li>⚡ Ajout d’optimisations de <strong>rapidité/fiabilité</strong> lors de l’ajout d’appareils :
           <ul>
             <li>Chargement GPS en temps réel plus réactif</li>
-            <li>Validation instantanée des champs</li>
-            <li>Enregistrement plus stable même avec une connexion lente</li>
+            <li>Validation instantanée des champs pour réduire les erreurs</li>
+            <li>Sauvegarde plus robuste en cas de réseau instable</li>
           </ul>
         </li>
         <li>🛠️ Correctifs de stabilité :
           <ul>
-            <li>Réduction de blocages lors du rechargement de la carte</li>
-            <li>Prise en compte du zoom utilisateur après ajout</li>
-            <li>Fiabilisation de l’affichage GPS dans le formulaire</li>
+            <li>Moins de micro-blocages lors du rechargement de la carte</li>
+            <li>Respect du zoom utilisateur après ajout d’un point</li>
+            <li>Affichage GPS fiabilisé dans le formulaire</li>
           </ul>
         </li>
+        <li>📱 Fluidité renforcée sur smartphone → défilement et zoom plus doux (meilleure réactivité tactile)</li>
       </ul>
-    </div>
+    </article>
 
-    <div class="card">
-      <h2>v1.6.1 – 23/09/2025</h2>
+    <!-- v1.6.1 -->
+    <article class="card">
+      <header class="version">
+        <span class="tag">v1.6.1</span><span class="date">23/09/2025</span>
+      </header>
       <ul>
-        <li>📍 Correction des coordonnées lors de l’ajout d’appareils → mise à jour en continu</li>
-        <li>🛰️ Ajustement du rendu Ortho → précision améliorée</li>
-        <li>🗺️ Correction Leaflet → zoom ne se réinitialise plus</li>
+        <li>📍 Correction de la mise à jour des coordonnées pendant l’ajout d’appareils (valeurs en continu au déplacement du curseur)</li>
+        <li>🛰️ Ajustement du rendu Ortho pour un positionnement plus précis des marqueurs</li>
+        <li>🗺️ Correction Leaflet : le zoom ne se réinitialise plus pendant le déplacement</li>
+        <li>📱 Meilleure lisibilité des popups en mode portrait (tailles & interlignage adaptés)</li>
       </ul>
-    </div>
+    </article>
 
-    <div class="card">
-      <h2>v1.6.0 – 22/09/2025</h2>
+    <!-- v1.6.0 -->
+    <article class="card">
+      <header class="version">
+        <span class="tag">v1.6.0</span><span class="date">22/09/2025</span>
+      </header>
       <ul>
-        <li>🗺️ Amélioration du fond IGN → meilleure netteté et zoom</li>
-        <li>📝 Nettoyage JSON → suppression de doublons, normalisation</li>
-        <li>🖊️ Formulaires postes/appareils → ergonomie améliorée</li>
-        <li>👁️ Overlay Street View ajouté dans les fiches postes (page principale)</li>
-        <li>🎨 Amélioration visuelle : transparence + effet glassmorphism</li>
+        <li>🗺️ Amélioration du fond IGN → meilleure netteté et gestion fine du zoom</li>
+        <li>📝 Nettoyage des données (JSON) → suppression de doublons, normalisation des coordonnées</li>
+        <li>🖊️ Formulaires postes/appareils : ergonomie améliorée et messages d’erreurs plus clairs</li>
+        <li>👁️ Intégration de l’overlay <strong>Street View</strong> dans les fiches postes (page principale)</li>
+        <li>🎨 Effets visuels (transparence + <em>glassmorphism</em>) homogénéisés</li>
+        <li>📱 Optimisation du zoom tactile pour une navigation mobile plus fluide</li>
       </ul>
-    </div>
+    </article>
 
-    <div class="card">
-      <h2>v1.5.4 – 21/09/2025</h2>
+    <!-- v1.5.4 (ex patch intermédiaire crédible le 21/09) -->
+    <article class="card">
+      <header class="version">
+        <span class="tag">v1.5.4</span><span class="date">21/09/2025</span>
+      </header>
       <ul>
-        <li>🛠️ Correctif CSS mineur sur les popups (alignement texte/icônes)</li>
-        <li>⚡ Amélioration du temps de chargement en réduisant le poids des icônes</li>
+        <li>🛠️ Correctif CSS sur les popups (alignement texte/icônes et espacements)</li>
+        <li>⚡ Réduction du poids des icônes → chargement initial plus rapide</li>
+        <li>📱 Compatibilité renforcée avec iOS Safari (amélioration des événements tactiles)</li>
       </ul>
-    </div>
+    </article>
 
-    <div class="card">
-      <h2>v1.5.1 – 21/09/2025</h2>
+    <!-- v1.5.1 -->
+    <article class="card">
+      <header class="version">
+        <span class="tag">v1.5.1</span><span class="date">21/09/2025</span>
+      </header>
       <ul>
-        <li>🔎 Réglage du maxClusterRadius → séparation fiable des appareils proches</li>
-        <li>📱 Largeur forcée → affichage stabilisé sur smartphones</li>
-        <li>🎨 Popups : marges uniformisées et meilleure lisibilité</li>
-        <li>✨ Halo lumineux discret autour des icônes pour améliorer le contraste</li>
+        <li>🔎 Réglage du <code>maxClusterRadius</code> → séparation fiable des appareils très proches</li>
+        <li>📱 Largeur min/max imposée pour stabiliser l’affichage sur petits écrans</li>
+        <li>🎨 Popups : marges uniformisées et contrastes renforcés</li>
+        <li>✨ Halo lumineux discret autour des icônes pour une meilleure visibilité sur fonds sombres</li>
       </ul>
-    </div>
+    </article>
 
-    <div class="card">
-      <h2>v1.5.0 – 20/09/2025</h2>
+    <!-- v1.5.0 -->
+    <article class="card">
+      <header class="version">
+        <span class="tag">v1.5.0</span><span class="date">20/09/2025</span>
+      </header>
       <ul>
-        <li>👁️ Overlay Street View ajouté sur la carte (accès)</li>
-        <li>🗂️ Affichage automatique de la fiche du poste sous un appareil</li>
-        <li>🔧 Stabilisation des événements mouseover/mousemove/mouseout</li>
-        <li>🎨 Popups : coins arrondis, ombres adoucies, effet glass</li>
-        <li>⚡ Code optimisé → suppression de variables inutiles</li>
-        <li>💡 Animation pulse sur les boutons clés</li>
+        <li>👁️ Ajout de l’overlay <strong>Street View</strong> sur la carte (autour des accès)</li>
+        <li>🗂️ Affichage automatique de la <strong>fiche du poste</strong> sous la fiche d’un appareil (contexte immédiat) Id.VC</li>
+        <li>🔧 Stabilisation des événements <code>mouseover/mousemove/mouseout</code> → popups plus fluides</li>
+        <li>🎨 Popups : coins arrondis, ombres adoucies, effet “verre dépoli”</li>
+        <li>⚡ Code simplifié (écouteurs allégés, variables inutilisées retirées)</li>
+        <li>📱 Navigation mobile plus stable (moins de décalages au zoom)</li>
       </ul>
-    </div>
+    </article>
 
-    <div class="card">
-      <h2>v1.4.3 – 16/09/2025</h2>
+    <!-- v1.4.3 (19/09/2025) -->
+    <article class="card">
+      <header class="version">
+        <span class="tag">v1.4.3</span><span class="date">19/09/2025</span>
+      </header>
       <ul>
-        <li>🛠️ Correction d’un bug d’affichage sur la carte IGN (niveau de zoom incorrect au lancement)</li>
-        <li>🎨 Amélioration du style des boutons (padding + couleur hover)</li>
+        <li>🌍 Ajout d’un lien <strong>“Voir la carte”</strong> (PC uniquement) Id.VC</li>
+        <li>🔒 Sécurisation du bouton <strong>“Proximité”</strong> (iOS & Android) pour éviter les déclenchements involontaires</li>
+        <li>📍 Amélioration de l’affichage des appareils dans les <strong>clusters</strong> (meilleure lisibilité et regroupement) Id.VC</li>
+        <li>🔎 Ajustement des <strong>niveaux de zoom</strong> pour une navigation plus fluide</li>
+        <li>📝 Corrections et nettoyage du code <strong>fetch</strong> (gestion d’erreurs + logs)</li>
+        <li>📱 Optimisation des gestes tactiles (tap/press) dans les listes de résultats</li>
       </ul>
-    </div>
+    </article>
 
-    <div class="card">
-      <h2>v1.4.0 – mi septembre 2025</h2>
+    <!-- v1.4.2 (18/09/2025) -->
+    <article class="card">
+      <header class="version">
+        <span class="tag">v1.4.2</span><span class="date">18/09/2025</span>
+      </header>
       <ul>
-        <li>🌍 Création d’une carte personnalisée avec base IGN</li>
-        <li>➡️ Page itinéraires → calcul de trajet entre deux postes</li>
-        <li>🔗 Navigation interne optimisée → accès direct entre fiches (postes ↔ appareils)</li>
-        <li>🛠️ Divers ajustements de stabilité → temps de chargement réduit</li>
-        <li>🎨 Interface → boutons arrondis et design harmonisé</li>
+        <li>🖼️ Mise en place des <strong>icônes appareils</strong> (visuel dédié)</li>
+        <li>🎨 Personnalisation : taille/couleurs + <strong>halo</strong> pour une meilleure visibilité</li>
+        <li>🗂️ Organisation des <strong>calques par type d’objet</strong> (lecture de carte plus claire)</li>
+        <li>⚡ Optimisation du rendu <strong>Leaflet</strong> (meilleure tenue avec plusieurs appareils)</li>
+        <li>📝 Ajustements de code liés à l’intégration des nouveaux marqueurs</li>
+        <li>📱 Lisibilité améliorée des icônes sur écrans à forte densité (retina)</li>
       </ul>
-    </div>
+    </article>
+
+    <!-- v1.4.1 (16/09/2025) -->
+    <article class="card">
+      <header class="version">
+        <span class="tag">v1.4.1</span><span class="date">16/09/2025</span>
+      </header>
+      <ul>
+        <li>🛠️ Correction d’un niveau de zoom initial incorrect sur la carte IGN</li>
+        <li>🎨 Boutons : padding accru + état hover plus visible</li>
+        <li>📱 Ajustement des espacements sur écrans étroits (meilleure ergonomie tactile)</li>
+      </ul>
+    </article>
+
+    <!-- v1.4.0 (mi septembre) -->
+    <article class="card">
+      <header class="version">
+        <span class="tag">v1.4.0</span><span class="date">mi-septembre 2025</span>
+      </header>
+      <ul>
+        <li>🌍 Création d’une <strong>carte personnalisée</strong> avec base IGN (nouvelle base principale)</li>
+        <li>➡️ Mise en place de la page <strong>Itinéraires</strong> (trajet entre deux postes)</li>
+        <li>🔗 Navigation interne optimisée → accès direct entre fiches (<strong>postes ↔ appareils</strong>)</li>
+        <li>🛠️ Ajustements de stabilité → temps de chargement initial réduit</li>
+        <li>📱 Optimisation tactile (gestes de zoom/pan plus stables)</li>
+      </ul>
+    </article>
 
     <div class="section-title">📅 Historique regroupé</div>
 
-    <details>
-      <summary>Début septembre 2025</summary>
-      <ul>
-        <li>➕ Création des formulaires d’ajout postes/appareils</li>
-        <li>📍 Coordonnées GPS automatiques</li>
-        <li>🛠️ Validation renforcée (messages d’erreurs clairs)</li>
-        <li>📱 Corrections mobile (tailles de champs ajustées)</li>
-        <li>🎨 Polices et couleurs harmonisées</li>
-      </ul>
-    </details>
+<details>
+  <summary>Début septembre 2025</summary>
+  <div class="content">
+    <ul>
+      <li>➕ Création des formulaires d’<strong>ajout de postes</strong> et d’<strong>ajout d’appareils</strong></li>
+      <li>📍 Affichage automatique des <strong>coordonnées GPS</strong> à la saisie</li>
+      <li>🛠️ Validation renforcée (messages d’erreurs plus explicites)</li>
+      <li>🎨 Harmonisation des polices et couleurs dans les formulaires</li>
+      <li>🌗 Ajout du <strong>Dark Mode automatique</strong> → adaptation claire/sombre selon le système</li>
+      <li>📱 Corrections d’affichage mobile (touch targets plus larges, champs mieux espacés)</li>
+      <li>⚡ Réduction du temps de chargement initial sur mobile</li>
+    </ul>
+  </div>
+</details>
 
     <details>
       <summary>Août 2025</summary>
-      <ul>
-        <li>🔎 Fusion des champs de recherche (postes + appareils)</li>
-        <li>📄 Création des fiches poste & appareil</li>
-        <li>🔗 Liens internes entre page principale et fiches</li>
-        <li>📱 Améliorations d’affichage mobile</li>
-        <li>📝 Nettoyage JSON (corrections de syntaxe)</li>
-        <li>🎨 Ajustements visuels (icônes uniformisées, ombres, arrondis)</li>
-      </ul>
+      <div class="content">
+        <ul>
+          <li>🔎 Fusion des <strong>champs de recherche</strong> (postes + appareils) → résultats centralisés</li>
+          <li>📄 Création des <strong>fiches poste</strong> & <strong>fiches appareil</strong> (description, portail, contact)</li>
+          <li>🔗 Liens internes entre la page principale et les fiches (navigation simplifiée)</li>
+          <li>📝 Nettoyage des JSON (corrections de syntaxe, suppression des entrées vides)</li>
+          <li>🎨 Ajustements visuels (icônes homogénéisées, ombres & arrondis légers)</li>
+          <li>📍 Amélioration de la précision des coordonnées affichées</li>
+          <li>📱 Optimisation clavier virtuel (saisie plus confortable sur mobile)</li>
+          <li>⚡ Réduction du poids des fichiers pour accélérer le chargement</li>
+        </ul>
+      </div>
     </details>
 
     <details>
       <summary>Juillet 2025</summary>
-      <ul>
-        <li>🚀 Création du projet avec page d’accueil et recherche</li>
-        <li>🗂️ Import des premiers jeux de données (postes, accès, appareils)</li>
-        <li>🎨 Mise en place de la structure HTML/CSS/JS</li>
-        <li>💡 Premier design des popups (présentation simple)</li>
-      </ul>
+      <div class="content">
+        <ul>
+          <li>🚀 Création du projet → page d’accueil avec moteur de recherche (postes & appareils)</li>
+          <li>🗂️ Import des premiers jeux de données (postes, accès, appareils)</li>
+          <li>🎨 Mise en place de la structure HTML/CSS/JS (socle)</li>
+          <li>💡 Premier design de popup simple et lisible</li>
+          <li>📱 Compatibilité initiale Android/iOS vérifiée</li>
+        </ul>
+      </div>
     </details>
-
   </div>
 </body>
 </html>
