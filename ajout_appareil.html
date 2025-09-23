@@ -693,8 +693,17 @@ $("pill-acces-oui").onclick=()=>{
   $("pill-acces-oui").classList.add("active");
   $("pill-acces-non").classList.remove("active");
   toggle($("mapAccessWrap"),1);
-
-setTimeout(() => mapAccess && mapAccess.invalidateSize(), 300);
+// ✅ recalcul robuste pour forcer l’affichage
+requestAnimationFrame(() => {
+  if (mapAccess) {
+    mapAccess.invalidateSize();
+    if (lastFix) {
+      mapAccess.setView([lastFix.lat, lastFix.lon], 18);
+    } else {
+      mapAccess.setView(HAZE, 18);
+    }
+  }
+});
 setTimeout(() => mapAccess && mapAccess.invalidateSize(), 1000);
   markError($("lienAccess"), $("lienAccessHelp"), false);
   document.querySelectorAll("#pill-acces-oui, #pill-acces-non").forEach(p=>p.classList.remove("error"));
@@ -717,7 +726,17 @@ $("pill-access-gps").onclick = () => {
 
   toggle($("mapAccessWrap"), 1);
   toggle($("lienAccessField"), 0);
-setTimeout(() => mapAccess && mapAccess.invalidateSize(), 300);
+// ✅ recalcul robuste pour forcer l’affichage
+requestAnimationFrame(() => {
+  if (mapAccess) {
+    mapAccess.invalidateSize();
+    if (lastFix) {
+      mapAccess.setView([lastFix.lat, lastFix.lon], 18);
+    } else {
+      mapAccess.setView(HAZE, 18);
+    }
+  }
+});
 setTimeout(() => mapAccess && mapAccess.invalidateSize(), 1000);
   markError($("lienAccess"), $("lienAccessHelp"), false);
 
