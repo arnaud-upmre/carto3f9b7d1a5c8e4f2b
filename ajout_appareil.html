@@ -735,7 +735,6 @@ const planIGN = L.tileLayer(
   + "&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&STYLE=normal&FORMAT=image/png"
   + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
   {
-    attribution: "© IGN – Géoplateforme",
     maxZoom: 21,
     maxNativeZoom: 19,
     tileSize: 256,
@@ -828,7 +827,7 @@ function onGeoDenied(target){
 }
   
 function ensureMap(mapId,btnToggle,btnRecenter,lat,lon){
-  let map=L.map(mapId).setView([lat,lon],18);
+let map = L.map(mapId, { attributionControl: false }).setView([lat, lon], 18);
   setTimeout(()=>map.invalidateSize(),300);
 
 orthoIGN.addTo(map);
