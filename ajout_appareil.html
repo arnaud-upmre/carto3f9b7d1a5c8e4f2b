@@ -373,7 +373,7 @@ if(i===8){
     if(!mapAccess){
       startLocAccess();
     }
-    requestAnimationFrame(()=> mapAccess && mapAccess.invalidateSize());
+ setTimeout(() => mapAccess && mapAccess.invalidateSize(), 300);
 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -898,13 +898,17 @@ $(btnRecenter).onclick = () => {
     return true;
   };
 
-  if (confirmFromFix(lastFix)) return;
+  if (confirmFromFix(lastFix)) {
+    map.invalidateSize();
+    return;
+  }
 
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
       p => {
         applyFix(p.coords.latitude, p.coords.longitude);
         confirmFromFix({ lat: p.coords.latitude, lon: p.coords.longitude });
+        map.invalidateSize();
       },
       err => { 
         if (err.code === 1) onGeoDenied(kind); 
