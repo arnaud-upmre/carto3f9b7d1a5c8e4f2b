@@ -382,48 +382,43 @@ if (navigator.geolocation && $("presentValue").value === "oui") {
   );
 }
 }
-
+  
 if (i === 8) { 
-  const m = $("accessMethod").value;
-  toggle($("mapAccessWrap"), m === "gps");
-  toggle($("lienAccessField"), m === "lien");
+  if (!mapAccess) {
+    startLocAccess(); 
+  }
+  setTimeout(() => mapAccess && mapAccess.invalidateSize(), 300);
 
-  if (m === "gps") {
-    if (!mapAccess) {
-      startLocAccess();
-    }
-    setTimeout(() => mapAccess && mapAccess.invalidateSize(), 300);
+  // 🚀 Localisation auto dès l’ouverture
+  setTimeout(() => $("btnRecenterAccess").click(), 500);
 
-    // 🚀 Localisation auto dès l’ouverture (comme pour l’appareil)
-    setTimeout(() => $("btnRecenterAccess").click(), 500);
+  if (navigator.geolocation && $("accessValue").value === "oui" && $("accessMethod").value === "gps") {
+    const btn = $("btnRecenterAccess");
+    const oldTxt = btn.textContent;
+    btn.textContent = "🛰️ Attente GPS…";
+    btn.disabled = true;
 
-    if (navigator.geolocation && $("accessMethod").value === "gps") {
-      const btn = $("btnRecenterAccess");
-      const oldTxt = btn.textContent;
-      btn.textContent = "🛰️ Attente GPS…";
-      btn.disabled = true;
+    navigator.geolocation.getCurrentPosition(
+      p => {
+        ACCESS_CONFIRMED = true;
+        $("mapAccessWrap").classList.remove("error");
+        applyFix(p.coords.latitude, p.coords.longitude);
 
-      navigator.geolocation.getCurrentPosition(
-        p => {
-          ACCESS_CONFIRMED = true;
-          $("mapAccessWrap").classList.remove("error");
-          applyFix(p.coords.latitude, p.coords.longitude);
-
-          setTimeout(() => {
-            btn.textContent = oldTxt;
-            btn.disabled = false;
-          }, 2000);
-        },
-        err => { 
-          if (err.code === 1) onGeoDenied("access"); 
+        setTimeout(() => {
           btn.textContent = oldTxt;
           btn.disabled = false;
-        },
-        { enableHighAccuracy: true, timeout: 7000, maximumAge: 0 }
-      );
-    }
+        }, 2000);
+      },
+      err => { 
+        if (err.code === 1) onGeoDenied("access"); 
+        btn.textContent = oldTxt;
+        btn.disabled = false;
+      },
+      { enableHighAccuracy: true, timeout: 7000, maximumAge: 0 }
+    );
   }
 }
+  
   if(i===10){
     const recap = $("recap");
     recap.innerHTML = "";
