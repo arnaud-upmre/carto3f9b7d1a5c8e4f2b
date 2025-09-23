@@ -218,6 +218,7 @@ Remplir uniquement si l’appareil dépend d’un SAT
           <input id="lien" type="url" placeholder="https://maps.app.goo.gl/…">
           <div id="lienHelp" class="field-hint">⚠️ Lien requis pour continuer</div>
         </div>
+        <div id="geoDeviceMsg" style="display:none;color:#c62828;font-size:14px;margin:6px 0"></div>
         <div class="btn-row">
           <button type="button" class="btn secondary prev">⬅️ Retour</button>
           <button type="button" class="btn primary next">Suivant ➡️</button>
@@ -280,6 +281,7 @@ Remplir uniquement si l’appareil dépend d’un SAT
     <label>🔗 Lien Google Maps accès :</label>
     <input id="lienAccess" type="url" placeholder="https://maps.app.goo.gl/…">
     <div id="lienAccessHelp" class="field-hint">⚠️ Lien requis pour continuer</div>
+    <div id="geoAccessMsg" style="display:none;color:#c62828;font-size:14px;margin:6px 0"></div>
   </div>
 
   <div class="btn-row">
@@ -797,7 +799,6 @@ function onGeoDenied(target){
   GEO_BLOCKED = true;
 
   if (target === "device") {
-
     $("presentValue").value = "non";
     toggle($("mapDeviceWrap"), 0);
     toggle($("lienField"), 1);
@@ -807,10 +808,12 @@ function onGeoDenied(target){
     $("lonDevice").value = "";
     DEVICE_CONFIRMED = false;
     $("mapDeviceWrap").classList.remove("error");
+
+    $("geoDeviceMsg").textContent = "📌 Localisation refusée : collez un lien Google Maps pour continuer.";
+    $("geoDeviceMsg").style.display = "block";
   }
 
   if (target === "access") {
-
     $("accessMethod").value = "lien";
     toggle($("mapAccessWrap"), 0);
     toggle($("lienAccessField"), 1);
@@ -818,6 +821,9 @@ function onGeoDenied(target){
     $("coordsAccessDisplay").style.display = "none";
     ACCESS_CONFIRMED = false;
     $("mapAccessWrap").classList.remove("error");
+
+    $("geoAccessMsg").textContent = "📌 Localisation refusée : collez un lien Google Maps pour continuer.";
+    $("geoAccessMsg").style.display = "block";
   }
 }
   
@@ -825,10 +831,10 @@ function ensureMap(mapId,btnToggle,btnRecenter,lat,lon){
   let map=L.map(mapId).setView([lat,lon],18);
   setTimeout(()=>map.invalidateSize(),300);
 
-    planIGN.addTo(map); 
-  $(btnToggle).textContent = "🛰️ Satellite"; 
+orthoIGN.addTo(map);
+$(btnToggle).textContent = "🗺️ Plan"; 
 
-  let isPlan = true;
+  let isPlan = false;
   $(btnToggle).onclick = () => {
     if (isPlan) {
       map.removeLayer(planIGN);
@@ -863,7 +869,17 @@ map.on("click", e => {
 });
 
 $(btnRecenter).onclick = () => {
-  if (GEO_BLOCKED) { onGeoDenied(mapId === "mapDevice" ? "device" : "access"); return; }
+  const btn = $(btnRecenter);
+  const oldTxt = btn.textContent;
+  btn.textContent = "🛰️ Attente GPS…";
+  btn.disabled = true;
+
+  if (GEO_BLOCKED) { 
+    onGeoDenied(mapId === "mapDevice" ? "device" : "access"); 
+    btn.textContent = oldTxt;
+    btn.disabled = false;
+    return; 
+  }
 
   const kind = (mapId === "mapDevice") ? "device" : "access";
 
@@ -878,6 +894,8 @@ $(btnRecenter).onclick = () => {
       $("mapAccessWrap").classList.remove("error");
       setMapTo(map, marker, fix.lat, fix.lon, "access");
     }
+    btn.textContent = oldTxt;
+    btn.disabled = false;
     return true;
   };
 
@@ -889,7 +907,11 @@ $(btnRecenter).onclick = () => {
         applyFix(p.coords.latitude, p.coords.longitude);
         confirmFromFix({ lat: p.coords.latitude, lon: p.coords.longitude });
       },
-      err => { if (err.code === 1) onGeoDenied(kind); },
+      err => { 
+        if (err.code === 1) onGeoDenied(kind); 
+        btn.textContent = oldTxt;
+        btn.disabled = false;
+      },
       GEO_OPTS
     );
   }
