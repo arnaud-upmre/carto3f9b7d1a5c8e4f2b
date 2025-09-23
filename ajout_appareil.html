@@ -446,69 +446,66 @@ if (i === 8) {
       { step: 9, label: "📝 Notes", value: $("infos").value }
     ];
 
- data.forEach(item=>{
+data.forEach(item=>{
   if(item.value && item.value.trim()!==""){
     const div = document.createElement("div");
 
-if(item.value.includes(",") && !item.value.startsWith("http")){
-  const [lat, lon] = item.value.split(",");
-  const span = document.createElement("span");
-  span.textContent = `${item.label} (par GPS)`;
-  div.appendChild(span);
+    if(item.value.includes(",") && !item.value.startsWith("http")){
+      const [lat, lon] = item.value.split(",");
+      const span = document.createElement("span");
+      span.textContent = `${item.label} (par GPS)`;
+      div.appendChild(span);
 
-  const link = document.createElement("a");
-  link.href = `https://www.google.com/maps/@${lat.trim()},${lon.trim()},20z/data=!3m1!1e3`;
-  link.target = "_blank";
-  link.rel = "noopener";
-  link.textContent = " 🔎 Voir sur Google Maps";
-  link.style.marginLeft = "8px";
-  link.style.color = "#0b6cff";
-  link.style.textDecoration = "underline";
-  link.addEventListener("click", e => e.stopPropagation());
-  div.appendChild(link);
+      const link = document.createElement("a");
+      link.href = `https://www.google.com/maps?q=${lat.trim()},${lon.trim()}&z=18`;
+      link.target = "_blank";
+      link.rel = "noopener";
+      link.textContent = "🔎 Vérifier sur Google Maps";
+      link.style.marginLeft = "8px";
+      link.style.color = "#0b6cff";
+      link.style.textDecoration = "underline";
+      link.addEventListener("click", e => e.stopPropagation());
+      div.appendChild(link);
 
-} else if(item.value.startsWith("http")){
-  let url = item.value.trim();
+    } else if(item.value.startsWith("http")){
+      let url = item.value.trim();
+      if (!/^https?:\/\//i.test(url)) {
+        url = "https://" + url;
+      }
 
-  if (!/^https?:\/\//i.test(url)) {
-    url = "https://" + url;
-  }
+      const span = document.createElement("span");
+      span.textContent = `${item.label} (par lien)`;
+      div.appendChild(span);
 
-  const span = document.createElement("span");
-  span.textContent = `${item.label} (par lien)`;
-  div.appendChild(span);
+      const link = document.createElement("a");
+      link.href = url; 
+      link.target = "_blank";
+      link.rel = "noopener";
+      link.textContent = "🔎 Vérifier sur Google Maps";
+      link.style.marginLeft = "8px";
+      link.style.color = "#0b6cff";
+      link.style.textDecoration = "underline";
+      link.addEventListener("click", e => e.stopPropagation());
+      div.appendChild(link);
 
-  const link = document.createElement("a");
-  link.href = url; 
-  link.target = "_blank";
-  link.rel = "noopener";
-  link.textContent = " 🔎 Voir sur Google Maps";
-  link.style.marginLeft = "8px";
-  link.style.color = "#0b6cff";
-  link.style.textDecoration = "underline";
-  link.addEventListener("click", e => e.stopPropagation());
-  div.appendChild(link);
+    } else {
+      div.textContent = `${item.label} : ${item.value}`;
+    }
 
-} else {
-  div.textContent = `${item.label} : ${item.value}`;
-}
-
+    // 📌 rendu cliquable pour modifier
     div.style.cursor = "pointer";
     div.style.margin = "6px 0";
     div.style.padding = "6px";
     div.style.border = "1px solid var(--border)";
     div.style.borderRadius = "6px";
-   div.onclick = () => {
-  currentStep = item.step;
-  showStep(currentStep);
-  returnToRecap = true; 
-};
+    div.onclick = () => {
+      currentStep = item.step;
+      showStep(currentStep);
+      returnToRecap = true; 
+    };
     recap.appendChild(div);
   }
 });
-  }
-  
-}
 document.querySelectorAll(".next").forEach(btn=>{
   btn.addEventListener("click", e=>{
     e.preventDefault();
