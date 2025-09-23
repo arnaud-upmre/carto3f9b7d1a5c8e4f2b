@@ -993,16 +993,26 @@ if (confirmFromFix(lastFix)) {
   else{mapAccess=map;markerAccess=marker;}
 }
 function startLocDevice(){
-  if(!mapDevice)
-    ensureMap("mapDevice","btnToggleDevice","btnRecenterDevice",HAZE[0],HAZE[1]);
-  if(lastFix)
+  if (!mapDevice) {
+    if (lastFix) {
+      ensureMap("mapDevice","btnToggleDevice","btnRecenterDevice",lastFix.lat,lastFix.lon);
+    } else {
+      ensureMap("mapDevice","btnToggleDevice","btnRecenterDevice",HAZE[0],HAZE[1]);
+    }
+  }
+  if (lastFix)
     setMapTo(mapDevice,markerDevice,lastFix.lat,lastFix.lon,"device");
 }
 
 function startLocAccess(){
-  if(!mapAccess)
-    ensureMap("mapAccess","btnToggleAccess","btnRecenterAccess",HAZE[0],HAZE[1]);
-  if(lastFix)
+  if (!mapAccess) {
+    if (lastFix) {
+      ensureMap("mapAccess","btnToggleAccess","btnRecenterAccess",lastFix.lat,lastFix.lon);
+    } else {
+      ensureMap("mapAccess","btnToggleAccess","btnRecenterAccess",HAZE[0],HAZE[1]);
+    }
+  }
+  if (lastFix)
     setMapTo(mapAccess,markerAccess,lastFix.lat,lastFix.lon,"access");
 }
 
