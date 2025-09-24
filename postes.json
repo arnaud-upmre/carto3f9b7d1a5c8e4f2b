@@ -2616,8 +2616,25 @@
     "lignes": "",
     "numero_ligne": "",
     "pk": "",
-    "poste_latitude": "",
-    "poste_longitude": ""
+    "poste_latitude": "50.44299",
+    "poste_longitude": "3.01117"
+  },
+  {
+    "nom": "Maison Rouge",
+    "type": "L-A",
+    "SAT": "",
+    "accès": "SAT1",
+    "latitude": 50.441352,
+    "longitude": 2.998094,
+    "description": "",
+    "rss": "B",
+    "contact": "",
+    "portail": "",
+    "lignes": "",
+    "numero_ligne": "",
+    "pk": "",
+    "poste_latitude": "50.438111",
+    "poste_longitude": "2.999417"
   },
   {
     "nom": "Maison Rouge",
