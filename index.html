@@ -1419,6 +1419,7 @@ if (rawQuery.length >= 3) {
 }
 
 });
+    
 
 function showAppareil(app) {
   incrementCounterAppareil();
@@ -1428,59 +1429,40 @@ function showAppareil(app) {
   suggestionsEl.innerHTML = "";
   result.style.display = "block";
 
+  // Bloc appareil
   let html = `<h2>
     ⚡️ ${app.appareil} (${app.nom}${app.type ? ' ' + app.type : ''}${app.SAT ? ' / ' + app.SAT : ''})
   </h2>`;
 
-html += `
-  <div class="rep-block horizontal rep-appareil">
-    <p>
-      <span class="emoji">💡</span> <strong>Repérer l’appareil :</strong>
-    </p>
-    <div class="inline-links pills-3">
-      <a href="${myMapsViewer(app.latitude, app.longitude)}">🛰️ Vue satellite</a>
-    </div>
-  </div>`;
+  html += `
+    <div class="rep-block horizontal rep-appareil">
+      <p><span class="emoji">💡</span> <strong>Repérer l’appareil :</strong></p>
+      <div class="inline-links pills-3">
+        <a href="${myMapsViewer(app.latitude, app.longitude)}">🛰️ Vue satellite</a>
+      </div>
+    </div>`;
 
-  const posteTrouvé = lieux.find(l => 
+  if (app.description) {
+    html += `<p>${app.description}</p>`;
+  }
+
+  // 👉 On cherche uniquement le poste principal (pas l’accès)
+  const postePrincipal = lieux.find(l =>
     normalize(l.nom) === normalize(app.nom) &&
     normalize(l.type) === normalize(app.type) &&
-    normalize(l.SAT || "") === normalize(app.SAT || "")
+    !l.SAT && !l.accès // exclure SAT et accès
   );
 
-  const accesTrouvé = lieux.find(l => {
-    const sameBase = normalize(l.nom) === normalize(app.nom)
-      && normalize(l.type) === normalize(app.type)
-      && normalize(l.SAT || "") === normalize(app.SAT || "");
-    if (!sameBase) return false;
-
-    const accLieu = normalize(String(l.accès || ""));
-    const accFromApp = normalize(String(app.accès || ""));
-    const accFromId  = normalize(String(app.appareil || ""));
-
-    if (accFromApp && accLieu === accFromApp) return true;
-    return accLieu === accFromId;
-  });
-
-  const lieuCible = accesTrouvé || posteTrouvé;
-
-  const blocs = [];
-  if (app.description) blocs.push(`<p>${app.description}</p>`);
-
-  if (blocs.length > 0) {
-    html += blocs.map((b,i)=> i===0 ? b : `<hr class="separator" />${b}`).join("");
-  }
-  if (lieuCible) {
-    // Générer et afficher la fiche complète du poste/SAT/accès lié
-    const sauvegarde = html; // garder l’affichage appareil
-    showLieu(lieuCible);     // appelle la fonction qui construit la fiche poste
+  if (postePrincipal) {
+    const sauvegarde = html; // on garde la partie appareil
+    showLieu(postePrincipal); // on construit la fiche principale
     const fichePoste = document.getElementById("result").innerHTML;
-
-    // Recombine : appareil + fiche du poste
     html = sauvegarde + "<hr class='separator' />" + fichePoste;
   }
+
   result.innerHTML = html;
 }
+    
 
 const TOTAL_TRAINS = 11; 
 
