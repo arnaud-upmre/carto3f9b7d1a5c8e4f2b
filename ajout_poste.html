@@ -803,10 +803,11 @@ function ensureMap(mapId,btnToggle,btnRecenter,lat,lon){
   let map=L.map(mapId).setView([lat,lon],18);
   setTimeout(()=>map.invalidateSize(),300);
 
-  planIGN.addTo(map); 
-  $(btnToggle).textContent = "🛰️ Satellite"; 
 
-  let isPlan = true;
+orthoIGN.addTo(map); 
+$(btnToggle).textContent = "🗺️ Plan"; 
+let isPlan = false;
+  
   $(btnToggle).onclick = () => {
     if (isPlan) {
       map.removeLayer(planIGN);
