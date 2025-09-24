@@ -4688,5 +4688,15 @@
     "latitude": 50.61503,
     "longitude": 3.08983,
     "description": ""
+  },
+  {
+    "nom": "Bethune SUD",
+    "type": "SS",
+    "SAT": "",
+    "accès": "",
+    "appareil": "229-27B",
+    "latitude": 50.51932,
+    "longitude": 2.64545,
+    "description": "Non entrenu par l’EMRE"
   }
 ]
