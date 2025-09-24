@@ -930,41 +930,43 @@ function startLocAccess(){
 document.addEventListener("DOMContentLoaded",()=>{
 
   const params = new URLSearchParams(window.location.search);
-
+  
 
 if (params.has("poste")) {
-  
-const TYPES = ["A","L","L-A","LGV","P","PRCI","S","SP","ST","SST","SS","SSP","SSPA","SSP-A"];
-const TYPES_SORTED = [...TYPES].sort((a, b) => b.length - a.length);
-const esc = s => s.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
-const TYPES_RE = new RegExp("(?:\\s)+(" + TYPES_SORTED.map(esc).join("|") + ")\\s*$", "i");
-  
+  const TYPES = ["A","L","L-A","LGV","P","PRCI","S","SP","ST","SST","SS","SSP","SSPA","SSP-A"];
+  const TYPES_SORTED = [...TYPES].sort((a, b) => b.length - a.length);
+  const esc = s => s.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
+  const TYPES_RE = new RegExp("(?:\\s)+(" + TYPES_SORTED.map(esc).join("|") + ")\\s*$", "i");
+
   let raw = (params.get("poste") || "")
-    .replace(/^📍\s*/,"")     
-    .replace(/\u00A0/g," ")  
-    .replace(/\s+/g," ")      
+    .replace(/^📍\s*/, "")     
+    .replace(/\u00A0/g, " ")  
+    .replace(/\s+/g, " ")      
     .trim();
 
   let foundType = "";
   let foundSat  = "";
 
+  // Détecter SAT (SAT1, SAT2, etc.)
   const satM = raw.match(/\bSAT[\s-]*\d+\b/i);
   if (satM) {
-    foundSat = satM[0].replace(/\s+/g,"").toUpperCase();
-    raw = raw.slice(0, satM.index).trim();               
+    foundSat = satM[0].replace(/\s+/g, "").toUpperCase();
+    raw = raw.slice(0, satM.index).trim();
   }
 
+  // ⚡ Correction : on enlève le split avec "-" (sinon ça coupe L-A, SSP-A…)
   if (!satM) {
-    raw = raw.split(/(?:—|–|-|,|;|\/|\(|\[|\baccès\b|\bacces\b|\baccess\b)/i)[0].trim();
+    raw = raw.split(/(?:—|–|,|;|\/|\(|\[|\baccès\b|\bacces\b|\baccess\b)/i)[0].trim();
   }
 
+  // Détection du type (L-A, SSP-A, etc.)
   const typeM = raw.match(TYPES_RE);
   if (typeM) {
     foundType = typeM[1].toUpperCase();
-    raw = raw.replace(TYPES_RE, "").trim(); 
+    raw = raw.replace(TYPES_RE, "").trim();
   }
 
-  $("poste").value = raw;          
+  $("poste").value = raw;
   if (foundType) $("type").value = foundType;
   if (foundSat)  $("sat").value  = foundSat;
 }
