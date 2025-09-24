@@ -933,15 +933,11 @@ document.addEventListener("DOMContentLoaded",()=>{
 
 
 if (params.has("poste")) {
-
+  
 const TYPES = ["A","L","L-A","LGV","P","PRCI","S","SP","ST","SST","SS","SSP","SSPA","SSP-A"];
-
-
 const TYPES_SORTED = [...TYPES].sort((a, b) => b.length - a.length);
-
 const esc = s => s.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
-
-const TYPES_RE = new RegExp("(?:\\s|-)+(" + TYPES_SORTED.map(esc).join("|") + ")\\s*$", "i");  
+const TYPES_RE = new RegExp("(?:\\s)+(" + TYPES_SORTED.map(esc).join("|") + ")\\s*$", "i");
   
   let raw = (params.get("poste") || "")
     .replace(/^📍\s*/,"")     
