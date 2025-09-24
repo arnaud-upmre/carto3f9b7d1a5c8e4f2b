@@ -1144,6 +1144,16 @@ blocs.push(
     html += `<hr class="separator" />${appareilsHTML}`;
   }
 
+  // 👉 Bloc retour fiche principale si on est dans un SAT ou un accès
+if (lieu.SAT || lieu.accès) {
+  html += `
+    <div class="missing-box" onclick="retourFichePrincipale('${encodeURIComponent(lieu.nom)}','${encodeURIComponent(lieu.type)}')">
+      ⬅️ Retour à la fiche principale<br>
+      <strong>${lieu.nom} ${lieu.type}</strong>
+    </div>
+  `;
+}
+
   result.innerHTML = html;
 }
 
@@ -2005,7 +2015,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 <div id="about-footer">
   <div class="footer-links">
     <a href="arnaud.html" class="pill-link">🔧 À propos</a>
-   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.7</a>
+   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.7.1</a>
   </div>
 </div>
 <script>
@@ -2150,6 +2160,21 @@ document.getElementById("streetview-close").onclick = () => {
   document.getElementById("streetview-overlay").style.display = "none";
   document.getElementById("streetview-frame").src = "";
 };
+
+  function retourFichePrincipale(nom, type) {
+  // On retrouve le poste principal correspondant
+  const postePrincipal = lieux.find(l => 
+    normalize(l.nom) === normalize(decodeURIComponent(nom)) &&
+    normalize(l.type) === normalize(decodeURIComponent(type)) &&
+    !l.SAT && !l.accès // exclure les fiches secondaires
+  );
+
+  if (postePrincipal) {
+    showLieu(postePrincipal);
+  } else {
+    alert("⚠️ Poste principal introuvable");
+  }
+}
 </script>
 </body>
 </html>
