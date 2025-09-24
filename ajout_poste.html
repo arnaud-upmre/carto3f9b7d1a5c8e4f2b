@@ -300,100 +300,98 @@ const progress=document.getElementById("progress");
   function recapIndex(){ return [...steps].findIndex(s => s.querySelector('#recap')); }
 function stepIndexOf(el){ return el ? [...steps].findIndex(s => s.contains(el)) : -1; }
 
-  function showStep(i){
-  steps.forEach((s,idx)=>s.classList.toggle("active",idx===i));
 
+  function showStep(i) {
+  steps.forEach((s, idx) => s.classList.toggle("active", idx === i));
 
   const realSteps = [...steps].filter(s => s.id !== "introStep" && s.id !== "confirmationStep");
   const realIndex = realSteps.indexOf(steps[i]);
 
   if (realIndex >= 0) {
-    let pct = Math.round(((realIndex+1) / realSteps.length) * 100);
+    let pct = Math.round(((realIndex + 1) / realSteps.length) * 100);
     progress.textContent = `${pct}%`;
     document.getElementById("progressbar-fill").style.width =
-      ((realIndex+1)/realSteps.length*100) + "%";
+      ((realIndex + 1) / realSteps.length * 100) + "%";
   }
 
-if (steps[i].querySelector("#mapDeviceWrap")) {
-  if (!mapDevice) {
-    startLocDevice();
-  }
-  setTimeout(() => mapDevice && mapDevice.invalidateSize(), 300);
-
-  if (navigator.geolocation && $("presentValue").value === "oui") {
-    navigator.geolocation.getCurrentPosition(
-      p => {
-        DEVICE_CONFIRMED = true;
-        $("mapDeviceWrap").classList.remove("error");
-        applyFix(p.coords.latitude, p.coords.longitude);
-      },
-      err => { if (err.code === 1) onGeoDenied("device"); },
-      { enableHighAccuracy: true, timeout: 7000, maximumAge: 0 }
-    );
-  }
-}
-
-if (steps[i].querySelector("#mapAccessWrap")) {
-  const m = $("accessMethod").value;
-  toggle($("mapAccessWrap"), m === "gps");
-  toggle($("lienAccessField"), m === "lien");
-
-if (m === "gps") {
-  if (!mapAccess) {
-    startLocAccess();
-  }
-
-  requestAnimationFrame(() => {
-    if (mapAccess) {
-      // ⚡ recharge la couche pour éviter fond gris
-      mapAccess.eachLayer(l => mapAccess.removeLayer(l));
-      orthoIGN.addTo(mapAccess);
-      if (markerAccess) markerAccess.addTo(mapAccess);
-
-      mapAccess.invalidateSize();
-      setTimeout(() => mapAccess.invalidateSize(), 500);
+  // ---------------- Poste ----------------
+  if (steps[i].querySelector("#mapDeviceWrap")) {
+    if (!mapDevice) {
+      startLocDevice();
     }
-  });
+    setTimeout(() => mapDevice && mapDevice.invalidateSize(), 300);
 
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      p => {
-        ACCESS_CONFIRMED = true;
-        $("mapAccessWrap").classList.remove("error");
-        applyFix(p.coords.latitude, p.coords.longitude);
-      },
-      err => { if (err.code === 1) onGeoDenied("access"); },
-      { enableHighAccuracy: true, timeout: 7000, maximumAge: 0 }
-    );
+    if (navigator.geolocation && $("presentValue").value === "oui") {
+      navigator.geolocation.getCurrentPosition(
+        p => {
+          DEVICE_CONFIRMED = true;
+          $("mapDeviceWrap").classList.remove("error");
+          applyFix(p.coords.latitude, p.coords.longitude);
+        },
+        err => { if (err.code === 1) onGeoDenied("device"); },
+        { enableHighAccuracy: true, timeout: 7000, maximumAge: 0 }
+      );
+    }
   }
-}
+
+  // ---------------- Accès ----------------
+  if (steps[i].querySelector("#mapAccessWrap")) {
+    const m = $("accessMethod").value;
+    toggle($("mapAccessWrap"), m === "gps");
+    toggle($("lienAccessField"), m === "lien");
+
+    if (m === "gps") {
+      if (!mapAccess) {
+        startLocAccess();
+      }
+
+      requestAnimationFrame(() => {
+        if (mapAccess) {
+          // ⚡ recharge la couche pour éviter fond gris
+          mapAccess.eachLayer(l => mapAccess.removeLayer(l));
+          orthoIGN.addTo(mapAccess);
+          if (markerAccess) markerAccess.addTo(mapAccess);
+
+          mapAccess.invalidateSize();
+          setTimeout(() => mapAccess.invalidateSize(), 500);
+        }
+      });
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          p => {
+            ACCESS_CONFIRMED = true;
+            $("mapAccessWrap").classList.remove("error");
+            applyFix(p.coords.latitude, p.coords.longitude);
+          },
+          err => { if (err.code === 1) onGeoDenied("access"); },
+          { enableHighAccuracy: true, timeout: 7000, maximumAge: 0 }
+        );
+      }
+    }
   }
-}
 
-
-if (steps[i].querySelector('#recap')) {
+  // ---------------- Recap ----------------
+  if (steps[i].querySelector('#recap')) {
     const recap = $("recap");
     recap.innerHTML = "";
 
-const data = [
-  { step: 1, label: "👤 Demandeur", value: $("demandeur").value },
-  { step: 2, label: "📌 Poste", value: $("poste").value + ( $("type").value ? " ("+$("type").value+")" : "" ) },
-  { step: 2, label: "📌 SAT", value: $("sat").value },
+    const data = [
+      { step: 1, label: "👤 Demandeur", value: $("demandeur").value },
+      { step: 2, label: "📌 Poste", value: $("poste").value + ( $("type").value ? " ("+$("type").value+")" : "" ) },
+      { step: 2, label: "📌 SAT", value: $("sat").value },
+      { step: 3, label: "📍 Localisation poste", value: $("presentValue").value==="oui" ? ($("latDevice").value+","+$("lonDevice").value) : $("lien").value },
+      { step: 5, label: "📍 Localisation accès", value: ($("accessMethod").value==="gps"
+         ? $("coordsAccessDisplay").textContent.replace("Coordonnées relevées (accès) : ","")
+         : $("lienAccess").value) },
+      { step: 7, label: "📝 Notes", value: $("infos").value }
+    ];
 
-  { step: 3, label: "📍 Localisation poste", value: $("presentValue").value==="oui" ? ($("latDevice").value+","+$("lonDevice").value) : $("lien").value },
-
-  { step: 5, label: "📍 Localisation accès", value: ($("accessMethod").value==="gps"
-     ? $("coordsAccessDisplay").textContent.replace("Coordonnées relevées (accès) : ","")
-     : $("lienAccess").value) },
-  { step: 7, label: "📝 Notes", value: $("infos").value }
-];
-
-    data.forEach(item=>{
-      if(item.value && item.value.trim()!==""){
+    data.forEach(item => {
+      if (item.value && item.value.trim() !== "") {
         const div = document.createElement("div");
 
-    
-        if(item.value.includes(",") && !item.value.startsWith("http")){
+        if (item.value.includes(",") && !item.value.startsWith("http")) {
           const [lat, lon] = item.value.split(",");
           const span = document.createElement("span");
           span.textContent = `${item.label} (par GPS)`;
@@ -410,13 +408,9 @@ const data = [
           link.addEventListener("click", e => e.stopPropagation());
           div.appendChild(link);
 
-
-        } else if(item.value.startsWith("http")){
+        } else if (item.value.startsWith("http")) {
           let url = item.value.trim();
-
-          if (!/^https?:\/\//i.test(url)) {
-            url = "https://" + url;
-          }
+          if (!/^https?:\/\//i.test(url)) url = "https://" + url;
 
           const span = document.createElement("span");
           span.textContent = `${item.label} (par lien)`;
@@ -433,7 +427,6 @@ const data = [
           link.addEventListener("click", e => e.stopPropagation());
           div.appendChild(link);
 
-    
         } else {
           div.textContent = `${item.label} : ${item.value}`;
         }
@@ -443,38 +436,39 @@ const data = [
         div.style.padding = "6px";
         div.style.border = "1px solid var(--border)";
         div.style.borderRadius = "6px";
-     div.onclick = () => {
 
-  comeBackAt = item.step;
-  currentStep = item.step;
+        div.onclick = () => {
+          comeBackAt = item.step;
+          currentStep = item.step;
 
-  if (item.label.startsWith("📍 Localisation poste")) {
-    if ($("presentValue").value) {
-      currentStep = 4; 
-      comeBackAt = 4;
-    } else {
-      currentStep = 3; 
-      comeBackAt = 4;  
-    }
-  }
+          if (item.label.startsWith("📍 Localisation poste")) {
+            if ($("presentValue").value) {
+              currentStep = 4; 
+              comeBackAt = 4;
+            } else {
+              currentStep = 3; 
+              comeBackAt = 4;  
+            }
+          }
 
-  if (item.label.startsWith("📍 Localisation accès")) {
-    if ($("accessMethod").value) {
-      currentStep = 6; 
-      comeBackAt = 6;
-    } else {
-      currentStep = 5; 
-      comeBackAt = 6;  
-    }
-  }
+          if (item.label.startsWith("📍 Localisation accès")) {
+            if ($("accessMethod").value) {
+              currentStep = 6; 
+              comeBackAt = 6;
+            } else {
+              currentStep = 5; 
+              comeBackAt = 6;  
+            }
+          }
 
-  showStep(currentStep);
-};
+          showStep(currentStep);
+        };
+
         recap.appendChild(div);
       }
     });
   }
-} 
+}
 
 document.querySelectorAll(".next").forEach(btn=>{
   btn.addEventListener("click", e=>{
