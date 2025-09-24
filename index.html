@@ -1357,7 +1357,28 @@ results.sort((a, b) => {
 });
 
 const rawQuery = e.target.value.trim();  
+if (results.length === 0 && rawQuery.length >= 3) {
+  const li = document.createElement("li");
+  li.style.fontStyle = "italic"; 
 
+  if (isAppareilLike(rawQuery)) {
+    li.textContent = `➕ Ajouter cet appareil « ${rawQuery} »`;
+    li.onclick = () => {
+      location.href = `ajout_appareil.html?appareil=${encodeURIComponent(rawQuery)}`;
+    };
+} else if (isPosteLike(rawQuery)) {
+  li.textContent = `➕ Ajouter ce poste « ${rawQuery} »`;
+  li.onclick = () => {
+    location.href = `ajout_poste.html?poste=${encodeURIComponent(rawQuery)}`;
+  };
+} else {
+  
+    return;
+  }
+
+  suggestionsEl.appendChild(li);
+  return; 
+}
 
 suggestionsEl.innerHTML = "";
 
@@ -1384,6 +1405,44 @@ li.innerHTML = `${icon} ${labelFor(item)}`;
   suggestionsEl.appendChild(li);
 });
 
+if (rawQuery.length >= 3) {
+  const queryNorm = normalizeNomPoste(rawQuery);
+
+  const exactMatch = results.some(item => {
+    if (item.category === "poste") {
+      return normalizeNomPoste(item.nom) === queryNorm;
+    } else {
+      return normalize(item.appareil || "") === normalize(rawQuery);
+    }
+  });
+
+  if (!exactMatch) {
+    const liAdd = document.createElement("li");
+  
+  const posteExiste = lieux.some(l => normalizeNomPoste(l.nom) === queryNorm);
+  const appareilExiste = appareils.some(a => normalize(a.appareil) === normalize(rawQuery));
+
+  if (posteExiste || appareilExiste) return;
+    liAdd.style.fontStyle = "italic";
+
+    if (isAppareilLike(rawQuery)) {
+      liAdd.textContent = `➕ Ajouter cet appareil « ${rawQuery} »`;
+      liAdd.onclick = () => {
+        location.href = `ajout_appareil.html?appareil=${encodeURIComponent(rawQuery)}`;
+      };
+} else if (isPosteLike(rawQuery)) {
+  liAdd.textContent = `➕ Ajouter ce poste « ${rawQuery} »`;
+  liAdd.onclick = () => {
+    location.href = `ajout_poste.html?poste=${encodeURIComponent(rawQuery)}`;
+  };
+}
+
+    suggestionsEl.insertBefore(liAdd, suggestionsEl.firstChild);
+  }
+}
+
+});
+    
 
 function showAppareil(app) {
   incrementCounterAppareil();
@@ -1984,7 +2043,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 <div id="about-footer">
   <div class="footer-links">
     <a href="arnaud.html" class="pill-link">🔧 À propos</a>
-   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.7.3</a>
+   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.7.2</a>
   </div>
 </div>
 <script>
