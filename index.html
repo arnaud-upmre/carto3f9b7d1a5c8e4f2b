@@ -859,41 +859,10 @@ function generateAppareilListHTML(currentLieu) {
   );
 
   const isSAT = currentLieu.SAT && currentLieu.SAT !== "";
+  const isAcces = !!currentLieu.accès;
 
-  const matchingAppsForScope = isSAT
-    ? matchingApps.filter(app => (app.SAT || "") === currentLieu.SAT)
-    : matchingApps;
-
-  // Si aucun appareil trouvé
-  if (matchingAppsForScope.length === 0) {
-    return `
-      <div class="missing-box">
-        🤝 Appareil manquant ?
-        <a href="ajout_appareil.html?poste=${encodeURIComponent(formatNomCompletLieu(currentLieu))}">Aidez-nous à l’ajouter.</a>
-      </div>
-    `;
-  }
-
-  // 👉 Bloc 1 : appareils du SAT courant (ou poste principal)
-  let groupedCurrent = {};
-  matchingAppsForScope.forEach(app => {
-    const sat = app.SAT || 'Poste';
-    if (!groupedCurrent[sat]) groupedCurrent[sat] = [];
-    groupedCurrent[sat].push(app);
-  });
-
-  // Tri alphabétique
-  for (const sat in groupedCurrent) {
-    groupedCurrent[sat].sort((a, b) => a.appareil.localeCompare(b.appareil, "fr", { numeric: true }));
-  }
-
-  let html = `<p><strong>🧩 Appareils trouvés dans ce ${isSAT ? 'SAT' : 'poste'} :</strong></p>`;
-  for (const [sat, list] of Object.entries(groupedCurrent)) {
-    html += `<p>${list.map(app => `<a href="#" onclick='showAppareil(${JSON.stringify(app)})'>${app.appareil}</a>`).join(", ")}</p>`;
-  }
-
-  // 👉 Bloc 2 : recapitulatif du poste complet (si on est dans un SAT ou accès)
-  if (isSAT || currentLieu.accès) {
+  // Cas 1 : fiche principale → on affiche directement le récapitulatif complet
+  if (!isSAT && !isAcces) {
     let groupedAll = {};
     matchingApps.forEach(app => {
       const sat = app.SAT || 'Poste';
@@ -901,21 +870,67 @@ function generateAppareilListHTML(currentLieu) {
       groupedAll[sat].push(app);
     });
 
-    // Tri alphabétique dans chaque SAT
     for (const sat in groupedAll) {
       groupedAll[sat].sort((a, b) => a.appareil.localeCompare(b.appareil, "fr", { numeric: true }));
     }
 
-    html += `<p><strong>🧩 Appareils trouvés dans ce poste :</strong></p>`;
+    let html = `<p><strong>🧩 Appareils trouvés dans ce poste :</strong></p>`;
     for (const [sat, list] of Object.entries(groupedAll)) {
-      if (sat === currentLieu.SAT) continue; // ⚡️ on saute le SAT courant
       html += `<p><strong>${sat} :</strong> `;
       html += list.map(app => `<a href="#" onclick='showAppareil(${JSON.stringify(app)})'>${app.appareil}</a>`).join(", ");
       html += `</p>`;
     }
+
+    html += `
+      <div class="missing-box">
+        🤝 Appareil manquant ?
+        <a href="ajout_appareil.html?poste=${encodeURIComponent(formatNomCompletLieu(currentLieu))}">Aidez-nous à l’ajouter.</a>
+      </div>
+    `;
+    return html;
   }
 
-  // 👉 Bloc "Appareil manquant"
+  // Cas 2 et 3 : SAT ou accès → bloc courant + récapitulatif
+  const matchingAppsForScope = isSAT
+    ? matchingApps.filter(app => (app.SAT || "") === currentLieu.SAT)
+    : matchingApps;
+
+  let groupedCurrent = {};
+  matchingAppsForScope.forEach(app => {
+    const sat = app.SAT || 'Poste';
+    if (!groupedCurrent[sat]) groupedCurrent[sat] = [];
+    groupedCurrent[sat].push(app);
+  });
+
+  for (const sat in groupedCurrent) {
+    groupedCurrent[sat].sort((a, b) => a.appareil.localeCompare(b.appareil, "fr", { numeric: true }));
+  }
+
+  let html = `<p><strong>🧩 Appareils trouvés dans ce ${isSAT ? 'SAT' : 'accès'} :</strong></p>`;
+  for (const [sat, list] of Object.entries(groupedCurrent)) {
+    html += `<p>${list.map(app => `<a href="#" onclick='showAppareil(${JSON.stringify(app)})'>${app.appareil}</a>`).join(", ")}</p>`;
+  }
+
+  // Récapitulatif du poste (sans répéter le SAT ou accès courant)
+  let groupedAll = {};
+  matchingApps.forEach(app => {
+    const sat = app.SAT || 'Poste';
+    if (!groupedAll[sat]) groupedAll[sat] = [];
+    groupedAll[sat].push(app);
+  });
+
+  for (const sat in groupedAll) {
+    groupedAll[sat].sort((a, b) => a.appareil.localeCompare(b.appareil, "fr", { numeric: true }));
+  }
+
+  html += `<p><strong>🧩 Appareils trouvés dans ce poste :</strong></p>`;
+  for (const [sat, list] of Object.entries(groupedAll)) {
+    if (sat === currentLieu.SAT) continue; // ⚡️ on saute le SAT courant
+    html += `<p><strong>${sat} :</strong> `;
+    html += list.map(app => `<a href="#" onclick='showAppareil(${JSON.stringify(app)})'>${app.appareil}</a>`).join(", ");
+    html += `</p>`;
+  }
+
   html += `
     <div class="missing-box">
       🤝 Appareil manquant ?
@@ -925,7 +940,6 @@ function generateAppareilListHTML(currentLieu) {
 
   return html;
 }
-
     
     
 function generateAlias(appareil, nom, sat, posteType) {
