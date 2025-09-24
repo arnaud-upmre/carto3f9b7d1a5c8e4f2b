@@ -2622,6 +2622,23 @@
   {
     "nom": "Maison Rouge",
     "type": "L-A",
+    "SAT": "SAT1",
+    "accès": "",
+    "latitude": 50.441352,
+    "longitude": 2.998094,
+    "description": "",
+    "rss": "B",
+    "contact": "",
+    "portail": "",
+    "lignes": "",
+    "numero_ligne": "",
+    "pk": "",
+    "poste_latitude": "50.442766",
+    "poste_longitude": "2.998256"
+  },
+  {
+    "nom": "Maison Rouge",
+    "type": "L-A",
     "SAT": "SAT2",
     "accès": "",
     "latitude": 50.441352,
