@@ -2143,35 +2143,29 @@ const installLink = document.getElementById("installLink");
 const isStandalone = window.matchMedia('(display-mode: standalone)').matches 
                   || window.navigator.standalone === true;
 
-if (!isStandalone) {
+// ✅ Seulement Android/Chrome non installé
+if (!isStandalone && !/iphone|ipad|ipod/i.test(navigator.userAgent)) {
   window.addEventListener("beforeinstallprompt", (e) => {
     e.preventDefault();
     deferredPrompt = e;
-    installLink.style.display = "inline"; 
+    installLink.style.display = "inline";
 
-    installLink.addEventListener("click", async (evt) => {
+    installLink.onclick = async (evt) => {
       evt.preventDefault();
       if (deferredPrompt) {
         deferredPrompt.prompt();
         const choice = await deferredPrompt.userChoice;
         if (choice.outcome === "accepted") {
-          console.log("PWA installée ");
+          console.log("PWA installée");
         }
         deferredPrompt = null;
-        installLink.style.display = "none"; 
+        installLink.style.display = "none";
       }
-    });
+    };
   });
-
-
-  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-  if (isIOS) {
-    installLink.style.display = "inline";
-    installLink.addEventListener("click", (evt) => {
-      evt.preventDefault();
-      alert("ℹ️ Sur iPhone : touchez le bouton de partage Safari (carré avec flèche ↑), puis « Ajouter à l’écran d’accueil ».");
-    });
-  }
+} else {
+  // 👉 Déjà installé ou iOS → on masque le bouton
+  installLink.style.display = "none";
 }
 </script>
   <div id="notification"></div>
