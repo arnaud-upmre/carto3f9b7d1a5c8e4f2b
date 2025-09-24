@@ -859,6 +859,7 @@ let marker=L.marker([lat,lon],{draggable:true}).addTo(map);
 marker.on("drag", e => {
   const p = e.target.getLatLng();
   if (mapId === "mapDevice") {
+    DEVICE_CONFIRMED = true; // ✅ marquer comme confirmé
     $("latDevice").value = p.lat.toFixed(6);
     $("lonDevice").value = p.lng.toFixed(6);
     if ($("presentValue").value === "oui") {
@@ -867,6 +868,7 @@ marker.on("drag", e => {
     }
   } else {
     if ($("accessMethod").value === "gps") {
+      ACCESS_CONFIRMED = true; // ✅ marquer comme confirmé
       $("coordsAccessDisplay").textContent = `Coordonnées relevées (accès) : ${p.lat.toFixed(6)}, ${p.lng.toFixed(6)}`;
       $("coordsAccessDisplay").style.display = "block";
     }
