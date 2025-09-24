@@ -1358,9 +1358,6 @@ results.sort((a, b) => {
 
 const rawQuery = e.target.value.trim();  
 
-  suggestionsEl.appendChild(li);
-  return; 
-}
 
 suggestionsEl.innerHTML = "";
 
@@ -1397,17 +1394,6 @@ if (rawQuery.length >= 3) {
       return normalize(item.appareil || "") === normalize(rawQuery);
     }
   });
-
-  if (!exactMatch) {
-    const liAdd = document.createElement("li");
-  
-  const posteExiste = lieux.some(l => normalizeNomPoste(l.nom) === queryNorm);
-  const appareilExiste = appareils.some(a => normalize(a.appareil) === normalize(rawQuery));
-
-  if (posteExiste || appareilExiste) return;
-    liAdd.style.fontStyle = "italic";
-
-}
 
 });
     
