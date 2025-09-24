@@ -890,26 +890,30 @@ function generateAppareilListHTML(currentLieu) {
     return html;
   }
 
-  // Cas 2 et 3 : SAT ou accès → bloc courant + récapitulatif
-  const matchingAppsForScope = isSAT
-    ? matchingApps.filter(app => (app.SAT || "") === currentLieu.SAT)
-    : matchingApps;
+  let html = "";
 
-  let groupedCurrent = {};
-  matchingAppsForScope.forEach(app => {
-    const sat = app.SAT || 'Poste';
-    if (!groupedCurrent[sat]) groupedCurrent[sat] = [];
-    groupedCurrent[sat].push(app);
-  });
+  // Cas 2 : si on est dans un SAT → afficher bloc du SAT courant
+  if (isSAT) {
+    const matchingAppsForSAT = matchingApps.filter(app => (app.SAT || "") === currentLieu.SAT);
 
-  for (const sat in groupedCurrent) {
-    groupedCurrent[sat].sort((a, b) => a.appareil.localeCompare(b.appareil, "fr", { numeric: true }));
+    let groupedSAT = {};
+    matchingAppsForSAT.forEach(app => {
+      const sat = app.SAT || 'Poste';
+      if (!groupedSAT[sat]) groupedSAT[sat] = [];
+      groupedSAT[sat].push(app);
+    });
+
+    for (const sat in groupedSAT) {
+      groupedSAT[sat].sort((a, b) => a.appareil.localeCompare(b.appareil, "fr", { numeric: true }));
+    }
+
+    html += `<p><strong>🧩 Appareils trouvés dans ce SAT :</strong></p>`;
+    for (const [sat, list] of Object.entries(groupedSAT)) {
+      html += `<p>${list.map(app => `<a href="#" onclick='showAppareil(${JSON.stringify(app)})'>${app.appareil}</a>`).join(", ")}</p>`;
+    }
   }
 
-  let html = `<p><strong>🧩 Appareils trouvés dans ce ${isSAT ? 'SAT' : 'accès'} :</strong></p>`;
-  for (const [sat, list] of Object.entries(groupedCurrent)) {
-    html += `<p>${list.map(app => `<a href="#" onclick='showAppareil(${JSON.stringify(app)})'>${app.appareil}</a>`).join(", ")}</p>`;
-  }
+  // Cas 3 : si accès → ne rien afficher ici (on passe direct au bloc global)
 
   // Récapitulatif du poste (sans répéter le SAT ou accès courant)
   let groupedAll = {};
@@ -2034,7 +2038,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 <div id="about-footer">
   <div class="footer-links">
     <a href="arnaud.html" class="pill-link">🔧 À propos</a>
-   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.7.1</a>
+   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.7.2</a>
   </div>
 </div>
 <script>
