@@ -294,8 +294,23 @@
 const defaultCenter = [49.8, 2.5]; 
 const defaultZoom = 8;          
 
-const map = L.map('map', { zoomControl: false, attributionControl: false })
-             .setView(defaultCenter, defaultZoom);
+
+    // Limites géographiques approximatives pour la France
+const boundsFrance = [
+  [41.0, -5.5],  // Sud-Ouest
+  [51.5, 9.5]    // Nord-Est
+];
+
+const map = L.map('map', {
+  zoomControl: false,
+  attributionControl: false,
+  minZoom: 5,                  // empêche de trop dézoomer
+  maxZoom: 21,                 // selon tes tuiles IGN/OSM
+  maxBounds: boundsFrance,     // limite la zone affichée
+  maxBoundsViscosity: 1.0      // bloque l’effet “élastique”
+}).setView(defaultCenter, defaultZoom);
+
+    
 let editMode = false;   
 let holdTimeout;       
 
