@@ -6,7 +6,7 @@
     name="viewport"
     content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
   />
-  <title>➕ Ajouter un poste et l'accès</title>
+  <title>➕ Ajouter un poste et son accès</title>
 
   <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
@@ -140,23 +140,28 @@ input.error{border:2px solid #c62828!important;background:#ffecec}
         </div>
       </div>
 
-      <!-- Étape 2 -->
-      <div class="step">
-        <label>📌 Poste :</label>
-        <input id="poste" required placeholder="Ex : Hazebrouck">
-    <label>📌 Type (optionnel) :</label>
-<input id="type" placeholder="Ex : SP, SSP, PRCI....">
-        
-<label>📌 SAT (optionnel) :</label>
-<span style="font-weight:normal;color:var(--muted);font-size:14px">
-  Remplir uniquement si vous souhaitez enregistrer un SAT
-</span>
-<input id="sat" placeholder="Ex : SAT1, SAT2">
-        <div class="btn-row">
-          <button type="button" class="btn secondary prev">⬅️ Retour</button>
-          <button type="button" class="btn primary next">Suivant ➡️</button>
-        </div>
-      </div>
+<!-- Étape 2 -->
+<div class="step">
+  <div style="display:flex; gap:12px;">
+    <div style="flex:2">
+      <label>📌 Poste :</label>
+      <input id="poste" required placeholder="Ex : Hazebrouck">
+    </div>
+    <div style="flex:1">
+      <label>📌 Type :</label>
+      <input id="type" placeholder="Ex : SP, SSP, PRCI…">
+    </div>
+  </div>
+
+  <label>📌 SAT (obligatoire) :</label>
+  <input id="sat" required placeholder="Ex : SAT1, SAT2">
+  <div id="satHelp" class="field-hint">⚠️ SAT requis pour continuer</div>
+
+  <div class="btn-row">
+    <button type="button" class="btn secondary prev">⬅️ Retour</button>
+    <button type="button" class="btn primary next">Suivant ➡️</button>
+  </div>
+</div>
 
 <!-- Étape 5 -->
 <div class="step">
