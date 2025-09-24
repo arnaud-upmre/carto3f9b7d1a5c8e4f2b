@@ -1384,18 +1384,6 @@ li.innerHTML = `${icon} ${labelFor(item)}`;
   suggestionsEl.appendChild(li);
 });
 
-if (rawQuery.length >= 3) {
-  const queryNorm = normalizeNomPoste(rawQuery);
-
-  const exactMatch = results.some(item => {
-    if (item.category === "poste") {
-      return normalizeNomPoste(item.nom) === queryNorm;
-    } else {
-      return normalize(item.appareil || "") === normalize(rawQuery);
-    }
-  });
-
-}    
 
 function showAppareil(app) {
   incrementCounterAppareil();
