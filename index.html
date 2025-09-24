@@ -33,15 +33,6 @@
    
   <style id="eale-intro-styles">
 
-    /* Par défaut : on considère que c'est un PC */
-#btn-carte { display: inline-block; }
-#btn-localiser { display: none; }
-
-/* Sur mobile/tablette (≤ 1024px) → on inverse */
-@media (max-width: 1024px) {
-  #btn-carte { display: none; }
-  #btn-localiser { display: inline-block; }
-}
 
     .footer-links {
   display: flex;
@@ -1542,6 +1533,11 @@ const labelAppareil = p =>
   `${p.appareil} (${p.nom}${p.type ? " " + p.type : ""}${p.SAT ? " / " + p.SAT : ""})`;
     
 function isMobile() {
+  // Chrome Android même en "Version ordinateur"
+  if (navigator.userAgentData && "mobile" in navigator.userAgentData) {
+    return navigator.userAgentData.mobile;
+  }
+  // fallback si userAgentData pas dispo
   return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 }
 
