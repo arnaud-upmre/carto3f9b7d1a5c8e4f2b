@@ -861,34 +861,39 @@ function generateAppareilListHTML(currentLieu) {
   const isSAT = currentLieu.SAT && currentLieu.SAT !== "";
   const isAcces = !!currentLieu.accès;
 
-  // Cas 1 : fiche principale → on affiche directement le récapitulatif complet
-  if (!isSAT && !isAcces) {
-    let groupedAll = {};
-    matchingApps.forEach(app => {
-      const sat = app.SAT || 'Poste';
-      if (!groupedAll[sat]) groupedAll[sat] = [];
-      groupedAll[sat].push(app);
-    });
+if (!isSAT && !isAcces) {
+  let groupedAll = {};
+  matchingApps.forEach(app => {
+    const sat = app.SAT || 'Poste';
+    if (!groupedAll[sat]) groupedAll[sat] = [];
+    groupedAll[sat].push(app);
+  });
 
-    for (const sat in groupedAll) {
-      groupedAll[sat].sort((a, b) => a.appareil.localeCompare(b.appareil, "fr", { numeric: true }));
-    }
-
-    let html = `<p><strong>🧩 Appareils trouvés dans ce poste :</strong></p>`;
-    for (const [sat, list] of Object.entries(groupedAll)) {
-      html += `<p><strong>${sat} :</strong> `;
-      html += list.map(app => `<a href="#" onclick='showAppareil(${JSON.stringify(app)})'>${app.appareil}</a>`).join(", ");
-      html += `</p>`;
-    }
-
-    html += `
-      <div class="missing-box">
-        🤝 Appareil manquant ?
-        <a href="ajout_appareil.html?poste=${encodeURIComponent(formatNomCompletLieu(currentLieu))}">Aidez-nous à l’ajouter.</a>
-      </div>
-    `;
-    return html;
+  for (const sat in groupedAll) {
+    groupedAll[sat].sort((a, b) => a.appareil.localeCompare(b.appareil, "fr", { numeric: true }));
   }
+
+  let html = `<p><strong>🧩 Appareils trouvés dans ce poste :</strong></p>`;
+  for (const [sat, list] of Object.entries(groupedAll)) {
+    html += `<p><strong>${sat} :</strong> `;
+    html += list.map(app => `<a href="#" onclick='showAppareil(${JSON.stringify(app)})'>${app.appareil}</a>`).join(", ");
+    html += `</p>`;
+  }
+
+  // 👉 Ajout des deux blocs (SAT + appareil manquants)
+  html += `
+    <div class="missing-box">
+      📡 SAT manquant ?
+      <a href="ajout_poste.html?poste=${encodeURIComponent(formatNomCompletLieu(currentLieu))}">Aidez-nous à l’ajouter.</a>
+    </div>
+    <div class="missing-box">
+      🤝 Appareil manquant ?
+      <a href="ajout_appareil.html?poste=${encodeURIComponent(formatNomCompletLieu(currentLieu))}">Aidez-nous à l’ajouter.</a>
+    </div>
+  `;
+
+  return html;
+}
 
   let html = "";
 
@@ -1352,24 +1357,6 @@ results.sort((a, b) => {
 });
 
 const rawQuery = e.target.value.trim();  
-if (results.length === 0 && rawQuery.length >= 3) {
-  const li = document.createElement("li");
-  li.style.fontStyle = "italic"; 
-
-  if (isAppareilLike(rawQuery)) {
-    li.textContent = `➕ Ajouter cet appareil « ${rawQuery} »`;
-    li.onclick = () => {
-      location.href = `ajout_appareil.html?appareil=${encodeURIComponent(rawQuery)}`;
-    };
-} else if (isPosteLike(rawQuery)) {
-  li.textContent = `➕ Ajouter ce poste « ${rawQuery} »`;
-  li.onclick = () => {
-    location.href = `ajout_poste.html?poste=${encodeURIComponent(rawQuery)}`;
-  };
-} else {
-  
-    return;
-  }
 
   suggestionsEl.appendChild(li);
   return; 
@@ -1420,20 +1407,6 @@ if (rawQuery.length >= 3) {
   if (posteExiste || appareilExiste) return;
     liAdd.style.fontStyle = "italic";
 
-    if (isAppareilLike(rawQuery)) {
-      liAdd.textContent = `➕ Ajouter cet appareil « ${rawQuery} »`;
-      liAdd.onclick = () => {
-        location.href = `ajout_appareil.html?appareil=${encodeURIComponent(rawQuery)}`;
-      };
-} else if (isPosteLike(rawQuery)) {
-  liAdd.textContent = `➕ Ajouter ce poste « ${rawQuery} »`;
-  liAdd.onclick = () => {
-    location.href = `ajout_poste.html?poste=${encodeURIComponent(rawQuery)}`;
-  };
-}
-
-    suggestionsEl.insertBefore(liAdd, suggestionsEl.firstChild);
-  }
 }
 
 });
@@ -2038,7 +2011,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 <div id="about-footer">
   <div class="footer-links">
     <a href="arnaud.html" class="pill-link">🔧 À propos</a>
-   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.7.2</a>
+   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.7.3</a>
   </div>
 </div>
 <script>
