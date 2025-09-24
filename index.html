@@ -1533,16 +1533,19 @@ const labelAppareil = p =>
   `${p.appareil} (${p.nom}${p.type ? " " + p.type : ""}${p.SAT ? " / " + p.SAT : ""})`;
     
 function isMobile() {
-  // Chrome Android même en "Version ordinateur"
+  // Si Chrome expose la donnée fiable
   if (navigator.userAgentData && "mobile" in navigator.userAgentData) {
     return navigator.userAgentData.mobile;
   }
-  // fallback si userAgentData pas dispo
-  return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+  // Fallback : userAgent OU taille d’écran
+  const uaMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  const smallScreen = window.innerWidth <= 1024; // à ajuster selon ton seuil
+
+  return uaMobile || smallScreen;
 }
 
 if (!isMobile()) {
-  // PC → on cache le bouton géolocalisation et on montre le bouton carte
   document.getElementById("btn-localiser").style.display = "none";
   document.getElementById("btn-carte").style.display = "inline-block";
 }
