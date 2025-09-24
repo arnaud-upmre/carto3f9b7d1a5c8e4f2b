@@ -338,17 +338,35 @@ if (steps[i].querySelector("#mapAccessWrap")) {
   toggle($("mapAccessWrap"), m === "gps");
   toggle($("lienAccessField"), m === "lien");
 
-  if (m === "gps") {
-    if (!mapAccess) {
-      startLocAccess();
+if (m === "gps") {
+  if (!mapAccess) {
+    startLocAccess();
+  }
+
+  requestAnimationFrame(() => {
+    if (mapAccess) {
+      // ⚡ recharge la couche pour éviter fond gris
+      mapAccess.eachLayer(l => mapAccess.removeLayer(l));
+      orthoIGN.addTo(mapAccess);
+      if (markerAccess) markerAccess.addTo(mapAccess);
+
+      mapAccess.invalidateSize();
+      setTimeout(() => mapAccess.invalidateSize(), 500);
     }
-    // ⚡️ Correction : invalide 2 fois (immédiat + différé)
-    requestAnimationFrame(() => {
-      if (mapAccess) {
-        mapAccess.invalidateSize();
-        setTimeout(() => mapAccess.invalidateSize(), 500);
-      }
-    });
+  });
+
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      p => {
+        ACCESS_CONFIRMED = true;
+        $("mapAccessWrap").classList.remove("error");
+        applyFix(p.coords.latitude, p.coords.longitude);
+      },
+      err => { if (err.code === 1) onGeoDenied("access"); },
+      { enableHighAccuracy: true, timeout: 7000, maximumAge: 0 }
+    );
+  }
+}
 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
