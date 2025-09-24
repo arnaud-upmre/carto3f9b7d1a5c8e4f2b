@@ -743,7 +743,7 @@ function isValidUrl(str){return /^https?:\/\/.+/i.test((str||"").trim());}
 
 function setMapTo(map,marker,lat,lon,kind){
   if(!map||!marker)return;
-  map.setView([lat,lon],18);
+  map.setView([lat,lon], map.getZoom()); 
   marker.setLatLng([lat,lon]);
   const la=Number(lat).toFixed(6), lo=Number(lon).toFixed(6);
 
@@ -821,7 +821,25 @@ function ensureMap(mapId,btnToggle,btnRecenter,lat,lon){
     map.invalidateSize();
   };
   
-  let marker=L.marker([lat,lon],{draggable:true}).addTo(map);
+let marker=L.marker([lat,lon],{draggable:true}).addTo(map);
+
+// ➕ Ajout : mise à jour automatique quand on déplace le curseur
+marker.on("drag", e => {
+  const p = e.target.getLatLng();
+  if (mapId === "mapDevice") {
+    $("latDevice").value = p.lat.toFixed(6);
+    $("lonDevice").value = p.lng.toFixed(6);
+    if ($("presentValue").value === "oui") {
+      $("coordsDeviceDisplay").textContent = `Coordonnées relevées : ${p.lat.toFixed(6)}, ${p.lng.toFixed(6)}`;
+      $("coordsDeviceDisplay").style.display = "block";
+    }
+  } else {
+    if ($("accessMethod").value === "gps") {
+      $("coordsAccessDisplay").textContent = `Coordonnées relevées (accès) : ${p.lat.toFixed(6)}, ${p.lng.toFixed(6)}`;
+      $("coordsAccessDisplay").style.display = "block";
+    }
+  }
+});
 
 let p = marker.getLatLng();
 if (mapId === "mapDevice") {
@@ -841,7 +859,6 @@ if (mapId === "mapDevice") {
     $("coordsAccessDisplay").style.display = "none";
   }
 }
-  
 
 $(btnRecenter).onclick = () => {
   if (GEO_BLOCKED) { onGeoDenied(mapId === "mapDevice" ? "device" : "access"); return; }
