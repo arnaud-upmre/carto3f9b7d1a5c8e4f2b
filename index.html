@@ -1265,6 +1265,20 @@ if (idParam) {
 }
   });
 
+    let selectedIndex = -1;
+
+    function updateSelection(items) {
+  items.forEach((li, i) => {
+    if (i === selectedIndex) {
+      li.classList.add("best");
+      li.scrollIntoView({ block: "nearest" });
+    } else {
+      li.classList.remove("best");
+    }
+  });
+}
+    
+
 document.getElementById("search").addEventListener("input", e => {
   const query = normalize(e.target.value.trim());
   const suggestionsEl = document.getElementById("suggestions");
@@ -1395,6 +1409,37 @@ if (rawQuery.length >= 3) {
   });
 }
 
+});
+
+    document.getElementById("search").addEventListener("keydown", (e) => {
+  const suggestionsEl = document.getElementById("suggestions");
+  const items = suggestionsEl.querySelectorAll("li");
+
+  if (e.key === "ArrowDown" && items.length) {
+    e.preventDefault();
+    selectedIndex = (selectedIndex + 1) % items.length;
+    updateSelection(items);
+  } 
+  else if (e.key === "ArrowUp" && items.length) {
+    e.preventDefault();
+    selectedIndex = (selectedIndex - 1 + items.length) % items.length;
+    updateSelection(items);
+  } 
+  else if (e.key === "Enter") {
+    e.preventDefault();
+    if (selectedIndex >= 0 && items[selectedIndex]) {
+      items[selectedIndex].click();
+    } else if (items[0]) {
+      items[0].click();
+    }
+  }
+  else if (e.key === "Escape") {
+    e.preventDefault();
+    document.getElementById("result").style.display = "none";
+    document.getElementById("result").innerHTML = "";
+    suggestionsEl.innerHTML = "";
+    selectedIndex = -1;
+  }
 });
     
 
