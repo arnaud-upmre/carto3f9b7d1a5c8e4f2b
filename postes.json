@@ -2620,6 +2620,23 @@
     "poste_longitude": ""
   },
   {
+    "nom": "Maison Rouge",
+    "type": "L-A",
+    "SAT": "SAT3",
+    "accès": "",
+    "latitude": 50.443151,
+    "longitude": 3.011385,
+    "description": "",
+    "rss": "B",
+    "contact": "",
+    "portail": "",
+    "lignes": "",
+    "numero_ligne": "",
+    "pk": "",
+    "poste_latitude": "50.445722",
+    "poste_longitude": "3.017250"
+  },
+  {
     "nom": "Marquise",
     "type": "SSP",
     "SAT": "",
