@@ -367,18 +367,6 @@ if (m === "gps") {
     );
   }
 }
-
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        p => {
-          ACCESS_CONFIRMED = true;
-          $("mapAccessWrap").classList.remove("error");
-          applyFix(p.coords.latitude, p.coords.longitude);
-        },
-        err => { if (err.code === 1) onGeoDenied("access"); },
-        { enableHighAccuracy: true, timeout: 7000, maximumAge: 0 }
-      );
-    }
   }
 }
 
