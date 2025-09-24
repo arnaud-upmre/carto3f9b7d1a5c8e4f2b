@@ -2622,8 +2622,8 @@
   {
     "nom": "Maison Rouge",
     "type": "L-A",
-    "SAT": "",
-    "accès": "SAT1",
+    "SAT": "SAT1",
+    "accès": "",
     "latitude": 50.441352,
     "longitude": 2.998094,
     "description": "",
