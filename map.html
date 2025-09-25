@@ -8,6 +8,9 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
 
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-compass/dist/leaflet-compass.css" />
+<script src="https://unpkg.com/leaflet-compass/dist/leaflet-compass.min.js"></script>
+
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
   <style>
@@ -990,6 +993,45 @@ recenterBtn.onclick = () => {
 
 L.DomEvent.disableClickPropagation(recenterBtn);
 L.DomEvent.disableScrollPropagation(recenterBtn);
+
+  let compassControl = null;
+const compassBtn = L.DomUtil.create("div", "btn-toggle", topGroup);
+compassBtn.innerHTML = "🧭";
+
+compassBtn.onclick = async () => {
+  // ⚡ Cas iOS : demander la permission
+  if (typeof DeviceOrientationEvent !== "undefined" &&
+      typeof DeviceOrientationEvent.requestPermission === "function") {
+    try {
+      const response = await DeviceOrientationEvent.requestPermission();
+      if (response !== "granted") {
+        alert("Autorisation refusée : impossible d'activer la boussole.");
+        return;
+      }
+    } catch (e) {
+      console.warn("Erreur permission boussole", e);
+    }
+  }
+
+  // ⚡ Toggle boussole
+  if (!compassControl) {
+    compassControl = L.control.compass({
+      position: "topright",
+      autoActive: true,
+      showDigit: true
+    }).addTo(map);
+    compassBtn.classList.add("active");
+  } else {
+    map.removeControl(compassControl);
+    compassControl = null;
+    compassBtn.classList.remove("active");
+  }
+};
+
+L.DomEvent.disableClickPropagation(compassBtn);
+L.DomEvent.disableScrollPropagation(compassBtn);
+
+  
 
 let userMarker;
 let geoWatchId = null;
