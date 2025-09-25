@@ -410,7 +410,7 @@ if (matches.length > 0) {
   const first = matches[0].getLatLng();
   const allSameCoords = matches.every(m => m.getLatLng().equals(first));
 
-  map.setView(first, Math.max(zoom, 18));
+  map.setView(first, Math.max(zoom, 21));
 
  setTimeout(() => {
   if (matches.length === 1) {
@@ -511,7 +511,7 @@ function makeTelHtml(labelEmoji, value) {
 const params = new URLSearchParams(window.location.search);
 const lat = parseFloat(params.get("lat"));
 const lon = parseFloat(params.get("lon"));
-const zoom = parseInt(params.get("z")) || 18;
+const zoom = parseInt(params.get("z")) || 19;
 const id = params.get("id") ? decodeURIComponent(params.get("id")) : null;
 
   const planIGN = L.tileLayer(
@@ -602,7 +602,7 @@ const appareilsLayer = L.markerClusterGroup({
   spiderfyOnMaxZoom: true,
   showCoverageOnHover: false,
   zoomToBoundsOnClick: false,   
-  disableClusteringAtZoom: 19,
+  disableClusteringAtZoom: null,
   maxClusterRadius: function(zoom) {
     return zoom > 18 ? 20 : 60;
   }
@@ -719,9 +719,7 @@ let content = `
              
 <!-- Information -->
 <div style="margin-bottom:10px;">
-  ✍🏻 <strong>Information :</strong> ${ item.description 
-    ? item.description 
-    : `<span style="color:#777;font-style:italic;">Non renseigné</span>` }
+  ✍🏻 <strong>Information :</strong> ${ renderPortail(item.description) }
 </div>
 
 <!-- Portail -->
@@ -777,12 +775,11 @@ let content = `
   sur la ligne n°<strong>${item.numero_ligne || "(non renseigné)"}</strong>
   ${item.lignes ? " – " + item.lignes : ""}
 </div>
-<!-- Information -->
-<div style="margin-bottom:10px;">
-  ✍🏻 <strong>Information :</strong> ${ item.description 
-    ? item.description 
-    : `<span style="color:#777;font-style:italic;">Non renseigné</span>` }
-</div>
+
+ <!-- Information -->
+  <div style="margin-bottom:10px;">
+    ✍🏻 <strong>Information :</strong> ${ renderPortail(item.description) }
+  </div>
 
   <!-- Contact -->
   <div style="margin-bottom:10px;">
