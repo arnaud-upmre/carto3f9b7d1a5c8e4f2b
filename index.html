@@ -33,6 +33,48 @@
    
   <style id="eale-intro-styles">
 
+    #video-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+#video-box {
+  width: 90%;
+  max-width: 900px;
+  height: 70%;
+  background: rgba(20,20,20,0.95);
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+}
+
+#video-box iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+#video-close {
+  position: absolute;
+  top: 12px; right: 12px;
+  font-size: 24px;
+  background: rgba(0,0,0,0.6);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px; height: 40px;
+  cursor: pointer;
+  z-index: 2;
+}
+
 
     .footer-links {
   display: flex;
@@ -771,9 +813,9 @@ function formatPortail(val) {
     content = code;
   }
 
-  if (video) {
-    content += ` <a href="${video}" target="_blank" rel="noopener">▶️ Explication</a>`;
-  }
+if (video) {
+  content += ` <a href="#" class="open-video" data-url="${video}">▶️ Explication</a>`;
+}
 
   return `<p><strong id="editable-portail">🚧 Portail :</strong> ${content}</p>`;
 }
@@ -2205,5 +2247,39 @@ document.getElementById("streetview-close").onclick = () => {
 
   
 </script>
+  <div id="video-overlay" style="display:none;">
+  <div id="video-box">
+    <button id="video-close">❌</button>
+    <iframe id="video-frame" allowfullscreen></iframe>
+  </div>
+</div>
+<script>
+document.addEventListener("click", function(e) {
+  if (e.target.classList.contains("open-video")) {
+    e.preventDefault();
+    const url = e.target.dataset.url;
+    const iframe = document.getElementById("video-frame");
+
+    // Convertir les liens YouTube en embed
+    let embedUrl = url;
+    if (url.includes("youtube.com/watch?v=")) {
+      const id = url.split("v=")[1].split("&")[0];
+      embedUrl = `https://www.youtube.com/embed/${id}`;
+    } else if (url.includes("youtu.be/")) {
+      const id = url.split("youtu.be/")[1].split("?")[0];
+      embedUrl = `https://www.youtube.com/embed/${id}`;
+    }
+
+    iframe.src = embedUrl;
+    document.getElementById("video-overlay").style.display = "flex";
+  }
+});
+
+document.getElementById("video-close").onclick = () => {
+  document.getElementById("video-overlay").style.display = "none";
+  document.getElementById("video-frame").src = "";
+};
+</script>
+  
 </body>
 </html>
