@@ -2248,10 +2248,18 @@ document.getElementById("streetview-close").onclick = () => {
     alert("⚠️ Poste principal introuvable");
   }
 }
+</script> 
 
+<!-- Overlay vidéo YouTube -->
+<div id="video-overlay" style="display:none;">
+  <div id="video-box">
+    <button id="video-close">❌</button>
+    <iframe id="video-frame" allowfullscreen></iframe>
+  </div>
+</div>
 
 <script>
-
+// 👉 Ouvrir la vidéo
 document.addEventListener("click", function(e) {
   if (e.target.classList.contains("open-video")) {
     e.preventDefault();
@@ -2262,7 +2270,7 @@ document.addEventListener("click", function(e) {
   }
 });
 
-// 👉 Fermer la vidéo et vider le src
+// 👉 Fermer la vidéo
 document.getElementById("video-close").onclick = () => {
   document.getElementById("video-overlay").style.display = "none";
   document.getElementById("video-frame").src = "";
