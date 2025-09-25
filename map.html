@@ -598,20 +598,15 @@ orthoIGN.addTo(map);
 const postesLayer = L.markerClusterGroup({
   disableClusteringAtZoom: 18
 });
-
-
 const appareilsLayer = L.markerClusterGroup({
-  spiderfyOnMaxZoom: true,       // éclate les marqueurs au max zoom
+  spiderfyOnMaxZoom: true,
   showCoverageOnHover: false,
-  zoomToBoundsOnClick: false,    // ne zoome pas automatiquement sur clic
-  spiderfyOnClick: true,         // éclate quand tu cliques
-  disableClusteringAtZoom: 18,   // désactive le cluster dès z=18
+  zoomToBoundsOnClick: false,   
+  disableClusteringAtZoom: null,
   maxClusterRadius: function(zoom) {
-    return zoom >= 18 ? 1 : 60;  // à z>=18 → quasi plus de regroupement
+    return zoom > 18 ? 20 : 60;
   }
 });
-
-
 const accesLayer = L.markerClusterGroup({
   spiderfyOnMaxZoom: false,
   showCoverageOnHover: false,
