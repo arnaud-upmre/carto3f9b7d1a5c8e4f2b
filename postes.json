@@ -2773,23 +2773,6 @@
     "poste_longitude": "2.77582"
   },
   {
-    "nom": "Mercatel",
-    "type": "SP",
-    "SAT": "SAT3",
-    "accès": "",
-    "latitude": 50.27157,
-    "longitude": 2.76383,
-    "description": "",
-    "rss": "A",
-    "contact": "",
-    "portail": "",
-    "lignes": "Raccordement d'ARRAS-SUD",
-    "numero_ligne": "226306",
-    "pk": "",
-    "poste_latitude": "",
-    "poste_longitude": ""
-  },
-  {
     "nom": "Moulin",
     "type": "S",
     "SAT": "",
@@ -2845,8 +2828,8 @@
     "type": "S",
     "SAT": "SAT2",
     "accès": "V2",
-    "latitude": 50.88853,
-    "longitude": 1.81944,
+    "latitude": 50.88869,
+    "longitude": 1.81963
     "description": "Accès TGV n°F239 au PK 111.118 / Voie 2 / Accès aux appareils par TVP",
     "rss": "A",
     "contact": "",
