@@ -598,18 +598,22 @@ orthoIGN.addTo(map);
 const postesLayer = L.markerClusterGroup({
   disableClusteringAtZoom: 18
 });
-
 const appareilsLayer = L.markerClusterGroup({
-  spiderfyOnMaxZoom: true,     // éclate les points si zoom max
+  spiderfyOnMaxZoom: true,
   showCoverageOnHover: false,
-  zoomToBoundsOnClick: false,  // 👉 bloque le zoom auto sur la dernière bulle
+  zoomToBoundsOnClick: false,   
   disableClusteringAtZoom: null,
   maxClusterRadius: function(zoom) {
     return zoom > 18 ? 20 : 60;
   }
 });
+const accesLayer = L.markerClusterGroup({
+  spiderfyOnMaxZoom: false,
+  showCoverageOnHover: false,
+  zoomToBoundsOnClick: false
+});
 
-appareilsLayer.on('clusterclick', function (e) {
+accesLayer.on('clusterclick', function (e) {
   const childMarkers = e.layer.getAllChildMarkers();
   if (childMarkers.length === 0) return;
 
@@ -617,41 +621,18 @@ appareilsLayer.on('clusterclick', function (e) {
   const allSameCoords = childMarkers.every(m => m.getLatLng().equals(first));
 
   if (allSameCoords) {
-    // 👉 Cas : dernière bulle (tous les appareils au même endroit)
-    e.originalEvent.preventDefault();
-    e.originalEvent.stopPropagation();
-    e.layer.spiderfy();
-
-    // popup liste
     const items = childMarkers.map((m, i) => {
-      let label = m.options.customId || `Appareil ${i + 1}`;
-      return { label: label.trim(), idx: i };
-    }).sort((a, b) => a.label.localeCompare(b.label, "fr", { numeric:true, sensitivity:"base" }));
+      let label = m.options.customId || `Accès ${i + 1}`;
+      return { label: label.replace(/\bposte\b/gi, "").trim(), idx: i };
+    }).sort((a, b) => a.label.localeCompare(b.label, "fr", { numeric: true, sensitivity: "base" }));
 
     const html = `<div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
-      ${items.map(it => {
-        const marker = childMarkers[it.idx];
-        const id = (marker.options.customId || "").toUpperCase();
-        let iconFile = null;
-
-        if (id.startsWith("I") || id.startsWith("SI") || id.startsWith("D")) {
-          iconFile = "int.png";
-        } else if (id.startsWith("TT") || id.startsWith("TSA") || id.startsWith("TC") || id.startsWith("TRA")) {
-          iconFile = "TT.png";
-        } else if (/^[0-9]/.test(id) || id.startsWith("S") || id.startsWith("ST") || id.startsWith("F") || id.startsWith("P") || id.startsWith("FB") || id.startsWith("B")) {
-          iconFile = "sect.png";
-        } else if (id.startsWith("ALIM")) {
-          iconFile = "alim.png";
-        } else if (id.startsWith("DU")) {
-          iconFile = "stop.png";
-        }
-
-        return `
-          <a href="#" class="cluster-link" data-idx="${it.idx}" style="display:flex;align-items:center;gap:6px;">
-            ${iconFile ? `<img src="ico/${iconFile}" style="width:16px;height:16px;">` : ""}
-            <span>${it.label}</span>
-          </a>`;
-      }).join("")}
+      ${items.map(it => `
+        <a href="#" class="cluster-link" data-idx="${it.idx}" 
+           style="display:flex;align-items:center;gap:6px;">
+          <img src="ico/acces.png" style="width:16px;height:16px;">
+          <span>${it.label}</span>
+        </a>`).join("")}
     </div>`;
 
     L.popup()
@@ -659,27 +640,29 @@ appareilsLayer.on('clusterclick', function (e) {
       .setContent(html)
       .openOn(map);
 
-    setTimeout(() => {
-      document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
-        link.addEventListener("click", (ev) => {
-          ev.preventDefault();
-          const idx = +ev.currentTarget.dataset.idx;
-          const target = childMarkers[idx];
-          const content = target.getPopup() ? target.getPopup().getContent() : "";
-          L.popup({ maxWidth: 240 })
-            .setLatLng(target.getLatLng())
-            .setContent(content)
-            .openOn(map);
-          map.panTo(target.getLatLng());
-        });
-      });
-    }, 0);
+setTimeout(() => {
+  document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
+    link.addEventListener("click", (ev) => {
+      ev.preventDefault();
+      const idx = +ev.currentTarget.dataset.idx;
+      const target = childMarkers[idx];
+
+      const content = target.getPopup() ? target.getPopup().getContent() : "";
+      L.popup({ maxWidth: 240 })
+        .setLatLng(target.getLatLng())
+        .setContent(content)
+        .openOn(map);
+
+      map.panTo(target.getLatLng());
+    });
+  });
+}, 0);
 
   } else {
-    // 👉 Cas normal → zoom autorisé
     map.fitBounds(e.layer.getBounds());
   }
 });
+
 
 map.addLayer(postesLayer);
 map.addLayer(appareilsLayer);
