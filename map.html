@@ -884,8 +884,7 @@ fetch("appareils.json")
       });
     _tryOpenFromURL();
   });
-
-  appareilsLayer.on('clusterclick', function (e) {
+appareilsLayer.on('clusterclick', function (e) {
   const childMarkers = e.layer.getAllChildMarkers();
   if (childMarkers.length === 0) return;
 
@@ -893,29 +892,19 @@ fetch("appareils.json")
   const allSameCoords = childMarkers.every(m => m.getLatLng().equals(first));
 
   if (allSameCoords) {
-    // 👉 Cas : dernière bulle (tous les appareils au même endroit)
-    // On bloque le zoom auto et on force l’éclatement (spiderfy)
-    e.originalEvent.preventDefault();
-    e.originalEvent.stopPropagation();
-    e.layer.spiderfy();
+    if (id) {
+      // 👉 Cas : depuis index.html → popup liste
+      const items = childMarkers.map((m, i) => {
+        let label = m.options.customId || `Appareil ${i + 1}`;
+        return { label: label.trim(), idx: i };
+      }).sort((a, b) => a.label.localeCompare(b.label, "fr", { numeric:true, sensitivity:"base" }));
 
-    const items = childMarkers.map((m, i) => {
-      let label = m.options.customId || `Appareil ${i + 1}`;
-      return { label: label.trim(), idx: i };
-    }).sort((a, b) => a.label.localeCompare(b.label, "fr", { numeric:true, sensitivity:"base" }));
+      const html = `<div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
+        ${items.map(it => {
+          const marker = childMarkers[it.idx];
+          const id = (marker.options.customId || "").toUpperCase();
+          let iconFile = null;
 
-    const html = `<div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
-      ${items.map(it => {
-        const marker = childMarkers[it.idx];
-        const id = (marker.options.customId || "").toUpperCase();
-        let iconFile = null;
-
-        if (marker.options.isAcces) {
-          iconFile = "acces.png";
-        } else if (id.includes("POSTE")) {
-          iconFile = "poste.png";
-        } else {
-          // règles appareils
           if (id.startsWith("I") || id.startsWith("SI") || id.startsWith("D")) {
             iconFile = "int.png";
           } else if (id.startsWith("TT") || id.startsWith("TSA") || id.startsWith("TC") || id.startsWith("TRA")) {
@@ -927,43 +916,48 @@ fetch("appareils.json")
           } else if (id.startsWith("DU")) {
             iconFile = "stop.png";
           }
-        }
 
-        return `
-          <a href="#" class="cluster-link" data-idx="${it.idx}" style="display:flex;align-items:center;gap:6px;">
-            ${iconFile ? `<img src="ico/${iconFile}" style="width:16px;height:16px;">` : ""}
-            <span>${it.label}</span>
-          </a>`;
-      }).join("")}
-    </div>`;
+          return `
+            <a href="#" class="cluster-link" data-idx="${it.idx}" style="display:flex;align-items:center;gap:6px;">
+              ${iconFile ? `<img src="ico/${iconFile}" style="width:16px;height:16px;">` : ""}
+              <span>${it.label}</span>
+            </a>`;
+        }).join("")}
+      </div>`;
 
-    L.popup()
-      .setLatLng(first)
-      .setContent(html)
-      .openOn(map);
+      L.popup()
+        .setLatLng(first)
+        .setContent(html)
+        .openOn(map);
 
-    setTimeout(() => {
-      document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
-        link.addEventListener("click", (ev) => {
-          ev.preventDefault();
-          const idx = +ev.currentTarget.dataset.idx;
-          const target = childMarkers[idx];
-          const content = target.getPopup() ? target.getPopup().getContent() : "";
-          L.popup({ maxWidth: 240 })
-            .setLatLng(target.getLatLng())
-            .setContent(content)
-            .openOn(map);
-          map.panTo(target.getLatLng());
+      setTimeout(() => {
+        document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
+          link.addEventListener("click", (ev) => {
+            ev.preventDefault();
+            const idx = +ev.currentTarget.dataset.idx;
+            const target = childMarkers[idx];
+            const content = target.getPopup() ? target.getPopup().getContent() : "";
+            L.popup({ maxWidth: 240 })
+              .setLatLng(target.getLatLng())
+              .setContent(content)
+              .openOn(map);
+            map.panTo(target.getLatLng());
+          });
         });
-      });
-    }, 0);
+      }, 0);
+
+    } else {
+      // 👉 Cas : dernière bulle mais PAS depuis index → pas de zoom, juste éclatement
+      e.originalEvent.preventDefault();
+      e.originalEvent.stopPropagation();
+      e.layer.spiderfy();
+    }
 
   } else {
-    // 👉 Cas : cluster normal → autoriser zoom
+    // 👉 Cas normal → zoom autorisé
     map.fitBounds(e.layer.getBounds());
   }
 });
-
 
 const leftControls = L.control({ position: "topleft" });
 leftControls.onAdd = function() {
