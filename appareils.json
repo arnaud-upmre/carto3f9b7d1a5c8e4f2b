@@ -4698,5 +4698,15 @@
     "latitude": 50.51932,
     "longitude": 2.64545,
     "description": "Non entrenu par l’EMRE"
+  },
+  {
+    "nom": "PE5 Mardyck",
+    "type": "A",
+    "SAT": "",
+    "accès": "",
+    "appareil": "DA3",
+    "latitude": 50.993162,
+    "longitude": 2.260769,
+    "description": ""
   }
 ]
