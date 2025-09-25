@@ -814,7 +814,11 @@ function formatPortail(val) {
   }
 
 if (video) {
-  content += ` <a href="#" class="open-video" data-url="${video}">▶️ Explication</a>`;
+  const ytMatch = video.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]+)/);
+  if (ytMatch) {
+    const videoId = ytMatch[1];
+    content += ` <a href="#" class="open-video" data-video="${videoId}">▶️ Explication</a>`;
+  }
 }
 
   return `<p><strong id="editable-portail">🚧 Portail :</strong> ${content}</p>`;
@@ -2245,36 +2249,20 @@ document.getElementById("streetview-close").onclick = () => {
   }
 }
 
-  
-</script>
-  <div id="video-overlay" style="display:none;">
-  <div id="video-box">
-    <button id="video-close">❌</button>
-    <iframe id="video-frame" allowfullscreen></iframe>
-  </div>
-</div>
+
 <script>
+
 document.addEventListener("click", function(e) {
   if (e.target.classList.contains("open-video")) {
     e.preventDefault();
-    const url = e.target.dataset.url;
-    const iframe = document.getElementById("video-frame");
-
-    // Convertir les liens YouTube en embed
-    let embedUrl = url;
-    if (url.includes("youtube.com/watch?v=")) {
-      const id = url.split("v=")[1].split("&")[0];
-      embedUrl = `https://www.youtube.com/embed/${id}`;
-    } else if (url.includes("youtu.be/")) {
-      const id = url.split("youtu.be/")[1].split("?")[0];
-      embedUrl = `https://www.youtube.com/embed/${id}`;
-    }
-
-    iframe.src = embedUrl;
+    const videoId = e.target.dataset.video;
+    const iframe = document.getElementById("video-frame"); 
+    iframe.src = `https://www.youtube.com/embed/${videoId}`;
     document.getElementById("video-overlay").style.display = "flex";
   }
 });
 
+// 👉 Fermer la vidéo et vider le src
 document.getElementById("video-close").onclick = () => {
   document.getElementById("video-overlay").style.display = "none";
   document.getElementById("video-frame").src = "";
