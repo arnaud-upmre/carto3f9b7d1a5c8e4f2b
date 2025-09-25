@@ -719,7 +719,9 @@ let content = `
              
 <!-- Information -->
 <div style="margin-bottom:10px;">
-  ✍🏻 <strong>Information :</strong> ${ renderPortail(item.description) }
+  ✍🏻 <strong>Information :</strong> ${ item.description 
+    ? item.description 
+    : `<span style="color:#777;font-style:italic;">Non renseigné</span>` }
 </div>
 
 <!-- Portail -->
@@ -775,11 +777,12 @@ let content = `
   sur la ligne n°<strong>${item.numero_ligne || "(non renseigné)"}</strong>
   ${item.lignes ? " – " + item.lignes : ""}
 </div>
-
- <!-- Information -->
-  <div style="margin-bottom:10px;">
-    ✍🏻 <strong>Information :</strong> ${ renderPortail(item.description) }
-  </div>
+<!-- Information -->
+<div style="margin-bottom:10px;">
+  ✍🏻 <strong>Information :</strong> ${ item.description 
+    ? item.description 
+    : `<span style="color:#777;font-style:italic;">Non renseigné</span>` }
+</div>
 
   <!-- Contact -->
   <div style="margin-bottom:10px;">
