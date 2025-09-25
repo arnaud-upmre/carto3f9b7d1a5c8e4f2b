@@ -511,7 +511,7 @@ function makeTelHtml(labelEmoji, value) {
 const params = new URLSearchParams(window.location.search);
 const lat = parseFloat(params.get("lat"));
 const lon = parseFloat(params.get("lon"));
-const zoom = parseInt(params.get("z")) || 19;
+const zoom = parseInt(params.get("z")) || 18;
 const id = params.get("id") ? decodeURIComponent(params.get("id")) : null;
 
   const planIGN = L.tileLayer(
