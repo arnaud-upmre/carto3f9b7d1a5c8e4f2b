@@ -460,6 +460,36 @@
     "description": "Remplacement possible du TT par nacelle"
   },
   {
+    "nom": "Coudekerque",
+    "type": "SST",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT8",
+    "latitude": 50.995166,
+    "longitude": 2.390830,
+    "description": "Remplacement possible du TT par nacelle"
+  },
+  {
+    "nom": "Coudekerque",
+    "type": "SST",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT13",
+    "latitude": 50.995166,
+    "longitude": 2.390830,
+    "description": "Remplacement possible du TT par nacelle"
+  },
+  {
+    "nom": "Coudekerque",
+    "type": "SST",
+    "SAT": "",
+    "accès": "",
+    "appareil": "P1",
+    "latitude": 50.995166,
+    "longitude": 2.390830,
+    "description": "Remplacement possible du TT par nacelle"
+  },
+  {
     "nom": "Coulogne",
     "type": "SP",
     "SAT": "SAT1",
