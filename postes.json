@@ -1961,8 +1961,8 @@
     "type": "SSP",
     "SAT": "SAT1",
     "accès": "",
-    "latitude": 50.61123,
-    "longitude": 3.08054,
+    "latitude": 50.616002,
+    "longitude": 3.0622908,
     "description": "",
     "rss": "A",
     "contact": "",
@@ -1970,8 +1970,8 @@
     "lignes": "",
     "numero_ligne": "",
     "pk": "",
-    "poste_latitude": "50.6159866",
-    "poste_longitude": "3.0623705"
+    "poste_latitude": 50.61123,
+    "poste_longitude": 3.08054,
   },
   {
     "nom": "Justice",
