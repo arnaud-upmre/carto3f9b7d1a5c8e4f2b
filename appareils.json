@@ -410,6 +410,56 @@
     "description": "Non entrenu par l’EMRE"
   },
   {
+    "nom": "Coudekerque",
+    "type": "SST",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT12",
+    "latitude": 50.995516,
+    "longitude": 2.390379,
+    "description": "Remplacement possible du TT par nacelle"
+  },
+  {
+    "nom": "Coudekerque",
+    "type": "SST",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT11",
+    "latitude": 50.995261,
+    "longitude": 2.390696,
+    "description": "Remplacement possible du TT par nacelle"
+  },
+  {
+    "nom": "Coudekerque",
+    "type": "SST",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT1",
+    "latitude": 50.995208,
+    "longitude": 2.390762,
+    "description": "Remplacement possible du TT par nacelle"
+  },
+  {
+    "nom": "Coudekerque",
+    "type": "SST",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT2",
+    "latitude": 50.995208,
+    "longitude": 2.390762,
+    "description": "Remplacement possible du TT par nacelle"
+  },
+  {
+    "nom": "Coudekerque",
+    "type": "SST",
+    "SAT": "",
+    "accès": "",
+    "appareil": "P2",
+    "latitude": 50.995208,
+    "longitude": 2.390762,
+    "description": "Remplacement possible du TT par nacelle"
+  },
+  {
     "nom": "Coulogne",
     "type": "SP",
     "SAT": "SAT1",
