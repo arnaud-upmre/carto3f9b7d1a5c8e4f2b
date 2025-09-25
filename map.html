@@ -884,7 +884,7 @@ fetch("appareils.json")
     _tryOpenFromURL();
   });
 
-appareilsLayer.on('clusterclick', function (e) {
+    appareilsLayer.on('clusterclick', function (e) {
   const childMarkers = e.layer.getAllChildMarkers();
   if (childMarkers.length === 0) return;
 
@@ -892,42 +892,47 @@ appareilsLayer.on('clusterclick', function (e) {
   const allSameCoords = childMarkers.every(m => m.getLatLng().equals(first));
 
   if (allSameCoords) {
+    // Cas : tous les appareils ont exactement les mêmes coordonnées → on bloque le zoom
+    e.originalEvent.preventDefault();
+    e.originalEvent.stopPropagation();
+
     const items = childMarkers.map((m, i) => {
       let label = m.options.customId || `Appareil ${i + 1}`;
       return { label: label.trim(), idx: i };
     }).sort((a, b) => a.label.localeCompare(b.label, "fr", { numeric:true, sensitivity:"base" }));
 
-   const html = `<div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
-  ${items.map(it => {
-const marker = childMarkers[it.idx];
-const id = (marker.options.customId || "").toUpperCase();
-    let iconFile = null;
-   if (marker.options.isAcces) {
-  iconFile = "acces.png";
-} else if (id.includes("POSTE")) {
-  iconFile = "poste.png";
-} else {
-  // règles appareils
-  if (id.startsWith("I") || id.startsWith("SI")) {
-    iconFile = "int.png";
-  } else if (id.startsWith("TT") || id.startsWith("TSA") || id.startsWith("TC") || id.startsWith("TRA")) {
-    iconFile = "TT.png";
-  } else if (/^[0-9]/.test(id) || id.startsWith("S") || id.startsWith("ST") || id.startsWith("FIL") || id.startsWith("P") || id.startsWith("FB") || id.startsWith("B")) {
-    iconFile = "sect.png";
-  } else if (id.startsWith("ALIM")) {
-    iconFile = "alim.png";
-  } else if (id.startsWith("DU")) {
-    iconFile = "stop.png";
-  }
-}
+    const html = `<div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
+      ${items.map(it => {
+        const marker = childMarkers[it.idx];
+        const id = (marker.options.customId || "").toUpperCase();
+        let iconFile = null;
 
-    return `
-      <a href="#" class="cluster-link" data-idx="${it.idx}" style="display:flex;align-items:center;gap:6px;">
-        ${iconFile ? `<img src="ico/${iconFile}" style="width:16px;height:16px;">` : ""}
-        <span>${it.label}</span>
-      </a>`;
-  }).join("")}
-</div>`;
+        if (marker.options.isAcces) {
+          iconFile = "acces.png";
+        } else if (id.includes("POSTE")) {
+          iconFile = "poste.png";
+        } else {
+          // règles appareils
+          if (id.startsWith("I") || id.startsWith("SI") || id.startsWith("D")) {
+            iconFile = "int.png";
+          } else if (id.startsWith("TT") || id.startsWith("TSA") || id.startsWith("TC") || id.startsWith("TRA")) {
+            iconFile = "TT.png";
+          } else if (/^[0-9]/.test(id) || id.startsWith("S") || id.startsWith("ST") || id.startsWith("F") || id.startsWith("P") || id.startsWith("FB") || id.startsWith("B")) {
+            iconFile = "sect.png";
+          } else if (id.startsWith("ALIM")) {
+            iconFile = "alim.png";
+          } else if (id.startsWith("DU")) {
+            iconFile = "stop.png";
+          }
+        }
+
+        return `
+          <a href="#" class="cluster-link" data-idx="${it.idx}" style="display:flex;align-items:center;gap:6px;">
+            ${iconFile ? `<img src="ico/${iconFile}" style="width:16px;height:16px;">` : ""}
+            <span>${it.label}</span>
+          </a>`;
+      }).join("")}
+    </div>`;
 
     L.popup()
       .setLatLng(first)
@@ -951,6 +956,7 @@ const id = (marker.options.customId || "").toUpperCase();
     }, 0);
 
   } else {
+    // Cas : cluster normal (appareils proches mais pas identiques) → autoriser zoom
     map.fitBounds(e.layer.getBounds());
   }
 });
