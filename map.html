@@ -884,7 +884,7 @@ fetch("appareils.json")
     _tryOpenFromURL();
   });
 
-    appareilsLayer.on('clusterclick', function (e) {
+  appareilsLayer.on('clusterclick', function (e) {
   const childMarkers = e.layer.getAllChildMarkers();
   if (childMarkers.length === 0) return;
 
@@ -892,9 +892,11 @@ fetch("appareils.json")
   const allSameCoords = childMarkers.every(m => m.getLatLng().equals(first));
 
   if (allSameCoords) {
-    // Cas : tous les appareils ont exactement les mêmes coordonnées → on bloque le zoom
+    // 👉 Cas : dernière bulle (tous les appareils au même endroit)
+    // On bloque le zoom auto et on force l’éclatement (spiderfy)
     e.originalEvent.preventDefault();
     e.originalEvent.stopPropagation();
+    e.layer.spiderfy();
 
     const items = childMarkers.map((m, i) => {
       let label = m.options.customId || `Appareil ${i + 1}`;
@@ -956,7 +958,7 @@ fetch("appareils.json")
     }, 0);
 
   } else {
-    // Cas : cluster normal (appareils proches mais pas identiques) → autoriser zoom
+    // 👉 Cas : cluster normal → autoriser zoom
     map.fitBounds(e.layer.getBounds());
   }
 });
