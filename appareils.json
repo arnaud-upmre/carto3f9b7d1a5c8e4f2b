@@ -4201,7 +4201,7 @@
   },
   {
     "nom": "Avion",
-    "type": "",
+    "type": "(sectionneur)",
     "SAT": "",
     "accès": "208-16",
     "appareil": "208-16",
@@ -4211,7 +4211,7 @@
   },
   {
     "nom": "Avion",
-    "type": "",
+    "type": "(sectionneur)",
     "SAT": "",
     "accès": "209-3",
     "appareil": "209-3",
