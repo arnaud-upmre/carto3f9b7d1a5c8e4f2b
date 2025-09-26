@@ -3828,7 +3828,7 @@
   },
   {
     "nom": "Avion",
-    "type": "",
+    "type": "(sectionneur)",
     "SAT": "",
     "accès": "208-16",
     "latitude": 50.40705,
@@ -3845,7 +3845,7 @@
   },
   {
     "nom": "Avion",
-    "type": "",
+    "type": "(sectionneur)",
     "SAT": "",
     "accès": "209-3",
     "latitude": 50.40928,
