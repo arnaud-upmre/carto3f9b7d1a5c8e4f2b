@@ -12,6 +12,50 @@
 <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
   <style>
 
+    #imajnet-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: none;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#imajnet-box {
+  width: 90%;
+  max-width: 900px;
+  height: 70%;
+  background: rgba(20,20,20,0.95);
+  border-radius: 16px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+  overflow: hidden;
+  position: relative;
+}
+
+#imajnet-box iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+#imajnet-close {
+  position: absolute;
+  top: 12px; right: 12px;
+  font-size: 24px;
+  background: rgba(0,0,0,0.6);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px; height: 40px;
+  cursor: pointer;
+  z-index: 2;
+}
+
 .leaflet-popup-content-wrapper {
   background: linear-gradient(
     135deg,
@@ -288,6 +332,13 @@
   <div id="streetview-box">
     <button id="streetview-close">❌</button>
     <iframe id="streetview-frame"></iframe>
+  </div>
+</div>
+
+  <div id="imajnet-overlay">
+  <div id="imajnet-box">
+    <button id="imajnet-close">❌</button>
+    <iframe id="imajnet-frame"></iframe>
   </div>
 </div>
   <script>
@@ -716,7 +767,14 @@ let content = `
       style="cursor:pointer; position:absolute; top:10px; right:12px;">
   <img src="ico/street.png" alt="Street View" style="width:26px; height:26px;">
 </span>
-             
+
+             <!-- Icône Imajnet -->
+<span onclick="openImajnet(${item.latitude}, ${item.longitude}, '${item.imajnet||""}')"
+      style="cursor:pointer; position:absolute; top:10px; right:48px;">
+  <img src="ico/imajnet.png" alt="Imajnet" style="width:26px; height:26px;">
+</span>
+
+
 <!-- Information -->
 <div style="margin-bottom:10px;">
   ✍🏻 <strong>Information :</strong> ${ renderPortail(item.description) }
@@ -1107,6 +1165,22 @@ Promise.allSettled([
 if (isNaN(lat) || isNaN(lon)) { console.warn("URL lat/lon invalides", {lat, lon}); }
 
 
+    function openImajnet(lat, lon, url=null) {
+  const iframe = document.getElementById("imajnet-frame");
+  // Si ton JSON a un champ imajnet → on prend l’URL
+  // Sinon → on génère automatiquement à partir des coordonnées
+  const finalUrl = url && url.trim() !== "" 
+    ? url 
+    : `https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${lat},${lon}`;
+  
+  iframe.src = finalUrl;
+  document.getElementById("imajnet-overlay").style.display = "flex";
+}
+
+document.getElementById("imajnet-close").onclick = () => {
+  document.getElementById("imajnet-overlay").style.display = "none";
+  document.getElementById("imajnet-frame").src = "";
+};
 
     function makeTelHtml(labelEmoji, value) {
   if (!value) return "";
