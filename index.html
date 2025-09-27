@@ -1177,11 +1177,18 @@ let html = `<h2>
     
 html += `
 <div class="rep-block poste-only">
-  <p id="editable-rep-poste"><span class="emoji">⚡️</span> Repérer le poste (sat/guérite)</p>
-  <div class="inline-links pills-3">
+  <p id="editable-rep-poste"><span class="emoji">⚡️</span> <strong>Repérer le poste (sat/guérite)</strong></p>
+  <div class="inline-links pills-2">
     ${
       usePoste
-     ? `<a href="${myMapsViewer(lieu.poste_latitude || lieu.latitude, lieu.poste_longitude || lieu.longitude)}">🛰️ Vue satellite</a>`
+        ? `
+          <a href="${myMapsViewer(lieu.poste_latitude || lieu.latitude, lieu.poste_longitude || lieu.longitude)}" target="_blank">🛰️ Vue satellite</a>
+          <a href="${
+            lieu.imajnet && lieu.imajnet.trim() !== "" 
+              ? lieu.imajnet 
+              : imajnetLink(lieu.poste_latitude || lieu.latitude, lieu.poste_longitude || lieu.longitude)
+          }" target="_blank">🚄 Imajnet</a>
+        `
         : `<span class="placeholder">(non renseigné – fournir un lien Maps)</span>`
     }
   </div>
