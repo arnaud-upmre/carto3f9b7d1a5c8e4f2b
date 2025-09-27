@@ -1517,7 +1517,11 @@ html += `
     <p><span class="emoji">💡</span> <strong>Repérer l’appareil :</strong></p>
     <div class="inline-links pills-3">
       <a href="${myMapsViewer(app.latitude, app.longitude)}" target="_blank">🛰️ Vue satellite</a>
-    <a href="${imajnetLink(app.latitude, app.longitude)}" target="_blank">🚄 Imajnet</a>
+      <a href="${
+        app.imajnet && app.imajnet.trim() !== "" 
+          ? app.imajnet 
+          : imajnetLink(app.latitude, app.longitude)
+      }" target="_blank">🚄 Imajnet</a>
     </div>
   </div>`;
 
