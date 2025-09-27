@@ -67,7 +67,8 @@
     "appareil": "I5425",
     "latitude": 50.8715012,
     "longitude": 2.103808,
-    "description": ""
+    "description": "",
+    "imajnet" : "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.87153681170447,2.103658993150489;"
   },
   {
     "nom": "Audruicq",
