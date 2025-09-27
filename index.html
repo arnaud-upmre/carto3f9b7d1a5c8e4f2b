@@ -1515,19 +1515,28 @@ function showAppareil(app) {
     html += `<p>${app.description}</p>`;
   }
 
-  // 👉 On cherche uniquement le poste principal (pas l’accès)
-  const postePrincipal = lieux.find(l =>
+// 👉 On cherche d'abord le poste principal
+let postePrincipal = lieux.find(l =>
+  normalize(l.nom) === normalize(app.nom) &&
+  normalize(l.type) === normalize(app.type) &&
+  !l.SAT && !l.accès
+);
+
+// 👉 Fallback : si pas de poste principal, on cherche une fiche accès identique à l’appareil
+if (!postePrincipal) {
+  postePrincipal = lieux.find(l =>
     normalize(l.nom) === normalize(app.nom) &&
     normalize(l.type) === normalize(app.type) &&
-    !l.SAT && !l.accès // exclure SAT et accès
+    normalize(l.accès) === normalize(app.appareil)
   );
+}
 
-  if (postePrincipal) {
-    const sauvegarde = html; // on garde la partie appareil
-    showLieu(postePrincipal); // on construit la fiche principale
-    const fichePoste = document.getElementById("result").innerHTML;
-    html = sauvegarde + "<hr class='separator' />" + fichePoste;
-  }
+if (postePrincipal) {
+  const sauvegarde = html; // on garde la partie appareil
+  showLieu(postePrincipal); // on construit la fiche (poste ou accès)
+  const fichePoste = document.getElementById("result").innerHTML;
+  html = sauvegarde + "<hr class='separator' />" + fichePoste;
+}
 
   result.innerHTML = html;
 }
@@ -2094,7 +2103,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 <div id="about-footer">
   <div class="footer-links">
     <a href="arnaud.html" class="pill-link">🔧 À propos</a>
-   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.8.3</a>
+   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.8.4</a>
   </div>
 </div>
 <script>
