@@ -4438,7 +4438,8 @@
     "numero_ligne": 321000,
     "pk": "57,852",
     "poste_latitude": "49.64706",
-    "poste_longitude": "1.70009"
+    "poste_longitude": "1.70009",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.646885723610495,1.6996557913540664;"
   },
     {
     "nom": "Abancourt",
@@ -4455,7 +4456,8 @@
     "numero_ligne": 321000,
     "pk": "50,500",
     "poste_latitude": "49.6882",
-    "poste_longitude": "1.77699"
+    "poste_longitude": "1.77699",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.68777043927786,1.7765395544315548;"
   },
     {
     "nom": "Hellemmes",
