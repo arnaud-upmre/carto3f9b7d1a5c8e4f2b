@@ -795,7 +795,7 @@ function formatContact(val) {
 }
 
     // Génère un lien IMAJNET avec un léger décalage automatique
-function imajnetLink(lat, lon, zoom = 18, offset = -15) {
+function imajnetLink(lat, lon, zoom = 18, offset = -20) {
   // offset = recul en mètres (valeur négative = reculer, positive = avancer)
   const R = 6378137; // rayon de la Terre en mètres
   const newLat = lat + (offset / R) * (180 / Math.PI);
