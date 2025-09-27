@@ -1596,7 +1596,8 @@
     "numero_ligne": 304000,
     "pk": "23,700",
     "poste_latitude": "50.9786499",
-    "poste_longitude": "2.1225921"
+    "poste_longitude": "2.1225921",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.97875878294445,2.1220948859995596;"
   },
   {
     "nom": "Gravelines",
@@ -1613,7 +1614,8 @@
     "numero_ligne": 304000,
     "pk": "",
     "poste_latitude": "50.978107",
-    "poste_longitude": "2.1302745"
+    "poste_longitude": "2.1302745",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.97824179324051,2.1299238925946544;"
   },
   {
     "nom": "Gravelines",
@@ -1630,7 +1632,8 @@
     "numero_ligne": 304000,
     "pk": "",
     "poste_latitude": "50.9788961",
-    "poste_longitude": "2.1201756"
+    "poste_longitude": "2.1201756",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.97881292286586,2.1199124097002247;"
   },
   {
     "nom": "Gravelines",
@@ -1647,7 +1650,8 @@
     "numero_ligne": 304000,
     "pk": "24,870",
     "poste_latitude": "50.9774895",
-    "poste_longitude": "2.1060996"
+    "poste_longitude": "2.1060996",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.977569434045,2.1064621839738433;"
   },
   {
     "nom": "Guines",
@@ -3962,7 +3966,7 @@
     "numero_ligne": 295000,
     "pk": "",
     "poste_latitude": "50.70861",
-    "poste_longitude": "2.68289"
+    "poste_longitude": "2.68289",
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.70861052828933,2.682368520582081;"
   },
   {
