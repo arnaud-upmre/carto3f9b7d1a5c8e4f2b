@@ -3944,7 +3944,8 @@
     "numero_ligne": 295000,
     "pk": "",
     "poste_latitude": "50.70822",
-    "poste_longitude": "2.67262"
+    "poste_longitude": "2.67262",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.70829641608169,2.6730916264058635;"
   },
   {
     "nom": "Strazeele",
@@ -3962,6 +3963,7 @@
     "pk": "",
     "poste_latitude": "50.70861",
     "poste_longitude": "2.68289"
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.70861052828933,2.682368520582081;"
   },
   {
     "nom": "Tergnier",
