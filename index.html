@@ -794,6 +794,15 @@ function formatContact(val) {
   return `<p><strong id="editable-contact">👤 Contact :</strong> ${texteSansNum} ${boutons}</p>`;
 }
 
+    // Génère un lien IMAJNET avec un léger décalage automatique
+function imajnetLink(lat, lon, zoom = 18, offset = -8) {
+  // offset = recul en mètres (valeur négative = reculer, positive = avancer)
+  const R = 6378137; // rayon de la Terre en mètres
+  const newLat = lat + (offset / R) * (180 / Math.PI);
+  const newLon = lon; // on ne décale pas la longitude par défaut
+  return `https://gecko.imajnet.net/#map=OSM;zoom=${zoom};loc=${newLat},${newLon};`;
+}
+
 function formatPortail(val) {
   if (!val) return `<p><strong id="editable-portail">🚧 Portail :</strong> <span class="placeholder">(non renseigné)</span></p>`;
 
@@ -1508,7 +1517,7 @@ html += `
     <p><span class="emoji">💡</span> <strong>Repérer l’appareil :</strong></p>
     <div class="inline-links pills-3">
       <a href="${myMapsViewer(app.latitude, app.longitude)}" target="_blank">🛰️ Vue satellite</a>
-      <a href="https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${app.latitude},${app.longitude};" target="_blank">🚄 Imajnet</a>
+    <a href="${imajnetLink(app.latitude, app.longitude)}" target="_blank">🚄 Imajnet</a>
     </div>
   </div>`;
 
