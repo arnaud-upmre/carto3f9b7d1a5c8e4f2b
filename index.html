@@ -1515,28 +1515,40 @@ function showAppareil(app) {
     html += `<p>${app.description}</p>`;
   }
 
-// 👉 On cherche d'abord le poste principal
-let postePrincipal = lieux.find(l =>
-  normalize(l.nom) === normalize(app.nom) &&
-  normalize(l.type) === normalize(app.type) &&
-  !l.SAT && !l.accès
-);
+  // 👉 Priorité 1 : si l’appareil est lié à un SAT → on affiche la fiche du SAT
+  let postePrincipal = null;
+  if (app.SAT) {
+    postePrincipal = lieux.find(l =>
+      normalize(l.nom) === normalize(app.nom) &&
+      normalize(l.type) === normalize(app.type) &&
+      normalize(l.SAT) === normalize(app.SAT)
+    );
+  }
 
-// 👉 Fallback : si pas de poste principal, on cherche une fiche accès identique à l’appareil
-if (!postePrincipal) {
-  postePrincipal = lieux.find(l =>
-    normalize(l.nom) === normalize(app.nom) &&
-    normalize(l.type) === normalize(app.type) &&
-    normalize(l.accès) === normalize(app.appareil)
-  );
-}
+  // 👉 Priorité 2 : si pas de SAT, on cherche un accès identique
+  if (!postePrincipal && app.appareil) {
+    postePrincipal = lieux.find(l =>
+      normalize(l.nom) === normalize(app.nom) &&
+      normalize(l.type) === normalize(app.type) &&
+      normalize(l.accès) === normalize(app.appareil)
+    );
+  }
 
-if (postePrincipal) {
-  const sauvegarde = html; // on garde la partie appareil
-  showLieu(postePrincipal); // on construit la fiche (poste ou accès)
-  const fichePoste = document.getElementById("result").innerHTML;
-  html = sauvegarde + "<hr class='separator' />" + fichePoste;
-}
+  // 👉 Priorité 3 : sinon on prend le poste principal (pas de SAT, pas d’accès)
+  if (!postePrincipal) {
+    postePrincipal = lieux.find(l =>
+      normalize(l.nom) === normalize(app.nom) &&
+      normalize(l.type) === normalize(app.type) &&
+      !l.SAT && !l.accès
+    );
+  }
+
+  if (postePrincipal) {
+    const sauvegarde = html; // on garde la partie appareil
+    showLieu(postePrincipal); // on construit la fiche (poste, SAT ou accès)
+    const fichePoste = document.getElementById("result").innerHTML;
+    html = sauvegarde + "<hr class='separator' />" + fichePoste;
+  }
 
   result.innerHTML = html;
 }
