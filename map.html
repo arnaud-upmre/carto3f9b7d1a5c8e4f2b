@@ -348,50 +348,27 @@ editIcon.style = `
 `;
 document.body.appendChild(editIcon);
 
-let sequence = [];
-let sequenceTime = 0;
-
 document.addEventListener("keydown", function(e) {
-  const key = e.key.toLowerCase();
-  const now = Date.now();
-
-  // Si plus d'1 seconde entre deux touches → reset
-  if (now - sequenceTime > 1000) {
-    sequence = [];
-  }
-
-  sequence.push(key);
-  sequenceTime = now;
-
-  // Garder max 3 touches
-  if (sequence.length > 3) {
-    sequence.shift();
-  }
-
-  // Vérifie séquence E+D+I
-  if (sequence.join("") === "edi") {
+  if (e.key.toLowerCase() === "i") {
     editMode = !editMode;
 
-    editBanner.textContent = editMode ? "✏️ Mode édition activé" : "❌ Mode édition désactivé";
+    editBanner.textContent = editMode ? "ℹ️ Mode information activé" : "❌ Mode information désactivé";
     editBanner.style.display = "block";
     setTimeout(() => { editBanner.style.display = "none"; }, 2000);
 
+    editIcon.textContent = "ℹ️";
     editIcon.style.display = editMode ? "block" : "none";
-
-    sequence = []; // reset après activation
   }
 
-  // Vérifie ESC → quitte mode édition
+  // ESC pour désactiver
   if (e.key === "Escape" && editMode) {
     editMode = false;
-    editBanner.textContent = "❌ Mode édition désactivé";
+    editBanner.textContent = "❌ Mode information désactivé";
     editBanner.style.display = "block";
     setTimeout(() => { editBanner.style.display = "none"; }, 2000);
     editIcon.style.display = "none";
-    sequence = [];
   }
 });
-
     
     const allMarkers = [];
 
@@ -1198,53 +1175,48 @@ let activeEditPopup = null; // popup édition actif
 // petit helper pour afficher le texte dans <pre>
 function escHtml(s){return String(s).replace(/[&<>"]/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[m]));}
 
-// --- Clic simple sur la carte en mode édition ---
+    // --- Clic simple sur la carte en mode information ---
 map.on('click', (e) => {
   if (!editMode) return;
 
   const lat = Number(e.latlng.lat.toFixed(5));
   const lng = Number(e.latlng.lng.toFixed(5));
-
-  const posteText = `"poste_latitude": "${lat}",
-"poste_longitude": "${lng}"`;
-
-  const accesText = `"latitude": ${lat},
-"longitude": ${lng}`;
-
-  const previewText = `"latitude": ${lat},
-"longitude": ${lng},
-"poste_latitude": "${lat}",
-"poste_longitude": "${lng}"`;
+  const coordsText = `${lat}, ${lng}`;
 
   const popupContent = `
-<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;font-size:14px;min-width:220px;">
-  <div style="font-weight:600; font-size:16px; margin-bottom:12px;">📍 Informations</div>
+  <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
+              font-size:14px;min-width:220px;">
 
-  <pre style="margin:0; background:#f3f4f6; padding:8px; border-radius:6px; font-size:13px;">${escHtml(previewText)}</pre>
+    <div style="font-weight:600; font-size:16px; margin-bottom:12px;">📍 Coordonnées</div>
 
-  <div style="display:flex; flex-direction:column; gap:8px; margin-top:12px;">
-    <button id="btn-copy-poste"
-      style="padding:8px 12px; border:none; border-radius:6px; background:#f59e0b; color:white; cursor:pointer;">
-      🏢 Copier Poste
-    </button>
+    <pre style="margin:0; background:#f3f4f6; padding:8px; border-radius:6px; font-size:13px;">
+${coordsText}</pre>
 
-    <button id="btn-copy-acces"
-      style="padding:8px 12px; border:none; border-radius:6px; background:#3b82f6; color:white; cursor:pointer;">
-      🚪 Copier Accès
-    </button>
-  </div>
-</div>`;
+    <div style="display:flex; flex-direction:column; gap:8px; margin-top:12px;">
+      <button id="btn-copy" 
+        style="padding:8px 12px; border:none; border-radius:6px; background:#f59e0b; color:white; cursor:pointer;">
+        📋 Copier coordonnées
+      </button>
 
-  // Fermer l'ancien popup s'il existe
+      <button id="btn-gmaps" 
+        style="padding:8px 12px; border:none; border-radius:6px; background:#3b82f6; color:white; cursor:pointer;">
+        🔎 Google Maps
+      </button>
+
+      <button id="btn-imajnet" 
+        style="padding:8px 12px; border:none; border-radius:6px; background:#10b981; color:white; cursor:pointer;">
+        🛣️ Imajnet
+      </button>
+    </div>
+  </div>`;
+
   if (activeEditPopup) map.closePopup(activeEditPopup);
 
-  // Créer + ouvrir le popup
   activeEditPopup = L.popup({ autoClose: false, closeOnClick: false })
     .setLatLng(e.latlng)
     .setContent(popupContent)
     .openOn(map);
 
-  // Brancher les handlers après insertion dans le DOM
   setTimeout(() => {
     const flash = (txt) => {
       editBanner.textContent = txt;
@@ -1252,16 +1224,17 @@ map.on('click', (e) => {
       setTimeout(() => { editBanner.style.display = "none"; }, 1200);
     };
 
-    const safeCopy = (text) => {
-      if (!navigator.clipboard?.writeText) { alert("Copie non disponible dans ce navigateur."); return; }
-      navigator.clipboard.writeText(text).then(() => flash("✅ Copié")).catch(() => alert("Impossible de copier."));
-    };
+    document.getElementById('btn-copy')?.addEventListener('click', () => {
+      navigator.clipboard.writeText(coordsText).then(() => flash("✅ Coordonnées copiées"));
+    });
 
-    const bPoste = document.getElementById('btn-copy-poste');
-    const bAcces = document.getElementById('btn-copy-acces');
+    document.getElementById('btn-gmaps')?.addEventListener('click', () => {
+      window.open(`https://www.google.com/maps?q=${lat},${lng}`, '_blank');
+    });
 
-    bPoste && bPoste.addEventListener('click', () => safeCopy(posteText));
-    bAcces && bAcces.addEventListener('click', () => safeCopy(accesText));
+    document.getElementById('btn-imajnet')?.addEventListener('click', () => {
+      window.open(`https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${lat},${lng};`, '_blank');
+    });
   }, 0);
 });
     
