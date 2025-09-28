@@ -1184,27 +1184,28 @@ map.on('click', (e) => {
   const lng = Number(e.latlng.lng.toFixed(5));
   const coordsText = `${lat}, ${lng}`;
 
-  const popupContent = `
+const popupContent = `
   <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
-              font-size:14px;min-width:220px;">
+              font-size:14px;min-width:240px;">
 
     <div style="font-weight:600; font-size:16px; margin-bottom:12px;">📍 Coordonnées</div>
 
-    <pre style="margin:0; background:#f3f4f6; padding:8px; border-radius:6px; font-size:13px;">
+    <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+      <pre style="margin:0; background:#f3f4f6; padding:6px 10px; border-radius:6px; font-size:13px; flex:1;">
 ${coordsText}</pre>
-
-    <div style="display:flex; flex-direction:column; gap:8px; margin-top:12px;">
       <button id="btn-copy"
-        style="padding:8px 12px; border:none; border-radius:6px; background:#f59e0b; color:white; cursor:pointer;">
-        📋 Copier coordonnées
+        style="padding:6px 10px; border:none; border-radius:6px; background:#f59e0b; color:white; cursor:pointer;">
+        📋 Copier
       </button>
+    </div>
 
-      <button id="btn-gmaps"
+    <div style="display:flex; flex-direction:column; gap:8px;">
+      <button id="btn-gmaps" 
         style="padding:8px 12px; border:none; border-radius:6px; background:#3b82f6; color:white; cursor:pointer;">
         🔎 Google Maps
       </button>
 
-      <button id="btn-imajnet"
+      <button id="btn-imajnet" 
         style="padding:8px 12px; border:none; border-radius:6px; background:#10b981; color:white; cursor:pointer;">
         🛣️ Imajnet
       </button>
