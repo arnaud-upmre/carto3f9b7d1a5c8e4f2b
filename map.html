@@ -1175,8 +1175,7 @@ let activeEditPopup = null; // popup édition actif
 // petit helper pour afficher le texte dans <pre>
 function escHtml(s){return String(s).replace(/[&<>"]/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[m]));}
 
-
-    // --- Clic simple sur la carte en mode information ---
+// --- Clic simple sur la carte en mode information ---
 map.on('click', (e) => {
   if (!editMode) return;
 
@@ -1184,11 +1183,11 @@ map.on('click', (e) => {
   const lng = Number(e.latlng.lng.toFixed(5));
   const coordsText = `${lat}, ${lng}`;
 
-const popupContent = `
+  const popupContent = `
   <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
               font-size:14px;min-width:240px;">
 
-    <div style="font-weight:600; font-size:16px; margin-bottom:12px;">📍 Coordonnées</div>
+    <div style="font-weight:600; font-size:16px; margin-bottom:12px;"> ℹ️ Information : </div>
 
     <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
       <pre style="margin:0; background:#f3f4f6; padding:6px 10px; border-radius:6px; font-size:13px; flex:1;">
@@ -1219,28 +1218,26 @@ ${coordsText}</pre>
     .setContent(popupContent)
     .openOn(map);
 
-  // Quand la popup s’ouvre → brancher les boutons
-  map.once("popupopen", (ev) => {
-    const container = ev.popup.getElement(); // récupère le DOM de la popup
-
+  // 👉 Ici : on attend juste la fin du rendu DOM
+  setTimeout(() => {
     const flash = (txt) => {
       editBanner.textContent = txt;
       editBanner.style.display = "block";
       setTimeout(() => { editBanner.style.display = "none"; }, 1200);
     };
 
-    container.querySelector('#btn-copy')?.addEventListener('click', () => {
+    document.getElementById('btn-copy')?.addEventListener('click', () => {
       navigator.clipboard.writeText(coordsText).then(() => flash("✅ Coordonnées copiées"));
     });
 
-    container.querySelector('#btn-gmaps')?.addEventListener('click', () => {
+    document.getElementById('btn-gmaps')?.addEventListener('click', () => {
       window.open(`https://www.google.com/maps?q=${lat},${lng}`, '_blank');
     });
 
-    container.querySelector('#btn-imajnet')?.addEventListener('click', () => {
+    document.getElementById('btn-imajnet')?.addEventListener('click', () => {
       window.open(`https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${lat},${lng};`, '_blank');
     });
-  });
+  }, 50); // petit délai pour être sûr que le DOM est prêt
 });
     
 </script>
