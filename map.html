@@ -1175,6 +1175,7 @@ let activeEditPopup = null; // popup édition actif
 // petit helper pour afficher le texte dans <pre>
 function escHtml(s){return String(s).replace(/[&<>"]/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[m]));}
 
+
     // --- Clic simple sur la carte en mode information ---
 map.on('click', (e) => {
   if (!editMode) return;
@@ -1193,17 +1194,17 @@ map.on('click', (e) => {
 ${coordsText}</pre>
 
     <div style="display:flex; flex-direction:column; gap:8px; margin-top:12px;">
-      <button id="btn-copy" 
+      <button id="btn-copy"
         style="padding:8px 12px; border:none; border-radius:6px; background:#f59e0b; color:white; cursor:pointer;">
         📋 Copier coordonnées
       </button>
 
-      <button id="btn-gmaps" 
+      <button id="btn-gmaps"
         style="padding:8px 12px; border:none; border-radius:6px; background:#3b82f6; color:white; cursor:pointer;">
         🔎 Google Maps
       </button>
 
-      <button id="btn-imajnet" 
+      <button id="btn-imajnet"
         style="padding:8px 12px; border:none; border-radius:6px; background:#10b981; color:white; cursor:pointer;">
         🛣️ Imajnet
       </button>
@@ -1217,7 +1218,8 @@ ${coordsText}</pre>
     .setContent(popupContent)
     .openOn(map);
 
-  setTimeout(() => {
+  // Quand la popup s’ouvre → brancher les boutons
+  map.once("popupopen", () => {
     const flash = (txt) => {
       editBanner.textContent = txt;
       editBanner.style.display = "block";
@@ -1235,7 +1237,7 @@ ${coordsText}</pre>
     document.getElementById('btn-imajnet')?.addEventListener('click', () => {
       window.open(`https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${lat},${lng};`, '_blank');
     });
-  }, 0);
+  });
 });
     
 </script>
