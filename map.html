@@ -1220,22 +1220,24 @@ ${coordsText}</pre>
     .openOn(map);
 
   // Quand la popup s’ouvre → brancher les boutons
-  map.once("popupopen", () => {
+  map.once("popupopen", (ev) => {
+    const container = ev.popup.getElement(); // récupère le DOM de la popup
+
     const flash = (txt) => {
       editBanner.textContent = txt;
       editBanner.style.display = "block";
       setTimeout(() => { editBanner.style.display = "none"; }, 1200);
     };
 
-    document.getElementById('btn-copy')?.addEventListener('click', () => {
+    container.querySelector('#btn-copy')?.addEventListener('click', () => {
       navigator.clipboard.writeText(coordsText).then(() => flash("✅ Coordonnées copiées"));
     });
 
-    document.getElementById('btn-gmaps')?.addEventListener('click', () => {
+    container.querySelector('#btn-gmaps')?.addEventListener('click', () => {
       window.open(`https://www.google.com/maps?q=${lat},${lng}`, '_blank');
     });
 
-    document.getElementById('btn-imajnet')?.addEventListener('click', () => {
+    container.querySelector('#btn-imajnet')?.addEventListener('click', () => {
       window.open(`https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${lat},${lng};`, '_blank');
     });
   });
