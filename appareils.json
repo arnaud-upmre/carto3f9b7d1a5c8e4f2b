@@ -1085,7 +1085,17 @@
     "type": "SS",
     "SAT": "",
     "accès": "",
-    "appareil": "IL1 + TC",
+    "appareil": "IL1",
+    "latitude": 50.5525397,
+    "longitude": 2.9154044,
+    "description": ""
+  },
+  {
+    "nom": "Don Sainghin",
+    "type": "SS",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TC IL1 Alarme",
     "latitude": 50.5525397,
     "longitude": 2.9154044,
     "description": ""
@@ -1225,7 +1235,17 @@
     "type": "SS",
     "SAT": "SAT3",
     "accès": "",
-    "appareil": "IL2 + TC",
+    "appareil": "IL2",
+    "latitude": 50.5538223,
+    "longitude": 2.918155,
+    "description": ""
+  },
+  {
+    "nom": "Don Sainghin",
+    "type": "SS",
+    "SAT": "SAT3",
+    "accès": "",
+    "appareil": "TC IL2 Alarme",
     "latitude": 50.5538223,
     "longitude": 2.918155,
     "description": ""
