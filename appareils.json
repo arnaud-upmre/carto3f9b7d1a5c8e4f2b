@@ -325,7 +325,7 @@
     "type": "L",
     "SAT": "",
     "accès": "",
-    "appareil": "SI 7225-7323",
+    "appareil": "SI7225-7323",
     "latitude": 50.9255583,
     "longitude": 1.8319107,
     "description": ""
@@ -355,7 +355,7 @@
     "type": "L",
     "SAT": "SAT2",
     "accès": "",
-    "appareil": "SI 7315-7360",
+    "appareil": "SI7315-7360",
     "latitude": 50.9287488,
     "longitude": 1.8374807,
     "description": ""
@@ -365,7 +365,7 @@
     "type": "L",
     "SAT": "SAT3",
     "accès": "",
-    "appareil": "SI 7326-7351",
+    "appareil": "SI7326-7351",
     "latitude": 50.9266887,
     "longitude": 1.833618,
     "description": ""
