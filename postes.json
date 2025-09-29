@@ -4858,6 +4858,23 @@
   },
   {
     "nom": "Cambrai",
+    "type": "L",
+    "SAT": "",
+    "accès": "I83502",
+    "latitude": 50.16717,
+    "longitude": 3.25902,
+    "description": "",
+    "rss": "B",
+    "contact": "",
+    "portail": "Portail I83502 (appareil sur la gauche après le portail), boîte à clé.",
+    "lignes": "Raccordement de Cambrai-Nord ",
+    "numero_ligne": 250311,
+    "pk": "205,191",
+    "poste_latitude": "50.16926367475499",
+    "poste_longitude": "3.257466523770069"
+  },
+  {
+    "nom": "Cambrai",
     "type": "SSP",
     "SAT": "",
     "accès": "",
