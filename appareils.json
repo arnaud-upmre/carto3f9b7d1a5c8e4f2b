@@ -419,7 +419,7 @@
     "latitude": 50.995516,
     "longitude": 2.390379,
     "description": "Remplacement possible du TT par nacelle",
-    "imajnet": https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.99548465203315,2.39051135584085;"
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.99548465203315,2.39051135584085;"
   },
   {
     "nom": "Coudekerque",
