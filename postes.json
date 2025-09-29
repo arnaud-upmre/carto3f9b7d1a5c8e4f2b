@@ -4861,8 +4861,8 @@
     "type": "L",
     "SAT": "",
     "accès": "I83502",
-    "latitude": 50.16717,
-    "longitude": 3.25902,
+    "latitude": 50.16926367475499,
+    "longitude": 3.257466523770069,
     "description": "",
     "rss": "B",
     "contact": "",
@@ -4870,8 +4870,8 @@
     "lignes": "Raccordement de Cambrai-Nord ",
     "numero_ligne": 250311,
     "pk": "205,191",
-    "poste_latitude": "50.16926367475499",
-    "poste_longitude": "3.257466523770069"
+    "poste_latitude": "50.16679",
+    "poste_longitude": "3.25999"
   },
   {
     "nom": "Cambrai",
