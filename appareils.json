@@ -4851,7 +4851,7 @@
     "latitude": 50.16693,
     "longitude": 3.25982,
     "description": "",
-    "imajnet": ""
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.16701600526812,3.2597271356402917;uid=2f8e8991-dabe-4a1c-baa2-34d07b9a3111_598;"
   },
   {
     "nom": "Cambrai",
@@ -4862,6 +4862,6 @@
     "latitude": 50.16695,
     "longitude": 3.25976,
     "description": "",
-    "imajnet": ""
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.1670601768086,3.2596197892377825;uid=2f8e8991-dabe-4a1c-baa2-34d07b9a3111_601;"
   }
 ]
