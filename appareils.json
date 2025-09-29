@@ -458,14 +458,14 @@
     "appareil": "P2",
     "latitude": 50.995208,
     "longitude": 2.390762,
-    "description": "Remplacement possible du TT par nacelle"
+    "description": ""
   },
   {
     "nom": "Coudekerque",
     "type": "SST",
     "SAT": "",
     "accès": "",
-    "appareil": "TT8",
+    "appareil": "TT18",
     "latitude": 50.995166,
     "longitude": 2.390830,
     "description": "Remplacement possible du TT par nacelle"
@@ -488,7 +488,7 @@
     "appareil": "P1",
     "latitude": 50.995166,
     "longitude": 2.390830,
-    "description": "Remplacement possible du TT par nacelle"
+    "description": ""
   },
   {
     "nom": "Coulogne",
