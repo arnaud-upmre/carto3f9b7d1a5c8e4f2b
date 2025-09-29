@@ -4826,8 +4826,9 @@
     "SAT": "",
     "accès": "",
     "appareil": "I83502",
-    "latitude": 50.16998,
+    "latitude": 50.16997,
     "longitude": 3.2579,
-    "description": ""
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.170064586855496,3.2579380248161103;uid=a2185c49-97ec-4152-8132-26089b3caf8f_2465;"
   }
 ]
