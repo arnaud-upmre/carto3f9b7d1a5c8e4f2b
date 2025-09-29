@@ -4841,5 +4841,27 @@
     "longitude": 3.264991,
     "description": "",
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.16459598121967,3.2647986541672767;uid=af3b6057-588e-4bd9-bbfa-322a8772c60b_1696;"
+  },
+  {
+    "nom": "Cambrai",
+    "type": "L",
+    "SAT": "",
+    "accès": "",
+    "appareil": "I83507",
+    "latitude": 50.16693,
+    "longitude": 3.25982,
+    "description": "",
+    "imajnet": ""
+  },
+  {
+    "nom": "Cambrai",
+    "type": "L",
+    "SAT": "",
+    "accès": "",
+    "appareil": "I83507",
+    "latitude": 50.16695,
+    "longitude": 3.25976,
+    "description": "",
+    "imajnet": ""
   }
 ]
