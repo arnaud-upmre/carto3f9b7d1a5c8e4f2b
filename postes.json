@@ -4854,7 +4854,8 @@
     "numero_ligne": 250000,
     "pk": "204,620",
     "poste_latitude": "50.16679",
-    "poste_longitude": "3.25999"
+    "poste_longitude": "3.25999",
+    "imajnet" "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.16698547718145,3.2597980695850657;uid=2f8e8991-dabe-4a1c-baa2-34d07b9a3111_596;"
   },
   {
     "nom": "Cambrai",
@@ -4871,7 +4872,8 @@
     "numero_ligne": 250311,
     "pk": "205,191",
     "poste_latitude": "50.16679",
-    "poste_longitude": "3.25999"
+    "poste_longitude": "3.25999",
+    "imajnet" "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.16698547718145,3.2597980695850657;uid=2f8e8991-dabe-4a1c-baa2-34d07b9a3111_596;"
   },
   {
     "nom": "Cambrai",
