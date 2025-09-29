@@ -420,7 +420,7 @@
     "appareil": "TT12",
     "latitude": 50.995516,
     "longitude": 2.390379,
-    "description": "Remplacement possible du TT par nacelle",
+    "description": "🏗️ Accessible en nacelle",
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.99548465203315,2.39051135584085;"
   },
   {
@@ -431,7 +431,7 @@
     "appareil": "TT11",
     "latitude": 50.995261,
     "longitude": 2.390696,
-    "description": "Remplacement possible du TT par nacelle",
+    "description": "🏗️ Accessible en nacelle",
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.99522512993907,2.390846281527364;"
   },
   {
@@ -442,7 +442,7 @@
     "appareil": "TT1",
     "latitude": 50.995208,
     "longitude": 2.390762,
-    "description": "Remplacement possible du TT par nacelle",
+    "description": "🏗️ Accessible en nacelle",
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.995181864558816,2.3909020534106884;uid=da519a1f-3850-4381-b4ad-de849f9d5996_1299;"
   },
   {
@@ -453,7 +453,7 @@
     "appareil": "TT2",
     "latitude": 50.995208,
     "longitude": 2.390762,
-    "description": "Remplacement possible du TT par nacelle",
+    "description": "🏗️ Accessible en nacelle",
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.995181864558816,2.3909020534106884;uid=da519a1f-3850-4381-b4ad-de849f9d5996_1299;"
   },
   {
@@ -475,7 +475,7 @@
     "appareil": "TT18",
     "latitude": 50.995166,
     "longitude": 2.390830,
-    "description": "Remplacement possible du TT par nacelle",
+    "description": "🏗️ Accessible en nacelle",
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.99511697085506,2.3909857065348703;uid=da519a1f-3850-4381-b4ad-de849f9d5996_1296;"
   },
   {
@@ -486,7 +486,7 @@
     "appareil": "TT13",
     "latitude": 50.995166,
     "longitude": 2.390830,
-    "description": "Remplacement possible du TT par nacelle",
+    "description": "🏗️ Accessible en nacelle",
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.99511697085506,2.3909857065348703;uid=da519a1f-3850-4381-b4ad-de849f9d5996_1296;"
   },
   {
@@ -558,7 +558,7 @@
     "appareil": "TT7230",
     "latitude": 50.9355599,
     "longitude": 1.8500969,
-    "description": "Support 292 5YB - remplacement du TT possible avec nacelle"
+    "description": "🏗️ Accessible en nacelle - Support 292 5YB"
   },
   {
     "nom": "Coulogne",
