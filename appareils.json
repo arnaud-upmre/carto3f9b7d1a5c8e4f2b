@@ -398,7 +398,8 @@
     "appareil": "301-40",
     "latitude": 51.0058819,
     "longitude": 2.3808393,
-    "description": "Non entrenu par l’EMRE"
+    "description": "Non entrenu par l’EMRE",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=51.00577279695637,2.380838793053;uid=f9165a5e-3171-48ad-bef0-d7691faa8608_974;"
   },
   {
     "nom": "Coudekerque",
@@ -408,7 +409,8 @@
     "appareil": "301-41",
     "latitude": 51.0062885,
     "longitude": 2.3805026,
-    "description": "Non entrenu par l’EMRE"
+    "description": "Non entrenu par l’EMRE",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=51.00634536870912,2.3804990611431216;uid=8f9a27b8-410a-4400-b0f9-0b8aa5e93c0f_1614;"
   },
   {
     "nom": "Coudekerque",
