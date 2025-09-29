@@ -418,7 +418,8 @@
     "appareil": "TT12",
     "latitude": 50.995516,
     "longitude": 2.390379,
-    "description": "Remplacement possible du TT par nacelle"
+    "description": "Remplacement possible du TT par nacelle",
+    "imajnet": https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.99560145639493,2.390345478096423;"
   },
   {
     "nom": "Coudekerque",
@@ -428,7 +429,8 @@
     "appareil": "TT11",
     "latitude": 50.995261,
     "longitude": 2.390696,
-    "description": "Remplacement possible du TT par nacelle"
+    "description": "Remplacement possible du TT par nacelle",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.99536347966983,2.3906525552166693;"
   },
   {
     "nom": "Coudekerque",
