@@ -4819,5 +4819,15 @@
     "latitude": 50.993162,
     "longitude": 2.260769,
     "description": ""
+  },
+  {
+    "nom": "Cambrai",
+    "type": "L",
+    "SAT": "",
+    "accès": "",
+    "appareil": "I83502",
+    "latitude": 50.16998,
+    "longitude": 3.2579,
+    "description": ""
   }
 ]
