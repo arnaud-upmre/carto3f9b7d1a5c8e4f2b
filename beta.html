@@ -12,6 +12,69 @@
 <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
   <style>
 
+.leaflet-popup-content-wrapper {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.8) 0%,
+    rgba(255, 255, 255, 0.7) 100%
+  );
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.45);
+  box-shadow: inset 0 1px 4px rgba(255,255,255,0.4),
+              0 8px 24px rgba(0,0,0,0.25);
+}
+
+.leaflet-popup-tip {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.8) 0%,
+    rgba(255, 255, 255, 0.7) 100%
+  );
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+}
+    
+    
+
+.leaflet-popup-content {
+  max-width: 240px !important; 
+  min-width: 240px; 
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,sans-serif;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #111;
+  overflow: hidden;    
+  text-align: left;      
+}
+
+.leaflet-popup-content div,
+.leaflet-popup-content p {
+  display: flex;
+  align-items: center;
+  gap: 6px;           
+  margin: 4px 0;
+  flex-wrap: wrap;      
+}
+
+.leaflet-popup-content img,
+.leaflet-popup-content svg,
+.leaflet-popup-content i {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.leaflet-popup-content a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-decoration: none;
+}
+
     .leaflet-popup-content a.cluster-link {
   display: block;
   padding: 8px 12px;
@@ -44,6 +107,7 @@
   align-items: center;
   justify-content: center;
 }
+
 
 #streetview-box {
   width: 90%;
@@ -204,6 +268,19 @@
   </style>
 </head>
 <body>
+
+    <div id="video-overlay" style="display:none;
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  background:rgba(0,0,0,0.7);z-index:10000;align-items:center;justify-content:center;">
+  <div style="width:90%;max-width:800px;height:70%;position:relative;">
+    <button id="video-close" style="position:absolute;top:8px;right:8px;
+      font-size:24px;background:#000;color:#fff;border:none;border-radius:50%;
+      width:40px;height:40px;cursor:pointer;">❌</button>
+    <iframe id="video-frame" width="100%" height="100%" 
+      src="" frameborder="0" allowfullscreen></iframe>
+  </div>
+</div>
+  
   <div id="map"></div>
   
 
@@ -217,10 +294,180 @@
 const defaultCenter = [49.8, 2.5]; 
 const defaultZoom = 8;          
 
-const map = L.map('map', { zoomControl: false, attributionControl: false })
-             .setView(defaultCenter, defaultZoom);
+
+    // Limites géographiques approximatives pour la France
+const boundsFrance = [
+  [41.0, -5.5],  // Sud-Ouest
+  [51.5, 9.5]    // Nord-Est
+];
+
+const map = L.map('map', {
+  zoomControl: false,
+  attributionControl: false,
+  minZoom: 5,                  // empêche de trop dézoomer
+  maxZoom: 21,                 // selon tes tuiles IGN/OSM
+  maxBounds: boundsFrance,     // limite la zone affichée
+  maxBoundsViscosity: 1.0      // bloque l’effet “élastique”
+}).setView(defaultCenter, defaultZoom);
+
+    
+let editMode = false;   
+let holdTimeout;       
+
+const editBanner = document.createElement("div");
+editBanner.style = `
+  position: fixed;
+  bottom: 10px; left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.8);
+  color: white;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  z-index: 9999;
+  display: none;
+`;
+document.body.appendChild(editBanner);
+
+const editIcon = document.createElement("div");
+editIcon.textContent = "✏️";
+editIcon.style = `
+  position: fixed;
+  bottom: 40px; left: 12px;
+  font-size: 18px;
+  background: rgba(0,0,0,0.75);
+  color: white;
+  padding: 6px 8px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  z-index: 9999;
+  display: none;
+  font-family: system-ui, sans-serif;
+`;
+document.body.appendChild(editIcon);
+
+document.addEventListener("keydown", function(e) {
+  if (e.key.toLowerCase() === "i") {
+    editMode = !editMode;
+
+    editBanner.textContent = editMode ? "ℹ️ Mode information activé" : "❌ Mode information désactivé";
+    editBanner.style.display = "block";
+    setTimeout(() => { editBanner.style.display = "none"; }, 2000);
+
+    editIcon.textContent = "ℹ️";
+    editIcon.style.display = editMode ? "block" : "none";
+  }
+
+  // ESC pour désactiver
+  if (e.key === "Escape" && editMode) {
+    editMode = false;
+    editBanner.textContent = "❌ Mode information désactivé";
+    editBanner.style.display = "block";
+    setTimeout(() => { editBanner.style.display = "none"; }, 2000);
+    editIcon.style.display = "none";
+  }
+});
+    
     const allMarkers = [];
 
+let _datasetsLoaded = 0;
+function _tryOpenFromURL() {
+  _datasetsLoaded++;
+  if (_datasetsLoaded < 2) return; // attendre postes + appareils
+
+  if (!isNaN(lat) && !isNaN(lon)) {
+    const matches = allMarkers.filter(m => {
+      const ll = m.getLatLng();
+      return ll.lat === lat && ll.lng === lon;
+    });
+
+if (matches.length > 0) {
+  const first = matches[0].getLatLng();
+  const allSameCoords = matches.every(m => m.getLatLng().equals(first));
+
+  map.setView(first, Math.max(zoom, 21));
+
+ setTimeout(() => {
+  if (matches.length === 1) {
+    // 👉 Cas : un seul marker → popup normale
+    matches[0].openPopup();
+
+  } else if (allSameCoords) {
+    // 👉 Cas : plusieurs markers exactement au même endroit → liste
+    const items = matches.map((m, i) => {
+      let label = m.options.customId || `Élément ${i + 1}`;
+      return { label: label.replace(/\bposte\b/gi, "").trim(), idx: i };
+    }).sort((a, b) => a.label.localeCompare(b.label, "fr", { numeric: true, sensitivity: "base" }));
+
+    const html = `<div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
+      ${items.map(it => {
+       const marker = matches[it.idx];
+        const id = (marker.options.customId || "").toUpperCase();
+        
+let iconFile = null;
+
+if (marker.options.isAcces) {
+  iconFile = "acces.png";
+} else if (id.includes("POSTE")) {
+  iconFile = "poste.png";
+} else {
+  // règles appareils
+  if (id.startsWith("I") || id.startsWith("SI") || id.startsWith("D")) {
+    iconFile = "int.png";
+  } else if (id.startsWith("TT") || id.startsWith("TSA") || id.startsWith("TC") || id.startsWith("TRA")) {
+    iconFile = "TT.png";
+  } else if (/^[0-9]/.test(id) || id.startsWith("S") || id.startsWith("ST") || id.startsWith("F") || id.startsWith("P") || id.startsWith("FB") || id.startsWith("B")) {
+    iconFile = "sect.png";
+  } else if (id.startsWith("ALIM")) {
+    iconFile = "alim.png";
+  } else if (id.startsWith("DU")) {
+    iconFile = "stop.png";
+  }
+}
+
+        return `
+          <a href="#" class="cluster-link" data-idx="${it.idx}" style="display:flex;align-items:center;gap:6px;">
+            ${iconFile ? `<img src="ico/${iconFile}" style="width:16px;height:16px;">` : ""}
+            <span>${it.label}</span>
+          </a>`;
+      }).join("")}
+    </div>`;
+
+    L.popup()
+      .setLatLng(first)
+      .setContent(html)
+      .openOn(map);
+
+    setTimeout(() => {
+      document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
+        link.addEventListener("click", (ev) => {
+          ev.preventDefault();
+          const idx = +ev.currentTarget.dataset.idx;
+          const target = matches[idx];
+          const content = target.getPopup() ? target.getPopup().getContent() : "";
+          L.popup({ maxWidth: 240 })
+            .setLatLng(target.getLatLng())
+            .setContent(content)
+            .openOn(map);
+          map.panTo(target.getLatLng());
+        });
+      });
+    }, 0);
+  } else {
+    // 👉 Cas : markers proches mais pas identiques
+    const group = L.featureGroup(matches);
+    map.fitBounds(group.getBounds());
+  }
+}, 300);
+
+   
+} else {
+  map.setView([lat, lon], zoom);
+}
+  }
+}
 
 function makeTelHtml(labelEmoji, value) {
   if (!value) return "";
@@ -329,14 +576,24 @@ const postesLayer = L.markerClusterGroup({
   disableClusteringAtZoom: 18
 });
 const appareilsLayer = L.markerClusterGroup({
-  spiderfyOnMaxZoom: true, 
+  spiderfyOnMaxZoom: true,
   showCoverageOnHover: false,
-  disableClusteringAtZoom: null  
+  zoomToBoundsOnClick: false,   
+  disableClusteringAtZoom: null,
+  maxClusterRadius: function(zoom) {
+    return zoom > 18 ? 20 : 60;
+  }
 });
 const accesLayer = L.markerClusterGroup({
   spiderfyOnMaxZoom: false,
   showCoverageOnHover: false,
   zoomToBoundsOnClick: false
+});
+
+    const pnLayer = L.markerClusterGroup({
+  spiderfyOnMaxZoom: false,
+  showCoverageOnHover: false,
+  zoomToBoundsOnClick: true
 });
 
 accesLayer.on('clusterclick', function (e) {
@@ -418,76 +675,63 @@ fetch("postes.json")
 
     data.forEach(item => {
 
-      if (item.latitude && item.longitude) {
-        const accesVal = (item["accès"] ?? item.acces ?? "").toString().trim();
-        const cid = accesVal
-          ? [item.nom, item.type, item.SAT, "acces", accesVal].filter(Boolean).join(" ")
-          : [item.nom, item.type, item.SAT, "poste"].filter(Boolean).join(" ");
-        
-        let content = `
-          <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
-                      font-size:14px; color:#111; line-height:1.4; max-width:240px;">
+     if (item.latitude && item.longitude) {
+  const accesVal = (item["accès"] ?? item.acces ?? "").toString().trim();
+
+const cid = [item.nom, item.type, item.SAT, accesVal]
+  .filter(Boolean)
+  .join(" ");
+
+let content = `
 <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
-            font-size:14px; color:#111; line-height:1.4; max-width:240px; word-wrap:break-word;">
+            font-size:14px; color:#111; line-height:1.4; position:relative;">
 
-<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
-            font-size:14px; color:#111; line-height:1.4; max-width:240px; word-wrap:break-word;">
+<!-- Titre -->
+<div style="font-weight:600; font-size:16px; margin-bottom:14px; padding-right:32px;">
+  🚙 ${item.nom || "Sans nom"}
+  ${item.type ? " " + item.type : ""}
+  ${item.SAT ? " " + item.SAT : ""}
+  ${accesVal ? " – accès " + accesVal : ""}
+</div>
 
-  <!-- Titre + icône Street View -->
-  <div style="font-weight:600; font-size:16px; margin-bottom:14px; display:flex; align-items:center; justify-content:space-between;">
-    <span>
-      🚙 ${item.nom || "Sans nom"}
-      ${item.type ? " " + item.type : ""}
-      ${item.SAT ? " " + item.SAT : ""}
-      ${accesVal ? " – accès " + accesVal : ""}
-    </span>
-    <span onclick="openStreetView(${item.latitude}, ${item.longitude})"
-          style="cursor:pointer; font-size:20px; line-height:1; margin-left:6px;">📷</span>
-  </div>
+<!-- Icône Street View -->
+<span onclick="openStreetView(${item.latitude}, ${item.longitude})"
+      style="cursor:pointer; position:absolute; top:10px; right:12px;">
+  <img src="ico/street.png" alt="Street View" style="width:26px; height:26px;">
+</span>
+             
+<!-- Information -->
+<div style="margin-bottom:10px;">
+  ✍🏻 <strong>Information :</strong> ${ renderPortail(item.description) }
+</div>
 
-  <!-- Portail -->
-  <div style="margin-bottom:10px;">
-    🔑 Portail : ${
-      item.portail
-        ? (item.portail.match(/^[0-9+ ]+$/)
-            ? `<a href="tel:${item.portail.replace(/[^\d+]/g, "")}" style="color:#007aff; text-decoration:none;">${item.portail}</a>`
-            : item.portail)
-        : `<span style="color:#777;font-style:italic;">Non renseigné</span>`
-    }
-  </div>
+<!-- Portail -->
+<div style="margin-bottom:10px;">
+  🔑 <strong>Portail :</strong> ${ renderPortail(item.portail) }
+</div>
 
-  <!-- Information -->
-  <div style="margin-bottom:14px;">
-    ✍🏻 Information : ${
-      item.description
-        ? item.description
-        : `<span style="color:#777;font-style:italic;">Non renseignée</span>`
-    }
-  </div>
-
-  <!-- Fiche détaillée -->
+  <!-- Bouton Voir plus -->
   <a href="index.html?id=${encodeURIComponent(
-   (`${item.nom || ''} ${item.type || ''} ${item.SAT || ''}${accesVal ? ' – accès ' + accesVal : ''}`)
-    .replace(/\s+/g, " ")
-    .trim()
+    (`${item.nom || ''} ${item.type || ''} ${item.SAT || ''}${accesVal ? ' – accès ' + accesVal : ''}`)
+      .replace(/\s+/g, " ")
+      .trim()
   )}"
-    style="display:flex;align-items:center;justify-content:center;gap:6px;
-           background:#007aff;color:#fff;padding:8px 14px;border-radius:8px;
-           text-decoration:none;width:100%;max-width:200px;font-size:14px;">
+     style="display:flex;align-items:center;justify-content:center;gap:6px;
+            background:#007aff;color:#fff;padding:10px 14px;border-radius:8px;
+            text-decoration:none;width:100%;font-size:15px;font-weight:500;">
     ➕ Voir plus
   </a>
 </div>
-</div>
-          </div>
-        `;
+`;
 
-        const m = L.marker([item.latitude, item.longitude], {
-          icon: iconAcces,
-          customId: cid
-        }).bindPopup(content).addTo(accesLayer);
+const m = L.marker([item.latitude, item.longitude], {
+  icon: iconAcces,
+  customId: cid,
+  isAcces: true   
+}).bindPopup(content).addTo(accesLayer);
 
-        allMarkers.push(m);
-      }
+  allMarkers.push(m);
+}
 
       if (item.poste_latitude && item.poste_longitude) {
         const key = `${item.poste_latitude}_${item.poste_longitude}`;
@@ -495,256 +739,246 @@ fetch("postes.json")
         if (!seenPostes.has(key)) {
           seenPostes.add(key);
 
-          const cid = [item.nom, item.type, item.SAT, "poste"].filter(Boolean).join(" ");
+  const cid = [item.nom, item.type, item.SAT, "poste"].filter(Boolean).join(" ");
 
-          let content = `
-            <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
-                        font-size:14px; color:#111; line-height:1.4; max-width:240px;">
-              <div style="font-weight:600; font-size:15px; margin-bottom:4px;">
-                📍 ${item.nom || "Sans nom"} 
-                ${item.type ? " " + item.type : ""} 
-                ${item.SAT ? " " + item.SAT : ""}
-              </div>
+let content = `
+<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
+            font-size:14px; color:#111; line-height:1.4;">
 
-              <div style="margin-bottom:6px; color:#333;">
-                ${item.pk 
-                  ? `🚄 PK ${item.pk} sur la ligne n°${item.numero_ligne || ""} – ${item.lignes || ""}`
-                  : `🚄 ligne n°${item.numero_ligne || ""} – ${item.lignes || ""}`}
-              </div>
+  <!-- Nom + type + SAT -->
+  <div style="font-weight:600; font-size:16px; margin-bottom:14px;">
+    📍 ${item.nom || "Sans nom"} 
+    ${item.type ? " " + item.type : ""} 
+    ${item.SAT ? " " + item.SAT : ""}
+  </div>
 
-              ${ makeTelHtml("🔑", item.portail) }
-              ${ makeTelHtml("📞", item.contact) }
-              ${item.description ? `<div>ℹ️ ${item.description}</div>` : ""}
-            </div>
-          `;
+<!-- PK + Ligne -->
+<div style="margin-bottom:10px;">
+  🚄 PK <strong>${item.pk || "(non renseigné)"}</strong>
+  sur la ligne n°<strong>${item.numero_ligne || "(non renseigné)"}</strong>
+  ${item.lignes ? " – " + item.lignes : ""}
+</div>
 
-          const m = L.marker([item.poste_latitude, item.poste_longitude], {
-            icon: iconPoste,
-            customId: cid
-          }).bindPopup(content).addTo(postesLayer);
+ <!-- Information -->
+  <div style="margin-bottom:10px;">
+    ✍🏻 <strong>Information :</strong> ${ renderPortail(item.description) }
+  </div>
 
-          allMarkers.push(m);
+  <!-- Contact -->
+  <div style="margin-bottom:10px;">
+    📞 <strong>Contact :</strong> ${ renderContact(item.contact) }
+  </div>
+
+  <!-- Portail -->
+  <div style="margin-bottom:10px;">
+    🔑 <strong>Portail :</strong> ${ renderPortail(item.portail) }
+  </div>
+
+  <!-- Bouton Voir plus -->
+  <a href="index.html?id=${encodeURIComponent(
+    (`${item.nom || ''} ${item.type || ''} ${item.SAT || ''}`)
+      .replace(/\s+/g, " ")
+      .trim()
+  )}"
+     style="display:flex;align-items:center;justify-content:center;gap:6px;
+            background:#007aff;color:#fff;padding:10px 14px;border-radius:8px;
+            text-decoration:none;width:100%;font-size:15px;font-weight:500;">
+    ➕ Voir plus
+  </a>
+</div>
+`;
+
+const m = L.marker([item.poste_latitude, item.poste_longitude], {
+  icon: iconPoste,
+  customId: cid
+}).bindPopup(content).addTo(postesLayer);
+
+allMarkers.push(m);
         }
       }
 
     });
+_tryOpenFromURL();
   });
     
-    
- fetch("appareils.json")
+fetch("appareils.json")
   .then(r => r.json())
   .then(data => {
-    const grouped = {};
     data.forEach(item => {
-      const key = `${item.latitude}_${item.longitude}`;
-      if (!grouped[key]) grouped[key] = [];
-      grouped[key].push(item);
-    });
+      if (!item.latitude || !item.longitude) return;
 
-    Object.entries(grouped).forEach(([key, items]) => {
-      const [lat, lng] = key.split("_").map(Number);
+      let appareilIcon;
+      const ref = (item.appareil || "").toUpperCase();
 
-      if (items.length === 1) {
-        const item = items[0];
-        let appareilIcon;
-        if (item.appareil && item.appareil.toUpperCase().startsWith("I")) {
-          appareilIcon = L.divIcon({
-            html: `<img src="ico/int.png" class="icon-halo-appareil">`,
-            className: "",
-            iconAnchor: [16, 32],
-            popupAnchor: [0, -32]
-          });
-        } else if (
-          item.appareil &&
-          (item.appareil.toUpperCase().startsWith("TT") ||
-           item.appareil.toUpperCase().startsWith("TSA") ||
-           item.appareil.toUpperCase().startsWith("TC")  ||
-           item.appareil.toUpperCase().startsWith("TRA"))
-        ) {
-          appareilIcon = L.divIcon({
-            html: `<img src="ico/TT.png" class="icon-halo-appareil">`,
-            className: "",
-            iconAnchor: [16, 32],
-            popupAnchor: [0, -32]
-          });
-        } else if (
-          item.appareil &&
-          (
-            /^[0-9]/.test(item.appareil) ||
-            item.appareil.toUpperCase().startsWith("S") ||
-            item.appareil.toUpperCase().startsWith("ST") ||
-            item.appareil.toUpperCase().startsWith("F IL") ||
-            /^P[0-9]+/i.test(item.appareil) ||
-            item.appareil.toUpperCase().startsWith("FB") ||
-            item.appareil.toUpperCase().startsWith("B")
-          )
-        ) {
-          appareilIcon = L.divIcon({
-            html: `<img src="ico/sect.png" class="icon-halo-appareil">`,
-            className: "",
-            iconAnchor: [16, 32],
-            popupAnchor: [0, -32]
-          });
-        } else if (item.appareil && item.appareil.toUpperCase().startsWith("ALIM")) {
-          appareilIcon = L.divIcon({
-            html: `<img src="ico/alim.png" class="icon-halo-appareil">`,
-            className: "",
-            iconAnchor: [16, 32],
-            popupAnchor: [0, -32]
-          });
-        } else if (item.appareil && item.appareil.toUpperCase().startsWith("DU")) {
-          appareilIcon = L.divIcon({
-            html: `<img src="ico/stop.png" class="icon-halo-appareil">`,
-            className: "",
-            iconAnchor: [16, 32],
-            popupAnchor: [0, -32]
-          });
-        } else if (item.appareil && item.appareil.toUpperCase().startsWith("SI")) {
-          appareilIcon = L.divIcon({
-            html: `<img src="ico/int.png" class="icon-halo-appareil">`,
-            className: "",
-            iconAnchor: [16, 32],
-            popupAnchor: [0, -32]
-          });
-        } else {
-          appareilIcon = iconAppareil;
-        }
-
-        let content = `
-          <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
-                      font-size:14px; color:#111; line-height:1.4; max-width:240px;">
-            <div style="font-size:15px; margin-bottom:6px;">
-              <span style="font-weight:600;">
-                ${item.appareil || "Sans référence"}
-              </span>
-              <span>
-                ${item.nom ? " " + item.nom : ""} 
-                ${item.type ? " " + item.type : ""} 
-                ${item.SAT ? " (" + item.SAT + ")" : ""}
-              </span>
-            </div>
-            ${item.description ? `<div style="margin-bottom:6px;">ℹ️ ${item.description}</div>` : ""}
-          </div>
-        `;
-
-        const m = L.marker([lat, lng], { icon: appareilIcon }).bindPopup(content);
-        appareilsLayer.addLayer(m);
-        allMarkers.push(m);
-
+      if (ref.startsWith("I") || ref.startsWith("SI") || ref.startsWith("D")) {
+        appareilIcon = L.divIcon({ html:`<img src="ico/int.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,32], popupAnchor:[0,-32] });
+      } else if (ref.startsWith("TT") || ref.startsWith("TSA") || ref.startsWith("TC") || ref.startsWith("TRA")) {
+        appareilIcon = L.divIcon({ html:`<img src="ico/TT.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,32], popupAnchor:[0,-32] });
+      } else if (/^[0-9]/.test(ref) || ref.startsWith("S") || ref.startsWith("ST") || ref.startsWith("F") || ref.startsWith("P") || ref.startsWith("FB") || ref.startsWith("B")) {
+        appareilIcon = L.divIcon({ html:`<img src="ico/sect.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,32], popupAnchor:[0,-32] });
+      } else if (ref.startsWith("ALIM")) {
+        appareilIcon = L.divIcon({ html:`<img src="ico/alim.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,32], popupAnchor:[0,-32] });
+      } else if (ref.startsWith("DU")) {
+        appareilIcon = L.divIcon({ html:`<img src="ico/stop.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,32], popupAnchor:[0,-32] });
       } else {
-
-        const subGroup = L.markerClusterGroup({
-          spiderfyOnMaxZoom: true,
-          showCoverageOnHover: false,
-          disableClusteringAtZoom: 21
-        });
-
-        items.forEach(item => {
-          let appareilIcon;
-          if (item.appareil && item.appareil.toUpperCase().startsWith("I")) {
-            appareilIcon = L.divIcon({
-              html: `<img src="ico/int.png" class="icon-halo-appareil">`,
-              className: "",
-              iconAnchor: [16, 32],
-              popupAnchor: [0, -32]
-            });
-          } else if (
-            item.appareil &&
-            (item.appareil.toUpperCase().startsWith("TT") ||
-             item.appareil.toUpperCase().startsWith("TSA") ||
-             item.appareil.toUpperCase().startsWith("TC")  ||
-             item.appareil.toUpperCase().startsWith("TRA"))
-          ) {
-            appareilIcon = L.divIcon({
-              html: `<img src="ico/TT.png" class="icon-halo-appareil">`,
-              className: "",
-              iconAnchor: [16, 32],
-              popupAnchor: [0, -32]
-            });
-          } else if (
-            item.appareil &&
-            (
-              /^[0-9]/.test(item.appareil) ||
-              item.appareil.toUpperCase().startsWith("S") ||
-              item.appareil.toUpperCase().startsWith("ST") ||
-              item.appareil.toUpperCase().startsWith("F IL") ||
-              /^P[0-9]+/i.test(item.appareil) ||
-              item.appareil.toUpperCase().startsWith("FB") ||
-              item.appareil.toUpperCase().startsWith("B")
-            )
-          ) {
-            appareilIcon = L.divIcon({
-              html: `<img src="ico/sect.png" class="icon-halo-appareil">`,
-              className: "",
-              iconAnchor: [16, 32],
-              popupAnchor: [0, -32]
-            });
-          } else if (item.appareil && item.appareil.toUpperCase().startsWith("ALIM")) {
-            appareilIcon = L.divIcon({
-              html: `<img src="ico/alim.png" class="icon-halo-appareil">`,
-              className: "",
-              iconAnchor: [16, 32],
-              popupAnchor: [0, -32]
-            });
-          } else if (item.appareil && item.appareil.toUpperCase().startsWith("DU")) {
-            appareilIcon = L.divIcon({
-              html: `<img src="ico/stop.png" class="icon-halo-appareil">`,
-              className: "",
-              iconAnchor: [16, 32],
-              popupAnchor: [0, -32]
-            });
-          } else if (item.appareil && item.appareil.toUpperCase().startsWith("SI")) {
-            appareilIcon = L.divIcon({
-              html: `<img src="ico/int.png" class="icon-halo-appareil">`,
-              className: "",
-              iconAnchor: [16, 32],
-              popupAnchor: [0, -32]
-            });
-          } else {
-            appareilIcon = iconAppareil;
-          }
-
-          let content = `
-            <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
-                        font-size:14px; color:#111; line-height:1.4; max-width:240px;">
-              <div style="font-size:15px; margin-bottom:6px;">
-                <span style="font-weight:600;">
-                  ${item.appareil || "Sans référence"}
-                </span>
-                <span>
-                  ${item.nom ? " " + item.nom : ""} 
-                  ${item.type ? " " + item.type : ""} 
-                  ${item.SAT ? " (" + item.SAT + ")" : ""}
-                </span>
-              </div>
-              ${item.description ? `<div style="margin-bottom:6px;">ℹ️ ${item.description}</div>` : ""}
-            </div>
-          `;
-
-          const m = L.marker([lat, lng], { icon: appareilIcon }).bindPopup(content);
-          subGroup.addLayer(m);
-          allMarkers.push(m);
-        });
-
-               appareilsLayer.addLayer(subGroup);
+        appareilIcon = iconAppareil; // ⚡ défaut
       }
-    });
 
-    if (!isNaN(lat) && !isNaN(lon)) {
-      map.setView([lat, lon], zoom);
+      let content = `
+<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
+            font-size:14px; color:#111; line-height:1.4;">
 
-      const target = allMarkers.find(m => {
-        const ll = m.getLatLng();
-        return Math.abs(ll.lat - lat) < 1e-5 && Math.abs(ll.lng - lon) < 1e-5;
+<div style="font-size:15px; margin-bottom:10px;">
+  ⚡ <span style="font-weight:600;">${item.appareil || "Sans référence"}</span>
+  ${item.nom || item.type || item.SAT 
+    ? " (" + 
+        [item.nom, item.type, item.SAT]
+          .filter(Boolean)               // enlève les vides
+          .join(" ")                     // colle avec espace
+          .trim() + ")"                  // supprime espace en trop
+    : ""}
+</div>
+
+  ${item.description ? `<div style="margin-bottom:14px;">✍🏻 <strong>Information :</strong> ${item.description}</div>` : ""}
+
+  <a href="index.html?id=${encodeURIComponent(
+    [item.appareil, item.nom, item.type, item.SAT].filter(Boolean).join(" ").trim()
+  )}"
+     style="display:flex;align-items:center;justify-content:center;gap:6px;
+            background:#007aff;color:#fff;padding:10px 14px;border-radius:8px;
+            text-decoration:none;width:100%;font-size:15px;font-weight:500;
+            margin-top:10px;">
+    ➕ Voir plus
+  </a>
+</div>
+`;
+
+      const cid = [item.appareil, item.nom, item.type, item.SAT]
+        .filter(Boolean)
+        .join(" ");
+
+      const m = L.marker([item.latitude, item.longitude], {
+        icon: appareilIcon,
+        customId: cid
+      }).bindPopup(content);
+
+      appareilsLayer.addLayer(m);
+      allMarkers.push(m);
       });
-
-      if (target) {
-        target.openPopup();
-      }
-    }
-
+    _tryOpenFromURL();
   });
 
+
+    fetch("pn.json")
+  .then(r => r.json())
+  .then(data => {
+    data.forEach(pn => {
+      if (!pn.latitude || !pn.longitude) return;
+
+      const iconPN = L.divIcon({
+        html: `<img src="ico/pn.png" class="icon-halo-appareil">`,
+        className: "",
+        iconAnchor: [16, 32],
+        popupAnchor: [0, -32]
+      });
+
+      const content = `
+<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
+            font-size:14px; color:#111; line-height:1.4;">
+  <div style="font-weight:600;font-size:15px;margin-bottom:8px;">
+    🚧 Passage à niveau ${pn.numero || ""}
+  </div>
+  <div>🏘️ Commune : ${pn.commune || "?"}</div>
+  <div>🚄 Voie : ${pn.voie || "?"}</div>
+</div>`;
+
+      const marker = L.marker([pn.latitude, pn.longitude], {
+        icon: iconPN,
+        customId: pn.numero || ""
+      }).bindPopup(content);
+
+      pnLayer.addLayer(marker);
+      allMarkers.push(marker);
+    });
+  })
+  .catch(err => console.error("Erreur chargement PN:", err));
+
+
+    
+appareilsLayer.on('clusterclick', function (e) {
+  const childMarkers = e.layer.getAllChildMarkers();
+  if (childMarkers.length === 0) return;
+
+  const first = childMarkers[0].getLatLng();
+  const allSameCoords = childMarkers.every(m => m.getLatLng().equals(first));
+
+  if (allSameCoords) {
+    if (id) {
+      // 👉 Cas : depuis index.html → popup liste
+      const items = childMarkers.map((m, i) => {
+        let label = m.options.customId || `Appareil ${i + 1}`;
+        return { label: label.trim(), idx: i };
+      }).sort((a, b) => a.label.localeCompare(b.label, "fr", { numeric:true, sensitivity:"base" }));
+
+      const html = `<div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
+        ${items.map(it => {
+          const marker = childMarkers[it.idx];
+          const id = (marker.options.customId || "").toUpperCase();
+          let iconFile = null;
+
+          if (id.startsWith("I") || id.startsWith("SI") || id.startsWith("D")) {
+            iconFile = "int.png";
+          } else if (id.startsWith("TT") || id.startsWith("TSA") || id.startsWith("TC") || id.startsWith("TRA")) {
+            iconFile = "TT.png";
+          } else if (/^[0-9]/.test(id) || id.startsWith("S") || id.startsWith("ST") || id.startsWith("F") || id.startsWith("P") || id.startsWith("FB") || id.startsWith("B")) {
+            iconFile = "sect.png";
+          } else if (id.startsWith("ALIM")) {
+            iconFile = "alim.png";
+          } else if (id.startsWith("DU")) {
+            iconFile = "stop.png";
+          }
+
+          return `
+            <a href="#" class="cluster-link" data-idx="${it.idx}" style="display:flex;align-items:center;gap:6px;">
+              ${iconFile ? `<img src="ico/${iconFile}" style="width:16px;height:16px;">` : ""}
+              <span>${it.label}</span>
+            </a>`;
+        }).join("")}
+      </div>`;
+
+      L.popup()
+        .setLatLng(first)
+        .setContent(html)
+        .openOn(map);
+
+      setTimeout(() => {
+        document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
+          link.addEventListener("click", (ev) => {
+            ev.preventDefault();
+            const idx = +ev.currentTarget.dataset.idx;
+            const target = childMarkers[idx];
+            const content = target.getPopup() ? target.getPopup().getContent() : "";
+            L.popup({ maxWidth: 240 })
+              .setLatLng(target.getLatLng())
+              .setContent(content)
+              .openOn(map);
+            map.panTo(target.getLatLng());
+          });
+        });
+      }, 0);
+
+    } else {
+      // 👉 Cas : dernière bulle mais PAS depuis index → pas de zoom, juste éclatement
+      e.originalEvent.preventDefault();
+      e.originalEvent.stopPropagation();
+      e.layer.spiderfy();
+    }
+
+  } else {
+    // 👉 Cas normal → zoom autorisé
+    map.fitBounds(e.layer.getBounds());
+  }
+});
 
 const leftControls = L.control({ position: "topleft" });
 leftControls.onAdd = function() {
@@ -838,6 +1072,7 @@ L.DomEvent.disableScrollPropagation(locateBtn);
   makeBtn("🚙", accesLayer, true);
   makeBtn("📍", postesLayer, true);
   makeBtn("⚡", appareilsLayer, true);
+  makeBtn("🚧", pnLayer, false);   // PN désactivé par défaut
 
   return container;
 };
@@ -851,6 +1086,7 @@ if (!id) {
     }
   });
 }
+    
  function openStreetView(lat, lng) {
     const iframe = document.getElementById("streetview-frame");
     iframe.src = `https://www.google.com/maps?q=&layer=c&cbll=${lat},${lng}&cbp=11,0,0,0,0&output=svembed`;
@@ -861,9 +1097,194 @@ if (!id) {
     document.getElementById("streetview-overlay").style.display = "none";
     document.getElementById("streetview-frame").src = ""; 
   };
-
 document.getElementById("streetview-overlay").style.display = "none";
 document.getElementById("streetview-frame").src = "";
+
+// --- KIT DEBUG ÉCLAIR ---
+console.info("[Nono Maps] boot", {
+  leaflet: L.version,
+  clusters: { postes: !!postesLayer, appareils: !!appareilsLayer, acces: !!accesLayer }
+});
+
+// Attrape toutes les erreurs JS et les affiche joliment à l'écran
+window.onerror = function(msg, src, line, col, err){
+  const box = document.createElement("div");
+  box.style = "position:fixed;z-index:10000;left:8px;bottom:8px;max-width:90%;"+
+              "background:#111;color:#fff;padding:10px 12px;border:1px solid #333;"+
+              "font:12px/1.4 system-ui;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,.4)";
+  box.textContent = "❗ "+ msg + " [" + (src||"inline") + ":" + line + ":" + col + "]";
+  document.body.appendChild(box);
+  console.error("❗ Uncaught error", {msg, src, line, col, err});
+};
+
+// Vérifie qu’on charge bien les jeux de données et combien de marqueurs arrivent
+Promise.allSettled([
+  fetch("postes.json").then(r => r.json()).then(d => { console.log("postes.json OK", d.length); return d; })
+    .catch(e => { console.error("postes.json KO", e); return []; }),
+  fetch("appareils.json").then(r => r.json()).then(d => { console.log("appareils.json OK", d.length); return d; })
+    .catch(e => { console.error("appareils.json KO", e); return []; })
+]);
+
+// Petite garde anti-NaN dans l’URL (évite des comportements bizarres)
+if (isNaN(lat) || isNaN(lon)) { console.warn("URL lat/lon invalides", {lat, lon}); }
+
+
+
+    function makeTelHtml(labelEmoji, value) {
+  if (!value) return "";
+
+  if (value.indexOf("#") !== -1) return `<div>${labelEmoji} ${value}</div>`;
+
+  const digitsOnly = ("" + value).replace(/\D/g, "");
+  if (digitsOnly.length < 10) return `<div>${labelEmoji} ${value}</div>`;
+
+  const hrefSafe = ("" + value).replace(/[^\d+]/g, "");
+  if (!hrefSafe) return `<div>${labelEmoji} ${value}</div>`;
+
+  return `<div>${labelEmoji} <a href="tel:${hrefSafe}" style="color:#007aff; text-decoration:none;">${value}</a></div>`;
+}
+
+function renderPortail(value) {
+  if (!value) {
+    return `<span style="color:#777;font-style:italic;">Non renseigné</span>`;
+  }
+  const str = String(value);
+
+  // Cas avec #
+  if (str.includes("#")) return str;
+
+  // Cas YouTube
+  const ytMatch = str.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]+)/);
+  if (ytMatch) {
+    const videoId = ytMatch[1];
+    return `<a href="#" class="open-video" data-video="${videoId}" 
+              style="color:#007aff; text-decoration:none;">Voir vidéo explicative ICI</a>`;
+  }
+
+  // Cas lien http(s)
+  const urlMatch = str.match(/https?:\/\/[^\s]+/i);
+  if (urlMatch) {
+    const url = urlMatch[0];
+    const withoutUrl = str.replace(url, "").trim(); // ex: "Code 594"
+    const link = `<a href="${url}" target="_blank" style="color:#007aff; text-decoration:none;">Lien portail</a>`;
+    return withoutUrl ? `${withoutUrl} – ${link}` : link;
+  }
+
+  // Cas numéro de téléphone
+  const digits = str.replace(/\D/g, "");
+  if (digits.length >= 10) {
+    const tel = str.replace(/[^\d+]/g, "");
+    return `<a href="tel:${tel}" style="color:#007aff; text-decoration:none;">${str}</a>`;
+  }
+
+  // Sinon afficher brut
+  return str;
+}
+
+    // Gestion ouverture/fermeture overlay vidéo
+document.addEventListener("click", e => {
+  if (e.target.classList.contains("open-video")) {
+    e.preventDefault();
+    const videoId = e.target.dataset.video;
+    const iframe = document.getElementById("video-frame");
+    iframe.src = `https://www.youtube.com/embed/${videoId}`;
+    document.getElementById("video-overlay").style.display = "flex";
+  }
+});
+
+document.getElementById("video-close").onclick = () => {
+  document.getElementById("video-overlay").style.display = "none";
+  document.getElementById("video-frame").src = "";
+};
+
+    function renderContact(value) {
+  if (!value) {
+    return `<span style="color:#777;font-style:italic;">Non renseigné</span>`;
+  }
+
+  const str = String(value);
+
+  // On découpe le texte en séparant les numéros (format français 10 chiffres)
+  return str.split(/(\d{2}(?:\s?\d{2}){4})/g).map(part => {
+    const digits = part.replace(/\D/g, "");
+    if (digits.length === 10) {
+      // C'est un numéro → rendre cliquable
+      return `<a href="tel:${digits}" style="color:#007aff; text-decoration:none;">${part.trim()}</a>`;
+    }
+    return part; // Sinon on garde tel quel
+  }).join("");
+}
+
+let activeEditPopup = null; // popup édition actif
+
+// petit helper pour afficher le texte dans <pre>
+function escHtml(s){return String(s).replace(/[&<>"]/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[m]));}
+
+// --- Clic simple sur la carte en mode information ---
+map.on('click', (e) => {
+  if (!editMode) return;
+
+  const lat = Number(e.latlng.lat.toFixed(5));
+  const lng = Number(e.latlng.lng.toFixed(5));
+  const coordsText = `${lat}, ${lng}`;
+
+  const popupContent = `
+  <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
+              font-size:14px;min-width:240px;">
+
+    <div style="font-weight:600; font-size:16px; margin-bottom:12px;"> ℹ️ Information : </div>
+
+    <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+      <pre style="margin:0; background:#f3f4f6; padding:6px 10px; border-radius:6px; font-size:13px; flex:1;">
+${coordsText}</pre>
+      <button id="btn-copy"
+        style="padding:6px 10px; border:none; border-radius:6px; background:#f59e0b; color:white; cursor:pointer;">
+        📋 Copier
+      </button>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:8px;">
+      <button id="btn-gmaps" 
+        style="padding:8px 12px; border:none; border-radius:6px; background:#3b82f6; color:white; cursor:pointer;">
+        🔎 Google Maps
+      </button>
+
+      <button id="btn-imajnet" 
+        style="padding:8px 12px; border:none; border-radius:6px; background:#10b981; color:white; cursor:pointer;">
+        🛣️ Imajnet
+      </button>
+    </div>
+  </div>`;
+
+  if (activeEditPopup) map.closePopup(activeEditPopup);
+
+  activeEditPopup = L.popup({ autoClose: false, closeOnClick: false })
+    .setLatLng(e.latlng)
+    .setContent(popupContent)
+    .openOn(map);
+
+  // 👉 Ici : on attend juste la fin du rendu DOM
+  setTimeout(() => {
+    const flash = (txt) => {
+      editBanner.textContent = txt;
+      editBanner.style.display = "block";
+      setTimeout(() => { editBanner.style.display = "none"; }, 1200);
+    };
+
+    document.getElementById('btn-copy')?.addEventListener('click', () => {
+      navigator.clipboard.writeText(coordsText).then(() => flash("✅ Coordonnées copiées"));
+    });
+
+    document.getElementById('btn-gmaps')?.addEventListener('click', () => {
+      window.open(`https://www.google.com/maps?q=${lat},${lng}`, '_blank');
+    });
+
+    document.getElementById('btn-imajnet')?.addEventListener('click', () => {
+      window.open(`https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${lat},${lng};`, '_blank');
+    });
+  }, 50); // petit délai pour être sûr que le DOM est prêt
+});
+    
 </script>
 
 </body>
