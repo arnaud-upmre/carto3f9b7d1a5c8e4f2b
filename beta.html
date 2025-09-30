@@ -903,7 +903,7 @@ function translateObstacle(obs) {
   return obs;
 }
 
-fetch("pn.json")
+    fetch("pn.json")
   .then(r => r.json())
   .then(data => {
     data.forEach(pn => {
@@ -911,9 +911,9 @@ fetch("pn.json")
       const lat = pn.geo_point_2d.lat;
       const lon = pn.geo_point_2d.lon;
 
-      // ✅ Filtre Hauts-de-France
-      if (lat < 49.8 || lat > 51.2) return;
-      if (lon < 1.5 || lon > 4.5) return;
+      // ✅ Filtre Hauts-de-France élargi ~50 km
+      if (lat < 49.3 || lat > 51.7) return;
+      if (lon < 1.0 || lon > 5.0) return;
 
       const iconPN = L.divIcon({
         html: `<img src="ico/pn.png" class="icon-halo-appareil">`,
@@ -928,13 +928,10 @@ fetch("pn.json")
         ? `🛑 Classe ${classeCode} : ${pnClasses[classeCode]}` 
         : "";
 
-      // Traduction obstacle
-      const obstacleTexte = translateObstacle(pn.obstacle);
-
-      // 🔧 Nettoyage du libellé pour éviter "PN PN"
+      // Nettoyage libellé pour éviter "PN PN"
       let libelle = (pn.libelle || "").trim();
       if (/^PN\s*/i.test(libelle)) {
-        libelle = libelle.replace(/^PN\s*/i, ""); // supprime le "PN " du début
+        libelle = libelle.replace(/^PN\s*/i, "");
       }
 
       const marker = L.marker([lat, lon], { icon: iconPN })
@@ -952,9 +949,6 @@ fetch("pn.json")
 
             <!-- Classe -->
             ${classeTexte ? `<div>${classeTexte}</div>` : ""}
-
-            <!-- Obstacle traduit -->
-            ${obstacleTexte ? `<div>🛣️ ${obstacleTexte}</div>` : ""}
 
             <!-- Boutons -->
             <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px;align-items:center;">
@@ -980,6 +974,7 @@ fetch("pn.json")
     });
   })
   .catch(err => console.error("Erreur chargement PN:", err));
+
     
 appareilsLayer.on('clusterclick', function (e) {
   const childMarkers = e.layer.getAllChildMarkers();
