@@ -931,6 +931,12 @@ fetch("pn.json")
       // Traduction obstacle
       const obstacleTexte = translateObstacle(pn.obstacle);
 
+      // 🔧 Nettoyage du libellé pour éviter "PN PN"
+      let libelle = (pn.libelle || "").trim();
+      if (/^PN\s*/i.test(libelle)) {
+        libelle = libelle.replace(/^PN\s*/i, ""); // supprime le "PN " du début
+      }
+
       const marker = L.marker([lat, lon], { icon: iconPN })
         .bindPopup(`
           <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
@@ -938,7 +944,7 @@ fetch("pn.json")
 
             <!-- Titre PN -->
             <div style="font-weight:700; font-size:16px; margin-bottom:8px;">
-       🚧 ${(pn.libelle || "").replace(/^PN\s*/i, "")}
+              🚧 PN ${libelle}
             </div>
 
             <!-- PK + Ligne -->
@@ -974,7 +980,6 @@ fetch("pn.json")
     });
   })
   .catch(err => console.error("Erreur chargement PN:", err));
-
     
 appareilsLayer.on('clusterclick', function (e) {
   const childMarkers = e.layer.getAllChildMarkers();
