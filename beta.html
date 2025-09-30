@@ -868,12 +868,20 @@ fetch("appareils.json")
     _tryOpenFromURL();
   });
 
-
-    fetch("pn.json")
+fetch("pn.json")
   .then(r => r.json())
   .then(data => {
+    const pnLayerGroup = [];
+
     data.forEach(pn => {
-      if (!pn.latitude || !pn.longitude) return;
+      if (!pn.geo_point_2d) return;
+
+      const lat = pn.geo_point_2d.lat;
+      const lon = pn.geo_point_2d.lon;
+
+      // ✅ Filtre Hauts-de-France
+      if (lat < 49.8 || lat > 51.2) return;
+      if (lon < 1.5 || lon > 4.5) return;
 
       const iconPN = L.divIcon({
         html: `<img src="ico/pn.png" class="icon-halo-appareil">`,
@@ -882,27 +890,19 @@ fetch("appareils.json")
         popupAnchor: [0, -32]
       });
 
-      const content = `
-<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
-            font-size:14px; color:#111; line-height:1.4;">
-  <div style="font-weight:600;font-size:15px;margin-bottom:8px;">
-    🚧 Passage à niveau ${pn.numero || ""}
-  </div>
-  <div>🏘️ Commune : ${pn.commune || "?"}</div>
-  <div>🚄 Voie : ${pn.voie || "?"}</div>
-</div>`;
-
-      const marker = L.marker([pn.latitude, pn.longitude], {
-        icon: iconPN,
-        customId: pn.numero || ""
-      }).bindPopup(content);
+      const marker = L.marker([lat, lon], { icon: iconPN })
+        .bindPopup(`
+          <div style="font-family:sans-serif;font-size:14px;">
+            🚧 ${pn.libelle || "PN"}<br>
+            Ligne : ${pn.code_ligne || "?"}
+          </div>
+        `);
 
       pnLayer.addLayer(marker);
       allMarkers.push(marker);
     });
   })
   .catch(err => console.error("Erreur chargement PN:", err));
-
 
     
 appareilsLayer.on('clusterclick', function (e) {
