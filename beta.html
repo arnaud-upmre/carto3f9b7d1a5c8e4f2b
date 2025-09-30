@@ -868,14 +868,46 @@ fetch("appareils.json")
     _tryOpenFromURL();
   });
 
+    // Dictionnaire des classes PN
+const pnClasses = {
+  10: "PN public pour voitures sans barrières (protection assurée par un agent)",
+  11: "PN public pour voitures avec barrières gardé sans passage piétons accolé (manœuvré à pied d'œuvre)",
+  12: "PN public pour voitures avec barrières gardé sans passage piétons accolé (manœuvré à distance)",
+  13: "PN public pour voitures avec barrières gardé sans passage piétons accolé (manœuvré pied d'œuvre + distance)",
+  14: "PN public pour voitures avec barrières gardé avec passage piétons accolé (manœuvré à pied d'œuvre)",
+  15: "PN public pour voitures avec barrières gardé avec passage piétons accolé (manœuvré à distance)",
+  16: "PN public pour voitures avec barrières gardé avec passage piétons accolé (manœuvré pied d'œuvre + distance)",
+  17: "PN public pour voitures avec barrières ou 1/2 barrières non gardé à SAL 2 / SAL 2B",
+  18: "PN public pour voitures avec barrières ou 1/2 barrières non gardé à SAL 2 + îlot séparateur",
+  19: "PN public pour voitures avec barrières ou 1/2 barrières non gardé à SAL 4",
+  20: "PN public pour voitures sans barrières sans SAL",
+  21: "PN public pour voitures sans barrières avec SAL 0",
+  31: "PN public isolé pour piétons sans portillons",
+  32: "PN public isolé pour piétons avec portillons",
+  41: "PN privé pour voitures sans barrières",
+  42: "PN privé pour voitures avec barrières sans passage piétons accolé",
+  43: "PN privé pour voitures avec barrières avec passage piétons accolé public",
+  44: "PN privé pour voitures avec barrières avec passage piétons accolé privé",
+  45: "PN privé isolé pour piétons sans portillons",
+  46: "PN privé isolé pour piétons avec portillons"
+};
+
+// Traduction des obstacles
+function translateObstacle(obs) {
+  if (!obs) return "";
+  if (obs.toLowerCase() === "autre") return ""; // on n’affiche rien si "Autre"
+  if (obs.startsWith("VC")) return "Voie communale";
+  if (obs.startsWith("CD")) return "Route départementale " + obs.replace("CD", "").trim();
+  if (obs.startsWith("RN")) return "Route nationale " + obs.replace("RN", "").trim();
+  if (obs.startsWith("CP")) return "Chemin privé";
+  return obs;
+}
+
 fetch("pn.json")
   .then(r => r.json())
   .then(data => {
-    const pnLayerGroup = [];
-
     data.forEach(pn => {
       if (!pn.geo_point_2d) return;
-
       const lat = pn.geo_point_2d.lat;
       const lon = pn.geo_point_2d.lon;
 
@@ -890,39 +922,52 @@ fetch("pn.json")
         popupAnchor: [0, -32]
       });
 
-      const marker = L.marker([lat, lon], { icon: iconPN })
-  .bindPopup(`
-    <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
-                font-size:14px; color:#111; line-height:1.5; text-align:center;">
-      
-      <!-- Titre PN -->
-      <div style="font-weight:700; font-size:16px; margin-bottom:6px;">
-        🚧 PN ${ (pn.libelle || "").replace(/^PN\s*/i, "") }
-      </div>
-      
-      <!-- PK + ligne -->
-      <div style="font-size:14px; margin-bottom:14px; color:#444;">
-        🚄 PK ${pn.pk || "?"} sur la ligne n°${pn.code_ligne || "?"}
-      </div>
+      // Décodage classe PN
+      const classeCode = (pn.mnemo || "").replace("CLASSE ", "").trim();
+      const classeTexte = pnClasses[classeCode] 
+        ? `🛑 Classe ${classeCode} : ${pnClasses[classeCode]}` 
+        : "";
 
-      <!-- Boutons actions -->
-      <div style="display:flex;flex-direction:column;gap:8px;align-items:center;">
-        <a href="https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${lat},${lon};" 
-           target="_blank"
-           style="display:block;width:100%;max-width:200px;padding:10px 12px;
-                  border-radius:8px;background:#10b981;color:white;
-                  text-decoration:none;font-size:14px;font-weight:500;">
-          🛣️ Voir sur Imajnet
-        </a>
-        <button onclick="openStreetView(${lat},${lon})"
-           style="display:block;width:100%;max-width:200px;padding:10px 12px;
-                  border:none;border-radius:8px;background:#3b82f6;
-                  color:white;cursor:pointer;font-size:14px;font-weight:500;">
-          🌍 Voir en Street View
-        </button>
-      </div>
-    </div>
-  `);
+      // Traduction obstacle
+      const obstacleTexte = translateObstacle(pn.obstacle);
+
+      const marker = L.marker([lat, lon], { icon: iconPN })
+        .bindPopup(`
+          <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
+                      font-size:14px; color:#111; line-height:1.5; text-align:left;">
+
+            <!-- Titre PN -->
+            <div style="font-weight:700; font-size:16px; margin-bottom:8px;">
+              🚧 PN ${(pn.libelle || "").replace(/^PN\\s*/i, "")}
+            </div>
+
+            <!-- PK + Ligne -->
+            <div>🚄 PK ${pn.pk || "?"} sur la ligne n°${pn.code_ligne || "?"}</div>
+
+            <!-- Classe -->
+            ${classeTexte ? `<div>${classeTexte}</div>` : ""}
+
+            <!-- Obstacle traduit -->
+            ${obstacleTexte ? `<div>🛣️ ${obstacleTexte}</div>` : ""}
+
+            <!-- Boutons -->
+            <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px;align-items:center;">
+              <a href="https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${lat},${lon};" 
+                 target="_blank"
+                 style="display:block;width:100%;max-width:200px;padding:10px 12px;
+                        border-radius:8px;background:#10b981;color:white;
+                        text-decoration:none;font-size:14px;font-weight:500;text-align:center;">
+                🛣️ Voir sur Imajnet
+              </a>
+              <button onclick="openStreetView(${lat},${lon})"
+                 style="display:block;width:100%;max-width:200px;padding:10px 12px;
+                        border:none;border-radius:8px;background:#3b82f6;
+                        color:white;cursor:pointer;font-size:14px;font-weight:500;">
+                🌍 Voir en Street View
+              </button>
+            </div>
+          </div>
+        `);
 
       pnLayer.addLayer(marker);
       allMarkers.push(marker);
