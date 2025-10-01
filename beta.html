@@ -1230,12 +1230,13 @@ L.DomEvent.disableScrollPropagation(backBtn);
 
 const recenterBtn = L.DomUtil.create("div", "btn-toggle", topGroup);
 recenterBtn.innerHTML = "🎯";
-
+  
 recenterBtn.onclick = () => {
   if (allMarkers.length > 0) {
     recenterBtn.classList.add("active"); 
- map.setView(defaultCenter, defaultZoom);
+    map.setView(defaultCenter, defaultZoom);
 
+    showToast("✅ Carte recentrée");
 
     setTimeout(() => {
       recenterBtn.classList.remove("active");
@@ -1262,6 +1263,7 @@ locateBtn.onclick = () => {
       userMarker = null;
     }
     locateBtn.classList.remove("active");
+    showToast("❌ Géolocalisation désactivée");
     return;
   }
 
@@ -1281,6 +1283,7 @@ locateBtn.onclick = () => {
   });
 
   locateBtn.classList.add("active");
+  showToast("✅ Géolocalisation activée");
 };
 
 L.DomEvent.disableClickPropagation(locateBtn);
