@@ -6,37 +6,36 @@
   <title>Historique des versions – Nono Maps</title>
 
   <style>
-
     .card header.version {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 14px;
-  padding: 10px 16px;
-  border-radius: 18px;
-  background: rgba(37, 99, 235, 0.35); /* bleu translucide */
-  backdrop-filter: blur(20px) saturate(160%);
-  -webkit-backdrop-filter: blur(20px) saturate(160%);
-  box-shadow: inset 0 1px 2px rgba(255,255,255,0.25),
-              0 4px 12px rgba(37, 99, 235, 0.25);
-}
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      padding: 10px 16px;
+      border-radius: 18px;
+      background: rgba(37, 99, 235, 0.35);
+      backdrop-filter: blur(20px) saturate(160%);
+      -webkit-backdrop-filter: blur(20px) saturate(160%);
+      box-shadow: inset 0 1px 2px rgba(255,255,255,0.25),
+                  0 4px 12px rgba(37, 99, 235, 0.25);
+    }
 
-.version .tag {
-  font-size: 14px;
-  font-weight: 600;
-  color: #fff;
-  background: rgba(37, 99, 235, 0.8);
-  padding: 6px 14px;
-  border-radius: 999px;
-  box-shadow: 0 0 12px rgba(37, 99, 235, 0.6),
-              inset 0 1px 3px rgba(255,255,255,0.4);
-}
+    .version .tag {
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+      background: rgba(37, 99, 235, 0.8);
+      padding: 6px 14px;
+      border-radius: 999px;
+      box-shadow: 0 0 12px rgba(37, 99, 235, 0.6),
+                  inset 0 1px 3px rgba(255,255,255,0.4);
+    }
 
-.version .date {
-  font-size: 13px;
-  color: rgba(255,255,255,0.85);
-  letter-spacing: .3px;
-}
+    .version .date {
+      font-size: 13px;
+      color: rgba(255,255,255,0.85);
+      letter-spacing: .3px;
+    }
     
     :root {
       --bg: #f9fafb;
@@ -204,316 +203,294 @@
   <div class="container">
     <p class="intro">Ce journal présente les <strong>dernières mises à jour détaillées</strong>. Les périodes plus anciennes sont <strong>regroupées</strong> et repliables pour garder une lecture fluide.</p>
 
+    <!-- ===== Dernières mises à jour ===== -->
     <div class="section-title">🆕 Dernières mises à jour</div>
 
-
-    <article class="card">
-  <header class="version">
-    <span class="tag">v1.9.1</span>
-    <span class="date">28/09/2025</span>
-  </header>
-  <ul>
-    <li>ℹ️ <strong>Amélioration du mode “Informations”</strong><br>
-      Le <em>menu caché</em> de la carte a été enrichi et optimisé (demander l'accès à Arnaud) - Uniquement dispo sur ordinateur.
-    </li>
-    <li>🌐 <strong>Nouveau lien IMAJNET</strong><br>
-      Ajout d’un accès supplémentaire au service externe, en attendant l’intégration complète du SDK.
-    </li>
-  </ul>
-</article>
-
-    <article class="card">
-  <header class="version">
-    <span class="tag">v1.9</span>
-    <span class="date">27/09/2025</span>
-  </header>
-  <ul>
-    <li>🆕 <strong>Ajout des boutons Imajnet</strong><br>
-      Disponibles désormais sur les fiches <strong>postes</strong> et <strong>appareils</strong> pour accéder rapidement au service externe Imajnet.
-    </li>
-    <li>📍 <strong>Comportement actuel :</strong>
-      <ul>
-        <li>Les coordonnées transmises correspondent à l’objet sélectionné (poste ou appareil).</li>
-        <li>L’image affichée peut être légèrement décalée → il est parfois nécessaire d’avancer ou reculer de quelques mètres dans Imajnet pour voir la photo exacte.</li>
-      </ul>
-    </li>
-    <li>🔜 <strong>Améliorations prévues :</strong>
-      <ul>
-        <li>Ajustement automatique pour viser directement l’image exacte du poste ou de l’appareil ciblé. (Fait : Abancourt, Criquiers, Strazeele, Gravelines...)</li>
-        <li>Intégration de l’API/SDK Imajnet, afin d’exploiter directement leurs fonctionnalités dans Nono Maps.</li>
-      </ul>
-    </li>
-  </ul>
-</article>
-
-    <div class="card">
-  <header class="version">
-    <span class="tag">v1.8.4</span>
-    <span class="date">27/09/2025</span>
-  </header>
-  <ul>
-    <li>Amélioration de la fonction <strong>Retour à la fiche principale</strong> :</li>
-    <ul>
-      <li>Retourne désormais vers le <strong>SAT</strong> si l’appareil est rattaché à un SAT.</li>
-      <li>Retourne vers l’<strong>accès</strong> si l’appareil est rattaché à un accès, y compris dans les cas où aucun poste principal n’existe (ex. <em>Avion – accès 208-16</em> et ses sectionneurs).</li>
-      <li>Sinon, retour vers le <strong>poste principal</strong> (comportement inchangé).</li>
-    </ul>
-  </ul>
-</div>
-    <article class="card">
-  <header class="version">
-    <span class="tag">v1.8.3</span>
-    <span class="date">26/09/2025</span>
-  </header>
-  <ul>
-    <li>📺 Mise en overlay des <strong>vidéos explicatives</strong> (ex. Valenciennes SS).</li>
-    <li>📍 Ajouts de <strong>9 points GPS</strong> et ajustement de certaines coordonnées JSON.</li>
-  </ul>
-</article>
-
-    <article class="card">
-  <header class="version">
-    <span class="tag">v1.8.2</span><span class="date">24/09/2025</span>
-  </header>
-  <ul>
-    <li>🛠️ Correctifs sur le formulaire <strong>Ajout de poste / SAT</strong><br>
-      Meilleure fiabilité et affichage corrigé lors de l’enregistrement.
-    </li>
-    <li>📍 Mise à jour en <strong>temps réel</strong> des coordonnées lors du déplacement du curseur</li>
-    <li>🔎 Suppression du <strong>zoom automatique</strong> lors du déplacement du curseur</li>
-  </ul>
-</article>
-
-    <article class="card">
-  <header class="version">
-    <span class="tag">v1.8.1</span><span class="date">24/09/2025</span>
-  </header>
-  <ul>
-    <li>📱 <strong>Correction d’affichage mobile</strong><br>
-      Ajustements du code pour améliorer la lisibilité et la mise en page sur smartphones.
-    </li>
-  </ul>
-</article>
-
-    <article class="card">
-  <header class="version">
-    <span class="tag">v1.8.0</span><span class="date">24/09/2025</span>
-  </header>
-  <ul>
-    <li>🔙 <strong>Retour à la fiche principale</strong><br>
-      Depuis un SAT, le bouton ramène désormais sur la fiche du poste principal (Id.VC)
-    </li>
-    <li>🔤 <strong>Tri par ordre alphabétique</strong><br>
-      Les listes des appareils s’affichent maintenant dans l’ordre correct.
-    </li>
-    <li>🔗 <strong>Affichage des appareils liés</strong><br>
-      Lors de la consultation d’un SAT, tous les appareils du poste s’affichent (et non plus uniquement celui du SAT). (Id.VC)
-    </li>
-    <li>🖼️ <strong>Remplacement visuel</strong><br>
-      Nouvelle image StreetView sur la carte MAP (Id.VC)
-    </li>
-    <li>🗺️ <strong>Optimisation de la carte</strong><br>
-      Limitation du dézoom pour améliorer la rapidité de chargement. (Id.VC)
-    </li>
-    <li>➕ <strong>Nouveau bouton SAT</strong><br>
-      Ajout d’un bouton permettant d’insérer directement un SAT depuis une fiche. (Id.VC)
-    </li>
-    <li>⌨️ <strong>Navigation au clavier</strong> (Id.VC)
-      <ul>
-        <li>Recherche utilisable entièrement au clavier.</li>
-        <li>Ajout de la classe CSS <code>.best</code> assure le bon surlignage des résultats.</li>
-        <li>La touche Échap ferme la fiche et les suggestions comme attendu.</li>
-      </ul>
-    </li>
-  </ul>
-</article>
-
+    <!-- v1.10.0 (Aujourd'hui) -->
     <article class="card">
       <header class="version">
-        <span class="tag">v1.7.0</span><span class="date">23/09/2025</span>
-      </header>
- <ul>
-  <li>🗂️ Nouvelle page <em>Historique des versions</em> → accès clair et centralisé aux évolutions</li>
-  
-  <li>⚡ Optimisations de <strong>rapidité et fiabilité</strong> lors de l’ajout d’appareils :
-    <ul>
-      <li>Chargement GPS en temps réel plus réactif</li>
-      <li>Validation instantanée des champs pour réduire les erreurs</li>
-      <li>Sauvegarde plus robuste en cas de réseau instable</li>
-      <li>Correction de la mise à jour des coordonnées → valeurs actualisées en continu lors du déplacement du curseur</li>
-    </ul>
-  </li>
-  
-  <li>🛰️ Ajustement du rendu Ortho → positionnement des marqueurs plus précis</li>
-  
-  <li>🗺️ Amélioration Leaflet :
-    <ul>
-      <li>Le zoom ne se réinitialise plus lors du déplacement</li>
-      <li>Respect du niveau de zoom défini par l’utilisateur</li>
-    </ul>
-  </li>
-  
-  <li>🛠️ Correctifs de stabilité :
-    <ul>
-      <li>Réduction des micro-blocages lors du rechargement de la carte</li>
-      <li>Affichage GPS fiabilisé dans le formulaire</li>
-    </ul>
-  </li>
-  
-  <li>📱 Améliorations mobiles :
-    <ul>
-      <li>Défilement et zoom plus fluides (meilleure réactivité tactile)</li>
-      <li>Meilleure lisibilité des popups (tailles & interlignage adaptés)</li>
-    </ul>
-  </li>
-</ul>
-    </article>
-
-    <article class="card">
-      <header class="version">
-        <span class="tag">v1.6.0</span><span class="date">22/09/2025</span>
+        <span class="tag">v1.10.0</span>
+        <span class="date">02/10/2025</span>
       </header>
       <ul>
-        <li>🗺️ Amélioration du fond IGN → meilleure netteté et gestion fine du zoom</li>
-        <li>📝 Nettoyage des données (JSON) → suppression de doublons, normalisation des coordonnées</li>
-        <li>🖊️ Formulaires postes/appareils : ergonomie améliorée et messages d’erreurs plus clairs</li>
-        <li>👁️ Intégration de l’overlay <strong>Street View</strong> dans les fiches postes (page principale)</li>
-        <li>🎨 Effets visuels (transparence + <em>glassmorphism</em>) homogénéisés</li>
-        <li>📱 Optimisation du zoom tactile pour une navigation mobile plus fluide</li>
+        <li>🍔 <strong>Création d’un menu burger “Filtres”</strong><br>
+          Permet de choisir dynamiquement quels éléments afficher <em>(appareils, accès, postes, passages à niveau)</em>. Pensé pour améliorer l’ergonomie surtout sur <strong>mobile</strong>.
+        </li>
+        <li>🌐 <strong>Intégration de la source Open Data SNCF – Passages à niveau</strong><br>
+          Nouveaux points ajoutés sur la carte pour enrichir la vision terrain <em>(désactivé par défaut)</em>.
+        </li>
       </ul>
     </article>
 
-    <article class="card">
-      <header class="version">
-        <span class="tag">v1.5.2</span><span class="date">21/09/2025</span>
-      </header>
-      <ul>
-        <li>🛠️ Correctif CSS sur les popups (alignement texte/icônes et espacements)</li>
-        <li>⚡ Réduction du poids des icônes → chargement initial plus rapide</li>
-        <li>📱 Compatibilité renforcée avec iOS Safari et Android (chrome) </li>
-      </ul>
-    </article>
-
-    <article class="card">
-      <header class="version">
-        <span class="tag">v1.5.1</span><span class="date">21/09/2025</span>
-      </header>
-      <ul>
-        <li>🔎 Réglage du <code>maxClusterRadius</code> → séparation fiable des appareils très proches</li>
-        <li>📱 Largeur min/max imposée pour stabiliser l’affichage sur petits écrans</li>
-        <li>🎨 Popups : marges uniformisées et contrastes renforcés</li>
-        <li>✨ Halo lumineux discret autour des icônes pour une meilleure visibilité sur fonds sombres</li>
-      </ul>
-    </article>
-
-    <article class="card">
-      <header class="version">
-        <span class="tag">v1.5.0</span><span class="date">20/09/2025</span>
-      </header>
-      <ul>
-        <li>👁️ Ajout de l’overlay <strong>Street View</strong> sur la carte (autour des accès)</li>
-        <li>🗂️ Affichage automatique de la <strong>fiche du poste</strong> sous la fiche d’un appareil (contexte immédiat) Id.VC</li>
-        <li>🔧 Stabilisation des événements <code>mouseover/mousemove/mouseout</code> → popups plus fluides</li>
-        <li>🎨 Popups : coins arrondis, ombres adoucies, effet “verre dépoli”</li>
-        <li>⚡ Code simplifié (écouteurs allégés, variables inutilisées retirées)</li>
-        <li>📱 Navigation mobile plus stable (moins de décalages au zoom)</li>
-      </ul>
-    </article>
-
-    <article class="card">
-      <header class="version">
-        <span class="tag">v1.4.3</span><span class="date">19/09/2025</span>
-      </header>
-      <ul>
-        <li>🌍 Ajout d’un lien <strong>“Voir la carte”</strong> (PC uniquement) Id.VC</li>
-        <li>🔒 Sécurisation du bouton <strong>“Proximité”</strong> (iOS & Android) pour éviter les déclenchements involontaires</li>
-        <li>📍 Amélioration de l’affichage des appareils dans les <strong>clusters</strong> (meilleure lisibilité et regroupement) Id.VC</li>
-        <li>🔎 Ajustement des <strong>niveaux de zoom</strong> pour une navigation plus fluide</li>
-        <li>📝 Corrections et nettoyage du code <strong>fetch</strong> (gestion d’erreurs + logs)</li>
-        <li>📱 Optimisation des gestes tactiles (tap/press) dans les listes de résultats</li>
-      </ul>
-    </article>
-
-    <article class="card">
-      <header class="version">
-        <span class="tag">v1.4.2</span><span class="date">18/09/2025</span>
-      </header>
-      <ul>
-        <li>🖼️ Mise en place des <strong>icônes appareils</strong> (visuel dédié)</li>
-        <li>🎨 Personnalisation : taille/couleurs + <strong>halo</strong> pour une meilleure visibilité</li>
-        <li>🗂️ Organisation des <strong>calques par type d’objet</strong> (lecture de carte plus claire)</li>
-        <li>⚡ Optimisation du rendu <strong>Leaflet</strong> (meilleure tenue avec plusieurs appareils)</li>
-        <li>📝 Ajustements de code liés à l’intégration des nouveaux marqueurs</li>
-        <li>📱 Lisibilité améliorée des icônes sur écrans à forte densité (retina)</li>
-      </ul>
-    </article>
-
-    <article class="card">
-      <header class="version">
-        <span class="tag">v1.4.1</span><span class="date">16/09/2025</span>
-      </header>
-      <ul>
-        <li>🛠️ Correction d’un niveau de zoom initial incorrect sur la carte IGN</li>
-        <li>🎨 Boutons : padding accru + état hover plus visible</li>
-        <li>📱 Ajustement des espacements sur écrans étroits (meilleure ergonomie tactile)</li>
-      </ul>
-    </article>
-
-    <article class="card">
-      <header class="version">
-        <span class="tag">v1.4.0</span><span class="date">mi-septembre 2025</span>
-      </header>
-      <ul>
-        <li>🌍 Création d’une <strong>carte personnalisée</strong> avec base IGN (nouvelle base principale)</li>
-        <li>➡️ Mise en place de la page <strong>Itinéraires</strong> (trajet entre deux postes)</li>
-        <li>🔗 Navigation interne optimisée → accès direct entre fiches (<strong>postes ↔ appareils</strong>)</li>
-        <li>🛠️ Ajustements de stabilité → temps de chargement initial réduit</li>
-        <li>📱 Optimisation tactile (gestes de zoom/pan plus stables)</li>
-      </ul>
-    </article>
-
+    <!-- ===== Historique regroupé ===== -->
     <div class="section-title">📅 Historique regroupé</div>
 
-    <details>
-      <summary>Début septembre 2025</summary>
+    <!-- SEPTEMBRE 2025 (tout regroupé) -->
+    <details open>
+      <summary>Septembre 2025</summary>
       <div class="content">
-        <ul>
-          <li>➕ Création des formulaires d’<strong>ajout de postes</strong> et d’<strong>ajout d’appareils</strong></li>
-          <li>📍 Affichage automatique des <strong>coordonnées GPS</strong> à la saisie</li>
-          <li>🛠️ Validation renforcée (messages d’erreurs plus explicites)</li>
-          <li>🎨 Harmonisation des polices et couleurs dans les formulaires</li>
-          <li>🌗 Ajout du <strong>Dark Mode automatique</strong> → adaptation claire/sombre selon le système</li>
-          <li>📱 Corrections d’affichage mobile (touch targets plus larges, champs mieux espacés)</li>
-          <li>⚡ Réduction du temps de chargement initial sur mobile</li>
+        <!-- Petit récap 'début septembre' -->
+        <ul class="card" style="list-style: none; padding-left: 0;">
+          <li style="margin:0;">
+            <ul>
+              <li>➕ Création des formulaires d’<strong>ajout de postes</strong> et d’<strong>ajout d’appareils</strong></li>
+              <li>📍 Affichage automatique des <strong>coordonnées GPS</strong> à la saisie</li>
+              <li>🛠️ Validation renforcée (messages d’erreurs plus explicites)</li>
+              <li>🎨 Harmonisation des polices et couleurs dans les formulaires</li>
+              <li>🌗 Ajout du <strong>Dark Mode automatique</strong> → adaptation claire/sombre selon le système</li>
+              <li>📱 Corrections d’affichage mobile (touch targets plus larges, champs mieux espacés)</li>
+              <li>⚡ Réduction du temps de chargement initial sur mobile</li>
+            </ul>
+          </li>
         </ul>
+
+        <!-- Versions détaillées de septembre (v1.9.1 → v1.4.0) -->
+        <article class="card">
+          <header class="version">
+            <span class="tag">v1.9.1</span>
+            <span class="date">28/09/2025</span>
+          </header>
+          <ul>
+            <li>ℹ️ <strong>Amélioration du mode “Informations”</strong><br>
+              Le <em>menu caché</em> de la carte a été enrichi et optimisé (demander l'accès à Arnaud) – Uniquement dispo sur ordinateur.
+            </li>
+            <li>🌐 <strong>Nouveau lien IMAJNET</strong><br>
+              Ajout d’un accès supplémentaire au service externe, en attendant l’intégration complète du SDK.
+            </li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <header class="version">
+            <span class="tag">v1.9</span>
+            <span class="date">27/09/2025</span>
+          </header>
+          <ul>
+            <li>🆕 <strong>Ajout des boutons Imajnet</strong><br>
+              Disponibles désormais sur les fiches <strong>postes</strong> et <strong>appareils</strong> pour accéder rapidement au service externe Imajnet.
+            </li>
+            <li>📍 <strong>Comportement actuel :</strong>
+              <ul>
+                <li>Les coordonnées transmises correspondent à l’objet sélectionné (poste ou appareil).</li>
+                <li>L’image affichée peut être légèrement décalée → il est parfois nécessaire d’avancer/reculer de quelques mètres dans Imajnet.</li>
+              </ul>
+            </li>
+            <li>🔜 <strong>Améliorations prévues :</strong>
+              <ul>
+                <li>Ajustement automatique pour viser l’image exacte (Abancourt, Criquiers, Strazeele, Gravelines… faits).</li>
+                <li>Intégration de l’API/SDK Imajnet dans Nono Maps.</li>
+              </ul>
+            </li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <header class="version">
+            <span class="tag">v1.8.4</span>
+            <span class="date">27/09/2025</span>
+          </header>
+          <ul>
+            <li>Amélioration de <strong>Retour à la fiche principale</strong> :</li>
+            <ul>
+              <li>Retourne vers le <strong>SAT</strong> si l’appareil est rattaché à un SAT.</li>
+              <li>Retourne vers l’<strong>accès</strong> si l’appareil est rattaché à un accès, y compris sans poste principal (ex. <em>Avion – accès 208-16</em> et sectionneurs).</li>
+              <li>Sinon, retour vers le <strong>poste principal</strong> (comportement inchangé).</li>
+            </ul>
+          </ul>
+        </article>
+
+        <article class="card">
+          <header class="version">
+            <span class="tag">v1.8.3</span>
+            <span class="date">26/09/2025</span>
+          </header>
+          <ul>
+            <li>📺 Mise en overlay des <strong>vidéos explicatives</strong> (ex. Valenciennes SS).</li>
+            <li>📍 Ajouts de <strong>9 points GPS</strong> et ajustement de certaines coordonnées JSON.</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <header class="version">
+            <span class="tag">v1.8.2</span><span class="date">24/09/2025</span>
+          </header>
+          <ul>
+            <li>🛠️ Correctifs sur le formulaire <strong>Ajout de poste / SAT</strong> – affichage corrigé.</li>
+            <li>📍 Mise à jour en <strong>temps réel</strong> des coordonnées lors du déplacement du curseur.</li>
+            <li>🔎 Suppression du <strong>zoom automatique</strong> lors du déplacement du curseur.</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <header class="version">
+            <span class="tag">v1.8.1</span><span class="date">24/09/2025</span>
+          </header>
+          <ul>
+            <li>📱 <strong>Correction d’affichage mobile</strong> – lisibilité & mise en page.</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <header class="version">
+            <span class="tag">v1.8.0</span><span class="date">24/09/2025</span>
+          </header>
+          <ul>
+            <li>🔙 <strong>Retour à la fiche principale</strong> depuis un SAT → fiche du poste principal (Id.VC)</li>
+            <li>🔤 <strong>Tri alphabétique</strong> des appareils</li>
+            <li>🔗 <strong>Appareils liés</strong> visibles sur les fiches SAT (pas seulement celui du SAT)</li>
+            <li>🖼️ <strong>Remplacement visuel</strong> – nouvelle image StreetView (Id.VC)</li>
+            <li>🗺️ Limitation du dézoom (perf)</li>
+            <li>➕ <strong>Bouton SAT</strong> pour insérer directement un SAT (Id.VC)</li>
+            <li>⌨️ <strong>Navigation au clavier</strong> (Id.VC)</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <header class="version">
+            <span class="tag">v1.7.0</span><span class="date">23/09/2025</span>
+          </header>
+          <ul>
+            <li>🗂️ Nouvelle page <em>Historique des versions</em></li>
+            <li>⚡ Optimisations rapidité/fiabilité à l’ajout d’appareils (GPS temps réel, validations, sauvegardes, etc.)</li>
+            <li>🛰️ Ajustement Ortho → positionnement plus précis</li>
+            <li>🗺️ Amélioration Leaflet (zoom conservé)</li>
+            <li>🛠️ Correctifs de stabilité (moins de micro-blocages)</li>
+            <li>📱 Améliorations mobiles (défilement/zoom, popups)</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <header class="version">
+            <span class="tag">v1.6.0</span><span class="date">22/09/2025</span>
+          </header>
+          <ul>
+            <li>🗺️ Fond IGN amélioré (netteté/zoom)</li>
+            <li>📝 Nettoyage JSON (doublons, normalisation coordonnées)</li>
+            <li>🖊️ Formulaires : ergonomie + messages d’erreurs</li>
+            <li>👁️ Overlay <strong>Street View</strong> dans les fiches postes</li>
+            <li>🎨 Effets visuels homogénéisés</li>
+            <li>📱 Zoom tactile optimisé</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <header class="version">
+            <span class="tag">v1.5.2</span><span class="date">21/09/2025</span>
+          </header>
+          <ul>
+            <li>🛠️ Correctif CSS popups (alignements/espacements)</li>
+            <li>⚡ Réduction poids icônes</li>
+            <li>📱 Compatibilité iOS Safari & Android (Chrome)</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <header class="version">
+            <span class="tag">v1.5.1</span><span class="date">21/09/2025</span>
+          </header>
+          <ul>
+            <li>🔎 Réglage <code>maxClusterRadius</code> (séparation appareils proches)</li>
+            <li>📱 Largeur min/max pour petits écrans</li>
+            <li>🎨 Popups : marges uniformisées + contraste</li>
+            <li>✨ Halo lumineux discret autour des icônes</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <header class="version">
+            <span class="tag">v1.5.0</span><span class="date">20/09/2025</span>
+          </header>
+          <ul>
+            <li>👁️ Overlay <strong>Street View</strong> sur la carte (autour des accès)</li>
+            <li>🗂️ Fiche du poste affichée sous la fiche d’un appareil (contexte) (Id.VC)</li>
+            <li>🔧 Stabilisation des événements souris</li>
+            <li>🎨 Popups “verre dépoli”</li>
+            <li>⚡ Code simplifié</li>
+            <li>📱 Navigation mobile plus stable</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <header class="version">
+            <span class="tag">v1.4.3</span><span class="date">19/09/2025</span>
+          </header>
+          <ul>
+            <li>🌍 Lien <strong>“Voir la carte”</strong> (PC uniquement) (Id.VC)</li>
+            <li>🔒 Sécurisation du bouton <strong>Proximité</strong> (iOS & Android)</li>
+            <li>📍 Amélioration de l’affichage des appareils dans les <strong>clusters</strong> (Id.VC)</li>
+            <li>🔎 Ajustement des <strong>niveaux de zoom</strong></li>
+            <li>📝 Corrections/nets de code <strong>fetch</strong></li>
+            <li>📱 Optimisation gestes tactiles (listes de résultats)</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <header class="version">
+            <span class="tag">v1.4.2</span><span class="date">18/09/2025</span>
+          </header>
+          <ul>
+            <li>🖼️ Icônes appareils dédiées</li>
+            <li>🎨 Personnalisation + <strong>halo</strong></li>
+            <li>🗂️ Calques par type d’objet</li>
+            <li>⚡ Optimisation rendu <strong>Leaflet</strong></li>
+            <li>📝 Ajustements d’intégration</li>
+            <li>📱 Lisibilité améliorée (retina)</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <header class="version">
+            <span class="tag">v1.4.1</span><span class="date">16/09/2025</span>
+          </header>
+          <ul>
+            <li>🛠️ Correction d’un zoom initial incorrect (IGN)</li>
+            <li>🎨 Boutons : padding + hover</li>
+            <li>📱 Espacements sur écrans étroits</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <header class="version">
+            <span class="tag">v1.4.0</span><span class="date">mi-septembre 2025</span>
+          </header>
+          <ul>
+            <li>🌍 Carte personnalisée avec base IGN (nouvelle base principale)</li>
+            <li>➡️ Page <strong>Itinéraires</strong> (trajet entre deux postes)</li>
+            <li>🔗 Navigation interne optimisée (<strong>postes ↔ appareils</strong>)</li>
+            <li>🛠️ Ajustements de stabilité (chargement initial réduit)</li>
+            <li>📱 Optimisation tactile</li>
+          </ul>
+        </article>
       </div>
     </details>
 
+    <!-- AOÛT 2025 -->
     <details>
       <summary>Août 2025</summary>
       <div class="content">
         <ul>
-          <li>🔎 Fusion des <strong>champs de recherche</strong> (postes + appareils) → résultats centralisés</li>
-          <li>📄 Création des <strong>fiches poste</strong> & <strong>fiches appareil</strong> (description, portail, contact)</li>
-          <li>🔗 Liens internes entre la page principale et les fiches (navigation simplifiée)</li>
-          <li>📝 Nettoyage des JSON (corrections de syntaxe, suppression des entrées vides)</li>
-          <li>🎨 Ajustements visuels (icônes homogénéisées, ombres & arrondis légers)</li>
-          <li>📍 Amélioration de la précision des coordonnées affichées</li>
-          <li>📱 Optimisation mobile Android et IOS (saisie plus confortable sur mobile)</li>
-          <li>⚡ Réduction du poids des fichiers pour accélérer le chargement</li>
+          <li>🔎 Fusion des <strong>champs de recherche</strong> (postes + appareils)</li>
+          <li>📄 Création des <strong>fiches poste</strong> & <strong>fiches appareil</strong></li>
+          <li>🔗 Liens internes entre la page principale et les fiches</li>
+          <li>📝 Nettoyage des JSON (syntaxe, entrées vides)</li>
+          <li>🎨 Ajustements visuels (icônes, ombres & arrondis)</li>
+          <li>📍 Amélioration de la précision des coordonnées</li>
+          <li>📱 Optimisation mobile Android et iOS</li>
+          <li>⚡ Réduction du poids des fichiers</li>
         </ul>
       </div>
     </details>
 
+    <!-- JUILLET 2025 -->
     <details>
       <summary>Juillet 2025</summary>
       <div class="content">
         <ul>
-          <li>🚀 Création du projet → page d’accueil avec moteur de recherche (postes & appareils)</li>
+          <li>🚀 Création du projet → page d’accueil avec moteur de recherche</li>
           <li>🗂️ Import des premiers jeux de données (postes, accès, appareils)</li>
           <li>🎨 Mise en place de la structure HTML/CSS/JS (socle)</li>
           <li>💡 Premier design de popup simple et lisible</li>
-          <li>📱 Compatibilité initiale Android/iOS vérifiée</li>
+          <li>📱 Compatibilité initiale Android/iOS</li>
         </ul>
       </div>
     </details>
