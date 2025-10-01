@@ -98,12 +98,13 @@
 
 /* --- ACTIF --- */
 .fab-options button.active {
-  background: transparent;        /* pas de rond blanc */
+  background: rgba(0,0,0,0.75);   /* rond noir translucide conservé */
 }
+
 .fab-options button.active img {
   opacity: 1;
-  filter: drop-shadow(0 0 6px rgba(255,255,255,1))
-          drop-shadow(0 0 14px rgba(255,255,255,0.9)); /* halo plus fort */
+  filter: drop-shadow(0 0 4px rgba(255,255,255,1))
+          drop-shadow(0 0 8px rgba(255,255,255,0.9));
 }
 
 /* Effet hover */
