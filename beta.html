@@ -92,23 +92,20 @@
   opacity: 1;
 }
 
-/* État inactif → fond noir translucide + icône grisée */
-.fab-options button:not(.active) {
-  background: rgba(0,0,0,0.7);
-}
-.fab-options button:not(.active) img {
-  opacity: 0.5;
-}
+
 
 /* Effet hover */
 .fab-options button:hover {
   transform: scale(1.1);
 }
 
-/* Désactivé → même image mais grisé */
+/* État inactif → fond noir translucide + icône grisée */
+.fab-options button:not(.active) {
+  background: rgba(0,0,0,0.7);
+}
 .fab-options button:not(.active) img {
   opacity: 0.5;
-  filter: drop-shadow(0 0 2px rgba(255,255,255,0.4));
+  filter: grayscale(100%) drop-shadow(0 0 2px rgba(255,255,255,0.4));
 }
   
 .fab-options button:hover {
