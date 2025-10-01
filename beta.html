@@ -4,15 +4,20 @@
   <meta charset="UTF-8" />
   <title>Nono Maps</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
- <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
-  <style>
 
-    .fab-container {
+<style>
+
+/* =========================================================
+   MENU FLOTTANT (FAB + options)
+   ========================================================= */
+.fab-container {
   position: fixed;
   bottom: 20px;
   right: 20px;
@@ -44,7 +49,7 @@
   right: 0;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 18px; /* espacement entre les icônes */
   opacity: 0;
   transform: translateY(20px);
   pointer-events: none;
@@ -57,13 +62,18 @@
 }
 
 .fab-options button {
-  margin: 0;       /* supprime marges parasites */
-  padding: 0;      /* supprime padding parasite */
-  width: 46px;     /* même largeur que le bouton burger */
-  height: 46px;    /* pour que tout soit centré pareil */
+  margin: 0;
+  padding: 0;
+  width: 46px;
+  height: 46px;
+  background: none;
+  border: none;
+  box-shadow: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-
-/* Icône visible avec halo fort */
 .fab-options button img {
   width: 44px;
   height: 44px;
@@ -72,19 +82,16 @@
   filter: drop-shadow(0 0 4px rgba(255,255,255,0.9))
           drop-shadow(0 0 10px rgba(255,255,255,0.6));
 }
-
-/* Icône désactivée → même image mais plus transparente + halo léger */
 .fab-options button:not(.active) img {
-  opacity: 0.5;
+  opacity: 0.5; /* icône grisée */
 }
-
-
 .fab-options button:hover {
   transform: scale(1.1);
 }
-    
 
-/* Toast */
+/* =========================================================
+   TOAST (notifications flottantes)
+   ========================================================= */
 .toast {
   position: fixed;
   bottom: 140px;
@@ -104,6 +111,9 @@
   opacity: 1;
 }
 
+/* =========================================================
+   POPUPS LEAFLET
+   ========================================================= */
 .leaflet-popup-content-wrapper {
   background: linear-gradient(
     135deg,
@@ -117,7 +127,6 @@
   box-shadow: inset 0 1px 4px rgba(255,255,255,0.4),
               0 8px 24px rgba(0,0,0,0.25);
 }
-
 .leaflet-popup-tip {
   background: linear-gradient(
     135deg,
@@ -128,9 +137,6 @@
   -webkit-backdrop-filter: blur(5px);
   border: 1px solid rgba(255, 255, 255, 0.45);
 }
-    
-    
-
 .leaflet-popup-content {
   max-width: 240px !important; 
   min-width: 240px; 
@@ -141,7 +147,6 @@
   overflow: hidden;    
   text-align: left;      
 }
-
 .leaflet-popup-content div,
 .leaflet-popup-content p {
   display: flex;
@@ -150,7 +155,6 @@
   margin: 4px 0;
   flex-wrap: wrap;      
 }
-
 .leaflet-popup-content img,
 .leaflet-popup-content svg,
 .leaflet-popup-content i {
@@ -158,7 +162,6 @@
   height: 18px;
   flex-shrink: 0;
 }
-
 .leaflet-popup-content a {
   display: flex;
   align-items: center;
@@ -166,8 +169,7 @@
   gap: 6px;
   text-decoration: none;
 }
-
-    .leaflet-popup-content a.cluster-link {
+.leaflet-popup-content a.cluster-link {
   display: block;
   padding: 8px 12px;
   border-radius: 8px;
@@ -179,12 +181,14 @@
   margin: 2px 0;
   transition: background 0.2s;
 }
-
 .leaflet-popup-content a.cluster-link:hover,
 .leaflet-popup-content a.cluster-link:active {
-  background: #e5e7eb; /* gris clair au survol */
+  background: #e5e7eb;
 }
 
+/* =========================================================
+   STREETVIEW OVERLAY
+   ========================================================= */
 #streetview-overlay {
   position: fixed;
   top: 0; left: 0;
@@ -194,13 +198,10 @@
   -webkit-backdrop-filter: blur(6px);
   display: none;
   z-index: 9999;
-
   display: flex;             
   align-items: center;
   justify-content: center;
 }
-
-
 #streetview-box {
   width: 90%;
   max-width: 900px;
@@ -211,13 +212,11 @@
   overflow: hidden;
   position: relative;
 }
-
 #streetview-box iframe {
   width: 100%;
   height: 100%;
   border: none;
 }
-
 #streetview-close {
   position: absolute;
   top: 12px; right: 12px;
@@ -231,28 +230,28 @@
   z-index: 2;
 }
 
+/* =========================================================
+   ICONES / CLUSTERS / HALO
+   ========================================================= */
 .btn-return {
   position: relative;
   animation: pulseHalo 1.8s infinite;
 }
-
 @keyframes pulseHalo {
   0%   { box-shadow: 0 0 0px rgba(255,255,255,0.6); }
   50%  { box-shadow: 0 0 15px rgba(255,255,255,0.9), 0 0 30px rgba(255,255,255,0.4); }
   100% { box-shadow: 0 0 0px rgba(255,255,255,0.6); }
 }
-  
-    .icon-halo {
+.icon-halo {
   width: 48px;  
   height: 48px;
   filter: drop-shadow(0 0 2px white) drop-shadow(0 0 4px white);
 }
-    .icon-halo-appareil {
+.icon-halo-appareil {
   width: 24px;  
   height: 24px;
   filter: drop-shadow(0 0 4px white) drop-shadow(0 0 8px white);
 }
-    
 .icon-wrapper {
   display: inline-block;
   border-radius: 50%;         
@@ -260,18 +259,17 @@
   background: white;       
   box-shadow: 0 0 6px rgba(0,0,0,0.4); 
 }
-
 .icon-wrapper img {
   width: 44px;
   height: 44px;
   display: block;
 }
 
+/* CLUSTERS */
 .marker-cluster {
   background: transparent !important; 
   border-radius: 50%;
 }
-
 .marker-cluster div {
   width: 42px;
   height: 42px;
@@ -279,7 +277,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont,"Segoe UI",Roboto,Inter,sans-serif;
   font-weight: 600;
   font-size: 14px;
   color: #ffffff;
@@ -291,57 +289,21 @@
   box-shadow: 0 6px 18px rgba(0,0,0,0.2);
   transition: transform 0.25s ease, background 0.3s ease;
 }
-
 .marker-cluster:hover div {
   transform: scale(1.12);
   background: rgba(255, 255, 255, 0.25);
 }
 
-    .control-group {
+/* =========================================================
+   CONTRÔLES LEAFLET (loupe, recentrer, etc.)
+   ========================================================= */
+.control-group {
   margin-bottom: 10px; 
 }
-    .control-group + .control-group {
+.control-group + .control-group {
   margin-top: 45px; 
 }
-    
-#version-label {
-  position: fixed;
-  bottom: 6px;
-  left: 8px;   
-  font-size: 11px;
-  color: rgba(255,255,255,0.45);
-  font-family: system-ui, sans-serif;
-  pointer-events: none;
-  user-select: none;
-}
-
-.btn-toggle {
-  background: none !important;   /* pas de rond noir/blanc */
-  border: none !important;
-  border-radius: 0 !important;   /* pas de cercle */
-  width: auto; 
-  height: auto; 
-  margin: 0;
-  padding: 0;
-  box-shadow: none !important;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-}
-.btn-toggle.active {
-  background: none !important; /* plus de rond blanc */
-  color: inherit;
-}
-    
-    :root { --accent:#4f46e5; --bg:#0b0c0e; --ink:#f9fafb; --glass:rgba(17,19,23,.65); --border:rgba(255,255,255,.12); }
-    html, body { height:100%; margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,sans-serif; background:var(--bg); color:var(--ink); }
-    #map { width:100%; height:100%; }
-
-    .icon-circle { width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:15px; font-weight:bold; }
-    .poste { background:#e11d48; } .appareil { background:#facc15; } .acces { background:#3b82f6; }
-   .leaflet-control-custom{
+.leaflet-control-custom {
   background: rgba(0,0,0,0.7);
   border: 1px solid rgba(255,255,255,.12);
   border-radius: 50%;
@@ -356,7 +318,81 @@
   line-height: 1;                   
   -webkit-tap-highlight-color: transparent;
 }
-  </style>
+
+/* =========================================================
+   BOUTONS GÉNÉRIQUES
+   ========================================================= */
+.btn-toggle {
+  background: none !important;
+  border: none !important;
+  border-radius: 0 !important;
+  width: auto; 
+  height: auto; 
+  margin: 0;
+  padding: 0;
+  box-shadow: none !important;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-toggle.active {
+  background: none !important;
+  color: inherit;
+}
+
+/* =========================================================
+   VARIABLES GLOBALES + MAP
+   ========================================================= */
+:root {
+  --accent:#4f46e5;
+  --bg:#0b0c0e;
+  --ink:#f9fafb;
+  --glass:rgba(17,19,23,.65);
+  --border:rgba(255,255,255,.12);
+}
+html, body {
+  height:100%;
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+}
+#map {
+  width:100%;
+  height:100%;
+}
+
+.icon-circle {
+  width:26px;
+  height:26px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:white;
+  font-size:15px;
+  font-weight:bold;
+}
+.poste { background:#e11d48; }
+.appareil { background:#facc15; }
+.acces { background:#3b82f6; }
+
+#version-label {
+  position: fixed;
+  bottom: 6px;
+  left: 8px;   
+  font-size: 11px;
+  color: rgba(255,255,255,0.45);
+  font-family: system-ui, sans-serif;
+  pointer-events: none;
+  user-select: none;
+}
+
+</style>
+
+
+  
 </head>
 <body>
 
