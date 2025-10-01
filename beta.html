@@ -18,10 +18,6 @@
    MENU FLOTTANT (FAB + options)
    ========================================================= */
 
-  .fab-options button {
-  margin: 0 auto; /* centre horizontalement dans .fab-options */
-}
-  
 .fab-container {
   position: fixed;
   bottom: 20px;
@@ -30,8 +26,8 @@
 }
 
 .fab {
-  width: 60px;
-  height: 60px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   background: rgba(0,0,0,0.75);
   color: white;
@@ -79,42 +75,37 @@
   padding: 0;
   width: 50px;
   height: 50px;
-  border-radius: 50%;
+  border: none;
+  background: transparent; /* ❌ plus de rond noir */
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.25);
   transition: transform .2s, opacity .2s;
+  box-shadow: none;
 }
 
 /* Icônes */
 .fab-options button img {
-  width: 38px;  /* un peu plus grandes */
+  width: 38px;
   height: 38px;
   transition: opacity .2s, filter .2s;
 }
 
 /* --- INACTIF --- */
-.fab-options button:not(.active) {
-  background: rgba(0,0,0,0.75);   /* rond noir */
-}
 .fab-options button:not(.active) img {
-  opacity: 0.5;                   /* icône grisée */
-  filter: none;
+  opacity: 0.5;   /* grisé */
+  filter: none;   /* pas de halo */
 }
 
 /* --- ACTIF --- */
-.fab-options button.active {
-  background: transparent;        /* pas de rond noir */
-}
 .fab-options button.active img {
   opacity: 1;
-  filter: drop-shadow(0 0 5px rgba(255,255,255,1))
-          drop-shadow(0 0 12px rgba(255,255,255,0.95));
+  filter: drop-shadow(0 0 6px rgba(255,255,255,1))
+          drop-shadow(0 0 12px rgba(255,255,255,0.9));
 }
 
-/* Effet hover */
+/* Hover */
 .fab-options button:hover {
   transform: scale(1.1);
 }
