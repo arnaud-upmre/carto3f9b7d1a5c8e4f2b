@@ -17,13 +17,19 @@
 /* ============================
    FAB container + bouton burger
    ============================ */
+/* Container global */
 .fab-container {
   position: fixed;
   bottom: 20px;
   right: 20px;
   z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;  /* centre horizontalement */
+  gap: 20px;            /* espace entre le burger et la colonne d’icônes */
 }
 
+/* Bouton burger */
 .fab {
   width: 60px;
   height: 60px;
@@ -38,17 +44,9 @@
   justify-content: center;
   transition: transform 0.3s;
 }
-.fab.open {
-  transform: rotate(90deg);
-}
 
-/* ============================
-   Menu déroulant
-   ============================ */
+/* Menu icônes */
 .fab-options {
-  position: absolute;
-  bottom: 60px;
-  right: 0;
   width: 70px;
   background: rgba(0,0,0,0.7);
   border-radius: 40px;
