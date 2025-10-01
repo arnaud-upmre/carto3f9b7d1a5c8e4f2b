@@ -68,43 +68,42 @@
   max-height: 400px;
   pointer-events: auto;
 }
-/* Boutons du menu flottant */
+  
+  /* Boutons du menu flottant (sans carré noir) */
 .fab-options button {
   margin: 0;
   padding: 0;
-  width: 50px;
-  height: 50px;
   border: none;
-  border-radius: 50%;
-  background: transparent !important;  /* ⬅️ aucun fond, NI blanc NI noir */
+  background: none !important;     /* ⬅️ aucun fond */
+  box-shadow: none !important;     /* ⬅️ aucune ombre */
+  width: auto;                     /* ⬅️ taille auto selon l’icône */
+  height: auto;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: none !important;         /* ⬅️ pas d’ombre de cercle */
   transition: transform .2s, opacity .2s;
 }
 
 /* Icônes */
 .fab-options button img {
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
   transition: opacity .2s, filter .2s;
 }
 
-/* --- INACTIF --- */
+/* Inactif */
 .fab-options button:not(.active) img {
-  opacity: 0.5;   /* grisé */
+  opacity: 0.5;
   filter: none;
 }
 
-/* --- ACTIF --- */
+/* Actif avec halo */
 .fab-options button.active img {
   opacity: 1;
   filter: drop-shadow(0 0 6px rgba(255,255,255,1))
           drop-shadow(0 0 14px rgba(255,255,255,0.9));
 }
-
 /* Effet hover */
 .fab-options button:hover {
   transform: scale(1.1);
