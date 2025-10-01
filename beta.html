@@ -369,12 +369,12 @@
   <!-- Bouton flottant (FAB) -->
 <div class="fab-container">
   <button class="fab" id="fabBtn">☰</button>
-  <div class="fab-options" id="fabOptions">
-    <button onclick="toggleLayer(accesLayer, this)">🚙</button>
-    <button onclick="toggleLayer(postesLayer, this)">📍</button>
-    <button onclick="toggleLayer(appareilsLayer, this)">⚡</button>
-    <button onclick="toggleLayer(pnLayer, this)">🚧</button>
-  </div>
+<div class="fab-options" id="fabOptions">
+  <button class="btn-toggle active" onclick="toggleLayer(accesLayer, this, 'Accès routiers')">🚙</button>
+  <button class="btn-toggle active" onclick="toggleLayer(postesLayer, this, 'Postes')">📍</button>
+  <button class="btn-toggle active" onclick="toggleLayer(appareilsLayer, this, 'Appareils')">⚡</button>
+  <button class="btn-toggle" onclick="toggleLayer(pnLayer, this, 'Passages à niveau')">🚧</button>
+</div>
 </div>
 
 <!-- Encadré notification -->
@@ -1431,7 +1431,6 @@ ${coordsText}</pre>
   }, 50); // petit délai pour être sûr que le DOM est prêt
 });
 
-    // --- FAB Burger ---
 const fabBtn = document.getElementById("fabBtn");
 const fabOptions = document.getElementById("fabOptions");
 const toast = document.getElementById("toast");
@@ -1441,15 +1440,16 @@ fabBtn.addEventListener("click", () => {
   fabOptions.classList.toggle("show");
 });
 
-function toggleLayer(layer, btn) {
+// toggle avec message spécifique
+function toggleLayer(layer, btn, label) {
   if (map.hasLayer(layer)) {
     map.removeLayer(layer);
     btn.classList.remove("active");
-    showToast("❌ Couche masquée");
+    showToast(`❌ ${label} masqués`);
   } else {
     map.addLayer(layer);
     btn.classList.add("active");
-    showToast("✅ Couche affichée");
+    showToast(`✅ ${label} affichés`);
   }
 }
 
