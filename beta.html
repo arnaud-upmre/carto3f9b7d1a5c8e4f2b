@@ -73,36 +73,42 @@
   justify-content: center;
   cursor: pointer;
   box-shadow: 0 4px 8px rgba(0,0,0,0.25);
-  transition: background 0.2s, opacity 0.2s, transform 0.2s;
+  transition: transform .2s, opacity .2s;
 }
 
+/* Icônes par défaut */
 .fab-options button img {
-  width: 40px;   /* au lieu de 28 */
-  height: 40px;  /* au lieu de 28 */
-  max-width: 90%;   /* évite que ça dépasse */
-  max-height: 90%;
-  transition: opacity 0.2s;
-  filter: drop-shadow(0 0 3px rgba(255,255,255,0.8));
+  width: 32px;
+  height: 32px;
+  transition: opacity .2s, filter .2s;
 }
 
+/* --- INACTIF --- */
+.fab-options button:not(.active) {
+  background: rgba(0,0,0,0.75);   /* rond noir */
+}
+.fab-options button:not(.active) img {
+  opacity: 0.5;                   /* icône grisée */
+  filter: none;                   /* surtout pas de halo */
+}
+
+/* --- ACTIF --- */
+.fab-options button.active {
+  background: transparent;        /* pas de rond blanc */
+}
 .fab-options button.active img {
   opacity: 1;
+  filter: drop-shadow(0 0 4px rgba(255,255,255,0.9))
+          drop-shadow(0 0 8px rgba(255,255,255,0.7));
   animation: haloPulse 1.6s infinite;
 }
 
-.fab-options button:not(.active) img {
-  opacity: 0.5;
-  filter: grayscale(100%) drop-shadow(0 0 2px rgba(255,255,255,0.4));
-}
-
-/* Animation halo blanc autour quand actif */
+/* Animation halo autour des icônes actives */
 @keyframes haloPulse {
-  0%   { filter: drop-shadow(0 0 2px rgba(255,255,255,0.4)) drop-shadow(0 0 4px rgba(255,255,255,0.6)); }
-  50%  { filter: drop-shadow(0 0 6px rgba(255,255,255,0.9)) drop-shadow(0 0 12px rgba(255,255,255,0.6)); }
-  100% { filter: drop-shadow(0 0 2px rgba(255,255,255,0.4)) drop-shadow(0 0 4px rgba(255,255,255,0.6)); }
+  0%   { filter: drop-shadow(0 0 2px rgba(255,255,255,0.5)) drop-shadow(0 0 4px rgba(255,255,255,0.4)); }
+  50%  { filter: drop-shadow(0 0 6px rgba(255,255,255,1)) drop-shadow(0 0 12px rgba(255,255,255,0.8)); }
+  100% { filter: drop-shadow(0 0 2px rgba(255,255,255,0.5)) drop-shadow(0 0 4px rgba(255,255,255,0.4)); }
 }
-
-
 
 /* Effet hover */
 .fab-options button:hover {
