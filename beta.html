@@ -14,10 +14,9 @@
 
 <style>
 
-/* =========================================================
-   MENU FLOTTANT (FAB + options)
-   ========================================================= */
-
+/* ============================
+   FAB container + bouton burger
+   ============================ */
 .fab-container {
   position: fixed;
   bottom: 20px;
@@ -34,7 +33,6 @@
   font-size: 28px;
   border: none;
   cursor: pointer;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.25);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -44,6 +42,9 @@
   transform: rotate(90deg);
 }
 
+/* ============================
+   Menu déroulant
+   ============================ */
 .fab-options {
   position: absolute;
   bottom: 70px;
@@ -61,28 +62,25 @@
   overflow: hidden;
   pointer-events: none;
   transition: all 0.35s ease;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.4);
 }
 .fab-options.show {
   opacity: 1;
   max-height: 400px;
   pointer-events: auto;
 }
-  
-  /* Boutons du menu flottant (sans carré noir) */
+
+/* ============================
+   Boutons du menu
+   ============================ */
 .fab-options button {
-  margin: 0;
-  padding: 0;
   border: none;
-  background: none !important;     /* ⬅️ aucun fond */
-  box-shadow: none !important;     /* ⬅️ aucune ombre */
-  width: auto;                     /* ⬅️ taille auto selon l’icône */
-  height: auto;
+  background: none;   /* pas de carré, pas de rond */
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  transition: transform .2s, opacity .2s;
 }
 
 /* Icônes */
@@ -98,15 +96,11 @@
   filter: none;
 }
 
-/* Actif avec halo */
+/* Actif */
 .fab-options button.active img {
   opacity: 1;
   filter: drop-shadow(0 0 6px rgba(255,255,255,1))
-          drop-shadow(0 0 14px rgba(255,255,255,0.9));
-}
-/* Effet hover */
-.fab-options button:hover {
-  transform: scale(1.1);
+          drop-shadow(0 0 12px rgba(255,255,255,0.9));
 }
   
 /* =========================================================
