@@ -801,12 +801,10 @@ function formatContact(val) {
   return `<p><strong id="editable-contact">👤 Contact :</strong> ${texteSansNum} ${boutons}</p>`;
 }
 
-    // Génère un lien IMAJNET avec un léger décalage automatique
 function imajnetLink(lat, lon, zoom = 18, offset = 0) {
-  // offset = recul en mètres (valeur négative = reculer, positive = avancer)
-  const R = 6378137; // rayon de la Terre en mètres
+  const R = 6378137;
   const newLat = lat + (offset / R) * (180 / Math.PI);
-  const newLon = lon; // on ne décale pas la longitude par défaut
+  const newLon = lon;
   return `https://gecko.imajnet.net/#map=OSM;zoom=${zoom};loc=${newLat},${newLon};`;
 }
 
@@ -943,7 +941,6 @@ if (!isSAT && !isAcces) {
     html += `</p>`;
   }
 
-  // 👉 Ajout des deux blocs (SAT + appareil manquants)
   html += `
     <div class="missing-box">
       📡 SAT manquant ?
@@ -960,7 +957,6 @@ if (!isSAT && !isAcces) {
 
   let html = "";
 
-  // Cas 2 : si on est dans un SAT → afficher bloc du SAT courant
   if (isSAT) {
     const matchingAppsForSAT = matchingApps.filter(app => (app.SAT || "") === currentLieu.SAT);
 
@@ -981,9 +977,6 @@ if (!isSAT && !isAcces) {
     }
   }
 
-  // Cas 3 : si accès → ne rien afficher ici (on passe direct au bloc global)
-
-  // Récapitulatif du poste (sans répéter le SAT ou accès courant)
   let groupedAll = {};
   matchingApps.forEach(app => {
     const sat = app.SAT || 'Poste';
@@ -1260,7 +1253,6 @@ blocs.push(
     html += `<hr class="separator" />${appareilsHTML}`;
   }
 
-  // 👉 Bloc retour fiche principale si on est dans un SAT ou un accès
 if (lieu.SAT || lieu.accès) {
   html += `
     <div class="missing-box" onclick="retourFichePrincipale('${encodeURIComponent(lieu.nom)}','${encodeURIComponent(lieu.type)}')">
@@ -1312,14 +1304,15 @@ const idParam = decodeURIComponent(params.get("id") || "");
 if (idParam) {
   console.log("🔍 Paramètre id =", JSON.stringify(idParam));
 
-  // 1. Chercher dans les postes / accès
+
   const matchPoste = lieux.find(l => formatNomCompletLieu(l) === idParam);
 
   if (matchPoste) {
     console.log("✅ Poste/Accès trouvé:", matchPoste);
     showLieu(matchPoste);
   } else {
-    // 2. Chercher dans les appareils
+
+    
     const matchApp = appareils.find(a => {
       const candidate = `${a.appareil} ${a.nom || ""} ${a.type || ""} ${a.SAT || ""}`.trim();
       return candidate === idParam;
@@ -1521,7 +1514,6 @@ function showAppareil(app) {
   suggestionsEl.innerHTML = "";
   result.style.display = "block";
 
-  // Bloc appareil
   let html = `<h2>
     ⚡️ ${app.appareil} (${app.nom}${app.type ? ' ' + app.type : ''}${app.SAT ? ' / ' + app.SAT : ''})
   </h2>`;
@@ -1543,7 +1535,7 @@ html += `
     html += `<p>${app.description}</p>`;
   }
 
-  // 👉 Priorité 1 : si l’appareil est lié à un SAT → on affiche la fiche du SAT
+
   let postePrincipal = null;
   if (app.SAT) {
     postePrincipal = lieux.find(l =>
@@ -1553,7 +1545,6 @@ html += `
     );
   }
 
-  // 👉 Priorité 2 : si pas de SAT, on cherche un accès identique
   if (!postePrincipal && app.appareil) {
     postePrincipal = lieux.find(l =>
       normalize(l.nom) === normalize(app.nom) &&
@@ -1562,7 +1553,6 @@ html += `
     );
   }
 
-  // 👉 Priorité 3 : sinon on prend le poste principal (pas de SAT, pas d’accès)
   if (!postePrincipal) {
     postePrincipal = lieux.find(l =>
       normalize(l.nom) === normalize(app.nom) &&
@@ -1572,8 +1562,8 @@ html += `
   }
 
   if (postePrincipal) {
-    const sauvegarde = html; // on garde la partie appareil
-    showLieu(postePrincipal); // on construit la fiche (poste, SAT ou accès)
+    const sauvegarde = html;
+    showLieu(postePrincipal); 
     const fichePoste = document.getElementById("result").innerHTML;
     html = sauvegarde + "<hr class='separator' />" + fichePoste;
   }
@@ -1628,12 +1618,10 @@ const labelAppareil = p =>
   `${p.appareil} (${p.nom}${p.type ? " " + p.type : ""}${p.SAT ? " / " + p.SAT : ""})`;
     
 function isMobile() {
-  // Chrome moderne
   if (navigator.userAgentData && "mobile" in navigator.userAgentData) {
     return navigator.userAgentData.mobile;
   }
 
-  // Fallback : on ne garde que le test userAgent
   return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 }
 
@@ -2238,7 +2226,7 @@ const installLink = document.getElementById("installLink");
 const isStandalone = window.matchMedia('(display-mode: standalone)').matches 
                   || window.navigator.standalone === true;
 
-// ✅ Seulement Android/Chrome non installé
+
 if (!isStandalone && !/iphone|ipad|ipod/i.test(navigator.userAgent)) {
   window.addEventListener("beforeinstallprompt", (e) => {
     e.preventDefault();
@@ -2259,7 +2247,7 @@ if (!isStandalone && !/iphone|ipad|ipod/i.test(navigator.userAgent)) {
     };
   });
 } else {
-  // 👉 Déjà installé ou iOS → on masque le bouton
+
   installLink.style.display = "none";
 }
 </script>
@@ -2284,11 +2272,10 @@ document.getElementById("streetview-close").onclick = () => {
 };
 
   function retourFichePrincipale(nom, type) {
-  // On retrouve le poste principal correspondant
   const postePrincipal = lieux.find(l => 
     normalize(l.nom) === normalize(decodeURIComponent(nom)) &&
     normalize(l.type) === normalize(decodeURIComponent(type)) &&
-    !l.SAT && !l.accès // exclure les fiches secondaires
+    !l.SAT && !l.accès
   );
 
   if (postePrincipal) {
@@ -2308,7 +2295,7 @@ document.getElementById("streetview-close").onclick = () => {
 </div>
 
 <script>
-// 👉 Ouvrir la vidéo
+
 document.addEventListener("click", function(e) {
   if (e.target.classList.contains("open-video")) {
     e.preventDefault();
@@ -2319,7 +2306,6 @@ document.addEventListener("click", function(e) {
   }
 });
 
-// 👉 Fermer la vidéo
 document.getElementById("video-close").onclick = () => {
   document.getElementById("video-overlay").style.display = "none";
   document.getElementById("video-frame").src = "";
