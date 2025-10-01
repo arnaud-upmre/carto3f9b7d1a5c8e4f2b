@@ -369,11 +369,20 @@
   <!-- Bouton flottant (FAB) -->
 <div class="fab-container">
   <button class="fab" id="fabBtn">☰</button>
+<!-- Boutons du menu flottant -->
 <div class="fab-options" id="fabOptions">
-  <button class="btn-toggle active" onclick="toggleLayer(accesLayer, this, 'Accès routiers')">🚙</button>
-  <button class="btn-toggle active" onclick="toggleLayer(postesLayer, this, 'Postes')">📍</button>
-  <button class="btn-toggle active" onclick="toggleLayer(appareilsLayer, this, 'Appareils')">⚡</button>
-  <button class="btn-toggle" onclick="toggleLayer(pnLayer, this, 'Passages à niveau')">🚧</button>
+  <button class="btn-toggle active" onclick="toggleLayer(accesLayer, this, 'Accès routiers')">
+    <img src="ico/acces.png" alt="Accès routiers" style="width:22px;height:22px;">
+  </button>
+  <button class="btn-toggle active" onclick="toggleLayer(postesLayer, this, 'Postes')">
+    <img src="ico/poste.png" alt="Postes" style="width:22px;height:22px;">
+  </button>
+  <button class="btn-toggle active" onclick="toggleLayer(appareilsLayer, this, 'Appareils')">
+    <img src="ico/int.png" alt="Appareils" style="width:22px;height:22px;">
+  </button>
+  <button class="btn-toggle" onclick="toggleLayer(pnLayer, this, 'Passages à niveau')">
+    <img src="ico/pn.png" alt="Passages à niveau" style="width:22px;height:22px;">
+  </button>
 </div>
 </div>
 
