@@ -393,7 +393,7 @@
   {
     "nom": "Coudekerque",
     "type": "SST",
-    "SAT": "SAT2",
+    "SAT": "",
     "accès": "",
     "appareil": "301-40",
     "latitude": 51.0058819,
@@ -404,7 +404,7 @@
   {
     "nom": "Coudekerque",
     "type": "SST",
-    "SAT": "SAT2",
+    "SAT": "",
     "accès": "",
     "appareil": "301-41",
     "latitude": 51.0062885,
