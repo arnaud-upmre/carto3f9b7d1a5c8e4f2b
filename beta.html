@@ -56,48 +56,30 @@
   pointer-events: auto;
 }
 
-
-/* Icônes dans les boutons flottants */
+/* Boutons flottants : plus de fond, uniquement les icônes */
 .fab-options button {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  border: 1px solid rgba(255,255,255,.12);
-  background: rgba(0,0,0,0.7);
+  background: none;      /* pas de fond */
+  border: none;          /* pas de contour */
+  box-shadow: none;      /* pas d’ombre */
+  padding: 0;
+  cursor: pointer;
+  width: auto;
+  height: auto;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0,0,0,.25);
-  transition: transform 0.2s, background 0.2s;
 }
 
-
-/* Icône par défaut */
 .fab-options button img {
-  width: 38px;   /* tu peux mettre 28px, 32px ou 34px selon ton goût */
-  height: 38px;
+  width: 40px;   /* ajuste ici la taille : 34–40px selon ton goût */
+  height: 40px;
+  opacity: 1;    /* actif = plein */
   transition: opacity 0.2s;
-  opacity: 1; /* activé par défaut */
 }
 
-/* Quand le bouton est désactivé → icône plus pâle */
+/* désactivé = même icône mais en semi-transparent */
 .fab-options button:not(.active) img {
-  opacity: 0.5; /* 40% de transparence */
-}
-
-.fab-options button {
-  background: rgba(0,0,0,0.7); /* inactif = fond noir translucide */
-}
-
-.fab-options button.active {
-  background: #fff; /* actif = fond blanc */
-}
-
-    
-
-.fab-options button.active {
-  background: #fff;
+  opacity: 0.5;
 }
 
 
