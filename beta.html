@@ -72,20 +72,27 @@
   transition: transform 0.2s, background 0.2s;
 }
 
-.fab-options button img {
-  width: 26px;
-  height: 26px;
-  filter: invert(1); /* icône blanche quand désactivée */
-  transition: filter 0.2s;
+
+    .fab-options button img {
+  width: 32px;
+  height: 32px;
+  transition: opacity 0.2s;
 }
+
+.fab-options button {
+  background: rgba(0,0,0,0.7); /* inactif = fond noir translucide */
+}
+
+.fab-options button.active {
+  background: #fff; /* actif = fond blanc */
+}
+
+    
 
 .fab-options button.active {
   background: #fff;
 }
 
-.fab-options button.active img {
-  filter: none; /* icône en couleur normale quand activée */
-}
 
 .fab-options button:hover {
   transform: scale(1.1);
