@@ -76,10 +76,11 @@
   transition: background 0.2s, opacity 0.2s, transform 0.2s;
 }
 
-/* Icônes à l’intérieur */
 .fab-options button img {
-  width: 28px;
-  height: 28px;
+  width: 40px;   /* au lieu de 28 */
+  height: 40px;  /* au lieu de 28 */
+  max-width: 90%;   /* évite que ça dépasse */
+  max-height: 90%;
   transition: opacity 0.2s;
   filter: drop-shadow(0 0 3px rgba(255,255,255,0.8));
 }
