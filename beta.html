@@ -52,17 +52,24 @@
   position: absolute;
   bottom: 70px;
   right: 0;
+  width: 70px; /* largeur du rectangle arrondi */
+  background: rgba(0,0,0,0.7);
+  border-radius: 40px;
+  padding: 12px 0;
   display: flex;
   flex-direction: column;
-  gap: 18px; /* espacement entre les icônes */
+  align-items: center;
+  gap: 14px;
   opacity: 0;
-  transform: translateY(20px);
+  max-height: 0;
+  overflow: hidden;
   pointer-events: none;
-  transition: opacity 0.3s, transform 0.3s;
+  transition: all 0.35s ease;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.4);
 }
 .fab-options.show {
   opacity: 1;
-  transform: translateY(0);
+  max-height: 400px; /* assez pour contenir les boutons */
   pointer-events: auto;
 }
 /* Boutons du menu flottant */
