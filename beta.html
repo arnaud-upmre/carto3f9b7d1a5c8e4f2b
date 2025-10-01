@@ -44,7 +44,7 @@
   right: 0;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 18px;
   opacity: 0;
   transform: translateY(20px);
   pointer-events: none;
@@ -57,14 +57,10 @@
 }
 
 .fab-options button {
-  background: none;     /* plus de fond */
-  border: none;
-  box-shadow: none;
-  padding: 0;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  margin: 0;       /* supprime marges parasites */
+  padding: 0;      /* supprime padding parasite */
+  width: 46px;     /* même largeur que le bouton burger */
+  height: 46px;    /* pour que tout soit centré pareil */
 }
 
 /* Icône visible avec halo fort */
@@ -79,9 +75,7 @@
 
 /* Icône désactivée → même image mais plus transparente + halo léger */
 .fab-options button:not(.active) img {
-  opacity: 0.4;
-  filter: drop-shadow(0 0 2px rgba(255,255,255,0.4))
-          drop-shadow(0 0 6px rgba(255,255,255,0.2));
+  opacity: 0.5;
 }
 
 
