@@ -56,24 +56,41 @@
   pointer-events: auto;
 }
 
+
+/* Icônes dans les boutons flottants */
 .fab-options button {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  border: none;
-  font-size: 22px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  background: white;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.2);
-  transition: transform 0.3s, background 0.2s;
+  box-shadow: 0 4px 12px rgba(0,0,0,.25);
+  transition: transform 0.2s, background 0.2s;
 }
+
+.fab-options button img {
+  width: 26px;
+  height: 26px;
+  filter: invert(1); /* icône blanche quand désactivée */
+  transition: filter 0.2s;
+}
+
 .fab-options button.active {
-  background: #2563eb;
-  color: white;
+  background: #fff;
 }
+
+.fab-options button.active img {
+  filter: none; /* icône en couleur normale quand activée */
+}
+
 .fab-options button:hover {
   transform: scale(1.1);
 }
+    
 
 /* Toast */
 .toast {
@@ -366,24 +383,24 @@
   
   <div id="map"></div>
 
-  <!-- Bouton flottant (FAB) -->
+<!-- Bouton flottant (FAB) -->
 <div class="fab-container">
   <button class="fab" id="fabBtn">☰</button>
-<!-- Boutons du menu flottant -->
-<div class="fab-options" id="fabOptions">
-  <button class="btn-toggle active" onclick="toggleLayer(accesLayer, this, 'Accès routiers')">
-    <img src="ico/acces.png" alt="Accès routiers" style="width:22px;height:22px;">
-  </button>
-  <button class="btn-toggle active" onclick="toggleLayer(postesLayer, this, 'Postes')">
-    <img src="ico/poste.png" alt="Postes" style="width:22px;height:22px;">
-  </button>
-  <button class="btn-toggle active" onclick="toggleLayer(appareilsLayer, this, 'Appareils')">
-    <img src="ico/int.png" alt="Appareils" style="width:22px;height:22px;">
-  </button>
-  <button class="btn-toggle" onclick="toggleLayer(pnLayer, this, 'Passages à niveau')">
-    <img src="ico/pn.png" alt="Passages à niveau" style="width:22px;height:22px;">
-  </button>
-</div>
+  <!-- Boutons du menu flottant -->
+  <div class="fab-options" id="fabOptions">
+    <button class="btn-toggle active" onclick="toggleLayer(accesLayer, this, 'Accès routiers')">
+      <img src="ico/acces.png" alt="Accès routiers">
+    </button>
+    <button class="btn-toggle active" onclick="toggleLayer(postesLayer, this, 'Postes')">
+      <img src="ico/poste.png" alt="Postes">
+    </button>
+    <button class="btn-toggle active" onclick="toggleLayer(appareilsLayer, this, 'Appareils')">
+      <img src="ico/int.png" alt="Appareils">
+    </button>
+    <button class="btn-toggle" onclick="toggleLayer(pnLayer, this, 'Passages à niveau')">
+      <img src="ico/pn.png" alt="Passages à niveau">
+    </button>
+  </div>
 </div>
 
 <!-- Encadré notification -->
