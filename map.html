@@ -4,14 +4,128 @@
   <meta charset="UTF-8" />
   <title>Nono Maps</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
- <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
-  <style>
 
+<style>
+
+/* ============================
+   FAB container + bouton burger
+   ============================ */
+.fab-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column-reverse; 
+  align-items: center;
+  gap: 20px; 
+}
+
+/* Bouton burger */
+.fab {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.75);
+  color: white;
+  font-size: 28px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s;
+}
+
+/* Menu icônes */
+.fab-options {
+  width: 70px;
+  background: rgba(0,0,0,0.7);
+  border-radius: 40px;
+  padding: 12px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  pointer-events: none;
+  transition: all 0.35s ease;
+}
+.fab-options.show {
+  opacity: 1;
+  max-height: 400px;
+  pointer-events: auto;
+}
+
+/* ============================
+   Boutons du menu
+   ============================ */
+.fab-options button {
+  border: none;
+  background: none;   
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Icônes */
+.fab-options button img {
+  width: 36px;
+  height: 36px;
+  transition: opacity .2s, filter .2s;
+}
+
+/* Inactif */
+.fab-options button:not(.active) img {
+  opacity: 0.5;
+  filter: none;
+}
+
+/* Actif */
+.fab-options button.active {
+  background: rgba(255,255,255,0.50); 
+}
+.fab-options button.active img {
+  opacity: 1;  /* remet l’icône normale */
+}
+  
+/* =========================================================
+   TOAST (notifications flottantes)
+   ========================================================= */
+.toast {
+  position: fixed;
+  bottom: 140px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(37,99,235,0.9);
+  color: white;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s;
+  z-index: 10001;
+}
+.toast.show {
+  opacity: 1;
+}
+
+/* =========================================================
+   POPUPS LEAFLET
+   ========================================================= */
 .leaflet-popup-content-wrapper {
   background: linear-gradient(
     135deg,
@@ -25,7 +139,6 @@
   box-shadow: inset 0 1px 4px rgba(255,255,255,0.4),
               0 8px 24px rgba(0,0,0,0.25);
 }
-
 .leaflet-popup-tip {
   background: linear-gradient(
     135deg,
@@ -36,9 +149,6 @@
   -webkit-backdrop-filter: blur(5px);
   border: 1px solid rgba(255, 255, 255, 0.45);
 }
-    
-    
-
 .leaflet-popup-content {
   max-width: 240px !important; 
   min-width: 240px; 
@@ -49,7 +159,6 @@
   overflow: hidden;    
   text-align: left;      
 }
-
 .leaflet-popup-content div,
 .leaflet-popup-content p {
   display: flex;
@@ -58,7 +167,6 @@
   margin: 4px 0;
   flex-wrap: wrap;      
 }
-
 .leaflet-popup-content img,
 .leaflet-popup-content svg,
 .leaflet-popup-content i {
@@ -66,7 +174,6 @@
   height: 18px;
   flex-shrink: 0;
 }
-
 .leaflet-popup-content a {
   display: flex;
   align-items: center;
@@ -74,8 +181,7 @@
   gap: 6px;
   text-decoration: none;
 }
-
-    .leaflet-popup-content a.cluster-link {
+.leaflet-popup-content a.cluster-link {
   display: block;
   padding: 8px 12px;
   border-radius: 8px;
@@ -87,12 +193,14 @@
   margin: 2px 0;
   transition: background 0.2s;
 }
-
 .leaflet-popup-content a.cluster-link:hover,
 .leaflet-popup-content a.cluster-link:active {
-  background: #e5e7eb; /* gris clair au survol */
+  background: #e5e7eb;
 }
 
+/* =========================================================
+   STREETVIEW OVERLAY
+   ========================================================= */
 #streetview-overlay {
   position: fixed;
   top: 0; left: 0;
@@ -102,13 +210,10 @@
   -webkit-backdrop-filter: blur(6px);
   display: none;
   z-index: 9999;
-
   display: flex;             
   align-items: center;
   justify-content: center;
 }
-
-
 #streetview-box {
   width: 90%;
   max-width: 900px;
@@ -119,13 +224,11 @@
   overflow: hidden;
   position: relative;
 }
-
 #streetview-box iframe {
   width: 100%;
   height: 100%;
   border: none;
 }
-
 #streetview-close {
   position: absolute;
   top: 12px; right: 12px;
@@ -139,28 +242,28 @@
   z-index: 2;
 }
 
+/* =========================================================
+   ICONES / CLUSTERS / HALO
+   ========================================================= */
 .btn-return {
   position: relative;
   animation: pulseHalo 1.8s infinite;
 }
-
 @keyframes pulseHalo {
   0%   { box-shadow: 0 0 0px rgba(255,255,255,0.6); }
   50%  { box-shadow: 0 0 15px rgba(255,255,255,0.9), 0 0 30px rgba(255,255,255,0.4); }
   100% { box-shadow: 0 0 0px rgba(255,255,255,0.6); }
 }
-  
-    .icon-halo {
+.icon-halo {
   width: 48px;  
   height: 48px;
   filter: drop-shadow(0 0 2px white) drop-shadow(0 0 4px white);
 }
-    .icon-halo-appareil {
+.icon-halo-appareil {
   width: 24px;  
   height: 24px;
   filter: drop-shadow(0 0 4px white) drop-shadow(0 0 8px white);
 }
-    
 .icon-wrapper {
   display: inline-block;
   border-radius: 50%;         
@@ -168,18 +271,17 @@
   background: white;       
   box-shadow: 0 0 6px rgba(0,0,0,0.4); 
 }
-
 .icon-wrapper img {
   width: 44px;
   height: 44px;
   display: block;
 }
 
+/* CLUSTERS */
 .marker-cluster {
   background: transparent !important; 
   border-radius: 50%;
 }
-
 .marker-cluster div {
   width: 42px;
   height: 42px;
@@ -187,7 +289,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont,"Segoe UI",Roboto,Inter,sans-serif;
   font-weight: 600;
   font-size: 14px;
   color: #ffffff;
@@ -199,30 +301,39 @@
   box-shadow: 0 6px 18px rgba(0,0,0,0.2);
   transition: transform 0.25s ease, background 0.3s ease;
 }
-
 .marker-cluster:hover div {
   transform: scale(1.12);
   background: rgba(255, 255, 255, 0.25);
 }
 
-    .control-group {
+/* =========================================================
+   CONTRÔLES LEAFLET (loupe, recentrer, etc.)
+   ========================================================= */
+.control-group {
   margin-bottom: 10px; 
 }
-    .control-group + .control-group {
+.control-group + .control-group {
   margin-top: 45px; 
 }
-    
-#version-label {
-  position: fixed;
-  bottom: 6px;
-  left: 8px;   
-  font-size: 11px;
-  color: rgba(255,255,255,0.45);
-  font-family: system-ui, sans-serif;
-  pointer-events: none;
+.leaflet-control-custom {
+  background: rgba(0,0,0,0.7);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 50%;
+  width: 44px; height: 44px;          
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  color: #fff;
+  cursor: pointer;
+  margin: 5px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.25);
   user-select: none;
+  line-height: 1;                   
+  -webkit-tap-highlight-color: transparent;
 }
 
+/* =========================================================
+   BOUTONS GÉNÉRIQUES
+   ========================================================= */
 .btn-toggle{
   background: rgba(0,0,0,.7);
   border: 1px solid rgba(255,255,255,.12);
@@ -243,29 +354,59 @@
   background: #fff;
   color: #111;
 }
-    
-    :root { --accent:#4f46e5; --bg:#0b0c0e; --ink:#f9fafb; --glass:rgba(17,19,23,.65); --border:rgba(255,255,255,.12); }
-    html, body { height:100%; margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,sans-serif; background:var(--bg); color:var(--ink); }
-    #map { width:100%; height:100%; }
 
-    .icon-circle { width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:15px; font-weight:bold; }
-    .poste { background:#e11d48; } .appareil { background:#facc15; } .acces { background:#3b82f6; }
-   .leaflet-control-custom{
-  background: rgba(0,0,0,0.7);
-  border: 1px solid rgba(255,255,255,.12);
-  border-radius: 50%;
-  width: 44px; height: 44px;          
-  display: flex; align-items: center; justify-content: center;
-  font-size: 20px;
-  color: #fff;
-  cursor: pointer;
-  margin: 5px;
-  box-shadow: 0 4px 12px rgba(0,0,0,.25);
-  user-select: none;
-  line-height: 1;                   
-  -webkit-tap-highlight-color: transparent;
+/* =========================================================
+   VARIABLES GLOBALES + MAP
+   ========================================================= */
+:root {
+  --accent:#4f46e5;
+  --bg:#0b0c0e;
+  --ink:#f9fafb;
+  --glass:rgba(17,19,23,.65);
+  --border:rgba(255,255,255,.12);
 }
-  </style>
+html, body {
+  height:100%;
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+}
+#map {
+  width:100%;
+  height:100%;
+}
+
+.icon-circle {
+  width:26px;
+  height:26px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:white;
+  font-size:15px;
+  font-weight:bold;
+}
+.poste { background:#e11d48; }
+.appareil { background:#facc15; }
+.acces { background:#3b82f6; }
+
+#version-label {
+  position: fixed;
+  bottom: 6px;
+  left: 8px;   
+  font-size: 11px;
+  color: rgba(255,255,255,0.45);
+  font-family: system-ui, sans-serif;
+  pointer-events: none;
+  user-select: none;
+}
+
+</style>
+
+
+  
 </head>
 <body>
 
@@ -282,7 +423,29 @@
 </div>
   
   <div id="map"></div>
-  
+
+<!-- Bouton flottant (FAB) -->
+<div class="fab-container">
+  <button class="fab" id="fabBtn">☰</button>
+  <!-- Boutons du menu flottant -->
+  <div class="fab-options" id="fabOptions">
+    <button class="btn-toggle active" onclick="toggleLayer(accesLayer, this, 'Accès routiers')">
+      <img src="ico/acces.png" alt="Accès routiers">
+    </button>
+    <button class="btn-toggle active" onclick="toggleLayer(postesLayer, this, 'Postes')">
+      <img src="ico/poste.png" alt="Postes">
+    </button>
+    <button class="btn-toggle active" onclick="toggleLayer(appareilsLayer, this, 'Appareils')">
+      <img src="ico/int.png" alt="Appareils">
+    </button>
+    <button class="btn-toggle" onclick="toggleLayer(pnLayer, this, 'Passages à niveau')">
+      <img src="ico/pn.png" alt="Passages à niveau">
+    </button>
+  </div>
+</div>
+
+<!-- Encadré notification -->
+<div class="toast" id="toast"></div>
 
 <div id="streetview-overlay">
   <div id="streetview-box">
@@ -295,19 +458,18 @@ const defaultCenter = [49.8, 2.5];
 const defaultZoom = 8;          
 
 
-    // Limites géographiques approximatives pour la France
 const boundsFrance = [
-  [41.0, -5.5],  // Sud-Ouest
-  [51.5, 9.5]    // Nord-Est
+  [41.0, -5.5],  
+  [51.5, 9.5]    
 ];
 
 const map = L.map('map', {
   zoomControl: false,
   attributionControl: false,
-  minZoom: 5,                  // empêche de trop dézoomer
-  maxZoom: 21,                 // selon tes tuiles IGN/OSM
-  maxBounds: boundsFrance,     // limite la zone affichée
-  maxBoundsViscosity: 1.0      // bloque l’effet “élastique”
+  minZoom: 5,                  
+  maxZoom: 21,                 
+  maxBounds: boundsFrance,     
+  maxBoundsViscosity: 1.0      
 }).setView(defaultCenter, defaultZoom);
 
     
@@ -360,7 +522,7 @@ document.addEventListener("keydown", function(e) {
     editIcon.style.display = editMode ? "block" : "none";
   }
 
-  // ESC pour désactiver
+
   if (e.key === "Escape" && editMode) {
     editMode = false;
     editBanner.textContent = "❌ Mode information désactivé";
@@ -375,7 +537,7 @@ document.addEventListener("keydown", function(e) {
 let _datasetsLoaded = 0;
 function _tryOpenFromURL() {
   _datasetsLoaded++;
-  if (_datasetsLoaded < 2) return; // attendre postes + appareils
+  if (_datasetsLoaded < 2) return; 
 
   if (!isNaN(lat) && !isNaN(lon)) {
     const matches = allMarkers.filter(m => {
@@ -391,11 +553,11 @@ if (matches.length > 0) {
 
  setTimeout(() => {
   if (matches.length === 1) {
-    // 👉 Cas : un seul marker → popup normale
+
     matches[0].openPopup();
 
   } else if (allSameCoords) {
-    // 👉 Cas : plusieurs markers exactement au même endroit → liste
+
     const items = matches.map((m, i) => {
       let label = m.options.customId || `Élément ${i + 1}`;
       return { label: label.replace(/\bposte\b/gi, "").trim(), idx: i };
@@ -413,7 +575,7 @@ if (marker.options.isAcces) {
 } else if (id.includes("POSTE")) {
   iconFile = "poste.png";
 } else {
-  // règles appareils
+
   if (id.startsWith("I") || id.startsWith("SI") || id.startsWith("D")) {
     iconFile = "int.png";
   } else if (id.startsWith("TT") || id.startsWith("TSA") || id.startsWith("TC") || id.startsWith("TRA")) {
@@ -456,7 +618,7 @@ if (marker.options.isAcces) {
       });
     }, 0);
   } else {
-    // 👉 Cas : markers proches mais pas identiques
+
     const group = L.featureGroup(matches);
     map.fitBounds(group.getBounds());
   }
@@ -588,6 +750,12 @@ const accesLayer = L.markerClusterGroup({
   spiderfyOnMaxZoom: false,
   showCoverageOnHover: false,
   zoomToBoundsOnClick: false
+});
+
+    const pnLayer = L.markerClusterGroup({
+  spiderfyOnMaxZoom: false,
+  showCoverageOnHover: false,
+  zoomToBoundsOnClick: true
 });
 
 accesLayer.on('clusterclick', function (e) {
@@ -815,7 +983,7 @@ fetch("appareils.json")
       } else if (ref.startsWith("DU")) {
         appareilIcon = L.divIcon({ html:`<img src="ico/stop.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,32], popupAnchor:[0,-32] });
       } else {
-        appareilIcon = iconAppareil; // ⚡ défaut
+        appareilIcon = iconAppareil;
       }
 
       let content = `
@@ -827,9 +995,9 @@ fetch("appareils.json")
   ${item.nom || item.type || item.SAT 
     ? " (" + 
         [item.nom, item.type, item.SAT]
-          .filter(Boolean)               // enlève les vides
-          .join(" ")                     // colle avec espace
-          .trim() + ")"                  // supprime espace en trop
+          .filter(Boolean)               
+          .join(" ")                     
+          .trim() + ")"                  
     : ""}
 </div>
 
@@ -861,6 +1029,111 @@ fetch("appareils.json")
       });
     _tryOpenFromURL();
   });
+
+const pnClasses = {
+  10: "PN public pour voitures sans barrières (protection assurée par un agent)",
+  11: "PN public pour voitures avec barrières gardé sans passage piétons accolé (manœuvré à pied d'œuvre)",
+  12: "PN public pour voitures avec barrières gardé sans passage piétons accolé (manœuvré à distance)",
+  13: "PN public pour voitures avec barrières gardé sans passage piétons accolé (manœuvré pied d'œuvre + distance)",
+  14: "PN public pour voitures avec barrières gardé avec passage piétons accolé (manœuvré à pied d'œuvre)",
+  15: "PN public pour voitures avec barrières gardé avec passage piétons accolé (manœuvré à distance)",
+  16: "PN public pour voitures avec barrières gardé avec passage piétons accolé (manœuvré pied d'œuvre + distance)",
+  17: "PN public pour voitures avec barrières ou 1/2 barrières non gardé à SAL 2 / SAL 2B",
+  18: "PN public pour voitures avec barrières ou 1/2 barrières non gardé à SAL 2 + îlot séparateur",
+  19: "PN public pour voitures avec barrières ou 1/2 barrières non gardé à SAL 4",
+  20: "PN public pour voitures sans barrières sans SAL",
+  21: "PN public pour voitures sans barrières avec SAL 0",
+  31: "PN public isolé pour piétons sans portillons",
+  32: "PN public isolé pour piétons avec portillons",
+  41: "PN privé pour voitures sans barrières",
+  42: "PN privé pour voitures avec barrières sans passage piétons accolé",
+  43: "PN privé pour voitures avec barrières avec passage piétons accolé public",
+  44: "PN privé pour voitures avec barrières avec passage piétons accolé privé",
+  45: "PN privé isolé pour piétons sans portillons",
+  46: "PN privé isolé pour piétons avec portillons"
+};
+
+function translateObstacle(obs) {
+  if (!obs) return "";
+  if (obs.toLowerCase() === "autre") return ""; 
+  if (obs.startsWith("VC")) return "Voie communale";
+  if (obs.startsWith("CD")) return "Route départementale " + obs.replace("CD", "").trim();
+  if (obs.startsWith("RN")) return "Route nationale " + obs.replace("RN", "").trim();
+  if (obs.startsWith("CP")) return "Chemin privé";
+  return obs;
+}
+
+    fetch("pn.json")
+  .then(r => r.json())
+  .then(data => {
+    data.forEach(pn => {
+      if (!pn.geo_point_2d) return;
+      const lat = pn.geo_point_2d.lat;
+      const lon = pn.geo_point_2d.lon;
+
+      if (lat < 49.3 || lat > 51.7) return;
+      if (lon < 1.0 || lon > 5.0) return;
+
+      const iconPN = L.divIcon({
+        html: `<img src="ico/pn.png" class="icon-halo-appareil">`,
+        className: "",
+        iconAnchor: [16, 32],
+        popupAnchor: [0, -32]
+      });
+
+
+      const classeCode = (pn.mnemo || "").replace("CLASSE ", "").trim();
+      const classeTexte = pnClasses[classeCode] 
+        ? `🛑 Classe ${classeCode} : ${pnClasses[classeCode]}` 
+        : "";
+
+      let libelle = (pn.libelle || "").trim();
+      if (/^PN\s*/i.test(libelle)) {
+        libelle = libelle.replace(/^PN\s*/i, "");
+      }
+
+      const marker = L.marker([lat, lon], { icon: iconPN })
+        .bindPopup(`
+          <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
+                      font-size:14px; color:#111; line-height:1.5; text-align:left;">
+
+            <!-- Titre PN -->
+            <div style="font-weight:700; font-size:16px; margin-bottom:8px;">
+              🚧 PN ${libelle}
+            </div>
+
+            <!-- PK + Ligne -->
+            <div>🚄 PK ${pn.pk || "?"} sur la ligne n°${pn.code_ligne || "?"}</div>
+
+            <!-- Classe -->
+            ${classeTexte ? `<div>${classeTexte}</div>` : ""}
+
+            <!-- Boutons -->
+            <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px;align-items:center;">
+              <a href="https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${lat},${lon};" 
+                 target="_blank"
+                 style="display:block;width:100%;max-width:200px;padding:10px 12px;
+                        border-radius:8px;background:#10b981;color:white;
+                        text-decoration:none;font-size:14px;font-weight:500;text-align:center;">
+                🛣️ Voir sur Imajnet
+              </a>
+              <button onclick="openStreetView(${lat},${lon})"
+                 style="display:block;width:100%;max-width:200px;padding:10px 12px;
+                        border:none;border-radius:8px;background:#3b82f6;
+                        color:white;cursor:pointer;font-size:14px;font-weight:500;">
+                🌍 Voir en Street View
+              </button>
+            </div>
+          </div>
+        `);
+
+      pnLayer.addLayer(marker);
+      allMarkers.push(marker);
+    });
+  })
+  .catch(err => console.error("Erreur chargement PN:", err));
+
+    
 appareilsLayer.on('clusterclick', function (e) {
   const childMarkers = e.layer.getAllChildMarkers();
   if (childMarkers.length === 0) return;
@@ -870,7 +1143,7 @@ appareilsLayer.on('clusterclick', function (e) {
 
   if (allSameCoords) {
     if (id) {
-      // 👉 Cas : depuis index.html → popup liste
+
       const items = childMarkers.map((m, i) => {
         let label = m.options.customId || `Appareil ${i + 1}`;
         return { label: label.trim(), idx: i };
@@ -924,14 +1197,14 @@ appareilsLayer.on('clusterclick', function (e) {
       }, 0);
 
     } else {
-      // 👉 Cas : dernière bulle mais PAS depuis index → pas de zoom, juste éclatement
+
       e.originalEvent.preventDefault();
       e.originalEvent.stopPropagation();
       e.layer.spiderfy();
     }
 
   } else {
-    // 👉 Cas normal → zoom autorisé
+
     map.fitBounds(e.layer.getBounds());
   }
 });
@@ -1008,26 +1281,6 @@ locateBtn.onclick = () => {
 L.DomEvent.disableClickPropagation(locateBtn);
 L.DomEvent.disableScrollPropagation(locateBtn);
 
-  const bottomGroup = L.DomUtil.create("div", "control-group", container);
-
-  function makeBtn(emoji, layer, initiallyOn = true) {
-    const b = L.DomUtil.create("div", "btn-toggle" + (initiallyOn ? " active" : ""), bottomGroup);
-    b.innerHTML = emoji;
-    b.onclick = () => {
-      if (map.hasLayer(layer)) {
-        map.removeLayer(layer);
-        b.classList.remove("active");
-      } else {
-        map.addLayer(layer);
-        b.classList.add("active");
-      }
-    };
-    return b;
-  }
-
-  makeBtn("🚙", accesLayer, true);
-  makeBtn("📍", postesLayer, true);
-  makeBtn("⚡", appareilsLayer, true);
 
   return container;
 };
@@ -1055,13 +1308,13 @@ if (!id) {
 document.getElementById("streetview-overlay").style.display = "none";
 document.getElementById("streetview-frame").src = "";
 
-// --- KIT DEBUG ÉCLAIR ---
+
 console.info("[Nono Maps] boot", {
   leaflet: L.version,
   clusters: { postes: !!postesLayer, appareils: !!appareilsLayer, acces: !!accesLayer }
 });
 
-// Attrape toutes les erreurs JS et les affiche joliment à l'écran
+
 window.onerror = function(msg, src, line, col, err){
   const box = document.createElement("div");
   box.style = "position:fixed;z-index:10000;left:8px;bottom:8px;max-width:90%;"+
@@ -1072,7 +1325,6 @@ window.onerror = function(msg, src, line, col, err){
   console.error("❗ Uncaught error", {msg, src, line, col, err});
 };
 
-// Vérifie qu’on charge bien les jeux de données et combien de marqueurs arrivent
 Promise.allSettled([
   fetch("postes.json").then(r => r.json()).then(d => { console.log("postes.json OK", d.length); return d; })
     .catch(e => { console.error("postes.json KO", e); return []; }),
@@ -1080,7 +1332,6 @@ Promise.allSettled([
     .catch(e => { console.error("appareils.json KO", e); return []; })
 ]);
 
-// Petite garde anti-NaN dans l’URL (évite des comportements bizarres)
 if (isNaN(lat) || isNaN(lon)) { console.warn("URL lat/lon invalides", {lat, lon}); }
 
 
@@ -1105,10 +1356,10 @@ function renderPortail(value) {
   }
   const str = String(value);
 
-  // Cas avec #
+
   if (str.includes("#")) return str;
 
-  // Cas YouTube
+
   const ytMatch = str.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]+)/);
   if (ytMatch) {
     const videoId = ytMatch[1];
@@ -1116,27 +1367,26 @@ function renderPortail(value) {
               style="color:#007aff; text-decoration:none;">Voir vidéo explicative ICI</a>`;
   }
 
-  // Cas lien http(s)
   const urlMatch = str.match(/https?:\/\/[^\s]+/i);
   if (urlMatch) {
     const url = urlMatch[0];
-    const withoutUrl = str.replace(url, "").trim(); // ex: "Code 594"
+    const withoutUrl = str.replace(url, "").trim(); 
     const link = `<a href="${url}" target="_blank" style="color:#007aff; text-decoration:none;">Lien portail</a>`;
     return withoutUrl ? `${withoutUrl} – ${link}` : link;
   }
 
-  // Cas numéro de téléphone
+
   const digits = str.replace(/\D/g, "");
   if (digits.length >= 10) {
     const tel = str.replace(/[^\d+]/g, "");
     return `<a href="tel:${tel}" style="color:#007aff; text-decoration:none;">${str}</a>`;
   }
 
-  // Sinon afficher brut
+
   return str;
 }
 
-    // Gestion ouverture/fermeture overlay vidéo
+
 document.addEventListener("click", e => {
   if (e.target.classList.contains("open-video")) {
     e.preventDefault();
@@ -1159,23 +1409,21 @@ document.getElementById("video-close").onclick = () => {
 
   const str = String(value);
 
-  // On découpe le texte en séparant les numéros (format français 10 chiffres)
   return str.split(/(\d{2}(?:\s?\d{2}){4})/g).map(part => {
     const digits = part.replace(/\D/g, "");
     if (digits.length === 10) {
-      // C'est un numéro → rendre cliquable
+ 
       return `<a href="tel:${digits}" style="color:#007aff; text-decoration:none;">${part.trim()}</a>`;
     }
-    return part; // Sinon on garde tel quel
+    return part; 
   }).join("");
 }
 
-let activeEditPopup = null; // popup édition actif
+let activeEditPopup = null; 
 
-// petit helper pour afficher le texte dans <pre>
 function escHtml(s){return String(s).replace(/[&<>"]/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[m]));}
 
-// --- Clic simple sur la carte en mode information ---
+
 map.on('click', (e) => {
   if (!editMode) return;
 
@@ -1218,7 +1466,7 @@ ${coordsText}</pre>
     .setContent(popupContent)
     .openOn(map);
 
-  // 👉 Ici : on attend juste la fin du rendu DOM
+
   setTimeout(() => {
     const flash = (txt) => {
       editBanner.textContent = txt;
@@ -1237,9 +1485,37 @@ ${coordsText}</pre>
     document.getElementById('btn-imajnet')?.addEventListener('click', () => {
       window.open(`https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${lat},${lng};`, '_blank');
     });
-  }, 50); // petit délai pour être sûr que le DOM est prêt
+  }, 50); 
 });
-    
+
+const fabBtn = document.getElementById("fabBtn");
+const fabOptions = document.getElementById("fabOptions");
+const toast = document.getElementById("toast");
+
+fabBtn.addEventListener("click", () => {
+  fabBtn.classList.toggle("open");
+  fabOptions.classList.toggle("show");
+});
+
+function toggleLayer(layer, btn, label) {
+  if (map.hasLayer(layer)) {
+    map.removeLayer(layer);
+    btn.classList.remove("active");
+    showToast(`❌ ${label} masqués`);
+  } else {
+    map.addLayer(layer);
+    btn.classList.add("active");
+    showToast(`✅ ${label} affichés`);
+  }
+}
+
+function showToast(message) {
+  toast.textContent = message;
+  toast.classList.add("show");
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 2000);
+}
 </script>
 
 </body>
