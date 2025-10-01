@@ -12,6 +12,89 @@
 <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
   <style>
 
+    .fab-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 10000;
+}
+
+.fab {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.75);
+  color: white;
+  font-size: 28px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s;
+}
+.fab.open {
+  transform: rotate(90deg);
+}
+
+.fab-options {
+  position: absolute;
+  bottom: 70px;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+  transition: opacity 0.3s, transform 0.3s;
+}
+.fab-options.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.fab-options button {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  background: white;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+  transition: transform 0.3s, background 0.2s;
+}
+.fab-options button.active {
+  background: #2563eb;
+  color: white;
+}
+.fab-options button:hover {
+  transform: scale(1.1);
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 140px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(37,99,235,0.9);
+  color: white;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s;
+  z-index: 10001;
+}
+.toast.show {
+  opacity: 1;
+}
+
 .leaflet-popup-content-wrapper {
   background: linear-gradient(
     135deg,
@@ -282,7 +365,20 @@
 </div>
   
   <div id="map"></div>
-  
+
+  <!-- Bouton flottant (FAB) -->
+<div class="fab-container">
+  <button class="fab" id="fabBtn">☰</button>
+  <div class="fab-options" id="fabOptions">
+    <button onclick="toggleLayer(accesLayer, this)">🚙</button>
+    <button onclick="toggleLayer(postesLayer, this)">📍</button>
+    <button onclick="toggleLayer(appareilsLayer, this)">⚡</button>
+    <button onclick="toggleLayer(pnLayer, this)">🚧</button>
+  </div>
+</div>
+
+<!-- Encadré notification -->
+<div class="toast" id="toast"></div>
 
 <div id="streetview-overlay">
   <div id="streetview-box">
@@ -1123,27 +1219,6 @@ locateBtn.onclick = () => {
 L.DomEvent.disableClickPropagation(locateBtn);
 L.DomEvent.disableScrollPropagation(locateBtn);
 
-  const bottomGroup = L.DomUtil.create("div", "control-group", container);
-
-  function makeBtn(emoji, layer, initiallyOn = true) {
-    const b = L.DomUtil.create("div", "btn-toggle" + (initiallyOn ? " active" : ""), bottomGroup);
-    b.innerHTML = emoji;
-    b.onclick = () => {
-      if (map.hasLayer(layer)) {
-        map.removeLayer(layer);
-        b.classList.remove("active");
-      } else {
-        map.addLayer(layer);
-        b.classList.add("active");
-      }
-    };
-    return b;
-  }
-
-  makeBtn("🚙", accesLayer, true);
-  makeBtn("📍", postesLayer, true);
-  makeBtn("⚡", appareilsLayer, true);
-  makeBtn("🚧", pnLayer, false);   // PN désactivé par défaut
 
   return container;
 };
@@ -1355,7 +1430,36 @@ ${coordsText}</pre>
     });
   }, 50); // petit délai pour être sûr que le DOM est prêt
 });
-    
+
+    // --- FAB Burger ---
+const fabBtn = document.getElementById("fabBtn");
+const fabOptions = document.getElementById("fabOptions");
+const toast = document.getElementById("toast");
+
+fabBtn.addEventListener("click", () => {
+  fabBtn.classList.toggle("open");
+  fabOptions.classList.toggle("show");
+});
+
+function toggleLayer(layer, btn) {
+  if (map.hasLayer(layer)) {
+    map.removeLayer(layer);
+    btn.classList.remove("active");
+    showToast("❌ Couche masquée");
+  } else {
+    map.addLayer(layer);
+    btn.classList.add("active");
+    showToast("✅ Couche affichée");
+  }
+}
+
+function showToast(message) {
+  toast.textContent = message;
+  toast.classList.add("show");
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 2000);
+}
 </script>
 
 </body>
