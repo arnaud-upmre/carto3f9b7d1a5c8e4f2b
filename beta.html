@@ -2118,12 +2118,16 @@ document.getElementById("btn-save-appareil").addEventListener("click", function(
 
   const demandeur = getDemandeur();
 
-  const payload = {
-    category: "appareil",
-    ficheOrigine: originalAppareil.appareil,
-    demandeur,
-    horodatage: new Date().toISOString()
-  };
+const payload = {
+  category: "appareil",
+  ficheOrigine: originalAppareil.appareil, // reste la référence brute
+  nom_orig: currentItem.nom || "",
+  type_orig: currentItem.type || "",
+  sat_orig: currentItem.SAT || "",
+  acces_orig: currentItem.accès || "",
+  demandeur,
+  horodatage: new Date().toISOString()
+};
 
   if (newAppareil !== originalAppareil.appareil) {
     payload.appareil = newAppareil;
