@@ -2148,36 +2148,34 @@ document.getElementById("btn-save-appareil").addEventListener("click", function(
   }
 
   console.log("📤 Payload envoyé :", payload);
+fetch("https://script.google.com/macros/s/AKfycbyZYV5b-aGdAsFc775xwxsdfBSIZHobE6mGNC7Zixgms77kRTmOaUpwVgNoBoKAiGhm/exec", {
+  method: "POST",
+  mode: "no-cors",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(payload)
+})
+.then(() => {
+  showNotification("✅ Modification appareil envoyée", "success");
 
-  fetch("https://script.google.com/macros/s/AKfycbyZYV5b-aGdAsFc775xwxsdfBSIZHobE6mGNC7Zixgms77kRTmOaUpwVgNoBoKAiGhm/exec", {
-    method: "POST",
-    mode: "no-cors",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload)
-  })
-  .then(() => showNotification("✅ Modification appareil envoyée", "success"))
-    
-  // 👉 Incrémenter le compteur de contributions (comme pour les postes)
+  // 👉 Incrémenter le compteur
   let contrib = parseInt(localStorage.getItem("contributions") || "0", 10);
   contrib++;
   localStorage.setItem("contributions", contrib);
 
-  // Si tu as un élément compteur affiché dans la page, on le met à jour
   const compteurEl = document.getElementById("compteur-contributions");
   if (compteurEl) {
     compteurEl.textContent = contrib;
   }
 })
-  .catch(() => showNotification("❌ Erreur envoi appareil", "error"))
-  .finally(() => {
-    setTimeout(() => {
-      btn.disabled = false;
-      btn.textContent = "💾 Sauvegarder";
-      if (currentItem) {
-        quitEditModeAppareil(newAppareil, newNomPoste, newLien, newDescription);
-      }
-    }, 2000);
-  });
+.catch(() => showNotification("❌ Erreur envoi appareil", "error"))
+.finally(() => {
+  setTimeout(() => {
+    btn.disabled = false;
+    btn.textContent = "💾 Sauvegarder";
+    if (currentItem) {
+      quitEditModeAppareil(newAppareil, newNomPoste, newLien, newDescription);
+    }
+  }, 2000);
 });
 
 function quitEditMode(nom, type, sat = "", acces = ""){
