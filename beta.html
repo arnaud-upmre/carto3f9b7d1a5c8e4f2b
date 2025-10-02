@@ -2091,22 +2091,21 @@ fetch("https://script.google.com/macros/s/AKfycbyxh3HGR6iHcn0ynwfGzSzOm5Djc7o2e1
   }, 3000);
 });
   }); 
-document.getElementById("btn-save-appareil").addEventListener("click", function() {
+
+
+    document.getElementById("btn-save-appareil").addEventListener("click", function() {
   const btn = this;
   btn.disabled = true;
   btn.textContent = "⏳ Envoi...";
 
   const newAppareil    = document.getElementById("input-appareil")?.value   || originalAppareil.appareil;
   const newNomPoste    = document.getElementById("input-nomposte")?.value   || originalAppareil.nomposte;
-  const newLien        = document.getElementById("input-rep-appareil")?.value || "";
-let newDescription = originalAppareil.description || "";
-const descInput = document.getElementById("input-description-appareil");
-if (descInput) {
-  newDescription = descInput.value.trim();
-}
+  const newLien = document.getElementById("input-rep-appareil")?.value.trim() || "";
+  const newDescription = document.getElementById("input-description-appareil")
+    ? document.getElementById("input-description-appareil").value.trim()
+    : originalAppareil.description || "";
 
   const demandeur = getDemandeur();
-
 
   const payload = {
     category: "appareil",
@@ -2115,16 +2114,15 @@ if (descInput) {
     horodatage: new Date().toISOString()
   };
 
-
   if (newAppareil !== originalAppareil.appareil) {
     payload.appareil = newAppareil;
   }
   if (newNomPoste !== originalAppareil.nomposte) {
     payload.nom = newNomPoste;
   }
-  if (newLien && newLien !== (originalAppareil.lien || "")) {
-    payload.lien = newLien;
-  }
+if (newLien) {
+  payload.lien = newLien;
+}
   if (newDescription !== (originalAppareil.description || "")) {
     payload.description = newDescription;
   }
