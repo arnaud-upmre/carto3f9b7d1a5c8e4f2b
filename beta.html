@@ -1565,7 +1565,7 @@ function showAppareil(app) {
   let html = `<h2>
     ⚡️ <span id="editable-appareil">${app.appareil}</span>
 (<span id="editable-nomposte">
-  ${app.nom || ''}${app.type ? ' ' + app.type : ''}${app.SAT ? ' ' + app.SAT : ''}${app.accès ? ' – accès ' + app.accès : ''}
+${(app.nom || '').trim()}${app.type ? ' ' + app.type.trim() : ''}${app.SAT ? ' ' + app.SAT.trim() : ''}
 </span>)
     <a href="#" id="edit-toggle-appareil">[modifier]</a>
   </h2>`;
