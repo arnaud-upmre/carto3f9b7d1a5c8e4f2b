@@ -771,6 +771,11 @@ main {
   <button id="btn-cancel" class="btn-primary">❌ Annuler édition</button>
 </div>
 
+  <div id="edit-buttons-appareil" style="display:none;">
+  <button id="btn-save-appareil" class="btn-primary">💾 Sauvegarder</button>
+  <button id="btn-cancel-appareil" class="btn-primary">❌ Annuler édition</button>
+</div>
+
 <button id="btn-localiser" class="btn-primary">
   📍 À proximité
 </button>
@@ -1525,9 +1530,7 @@ if (rawQuery.length >= 3) {
     
 
 function showAppareil(app) {
-  currentItem = app;
   incrementCounterAppareil();
-
   const result = document.getElementById("result");
   const suggestionsEl = document.getElementById("suggestions");
 
@@ -1536,14 +1539,13 @@ function showAppareil(app) {
 
   let html = `<h2>
     ⚡️ <span id="editable-appareil">${app.appareil}</span>
-    (<span id="editable-nom">${app.nom}</span>${app.type ? ' ' + app.type : ''}${app.SAT ? ' / ' + app.SAT : ''})
-    <a href="#" id="edit-toggle">[modifier]</a>
+    (<span id="editable-nomposte">${app.nom}${app.type ? ' ' + app.type : ''}</span>)
+    <a href="#" id="edit-toggle-appareil">[modifier]</a>
   </h2>`;
 
-  // bloc "Repérer l’appareil"
   html += `
     <div class="rep-block horizontal rep-appareil">
-      <p id="editable-rep-appareil"><span class="emoji">💡</span> Repérer l’appareil :</p>
+      <p id="editable-rep-appareil"><span class="emoji">💡</span> <strong>Repérer l’appareil :</strong></p>
       <div class="inline-links pills-2">
         <a href="${myMapsViewer(app.latitude, app.longitude)}" target="_blank">🛰️ Vue satellite</a>
         <a href="${
@@ -1554,13 +1556,31 @@ function showAppareil(app) {
       </div>
     </div>`;
 
-  // bloc informations
   html += `
-    <div class="rep-appareil">
+    <div class="rep-block">
       ${formatInformations(app.description)}
     </div>`;
 
-  // cherche le poste principal associé
+  result.innerHTML = html;
+  currentItem = app;
+}
+
+
+html += `
+  <div class="rep-block rep-appareil">
+    <p><span class="emoji">💡</span> <strong>Repérer l’appareil :</strong></p>
+    <div class="inline-links pills-2">
+      <a href="${myMapsViewer(app.latitude, app.longitude)}" target="_blank">🛰️ Vue satellite</a>
+      <a href="${
+        app.imajnet && app.imajnet.trim() !== "" 
+          ? app.imajnet 
+          : imajnetLink(app.latitude, app.longitude)
+      }" target="_blank">🚄 Imajnet</a>
+    </div>
+
+    ${formatInformations(app.description)}   <!-- 📌 déplacé à l’intérieur -->
+  </div>`;
+
   let postePrincipal = null;
   if (app.SAT) {
     postePrincipal = lieux.find(l =>
@@ -1595,6 +1615,7 @@ function showAppareil(app) {
 
   result.innerHTML = html;
 }
+    
 
 const TOTAL_TRAINS = 11; 
 
@@ -1819,6 +1840,64 @@ if (ligneNomEl) ligneNomEl.style.display = "none";
   }
 });
 
+    // ======================
+// Edition Appareil
+// ======================
+let editModeAppareil = false;
+let originalAppareil = {};
+
+document.addEventListener("click", function(e) {
+  if (e.target.id === "edit-toggle-appareil") {
+    e.preventDefault();
+    if (!editModeAppareil) {
+      editModeAppareil = true;
+
+      originalAppareil.appareil = currentItem.appareil || "";
+      originalAppareil.nomposte = currentItem.nom || "";
+      originalAppareil.description = currentItem.description || "";
+
+      ["editable-appareil","editable-nomposte","editable-rep-appareil","editable-description-appareil"]
+        .forEach(id=>{
+          const el = document.getElementById(id);
+          if (el) el.classList.add("editable-halo","editable-wiggle");
+        });
+
+      document.getElementById("edit-buttons-appareil").style.display = "flex";
+    }
+  }
+});
+
+// clic sur un champ appareil
+document.addEventListener("click", function(e) {
+  if (editModeAppareil && e.target.id === "editable-appareil") {
+    const val = originalAppareil.appareil;
+    e.target.innerHTML = `<input type="text" id="input-appareil" value="${val}" style="border:2px solid #1a73e8; padding:3px; border-radius:6px;" />`;
+  }
+
+  if (editModeAppareil && e.target.id === "editable-nomposte") {
+    const val = originalAppareil.nomposte;
+    e.target.innerHTML = `<input type="text" id="input-nomposte" value="${val}" style="border:2px solid #1a73e8; padding:3px; border-radius:6px;" />`;
+  }
+
+  if (editModeAppareil && e.target.id === "editable-rep-appareil") {
+    const bloc = e.target.closest(".rep-block").querySelector(".inline-links");
+    bloc.innerHTML = `
+      <input type="text" id="input-rep-appareil"
+        placeholder="Coller ici le lien Google Maps"
+        style="width:100%; border:2px solid #1a73e8; border-radius:6px; padding:4px;" />
+    `;
+  }
+
+  if (editModeAppareil && e.target.closest(".info-block")) {
+    const parent = e.target.closest(".info-block");
+    const val = originalAppareil.description;
+    parent.innerHTML = `
+      <strong id="editable-description-appareil">ℹ️ Informations :</strong>
+      <textarea id="input-description-appareil" style="width:100%; min-height:60px; border:2px solid #1a73e8; padding:4px; border-radius:6px;">${val}</textarea>
+    `;
+  }
+});
+
 document.addEventListener("click", function(e){
   if (editMode && (
       ["editable-nom","editable-type","editable-sat","editable-acces","editable-rss",
@@ -1921,17 +2000,6 @@ if (editMode && e.target.id === "editable-rep-poste") {
   return;
 }
 
-  if (editMode && e.target.id === "editable-rep-appareil") {
-  const bloc = e.target.closest(".rep-block").querySelector(".inline-links");
-  bloc.innerHTML = `
-    <input type="text" id="input-appareil-link"
-      placeholder="Coller ici le lien Google Maps"
-      style="width:100%; border:2px solid #1a73e8; border-radius:6px; padding:4px;" />
-  `;
-  navigator.vibrate?.(50);
-  return;
-}
-
 if (editMode && e.target.id === "editable-rep-acces") {
   const bloc = e.target.closest(".rep-block").querySelector(".inline-links");
   bloc.innerHTML = `
@@ -1961,98 +2029,232 @@ function getDemandeur() {
   return demandeur;
 }
     
-
 document.getElementById("btn-save").addEventListener("click", function(){
   const btnSave = document.getElementById("btn-save");
   btnSave.disabled = true;
   btnSave.textContent = "⏳ Envoi..."; 
 
-  const newNom        = document.getElementById("input-nom")?.value || currentItem.nom || "";
-  const newAppareil   = document.getElementById("input-appareil")?.value || currentItem.appareil || "";
-  const newAppareilLink = document.getElementById("input-appareil-link")?.value || "";
-  const newDescription = document.getElementById("input-description")?.value || currentItem.description || "";
-
+  const newNom   = document.getElementById("input-nom")?.value   || originalValues.nom;
+  const newType  = document.getElementById("input-type")?.value  || originalValues.type;
+  const newSat   = document.getElementById("input-sat")?.value   || originalValues.sat || "";
+  const newAcces = document.getElementById("input-acces")?.value || originalValues["accès"] || "";
+const newDescription = document.getElementById("input-description")?.value || originalValues.description || "";
+const newContact     = document.getElementById("input-contact")?.value     || originalValues.contact || "";
+const newPortail     = document.getElementById("input-portail")?.value     || originalValues.portail || "";
+const newPk   = document.getElementById("input-pk")?.value || currentItem.pk || "";
+const newNumLigne = document.getElementById("input-numero_ligne")?.value || currentItem.numero_ligne || "";
+    const newPosteLink = document.getElementById("input-poste-link")?.value || "";
+  const newAccesLink = document.getElementById("input-acces-link")?.value || "";
+  
   const demandeur = getDemandeur();
   const ficheOrigine = currentItem
-    ? `${currentItem.appareil || ''} (${currentItem.nom || ''})`
+    ? `${currentItem.nom || ''} ${currentItem.type || ''} ${currentItem.SAT || ''} ${currentItem.accès || ''}`.trim()
     : "";
 
   const payload = {
     demandeur,
-    ficheOrigine,
+    ficheOrigine
+  };
+if (currentItem.rssTemp) {
+  payload.rss = currentItem.rssTemp;
+  payload.rssChanged = true;   
+  originalValues.rss = currentItem.rssTemp;
+  delete currentItem.rssTemp;
+}
+
+  if (newNom !== originalValues.nom) payload.nom = newNom;
+  if (newType !== originalValues.type) payload.type = newType;
+  if (newSat !== (originalValues.sat || "")) payload.sat = newSat;
+ if (newAcces !== (originalValues["accès"] || "")) payload["accès"] = newAcces;
+  if (originalValues.rss) payload.rss = originalValues.rss;
+if (newDescription !== (originalValues.description || "")) payload.description = newDescription;
+if (newContact !== (originalValues.contact || "")) payload.contact = newContact;
+if (newPortail !== (originalValues.portail || "")) payload.portail = newPortail;
+ if (newPk !== (currentItem.pk || "")) payload.pk = newPk;
+if (newNumLigne !== (currentItem.numero_ligne || "")) payload.numero_ligne = newNumLigne;
+    if (newPosteLink) payload.lien_poste = newPosteLink;
+  if (newAccesLink) payload.lien_acces = newAccesLink;
+  
+fetch("https://script.google.com/macros/s/AKfycbyxh3HGR6iHcn0ynwfGzSzOm5Djc7o2e1uA4dvdPurolDerZlNiARcpsiY4daDRPSV1tw/exec", {
+  method: "POST",
+  mode: "no-cors",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(payload)
+})
+.then(() => {
+  showNotification(" Modification envoyée (en attente d’approbation)", "success");
+  originalValues.description = newDescription;
+  originalValues.contact = newContact;
+  originalValues.portail = newPortail;
+  quitEditMode(newNom, newType, newSat, newAcces);
+
+  return fetch("https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec?increment=true");
+})
+.then(() => console.log(" Contribution créditée"))
+.catch(() => showNotification("❌ Échec d’envoi (réseau)", "error"))
+.finally(() => {
+  setTimeout(() => {
+    btnSave.disabled = false;
+    btnSave.textContent = "💾 Sauvegarder"; 
+  }, 3000);
+});
+  }); 
+
+    document.getElementById("btn-save-appareil").addEventListener("click", function() {
+  const btn = this;
+  btn.disabled = true;
+  btn.textContent = "⏳ Envoi...";
+
+  const newAppareil   = document.getElementById("input-appareil")?.value   || originalAppareil.appareil;
+  const newNomPoste   = document.getElementById("input-nomposte")?.value   || originalAppareil.nomposte;
+  const newLien       = document.getElementById("input-rep-appareil")?.value || "";
+  const newDescription= document.getElementById("input-description-appareil")?.value || originalAppareil.description;
+
+  const demandeur = getDemandeur();
+
+  const payload = {
+    category: "appareil",
+    ficheOrigine: originalAppareil.appareil,
     appareil: newAppareil,
-    nom: newNom,
-    localisation: newAppareilLink,
-    information: newDescription
+    nom: newNomPoste,
+    lien: newLien,
+    description: newDescription,
+    demandeur
   };
 
-  fetch("https://script.google.com/macros/s/AKfycbwD9ZhBCLxaHWpCfGUwrI95We5l1NGMSCgnAwQCsaV1W9uhnV-5XijJVw0TZ6yfdKE/exec", {
+  fetch("https://script.google.com/macros/s/AKfycbyZYV5b-aGdAsFc775xwxsdfBSIZHobE6mGNC7Zixgms77kRTmOaUpwVgNoBoKAiGhm/exec", {
     method: "POST",
+    mode: "no-cors",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload)
   })
-  .then(() => {
-    showNotification(" Modification appareil envoyée ✅", "success");
-    quitEditMode(newNom);
-    return fetch("https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec?increment=true");
-  })
-  .catch(() => showNotification("❌ Échec d’envoi (réseau)", "error"))
+  .then(() => showNotification("✅ Modification appareil envoyée", "success"))
+  .catch(() => showNotification("❌ Erreur envoi appareil", "error"))
   .finally(() => {
     setTimeout(() => {
-      btnSave.disabled = false;
-      btnSave.textContent = "💾 Sauvegarder"; 
-    }, 3000);
+      btn.disabled = false;
+      btn.textContent = "💾 Sauvegarder";
+    }, 2000);
   });
 });
-  
 
-function quitEditMode(nomPoste, appareil){
-  // remet le nom du poste associé et le nom de l’appareil
-  if (document.getElementById("editable-nom")) {
-    document.getElementById("editable-nom").textContent = nomPoste;
+function quitEditMode(nom, type, sat = "", acces = ""){
+  document.getElementById("editable-nom").textContent = nom;
+  document.getElementById("editable-type").textContent = type;
+  if (document.getElementById("editable-sat")) {
+    document.getElementById("editable-sat").textContent = " " + sat;
   }
-  if (document.getElementById("editable-appareil")) {
-    document.getElementById("editable-appareil").textContent = appareil;
-  }
-
-  // remet description normale
-  if (document.getElementById("input-description")) {
-    const descVal = document.getElementById("input-description").value.trim();
-    document.getElementById("input-description").parentNode.outerHTML =
-      formatInformations(descVal);
+  if (document.getElementById("editable-acces")) {
+    document.getElementById("editable-acces").textContent = " – accès " + acces;
   }
 
-  // remet bloc "Repérer l’appareil"
-  const repAppareilInput = document.getElementById("input-appareil-link");
-  if (repAppareilInput) {
-    const bloc = repAppareilInput.closest(".inline-links");
-    bloc.innerHTML = `
-      <a href="${myMapsViewer(currentItem.latitude, currentItem.longitude)}" target="_blank">🛰️ Vue satellite</a>
-      <a href="${
-        currentItem.imajnet && currentItem.imajnet.trim() !== "" 
-          ? currentItem.imajnet 
-          : imajnetLink(currentItem.latitude, currentItem.longitude)
-      }" target="_blank">🚄 Imajnet</a>
-    `;
+const pkVal = originalValues.pk || currentItem.pk || "(non renseigné)";
+const numVal = originalValues.numero_ligne || currentItem.numero_ligne || "(non renseigné)";
+const ligneNomEl = document.getElementById("ligne-nom");
+const ligneNomTxt = ligneNomEl ? ligneNomEl.textContent : "";
+
+const pkParent = document.getElementById("editable-pk")?.parentNode;
+if (pkParent) {
+  pkParent.innerHTML = `
+    🚄 PK <strong id="editable-pk">${pkVal}</strong>
+    sur la ligne n°<strong id="editable-numero_ligne">${numVal}</strong>
+    ${ligneNomTxt ? `<span id="ligne-nom">${ligneNomTxt}</span>` : ""}
+  `;
+}
+
+[
+  "editable-nom","editable-type","editable-sat","editable-acces","editable-rss",
+  "editable-description","editable-contact","editable-portail",
+  "editable-pk","editable-numero_ligne"
+].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) {
+    el.classList.remove("editable-halo", "editable-wiggle"); 
   }
+});
 
-  // enlève les halos et animations
-  document.querySelectorAll(".editable-halo, .editable-wiggle").forEach(el => {
-    el.classList.remove("editable-halo", "editable-wiggle");
-  });
-
-  // cache les boutons et désactive mode édition
   document.getElementById("edit-buttons").style.display = "none";
-  editMode = false;
+ 
+if (document.getElementById("input-description")) {
+  const descVal = document.getElementById("input-description").value.trim();
+  originalValues.description = descVal; 
+
+  document.getElementById("input-description").parentNode.outerHTML =
+    formatDescription(descVal);
+}
+
+if (document.getElementById("editable-contact")) {
+  const contactVal = originalValues.contact || "";
+  document.getElementById("editable-contact").parentNode.outerHTML =
+    formatContact(contactVal);
+}
+
+if (document.getElementById("editable-portail")) {
+  const portailVal = originalValues.portail || "";
+  document.getElementById("editable-portail").parentNode.outerHTML =
+    formatPortail(portailVal);
 }
   
 
+if (ligneNomEl) ligneNomEl.style.display = "inline";
+
+const rssEl = document.getElementById("editable-rss");
+if (rssEl) {
+  if (currentItem.rssChanged) {
+
+    const rssVal = originalValues.rss || currentItem.rss || "";
+rssEl.outerHTML = formatRSS(rssVal, true);
+    delete currentItem.rssChanged;
+  } else if (rssEl.querySelector(".btn-rss")) {
+    
+    const rssVal = originalValues.rss || currentItem.rss || "";
+rssEl.outerHTML = formatRSS(rssVal, true);
+  }
+}
+
+const repPosteInput = document.getElementById("input-poste-link");
+if (repPosteInput) {
+  const bloc = repPosteInput.closest(".inline-links");
+  const latPoste = (currentItem.poste_latitude ?? "").toString();
+  const lonPoste = (currentItem.poste_longitude ?? "").toString();
+  const usePoste = latPoste !== "" && lonPoste !== "";
+  const targetLat = usePoste ? latPoste : currentItem.latitude;
+  const targetLon = usePoste ? lonPoste : currentItem.longitude;
+bloc.innerHTML = usePoste
+  ? `<a href="${myMapsViewer(currentItem.poste_latitude || currentItem.latitude, currentItem.poste_longitude || currentItem.longitude)}" target="_blank" rel="noopener">🛰️ Vue satellite</a>`
+  : `<span class="placeholder">(non renseigné – fournir un lien Maps)</span>`;
+}
+
+const repAccesInput = document.getElementById("input-acces-link");
+if (repAccesInput) {
+  const bloc = repAccesInput.closest(".inline-links");
+bloc.innerHTML = `
+<a href="${myMapsViewer(currentItem.latitude, currentItem.longitude)}">🛰️ Vue satellite</a>
+<a href="#" onclick="openStreetView(${currentItem.latitude}, ${currentItem.longitude}); return false;">👁️ Street View</a>
+`;
+}
+
+  document.querySelectorAll(".editable-halo, .editable-wiggle").forEach(el => {
+    el.classList.remove("editable-halo", "editable-wiggle");
+  });
+  editMode = false;
+}
+
 document.getElementById("btn-cancel").addEventListener("click", function(){
   quitEditMode(
-    originalValues.nom || currentItem.nom,
-    originalValues.appareil || currentItem.appareil
+    originalValues.nom,
+    originalValues.type,
+    originalValues.sat || "",
+     originalValues["accès"] || ""
   );
   showNotification("🔙 Édition annulée", "info");
+});
+
+    document.getElementById("btn-cancel-appareil").addEventListener("click", function(){
+  showAppareil(currentItem); 
+  showNotification("🔙 Édition appareil annulée", "info");
+  editModeAppareil = false;
+  document.getElementById("edit-buttons-appareil").style.display = "none";
 });
 
 function formatInformations(val) {
