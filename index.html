@@ -1530,11 +1530,8 @@ html += `
       }" target="_blank">🚄 Imajnet</a>
     </div>
   </div>`;
-
-  if (app.description) {
-    html += `<p>${app.description}</p>`;
-  }
-
+  
+html += formatInformations(app.description);
 
   let postePrincipal = null;
   if (app.SAT) {
@@ -2108,6 +2105,14 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
   );
   showNotification("🔙 Édition annulée", "info");
 });
+
+    function formatInformations(val) {
+  return `<p><strong id="editable-description">ℹ️ Informations :</strong> 
+    ${val && val.trim() !== "" 
+      ? `<span class="desc-value">${val}</span>` 
+      : '<span class="placeholder">(non renseigné)</span>'}
+  </p>`;
+}
     
     function showNotification(message, type = "info") {
   const notif = document.getElementById("notification");
