@@ -1573,10 +1573,7 @@ function showAppareil(app) {
       </div>
     </div>`;
 
-  html += `
-    <div class="rep-block">
-      ${formatInformations(app.description)}
-    </div>`;
+html += formatInformations(app.description);
 
   // 🔹 rattacher au poste principal si dispo
   let postePrincipal = null;
@@ -2295,7 +2292,7 @@ function formatInformations(val) {
 <div id="about-footer">
   <div class="footer-links">
     <a href="arnaud.html" class="pill-link">🔧 À propos</a>
-   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.10</a>
+   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.10.1</a>
   </div>
 </div>
 <script>
