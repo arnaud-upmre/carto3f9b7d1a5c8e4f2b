@@ -2107,12 +2107,20 @@ document.getElementById("btn-save-appareil").addEventListener("click", function(
   const payload = {
     category: "appareil",
     ficheOrigine: originalAppareil.appareil,
-    appareil: newAppareil,
-    nom: newNomPoste,
-    lien: newLien,
-    description: newDescription,
-    demandeur
+    demandeur,
+    horodatage: new Date().toISOString(),
+    description: newDescription   // ✅ description toujours incluse
   };
+
+  if (newAppareil !== originalAppareil.appareil) {
+    payload.appareil = newAppareil;
+  }
+  if (newNomPoste !== originalAppareil.nomposte) {
+    payload.nom = newNomPoste;
+  }
+  if (newLien && newLien !== (originalAppareil.lien || "")) {
+    payload.lien = newLien;
+  }
 
   fetch("https://script.google.com/macros/s/AKfycbyZYV5b-aGdAsFc775xwxsdfBSIZHobE6mGNC7Zixgms77kRTmOaUpwVgNoBoKAiGhm/exec", {
     method: "POST",
@@ -2126,10 +2134,7 @@ document.getElementById("btn-save-appareil").addEventListener("click", function(
     setTimeout(() => {
       btn.disabled = false;
       btn.textContent = "💾 Sauvegarder";
-
-      if (currentItem) {
-  quitEditModeAppareil(newAppareil, newNomPoste, newLien, newDescription);
-}
+      if (currentItem) quitEditModeAppareil(newAppareil, newNomPoste, newLien, newDescription);
     }, 2000);
   });
 });
