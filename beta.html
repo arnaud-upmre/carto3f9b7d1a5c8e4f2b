@@ -1,219 +1,169 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+  <meta name="robots" content="noindex, nofollow" />
   <meta charset="UTF-8" />
-  <title>Nono Maps</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Cartographie des postes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+ 
+  <meta property="og:title" content="Nono Maps">
+  <meta property="og:description" content="Cartographie collaborative des postes et accès.">
+  <meta property="og:image" content="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/icon-512.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/index.html">
 
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
-<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
-<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+<link rel="icon" href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/favicon/favicon.ico" type="image/x-icon" sizes="16x16 32x32 48x48 64x64 128x128">
+<link rel="icon" type="image/png" sizes="16x16" href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="96x96" href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/favicon/favicon-96x96.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/favicon/favicon-180x180.png">
+<link rel="apple-touch-icon" sizes="192x192" href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/favicon/icon-192.png">
+<link rel="apple-touch-icon" sizes="512x512" href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/favicon/icon-512.png">
+<link rel="manifest" href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/manifest.json">
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-<script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0b0c0e">
+  <meta name="mobile-web-app-capable" content="yes"> 
+  <meta name="apple-mobile-web-app-capable" content="yes"> 
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Nono Maps">
 
-<style>
-
-/* ============================
-   FAB container + bouton burger
-   ============================ */
-.fab-container {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  z-index: 10000;
-  display: flex;
-  flex-direction: column-reverse; 
-  align-items: center;
-  gap: 20px; 
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+   
+  <style id="eale-intro-styles">
+  
+  .rep-appareil .info-block {
+  text-align: left !important;   /* aligner à gauche uniquement pour appareils */
+  font-weight: normal;           /* remettre le texte en normal */
 }
 
-/* Bouton burger */
-.fab {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background: rgba(0,0,0,0.75);
-  color: white;
-  font-size: 28px;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.3s;
-}
-
-/* Menu icônes */
-.fab-options {
-  width: 70px;
-  background: rgba(0,0,0,0.7);
-  border-radius: 40px;
-  padding: 12px 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 14px;
-  opacity: 0;
-  max-height: 0;
-  overflow: hidden;
-  pointer-events: none;
-  transition: all 0.35s ease;
-}
-.fab-options.show {
-  opacity: 1;
-  max-height: 400px;
-  pointer-events: auto;
-}
-
-/* ============================
-   Boutons du menu
-   ============================ */
-.fab-options button {
-  border: none;
-  background: none;   /* pas de carré, pas de rond */
-  padding: 0;
-  margin: 0;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Icônes */
-.fab-options button img {
-  width: 36px;
-  height: 36px;
-  transition: opacity .2s, filter .2s;
-}
-
-/* Inactif */
-.fab-options button:not(.active) img {
-  opacity: 0.5;
-  filter: none;
-}
-
-/* Actif */
-.fab-options button.active {
-  background: rgba(255,255,255,0.50); /* ✅ cercle blanc transparent */
-}
-.fab-options button.active img {
-  opacity: 1;  /* remet l’icône normale */
+.rep-appareil .info-block strong {
+  font-weight: 600;              /* garder "ℹ️ Informations :" en gras */
 }
   
-/* =========================================================
-   TOAST (notifications flottantes)
-   ========================================================= */
-.toast {
-  position: fixed;
-  bottom: 140px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(37,99,235,0.9);
-  color: white;
-  padding: 8px 14px;
-  border-radius: 8px;
-  font-size: 14px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.5s;
-  z-index: 10001;
-}
-.toast.show {
-  opacity: 1;
+  .info-block .desc-value,
+.info-block .placeholder {
+  font-weight: normal !important;
 }
 
-/* =========================================================
-   POPUPS LEAFLET
-   ========================================================= */
-.leaflet-popup-content-wrapper {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.8) 0%,
-    rgba(255, 255, 255, 0.7) 100%
-  );
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.45);
-  box-shadow: inset 0 1px 4px rgba(255,255,255,0.4),
-              0 8px 24px rgba(0,0,0,0.25);
-}
-.leaflet-popup-tip {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.8) 0%,
-    rgba(255, 255, 255, 0.7) 100%
-  );
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  border: 1px solid rgba(255, 255, 255, 0.45);
-}
-.leaflet-popup-content {
-  max-width: 240px !important; 
-  min-width: 240px; 
-  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,sans-serif;
-  font-size: 14px;
-  line-height: 1.4;
-  color: #111;
-  overflow: hidden;    
-  text-align: left;      
-}
-.leaflet-popup-content div,
-.leaflet-popup-content p {
-  display: flex;
-  align-items: center;
-  gap: 6px;           
-  margin: 4px 0;
-  flex-wrap: wrap;      
-}
-.leaflet-popup-content img,
-.leaflet-popup-content svg,
-.leaflet-popup-content i {
-  width: 18px;
-  height: 18px;
-  flex-shrink: 0;
-}
-.leaflet-popup-content a {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  text-decoration: none;
-}
-.leaflet-popup-content a.cluster-link {
-  display: block;
-  padding: 8px 12px;
-  border-radius: 8px;
-  background: #f3f4f6;
-  color: #007aff;
-  text-decoration: none;
-  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,sans-serif;
-  font-size: 14px;
-  margin: 2px 0;
-  transition: background 0.2s;
-}
-.leaflet-popup-content a.cluster-link:hover,
-.leaflet-popup-content a.cluster-link:active {
-  background: #e5e7eb;
+.rep-appareil .info-block {
+  margin-top: 28px !important;
 }
 
-/* =========================================================
-   STREETVIEW OVERLAY
-   ========================================================= */
-#streetview-overlay {
+    .rep-block .inline-links {
+  display: flex;
+  justify-content: center; /* centre horizontalement */
+  gap: 8px; /* espace entre les boutons */
+  margin-top: 6px; /* petit espace au-dessus des boutons */
+}
+
+    #video-overlay {
   position: fixed;
   top: 0; left: 0;
   width: 100%; height: 100%;
   background: rgba(0,0,0,0.6);
-  backdrop-filter: blur(6px);     
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+#video-box {
+  width: 90%;
+  max-width: 900px;
+  height: 70%;
+  background: rgba(20,20,20,0.95);
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+}
+
+#video-box iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+#video-close {
+  position: absolute;
+  top: 12px; right: 12px;
+  font-size: 24px;
+  background: rgba(0,0,0,0.6);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px; height: 40px;
+  cursor: pointer;
+  z-index: 2;
+}
+
+
+    .footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.pill-link {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  border: 1px solid #1a73e8;
+  color: #1a73e8;
+  background: #f5f9ff;
+}
+
+.pill-link:hover {
+  background: #1a73e8;
+  color: #fff;
+}
+
+.version-pill {
+  opacity: 0.85;
+  font-size: 12px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .pill-link {
+    background: #1e1e1e;
+    color: #90caf9;
+    border: 1px solid #90caf9;
+  }
+  .pill-link:hover {
+    background: #90caf9;
+    color: #121212;
+  }
+}
+
+    .rep-block.horizontal .inline-links {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+    #streetview-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   display: none;
   z-index: 9999;
-  display: flex;             
+
+  display: flex;
   align-items: center;
   justify-content: center;
 }
+
 #streetview-box {
   width: 90%;
   max-width: 900px;
@@ -224,11 +174,13 @@
   overflow: hidden;
   position: relative;
 }
+
 #streetview-box iframe {
   width: 100%;
   height: 100%;
   border: none;
 }
+
 #streetview-close {
   position: absolute;
   top: 12px; right: 12px;
@@ -242,1167 +194,2071 @@
   z-index: 2;
 }
 
-/* =========================================================
-   ICONES / CLUSTERS / HALO
-   ========================================================= */
-.btn-return {
-  position: relative;
-  animation: pulseHalo 1.8s infinite;
+#btn-carte { 
+  margin-top: 4rem; 
+  display: inline-block; /* pour être traité comme un bouton */
 }
-@keyframes pulseHalo {
-  0%   { box-shadow: 0 0 0px rgba(255,255,255,0.6); }
-  50%  { box-shadow: 0 0 15px rgba(255,255,255,0.9), 0 0 30px rgba(255,255,255,0.4); }
-  100% { box-shadow: 0 0 0px rgba(255,255,255,0.6); }
+    
+    #counters {
+  text-align: center;
 }
-.icon-halo {
-  width: 48px;  
-  height: 48px;
-  filter: drop-shadow(0 0 2px white) drop-shadow(0 0 4px white);
-}
-.icon-halo-appareil {
-  width: 24px;  
-  height: 24px;
-  filter: drop-shadow(0 0 4px white) drop-shadow(0 0 8px white);
-}
-.icon-wrapper {
-  display: inline-block;
-  border-radius: 50%;         
-  padding: 4px;            
-  background: white;       
-  box-shadow: 0 0 6px rgba(0,0,0,0.4); 
-}
-.icon-wrapper img {
-  width: 44px;
-  height: 44px;
-  display: block;
+  :root{--eale-intro-bg:#fff;--eale-intro-fg:#222}
+  @media (prefers-color-scheme: dark){
+    :root{--eale-intro-bg:#0b0b0b;--eale-intro-fg:#eee}
+  }
+  .eale-intro-overlay{
+    position:fixed; inset:0;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    background:var(--eale-intro-bg); color:var(--eale-intro-fg);
+    z-index:99999; user-select:none; touch-action:none;
+  }
+  .eale-intro-img{
+    width:min(60vw,260px); height:auto; object-fit:contain; pointer-events:none;
+    animation:eale-zoomIn 1.8s ease-out forwards;
+  }
+  .eale-intro-text{
+    position:fixed; bottom:12vh; left:50%; transform:translateX(-50%);
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size:0.95rem; font-style:italic; text-align:center; opacity:.95; max-width:90%;
+  }
+  @keyframes eale-zoomIn{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+  .eale-intro-hide{opacity:0; transition:opacity .35s ease}
+
+.inline-links.pills-3 {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;  
+  align-items: center;       
+  text-align: center;
+  gap: 8px;
 }
 
-/* CLUSTERS */
-.marker-cluster {
-  background: transparent !important; 
-  border-radius: 50%;
+.inline-links.pills-3 a {
+  display: inline-flex;       
+  align-items: center;        
+  vertical-align: middle;     
+  padding: 6px 10px;
 }
-.marker-cluster div {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
+  
+@media (min-width: 420px){
+  .inline-links.pills-3{ flex-wrap: nowrap; }
+}
+
+@media (max-width: 390px){
+  .inline-links.pills-3 a{
+    padding: 6px 8px;
+    font-size: 13.5px;
+  }
+}
+    
+ul#suggestions:empty {
+  margin: 0;
+  padding: 0;
+}
+
+ul#suggestions:not(:empty){
+  margin: .4rem 0 .6rem 0;
+}
+
+.editable-halo {
+  display: inline-block;
+  padding: 2px 4px;
+  border-radius: 6px;
+  position: relative;
+
+  box-shadow: 0 0 6px rgba(26,115,232,0.8),
+              0 0 12px rgba(26,115,232,0.5);
+
+  animation: pulseHalo 1.6s ease-in-out infinite;
+}
+
+@keyframes pulseHalo {
+  0%   { box-shadow: 0 0 4px rgba(26,115,232,0.6), 0 0 8px rgba(26,115,232,0.4); }
+  50%  { box-shadow: 0 0 10px rgba(26,115,232,0.9), 0 0 18px rgba(26,115,232,0.6); }
+  100% { box-shadow: 0 0 4px rgba(26,115,232,0.6), 0 0 8px rgba(26,115,232,0.4); }
+}
+
+.editable-wiggle {
+  animation: wiggle 0.3s infinite; 
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-2deg); }
+  50% { transform: rotate(2deg); }
+}
+    
+#edit-toggle {
+  font-size: 13px;
+  font-style: italic;
+  color: #777;
+  margin-left: 6px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+#edit-toggle:hover {
+  color: #1a73e8;  
+  text-decoration: underline;
+}
+
+#edit-buttons {
+  display: none;
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+
+  background: rgba(255, 255, 255, 0.8); 
+  backdrop-filter: blur(8px);         
+  -webkit-backdrop-filter: blur(8px);   
+
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  padding: 12px 20px;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  border: 1px solid #ddd;
+}
+
+@media (prefers-color-scheme: dark) {
+  #edit-buttons {
+    background: rgba(30, 30, 30, 0.8); 
+    border: 1px solid #444;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+  }
+}
+
+.rep-block {
+  display: block;            
+  margin: 1.5rem 0 0.5rem 0;
+  text-align: center;        
+}
+
+.rep-block p {
+  font-weight: 600;
+  margin: 0 0 6px 0;
+  text-align: center; 
+}
+
+    .rep-block p .emoji {
+  display: inline-block;
+  width: 1.6em;  
+  text-align: center;
+}
+
+    .rep-block.poste-only p {
+  transform: translateX(-14px);  
+}
+.placeholder {
+  color: #888;
+  font-style: italic;
+}
+    
+</style>
+  <style>
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #fff;
+  padding: 1rem;
+  color: #333;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;   
+  width: 100%;
+  max-width: 100%;      
+  box-sizing: border-box;
+}
+    #train-container {
+      width: 100%;
+      max-width: 600px;
+      height: 48px;
+      overflow: hidden;
+      margin-bottom: 3rem;
+      position: relative;
+    }
+   
+@media (max-width: 600px){
+  #train-container { margin-bottom: .8rem; }
+  h1 { margin-bottom: .4rem; }
+}
+    #train {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 42px;
+      animation: trainVaEtVient 28s ease-in-out infinite;
+    }
+    @keyframes trainVaEtVient {
+      0%, 100% { left: 0; }
+      45%, 50% { left: calc(100% - 140px); }
+      95% { left: 0; }
+    }
+    h1 {
+      font-size: 20px;
+      margin: 0 0 0.8rem 0;
+      font-weight: 600;
+      width: 100%;
+      max-width: 600px;
+      padding: 0 1rem;
+      text-align: left;
+    }
+input[type="text"] {
+  width: 100%;
+  max-width: 600px;   
+  padding: 12px 16px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+  
+    input[type="text"]:focus {
+      border-color: #1a73e8;
+      box-shadow: 0 4px 14px rgba(26,115,232,0.4);
+    }
+
+    #result {
+      display: none;
+      background: #ffffff;
+      padding: 1rem 1.1rem;
+      border-radius: 18px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      max-width: 600px;
+      width: 100%;
+      color: #444;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+#result h2 {
+  margin-top: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: #1a73e8;
+  text-align: left; 
+}
+
+  
+#search,
+#suggestions,
+#result,
+#counters {
+  width: 100%;
+  max-width: 600px;     
+}
+
+#suggestions,
+#result {
+  box-sizing: border-box;
+}
+
+#result {
+  border: 1px solid transparent; 
+}
+    
+    .inline-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      font-size: 14px;
+      padding: 0 1rem 0 0;
+    }
+    .inline-links a {
+      padding: 6px 10px;
+      font-size: 14px;
+      text-decoration: none;
+      color: #1a73e8;
+      border: 1px solid #1a73e8;
+      border-radius: 10px;
+      transition: 0.3s;
+      white-space: nowrap;
+    }
+    .inline-links a:hover {
+      background-color: #1a73e8;
+      color: white;
+    }
+    .separator {
+      border: none;
+      border-top: 1px solid #eee;
+      margin: .8rem 0;
+    }
+
+ul#suggestions {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 0.5rem 0;
+  max-width: 600px;
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+  background-color: #fff;
+  font-size: 15px;
+  color: #333;
+}
+ul#suggestions li {
+  padding: 12px 16px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+}
+ul#suggestions li:hover {
+  background-color: #f0f8ff;
+  color: #1a73e8;
+}
+
+@media (prefers-color-scheme: dark){
+  ul#suggestions {
+    background-color: #1e1e1e;
+    color: #e5e5e5;
+    box-shadow: 0 6px 15px rgba(255,255,255,0.05);
+  }
+  ul#suggestions li { border-bottom:1px solid #333; }
+  ul#suggestions li:hover { background-color:#1e2a36; color:#90caf9; }
+}
+    
+li.best {
+  background-color: #e6f0ff;
+  font-weight: 600;
+}
+@media (prefers-color-scheme: dark){
+  li.best {
+    background-color: #1b2836; 
+  }
+}
+    @media (prefers-color-scheme: dark) {
+  #result {
+    background: #1e1e1e;   
+    color: #e5e5e5;       
+    box-shadow: 0 8px 24px rgba(255,255,255,0.05); 
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #121212;
+    color: #e5e5e5;
+  }
+
+  h1,
+  #result h2 {
+    color: #90caf9;
+  }
+
+  input[type="text"] {
+    background-color: #1e1e1e;
+    color: #e5e5e5;
+    border: 1px solid #555;
+  }
+
+  .inline-links a {
+    color: #90caf9;
+    border-color: #90caf9;
+  }
+
+  .inline-links a:hover {
+    background-color: #90caf9;
+    color: #121212;
+  }
+}
+
+.titre-lien{
+  color:inherit;
+  text-decoration:none;
+}
+.titre-lien:hover,
+.titre-lien:focus{ opacity:.85; }
+
+.missing-box {
+  background-color:#e6f0ff;
+  border-radius:12px;
+  padding:12px 16px;
+  margin-top:1.2rem;
+  text-align:center;
+  font-size:15px;
+}
+.missing-box a {
+  color:#1a73e8; 
+  font-weight:600;
+}
+    
+#about-footer {
+  width: 100%;
+  text-align: center;
+  padding: 15px 0;
+  font-size: 13px;
+  background: #121212; 
+  border-top: 1px solid #333;
+  margin-top: 40px; 
+}
+
+.footer-version {
+  color: #999;
+  font-size: 11px;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1; 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+@media (prefers-color-scheme: light) {
+  #about-footer {
+    background: #fff;
+    color: #333;
+    border-top: 1px solid #ddd;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  #about-footer {
+    background: #121212;
+    color: #aaa;
+    border-top: 1px solid #333;
+  }
+}
+
+@media (prefers-color-scheme: dark){
+  a, a:visited { 
+    color:#90caf9; 
+  }
+
+  .inline-links a:hover { 
+    background-color:#90caf9; 
+    color:#121212; 
+  }
+
+  .missing-box {
+    background-color:#16202c;
+    border:1px solid #243447;
+  }
+  .missing-box a { 
+    color:#90caf9; 
+  }
+}
+
+.btn-primary {
+  margin: 8px 0;
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 1px solid #1a73e8;
+  background: #f5f9ff;  
+  color: #1a73e8;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 15px;
+  transition: background 0.2s, color 0.2s;
+  text-decoration: none; 
+}
+
+.btn-primary:hover {
+  background: #1a73e8;
+  color: #fff;
+}
+
+@media (prefers-color-scheme: dark) {
+  .btn-primary {
+    background: #1e1e1e;  
+    color: #90caf9;       
+    border: 1px solid #90caf9;
+  }
+  .btn-primary:hover {
+    background: #90caf9;
+    color: #121212;
+  }
+}
+    #btn-localiser { margin-top: 4rem; } 
+
+  #notification {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 240px;
+  max-width: 90%;
+  padding: 12px 18px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  text-align: center;
+  display: none;
+  z-index: 99999;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+#notification.success {
+  background: #e6f4ea;
+  color: #137333;
+  border: 1px solid #137333;
+}
+
+#notification.error {
+  background: #fce8e6;
+  color: #b00020;
+  border: 1px solid #b00020;
+}
+
+#notification.info {
+  background: #e8f0fe;
+  color: #174ea6;
+  border: 1px solid #174ea6;
+}
+
+@media (prefers-color-scheme: dark) {
+  #notification.success {
+    background: #1e2a21;
+    color: #8dd39c;
+    border: 1px solid #8dd39c;
+  }
+  #notification.error {
+    background: #3a1c1c;
+    color: #ff8a80;
+    border: 1px solid #ff8a80;
+  }
+  #notification.info {
+    background: #1a237e;
+    color: #90caf9;
+    border: 1px solid #90caf9;
+  }
+}
+    
+.rep-block.horizontal.rep-appareil {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: -apple-system, BlinkMacSystemFont,"Segoe UI",Roboto,Inter,sans-serif;
+  gap: 10px; /* espace entre texte et bouton */
+}
+
+.rep-block.horizontal.rep-appareil p {
+  margin: 0;
   font-weight: 600;
-  font-size: 14px;
-  color: #ffffff;
-  text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 0 6px rgba(0,0,0,0.6); 
-  background: rgba(255, 255, 255, 0.15);   
-  backdrop-filter: blur(10px);             
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255,255,255,0.25);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.2);
-  transition: transform 0.25s ease, background 0.3s ease;
 }
-.marker-cluster:hover div {
-  transform: scale(1.12);
-  background: rgba(255, 255, 255, 0.25);
-}
-
-/* =========================================================
-   CONTRÔLES LEAFLET (loupe, recentrer, etc.)
-   ========================================================= */
-.control-group {
-  margin-bottom: 10px; 
-}
-.control-group + .control-group {
-  margin-top: 45px; 
-}
-.leaflet-control-custom {
-  background: rgba(0,0,0,0.7);
-  border: 1px solid rgba(255,255,255,.12);
-  border-radius: 50%;
-  width: 44px; height: 44px;          
-  display: flex; align-items: center; justify-content: center;
-  font-size: 20px;
-  color: #fff;
-  cursor: pointer;
-  margin: 5px;
-  box-shadow: 0 4px 12px rgba(0,0,0,.25);
-  user-select: none;
-  line-height: 1;                   
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* =========================================================
-   BOUTONS GÉNÉRIQUES
-   ========================================================= */
-.btn-toggle{
-  background: rgba(0,0,0,.7);
-  border: 1px solid rgba(255,255,255,.12);
-  border-radius: 50%;
-  width: 44px; height: 44px;       
-  display: flex; align-items: center; justify-content: center;
-  font-size: 20px;                
-  color: #fff;
-  cursor: pointer;
-  margin: 10px 5px;              
-  box-shadow: 0 4px 12px rgba(0,0,0,.25);
-  user-select: none;
-  line-height: 1;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-}
-.btn-toggle.active {
-  background: #fff;
-  color: #111;
-}
-
-/* =========================================================
-   VARIABLES GLOBALES + MAP
-   ========================================================= */
-:root {
-  --accent:#4f46e5;
-  --bg:#0b0c0e;
-  --ink:#f9fafb;
-  --glass:rgba(17,19,23,.65);
-  --border:rgba(255,255,255,.12);
-}
-html, body {
-  height:100%;
-  margin:0;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,sans-serif;
-  background:var(--bg);
-  color:var(--ink);
-}
-#map {
-  width:100%;
-  height:100%;
-}
-
-.icon-circle {
-  width:26px;
-  height:26px;
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:white;
-  font-size:15px;
-  font-weight:bold;
-}
-.poste { background:#e11d48; }
-.appareil { background:#facc15; }
-.acces { background:#3b82f6; }
-
-#version-label {
-  position: fixed;
-  bottom: 6px;
-  left: 8px;   
-  font-size: 11px;
-  color: rgba(255,255,255,0.45);
-  font-family: system-ui, sans-serif;
-  pointer-events: none;
-  user-select: none;
-}
-
-</style>
-
-
   
+  </style>
 </head>
-<body>
-
-    <div id="video-overlay" style="display:none;
-  position:fixed;top:0;left:0;width:100%;height:100%;
-  background:rgba(0,0,0,0.7);z-index:10000;align-items:center;justify-content:center;">
-  <div style="width:90%;max-width:800px;height:70%;position:relative;">
-    <button id="video-close" style="position:absolute;top:8px;right:8px;
-      font-size:24px;background:#000;color:#fff;border:none;border-radius:50%;
-      width:40px;height:40px;cursor:pointer;">❌</button>
-    <iframe id="video-frame" width="100%" height="100%" 
-      src="" frameborder="0" allowfullscreen></iframe>
+<body> <main>
+  <div id="train-container">
+ <img id="train"
+     src="images/train1.gif"
+     alt="Train animé"
+     title="Clique pour changer de train"
+     style="cursor:pointer" />
   </div>
+
+<h1>
+  🚘 <a href="itineraire.html" style="color:inherit; text-decoration:none;">
+    Itinéraire et infos
+  </a>
+</h1>
+<input type="text" id="search" placeholder="Entrer un poste ou un appareil" autocomplete="off" />
+<ul id="suggestions"></ul>
+<div id="result"></div>
+
+<div id="edit-buttons" style="display:none;">
+  <button id="btn-save" class="btn-primary">💾 Sauvegarder</button>
+  <button id="btn-cancel" class="btn-primary">❌ Annuler édition</button>
 </div>
+
+<button id="btn-localiser" class="btn-primary">
+  📍 À proximité
+</button>
+  <!-- Nouveau bouton pour PC -->
+<a id="btn-carte" class="btn-primary" href="map.html" style="display:none;">
+  🗺️ Afficher la carte
+</a>
+<div id="proximite" style="margin-top:1rem; font-size:14px;"></div>
+<div id="proximite-actions" style="text-align:center; margin:10px 0;">
+  <button id="voir-plus" class="btn-primary" style="display:none;">➕ Voir plus</button>
+</div>
+  <script>
+const jsonUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/postes.json";
+const appareilsUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/appareils.json";
+const compteurURL = "https://script.google.com/macros/s/AKfycbzUFaek89LYosR0FSw9gyxn2IZXlFlWXA_dIFIDwox-szE3DgH-l8IVbGfaoIgGK04h/exec";
+const compteurAppareilURL = "https://script.google.com/macros/s/AKfycbwJIlvcfNYREJn1oPiVAhQqHACXXar8ZbRl6aChwYw4TFSAaMTFEHTT5X2T7BKLJ3gsJw/exec";
+
+let lieux = [], appareils = [];
+    let currentItem = null;
+
+function myMapsViewer(lat, lon, z = 19) {
+  return `map.html?lat=${lat}&lon=${lon}&z=${z}`;
+}
+    
+let proximiteIndex = 0;
+const PROX_STEP = 10;
+let proximiteSorted = [];
+    
+function formatContact(val) {
+  if (!val) return `<p><strong id="editable-contact">👤 Contact :</strong> <span class="placeholder">(non renseigné)</span></p>`;
+
+  const phoneRegex = /\d{2}\s?\d{2}\s?\d{2}\s?\d{2}\s?\d{2}/g;
+  const matches = val.match(phoneRegex);
+
+  if (!matches) {
+    return `<p><strong id="editable-contact">👤 Contact :</strong> ${val}</p>`;
+  }
+
+  const texteSansNum = val.replace(phoneRegex, "").trim();
+
+  const boutons = matches.map(num => {
+    const cleaned = num.replace(/\s+/g, "");
+    return `<a href="tel:${cleaned}">${num}</a>`;
+  }).join(" ");
+
+  return `<p><strong id="editable-contact">👤 Contact :</strong> ${texteSansNum} ${boutons}</p>`;
+}
+
+function imajnetLink(lat, lon, zoom = 18, offset = 0) {
+  const R = 6378137;
+  const newLat = lat + (offset / R) * (180 / Math.PI);
+  const newLon = lon;
+  return `https://gecko.imajnet.net/#map=OSM;zoom=${zoom};loc=${newLat},${newLon};`;
+}
+
+function formatPortail(val) {
+  if (!val) return `<p><strong id="editable-portail">🚧 Portail :</strong> <span class="placeholder">(non renseigné)</span></p>`;
+
+  const urlRegex = /(https?:\/\/[^\s]+)/;
+  const urlMatch = val.match(urlRegex);
+  const video = urlMatch ? urlMatch[0] : null;
+
+  const code = val.replace(urlRegex, "").trim();
+
+  const phoneRegex = /^(\d{10}|\d{2}(\s?\d{2}){4})([,\;\*#0-9]*)?$/;
+  let content = "";
+
+  if (phoneRegex.test(code)) {
+    const cleaned = code.replace(/\s+/g, "");
+    content = `<a href="tel:${cleaned}">${code}</a>`;
+  } else {
+    content = code;
+  }
+
+if (video) {
+  const ytMatch = video.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]+)/);
+  if (ytMatch) {
+    const videoId = ytMatch[1];
+    content += ` <a href="#" class="open-video" data-video="${videoId}">▶️ Explication</a>`;
+  }
+}
+
+  return `<p><strong id="editable-portail">🚧 Portail :</strong> ${content}</p>`;
+}
+
+    function formatDescription(val) {
+  return `<p><strong id="editable-description">ℹ️ Informations :</strong> 
+    ${val ? `<span class="desc-value">${val}</span>` : '<span class="placeholder">(non renseigné)</span>'}
+  </p>`;
+}
+    
+function normalize(str) {
+  return str
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")    
+    .replace(/[^a-z0-9\s]/gi, "") 
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, " ");  
+}
+
+function normalizeNomPoste(name) {
+  if (!name) return "";
+  return name
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")     
+    .toLowerCase()
+    .trim()
+    
+    .replace(/\b(?:a|p|sp|ssp|sspa|l|l-a|prci|lgv|ss|sst)\b$/i, "")
+    .trim();
+}
+
+
+function isAppareilLike(raw){
+  if(!raw) return false;
+  const s = raw.trim().toLowerCase();
+  const prefixes = ["tt","i","tc","tsa","il","ip","imp","s"]; 
+  const first = s.split(/\s+/)[0];
+  const hasDigits = /\d/.test(s);
+  return prefixes.includes(first) || hasDigits;
+}
+
+function isPosteLike(raw){
+  if(!raw) return false;
+  const s = raw.trim();
+  return s.length >= 3 && !isAppareilLike(s);
+}
+
+function formatNomCompletLieu(obj) {
+  const base = `${obj.nom || ''} ${obj.type || ''} ${obj.SAT || ''}`.trim();
+return obj["accès"] ? `${base} – accès ${obj["accès"]}` : base;
+}
+
+function formatNomComplet(obj) {
+  return `${obj.nom || ''} ${obj.type || ''}`.trim();
+}
+function formatRSS(table, showPhones = true) {
+  const tables = {
+    "A": ["03 28 55 82 56", "03 28 55 82 57"],
+    "B": ["03 28 55 82 58", "03 28 55 82 59"],
+    "C": ["03 28 55 82 53", "03 28 55 82 54"]
+  };
+  const tableNum = { "A": "1", "B": "2", "C": "3" };
+
+  if (!tables[table]) {
+    return `<p><strong id="editable-rss">📞 RSS :</strong> ${table}</p>`;
+  }
+
+  let html = `<p><strong id="editable-rss">📞 RSS Table ${tableNum[table] || table}</strong></p>`;
+
+  if (showPhones) {
+    const nums = tables[table]
+      .map(num => `<a href="tel:${num.replace(/\s+/g, '')}">${num}</a>`)
+      .join(" ");
+    html += `<div id="rss-phones" class="inline-links">${nums}</div>`;
+  }
+  return html;
+}
+    
+function generateAppareilListHTML(currentLieu) {
+  const matchingApps = appareils.filter(app => 
+    app.nom  === currentLieu.nom  &&
+    app.type === currentLieu.type
+  );
+
+  const isSAT = currentLieu.SAT && currentLieu.SAT !== "";
+  const isAcces = !!currentLieu.accès;
+
+if (!isSAT && !isAcces) {
+  let groupedAll = {};
+  matchingApps.forEach(app => {
+    const sat = app.SAT || 'Poste';
+    if (!groupedAll[sat]) groupedAll[sat] = [];
+    groupedAll[sat].push(app);
+  });
+
+  for (const sat in groupedAll) {
+    groupedAll[sat].sort((a, b) => a.appareil.localeCompare(b.appareil, "fr", { numeric: true }));
+  }
+
+  let html = `<p><strong>🧩 Appareils trouvés dans ce poste :</strong></p>`;
+  for (const [sat, list] of Object.entries(groupedAll)) {
+    html += `<p><strong>${sat} :</strong> `;
+    html += list.map(app => `<a href="#" onclick='showAppareil(${JSON.stringify(app)})'>${app.appareil}</a>`).join(", ");
+    html += `</p>`;
+  }
+
+  html += `
+    <div class="missing-box">
+      📡 SAT manquant ?
+      <a href="ajout_poste.html?poste=${encodeURIComponent(formatNomCompletLieu(currentLieu))}">Aidez-nous à l’ajouter.</a>
+    </div>
+    <div class="missing-box">
+      🤝 Appareil manquant ?
+      <a href="ajout_appareil.html?poste=${encodeURIComponent(formatNomCompletLieu(currentLieu))}">Aidez-nous à l’ajouter.</a>
+    </div>
+  `;
+
+  return html;
+}
+
+  let html = "";
+
+  if (isSAT) {
+    const matchingAppsForSAT = matchingApps.filter(app => (app.SAT || "") === currentLieu.SAT);
+
+    let groupedSAT = {};
+    matchingAppsForSAT.forEach(app => {
+      const sat = app.SAT || 'Poste';
+      if (!groupedSAT[sat]) groupedSAT[sat] = [];
+      groupedSAT[sat].push(app);
+    });
+
+    for (const sat in groupedSAT) {
+      groupedSAT[sat].sort((a, b) => a.appareil.localeCompare(b.appareil, "fr", { numeric: true }));
+    }
+
+    html += `<p><strong>🧩 Appareils trouvés dans ce SAT :</strong></p>`;
+    for (const [sat, list] of Object.entries(groupedSAT)) {
+      html += `<p>${list.map(app => `<a href="#" onclick='showAppareil(${JSON.stringify(app)})'>${app.appareil}</a>`).join(", ")}</p>`;
+    }
+  }
+
+  let groupedAll = {};
+  matchingApps.forEach(app => {
+    const sat = app.SAT || 'Poste';
+    if (!groupedAll[sat]) groupedAll[sat] = [];
+    groupedAll[sat].push(app);
+  });
+
+  for (const sat in groupedAll) {
+    groupedAll[sat].sort((a, b) => a.appareil.localeCompare(b.appareil, "fr", { numeric: true }));
+  }
+
+  html += `<p><strong>🧩 Appareils trouvés dans ce poste :</strong></p>`;
+  for (const [sat, list] of Object.entries(groupedAll)) {
+    if (sat === currentLieu.SAT) continue; // ⚡️ on saute le SAT courant
+    html += `<p><strong>${sat} :</strong> `;
+    html += list.map(app => `<a href="#" onclick='showAppareil(${JSON.stringify(app)})'>${app.appareil}</a>`).join(", ");
+    html += `</p>`;
+  }
+
+  html += `
+    <div class="missing-box">
+      🤝 Appareil manquant ?
+      <a href="ajout_appareil.html?poste=${encodeURIComponent(formatNomCompletLieu(currentLieu))}">Aidez-nous à l’ajouter.</a>
+    </div>
+  `;
+
+  return html;
+}
+    
+    
+function generateAlias(appareil, nom, sat, posteType) {
+  const alias = new Set();
+  const norm = str => (str || "").toLowerCase().trim();
+
+  const a = norm(appareil); 
+  const n = norm(nom);    
+  const s = norm(sat);
+  const t = norm(posteType);
+
+
+  const match = a.match(/^([a-z]+)(\d+)?$/i);
+  const letters = match ? match[1].toLowerCase() : a; 
+  const root = a.split(/[\s\-]/)[0]; 
+
+ 
+  alias.add(a);                          
+  alias.add(a.replace(/([a-z]+)(\d+)/, "$1 $2"));
+  alias.add(letters);                          
+
+
+  if (n) {
+    alias.add(`${a} ${n}`);
+    alias.add(`${n} ${a}`);
+    alias.add(`${root} ${n}`);
+    alias.add(`${n} ${root}`);
+    alias.add(`${letters} ${n}`);
+    alias.add(`${n} ${letters}`);
+  }
+
+  if (/^(i|ia|il|ip|imp)/i.test(a)) {
+    alias.add("interrupteur");
+    alias.add("inter");                       
+    alias.add(`interrupteur ${a}`);
+    alias.add(`inter ${a}`);               
+    if (n) {
+      alias.add(`interrupteur ${n}`);
+      alias.add(`inter ${n}`);               
+    }
+  }
+
+  if (/^(tt|tc|tsa)/i.test(a)) {
+    alias.add("transformateur");
+    alias.add("transfo");                       
+    alias.add(`transformateur ${a}`);
+    alias.add(`transfo ${a}`);                   
+    if (n) {
+      alias.add(`transformateur ${n}`);
+      alias.add(`transfo ${n}`);           
+    }
+  }
+
+  if (/^s?\d+$/i.test(a) || /^sm/i.test(a) || /^st/i.test(a)) {   
+    alias.add("sectionneur");
+    alias.add(`sectionneur ${a}`);
+    if (n) alias.add(`sectionneur ${n}`);
+  }
+
+  if (n) {
+    const mots = n.split(/\s+/);
+    mots.forEach(m => {
+      alias.add(`${letters} ${m}`);
+      alias.add(`${m} ${letters}`);
+      alias.add(`${letters.toUpperCase()} ${m}`);
+      alias.add(`${m} ${letters.toUpperCase()}`);
+    });
+  }
+
+  if (s) {
+    alias.add(`${a} ${s}`);
+    alias.add(`${s} ${a}`);
+    if (n) {
+      alias.add(`${a} ${n} ${s}`);
+      alias.add(`${n} ${s} ${a}`);
+      alias.add(`${letters} ${n} ${s}`);
+      alias.add(`${n} ${s} ${letters}`);
+    }
+  }
+
+  if (t && n) {
+    alias.add(`${n} ${t}`);
+    alias.add(`${t} ${n}`);
+  }
+
+  return Array.from(alias);
+} 
+
+
+function incrementCounter() {
+  fetch(compteurURL + "?increment=true").catch(() => {});
+}
+
+function incrementCounterAppareil() {
+  fetch(compteurAppareilURL + "?increment=true").catch(() => {});
+}
+
+function showLieu(lieu) {
+    currentItem = lieu;
+
+if (lieu.special === true) {
+  const result = document.getElementById("result");
+  document.getElementById("suggestions").innerHTML = "";
+  result.style.display = "block";
+
+  let html = `<h2>
+  📍 ${lieu.nom}
+</h2>`;
+
+  html += `
+  <div class="rep-block">
+    <p><span class="emoji">🛣️</span> Repérer l’accès :</p>
+    <div class="inline-links pills-3">
+<a href="${myMapsViewer(lieu.latitude, lieu.longitude)}">🛰️ Vue satellite</a>
+
+<a href="#" onclick="openStreetView(${lieu.latitude}, ${lieu.longitude}); return false;">👁️ Street View</a>
+    </div>
+  </div>`;
+
+  html += `
+  <div class="rep-block">
+    <p><span class="emoji">🚙</span> Itinéraires disponibles :</p>
+    <div class="inline-links pills-3">
+      <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🗺️ Maps</a>
+      <a href="https://maps.apple.com/?daddr=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🍎 Plans</a>
+      <a href="https://waze.com/ul?ll=${lieu.latitude},${lieu.longitude}&navigate=yes" target="_blank" rel="noopener">🚗 Waze</a>
+    </div>
+  </div>`;
+
+  const blocs = [];
+
+  blocs.push(formatDescription(lieu.description));
+  blocs.push(formatPortail(lieu.portail));
+
+  if (blocs.length > 0) {
+    html += `<hr class="separator" />` +
+            blocs.map((b,i)=> i===0 ? b : `<hr class="separator" />${b}`).join("");
+  }
+
+  result.innerHTML = html;
+  return; 
+}
   
-  <div id="map"></div>
+  const result = document.getElementById("result");
+  document.getElementById("suggestions").innerHTML = "";
+  result.style.display = "block";
+  incrementCounter();
 
-<!-- Bouton flottant (FAB) -->
-<div class="fab-container">
-  <button class="fab" id="fabBtn">☰</button>
-  <!-- Boutons du menu flottant -->
-  <div class="fab-options" id="fabOptions">
-    <button class="btn-toggle active" onclick="toggleLayer(accesLayer, this, 'Accès routiers')">
-      <img src="ico/acces.png" alt="Accès routiers">
-    </button>
-    <button class="btn-toggle active" onclick="toggleLayer(postesLayer, this, 'Postes')">
-      <img src="ico/poste.png" alt="Postes">
-    </button>
-    <button class="btn-toggle active" onclick="toggleLayer(appareilsLayer, this, 'Appareils')">
-      <img src="ico/int.png" alt="Appareils">
-    </button>
-    <button class="btn-toggle" onclick="toggleLayer(pnLayer, this, 'Passages à niveau')">
-      <img src="ico/pn.png" alt="Passages à niveau">
-    </button>
+const _latPoste = (lieu.poste_latitude ?? "").toString();
+const _lonPoste = (lieu.poste_longitude ?? "").toString();
+const usePoste = _latPoste !== "" && _lonPoste !== "";
+const targetLat = usePoste ? _latPoste : lieu.latitude;
+const targetLon = usePoste ? _lonPoste : lieu.longitude;
+const urlMyMapsPoste = myMapsViewer(targetLat, targetLon, 20);
+
+let html = `<h2>
+  📍 <span id="editable-nom">${lieu.nom}</span> 
+  <span id="editable-type">${lieu.type}</span>
+  ${lieu.SAT ? `<span id="editable-sat"> ${lieu.SAT}</span>` : ""}
+  ${lieu.accès ? `<span id="editable-acces"> – accès ${lieu.accès}</span>` : ""}
+  <a href="#" id="edit-toggle">[modifier]</a>
+</h2>`;
+    
+html += `
+<div class="rep-block poste-only">
+  <p id="editable-rep-poste"><span class="emoji">⚡️</span> <strong>Repérer le poste (sat/guérite)</strong></p>
+  <div class="inline-links pills-2">
+    ${
+      usePoste
+        ? `
+          <a href="${myMapsViewer(lieu.poste_latitude || lieu.latitude, lieu.poste_longitude || lieu.longitude)}" target="_blank">🛰️ Vue satellite</a>
+          <a href="${
+            lieu.imajnet && lieu.imajnet.trim() !== "" 
+              ? lieu.imajnet 
+              : imajnetLink(lieu.poste_latitude || lieu.latitude, lieu.poste_longitude || lieu.longitude)
+          }" target="_blank">🚄 Imajnet</a>
+        `
+        : `<span class="placeholder">(non renseigné – fournir un lien Maps)</span>`
+    }
   </div>
+</div>`;
+
+html += `
+<div class="rep-block">
+  <p id="editable-rep-acces"><span class="emoji">🛣️</span> Repérer l’accès :</p>
+  <div class="inline-links pills-3">
+<a href="${myMapsViewer(lieu.latitude, lieu.longitude)}">🛰️ Vue satellite</a>
+<a href="#" onclick="openStreetView(${lieu.latitude}, ${lieu.longitude}); return false;">👁️ Street View</a> </div>
+</div>`;
+  
+html += `
+<div class="rep-block">
+  <p><span class="emoji">🚙</span> Itinéraires disponibles :</p>
+  <div class="inline-links pills-3">
+    <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🗺️ Maps</a>
+    <a href="https://maps.apple.com/?daddr=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🍎 Plans</a>
+    <a href="https://waze.com/ul?ll=${lieu.latitude},${lieu.longitude}&navigate=yes" target="_blank" rel="noopener">🚗 Waze</a>
+  </div>
+</div>`;
+
+const blocs = [];
+
+if (lieu.rss) {
+blocs.push(formatRSS(lieu.rss, true));
+}
+
+const pk = lieu.pk 
+  ? `<strong id="editable-pk">${lieu.pk}</strong>` 
+  : `<span id="editable-pk" class="placeholder">(non renseigné)</span>`;
+
+const numLigne = lieu.numero_ligne 
+  ? `<strong id="editable-numero_ligne">${lieu.numero_ligne}</strong>` 
+  : `<span id="editable-numero_ligne" class="placeholder">(non renseigné)</span>`;
+
+const ligneNom = lieu.lignes 
+  ? ` <span id="ligne-nom">– ${lieu.lignes}</span>` 
+  : "";
+
+blocs.push(`
+  <p>
+    <strong>🚄 PK</strong> ${pk}
+    sur la ligne n°${numLigne}${ligneNom}
+  </p>
+`);
+
+blocs.push(formatDescription(lieu.description));
+  
+blocs.push(
+  formatContact(lieu.contact) ||
+  `<p><strong id="editable-contact">👤 Contact :</strong> <span class="contact-value"><span class="placeholder">(non renseigné)</span></span></p>`
+);
+
+blocs.push(
+  formatPortail(lieu.portail) ||
+  `<p><strong id="editable-portail">🚧 Portail :</strong> <span class="portail-value"><span class="placeholder">(non renseigné)</span></span></p>`
+);
+
+  
+  if (blocs.length > 0) {
+    html += `<hr class="separator" />` +
+            blocs.map((b,i)=> i===0 ? b : `<hr class="separator" />${b}`).join("");
+  }
+
+  const appareilsHTML = generateAppareilListHTML(lieu);
+  if (appareilsHTML) {
+    html += `<hr class="separator" />${appareilsHTML}`;
+  }
+
+if (lieu.SAT || lieu.accès) {
+  html += `
+    <div class="missing-box" onclick="retourFichePrincipale('${encodeURIComponent(lieu.nom)}','${encodeURIComponent(lieu.type)}')">
+      ⬅️ Retour à la fiche principale<br>
+      <strong>${lieu.nom} ${lieu.type}</strong>
+    </div>
+  `;
+}
+
+  result.innerHTML = html;
+}
+
+  let allItems = [], fuseMix;
+
+Promise.all([
+  fetch(jsonUrl).then(r => r.json()),
+  fetch(appareilsUrl).then(r => r.json())
+]).then(([postes, apps]) => {
+  lieux = postes;
+  appareils = apps;
+
+  appareils.forEach(app => {
+    app.alias = generateAlias(app.appareil, app.nom, app.SAT, app.type);
+  });
+
+  const postesTagged = postes.map(p => ({ ...p, category: "poste" }));
+  const appsTagged   = apps.map(a => ({ ...a, category: "appareil" }));
+  allItems = [...postesTagged, ...appsTagged];
+
+  fuseMix = new Fuse(allItems, {
+    keys: [
+      { name: "nom", weight: 0.8 },
+      { name: "type", weight: 0.2 },
+      { name: "SAT", weight: 0.2 },
+      { name: "appareil", weight: 0.6 },
+      { name: "alias", weight: 0.7 },
+      { name: "accès", getFn: o => o.accès?.toString?.() || "", weight: 0.2 }
+    ],
+    includeScore: true,
+    threshold: 0.30,
+    distance: 50,
+    minMatchCharLength: 2,
+    ignoreLocation: true
+  });
+
+  const params = new URLSearchParams(window.location.search);
+const idParam = decodeURIComponent(params.get("id") || "");
+
+if (idParam) {
+  console.log("🔍 Paramètre id =", JSON.stringify(idParam));
+
+
+  const matchPoste = lieux.find(l => formatNomCompletLieu(l) === idParam);
+
+  if (matchPoste) {
+    console.log("✅ Poste/Accès trouvé:", matchPoste);
+    showLieu(matchPoste);
+  } else {
+
+    
+    const matchApp = appareils.find(a => {
+      const candidate = `${a.appareil} ${a.nom || ""} ${a.type || ""} ${a.SAT || ""}`.trim();
+      return candidate === idParam;
+    });
+
+    if (matchApp) {
+      console.log("✅ Appareil trouvé:", matchApp);
+      showAppareil(matchApp);
+    } else {
+      console.warn("❌ Aucun match pour", JSON.stringify(idParam));
+    }
+  }
+}
+  });
+
+    let selectedIndex = -1;
+
+    function updateSelection(items) {
+  items.forEach((li, i) => {
+    if (i === selectedIndex) {
+      li.classList.add("best");
+      li.scrollIntoView({ block: "nearest" });
+    } else {
+      li.classList.remove("best");
+    }
+  });
+}
+    
+
+document.getElementById("search").addEventListener("input", e => {
+  const query = normalize(e.target.value.trim());
+  const suggestionsEl = document.getElementById("suggestions");
+  const resultEl = document.getElementById("result");
+
+  suggestionsEl.innerHTML = "";
+  resultEl.innerHTML = "";
+  resultEl.style.display = "none";
+
+  if (!query || query.length < 2 || !fuseMix) return;
+
+let results = fuseMix.search(query).map(r => r.item);
+  const cleanedQuery = query.replace(/\s+/g, "").toLowerCase();
+
+const queryWords = query.split(/\s+/);
+const prefixes = ["tt","i","tc","tsa","il","ip","imp","s"];
+const lowerWords = queryWords.map(w => w.toLowerCase());
+
+const prefixWord = lowerWords.find(w => prefixes.includes(w));
+
+if (prefixWord) {
+  const otherWords = lowerWords.filter(w => w !== prefixWord);
+
+  results = results.filter(item => {
+    const appareilOk = item.appareil && item.appareil.toLowerCase().startsWith(prefixWord);
+    const nomOk = otherWords.every(w => normalize(item.nom || "").includes(w));
+    return appareilOk && nomOk;
+  });
+}
+
+results.forEach(it => {
+  const aliases = Array.isArray(it.alias) ? it.alias : [];
+  it.__directAliasHit = aliases.some(a => normalize(a) === query);
+});
+
+results.sort((a, b) => {
+  const q = query.toLowerCase();
+
+ 
+  const norm = s => (s || "").toString().toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").trim().replace(/\s+/g, " ");
+  const id = x => (x.appareil || "").toString().replace(/\s+/g, "").toLowerCase();    
+  const idDigits = x => id(x).replace(/\D/g, "");                                   
+
+  const qId = cleanedQuery;          
+  const qDigits = cleanedQuery.replace(/\D/g, "");
+  const aExactId = a.category === "appareil" && (id(a) === qId || (qDigits && idDigits(a) === qDigits));
+  const bExactId = b.category === "appareil" && (id(b) === qId || (qDigits && idDigits(b) === qDigits));
+  if (aExactId && !bExactId) return -1;
+  if (bExactId && !aExactId) return 1;
+
+  const aliasHit = (x) => Array.isArray(x.alias) && x.alias
+      .map(s => s.replace(/\s+/g, "").toLowerCase())
+      .some(s => s === qId || (qDigits && s.replace(/\D/g, "") === qDigits));
+  const aAlias = a.category === "appareil" && aliasHit(a);
+  const bAlias = b.category === "appareil" && aliasHit(b);
+  if (aAlias && !bAlias) return -1;
+  if (bAlias && !aAlias) return 1;
+
+  const aNom = norm(a.nom || "");
+  const bNom = norm(b.nom || "");
+  const aStarts = aNom.startsWith(q);
+  const bStarts = bNom.startsWith(q);
+  if (aStarts && !bStarts) return -1;
+  if (bStarts && !aStarts) return 1;
+
+  const aExact = aNom === q;
+  const bExact = bNom === q;
+  if (aExact && !bExact) return -1;
+  if (bExact && !aExact) return 1;
+
+  const aIsPoste = a.category === "poste" && !a.accès;
+  const bIsPoste = b.category === "poste" && !b.accès;
+  if (aIsPoste && !bIsPoste) return -1;
+  if (bIsPoste && !aIsPoste) return 1;
+
+  const aIsAcces = a.category === "poste" && !!a.accès;
+  const bIsAcces = b.category === "poste" && !!b.accès;
+  if (aIsAcces && !bIsAcces) return -1;
+  if (bIsAcces && !aIsAcces) return 1;
+
+  if (a.category === "appareil" && b.category !== "appareil") return 1;
+  if (b.category === "appareil" && a.category !== "appareil") return -1;
+
+  const label = x =>
+    x.category === "poste"
+      ? `${x.nom || ""} ${x.type || ""} ${x.SAT || ""}`.trim()
+      : `${x.appareil} (${x.nom}${x.type ? " " + x.type : ""}${x.SAT ? " / " + x.SAT : ""})`;
+
+  return label(a).localeCompare(label(b), "fr", { sensitivity: "base" });
+});
+
+const rawQuery = e.target.value.trim();  
+
+suggestionsEl.innerHTML = "";
+
+const labelFor = (item) =>
+  (item.category === "poste")
+    ? formatNomCompletLieu(item)
+    : `${item.appareil} (${item.nom}${item.type ? ' ' + item.type : ''}${item.SAT ? ' / ' + item.SAT : ''})`;
+
+results.forEach((item, i) => {
+  const li = document.createElement("li");
+const icon = (item.category === "poste")
+  ? `🚙${item.poste_latitude && item.poste_longitude ? " 📍" : ""}`
+  : "💡";
+
+li.innerHTML = `${icon} ${labelFor(item)}`;
+
+  if (i === 0) li.classList.add("best");
+
+  li.onclick = () => {
+    if (item.category === "poste") showLieu(item);
+    else showAppareil(item);
+  };
+
+  suggestionsEl.appendChild(li);
+});
+
+if (rawQuery.length >= 3) {
+  const queryNorm = normalizeNomPoste(rawQuery);
+
+  const exactMatch = results.some(item => {
+    if (item.category === "poste") {
+      return normalizeNomPoste(item.nom) === queryNorm;
+    } else {
+      return normalize(item.appareil || "") === normalize(rawQuery);
+    }
+  });
+}
+
+});
+
+    document.getElementById("search").addEventListener("keydown", (e) => {
+  const suggestionsEl = document.getElementById("suggestions");
+  const items = suggestionsEl.querySelectorAll("li");
+
+  if (e.key === "ArrowDown" && items.length) {
+    e.preventDefault();
+    selectedIndex = (selectedIndex + 1) % items.length;
+    updateSelection(items);
+  } 
+  else if (e.key === "ArrowUp" && items.length) {
+    e.preventDefault();
+    selectedIndex = (selectedIndex - 1 + items.length) % items.length;
+    updateSelection(items);
+  } 
+  else if (e.key === "Enter") {
+    e.preventDefault();
+    if (selectedIndex >= 0 && items[selectedIndex]) {
+      items[selectedIndex].click();
+    } else if (items[0]) {
+      items[0].click();
+    }
+  }
+  else if (e.key === "Escape") {
+    e.preventDefault();
+    document.getElementById("result").style.display = "none";
+    document.getElementById("result").innerHTML = "";
+    suggestionsEl.innerHTML = "";
+    selectedIndex = -1;
+  }
+});
+    
+
+function showAppareil(app) {
+  currentItem = app;
+  incrementCounterAppareil();
+
+  const result = document.getElementById("result");
+  const suggestionsEl = document.getElementById("suggestions");
+
+  suggestionsEl.innerHTML = "";
+  result.style.display = "block";
+
+  let html = `<h2>
+    ⚡️ <span id="editable-appareil">${app.appareil}</span>
+    (<span id="editable-nom">${app.nom}</span>${app.type ? ' ' + app.type : ''}${app.SAT ? ' / ' + app.SAT : ''})
+    <a href="#" id="edit-toggle">[modifier]</a>
+  </h2>`;
+
+  // bloc "Repérer l’appareil"
+  html += `
+    <div class="rep-block horizontal rep-appareil">
+      <p id="editable-rep-appareil"><span class="emoji">💡</span> Repérer l’appareil :</p>
+      <div class="inline-links pills-2">
+        <a href="${myMapsViewer(app.latitude, app.longitude)}" target="_blank">🛰️ Vue satellite</a>
+        <a href="${
+          app.imajnet && app.imajnet.trim() !== "" 
+            ? app.imajnet 
+            : imajnetLink(app.latitude, app.longitude)
+        }" target="_blank">🚄 Imajnet</a>
+      </div>
+    </div>`;
+
+  // bloc informations
+  html += `
+    <div class="rep-appareil">
+      ${formatInformations(app.description)}
+    </div>`;
+
+  result.innerHTML = html;
+}
+
+  let postePrincipal = null;
+  if (app.SAT) {
+    postePrincipal = lieux.find(l =>
+      normalize(l.nom) === normalize(app.nom) &&
+      normalize(l.type) === normalize(app.type) &&
+      normalize(l.SAT) === normalize(app.SAT)
+    );
+  }
+
+  if (!postePrincipal && app.appareil) {
+    postePrincipal = lieux.find(l =>
+      normalize(l.nom) === normalize(app.nom) &&
+      normalize(l.type) === normalize(app.type) &&
+      normalize(l.accès) === normalize(app.appareil)
+    );
+  }
+
+  if (!postePrincipal) {
+    postePrincipal = lieux.find(l =>
+      normalize(l.nom) === normalize(app.nom) &&
+      normalize(l.type) === normalize(app.type) &&
+      !l.SAT && !l.accès
+    );
+  }
+
+  if (postePrincipal) {
+    const sauvegarde = html;
+    showLieu(postePrincipal); 
+    const fichePoste = document.getElementById("result").innerHTML;
+    html = sauvegarde + "<hr class='separator' />" + fichePoste;
+  }
+
+  result.innerHTML = html;
+}
+    
+
+const TOTAL_TRAINS = 11; 
+
+const trainImg = document.getElementById('train');
+trainImg.onerror = () => { trainImg.src = 'images/train1.gif'; };
+let lastN = null;
+
+function pickRandomTrain() {
+  let n;
+  do {
+    n = Math.floor(Math.random() * TOTAL_TRAINS) + 1;
+  } while (TOTAL_TRAINS > 1 && n === lastN);
+  lastN = n;
+
+  trainImg.src = `images/train${n}.gif`;
+
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', pickRandomTrain);
+} else {
+  pickRandomTrain();
+}
+
+trainImg.addEventListener('click', pickRandomTrain);
+
+function getDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371; 
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLon/2) * Math.sin(dLon/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  return R * c; 
+}
+
+const km = d => d.toFixed(2).replace(".", ","); 
+
+const labelPoste = p =>
+  (`${p.nom || ""}${p.type ? " " + p.type : ""}${p.SAT ? " " + p.SAT : ""}`.trim()) +
+  (p.accès ? ` – accès ${p.accès}` : "");
+
+const labelAppareil = p =>
+  `${p.appareil} (${p.nom}${p.type ? " " + p.type : ""}${p.SAT ? " / " + p.SAT : ""})`;
+    
+function isMobile() {
+  if (navigator.userAgentData && "mobile" in navigator.userAgentData) {
+    return navigator.userAgentData.mobile;
+  }
+
+  return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+}
+
+if (!isMobile()) {
+  document.getElementById("btn-localiser").style.display = "none";
+  document.getElementById("btn-carte").style.display = "inline-block";
+}
+
+document.getElementById("btn-localiser").addEventListener("click", () => {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      showNearby,
+      (error) => {
+        if (error.code === error.PERMISSION_DENIED) {
+          alert("❌ Autorisation refusée pour la géolocalisation.");
+        } else if (error.code === error.POSITION_UNAVAILABLE) {
+          alert("⚠️ Position indisponible (pas de GPS ou réseau).");
+        } else if (error.code === error.TIMEOUT) {
+          alert("⌛ La demande de localisation a expiré.");
+        } else {
+          alert("❌ Erreur inconnue de géolocalisation.");
+        }
+      }
+    );
+  } else {
+    alert("La géolocalisation n’est pas supportée.");
+  }
+});
+
+function renderProximitePage() {
+  const container = document.getElementById("proximite");
+  const ul = container.querySelector("ul");
+  const btnVoirPlus = document.getElementById("voir-plus");
+
+  const slice = proximiteSorted.slice(proximiteIndex, proximiteIndex + PROX_STEP);
+
+  slice.forEach(p => {
+    const icon = p.category === "poste" ? "🚙" : "💡";
+    const label = p.category === "poste" ? labelPoste(p) : labelAppareil(p);
+
+    const li = document.createElement("li");
+    li.style.margin = "15px 0";
+
+    const a = document.createElement("a");
+    a.href = "#";
+    a.style.textDecoration = "none";
+    a.style.color = "inherit";
+    a.style.cursor = "pointer";
+  a.innerHTML = `${icon} ${label} – ${km(p.distance)} km`;
+
+    a.addEventListener("click", ev => {
+      ev.preventDefault();
+      container.innerHTML = "";
+      btnVoirPlus.style.display = "none";
+      if (p.category === "poste") {
+        showLieu(p);
+      } else {
+        showAppareil(p);
+      }
+    });
+
+    li.appendChild(a);
+    ul.appendChild(li);
+  });
+
+  proximiteIndex += slice.length;
+
+  if (proximiteIndex < proximiteSorted.length) {
+    btnVoirPlus.style.display = "inline-block";
+  } else {
+    btnVoirPlus.style.display = "none";
+  }
+}
+
+function showNearby(position) {
+  const lat = position.coords.latitude;
+  const lon = position.coords.longitude;
+
+  if (!allItems || allItems.length === 0) {
+    alert("Les données ne sont pas encore chargées.");
+    return;
+  }
+
+  proximiteSorted = allItems
+    .map(it => ({ ...it, distance: getDistance(lat, lon, it.latitude, it.longitude) }))
+    .sort((a, b) => a.distance - b.distance);
+
+  proximiteIndex = 0;
+
+  const container = document.getElementById("proximite");
+  container.innerHTML = `<h3>📍 À proximité :</h3><ul style="margin:0; padding-left:20px;"></ul>`;
+
+  const btnVoirPlus = document.getElementById("voir-plus");
+  btnVoirPlus.onclick = renderProximitePage;
+
+  renderProximitePage();
+}
+
+const compteurContributionURL = "https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec";
+
+function updateContrib() {
+  const cached = localStorage.getItem("counterContrib");
+  if (cached) {
+  const el1 = document.getElementById("compteur-valeur");
+if (el1) el1.textContent = `(${cached})`;
+  }
+
+  fetch(compteurContributionURL).then(r => r.json()).then(data => {
+    if (data && typeof data.count !== "undefined") {
+      const el2 = document.getElementById("compteur-valeur");
+if (el2) el2.textContent = `(${data.count})`;
+      localStorage.setItem("counterContrib", data.count);
+    }
+  }).catch(() => {});
+}
+
+let editMode = false;
+let originalValues = {};
+
+document.addEventListener("click", function(e){
+  if (e.target.id === "edit-toggle") {
+    e.preventDefault();
+    if (!editMode) {
+      editMode = true;
+      originalValues.nom = document.getElementById("editable-nom").textContent;
+      originalValues.type = document.getElementById("editable-type").textContent;
+ 
+if (currentItem.rss) {
+  originalValues.rss = currentItem.rss;  
+} else {
+  originalValues.rss = "";
+}
+        originalValues.pk = currentItem.pk || "";
+  originalValues.numero_ligne = currentItem.numero_ligne || "";
+      
+      if (document.getElementById("editable-sat")) {
+        originalValues.sat = document.getElementById("editable-sat").textContent.trim();
+      }
+      if (document.getElementById("editable-acces")) {
+       originalValues["accès"] = document.getElementById("editable-acces").textContent.replace("– accès ","").trim();
+      }
+        if (document.getElementById("editable-description")) {
+    originalValues.description = document.getElementById("editable-description").textContent.trim();
+  }
+
+
+originalValues.contact = currentItem.contact || "";
+originalValues.portail = currentItem.portail || "";
+
+["editable-nom","editable-type","editable-sat","editable-acces",
+ "editable-description","editable-contact","editable-portail",
+ "editable-pk","editable-numero_ligne","editable-rss"].forEach(id=>{
+  const el = document.getElementById(id);
+  if (el) {
+    el.classList.add("editable-halo", "editable-wiggle");
+  }
+});
+      ["editable-rep-poste","editable-rep-acces"].forEach(id=>{
+  const el = document.getElementById(id);
+  if (el) {
+    el.classList.add("editable-halo", "editable-wiggle");
+  }
+});
+
+const ligneNomEl = document.getElementById("ligne-nom");
+if (ligneNomEl) ligneNomEl.style.display = "none";
+
+      document.getElementById("edit-buttons").style.display = "flex";
+      navigator.vibrate?.(80);
+    }
+  }
+});
+
+document.addEventListener("click", function(e){
+  if (editMode && (
+      ["editable-nom","editable-type","editable-sat","editable-acces","editable-rss",
+       "editable-description","editable-contact","editable-portail",
+       "editable-pk","editable-numero_ligne"].includes(e.target.id) ||
+      e.target.closest("#editable-rss")
+  )) {
+
+ 
+if (["editable-nom","editable-type","editable-sat","editable-acces","editable-pk","editable-numero_ligne"].includes(e.target.id)) {
+  e.target.classList.remove("editable-wiggle");
+}
+    
+if (e.target.id === "editable-rss" || e.target.closest("#editable-rss")) {
+const rssEl = document.getElementById("editable-rss");
+if (!rssEl) return;
+
+const rssBlock = rssEl.closest("p"); 
+const phonesEl = document.getElementById("rss-phones"); 
+if (phonesEl) phonesEl.remove(); 
+
+rssBlock.outerHTML = `
+  <div id="editable-rss" class="inline-links">
+    <button class="btn-primary btn-rss" data-code="A">Table 1</button>
+    <button class="btn-primary btn-rss" data-code="B">Table 2</button>
+    <button class="btn-primary btn-rss" data-code="C">Table 3</button>
+  </div>
+`;
+
+document.querySelectorAll(".btn-rss").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const code = btn.dataset.code;
+    currentItem.rssTemp = code;         
+    currentItem.rssChanged = true;    
+    document.querySelector("#editable-rss").innerHTML =
+      `<strong>📞 RSS Table ${code === "A" ? "1" : code === "B" ? "2" : "3"}</strong>`;
+  });
+});
+
+  return; 
+}
+  
+if (editMode && (e.target.id === "editable-description" || e.target.closest("#editable-description"))) {
+  const parent = document.getElementById("editable-description").parentNode;
+  const val = currentItem.description || "";
+
+  parent.innerHTML = `
+    <strong id="editable-description">ℹ️ Informations :</strong>
+    <textarea id="input-description" style="width:100%; min-height:60px; border:2px solid #1a73e8; padding:4px; border-radius:6px;">${val}</textarea>
+  `;
+
+  document.getElementById("edit-buttons").style.display = "block";
+  navigator.vibrate?.(50);
+  return;
+}
+
+if (e.target.id === "editable-portail") {
+  const parent = e.target.parentNode;
+ const val = originalValues.portail || "";
+  parent.innerHTML = `
+    <strong id="editable-portail">🚧 Portail :</strong>
+    <input type="text" id="input-portail" value="${val}" 
+      style="border:2px solid #1a73e8; padding:3px; border-radius:6px; margin-left:6px; width:80%;" />
+  `;
+  document.getElementById("edit-buttons").style.display = "block";
+  navigator.vibrate?.(50);
+  return;
+}
+  if (e.target.id === "editable-contact") {
+  const val = currentItem.contact || ""; 
+  const parent = e.target.parentNode;
+
+  parent.innerHTML = `
+    <strong id="editable-contact">👤 Contact :</strong>
+    <input type="text" id="input-contact" value="${val}" 
+      style="border:2px solid #1a73e8; padding:3px; border-radius:6px; margin-left:6px; width:80%;" />
+  `;
+
+  document.getElementById("edit-buttons").style.display = "block";
+  navigator.vibrate?.(50);
+  return;
+}
+  
+
+    const field = e.target.id.replace("editable-","");
+    let currentVal = e.target.textContent.replace("– accès ","").trim();
+    e.target.innerHTML = `<input type="text" id="input-${field}" value="${currentVal}" style="border:2px solid #1a73e8; padding:3px; border-radius:6px;" />`;
+    document.getElementById("edit-buttons").style.display = "block";
+    navigator.vibrate?.(50);
+  }
+
+if (editMode && e.target.id === "editable-rep-poste") {
+  const bloc = e.target.closest(".rep-block").querySelector(".inline-links");
+  bloc.innerHTML = `
+    <input type="text" id="input-poste-link"
+      placeholder="Coller ici le lien Google Maps"
+      style="width:100%; border:2px solid #1a73e8; border-radius:6px; padding:4px;" />
+  `;
+  navigator.vibrate?.(50);
+  return;
+}
+
+  if (editMode && e.target.id === "editable-rep-appareil") {
+  const bloc = e.target.closest(".rep-block").querySelector(".inline-links");
+  bloc.innerHTML = `
+    <input type="text" id="input-appareil-link"
+      placeholder="Coller ici le lien Google Maps"
+      style="width:100%; border:2px solid #1a73e8; border-radius:6px; padding:4px;" />
+  `;
+  navigator.vibrate?.(50);
+  return;
+}
+
+if (editMode && e.target.id === "editable-rep-acces") {
+  const bloc = e.target.closest(".rep-block").querySelector(".inline-links");
+  bloc.innerHTML = `
+    <input type="text" id="input-acces-link"
+      placeholder="Coller ici le lien Google Maps"
+      style="width:100%; border:2px solid #1a73e8; border-radius:6px; padding:4px;" />
+  `;
+  navigator.vibrate?.(50);
+  return;
+}
+  });
+
+function getDemandeur() {
+  let demandeur = localStorage.getItem("demandeur");
+  const regexNom = /^[A-Za-zÀ-ÖØ-öø-ÿ\s\-]{2,}$/;
+
+  while (!demandeur || !regexNom.test(demandeur)) {
+    demandeur = prompt("👉 Entrez votre prénom et nom").trim();
+
+    if (!demandeur || !regexNom.test(demandeur)) {
+      alert("⚠️ Nom invalide. Utilisez uniquement lettres / espaces / accents.");
+      demandeur = "";
+    }
+  }
+
+  localStorage.setItem("demandeur", demandeur);
+  return demandeur;
+}
+    
+
+document.getElementById("btn-save").addEventListener("click", function(){
+  const btnSave = document.getElementById("btn-save");
+  btnSave.disabled = true;
+  btnSave.textContent = "⏳ Envoi..."; 
+
+  const newNom        = document.getElementById("input-nom")?.value || currentItem.nom || "";
+  const newAppareil   = document.getElementById("input-appareil")?.value || currentItem.appareil || "";
+  const newAppareilLink = document.getElementById("input-appareil-link")?.value || "";
+  const newDescription = document.getElementById("input-description")?.value || currentItem.description || "";
+
+  const demandeur = getDemandeur();
+  const ficheOrigine = currentItem
+    ? `${currentItem.appareil || ''} (${currentItem.nom || ''})`
+    : "";
+
+  const payload = {
+    demandeur,
+    ficheOrigine,
+    appareil: newAppareil,
+    nom: newNom,
+    localisation: newAppareilLink,
+    information: newDescription
+  };
+
+  fetch("https://script.google.com/macros/s/AKfycbwD9ZhBCLxaHWpCfGUwrI95We5l1NGMSCgnAwQCsaV1W9uhnV-5XijJVw0TZ6yfdKE/exec", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  })
+  .then(() => {
+    showNotification(" Modification appareil envoyée ✅", "success");
+    quitEditMode(newNom);
+    return fetch("https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec?increment=true");
+  })
+  .catch(() => showNotification("❌ Échec d’envoi (réseau)", "error"))
+  .finally(() => {
+    setTimeout(() => {
+      btnSave.disabled = false;
+      btnSave.textContent = "💾 Sauvegarder"; 
+    }, 3000);
+  });
+});
+  
+
+function quitEditMode(nomPoste, appareil){
+  // remet le nom du poste associé et le nom de l’appareil
+  if (document.getElementById("editable-nom")) {
+    document.getElementById("editable-nom").textContent = nomPoste;
+  }
+  if (document.getElementById("editable-appareil")) {
+    document.getElementById("editable-appareil").textContent = appareil;
+  }
+
+  // remet description normale
+  if (document.getElementById("input-description")) {
+    const descVal = document.getElementById("input-description").value.trim();
+    document.getElementById("input-description").parentNode.outerHTML =
+      formatInformations(descVal);
+  }
+
+  // remet bloc "Repérer l’appareil"
+  const repAppareilInput = document.getElementById("input-appareil-link");
+  if (repAppareilInput) {
+    const bloc = repAppareilInput.closest(".inline-links");
+    bloc.innerHTML = `
+      <a href="${myMapsViewer(currentItem.latitude, currentItem.longitude)}" target="_blank">🛰️ Vue satellite</a>
+      <a href="${
+        currentItem.imajnet && currentItem.imajnet.trim() !== "" 
+          ? currentItem.imajnet 
+          : imajnetLink(currentItem.latitude, currentItem.longitude)
+      }" target="_blank">🚄 Imajnet</a>
+    `;
+  }
+
+  // enlève les halos et animations
+  document.querySelectorAll(".editable-halo, .editable-wiggle").forEach(el => {
+    el.classList.remove("editable-halo", "editable-wiggle");
+  });
+
+  // cache les boutons et désactive mode édition
+  document.getElementById("edit-buttons").style.display = "none";
+  editMode = false;
+}
+  
+
+document.getElementById("btn-cancel").addEventListener("click", function(){
+  quitEditMode(
+    originalValues.nom || currentItem.nom,
+    originalValues.appareil || currentItem.appareil
+  );
+  showNotification("🔙 Édition annulée", "info");
+});
+
+function formatInformations(val) {
+  return `<p class="info-block">
+    <strong>ℹ️ Informations :</strong>
+    ${val && val.trim() !== "" 
+      ? `<span class="desc-value">${val}</span>` 
+      : '<span class="placeholder">(non renseigné)</span>'}
+  </p>`;
+}
+    
+    function showNotification(message, type = "info") {
+  const notif = document.getElementById("notification");
+  notif.textContent = message;
+  notif.className = type; 
+  notif.style.display = "block";
+
+  setTimeout(() => {
+    notif.style.display = "none";
+  }, 4000);
+}
+
+</script> 
+
+</main>
+
+<div id="install-container" style="text-align:center; margin:10px 0;">
+  <a id="installLink" href="#" style="display:none;">📲 Installer l’app</a>
 </div>
 
-<!-- Encadré notification -->
-<div class="toast" id="toast"></div>
+<div id="about-footer">
+  <div class="footer-links">
+    <a href="arnaud.html" class="pill-link">🔧 À propos</a>
+   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.10</a>
+  </div>
+</div>
+<script>
+(function(){
+  
+  var INTRO_DURATION_MS = 3000;             
+  var STORAGE_KEY       = 'eale_intro_last_day'; 
 
-<div id="streetview-overlay">
+
+  function todayLocal(){
+    var d=new Date();
+    var y=d.getFullYear();
+    var m=String(d.getMonth()+1).padStart(2,'0');
+    var day=String(d.getDate()).padStart(2,'0');
+    return y+'-'+m+'-'+day;
+  }
+
+  function shouldShowIntro(){
+    try{
+      var last = localStorage.getItem(STORAGE_KEY);
+      var today = todayLocal();
+      if (last === today) return false;
+      localStorage.setItem(STORAGE_KEY, today);
+      return true;
+    }catch(e){ return true; } 
+  }
+
+  function pickPhrase(){
+    var phrases = [
+      "Propulsé par Arnaud.",
+      "Une réalisation signée Arnaud.",
+      "Conçu et développé par Arnaud.",
+      "Réalisé avec soin par Arnaud.",
+      "Par Arnaud.",
+      "Fait par Arnaud.",
+      "Pensé par Arnaud.",
+      "Créé par Arnaud.",
+      "Une idée d’Arnaud.",
+      "Mis en place par Arnaud.",
+      "Lancé par Arnaud.",
+      "Conçu par Arnaud.",
+      "Mis en ligne par Arnaud.",
+      "Mis en route par Arnaud.",
+      "Fait maison par Arnaud.",
+      "Déclenché par Arnaud.",
+      "Organisé par Arnaud.",
+      "Initié par Arnaud.",
+      "Coordonné par Arnaud.",
+      "Centralisé par Arnaud.",
+      "Simplifié par Arnaud.",
+      "Géré par Arnaud.",
+      "Compilé par Arnaud.",
+      "Préparé par Arnaud.",
+      "Piloté par Arnaud.",
+      "Structuré par Arnaud.",
+      "Distribué par Arnaud.",
+      "Diffusé par Arnaud.",
+      "Rendu accessible par Arnaud.",
+      "Chargé par Arnaud.",
+      "Interface pensée par Arnaud."
+    ];
+    return phrases[Math.floor(Math.random()*phrases.length)];
+  }
+
+  function mountIntro(){
+    var overlay = document.createElement('div');
+    overlay.className = 'eale-intro-overlay';
+    overlay.setAttribute('aria-hidden','true');
+    overlay.innerHTML =
+   '<img class="eale-intro-img" alt="Logo EALE" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/Logo%20EALE.png">' +
+      '<div class="eale-intro-text" id="eale-intro-text"></div>';
+    document.body.appendChild(overlay);
+    document.getElementById('eale-intro-text').textContent = pickPhrase();
+
+    setTimeout(function(){
+      overlay.classList.add('eale-intro-hide');
+      setTimeout(function(){ overlay.remove(); }, 380);
+    }, INTRO_DURATION_MS);
+  }
+
+  if (document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', function(){ if (shouldShowIntro()) mountIntro(); });
+  } else {
+    if (shouldShowIntro()) mountIntro();
+  }
+})();
+</script>
+  <script>
+let deferredPrompt;
+const installLink = document.getElementById("installLink");
+
+const isStandalone = window.matchMedia('(display-mode: standalone)').matches 
+                  || window.navigator.standalone === true;
+
+
+if (!isStandalone && !/iphone|ipad|ipod/i.test(navigator.userAgent)) {
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    installLink.style.display = "inline";
+
+    installLink.onclick = async (evt) => {
+      evt.preventDefault();
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const choice = await deferredPrompt.userChoice;
+        if (choice.outcome === "accepted") {
+          console.log("PWA installée");
+        }
+        deferredPrompt = null;
+        installLink.style.display = "none";
+      }
+    };
+  });
+} else {
+
+  installLink.style.display = "none";
+}
+</script>
+  <div id="notification"></div>
+<div id="streetview-overlay" style="display:none;">
   <div id="streetview-box">
     <button id="streetview-close">❌</button>
     <iframe id="streetview-frame"></iframe>
   </div>
 </div>
-  <script>
-const defaultCenter = [49.8, 2.5]; 
-const defaultZoom = 8;          
 
-
-    // Limites géographiques approximatives pour la France
-const boundsFrance = [
-  [41.0, -5.5],  // Sud-Ouest
-  [51.5, 9.5]    // Nord-Est
-];
-
-const map = L.map('map', {
-  zoomControl: false,
-  attributionControl: false,
-  minZoom: 5,                  // empêche de trop dézoomer
-  maxZoom: 21,                 // selon tes tuiles IGN/OSM
-  maxBounds: boundsFrance,     // limite la zone affichée
-  maxBoundsViscosity: 1.0      // bloque l’effet “élastique”
-}).setView(defaultCenter, defaultZoom);
-
-    
-let editMode = false;   
-let holdTimeout;       
-
-const editBanner = document.createElement("div");
-editBanner.style = `
-  position: fixed;
-  bottom: 10px; left: 50%;
-  transform: translateX(-50%);
-  background: rgba(0,0,0,0.8);
-  color: white;
-  font-family: system-ui, sans-serif;
-  font-size: 13px;
-  padding: 6px 12px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-  z-index: 9999;
-  display: none;
-`;
-document.body.appendChild(editBanner);
-
-const editIcon = document.createElement("div");
-editIcon.textContent = "✏️";
-editIcon.style = `
-  position: fixed;
-  bottom: 40px; left: 12px;
-  font-size: 18px;
-  background: rgba(0,0,0,0.75);
-  color: white;
-  padding: 6px 8px;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-  z-index: 9999;
-  display: none;
-  font-family: system-ui, sans-serif;
-`;
-document.body.appendChild(editIcon);
-
-document.addEventListener("keydown", function(e) {
-  if (e.key.toLowerCase() === "i") {
-    editMode = !editMode;
-
-    editBanner.textContent = editMode ? "ℹ️ Mode information activé" : "❌ Mode information désactivé";
-    editBanner.style.display = "block";
-    setTimeout(() => { editBanner.style.display = "none"; }, 2000);
-
-    editIcon.textContent = "ℹ️";
-    editIcon.style.display = editMode ? "block" : "none";
-  }
-
-  // ESC pour désactiver
-  if (e.key === "Escape" && editMode) {
-    editMode = false;
-    editBanner.textContent = "❌ Mode information désactivé";
-    editBanner.style.display = "block";
-    setTimeout(() => { editBanner.style.display = "none"; }, 2000);
-    editIcon.style.display = "none";
-  }
-});
-    
-    const allMarkers = [];
-
-let _datasetsLoaded = 0;
-function _tryOpenFromURL() {
-  _datasetsLoaded++;
-  if (_datasetsLoaded < 2) return; // attendre postes + appareils
-
-  if (!isNaN(lat) && !isNaN(lon)) {
-    const matches = allMarkers.filter(m => {
-      const ll = m.getLatLng();
-      return ll.lat === lat && ll.lng === lon;
-    });
-
-if (matches.length > 0) {
-  const first = matches[0].getLatLng();
-  const allSameCoords = matches.every(m => m.getLatLng().equals(first));
-
-  map.setView(first, Math.max(zoom, 21));
-
- setTimeout(() => {
-  if (matches.length === 1) {
-    // 👉 Cas : un seul marker → popup normale
-    matches[0].openPopup();
-
-  } else if (allSameCoords) {
-    // 👉 Cas : plusieurs markers exactement au même endroit → liste
-    const items = matches.map((m, i) => {
-      let label = m.options.customId || `Élément ${i + 1}`;
-      return { label: label.replace(/\bposte\b/gi, "").trim(), idx: i };
-    }).sort((a, b) => a.label.localeCompare(b.label, "fr", { numeric: true, sensitivity: "base" }));
-
-    const html = `<div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
-      ${items.map(it => {
-       const marker = matches[it.idx];
-        const id = (marker.options.customId || "").toUpperCase();
-        
-let iconFile = null;
-
-if (marker.options.isAcces) {
-  iconFile = "acces.png";
-} else if (id.includes("POSTE")) {
-  iconFile = "poste.png";
-} else {
-  // règles appareils
-  if (id.startsWith("I") || id.startsWith("SI") || id.startsWith("D")) {
-    iconFile = "int.png";
-  } else if (id.startsWith("TT") || id.startsWith("TSA") || id.startsWith("TC") || id.startsWith("TRA")) {
-    iconFile = "TT.png";
-  } else if (/^[0-9]/.test(id) || id.startsWith("S") || id.startsWith("ST") || id.startsWith("F") || id.startsWith("P") || id.startsWith("FB") || id.startsWith("B")) {
-    iconFile = "sect.png";
-  } else if (id.startsWith("ALIM")) {
-    iconFile = "alim.png";
-  } else if (id.startsWith("DU")) {
-    iconFile = "stop.png";
-  }
+<script>
+function openStreetView(lat, lon) {
+  const iframe = document.getElementById("streetview-frame");
+  iframe.src = `https://www.google.com/maps?q=&layer=c&cbll=${lat},${lon}&cbp=11,0,0,0,0&output=svembed`;
+  document.getElementById("streetview-overlay").style.display = "flex";
 }
 
-        return `
-          <a href="#" class="cluster-link" data-idx="${it.idx}" style="display:flex;align-items:center;gap:6px;">
-            ${iconFile ? `<img src="ico/${iconFile}" style="width:16px;height:16px;">` : ""}
-            <span>${it.label}</span>
-          </a>`;
-      }).join("")}
-    </div>`;
+document.getElementById("streetview-close").onclick = () => {
+  document.getElementById("streetview-overlay").style.display = "none";
+  document.getElementById("streetview-frame").src = "";
+};
 
-    L.popup()
-      .setLatLng(first)
-      .setContent(html)
-      .openOn(map);
+  function retourFichePrincipale(nom, type) {
+  const postePrincipal = lieux.find(l => 
+    normalize(l.nom) === normalize(decodeURIComponent(nom)) &&
+    normalize(l.type) === normalize(decodeURIComponent(type)) &&
+    !l.SAT && !l.accès
+  );
 
-    setTimeout(() => {
-      document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
-        link.addEventListener("click", (ev) => {
-          ev.preventDefault();
-          const idx = +ev.currentTarget.dataset.idx;
-          const target = matches[idx];
-          const content = target.getPopup() ? target.getPopup().getContent() : "";
-          L.popup({ maxWidth: 240 })
-            .setLatLng(target.getLatLng())
-            .setContent(content)
-            .openOn(map);
-          map.panTo(target.getLatLng());
-        });
-      });
-    }, 0);
+  if (postePrincipal) {
+    showLieu(postePrincipal);
   } else {
-    // 👉 Cas : markers proches mais pas identiques
-    const group = L.featureGroup(matches);
-    map.fitBounds(group.getBounds());
-  }
-}, 300);
-
-   
-} else {
-  map.setView([lat, lon], zoom);
-}
+    alert("⚠️ Poste principal introuvable");
   }
 }
+</script> 
 
-function makeTelHtml(labelEmoji, value) {
-  if (!value) return "";
-
-  if (value.indexOf("#") !== -1) return `<div>${labelEmoji} ${value}</div>`;
-
-
-  const digitsOnly = ("" + value).replace(/\D/g, "");
-  if (digitsOnly.length < 10) return `<div>${labelEmoji} ${value}</div>`;
-
- const hrefSafe = ("" + value).replace(/[^\d+]/g, "");
-
-  if (!hrefSafe) return `<div>${labelEmoji} ${value}</div>`;
-
-  return `<div>${labelEmoji} <a href="tel:${hrefSafe}" style="color:#007aff; text-decoration:none;">${value}</a></div>`;
-}
-
-const params = new URLSearchParams(window.location.search);
-const lat = parseFloat(params.get("lat"));
-const lon = parseFloat(params.get("lon"));
-const zoom = parseInt(params.get("z")) || 19;
-const id = params.get("id") ? decodeURIComponent(params.get("id")) : null;
-
-  const planIGN = L.tileLayer(
-  "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
-  + "&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&STYLE=normal&FORMAT=image/png"
-  + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
-  {
-    attribution: "",
-    maxZoom: 21,       
-    maxNativeZoom: 19, 
-    tileSize: 256,
-    crossOrigin: 'anonymous'
-  }
-);
-
-const orthoIGN = L.tileLayer(
-  "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
-  + "&LAYER=ORTHOIMAGERY.ORTHOPHOTOS&STYLE=normal&FORMAT=image/jpeg"
-  + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
-  {
-    attribution: "© IGN – Géoplateforme",
-    maxZoom: 21,      
-    maxNativeZoom: 19, 
-    tileSize: 256,
-    crossOrigin: 'anonymous'
-  }
-);
-
-const osm = L.tileLayer(
-  "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-  { 
-    attribution: "© OpenStreetMap contributors", 
-    maxZoom: 21,        
-    maxNativeZoom: 19   
-  }
-);
-
-const esriSat = L.tileLayer(
-  "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-  {
-    attribution: "© Esri, Maxar, Earthstar Geographics",
-    maxZoom: 21,       
-    maxNativeZoom: 19, 
-    tileSize: 256
-  }
-);
-
-const mixte = L.layerGroup([
-  orthoIGN,
-  L.tileLayer(
-    "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
-    + "&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&STYLE=normal&FORMAT=image/png"
-    + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
-    {
-      attribution: "© IGN – Géoplateforme",
-      maxZoom: 19,
-      tileSize: 256,
-      crossOrigin: 'anonymous',
-      opacity: 0.4  
-    }
-  )
-]);
-
-orthoIGN.addTo(map);
-
-
-    L.control.layers(
-      { 
-        "🛰️ Satellite IGN": orthoIGN,
-        "🛰️ Satellite Open": esriSat,
-        "🗺️ Plan IGN (défaut)": planIGN,
-        "🌍 Plan Open": osm,
-        "🛰️+🗺️ Mixte": mixte
-      },
-      {}
-    ).addTo(map);
-
-    L.control.zoom({ position: 'topright' }).addTo(map);
-
-    planIGN.on("tileerror", e => console.warn("IGN PLAN tile error", e));
-    orthoIGN.on("tileerror", e => console.warn("IGN ORTHO tile error", e));
-
-
-const postesLayer = L.markerClusterGroup({
-  disableClusteringAtZoom: 18
-});
-const appareilsLayer = L.markerClusterGroup({
-  spiderfyOnMaxZoom: true,
-  showCoverageOnHover: false,
-  zoomToBoundsOnClick: false,   
-  disableClusteringAtZoom: null,
-  maxClusterRadius: function(zoom) {
-    return zoom > 18 ? 20 : 60;
-  }
-});
-const accesLayer = L.markerClusterGroup({
-  spiderfyOnMaxZoom: false,
-  showCoverageOnHover: false,
-  zoomToBoundsOnClick: false
-});
-
-    const pnLayer = L.markerClusterGroup({
-  spiderfyOnMaxZoom: false,
-  showCoverageOnHover: false,
-  zoomToBoundsOnClick: true
-});
-
-accesLayer.on('clusterclick', function (e) {
-  const childMarkers = e.layer.getAllChildMarkers();
-  if (childMarkers.length === 0) return;
-
-  const first = childMarkers[0].getLatLng();
-  const allSameCoords = childMarkers.every(m => m.getLatLng().equals(first));
-
-  if (allSameCoords) {
-    const items = childMarkers.map((m, i) => {
-      let label = m.options.customId || `Accès ${i + 1}`;
-      return { label: label.replace(/\bposte\b/gi, "").trim(), idx: i };
-    }).sort((a, b) => a.label.localeCompare(b.label, "fr", { numeric: true, sensitivity: "base" }));
-
-    const html = `<div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
-      ${items.map(it => `
-        <a href="#" class="cluster-link" data-idx="${it.idx}" 
-           style="display:flex;align-items:center;gap:6px;">
-          <img src="ico/acces.png" style="width:16px;height:16px;">
-          <span>${it.label}</span>
-        </a>`).join("")}
-    </div>`;
-
-    L.popup()
-      .setLatLng(first)
-      .setContent(html)
-      .openOn(map);
-
-setTimeout(() => {
-  document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
-    link.addEventListener("click", (ev) => {
-      ev.preventDefault();
-      const idx = +ev.currentTarget.dataset.idx;
-      const target = childMarkers[idx];
-
-      const content = target.getPopup() ? target.getPopup().getContent() : "";
-      L.popup({ maxWidth: 240 })
-        .setLatLng(target.getLatLng())
-        .setContent(content)
-        .openOn(map);
-
-      map.panTo(target.getLatLng());
-    });
-  });
-}, 0);
-
-  } else {
-    map.fitBounds(e.layer.getBounds());
-  }
-});
-
-
-map.addLayer(postesLayer);
-map.addLayer(appareilsLayer);
-map.addLayer(accesLayer);
-
-
-const iconPoste = L.divIcon({
-  html: `<img src="ico/poste.png" class="icon-halo">`,
-  className: "", 
-  iconAnchor: [24, 48],
-  popupAnchor: [0, -48]
-});
-
-const iconAppareil= L.divIcon({className:"icon-circle appareil",html:"⚡"});
-
-const iconAcces = L.divIcon({
-  html: `<img src="ico/acces.png" class="icon-halo">`,
-  className: "",
-  iconAnchor: [24, 48],
-  popupAnchor: [0, -48]
-});
-
-fetch("postes.json")
-  .then(r => r.json())
-  .then(data => {
-    const seenPostes = new Set();
-
-    data.forEach(item => {
-
-     if (item.latitude && item.longitude) {
-  const accesVal = (item["accès"] ?? item.acces ?? "").toString().trim();
-
-const cid = [item.nom, item.type, item.SAT, accesVal]
-  .filter(Boolean)
-  .join(" ");
-
-let content = `
-<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
-            font-size:14px; color:#111; line-height:1.4; position:relative;">
-
-<!-- Titre -->
-<div style="font-weight:600; font-size:16px; margin-bottom:14px; padding-right:32px;">
-  🚙 ${item.nom || "Sans nom"}
-  ${item.type ? " " + item.type : ""}
-  ${item.SAT ? " " + item.SAT : ""}
-  ${accesVal ? " – accès " + accesVal : ""}
-</div>
-
-<!-- Icône Street View -->
-<span onclick="openStreetView(${item.latitude}, ${item.longitude})"
-      style="cursor:pointer; position:absolute; top:10px; right:12px;">
-  <img src="ico/street.png" alt="Street View" style="width:26px; height:26px;">
-</span>
-             
-<!-- Information -->
-<div style="margin-bottom:10px;">
-  ✍🏻 <strong>Information :</strong> ${ renderPortail(item.description) }
-</div>
-
-<!-- Portail -->
-<div style="margin-bottom:10px;">
-  🔑 <strong>Portail :</strong> ${ renderPortail(item.portail) }
-</div>
-
-  <!-- Bouton Voir plus -->
-  <a href="index.html?id=${encodeURIComponent(
-    (`${item.nom || ''} ${item.type || ''} ${item.SAT || ''}${accesVal ? ' – accès ' + accesVal : ''}`)
-      .replace(/\s+/g, " ")
-      .trim()
-  )}"
-     style="display:flex;align-items:center;justify-content:center;gap:6px;
-            background:#007aff;color:#fff;padding:10px 14px;border-radius:8px;
-            text-decoration:none;width:100%;font-size:15px;font-weight:500;">
-    ➕ Voir plus
-  </a>
-</div>
-`;
-
-const m = L.marker([item.latitude, item.longitude], {
-  icon: iconAcces,
-  customId: cid,
-  isAcces: true   
-}).bindPopup(content).addTo(accesLayer);
-
-  allMarkers.push(m);
-}
-
-      if (item.poste_latitude && item.poste_longitude) {
-        const key = `${item.poste_latitude}_${item.poste_longitude}`;
-        
-        if (!seenPostes.has(key)) {
-          seenPostes.add(key);
-
-  const cid = [item.nom, item.type, item.SAT, "poste"].filter(Boolean).join(" ");
-
-let content = `
-<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
-            font-size:14px; color:#111; line-height:1.4;">
-
-  <!-- Nom + type + SAT -->
-  <div style="font-weight:600; font-size:16px; margin-bottom:14px;">
-    📍 ${item.nom || "Sans nom"} 
-    ${item.type ? " " + item.type : ""} 
-    ${item.SAT ? " " + item.SAT : ""}
+<!-- Overlay vidéo YouTube -->
+<div id="video-overlay" style="display:none;">
+  <div id="video-box">
+    <button id="video-close">❌</button>
+    <iframe id="video-frame" allowfullscreen></iframe>
   </div>
-
-<!-- PK + Ligne -->
-<div style="margin-bottom:10px;">
-  🚄 PK <strong>${item.pk || "(non renseigné)"}</strong>
-  sur la ligne n°<strong>${item.numero_ligne || "(non renseigné)"}</strong>
-  ${item.lignes ? " – " + item.lignes : ""}
 </div>
 
- <!-- Information -->
-  <div style="margin-bottom:10px;">
-    ✍🏻 <strong>Information :</strong> ${ renderPortail(item.description) }
-  </div>
+<script>
 
-  <!-- Contact -->
-  <div style="margin-bottom:10px;">
-    📞 <strong>Contact :</strong> ${ renderContact(item.contact) }
-  </div>
-
-  <!-- Portail -->
-  <div style="margin-bottom:10px;">
-    🔑 <strong>Portail :</strong> ${ renderPortail(item.portail) }
-  </div>
-
-  <!-- Bouton Voir plus -->
-  <a href="index.html?id=${encodeURIComponent(
-    (`${item.nom || ''} ${item.type || ''} ${item.SAT || ''}`)
-      .replace(/\s+/g, " ")
-      .trim()
-  )}"
-     style="display:flex;align-items:center;justify-content:center;gap:6px;
-            background:#007aff;color:#fff;padding:10px 14px;border-radius:8px;
-            text-decoration:none;width:100%;font-size:15px;font-weight:500;">
-    ➕ Voir plus
-  </a>
-</div>
-`;
-
-const m = L.marker([item.poste_latitude, item.poste_longitude], {
-  icon: iconPoste,
-  customId: cid
-}).bindPopup(content).addTo(postesLayer);
-
-allMarkers.push(m);
-        }
-      }
-
-    });
-_tryOpenFromURL();
-  });
-    
-fetch("appareils.json")
-  .then(r => r.json())
-  .then(data => {
-    data.forEach(item => {
-      if (!item.latitude || !item.longitude) return;
-
-      let appareilIcon;
-      const ref = (item.appareil || "").toUpperCase();
-
-      if (ref.startsWith("I") || ref.startsWith("SI") || ref.startsWith("D")) {
-        appareilIcon = L.divIcon({ html:`<img src="ico/int.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,32], popupAnchor:[0,-32] });
-      } else if (ref.startsWith("TT") || ref.startsWith("TSA") || ref.startsWith("TC") || ref.startsWith("TRA")) {
-        appareilIcon = L.divIcon({ html:`<img src="ico/TT.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,32], popupAnchor:[0,-32] });
-      } else if (/^[0-9]/.test(ref) || ref.startsWith("S") || ref.startsWith("ST") || ref.startsWith("F") || ref.startsWith("P") || ref.startsWith("FB") || ref.startsWith("B")) {
-        appareilIcon = L.divIcon({ html:`<img src="ico/sect.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,32], popupAnchor:[0,-32] });
-      } else if (ref.startsWith("ALIM")) {
-        appareilIcon = L.divIcon({ html:`<img src="ico/alim.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,32], popupAnchor:[0,-32] });
-      } else if (ref.startsWith("DU")) {
-        appareilIcon = L.divIcon({ html:`<img src="ico/stop.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,32], popupAnchor:[0,-32] });
-      } else {
-        appareilIcon = iconAppareil; // ⚡ défaut
-      }
-
-      let content = `
-<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
-            font-size:14px; color:#111; line-height:1.4;">
-
-<div style="font-size:15px; margin-bottom:10px;">
-  ⚡ <span style="font-weight:600;">${item.appareil || "Sans référence"}</span>
-  ${item.nom || item.type || item.SAT 
-    ? " (" + 
-        [item.nom, item.type, item.SAT]
-          .filter(Boolean)               // enlève les vides
-          .join(" ")                     // colle avec espace
-          .trim() + ")"                  // supprime espace en trop
-    : ""}
-</div>
-
-  ${item.description ? `<div style="margin-bottom:14px;">✍🏻 <strong>Information :</strong> ${item.description}</div>` : ""}
-
-  <a href="index.html?id=${encodeURIComponent(
-    [item.appareil, item.nom, item.type, item.SAT].filter(Boolean).join(" ").trim()
-  )}"
-     style="display:flex;align-items:center;justify-content:center;gap:6px;
-            background:#007aff;color:#fff;padding:10px 14px;border-radius:8px;
-            text-decoration:none;width:100%;font-size:15px;font-weight:500;
-            margin-top:10px;">
-    ➕ Voir plus
-  </a>
-</div>
-`;
-
-      const cid = [item.appareil, item.nom, item.type, item.SAT]
-        .filter(Boolean)
-        .join(" ");
-
-      const m = L.marker([item.latitude, item.longitude], {
-        icon: appareilIcon,
-        customId: cid
-      }).bindPopup(content);
-
-      appareilsLayer.addLayer(m);
-      allMarkers.push(m);
-      });
-    _tryOpenFromURL();
-  });
-
-    // Dictionnaire des classes PN
-const pnClasses = {
-  10: "PN public pour voitures sans barrières (protection assurée par un agent)",
-  11: "PN public pour voitures avec barrières gardé sans passage piétons accolé (manœuvré à pied d'œuvre)",
-  12: "PN public pour voitures avec barrières gardé sans passage piétons accolé (manœuvré à distance)",
-  13: "PN public pour voitures avec barrières gardé sans passage piétons accolé (manœuvré pied d'œuvre + distance)",
-  14: "PN public pour voitures avec barrières gardé avec passage piétons accolé (manœuvré à pied d'œuvre)",
-  15: "PN public pour voitures avec barrières gardé avec passage piétons accolé (manœuvré à distance)",
-  16: "PN public pour voitures avec barrières gardé avec passage piétons accolé (manœuvré pied d'œuvre + distance)",
-  17: "PN public pour voitures avec barrières ou 1/2 barrières non gardé à SAL 2 / SAL 2B",
-  18: "PN public pour voitures avec barrières ou 1/2 barrières non gardé à SAL 2 + îlot séparateur",
-  19: "PN public pour voitures avec barrières ou 1/2 barrières non gardé à SAL 4",
-  20: "PN public pour voitures sans barrières sans SAL",
-  21: "PN public pour voitures sans barrières avec SAL 0",
-  31: "PN public isolé pour piétons sans portillons",
-  32: "PN public isolé pour piétons avec portillons",
-  41: "PN privé pour voitures sans barrières",
-  42: "PN privé pour voitures avec barrières sans passage piétons accolé",
-  43: "PN privé pour voitures avec barrières avec passage piétons accolé public",
-  44: "PN privé pour voitures avec barrières avec passage piétons accolé privé",
-  45: "PN privé isolé pour piétons sans portillons",
-  46: "PN privé isolé pour piétons avec portillons"
-};
-
-// Traduction des obstacles
-function translateObstacle(obs) {
-  if (!obs) return "";
-  if (obs.toLowerCase() === "autre") return ""; // on n’affiche rien si "Autre"
-  if (obs.startsWith("VC")) return "Voie communale";
-  if (obs.startsWith("CD")) return "Route départementale " + obs.replace("CD", "").trim();
-  if (obs.startsWith("RN")) return "Route nationale " + obs.replace("RN", "").trim();
-  if (obs.startsWith("CP")) return "Chemin privé";
-  return obs;
-}
-
-    fetch("pn.json")
-  .then(r => r.json())
-  .then(data => {
-    data.forEach(pn => {
-      if (!pn.geo_point_2d) return;
-      const lat = pn.geo_point_2d.lat;
-      const lon = pn.geo_point_2d.lon;
-
-      // ✅ Filtre Hauts-de-France élargi ~50 km
-      if (lat < 49.3 || lat > 51.7) return;
-      if (lon < 1.0 || lon > 5.0) return;
-
-      const iconPN = L.divIcon({
-        html: `<img src="ico/pn.png" class="icon-halo-appareil">`,
-        className: "",
-        iconAnchor: [16, 32],
-        popupAnchor: [0, -32]
-      });
-
-      // Décodage classe PN
-      const classeCode = (pn.mnemo || "").replace("CLASSE ", "").trim();
-      const classeTexte = pnClasses[classeCode] 
-        ? `🛑 Classe ${classeCode} : ${pnClasses[classeCode]}` 
-        : "";
-
-      // Nettoyage libellé pour éviter "PN PN"
-      let libelle = (pn.libelle || "").trim();
-      if (/^PN\s*/i.test(libelle)) {
-        libelle = libelle.replace(/^PN\s*/i, "");
-      }
-
-      const marker = L.marker([lat, lon], { icon: iconPN })
-        .bindPopup(`
-          <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
-                      font-size:14px; color:#111; line-height:1.5; text-align:left;">
-
-            <!-- Titre PN -->
-            <div style="font-weight:700; font-size:16px; margin-bottom:8px;">
-              🚧 PN ${libelle}
-            </div>
-
-            <!-- PK + Ligne -->
-            <div>🚄 PK ${pn.pk || "?"} sur la ligne n°${pn.code_ligne || "?"}</div>
-
-            <!-- Classe -->
-            ${classeTexte ? `<div>${classeTexte}</div>` : ""}
-
-            <!-- Boutons -->
-            <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px;align-items:center;">
-              <a href="https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${lat},${lon};" 
-                 target="_blank"
-                 style="display:block;width:100%;max-width:200px;padding:10px 12px;
-                        border-radius:8px;background:#10b981;color:white;
-                        text-decoration:none;font-size:14px;font-weight:500;text-align:center;">
-                🛣️ Voir sur Imajnet
-              </a>
-              <button onclick="openStreetView(${lat},${lon})"
-                 style="display:block;width:100%;max-width:200px;padding:10px 12px;
-                        border:none;border-radius:8px;background:#3b82f6;
-                        color:white;cursor:pointer;font-size:14px;font-weight:500;">
-                🌍 Voir en Street View
-              </button>
-            </div>
-          </div>
-        `);
-
-      pnLayer.addLayer(marker);
-      allMarkers.push(marker);
-    });
-  })
-  .catch(err => console.error("Erreur chargement PN:", err));
-
-    
-appareilsLayer.on('clusterclick', function (e) {
-  const childMarkers = e.layer.getAllChildMarkers();
-  if (childMarkers.length === 0) return;
-
-  const first = childMarkers[0].getLatLng();
-  const allSameCoords = childMarkers.every(m => m.getLatLng().equals(first));
-
-  if (allSameCoords) {
-    if (id) {
-      // 👉 Cas : depuis index.html → popup liste
-      const items = childMarkers.map((m, i) => {
-        let label = m.options.customId || `Appareil ${i + 1}`;
-        return { label: label.trim(), idx: i };
-      }).sort((a, b) => a.label.localeCompare(b.label, "fr", { numeric:true, sensitivity:"base" }));
-
-      const html = `<div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
-        ${items.map(it => {
-          const marker = childMarkers[it.idx];
-          const id = (marker.options.customId || "").toUpperCase();
-          let iconFile = null;
-
-          if (id.startsWith("I") || id.startsWith("SI") || id.startsWith("D")) {
-            iconFile = "int.png";
-          } else if (id.startsWith("TT") || id.startsWith("TSA") || id.startsWith("TC") || id.startsWith("TRA")) {
-            iconFile = "TT.png";
-          } else if (/^[0-9]/.test(id) || id.startsWith("S") || id.startsWith("ST") || id.startsWith("F") || id.startsWith("P") || id.startsWith("FB") || id.startsWith("B")) {
-            iconFile = "sect.png";
-          } else if (id.startsWith("ALIM")) {
-            iconFile = "alim.png";
-          } else if (id.startsWith("DU")) {
-            iconFile = "stop.png";
-          }
-
-          return `
-            <a href="#" class="cluster-link" data-idx="${it.idx}" style="display:flex;align-items:center;gap:6px;">
-              ${iconFile ? `<img src="ico/${iconFile}" style="width:16px;height:16px;">` : ""}
-              <span>${it.label}</span>
-            </a>`;
-        }).join("")}
-      </div>`;
-
-      L.popup()
-        .setLatLng(first)
-        .setContent(html)
-        .openOn(map);
-
-      setTimeout(() => {
-        document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
-          link.addEventListener("click", (ev) => {
-            ev.preventDefault();
-            const idx = +ev.currentTarget.dataset.idx;
-            const target = childMarkers[idx];
-            const content = target.getPopup() ? target.getPopup().getContent() : "";
-            L.popup({ maxWidth: 240 })
-              .setLatLng(target.getLatLng())
-              .setContent(content)
-              .openOn(map);
-            map.panTo(target.getLatLng());
-          });
-        });
-      }, 0);
-
-    } else {
-      // 👉 Cas : dernière bulle mais PAS depuis index → pas de zoom, juste éclatement
-      e.originalEvent.preventDefault();
-      e.originalEvent.stopPropagation();
-      e.layer.spiderfy();
-    }
-
-  } else {
-    // 👉 Cas normal → zoom autorisé
-    map.fitBounds(e.layer.getBounds());
-  }
-});
-
-const leftControls = L.control({ position: "topleft" });
-leftControls.onAdd = function() {
-  const container = L.DomUtil.create("div");
-  const topGroup = L.DomUtil.create("div", "control-group", container);
-const backBtn = L.DomUtil.create("div", "btn-toggle btn-return", topGroup);
-backBtn.innerHTML = "🔍";
-
-backBtn.onclick = () => {
-  window.location.href = "index.html";
-};
-L.DomEvent.disableClickPropagation(backBtn);
-L.DomEvent.disableScrollPropagation(backBtn);
-  
-
-const recenterBtn = L.DomUtil.create("div", "btn-toggle", topGroup);
-recenterBtn.innerHTML = "🎯";
-  
-recenterBtn.onclick = () => {
-  if (allMarkers.length > 0) {
-    recenterBtn.classList.add("active"); 
-    map.setView(defaultCenter, defaultZoom);
-
-    showToast("✅ Carte recentrée");
-
-    setTimeout(() => {
-      recenterBtn.classList.remove("active");
-    }, 800); 
-  }
-};
-
-L.DomEvent.disableClickPropagation(recenterBtn);
-L.DomEvent.disableScrollPropagation(recenterBtn);
-
-let userMarker;
-let geoWatchId = null;
-const locateBtn = L.DomUtil.create("div", "btn-toggle", topGroup);
-locateBtn.innerHTML = "📍";
-
-locateBtn.onclick = () => {
-  if (!navigator.geolocation) return alert("Géolocalisation non supportée.");
-
-  if (geoWatchId !== null) {
-    navigator.geolocation.clearWatch(geoWatchId);
-    geoWatchId = null;
-    if (userMarker) {
-      map.removeLayer(userMarker);
-      userMarker = null;
-    }
-    locateBtn.classList.remove("active");
-    showToast("❌ Géolocalisation désactivée");
-    return;
-  }
-
-  geoWatchId = navigator.geolocation.watchPosition(pos => {
-    const lat = pos.coords.latitude, lng = pos.coords.longitude;
-    if (userMarker) {
-      userMarker.setLatLng([lat, lng]);
-    } else {
-      userMarker = L.circleMarker([lat, lng], {
-        radius: 8,
-        color: "#3b82f6",
-        fillColor: "#3b82f6",
-        fillOpacity: 0.6
-      }).addTo(map);
-    }
-    map.setView([lat, lng], 15);
-  });
-
-  locateBtn.classList.add("active");
-  showToast("✅ Géolocalisation activée");
-};
-
-L.DomEvent.disableClickPropagation(locateBtn);
-L.DomEvent.disableScrollPropagation(locateBtn);
-
-
-  return container;
-};
-leftControls.addTo(map);
-
-if (!id) {
-  map.whenReady(() => {
-    if (allMarkers.length > 0) {
-      const group = L.featureGroup(allMarkers);
-      map.fitBounds(group.getBounds());
-    }
-  });
-}
-    
- function openStreetView(lat, lng) {
-    const iframe = document.getElementById("streetview-frame");
-    iframe.src = `https://www.google.com/maps?q=&layer=c&cbll=${lat},${lng}&cbp=11,0,0,0,0&output=svembed`;
-    document.getElementById("streetview-overlay").style.display = "flex";
-  }
-
-  document.getElementById("streetview-close").onclick = () => {
-    document.getElementById("streetview-overlay").style.display = "none";
-    document.getElementById("streetview-frame").src = ""; 
-  };
-document.getElementById("streetview-overlay").style.display = "none";
-document.getElementById("streetview-frame").src = "";
-
-// --- KIT DEBUG ÉCLAIR ---
-console.info("[Nono Maps] boot", {
-  leaflet: L.version,
-  clusters: { postes: !!postesLayer, appareils: !!appareilsLayer, acces: !!accesLayer }
-});
-
-// Attrape toutes les erreurs JS et les affiche joliment à l'écran
-window.onerror = function(msg, src, line, col, err){
-  const box = document.createElement("div");
-  box.style = "position:fixed;z-index:10000;left:8px;bottom:8px;max-width:90%;"+
-              "background:#111;color:#fff;padding:10px 12px;border:1px solid #333;"+
-              "font:12px/1.4 system-ui;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,.4)";
-  box.textContent = "❗ "+ msg + " [" + (src||"inline") + ":" + line + ":" + col + "]";
-  document.body.appendChild(box);
-  console.error("❗ Uncaught error", {msg, src, line, col, err});
-};
-
-// Vérifie qu’on charge bien les jeux de données et combien de marqueurs arrivent
-Promise.allSettled([
-  fetch("postes.json").then(r => r.json()).then(d => { console.log("postes.json OK", d.length); return d; })
-    .catch(e => { console.error("postes.json KO", e); return []; }),
-  fetch("appareils.json").then(r => r.json()).then(d => { console.log("appareils.json OK", d.length); return d; })
-    .catch(e => { console.error("appareils.json KO", e); return []; })
-]);
-
-// Petite garde anti-NaN dans l’URL (évite des comportements bizarres)
-if (isNaN(lat) || isNaN(lon)) { console.warn("URL lat/lon invalides", {lat, lon}); }
-
-
-
-    function makeTelHtml(labelEmoji, value) {
-  if (!value) return "";
-
-  if (value.indexOf("#") !== -1) return `<div>${labelEmoji} ${value}</div>`;
-
-  const digitsOnly = ("" + value).replace(/\D/g, "");
-  if (digitsOnly.length < 10) return `<div>${labelEmoji} ${value}</div>`;
-
-  const hrefSafe = ("" + value).replace(/[^\d+]/g, "");
-  if (!hrefSafe) return `<div>${labelEmoji} ${value}</div>`;
-
-  return `<div>${labelEmoji} <a href="tel:${hrefSafe}" style="color:#007aff; text-decoration:none;">${value}</a></div>`;
-}
-
-function renderPortail(value) {
-  if (!value) {
-    return `<span style="color:#777;font-style:italic;">Non renseigné</span>`;
-  }
-  const str = String(value);
-
-  // Cas avec #
-  if (str.includes("#")) return str;
-
-  // Cas YouTube
-  const ytMatch = str.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]+)/);
-  if (ytMatch) {
-    const videoId = ytMatch[1];
-    return `<a href="#" class="open-video" data-video="${videoId}" 
-              style="color:#007aff; text-decoration:none;">Voir vidéo explicative ICI</a>`;
-  }
-
-  // Cas lien http(s)
-  const urlMatch = str.match(/https?:\/\/[^\s]+/i);
-  if (urlMatch) {
-    const url = urlMatch[0];
-    const withoutUrl = str.replace(url, "").trim(); // ex: "Code 594"
-    const link = `<a href="${url}" target="_blank" style="color:#007aff; text-decoration:none;">Lien portail</a>`;
-    return withoutUrl ? `${withoutUrl} – ${link}` : link;
-  }
-
-  // Cas numéro de téléphone
-  const digits = str.replace(/\D/g, "");
-  if (digits.length >= 10) {
-    const tel = str.replace(/[^\d+]/g, "");
-    return `<a href="tel:${tel}" style="color:#007aff; text-decoration:none;">${str}</a>`;
-  }
-
-  // Sinon afficher brut
-  return str;
-}
-
-    // Gestion ouverture/fermeture overlay vidéo
-document.addEventListener("click", e => {
+document.addEventListener("click", function(e) {
   if (e.target.classList.contains("open-video")) {
     e.preventDefault();
     const videoId = e.target.dataset.video;
-    const iframe = document.getElementById("video-frame");
+    const iframe = document.getElementById("video-frame"); 
     iframe.src = `https://www.youtube.com/embed/${videoId}`;
     document.getElementById("video-overlay").style.display = "flex";
   }
@@ -1412,125 +2268,7 @@ document.getElementById("video-close").onclick = () => {
   document.getElementById("video-overlay").style.display = "none";
   document.getElementById("video-frame").src = "";
 };
-
-    function renderContact(value) {
-  if (!value) {
-    return `<span style="color:#777;font-style:italic;">Non renseigné</span>`;
-  }
-
-  const str = String(value);
-
-  // On découpe le texte en séparant les numéros (format français 10 chiffres)
-  return str.split(/(\d{2}(?:\s?\d{2}){4})/g).map(part => {
-    const digits = part.replace(/\D/g, "");
-    if (digits.length === 10) {
-      // C'est un numéro → rendre cliquable
-      return `<a href="tel:${digits}" style="color:#007aff; text-decoration:none;">${part.trim()}</a>`;
-    }
-    return part; // Sinon on garde tel quel
-  }).join("");
-}
-
-let activeEditPopup = null; // popup édition actif
-
-// petit helper pour afficher le texte dans <pre>
-function escHtml(s){return String(s).replace(/[&<>"]/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[m]));}
-
-// --- Clic simple sur la carte en mode information ---
-map.on('click', (e) => {
-  if (!editMode) return;
-
-  const lat = Number(e.latlng.lat.toFixed(5));
-  const lng = Number(e.latlng.lng.toFixed(5));
-  const coordsText = `${lat}, ${lng}`;
-
-  const popupContent = `
-  <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
-              font-size:14px;min-width:240px;">
-
-    <div style="font-weight:600; font-size:16px; margin-bottom:12px;"> ℹ️ Information : </div>
-
-    <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
-      <pre style="margin:0; background:#f3f4f6; padding:6px 10px; border-radius:6px; font-size:13px; flex:1;">
-${coordsText}</pre>
-      <button id="btn-copy"
-        style="padding:6px 10px; border:none; border-radius:6px; background:#f59e0b; color:white; cursor:pointer;">
-        📋 Copier
-      </button>
-    </div>
-
-    <div style="display:flex; flex-direction:column; gap:8px;">
-      <button id="btn-gmaps" 
-        style="padding:8px 12px; border:none; border-radius:6px; background:#3b82f6; color:white; cursor:pointer;">
-        🔎 Google Maps
-      </button>
-
-      <button id="btn-imajnet" 
-        style="padding:8px 12px; border:none; border-radius:6px; background:#10b981; color:white; cursor:pointer;">
-        🛣️ Imajnet
-      </button>
-    </div>
-  </div>`;
-
-  if (activeEditPopup) map.closePopup(activeEditPopup);
-
-  activeEditPopup = L.popup({ autoClose: false, closeOnClick: false })
-    .setLatLng(e.latlng)
-    .setContent(popupContent)
-    .openOn(map);
-
-  // 👉 Ici : on attend juste la fin du rendu DOM
-  setTimeout(() => {
-    const flash = (txt) => {
-      editBanner.textContent = txt;
-      editBanner.style.display = "block";
-      setTimeout(() => { editBanner.style.display = "none"; }, 1200);
-    };
-
-    document.getElementById('btn-copy')?.addEventListener('click', () => {
-      navigator.clipboard.writeText(coordsText).then(() => flash("✅ Coordonnées copiées"));
-    });
-
-    document.getElementById('btn-gmaps')?.addEventListener('click', () => {
-      window.open(`https://www.google.com/maps?q=${lat},${lng}`, '_blank');
-    });
-
-    document.getElementById('btn-imajnet')?.addEventListener('click', () => {
-      window.open(`https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${lat},${lng};`, '_blank');
-    });
-  }, 50); // petit délai pour être sûr que le DOM est prêt
-});
-
-const fabBtn = document.getElementById("fabBtn");
-const fabOptions = document.getElementById("fabOptions");
-const toast = document.getElementById("toast");
-
-fabBtn.addEventListener("click", () => {
-  fabBtn.classList.toggle("open");
-  fabOptions.classList.toggle("show");
-});
-
-// toggle avec message spécifique
-function toggleLayer(layer, btn, label) {
-  if (map.hasLayer(layer)) {
-    map.removeLayer(layer);
-    btn.classList.remove("active");
-    showToast(`❌ ${label} masqués`);
-  } else {
-    map.addLayer(layer);
-    btn.classList.add("active");
-    showToast(`✅ ${label} affichés`);
-  }
-}
-
-function showToast(message) {
-  toast.textContent = message;
-  toast.classList.add("show");
-  setTimeout(() => {
-    toast.classList.remove("show");
-  }, 2000);
-}
 </script>
-
+  
 </body>
 </html>
