@@ -2126,7 +2126,7 @@ if (newLien) {
   if (newDescription !== (originalAppareil.description || "")) {
     payload.description = newDescription;
   }
-
+console.log("📤 Payload envoyé :", payload);
   fetch("https://script.google.com/macros/s/AKfycbyZYV5b-aGdAsFc775xwxsdfBSIZHobE6mGNC7Zixgms77kRTmOaUpwVgNoBoKAiGhm/exec", {
     method: "POST",
     mode: "no-cors",
