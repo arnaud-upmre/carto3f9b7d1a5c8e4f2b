@@ -1561,11 +1561,7 @@ function showAppareil(app) {
       ${formatInformations(app.description)}
     </div>`;
 
-  result.innerHTML = html;
-  currentItem = app;
-}
-
-
+  // 🔹 rattacher au poste principal si dispo
   let postePrincipal = null;
   if (app.SAT) {
     postePrincipal = lieux.find(l =>
@@ -1599,6 +1595,7 @@ function showAppareil(app) {
   }
 
   result.innerHTML = html;
+  currentItem = app;
 }
     
 
