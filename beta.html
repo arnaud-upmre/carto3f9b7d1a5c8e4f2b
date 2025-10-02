@@ -315,32 +315,34 @@ ul#suggestions:not(:empty){
   text-decoration: underline;
 }
 
-#edit-buttons {
+#edit-buttons,
+#edit-buttons-appareil {
   display: none;
   position: fixed;
-  bottom: 16px;
-  left: 50%;
-  transform: translateX(-50%);
+  bottom: 0;              /* toujours collé en bas */
+  left: 0;
+  width: 100%;            /* toute la largeur */
   z-index: 9999;
 
-  background: rgba(255, 255, 255, 0.8); 
-  backdrop-filter: blur(8px);         
-  -webkit-backdrop-filter: blur(8px);   
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 
-  border-radius: 16px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-  padding: 12px 20px;
+  border-top: 1px solid #ddd;
+  box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
+
+  padding: 12px;
   display: flex;
   justify-content: center;
   gap: 16px;
-  border: 1px solid #ddd;
 }
 
 @media (prefers-color-scheme: dark) {
-  #edit-buttons {
-    background: rgba(30, 30, 30, 0.8); 
-    border: 1px solid #444;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+  #edit-buttons,
+  #edit-buttons-appareil {
+    background: rgba(30, 30, 30, 0.92);
+    border-top: 1px solid #444;
+    box-shadow: 0 -4px 12px rgba(0,0,0,0.6);
   }
 }
 
