@@ -2107,12 +2107,16 @@ fetch("https://script.google.com/macros/s/AKfycbyxh3HGR6iHcn0ynwfGzSzOm5Djc7o2e1
 
   const demandeur = getDemandeur();
 
-  const payload = {
-    category: "appareil",
-    ficheOrigine: originalAppareil.appareil,
-    demandeur,
-    horodatage: new Date().toISOString()
-  };
+const payload = {
+  category: "appareil",
+  ficheOrigine: originalAppareil.appareil,  // toujours l’identifiant
+  nom: currentItem.nom || "",               // 👈 poste associé
+  type: currentItem.type || "",
+  SAT: currentItem.SAT || "",
+  acces: currentItem.accès || "",
+  demandeur,
+  horodatage: new Date().toISOString()
+};
 
   if (newAppareil !== originalAppareil.appareil) {
     payload.appareil = newAppareil;
