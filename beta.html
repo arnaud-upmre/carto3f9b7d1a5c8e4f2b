@@ -2118,22 +2118,13 @@ document.getElementById("btn-save-appareil").addEventListener("click", function(
 
   const demandeur = getDemandeur();
 
-  // ✅ Toujours envoyés
   const payload = {
     category: "appareil",
-    ficheOrigine: originalAppareil.appareil, // identifiant de base
-
-    // ➜ Contexte d’ORIGINE (jamais considéré comme "modification")
-    nom_orig:  currentItem.nom   || "",
-    type_orig: currentItem.type  || "",
-    sat_orig:  currentItem.SAT   || "",
-    acces_orig: currentItem.accès || "",
-
+    ficheOrigine: originalAppareil.appareil,
     demandeur,
     horodatage: new Date().toISOString()
   };
 
-  // ✅ Seulement si champ vraiment modifié
   if (newAppareil !== originalAppareil.appareil) {
     payload.appareil = newAppareil;
   }
@@ -2147,35 +2138,35 @@ document.getElementById("btn-save-appareil").addEventListener("click", function(
     payload.description = newDescription;
   }
 
-  console.log("📤 Payload envoyé :", payload);
-fetch("https://script.google.com/macros/s/AKfycbyZYV5b-aGdAsFc775xwxsdfBSIZHobE6mGNC7Zixgms77kRTmOaUpwVgNoBoKAiGhm/exec", {
-  method: "POST",
-  mode: "no-cors",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify(payload)
-})
-.then(() => {
-  showNotification("✅ Modification appareil envoyée", "success");
+  fetch("https://script.google.com/macros/s/AKfycbyZYV5b-aGdAsFc775xwxsdfBSIZHobE6mGNC7Zixgms77kRTmOaUpwVgNoBoKAiGhm/exec", {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  })
+  .then(() => {
+    showNotification("✅ Modification appareil envoyée", "success");
 
-  // 👉 Incrémenter le compteur
-  let contrib = parseInt(localStorage.getItem("contributions") || "0", 10);
-  contrib++;
-  localStorage.setItem("contributions", contrib);
+    // 👉 Incrémenter le compteur
+    let contrib = parseInt(localStorage.getItem("contributions") || "0", 10);
+    contrib++;
+    localStorage.setItem("contributions", contrib);
 
-  const compteurEl = document.getElementById("compteur-contributions");
-  if (compteurEl) {
-    compteurEl.textContent = contrib;
-  }
-})
-.catch(() => showNotification("❌ Erreur envoi appareil", "error"))
-.finally(() => {
-  setTimeout(() => {
-    btn.disabled = false;
-    btn.textContent = "💾 Sauvegarder";
-    if (currentItem) {
-      quitEditModeAppareil(newAppareil, newNomPoste, newLien, newDescription);
+    const compteurEl = document.getElementById("compteur-contributions");
+    if (compteurEl) {
+      compteurEl.textContent = contrib;
     }
-  }, 2000);
+  })
+  .catch(() => showNotification("❌ Erreur envoi appareil", "error"))
+  .finally(() => {
+    setTimeout(() => {
+      btn.disabled = false;
+      btn.textContent = "💾 Sauvegarder";
+      if (currentItem) {
+        quitEditModeAppareil(newAppareil, newNomPoste, newLien, newDescription);
+      }
+    }, 2000);
+  });
 });
 
 function quitEditMode(nom, type, sat = "", acces = ""){
