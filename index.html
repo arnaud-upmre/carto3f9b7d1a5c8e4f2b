@@ -32,14 +32,49 @@
   <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
    
   <style id="eale-intro-styles">
-  
-  .rep-appareil .info-block {
-  text-align: left !important;   /* aligner à gauche uniquement pour appareils */
-  font-weight: normal;           /* remettre le texte en normal */
+
+    .edit-buttons {
+  position: sticky;     
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center; 
+  gap: 12px;              
+  padding: 10px;
+  background: #fff;     
+  border-top: 1px solid #ddd;
+  z-index: 1000;          
+}
+
+    .rep-block.info-block,
+.rep-block.rep-appareil.info-block,
+.rep-block.info-block p {
+  text-align: left !important;
+}
+
+    #edit-toggle-appareil {
+  font-size: 13px;
+  font-style: italic;
+  color: #777;
+  margin-left: 6px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+#edit-toggle-appareil:hover {
+  color: #1a73e8;  
+  text-decoration: underline;
+}
+
+.rep-appareil .info-block {
+  text-align: left !important;
+  font-weight: normal; 
+  margin-left: 4px;    
 }
 
 .rep-appareil .info-block strong {
-  font-weight: 600;              /* garder "ℹ️ Informations :" en gras */
+  font-weight: 600; 
 }
   
   .info-block .desc-value,
@@ -53,9 +88,9 @@
 
     .rep-block .inline-links {
   display: flex;
-  justify-content: center; /* centre horizontalement */
-  gap: 8px; /* espace entre les boutons */
-  margin-top: 6px; /* petit espace au-dessus des boutons */
+  justify-content: center; 
+  gap: 8px; 
+  margin-top: 6px; 
 }
 
     #video-overlay {
@@ -143,12 +178,6 @@
   }
 }
 
-    .rep-block.horizontal .inline-links {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
     #streetview-overlay {
   position: fixed;
   top: 0; left: 0;
@@ -196,7 +225,7 @@
 
 #btn-carte { 
   margin-top: 4rem; 
-  display: inline-block; /* pour être traité comme un bouton */
+  display: inline-block;
 }
     
     #counters {
@@ -301,32 +330,34 @@ ul#suggestions:not(:empty){
   text-decoration: underline;
 }
 
-#edit-buttons {
+#edit-buttons,
+#edit-buttons-appareil {
   display: none;
   position: fixed;
-  bottom: 16px;
-  left: 50%;
-  transform: translateX(-50%);
+  bottom: 0;             
+  left: 0;
+  width: 100%;            
   z-index: 9999;
 
-  background: rgba(255, 255, 255, 0.8); 
-  backdrop-filter: blur(8px);         
-  -webkit-backdrop-filter: blur(8px);   
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 
-  border-radius: 16px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-  padding: 12px 20px;
+  border-top: 1px solid #ddd;
+  box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
+
+  padding: 12px;
   display: flex;
   justify-content: center;
   gap: 16px;
-  border: 1px solid #ddd;
 }
 
 @media (prefers-color-scheme: dark) {
-  #edit-buttons {
-    background: rgba(30, 30, 30, 0.8); 
-    border: 1px solid #444;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+  #edit-buttons,
+  #edit-buttons-appareil {
+    background: rgba(30, 30, 30, 0.92);
+    border-top: 1px solid #444;
+    box-shadow: 0 -4px 12px rgba(0,0,0,0.6);
   }
 }
 
@@ -334,12 +365,6 @@ ul#suggestions:not(:empty){
   display: block;            
   margin: 1.5rem 0 0.5rem 0;
   text-align: center;        
-}
-
-.rep-block p {
-  font-weight: 600;
-  margin: 0 0 6px 0;
-  text-align: center; 
 }
 
     .rep-block p .emoji {
@@ -738,7 +763,7 @@ main {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px; /* espace entre texte et bouton */
+  gap: 10px; 
 }
 
 .rep-block.horizontal.rep-appareil p {
@@ -771,10 +796,15 @@ main {
   <button id="btn-cancel" class="btn-primary">❌ Annuler édition</button>
 </div>
 
+  <div id="edit-buttons-appareil" style="display:none;">
+  <button id="btn-save-appareil" class="btn-primary">💾 Sauvegarder</button>
+  <button id="btn-cancel-appareil" class="btn-primary">❌ Annuler édition</button>
+</div>
+
 <button id="btn-localiser" class="btn-primary">
   📍 À proximité
 </button>
-  <!-- Nouveau bouton pour PC -->
+
 <a id="btn-carte" class="btn-primary" href="map.html" style="display:none;">
   🗺️ Afficher la carte
 </a>
@@ -1533,24 +1563,27 @@ function showAppareil(app) {
   result.style.display = "block";
 
   let html = `<h2>
-    ⚡️ ${app.appareil} (${app.nom}${app.type ? ' ' + app.type : ''}${app.SAT ? ' / ' + app.SAT : ''})
+    ⚡️ <span id="editable-appareil">${app.appareil}</span>
+(<span id="editable-nomposte">
+${(app.nom || '').trim()}${app.type ? ' ' + app.type.trim() : ''}${app.SAT ? ' ' + app.SAT.trim() : ''}
+</span>)
+    <a href="#" id="edit-toggle-appareil">[modifier]</a>
   </h2>`;
 
+  html += `
+    <div class="rep-block horizontal rep-appareil">
+      <p id="editable-rep-appareil"><span class="emoji">💡</span> <strong>Repérer l’appareil :</strong></p>
+      <div class="inline-links pills-2">
+        <a href="${myMapsViewer(app.latitude, app.longitude)}" target="_blank">🛰️ Vue satellite</a>
+        <a href="${
+          app.imajnet && app.imajnet.trim() !== "" 
+            ? app.imajnet 
+            : imajnetLink(app.latitude, app.longitude)
+        }" target="_blank">🚄 Imajnet</a>
+      </div>
+    </div>`;
 
-html += `
-  <div class="rep-block rep-appareil">
-    <p><span class="emoji">💡</span> <strong>Repérer l’appareil :</strong></p>
-    <div class="inline-links pills-2">
-      <a href="${myMapsViewer(app.latitude, app.longitude)}" target="_blank">🛰️ Vue satellite</a>
-      <a href="${
-        app.imajnet && app.imajnet.trim() !== "" 
-          ? app.imajnet 
-          : imajnetLink(app.latitude, app.longitude)
-      }" target="_blank">🚄 Imajnet</a>
-    </div>
-
-    ${formatInformations(app.description)}   <!-- 📌 déplacé à l’intérieur -->
-  </div>`;
+html += formatInformations(app.description);
 
   let postePrincipal = null;
   if (app.SAT) {
@@ -1585,6 +1618,7 @@ html += `
   }
 
   result.innerHTML = html;
+  currentItem = app;
 }
     
 
@@ -1811,6 +1845,65 @@ if (ligneNomEl) ligneNomEl.style.display = "none";
   }
 });
 
+
+let editModeAppareil = false;
+let originalAppareil = {};
+
+document.addEventListener("click", function(e) {
+  if (e.target.id === "edit-toggle-appareil") {
+    e.preventDefault();
+    if (!editModeAppareil) {
+      editModeAppareil = true;
+
+      originalAppareil.appareil = currentItem.appareil || "";
+originalAppareil.nomposte = `${currentItem.nom || ''}${currentItem.type ? ' ' + currentItem.type : ''}${currentItem.SAT ? ' ' + currentItem.SAT : ''}${currentItem.accès ? ' – accès ' + currentItem.accès : ''}`;
+      originalAppareil.description = currentItem.description || "";
+
+      ["editable-appareil","editable-nomposte","editable-rep-appareil","editable-description-appareil"]
+        .forEach(id=>{
+          const el = document.getElementById(id);
+          if (el) el.classList.add("editable-halo","editable-wiggle");
+        });
+
+      document.getElementById("edit-buttons-appareil").style.display = "flex";
+    }
+  }
+});
+
+document.addEventListener("click", function(e) {
+  if (editModeAppareil && e.target.id === "editable-appareil") {
+    const val = originalAppareil.appareil;
+    e.target.innerHTML = `<input type="text" id="input-appareil" value="${val}" style="border:2px solid #1a73e8; padding:3px; border-radius:6px;" />`;
+  }
+
+  if (editModeAppareil && e.target.id === "editable-nomposte") {
+    const val = originalAppareil.nomposte;
+    e.target.innerHTML = `<input type="text" id="input-nomposte" value="${val}" style="border:2px solid #1a73e8; padding:3px; border-radius:6px;" />`;
+  }
+
+if (editModeAppareil && e.target.closest("#editable-rep-appareil")) {
+  const bloc = e.target.closest(".rep-block").querySelector(".inline-links");
+  bloc.innerHTML = `
+    <input type="text" id="input-rep-appareil"
+      placeholder="Coller ici le lien Google Maps"
+      style="width:100%; border:2px solid #1a73e8; border-radius:6px; padding:4px;" />
+  `;
+  navigator.vibrate?.(50);
+}
+
+if (editModeAppareil 
+    && e.target.closest(".info-block") 
+    && !e.target.closest("#input-description-appareil")) {
+  const parent = e.target.closest(".info-block");
+  const val = originalAppareil.description;
+  parent.innerHTML = `
+    <strong id="editable-description-appareil">ℹ️ Informations :</strong>
+    <textarea id="input-description-appareil" style="width:100%; min-height:60px; border:2px solid #1a73e8; padding:4px; border-radius:6px;">${val}</textarea>
+  `;
+  navigator.vibrate?.(50);
+}
+});
+
 document.addEventListener("click", function(e){
   if (editMode && (
       ["editable-nom","editable-type","editable-sat","editable-acces","editable-rss",
@@ -1951,12 +2044,12 @@ document.getElementById("btn-save").addEventListener("click", function(){
   const newType  = document.getElementById("input-type")?.value  || originalValues.type;
   const newSat   = document.getElementById("input-sat")?.value   || originalValues.sat || "";
   const newAcces = document.getElementById("input-acces")?.value || originalValues["accès"] || "";
-const newDescription = document.getElementById("input-description")?.value || originalValues.description || "";
-const newContact     = document.getElementById("input-contact")?.value     || originalValues.contact || "";
-const newPortail     = document.getElementById("input-portail")?.value     || originalValues.portail || "";
-const newPk   = document.getElementById("input-pk")?.value || currentItem.pk || "";
-const newNumLigne = document.getElementById("input-numero_ligne")?.value || currentItem.numero_ligne || "";
-    const newPosteLink = document.getElementById("input-poste-link")?.value || "";
+  const newDescription = document.getElementById("input-description")?.value || originalValues.description || "";
+  const newContact     = document.getElementById("input-contact")?.value     || originalValues.contact || "";
+  const newPortail     = document.getElementById("input-portail")?.value     || originalValues.portail || "";
+  const newPk   = document.getElementById("input-pk")?.value || currentItem.pk || "";
+  const newNumLigne = document.getElementById("input-numero_ligne")?.value || currentItem.numero_ligne || "";
+  const newPosteLink = document.getElementById("input-poste-link")?.value || "";
   const newAccesLink = document.getElementById("input-acces-link")?.value || "";
   
   const demandeur = getDemandeur();
@@ -2012,6 +2105,68 @@ fetch("https://script.google.com/macros/s/AKfycbyxh3HGR6iHcn0ynwfGzSzOm5Djc7o2e1
   }, 3000);
 });
   }); 
+
+document.getElementById("btn-save-appareil").addEventListener("click", function() {
+  const btn = this;
+  btn.disabled = true;
+  btn.textContent = "⏳ Envoi...";
+
+  const newAppareil    = document.getElementById("input-appareil")?.value.trim() || originalAppareil.appareil;
+  const newNomPoste    = document.getElementById("input-nomposte")?.value.trim() || originalAppareil.nomposte;
+  const newLien        = document.getElementById("input-rep-appareil")?.value.trim() || "";
+  const newDescription = document.getElementById("input-description-appareil")?.value.trim() || originalAppareil.description;
+
+  const demandeur = getDemandeur();
+
+const payload = {
+  category: "appareil",
+  ficheOrigine: originalAppareil.appareil, // reste la référence brute
+  nom_orig: currentItem.nom || "",
+  type_orig: currentItem.type || "",
+  sat_orig: currentItem.SAT || "",
+  acces_orig: currentItem.accès || "",
+  demandeur,
+  horodatage: new Date().toISOString()
+};
+
+  if (newAppareil !== originalAppareil.appareil) {
+    payload.appareil = newAppareil;
+  }
+  if (newNomPoste !== originalAppareil.nomposte) {
+    payload.nom = newNomPoste;
+  }
+  if (newLien && newLien !== (originalAppareil.lien || "")) {
+    payload.lien = newLien;
+  }
+  if (newDescription !== (originalAppareil.description || "")) {
+    payload.description = newDescription;
+  }
+
+fetch("https://script.google.com/macros/s/AKfycbyZYV5b-aGdAsFc775xwxsdfBSIZHobE6mGNC7Zixgms77kRTmOaUpwVgNoBoKAiGhm/exec", {
+  method: "POST",
+  mode: "no-cors",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(payload)
+})
+.then(() => {
+  showNotification("✅ Modification appareil envoyée", "success");
+
+  // 👉 Incrémenter le compteur global (même script que pour les postes)
+  fetch("https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec?increment=true")
+    .then(() => console.log("Contribution appareil créditée"))
+    .catch(() => console.warn("⚠️ Échec incrément compteur appareil"));
+})
+.catch(() => showNotification("❌ Erreur envoi appareil", "error"))
+.finally(() => {
+  setTimeout(() => {
+    btn.disabled = false;
+    btn.textContent = "💾 Sauvegarder";
+    if (currentItem) {
+      quitEditModeAppareil(newAppareil, newNomPoste, newLien, newDescription);
+    }
+  }, 2000);
+});
+});
 
 function quitEditMode(nom, type, sat = "", acces = ""){
   document.getElementById("editable-nom").textContent = nom;
@@ -2115,6 +2270,28 @@ bloc.innerHTML = `
   editMode = false;
 }
 
+
+    function quitEditModeAppareil(newAppareil, newNomPoste, newLien, newDescription) {
+
+  originalAppareil.appareil = newAppareil;
+  originalAppareil.nomposte = newNomPoste;
+  originalAppareil.lien = newLien;
+  originalAppareil.description = newDescription;
+
+  if (currentItem) {
+    currentItem.appareil = newAppareil;
+    currentItem.nomposte = newNomPoste;
+    currentItem.lien = newLien;
+    currentItem.description = newDescription;
+  }
+
+  editModeAppareil = false;
+  document.getElementById("edit-buttons-appareil").style.display = "none";
+
+
+  showAppareil(currentItem);
+}
+
 document.getElementById("btn-cancel").addEventListener("click", function(){
   quitEditMode(
     originalValues.nom,
@@ -2125,13 +2302,27 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
   showNotification("🔙 Édition annulée", "info");
 });
 
+document.getElementById("btn-cancel-appareil").addEventListener("click", function(){
+  quitEditModeAppareil(
+    originalAppareil.appareil,
+    originalAppareil.nomposte,
+    originalAppareil.lien || "",
+    originalAppareil.description || ""
+  );
+  showNotification("🔙 Édition appareil annulée", "info");
+});
+
 function formatInformations(val) {
-  return `<p class="info-block">
-    <strong>ℹ️ Informations :</strong>
-    ${val && val.trim() !== "" 
-      ? `<span class="desc-value">${val}</span>` 
-      : '<span class="placeholder">(non renseigné)</span>'}
-  </p>`;
+  return `
+    <div class="rep-block rep-appareil info-block">
+      <p>
+        <strong id="editable-description-appareil">ℹ️ Informations :</strong>
+        ${val && val.trim() !== "" 
+          ? `<span class="desc-value">${val}</span>` 
+          : '<span class="placeholder">(non renseigné)</span>'}
+      </p>
+    </div>
+  `;
 }
     
     function showNotification(message, type = "info") {
@@ -2156,7 +2347,7 @@ function formatInformations(val) {
 <div id="about-footer">
   <div class="footer-links">
     <a href="arnaud.html" class="pill-link">🔧 À propos</a>
-   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.10</a>
+   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.10.1</a>
   </div>
 </div>
 <script>
