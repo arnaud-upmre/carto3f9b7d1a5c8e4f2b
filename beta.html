@@ -1885,14 +1885,17 @@ if (editModeAppareil && e.target.closest("#editable-rep-appareil")) {
   navigator.vibrate?.(50);
 }
 
-  if (editModeAppareil && e.target.closest(".info-block")) {
-    const parent = e.target.closest(".info-block");
-    const val = originalAppareil.description;
-    parent.innerHTML = `
-      <strong id="editable-description-appareil">ℹ️ Informations :</strong>
-      <textarea id="input-description-appareil" style="width:100%; min-height:60px; border:2px solid #1a73e8; padding:4px; border-radius:6px;">${val}</textarea>
-    `;
-  }
+if (editModeAppareil 
+    && e.target.closest(".info-block") 
+    && !e.target.closest("#input-description-appareil")) {
+  const parent = e.target.closest(".info-block");
+  const val = originalAppareil.description;
+  parent.innerHTML = `
+    <strong id="editable-description-appareil">ℹ️ Informations :</strong>
+    <textarea id="input-description-appareil" style="width:100%; min-height:60px; border:2px solid #1a73e8; padding:4px; border-radius:6px;">${val}</textarea>
+  `;
+  navigator.vibrate?.(50);
+}
 });
 
 document.addEventListener("click", function(e){
@@ -2285,7 +2288,7 @@ function formatInformations(val) {
 <div id="about-footer">
   <div class="footer-links">
     <a href="arnaud.html" class="pill-link">🔧 À propos</a>
-   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.10.2</a>
+   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.10</a>
   </div>
 </div>
 <script>
