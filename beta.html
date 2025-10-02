@@ -2261,12 +2261,16 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 });
 
 function formatInformations(val) {
-  return `<p class="info-block rep-appareil">
-    <strong id="editable-description-appareil">ℹ️ Informations :</strong>
-    ${val && val.trim() !== "" 
-      ? `<span class="desc-value">${val}</span>` 
-      : '<span class="placeholder">(non renseigné)</span>'}
-  </p>`;
+  return `
+    <div class="rep-block rep-appareil info-block">
+      <p>
+        <strong id="editable-description-appareil">ℹ️ Informations :</strong>
+        ${val && val.trim() !== "" 
+          ? `<span class="desc-value">${val}</span>` 
+          : '<span class="placeholder">(non renseigné)</span>'}
+      </p>
+    </div>
+  `;
 }
     
     function showNotification(message, type = "info") {
