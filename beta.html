@@ -1560,9 +1560,7 @@ function showAppareil(app) {
       ${formatInformations(app.description)}
     </div>`;
 
-  result.innerHTML = html;
-}
-
+  // cherche le poste principal associé
   let postePrincipal = null;
   if (app.SAT) {
     postePrincipal = lieux.find(l =>
@@ -1597,7 +1595,6 @@ function showAppareil(app) {
 
   result.innerHTML = html;
 }
-    
 
 const TOTAL_TRAINS = 11; 
 
