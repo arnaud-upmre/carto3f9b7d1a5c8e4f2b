@@ -32,6 +32,20 @@
   <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
    
   <style id="eale-intro-styles">
+
+    #edit-toggle-appareil {
+  font-size: 13px;
+  font-style: italic;
+  color: #777;
+  margin-left: 6px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+#edit-toggle-appareil:hover {
+  color: #1a73e8;  
+  text-decoration: underline;
+}
   
   .rep-appareil .info-block {
   text-align: left !important;   /* aligner à gauche uniquement pour appareils */
@@ -2240,8 +2254,8 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 });
 
 function formatInformations(val) {
-  return `<p class="info-block">
-    <strong>ℹ️ Informations :</strong>
+  return `<p class="info-block rep-appareil">
+    <strong id="editable-description-appareil">ℹ️ Informations :</strong>
     ${val && val.trim() !== "" 
       ? `<span class="desc-value">${val}</span>` 
       : '<span class="placeholder">(non renseigné)</span>'}
@@ -2270,7 +2284,7 @@ function formatInformations(val) {
 <div id="about-footer">
   <div class="footer-links">
     <a href="arnaud.html" class="pill-link">🔧 À propos</a>
-   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.10</a>
+   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.10.1</a>
   </div>
 </div>
 <script>
