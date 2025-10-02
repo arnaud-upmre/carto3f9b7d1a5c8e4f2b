@@ -1535,7 +1535,7 @@ html += `
     </div>
   </div>`;
   
-  html += `<hr class="separator" />` + formatInformations(app.description);
+  html += formatInformations(app.description);
 
   let postePrincipal = null;
   if (app.SAT) {
