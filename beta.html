@@ -2092,7 +2092,7 @@ fetch("https://script.google.com/macros/s/AKfycbyxh3HGR6iHcn0ynwfGzSzOm5Djc7o2e1
 });
   }); 
 
-    document.getElementById("btn-save-appareil").addEventListener("click", function() {
+document.getElementById("btn-save-appareil").addEventListener("click", function() {
   const btn = this;
   btn.disabled = true;
   btn.textContent = "⏳ Envoi...";
@@ -2126,6 +2126,13 @@ fetch("https://script.google.com/macros/s/AKfycbyxh3HGR6iHcn0ynwfGzSzOm5Djc7o2e1
     setTimeout(() => {
       btn.disabled = false;
       btn.textContent = "💾 Sauvegarder";
+
+      // ✅ Recharger la fiche pour quitter le mode édition
+      if (currentItem) {
+        showAppareil(currentItem);
+        editModeAppareil = false;
+        document.getElementById("edit-buttons-appareil").style.display = "none";
+      }
     }, 2000);
   });
 });
@@ -2284,7 +2291,7 @@ function formatInformations(val) {
 <div id="about-footer">
   <div class="footer-links">
     <a href="arnaud.html" class="pill-link">🔧 À propos</a>
-   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.10</a>
+   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.10.1</a>
   </div>
 </div>
 <script>
