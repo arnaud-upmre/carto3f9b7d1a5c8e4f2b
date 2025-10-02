@@ -2113,12 +2113,10 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
 
 function formatInformations(val) {
   return `<p class="info-block">
-    <strong>ℹ️ Informations :</strong> 
-    <span id="editable-description">
-      ${val && val.trim() !== "" 
-        ? val 
-        : '<span class="placeholder">(non renseigné)</span>'}
-    </span>
+    <strong>ℹ️ Informations :</strong>
+    ${val && val.trim() !== "" 
+      ? `<span class="desc-value">${val}</span>` 
+      : '<span class="placeholder">(non renseigné)</span>'}
   </p>`;
 }
     
