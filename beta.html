@@ -2092,7 +2092,6 @@ fetch("https://script.google.com/macros/s/AKfycbyxh3HGR6iHcn0ynwfGzSzOm5Djc7o2e1
 });
   }); 
 
-
 document.getElementById("btn-save-appareil").addEventListener("click", function() {
   const btn = this;
   btn.disabled = true;
@@ -2105,15 +2104,22 @@ document.getElementById("btn-save-appareil").addEventListener("click", function(
 
   const demandeur = getDemandeur();
 
-  // Toujours envoyés
+  // ✅ Toujours envoyés
   const payload = {
     category: "appareil",
-    ficheOrigine: originalAppareil.appareil,
+    ficheOrigine: originalAppareil.appareil, // identifiant de base
+
+    // ➜ Contexte d’ORIGINE (jamais considéré comme "modification")
+    nom_orig:  currentItem.nom   || "",
+    type_orig: currentItem.type  || "",
+    sat_orig:  currentItem.SAT   || "",
+    acces_orig: currentItem.accès || "",
+
     demandeur,
     horodatage: new Date().toISOString()
   };
 
-  // Seulement si champ modifié
+  // ✅ Seulement si champ vraiment modifié
   if (newAppareil !== originalAppareil.appareil) {
     payload.appareil = newAppareil;
   }
