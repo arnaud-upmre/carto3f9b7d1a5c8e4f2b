@@ -2156,6 +2156,18 @@ document.getElementById("btn-save-appareil").addEventListener("click", function(
     body: JSON.stringify(payload)
   })
   .then(() => showNotification("✅ Modification appareil envoyée", "success"))
+    
+  // 👉 Incrémenter le compteur de contributions (comme pour les postes)
+  let contrib = parseInt(localStorage.getItem("contributions") || "0", 10);
+  contrib++;
+  localStorage.setItem("contributions", contrib);
+
+  // Si tu as un élément compteur affiché dans la page, on le met à jour
+  const compteurEl = document.getElementById("compteur-contributions");
+  if (compteurEl) {
+    compteurEl.textContent = contrib;
+  }
+})
   .catch(() => showNotification("❌ Erreur envoi appareil", "error"))
   .finally(() => {
     setTimeout(() => {
@@ -2347,7 +2359,7 @@ function formatInformations(val) {
 <div id="about-footer">
   <div class="footer-links">
     <a href="arnaud.html" class="pill-link">🔧 À propos</a>
-   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.10</a>
+   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.10.1</a>
   </div>
 </div>
 <script>
