@@ -2127,12 +2127,9 @@ document.getElementById("btn-save-appareil").addEventListener("click", function(
       btn.disabled = false;
       btn.textContent = "💾 Sauvegarder";
 
-      // ✅ Recharger la fiche pour quitter le mode édition
       if (currentItem) {
-        showAppareil(currentItem);
-        editModeAppareil = false;
-        document.getElementById("edit-buttons-appareil").style.display = "none";
-      }
+  quitEditModeAppareil(newAppareil, newNomPoste, newLien, newDescription);
+}
     }, 2000);
   });
 });
@@ -2239,6 +2236,28 @@ bloc.innerHTML = `
   editMode = false;
 }
 
+
+    function quitEditModeAppareil(newAppareil, newNomPoste, newLien, newDescription) {
+
+  originalAppareil.appareil = newAppareil;
+  originalAppareil.nomposte = newNomPoste;
+  originalAppareil.lien = newLien;
+  originalAppareil.description = newDescription;
+
+  if (currentItem) {
+    currentItem.appareil = newAppareil;
+    currentItem.nomposte = newNomPoste;
+    currentItem.lien = newLien;
+    currentItem.description = newDescription;
+  }
+
+  editModeAppareil = false;
+  document.getElementById("edit-buttons-appareil").style.display = "none";
+
+
+  showAppareil(currentItem);
+}
+
 document.getElementById("btn-cancel").addEventListener("click", function(){
   quitEditMode(
     originalValues.nom,
@@ -2249,11 +2268,14 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
   showNotification("🔙 Édition annulée", "info");
 });
 
-    document.getElementById("btn-cancel-appareil").addEventListener("click", function(){
-  showAppareil(currentItem); 
+document.getElementById("btn-cancel-appareil").addEventListener("click", function(){
+  quitEditModeAppareil(
+    originalAppareil.appareil,
+    originalAppareil.nomposte,
+    originalAppareil.lien || "",
+    originalAppareil.description || ""
+  );
   showNotification("🔙 Édition appareil annulée", "info");
-  editModeAppareil = false;
-  document.getElementById("edit-buttons-appareil").style.display = "none";
 });
 
 function formatInformations(val) {
@@ -2291,7 +2313,7 @@ function formatInformations(val) {
 <div id="about-footer">
   <div class="footer-links">
     <a href="arnaud.html" class="pill-link">🔧 À propos</a>
-   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.10.1</a>
+   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.10</a>
   </div>
 </div>
 <script>
