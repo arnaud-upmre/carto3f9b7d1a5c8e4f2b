@@ -2099,11 +2099,15 @@ document.getElementById("btn-save-appareil").addEventListener("click", function(
   const newAppareil    = document.getElementById("input-appareil")?.value   || originalAppareil.appareil;
   const newNomPoste    = document.getElementById("input-nomposte")?.value   || originalAppareil.nomposte;
   const newLien        = document.getElementById("input-rep-appareil")?.value || "";
-  const newDescription = document.getElementById("input-description-appareil")?.value || originalAppareil.description;
+let newDescription = originalAppareil.description || "";
+const descInput = document.getElementById("input-description-appareil");
+if (descInput) {
+  newDescription = descInput.value.trim();
+}
 
   const demandeur = getDemandeur();
 
-  // ✅ On met toujours seulement ces 3
+
   const payload = {
     category: "appareil",
     ficheOrigine: originalAppareil.appareil,
@@ -2111,7 +2115,7 @@ document.getElementById("btn-save-appareil").addEventListener("click", function(
     horodatage: new Date().toISOString()
   };
 
-  // ✅ On ajoute les autres uniquement si modifiés
+
   if (newAppareil !== originalAppareil.appareil) {
     payload.appareil = newAppareil;
   }
