@@ -1566,21 +1566,6 @@ function showAppareil(app) {
 }
 
 
-html += `
-  <div class="rep-block rep-appareil">
-    <p><span class="emoji">💡</span> <strong>Repérer l’appareil :</strong></p>
-    <div class="inline-links pills-2">
-      <a href="${myMapsViewer(app.latitude, app.longitude)}" target="_blank">🛰️ Vue satellite</a>
-      <a href="${
-        app.imajnet && app.imajnet.trim() !== "" 
-          ? app.imajnet 
-          : imajnetLink(app.latitude, app.longitude)
-      }" target="_blank">🚄 Imajnet</a>
-    </div>
-
-    ${formatInformations(app.description)}   <!-- 📌 déplacé à l’intérieur -->
-  </div>`;
-
   let postePrincipal = null;
   if (app.SAT) {
     postePrincipal = lieux.find(l =>
