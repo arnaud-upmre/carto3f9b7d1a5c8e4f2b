@@ -1875,14 +1875,15 @@ document.addEventListener("click", function(e) {
     e.target.innerHTML = `<input type="text" id="input-nomposte" value="${val}" style="border:2px solid #1a73e8; padding:3px; border-radius:6px;" />`;
   }
 
-  if (editModeAppareil && e.target.id === "editable-rep-appareil") {
-    const bloc = e.target.closest(".rep-block").querySelector(".inline-links");
-    bloc.innerHTML = `
-      <input type="text" id="input-rep-appareil"
-        placeholder="Coller ici le lien Google Maps"
-        style="width:100%; border:2px solid #1a73e8; border-radius:6px; padding:4px;" />
-    `;
-  }
+if (editModeAppareil && e.target.closest("#editable-rep-appareil")) {
+  const bloc = e.target.closest(".rep-block").querySelector(".inline-links");
+  bloc.innerHTML = `
+    <input type="text" id="input-rep-appareil"
+      placeholder="Coller ici le lien Google Maps"
+      style="width:100%; border:2px solid #1a73e8; border-radius:6px; padding:4px;" />
+  `;
+  navigator.vibrate?.(50);
+}
 
   if (editModeAppareil && e.target.closest(".info-block")) {
     const parent = e.target.closest(".info-block");
@@ -2284,7 +2285,7 @@ function formatInformations(val) {
 <div id="about-footer">
   <div class="footer-links">
     <a href="arnaud.html" class="pill-link">🔧 À propos</a>
-   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.10.1</a>
+   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.10.2</a>
   </div>
 </div>
 <script>
