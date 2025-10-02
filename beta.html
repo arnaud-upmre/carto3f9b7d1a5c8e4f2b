@@ -2093,44 +2093,42 @@ fetch("https://script.google.com/macros/s/AKfycbyxh3HGR6iHcn0ynwfGzSzOm5Djc7o2e1
   }); 
 
 
-    document.getElementById("btn-save-appareil").addEventListener("click", function() {
+document.getElementById("btn-save-appareil").addEventListener("click", function() {
   const btn = this;
   btn.disabled = true;
   btn.textContent = "⏳ Envoi...";
 
-  const newAppareil    = document.getElementById("input-appareil")?.value   || originalAppareil.appareil;
-  const newNomPoste    = document.getElementById("input-nomposte")?.value   || originalAppareil.nomposte;
-  const newLien = document.getElementById("input-rep-appareil")?.value.trim() || "";
-  const newDescription = document.getElementById("input-description-appareil")
-    ? document.getElementById("input-description-appareil").value.trim()
-    : originalAppareil.description || "";
+  const newAppareil    = document.getElementById("input-appareil")?.value.trim() || originalAppareil.appareil;
+  const newNomPoste    = document.getElementById("input-nomposte")?.value.trim() || originalAppareil.nomposte;
+  const newLien        = document.getElementById("input-rep-appareil")?.value.trim() || "";
+  const newDescription = document.getElementById("input-description-appareil")?.value.trim() || originalAppareil.description;
 
   const demandeur = getDemandeur();
 
-const payload = {
-  category: "appareil",
-  ficheOrigine: originalAppareil.appareil,  // toujours l’identifiant
-  nom: currentItem.nom || "",               // 👈 poste associé
-  type: currentItem.type || "",
-  SAT: currentItem.SAT || "",
-  acces: currentItem.accès || "",
-  demandeur,
-  horodatage: new Date().toISOString()
-};
+  // Toujours envoyés
+  const payload = {
+    category: "appareil",
+    ficheOrigine: originalAppareil.appareil,
+    demandeur,
+    horodatage: new Date().toISOString()
+  };
 
+  // Seulement si champ modifié
   if (newAppareil !== originalAppareil.appareil) {
     payload.appareil = newAppareil;
   }
   if (newNomPoste !== originalAppareil.nomposte) {
     payload.nom = newNomPoste;
   }
-if (newLien) {
-  payload.lien = newLien;
-}
+  if (newLien && newLien !== (originalAppareil.lien || "")) {
+    payload.lien = newLien;
+  }
   if (newDescription !== (originalAppareil.description || "")) {
     payload.description = newDescription;
   }
-console.log("📤 Payload envoyé :", payload);
+
+  console.log("📤 Payload envoyé :", payload);
+
   fetch("https://script.google.com/macros/s/AKfycbyZYV5b-aGdAsFc775xwxsdfBSIZHobE6mGNC7Zixgms77kRTmOaUpwVgNoBoKAiGhm/exec", {
     method: "POST",
     mode: "no-cors",
@@ -2329,7 +2327,7 @@ function formatInformations(val) {
 <div id="about-footer">
   <div class="footer-links">
     <a href="arnaud.html" class="pill-link">🔧 À propos</a>
-   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.10.01</a>
+   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.10</a>
   </div>
 </div>
 <script>
