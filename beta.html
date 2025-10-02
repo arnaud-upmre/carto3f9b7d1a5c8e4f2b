@@ -74,9 +74,9 @@
 
     .rep-block .inline-links {
   display: flex;
-  justify-content: center; /* centre horizontalement */
-  gap: 8px; /* espace entre les boutons */
-  margin-top: 6px; /* petit espace au-dessus des boutons */
+  justify-content: center; 
+  gap: 8px; 
+  margin-top: 6px; 
 }
 
     #video-overlay {
@@ -164,12 +164,6 @@
   }
 }
 
-    .rep-block.horizontal .inline-links {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
     #streetview-overlay {
   position: fixed;
   top: 0; left: 0;
@@ -217,7 +211,7 @@
 
 #btn-carte { 
   margin-top: 4rem; 
-  display: inline-block; /* pour être traité comme un bouton */
+  display: inline-block;
 }
     
     #counters {
@@ -326,9 +320,9 @@ ul#suggestions:not(:empty){
 #edit-buttons-appareil {
   display: none;
   position: fixed;
-  bottom: 0;              /* toujours collé en bas */
+  bottom: 0;             
   left: 0;
-  width: 100%;            /* toute la largeur */
+  width: 100%;            
   z-index: 9999;
 
   background: rgba(255, 255, 255, 0.92);
@@ -357,12 +351,6 @@ ul#suggestions:not(:empty){
   display: block;            
   margin: 1.5rem 0 0.5rem 0;
   text-align: center;        
-}
-
-.rep-block p {
-  font-weight: 600;
-  margin: 0 0 6px 0;
-  text-align: center; 
 }
 
     .rep-block p .emoji {
@@ -761,7 +749,7 @@ main {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px; /* espace entre texte et bouton */
+  gap: 10px; 
 }
 
 .rep-block.horizontal.rep-appareil p {
@@ -802,7 +790,7 @@ main {
 <button id="btn-localiser" class="btn-primary">
   📍 À proximité
 </button>
-  <!-- Nouveau bouton pour PC -->
+
 <a id="btn-carte" class="btn-primary" href="map.html" style="display:none;">
   🗺️ Afficher la carte
 </a>
@@ -1581,7 +1569,6 @@ function showAppareil(app) {
 
 html += formatInformations(app.description);
 
-  // 🔹 rattacher au poste principal si dispo
   let postePrincipal = null;
   if (app.SAT) {
     postePrincipal = lieux.find(l =>
@@ -1842,9 +1829,7 @@ if (ligneNomEl) ligneNomEl.style.display = "none";
   }
 });
 
-    // ======================
-// Edition Appareil
-// ======================
+
 let editModeAppareil = false;
 let originalAppareil = {};
 
@@ -1869,7 +1854,6 @@ document.addEventListener("click", function(e) {
   }
 });
 
-// clic sur un champ appareil
 document.addEventListener("click", function(e) {
   if (editModeAppareil && e.target.id === "editable-appareil") {
     const val = originalAppareil.appareil;
@@ -2044,12 +2028,12 @@ document.getElementById("btn-save").addEventListener("click", function(){
   const newType  = document.getElementById("input-type")?.value  || originalValues.type;
   const newSat   = document.getElementById("input-sat")?.value   || originalValues.sat || "";
   const newAcces = document.getElementById("input-acces")?.value || originalValues["accès"] || "";
-const newDescription = document.getElementById("input-description")?.value || originalValues.description || "";
-const newContact     = document.getElementById("input-contact")?.value     || originalValues.contact || "";
-const newPortail     = document.getElementById("input-portail")?.value     || originalValues.portail || "";
-const newPk   = document.getElementById("input-pk")?.value || currentItem.pk || "";
-const newNumLigne = document.getElementById("input-numero_ligne")?.value || currentItem.numero_ligne || "";
-    const newPosteLink = document.getElementById("input-poste-link")?.value || "";
+  const newDescription = document.getElementById("input-description")?.value || originalValues.description || "";
+  const newContact     = document.getElementById("input-contact")?.value     || originalValues.contact || "";
+  const newPortail     = document.getElementById("input-portail")?.value     || originalValues.portail || "";
+  const newPk   = document.getElementById("input-pk")?.value || currentItem.pk || "";
+  const newNumLigne = document.getElementById("input-numero_ligne")?.value || currentItem.numero_ligne || "";
+  const newPosteLink = document.getElementById("input-poste-link")?.value || "";
   const newAccesLink = document.getElementById("input-acces-link")?.value || "";
   
   const demandeur = getDemandeur();
