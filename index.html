@@ -33,6 +33,11 @@
    
   <style id="eale-intro-styles">
 
+    /* Espacement au-dessus du bloc Informations */
+.info-block {
+  margin-top: 12px;
+}
+
     .rep-block .inline-links {
   display: flex;
   justify-content: center; /* centre horizontalement */
@@ -2106,8 +2111,8 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
   showNotification("🔙 Édition annulée", "info");
 });
 
-    function formatInformations(val) {
-  return `<p><strong id="editable-description">ℹ️ Informations :</strong> 
+function formatInformations(val) {
+  return `<p class="info-block"><strong id="editable-description">ℹ️ Informations :</strong> 
     ${val && val.trim() !== "" 
       ? `<span class="desc-value">${val}</span>` 
       : '<span class="placeholder">(non renseigné)</span>'}
