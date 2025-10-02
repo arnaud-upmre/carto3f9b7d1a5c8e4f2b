@@ -1550,7 +1550,9 @@ function showAppareil(app) {
 
   let html = `<h2>
     ⚡️ <span id="editable-appareil">${app.appareil}</span>
-    (<span id="editable-nomposte">${app.nom}${app.type ? ' ' + app.type : ''}</span>)
+(<span id="editable-nomposte">
+  ${app.nom || ''}${app.type ? ' ' + app.type : ''}${app.SAT ? ' ' + app.SAT : ''}${app.accès ? ' – accès ' + app.accès : ''}
+</span>)
     <a href="#" id="edit-toggle-appareil">[modifier]</a>
   </h2>`;
 
@@ -1840,7 +1842,7 @@ document.addEventListener("click", function(e) {
       editModeAppareil = true;
 
       originalAppareil.appareil = currentItem.appareil || "";
-      originalAppareil.nomposte = currentItem.nom || "";
+originalAppareil.nomposte = `${currentItem.nom || ''}${currentItem.type ? ' ' + currentItem.type : ''}${currentItem.SAT ? ' ' + currentItem.SAT : ''}${currentItem.accès ? ' – accès ' + currentItem.accès : ''}`;
       originalAppareil.description = currentItem.description || "";
 
       ["editable-appareil","editable-nomposte","editable-rep-appareil","editable-description-appareil"]
