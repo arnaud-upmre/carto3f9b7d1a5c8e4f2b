@@ -4867,7 +4867,7 @@
   {
     "nom": "Amiens",
     "type": "CU",
-    "SAT": "SATA",
+    "SAT": "SAT A",
     "accès": "",
     "appareil": "I34",
     "latitude": 49.87988,
@@ -4878,7 +4878,7 @@
   {
     "nom": "Amiens",
     "type": "CU",
-    "SAT": "SATA",
+    "SAT": "SAT A",
     "accès": "",
     "appareil": "I35",
     "latitude": 49.87991,
