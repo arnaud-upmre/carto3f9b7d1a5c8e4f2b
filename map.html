@@ -14,9 +14,6 @@
 
 <style>
 
-/* ============================
-   FAB container + bouton burger
-   ============================ */
 .fab-container {
   position: fixed;
   bottom: 20px;
@@ -28,7 +25,6 @@
   gap: 20px; 
 }
 
-/* Bouton burger */
 .fab {
   width: 60px;
   height: 60px;
@@ -44,7 +40,6 @@
   transition: transform 0.3s;
 }
 
-/* Menu icônes */
 .fab-options {
   width: 70px;
   background: rgba(0,0,0,0.7);
@@ -66,9 +61,6 @@
   pointer-events: auto;
 }
 
-/* ============================
-   Boutons du menu
-   ============================ */
 .fab-options button {
   border: none;
   background: none;   
@@ -80,20 +72,20 @@
   justify-content: center;
 }
 
-/* Icônes */
+
 .fab-options button img {
   width: 36px;
   height: 36px;
   transition: opacity .2s, filter .2s;
 }
 
-/* Inactif */
+
 .fab-options button:not(.active) img {
   opacity: 0.5;
   filter: none;
 }
 
-/* Actif */
+
 .fab-options button.active {
   background: rgba(255,255,255,0.50); 
 }
@@ -101,9 +93,6 @@
   opacity: 1;  /* remet l’icône normale */
 }
   
-/* =========================================================
-   TOAST (notifications flottantes)
-   ========================================================= */
 .toast {
   position: fixed;
   bottom: 140px;
@@ -123,9 +112,7 @@
   opacity: 1;
 }
 
-/* =========================================================
-   POPUPS LEAFLET
-   ========================================================= */
+
 .leaflet-popup-content-wrapper {
   background: linear-gradient(
     135deg,
@@ -198,9 +185,6 @@
   background: #e5e7eb;
 }
 
-/* =========================================================
-   STREETVIEW OVERLAY
-   ========================================================= */
 #streetview-overlay {
   position: fixed;
   top: 0; left: 0;
@@ -242,9 +226,6 @@
   z-index: 2;
 }
 
-/* =========================================================
-   ICONES / CLUSTERS / HALO
-   ========================================================= */
 .btn-return {
   position: relative;
   animation: pulseHalo 1.8s infinite;
@@ -306,9 +287,6 @@
   background: rgba(255, 255, 255, 0.25);
 }
 
-/* =========================================================
-   CONTRÔLES LEAFLET (loupe, recentrer, etc.)
-   ========================================================= */
 .control-group {
   margin-bottom: 10px; 
 }
@@ -331,9 +309,6 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-/* =========================================================
-   BOUTONS GÉNÉRIQUES
-   ========================================================= */
 .btn-toggle{
   background: rgba(0,0,0,.7);
   border: 1px solid rgba(255,255,255,.12);
@@ -355,9 +330,6 @@
   color: #111;
 }
 
-/* =========================================================
-   VARIABLES GLOBALES + MAP
-   ========================================================= */
 :root {
   --accent:#4f46e5;
   --bg:#0b0c0e;
@@ -424,10 +396,9 @@ html, body {
   
   <div id="map"></div>
 
-<!-- Bouton flottant (FAB) -->
 <div class="fab-container">
   <button class="fab" id="fabBtn">☰</button>
-  <!-- Boutons du menu flottant -->
+
   <div class="fab-options" id="fabOptions">
     <button class="btn-toggle active" onclick="toggleLayer(accesLayer, this, 'Accès routiers')">
       <img src="ico/acces.png" alt="Accès routiers">
@@ -444,7 +415,6 @@ html, body {
   </div>
 </div>
 
-<!-- Encadré notification -->
 <div class="toast" id="toast"></div>
 
 <div id="streetview-overlay">
@@ -848,7 +818,7 @@ let content = `
 <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
             font-size:14px; color:#111; line-height:1.4; position:relative;">
 
-<!-- Titre -->
+
 <div style="font-weight:600; font-size:16px; margin-bottom:14px; padding-right:32px;">
   🚙 ${item.nom || "Sans nom"}
   ${item.type ? " " + item.type : ""}
@@ -856,23 +826,21 @@ let content = `
   ${accesVal ? " – accès " + accesVal : ""}
 </div>
 
-<!-- Icône Street View -->
 <span onclick="openStreetView(${item.latitude}, ${item.longitude})"
       style="cursor:pointer; position:absolute; top:10px; right:12px;">
   <img src="ico/street.png" alt="Street View" style="width:26px; height:26px;">
 </span>
              
-<!-- Information -->
+
 <div style="margin-bottom:10px;">
   ✍🏻 <strong>Information :</strong> ${ renderPortail(item.description) }
 </div>
 
-<!-- Portail -->
+
 <div style="margin-bottom:10px;">
   🔑 <strong>Portail :</strong> ${ renderPortail(item.portail) }
 </div>
 
-  <!-- Bouton Voir plus -->
   <a href="index.html?id=${encodeURIComponent(
     (`${item.nom || ''} ${item.type || ''} ${item.SAT || ''}${accesVal ? ' – accès ' + accesVal : ''}`)
       .replace(/\s+/g, " ")
@@ -907,36 +875,36 @@ let content = `
 <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
             font-size:14px; color:#111; line-height:1.4;">
 
-  <!-- Nom + type + SAT -->
+
   <div style="font-weight:600; font-size:16px; margin-bottom:14px;">
     📍 ${item.nom || "Sans nom"} 
     ${item.type ? " " + item.type : ""} 
     ${item.SAT ? " " + item.SAT : ""}
   </div>
 
-<!-- PK + Ligne -->
+
 <div style="margin-bottom:10px;">
   🚄 PK <strong>${item.pk || "(non renseigné)"}</strong>
   sur la ligne n°<strong>${item.numero_ligne || "(non renseigné)"}</strong>
   ${item.lignes ? " – " + item.lignes : ""}
 </div>
 
- <!-- Information -->
+
   <div style="margin-bottom:10px;">
     ✍🏻 <strong>Information :</strong> ${ renderPortail(item.description) }
   </div>
 
-  <!-- Contact -->
+
   <div style="margin-bottom:10px;">
     📞 <strong>Contact :</strong> ${ renderContact(item.contact) }
   </div>
 
-  <!-- Portail -->
+
   <div style="margin-bottom:10px;">
     🔑 <strong>Portail :</strong> ${ renderPortail(item.portail) }
   </div>
 
-  <!-- Bouton Voir plus -->
+ 
   <a href="index.html?id=${encodeURIComponent(
     (`${item.nom || ''} ${item.type || ''} ${item.SAT || ''}`)
       .replace(/\s+/g, " ")
@@ -1097,18 +1065,18 @@ function translateObstacle(obs) {
           <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
                       font-size:14px; color:#111; line-height:1.5; text-align:left;">
 
-            <!-- Titre PN -->
+  
             <div style="font-weight:700; font-size:16px; margin-bottom:8px;">
               🚧 PN ${libelle}
             </div>
 
-            <!-- PK + Ligne -->
+         
             <div>🚄 PK ${pn.pk || "?"} sur la ligne n°${pn.code_ligne || "?"}</div>
 
-            <!-- Classe -->
+      
             ${classeTexte ? `<div>${classeTexte}</div>` : ""}
 
-            <!-- Boutons -->
+       
             <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px;align-items:center;">
               <a href="https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${lat},${lon};" 
                  target="_blank"
