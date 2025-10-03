@@ -4863,5 +4863,27 @@
     "longitude": 3.25976,
     "description": "",
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.1670601768086,3.2596197892377825;uid=2f8e8991-dabe-4a1c-baa2-34d07b9a3111_601;"
+  },
+  {
+    "nom": "Amiens",
+    "type": "CU",
+    "SAT": "SATA",
+    "accès": "",
+    "appareil": "I34",
+    "latitude": 49.87988,
+    "longitude": 2.33867,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.87971746735254,2.3387811479920986;"
+  },
+  {
+    "nom": "Amiens",
+    "type": "CU",
+    "SAT": "SATA",
+    "accès": "",
+    "appareil": "I35",
+    "latitude": 49.87988,
+    "longitude": 2.33867,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.879961213066736,2.3384539970817952;"
   }
 ]
