@@ -1142,12 +1142,12 @@ function translateObstacle(obs) {
     });
   })
   .catch(err => console.error("Erreur chargement PN:", err));
-
-    fetch("lignes-par-type.json")
+    
+fetch("lignes-hautsdefrance.geojson")
   .then(r => r.json())
   .then(data => {
     lignesLayer.addData(data);
-    console.log("lignes-par-type.json chargé :", data.features.length, "lignes");
+    console.log("GeoJSON lignes chargé :", data.features.length, "lignes");
   })
   .catch(err => console.error("Erreur chargement lignes:", err));
     
