@@ -5198,7 +5198,8 @@
     "lignes": "",
     "numero_ligne": "",
     "pk": "",
-    "poste_latitude": "49.766",
-    "poste_longitude": "3.27335"
-}
+    "poste_latitude": "49.765996",
+    "poste_longitude": "3.257934",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.76621384456837,3.2578616419937787;"
+   }
 ]
