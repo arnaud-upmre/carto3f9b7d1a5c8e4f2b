@@ -732,6 +732,7 @@ const accesLayer = L.markerClusterGroup({
   zoomToBoundsOnClick: true
 });
 
+
     const lignesLayer = L.geoJSON(null, {
   style: {
     color: "#c0392b",   // rouge brique
@@ -739,25 +740,17 @@ const accesLayer = L.markerClusterGroup({
     opacity: 0.8
   },
   onEachFeature: function (feature, layer) {
-    const num = feature.properties.CODE_LIGNE || "?";
-    const lib = feature.properties.LIBELLE || "Sans libellé";
+layer.on("click", (e) => {
+  const lat = e.latlng.lat;
+  const lon = e.latlng.lng;
 
-    // On prend un point pour le bouton Imajnet
-    let coord;
-    try {
-      coord = feature.geometry.coordinates[0][0]; // [lon, lat]
-    } catch (e) {
-      coord = null;
-    }
-
-    let popup = `
-      <div style="font-family:system-ui;font-size:14px;line-height:1.4;">
-        <div style="font-weight:600;font-size:16px;margin-bottom:8px;">
-          🚆 Ligne ${num}
-        </div>
-        <div>📄 ${lib}</div>
-        ${coord ? `
-          <a href="https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${coord[1]},${coord[0]};"
+      const popup = `
+        <div style="font-family:system-ui;font-size:14px;line-height:1.4;">
+          <div style="font-weight:600;font-size:16px;margin-bottom:8px;">
+            🚆 Ligne ${feature.properties.code_ligne || "?"}
+          </div>
+          <div>📄 ${feature.properties.lib_ligne || "Sans libellé"}</div>
+          <a href="https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${lat},${lon};"
              target="_blank"
              style="display:block;width:100%;max-width:200px;padding:10px 12px;
                     border-radius:8px;background:#10b981;color:white;
@@ -765,14 +758,13 @@ const accesLayer = L.markerClusterGroup({
                     margin-top:12px;">
             🛣️ Voir sur Imajnet
           </a>
-        ` : ""}
-      </div>
-    `;
-    layer.bindPopup(popup);
+        </div>
+      `;
+      layer.bindPopup(popup).openPopup();
+    });
   }
 });
-    
-
+      
 accesLayer.on('clusterclick', function (e) {
   const childMarkers = e.layer.getAllChildMarkers();
   if (childMarkers.length === 0) return;
