@@ -1038,7 +1038,7 @@ if (!isSAT && !isAcces) {
 
   html += `<p><strong>🧩 Appareils trouvés dans ce poste :</strong></p>`;
   for (const [sat, list] of Object.entries(groupedAll)) {
-    if (sat === currentLieu.SAT) continue; // ⚡️ on saute le SAT courant
+    if (sat === currentLieu.SAT) continue; 
     html += `<p><strong>${sat} :</strong> `;
     html += list.map(app => `<a href="#" onclick='showAppareil(${JSON.stringify(app)})'>${app.appareil}</a>`).join(", ");
     html += `</p>`;
@@ -2120,7 +2120,7 @@ document.getElementById("btn-save-appareil").addEventListener("click", function(
 
 const payload = {
   category: "appareil",
-  ficheOrigine: originalAppareil.appareil, // reste la référence brute
+  ficheOrigine: originalAppareil.appareil, 
   nom_orig: currentItem.nom || "",
   type_orig: currentItem.type || "",
   sat_orig: currentItem.SAT || "",
@@ -2151,7 +2151,7 @@ fetch("https://script.google.com/macros/s/AKfycbyZYV5b-aGdAsFc775xwxsdfBSIZHobE6
 .then(() => {
   showNotification("✅ Modification appareil envoyée", "success");
 
-  // 👉 Incrémenter le compteur global (même script que pour les postes)
+
   fetch("https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec?increment=true")
     .then(() => console.log("Contribution appareil créditée"))
     .catch(() => console.warn("⚠️ Échec incrément compteur appareil"));
