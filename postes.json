@@ -5183,5 +5183,22 @@
     "pk": "129,900",
     "poste_latitude": "50.063085",
     "poste_longitude": "2.872265"
+},
+ {
+    "nom": "Essigny Le Grand",
+    "type": "",
+    "SAT": "",
+    "accès": "",
+    "latitude": "49.76320368165142",
+    "longitude": "3.272550206825183",
+    "description": "",
+    "rss": "B",
+    "contact": "",
+    "portail": "",
+    "lignes": "",
+    "numero_ligne": "",
+    "pk": "",
+    "poste_latitude": "49.76592641654715",
+    "poste_longitude": "3.257989987659067"
 }
 ]
