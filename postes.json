@@ -5219,5 +5219,23 @@
     "poste_latitude": "49.887907",
     "poste_longitude": "2.326582",
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.887941509079496,2.3263614897602816;"
+   },
+ {
+    "nom": "Amiens",
+    "type": "CU",
+    "SAT": "SAT1",
+    "accès": "",
+    "latitude": "49.877483278210676",
+    "longitude": "2.3415388512579742",
+    "description": "",
+    "rss": "C",
+    "contact": "",
+    "portail": "",
+    "lignes": "",
+    "numero_ligne": "",
+    "pk": "",
+    "poste_latitude": "49.87985084012555",
+    "poste_longitude": "2.3387081857947383",
+    "imajnet": ""
    }
 ]
