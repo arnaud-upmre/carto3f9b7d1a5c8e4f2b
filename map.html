@@ -1039,9 +1039,6 @@ function translateObstacle(obs) {
       const lat = pn.geo_point_2d.lat;
       const lon = pn.geo_point_2d.lon;
 
-      if (lat < 49.3 || lat > 51.7) return;
-      if (lon < 1.0 || lon > 5.0) return;
-
       const iconPN = L.divIcon({
         html: `<img src="ico/pn.png" class="icon-halo-appareil">`,
         className: "",
