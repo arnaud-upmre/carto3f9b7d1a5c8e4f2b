@@ -5212,12 +5212,12 @@
     "description": "",
     "rss": "C",
     "contact": "",
-    "portail": "",
+    "portail": "25420",
     "lignes": "",
     "numero_ligne": "",
     "pk": "",
     "poste_latitude": "49.887907",
     "poste_longitude": "2.326582",
-    "imajnet": ""
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.887941509079496,2.3263614897602816;"
    }
 ]
