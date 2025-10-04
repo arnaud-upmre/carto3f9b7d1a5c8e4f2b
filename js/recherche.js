@@ -302,10 +302,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         : "💡";
       li.innerHTML = `${icon} ${labelFor(item)}`;
       if (i === 0) li.classList.add("best");
-      li.onclick = () => {
-        if (item.category === "poste") showLieu(item);
-        else showAppareil(item);
-      };
+  li.onclick = () => {
+  if (item.category === "poste") showLieu(item);
+  else showAppareil(item);
+  closeSearchBar(); // ✅ ferme la barre
+};
       suggestionsEl.appendChild(li);
     });
   });
@@ -421,3 +422,14 @@ window.showAppareil = function (item) {
 
   document.getElementById("search-container")?.classList.remove("open");
 };
+
+
+// ✅ Fermer automatiquement la barre de recherche après clic sur un résultat
+function closeSearchBar() {
+  const searchWrapper = document.getElementById("searchWrapper");
+  const searchInput = document.getElementById("search");
+  if (searchWrapper && searchWrapper.classList.contains("open")) {
+    searchWrapper.classList.remove("open");
+    searchInput.blur();
+  }
+}
