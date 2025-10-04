@@ -340,25 +340,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 }); // ✅ ferme le DOMContentLoaded
 
 // ===============================
-// 🌍 Intégration Nono Maps – compatibilité map1.html
-// ===============================
-window.initSearch = async function(map, allMarkers) {
-  console.log("🔍 [recherche.js] initSearch appelée depuis map1");
-
-  try {
-    await chargerBaseRecherche();
-
-    // 🔗 Rendre la carte et les marqueurs accessibles globalement
-    window.map = map;
-    window.allMarkers = allMarkers;
-
-    console.log("✅ Base de recherche prête (map1)");
-  } catch (err) {
-    console.error("❌ Erreur lors du chargement de la base de recherche :", err);
-  }
-};
-
-// ===============================
 // 🎯 Fonctions locales pour map1 — version finale robuste
 // ===============================
 window.showLieu = function (item) {
@@ -368,7 +349,6 @@ window.showLieu = function (item) {
   }
 
   // On cherche un marqueur dont le nom ressemble à celui du poste
-  
   const target = allMarkers.find(m => {
     const cid = (m.options.customId || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
     const nom = (item.nom || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
