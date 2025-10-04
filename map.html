@@ -381,18 +381,6 @@ html, body {
   
 </head>
 <body>
-
-    <div id="video-overlay" style="display:none;
-  position:fixed;top:0;left:0;width:100%;height:100%;
-  background:rgba(0,0,0,0.7);z-index:10000;align-items:center;justify-content:center;">
-  <div style="width:90%;max-width:800px;height:70%;position:relative;">
-    <button id="video-close" style="position:absolute;top:8px;right:8px;
-      font-size:24px;background:#000;color:#fff;border:none;border-radius:50%;
-      width:40px;height:40px;cursor:pointer;">❌</button>
-    <iframe id="video-frame" width="100%" height="100%" 
-      src="" frameborder="0" allowfullscreen></iframe>
-  </div>
-</div>
   
   <div id="map"></div>
 
@@ -601,21 +589,7 @@ if (marker.options.isAcces) {
   }
 }
 
-function makeTelHtml(labelEmoji, value) {
-  if (!value) return "";
 
-  if (value.indexOf("#") !== -1) return `<div>${labelEmoji} ${value}</div>`;
-
-
-  const digitsOnly = ("" + value).replace(/\D/g, "");
-  if (digitsOnly.length < 10) return `<div>${labelEmoji} ${value}</div>`;
-
- const hrefSafe = ("" + value).replace(/[^\d+]/g, "");
-
-  if (!hrefSafe) return `<div>${labelEmoji} ${value}</div>`;
-
-  return `<div>${labelEmoji} <a href="tel:${hrefSafe}" style="color:#007aff; text-decoration:none;">${value}</a></div>`;
-}
 
 const params = new URLSearchParams(window.location.search);
 const lat = parseFloat(params.get("lat"));
@@ -833,7 +807,7 @@ let content = `
              
 
 <div style="margin-bottom:10px;">
-  ✍🏻 <strong>Information :</strong> ${ renderPortail(item.description) }
+✍🏻 <strong>Information :</strong> ${ renderInformation(item.description) }
 </div>
 
   <a href="index.html?id=${encodeURIComponent(
@@ -886,7 +860,7 @@ let content = `
 
 
   <div style="margin-bottom:10px;">
-    ✍🏻 <strong>Information :</strong> ${ renderPortail(item.description) }
+✍🏻 <strong>Information :</strong> ${ renderInformation(item.description) }
   </div>
 
 
@@ -1294,57 +1268,14 @@ if (isNaN(lat) || isNaN(lon)) { console.warn("URL lat/lon invalides", {lat, lon}
   return `<div>${labelEmoji} <a href="tel:${hrefSafe}" style="color:#007aff; text-decoration:none;">${value}</a></div>`;
 }
 
-function renderPortail(value) {
+function renderInformation(value) {
   if (!value) {
     return `<span style="color:#777;font-style:italic;">Non renseigné</span>`;
   }
-  const str = String(value);
 
-
-  if (str.includes("#")) return str;
-
-
-  const ytMatch = str.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]+)/);
-  if (ytMatch) {
-    const videoId = ytMatch[1];
-    return `<a href="#" class="open-video" data-video="${videoId}" 
-              style="color:#007aff; text-decoration:none;">Voir vidéo explicative ICI</a>`;
-  }
-
-  const urlMatch = str.match(/https?:\/\/[^\s]+/i);
-  if (urlMatch) {
-    const url = urlMatch[0];
-    const withoutUrl = str.replace(url, "").trim(); 
-    const link = `<a href="${url}" target="_blank" style="color:#007aff; text-decoration:none;">Lien portail</a>`;
-    return withoutUrl ? `${withoutUrl} – ${link}` : link;
-  }
-
-
-  const digits = str.replace(/\D/g, "");
-  if (digits.length >= 10) {
-    const tel = str.replace(/[^\d+]/g, "");
-    return `<a href="tel:${tel}" style="color:#007aff; text-decoration:none;">${str}</a>`;
-  }
-
-
-  return str;
+  return escHtml(String(value));
 }
 
-
-document.addEventListener("click", e => {
-  if (e.target.classList.contains("open-video")) {
-    e.preventDefault();
-    const videoId = e.target.dataset.video;
-    const iframe = document.getElementById("video-frame");
-    iframe.src = `https://www.youtube.com/embed/${videoId}`;
-    document.getElementById("video-overlay").style.display = "flex";
-  }
-});
-
-document.getElementById("video-close").onclick = () => {
-  document.getElementById("video-overlay").style.display = "none";
-  document.getElementById("video-frame").src = "";
-};
 
     function renderContact(value) {
   if (!value) {
