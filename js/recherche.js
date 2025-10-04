@@ -251,6 +251,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   const suggestionsEl = document.getElementById("suggestions");
   const resultEl = document.getElementById("result");
 
+  // ✅ Ajout de la sécurité pour éviter l’erreur sur map1
+  if (!input) {
+    console.warn("🔎 Aucun champ de recherche (#search) sur cette page — recherche désactivée");
+    return;
+  }
+
   input.addEventListener("input", e => {
     const rawQuery = e.target.value.trim();
     const query = normalize(rawQuery);
