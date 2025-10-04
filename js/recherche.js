@@ -340,86 +340,75 @@ document.addEventListener("DOMContentLoaded", async () => {
 }); // ✅ ferme le DOMContentLoaded
 
 // ===============================
-// 🌍 Intégration Nono Maps – compatibilité map1.html
-// ===============================
-window.initSearch = async function(map, allMarkers) {
-  console.log("🔍 [recherche.js] initSearch appelée depuis map1");
-
-  try {
-    await chargerBaseRecherche();
-    console.log("✅ Base de recherche prête (map1)");
-
-    // On attend que la page soit bien chargée avant d'accéder au DOM
-    window.addEventListener("load", () => {
-      const input = document.getElementById("search");
-      const container = document.getElementById("search-container");
-
-      if (!input) {
-        console.warn("⚠️ Aucun champ de recherche (#search) sur cette page — recherche désactivée");
-        return;
-      }
-
-      if (!container) {
-        console.warn("⚠️ Barre de recherche absente sur map1");
-        return;
-      }
-
-      console.log("🔍 Champ de recherche détecté sur map1 – moteur actif");
-    });
-  } catch (err) {
-    console.error("❌ Erreur lors du chargement de la base de recherche :", err);
-  }
-};
-window.toggleSearch = function() {
-  const bar = document.getElementById("search-container");
-  if (!bar) {
-    console.warn("🔎 Barre de recherche absente sur map1");
-    return;
-  }
-  bar.classList.toggle("open");
-  const input = bar.querySelector("input");
-  if (bar.classList.contains("open")) input?.focus();
-};
-
-// ===============================
-// 🎯 Fonctions locales pour map1 — version corrigée
+// 🎯 Fonctions locales pour map1 — version finale robuste
 // ===============================
 window.showLieu = function (item) {
-  if (!window.map || !window.allMarkers) return;
+  if (!window.map || !window.allMarkers) {
+    console.warn("❌ Carte ou allMarkers non disponibles pour showLieu()");
+    return;
+  }
 
+  // On cherche un marqueur dont le nom ressemble à celui du poste
   const target = allMarkers.find(m => {
-    const cid = (m.options.customId || "").toLowerCase().trim();
-    const name = (item.nom || "").toLowerCase().trim();
-    const type = (item.type || "").toLowerCase().trim();
-    const sat = (item.SAT || "").toLowerCase().trim();
-    return cid.includes(name) && (!type || cid.includes(type)) && (!sat || cid.includes(sat));
+    const cid = (m.options.customId || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+    const nom = (item.nom || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+    const type = (item.type || "").toLowerCase();
+    const sat = (item.SAT || "").toLowerCase();
+    return (
+      cid.includes(nom) ||
+      (nom && cid.includes(`${nom} ${type}`)) ||
+      (sat && cid.includes(sat))
+    );
   });
 
   if (target) {
-    map.setView(target.getLatLng(), 18, { animate: true });
-    target.openPopup(); // 👉 ouvre la vraie popup existante
-    document.getElementById("search-container")?.classList.remove("open");
+    const latlng = target.getLatLng();
+    map.setView(latlng, 18, { animate: true });
+    target.openPopup(); // 🟢 ouvre la vraie popup existante
   } else if (item.latitude && item.longitude) {
-    map.setView([item.latitude, item.longitude], 18, { animate: true });
+    // 🟡 Si aucun marqueur trouvé, on se centre sur les coordonnées brutes
+    const lat = parseFloat(item.latitude);
+    const lon = parseFloat(item.longitude);
+    if (!isNaN(lat) && !isNaN(lon)) {
+      map.setView([lat, lon], 18, { animate: true });
+    }
   }
+
+  // 👇 ferme la barre de recherche après la sélection
+  document.getElementById("search-container")?.classList.remove("open");
 };
 
-window.showAppareil = function (item) {
-  if (!window.map || !window.allMarkers) return;
 
+window.showAppareil = function (item) {
+  if (!window.map || !window.allMarkers) {
+    console.warn("❌ Carte ou allMarkers non disponibles pour showAppareil()");
+    return;
+  }
+
+  // On cherche le marqueur appareil (plus strict sur le code)
   const target = allMarkers.find(m => {
-    const cid = (m.options.customId || "").toLowerCase().trim();
-    const app = (item.appareil || "").toLowerCase().trim();
+    const cid = (m.options.customId || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+    const appareil = (item.appareil || "").toLowerCase().trim();
     const nom = (item.nom || "").toLowerCase().trim();
     const sat = (item.SAT || "").toLowerCase().trim();
-    return cid.includes(app) && (!nom || cid.includes(nom)) && (!sat || cid.includes(sat));
+    return (
+      cid.includes(appareil) ||
+      cid.includes(`${appareil} ${nom}`) ||
+      (sat && cid.includes(sat))
+    );
   });
 
   if (target) {
-    map.setView(target.getLatLng(), 19, { animate: true });
-    target.openPopup(); // 👉 ouvre la vraie popup existante
-    document.getElementById("search-container")?.classList.remove("open");
+    const latlng = target.getLatLng();
+    map.setView(latlng, 19, { animate: true });
+    target.openPopup(); // 🟢 ouvre la vraie popup existante
   } else if (item.latitude && item.longitude) {
-    map.setView([item.latitude, item.longitude], 19, { animate: true });
+    const lat = parseFloat(item.latitude);
+    const lon = parseFloat(item.longitude);
+    if (!isNaN(lat) && !isNaN(lon)) {
+      map.setView([lat, lon], 19, { animate: true });
+    }
   }
+
+  document.getElementById("search-container")?.classList.remove("open");
 };
