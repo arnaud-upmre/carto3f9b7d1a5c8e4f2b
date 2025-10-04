@@ -365,69 +365,59 @@ window.initSearch = function(map, allMarkers) {
   console.log("✅ window.initSearch définie et opérationnelle");
 };
 
+
+
 // ===============================
-// 🎯 Fonctions locales pour map1 – ouverture de la vraie popup
+// 🎯 Fonctions locales pour map1
 // ===============================
 window.showLieu = function (item) {
-  if (!window.map || !window.allMarkers) {
-    console.warn("❌ Carte ou allMarkers non disponibles pour showLieu()");
-    return;
-  }
+  if (!window.map || !window.allMarkers) return;
 
-  const norm = s => (s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").trim();
+  const lat = parseFloat(item.latitude);
+  const lon = parseFloat(item.longitude);
+  if (isNaN(lat) || isNaN(lon)) return;
 
-  // On cherche le marqueur correspondant au poste
-  const target = allMarkers.find(m => {
-    const cid = norm(m.options.customId || "");
-    const nom = norm(item.nom);
-    const type = norm(item.type);
-    const sat = norm(item.SAT);
-    return (
-      cid.includes(nom) ||
-      cid.includes(`${nom} ${type}`) ||
-      (sat && cid.includes(sat))
-    );
+  // Cherche le marqueur correspondant dans allMarkers
+  const target = window.allMarkers.find(m => {
+    const pos = m.getLatLng();
+    return Math.abs(pos.lat - lat) < 0.0001 && Math.abs(pos.lng - lon) < 0.0001;
   });
 
   if (target) {
-    const latlng = target.getLatLng();
-    map.setView(latlng, 18, { animate: true });
-    target.openPopup(); // 🟢 ouvre la vraie popup déjà liée au marqueur
-  } else if (item.latitude && item.longitude) {
-    const lat = parseFloat(item.latitude);
-    const lon = parseFloat(item.longitude);
-    if (!isNaN(lat) && !isNaN(lon)) map.setView([lat, lon], 18, { animate: true });
+    map.setView([lat, lon], 18, { animate: true });
+    target.fire('click'); // 🟢 ouvre la vraie popup
+  } else {
+    // fallback : si aucun marqueur trouvé, popup générique
+    L.popup({ offset: [0, -10] })
+      .setLatLng([lat, lon])
+      .setContent(`<b>${item.nom}</b><br>${item.type || ""} ${item.SAT || ""}`)
+      .openOn(map);
   }
+
+  document.getElementById("search-container")?.classList.remove("open");
 };
 
 window.showAppareil = function (item) {
-  if (!window.map || !window.allMarkers) {
-    console.warn("❌ Carte ou allMarkers non disponibles pour showAppareil()");
-    return;
-  }
+  if (!window.map || !window.allMarkers) return;
 
-  const norm = s => (s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").trim();
+  const lat = parseFloat(item.latitude);
+  const lon = parseFloat(item.longitude);
+  if (isNaN(lat) || isNaN(lon)) return;
 
-  // On cherche le marqueur correspondant à l’appareil
-  const target = allMarkers.find(m => {
-    const cid = norm(m.options.customId || "");
-    const appareil = norm(item.appareil);
-    const nom = norm(item.nom);
-    const sat = norm(item.SAT);
-    return (
-      cid.includes(appareil) ||
-      cid.includes(`${appareil} ${nom}`) ||
-      (sat && cid.includes(sat))
-    );
+  const target = window.allMarkers.find(m => {
+    const pos = m.getLatLng();
+    return Math.abs(pos.lat - lat) < 0.0001 && Math.abs(pos.lng - lon) < 0.0001;
   });
 
   if (target) {
-    const latlng = target.getLatLng();
-    map.setView(latlng, 19, { animate: true });
-    target.openPopup(); // 🟢 ouvre la popup d’origine du marqueur
-  } else if (item.latitude && item.longitude) {
-    const lat = parseFloat(item.latitude);
-    const lon = parseFloat(item.longitude);
-    if (!isNaN(lat) && !isNaN(lon)) map.setView([lat, lon], 19, { animate: true });
+    map.setView([lat, lon], 19, { animate: true });
+    target.fire('click'); // 🟢 ouvre la vraie popup liée au marqueur
+  } else {
+    L.popup({ offset: [0, -10] })
+      .setLatLng([lat, lon])
+      .setContent(`<b>${item.appareil}</b><br>${item.nom || ""} ${item.type || ""} ${item.SAT || ""}`)
+      .openOn(map);
   }
+
+  document.getElementById("search-container")?.classList.remove("open");
 };
