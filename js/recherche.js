@@ -331,4 +331,30 @@ document.addEventListener("DOMContentLoaded", async () => {
       selectedIndex = -1;
     }
   });
-});
+}); // ✅ ferme le DOMContentLoaded
+
+// ===============================
+// 🌍 Intégration Nono Maps – compatibilité map1.html
+// ===============================
+window.initSearch = function(map, allMarkers) {
+  console.log("🔍 [recherche.js] initSearch appelée depuis map1");
+  document.addEventListener("DOMContentLoaded", async () => {
+    try {
+      await chargerBaseRecherche();
+      console.log("✅ Base de recherche prête (map1)");
+    } catch (err) {
+      console.error("❌ Erreur lors du chargement de la base de recherche :", err);
+    }
+  });
+};
+
+window.toggleSearch = function() {
+  const bar = document.getElementById("search-container");
+  if (!bar) {
+    console.warn("🔎 Barre de recherche absente sur map1");
+    return;
+  }
+  bar.classList.toggle("open");
+  const input = bar.querySelector("input");
+  if (bar.classList.contains("open")) input?.focus();
+};
