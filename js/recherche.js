@@ -228,80 +228,29 @@ function trierResultats(results, qId, qNorm) {
 }
 
 // ===============================
-// 🎯 Sélection clavier
-// ===============================
-function updateSelection(items) {
-  items.forEach((li, i) => {
-    if (i === selectedIndex) {
-      li.classList.add("best");
-      li.scrollIntoView({ block: "nearest" });
-    } else {
-      li.classList.remove("best");
-    }
-  });
-}
-
-// ===============================
-// 🚀 Initialisation du champ recherche
+// 🚀 Initialisation recherche
 // ===============================
 document.addEventListener("DOMContentLoaded", async () => {
   await chargerBaseRecherche();
-
   const input = document.getElementById("search");
   const suggestionsEl = document.getElementById("suggestions");
   const resultEl = document.getElementById("result");
 
-  // ✅ Ajout de la sécurité pour éviter l’erreur sur map1
-  if (!input) {
-    console.warn("🔎 Aucun champ de recherche (#search) sur cette page — recherche désactivée");
-    return;
-  }
+  if (!input) return;
 
   input.addEventListener("input", e => {
-    const rawQuery = e.target.value.trim();
-    const query = normalize(rawQuery);
-    const cleanedQuery = query.replace(/\s+/g, ""); // ✅ correctif identique à index
+    const query = normalize(e.target.value.trim());
     suggestionsEl.innerHTML = "";
-    resultEl.innerHTML = "";
-    resultEl.style.display = "none";
-    selectedIndex = -1;
-
     if (!query || query.length < 2 || !fuseMix) return;
 
-    // ► Recherche brute
     let results = fuseMix.search(query).map(r => r.item);
+    results = trierResultats(results, query, query.toLowerCase());
 
-    // ► Filtre préfixe (tt, i, tc, tsa, il, ip, imp, s)
-    const queryWords = query.split(/\s+/);
-    const prefixes = ["tt","i","tc","tsa","il","ip","imp","s"];
-    const lowerWords = queryWords.map(w => w.toLowerCase());
-    const prefixWord = lowerWords.find(w => prefixes.includes(w));
-
-    if (prefixWord) {
-      const otherWords = lowerWords.filter(w => w !== prefixWord);
-      results = results.filter(item => {
-        const appareilOk = item.appareil && item.appareil.toLowerCase().startsWith(prefixWord);
-        const nomOk = otherWords.every(w => normalize(item.nom || "").includes(w));
-        return appareilOk && nomOk;
-      });
-    }
-
-    // ► Tri complet
-    results = trierResultats(results, cleanedQuery, query.toLowerCase());
-
-    // ► Affichage des suggestions
-    const labelFor = (item) =>
-      (item.category === "poste")
-        ? formatNomCompletLieu(item)
-        : `${item.appareil} (${item.nom}${item.type ? ' ' + item.type : ''}${item.SAT ? ' / ' + item.SAT : ''})`;
-
-    results.forEach((item, i) => {
+    results.forEach(item => {
       const li = document.createElement("li");
-      const icon = (item.category === "poste")
-        ? `🚙${item.poste_latitude && item.poste_longitude ? " 📍" : ""}`
-        : "💡";
-      li.innerHTML = `${icon} ${labelFor(item)}`;
-      if (i === 0) li.classList.add("best");
+      li.innerHTML = (item.category === "poste")
+        ? `🚉 ${formatNomCompletLieu(item)}`
+        : `💡 ${item.appareil} (${item.nom})`;
       li.onclick = () => {
         if (item.category === "poste") showLieu(item);
         else showAppareil(item);
@@ -309,113 +258,45 @@ document.addEventListener("DOMContentLoaded", async () => {
       suggestionsEl.appendChild(li);
     });
   });
-
-  // ► Navigation clavier
-  input.addEventListener("keydown", (e) => {
-    const items = suggestionsEl.querySelectorAll("li");
-
-    if (e.key === "ArrowDown" && items.length) {
-      e.preventDefault();
-      selectedIndex = (selectedIndex + 1) % items.length;
-      updateSelection(items);
-    } else if (e.key === "ArrowUp" && items.length) {
-      e.preventDefault();
-      selectedIndex = (selectedIndex - 1 + items.length) % items.length;
-      updateSelection(items);
-    } else if (e.key === "Enter") {
-      e.preventDefault();
-      if (selectedIndex >= 0 && items[selectedIndex]) {
-        items[selectedIndex].click();
-      } else if (items[0]) {
-        items[0].click();
-      }
-    } else if (e.key === "Escape") {
-      e.preventDefault();
-      resultEl.style.display = "none";
-      resultEl.innerHTML = "";
-      suggestionsEl.innerHTML = "";
-      selectedIndex = -1;
-    }
-  });
-}); // ✅ ferme le DOMContentLoaded
+});
 
 // ===============================
-// 🌍 Intégration Nono Maps – compatibilité map1.html
-// ===============================
-window.initSearch = async function(map, allMarkers) {
-  console.log("🔍 [recherche.js] initSearch appelée depuis map1");
-
-  try {
-    await chargerBaseRecherche();
-    console.log("✅ Base de recherche prête (map1)");
-
-    // On attend que la page soit bien chargée avant d'accéder au DOM
-    window.addEventListener("load", () => {
-      const input = document.getElementById("search");
-      const container = document.getElementById("search-container");
-
-      if (!input) {
-        console.warn("⚠️ Aucun champ de recherche (#search) sur cette page — recherche désactivée");
-        return;
-      }
-
-      if (!container) {
-        console.warn("⚠️ Barre de recherche absente sur map1");
-        return;
-      }
-
-      console.log("🔍 Champ de recherche détecté sur map1 – moteur actif");
-    });
-  } catch (err) {
-    console.error("❌ Erreur lors du chargement de la base de recherche :", err);
-  }
-};
-window.toggleSearch = function() {
-  const bar = document.getElementById("search-container");
-  if (!bar) {
-    console.warn("🔎 Barre de recherche absente sur map1");
-    return;
-  }
-  bar.classList.toggle("open");
-  const input = bar.querySelector("input");
-  if (bar.classList.contains("open")) input?.focus();
-};
-
-// ===============================
-// 🎯 Fonctions locales pour map1
+// 🌍 Fonctions locales pour map1
 // ===============================
 window.showLieu = function (item) {
-  if (!window.map) {
-    console.warn("❌ Carte non initialisée pour showLieu()");
-    return;
-  }
-  if (item.latitude && item.longitude) {
-    const lat = parseFloat(item.latitude);
-    const lon = parseFloat(item.longitude);
-    if (!isNaN(lat) && !isNaN(lon)) {
-      map.setView([lat, lon], 18, { animate: true });
-      L.popup({ offset: [0, -10] })
-        .setLatLng([lat, lon])
-        .setContent(`<b>${item.nom}</b><br>${item.type || ""} ${item.SAT || ""}`)
-        .openOn(map);
-    }
+  if (!window.map || !window.allMarkers) return;
+
+  const target = allMarkers.find(m => {
+    const cid = (m.options.customId || "").toLowerCase().trim();
+    return cid.includes((item.nom || "").toLowerCase().trim());
+  });
+
+  if (target) {
+    map.setView(target.getLatLng(), 18, { animate: true });
+    target.openPopup();
+
+    // 👇 ferme la barre de recherche après sélection
+    document.getElementById("search-container")?.classList.remove("open");
+  } else if (item.latitude && item.longitude) {
+    map.setView([item.latitude, item.longitude], 18, { animate: true });
   }
 };
 
 window.showAppareil = function (item) {
-  if (!window.map) {
-    console.warn("❌ Carte non initialisée pour showAppareil()");
-    return;
-  }
-  if (item.latitude && item.longitude) {
-    const lat = parseFloat(item.latitude);
-    const lon = parseFloat(item.longitude);
-    if (!isNaN(lat) && !isNaN(lon)) {
-      map.setView([lat, lon], 19, { animate: true });
-      L.popup({ offset: [0, -10] })
-        .setLatLng([lat, lon])
-        .setContent(`<b>${item.appareil}</b><br>${item.nom || ""} ${item.type || ""} ${item.SAT || ""}`)
-        .openOn(map);
-    }
+  if (!window.map || !window.allMarkers) return;
+
+  const target = allMarkers.find(m => {
+    const cid = (m.options.customId || "").toLowerCase().trim();
+    return cid.includes((item.appareil || "").toLowerCase().trim());
+  });
+
+  if (target) {
+    map.setView(target.getLatLng(), 19, { animate: true });
+    target.openPopup();
+
+    // 👇 ferme la barre de recherche après sélection
+    document.getElementById("search-container")?.classList.remove("open");
+  } else if (item.latitude && item.longitude) {
+    map.setView([item.latitude, item.longitude], 19, { animate: true });
   }
 };
