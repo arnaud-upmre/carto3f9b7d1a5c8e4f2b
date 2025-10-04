@@ -4896,5 +4896,16 @@
     "longitude": 1.98887,
     "description": "",
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.77850020285,1.9889642961509086;"
+  },
+  {
+    "nom": "Poix",
+    "type": "SSP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT25",
+    "latitude": 49.779237,
+    "longitude": 1.987559,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.7791433189614,1.9877629460962891;"
   }
 ]
