@@ -1140,7 +1140,7 @@ if (lieu.special === true) {
   const blocs = [];
 
   blocs.push(formatDescription(lieu.description));
-  blocs.push(formatPortail(lieu.portail));
+blocs.push(formatPortail(lieu));
 
   if (blocs.length > 0) {
     html += `<hr class="separator" />` +
@@ -1241,7 +1241,7 @@ blocs.push(
 );
 
 blocs.push(
-  formatPortail(lieu.portail) ||
+  formatPortail(lieu) ||
   `<p><strong id="editable-portail">🚧 Portail :</strong> <span class="portail-value"><span class="placeholder">(non renseigné)</span></span></p>`
 );
 
@@ -2175,11 +2175,14 @@ if (document.getElementById("editable-contact")) {
 }
 
 if (document.getElementById("editable-portail")) {
-  const portailVal = originalValues.portail || "";
+  const portailObj = {
+    portail: originalValues.portail || "",
+    portail_lien: currentItem.portail_lien || "",
+    portail_texte: currentItem.portail_texte || ""
+  };
   document.getElementById("editable-portail").parentNode.outerHTML =
-    formatPortail(portailVal);
+    formatPortail(portailObj);
 }
-  
 
 if (ligneNomEl) ligneNomEl.style.display = "inline";
 
