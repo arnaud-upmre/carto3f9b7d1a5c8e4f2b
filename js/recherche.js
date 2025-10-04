@@ -2,10 +2,11 @@
 // 🔍 Moteur de recherche commun Nono Maps
 // ===============================
 
-let lieux = [];
-let appareils = [];
-let allItems = [];
-let fuseMix = null;
+// Déclaration sur window → évite tout conflit entre pages
+window.lieux = [];
+window.appareils = [];
+window.allItems = [];
+window.fuseMix = null;
 
 // URLs des sources
 const URL_POSTES = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/postes.json";
