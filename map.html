@@ -836,11 +836,6 @@ let content = `
   ✍🏻 <strong>Information :</strong> ${ renderPortail(item.description) }
 </div>
 
-
-<div style="margin-bottom:10px;">
-  🔑 <strong>Portail :</strong> ${ renderPortail(item.portail) }
-</div>
-
   <a href="index.html?id=${encodeURIComponent(
     (`${item.nom || ''} ${item.type || ''} ${item.SAT || ''}${accesVal ? ' – accès ' + accesVal : ''}`)
       .replace(/\s+/g, " ")
@@ -898,12 +893,6 @@ let content = `
   <div style="margin-bottom:10px;">
     📞 <strong>Contact :</strong> ${ renderContact(item.contact) }
   </div>
-
-
-  <div style="margin-bottom:10px;">
-    🔑 <strong>Portail :</strong> ${ renderPortail(item.portail) }
-  </div>
-
  
   <a href="index.html?id=${encodeURIComponent(
     (`${item.nom || ''} ${item.type || ''} ${item.SAT || ''}`)
