@@ -1269,16 +1269,6 @@ console.info("[Nono Maps] boot", {
 });
 
 
-window.onerror = function(msg, src, line, col, err){
-  const box = document.createElement("div");
-  box.style = "position:fixed;z-index:10000;left:8px;bottom:8px;max-width:90%;"+
-              "background:#111;color:#fff;padding:10px 12px;border:1px solid #333;"+
-              "font:12px/1.4 system-ui;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,.4)";
-  box.textContent = "❗ "+ msg + " [" + (src||"inline") + ":" + line + ":" + col + "]";
-  document.body.appendChild(box);
-  console.error("❗ Uncaught error", {msg, src, line, col, err});
-};
-
 Promise.allSettled([
   fetch("postes.json").then(r => r.json()).then(d => { console.log("postes.json OK", d.length); return d; })
     .catch(e => { console.error("postes.json KO", e); return []; }),
