@@ -1287,14 +1287,16 @@ if (lieu.SAT || lieu.accès) {
   result.innerHTML = html;
 }
 
-  let allItems = [], fuseMix;
+    // ⚙️ Variables globales réutilisées depuis recherche.js
+window.allItems = [];
+window.fuseMix = null;
 
 chargerBaseRecherche().then(data => {
-  allItems = data;
-  lieux = data.filter(x => x.category === "poste");
-  appareils = data.filter(x => x.category === "appareil");
+  window.allItems = data;
+  window.lieux = data.filter(x => x.category === "poste");
+  window.appareils = data.filter(x => x.category === "appareil");
 
-  console.log("✅ Base de recherche prête dans index1.html :", allItems.length);
+  console.log("✅ Base de recherche commune chargée :", window.allItems.length);
 
   // Gestion du paramètre ?id=...
   const params = new URLSearchParams(window.location.search);
@@ -1303,7 +1305,7 @@ chargerBaseRecherche().then(data => {
   if (idParam) {
     console.log("🔍 Paramètre id =", idParam);
 
-    const match = allItems.find(item => {
+    const match = window.allItems.find(item => {
       const fullName = formatNomCompletLieu(item);
       const appareilFull = `${item.appareil || ""} ${item.nom || ""} ${item.type || ""} ${item.SAT || ""}`.trim();
       return fullName === idParam || appareilFull === idParam;
