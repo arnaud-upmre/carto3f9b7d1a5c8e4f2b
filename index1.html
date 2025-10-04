@@ -813,28 +813,32 @@ function imajnetLink(lat, lon, zoom = 18, offset = 0) {
   return `https://gecko.imajnet.net/#map=OSM;zoom=${zoom};loc=${newLat},${newLon};`;
 }
 
-function formatPortail(val) {
-  if (!val) {
-    return `<p><strong id="editable-portail">🚧 Portail :</strong> <span class="placeholder">(non renseigné)</span></p>`;
+function formatPortail(app) {
+  const type = (app.portail || "").toLowerCase().trim();
+  const lien = app.portail_lien || "";
+  const texte = app.portail_texte || "";
+
+  let contenu = "";
+
+  // Si rien du tout
+  if (!type && !lien && !texte) {
+    contenu = `<span class="placeholder">(non renseigné)</span>`;
   }
 
-  // Si la valeur contient "secure"
-  if (val.toLowerCase().includes("secure")) {
-    // On sépare "secure" (lien) et éventuel texte à côté
-    const parts = val.split(/\s+/);
-    const secureUrl = parts.find(p => p.startsWith("http"));
-    const otherText = val.replace("secure", "").replace(secureUrl || "", "").trim();
-
-    let html = `<a href="${secureUrl}" target="_blank" rel="noopener">🔐 Voir les informations sécurisées</a>`;
-    if (otherText) {
-      html += ` – ${otherText}`;
-    }
-
-    return `<p><strong id="editable-portail">🚧 Portail :</strong> ${html}</p>`;
+  // Si portail sécurisé
+  else if (type === "secure") {
+    contenu = lien
+      ? `<a href="${lien}" target="_blank" rel="noopener">🔐 Voir les informations sécurisées</a>`
+      : `<span class="placeholder">(lien manquant)</span>`;
+    if (texte) contenu += ` – ${texte}`;
   }
 
-  // Sinon : simple texte ou numéro
-  return `<p><strong id="editable-portail">🚧 Portail :</strong> ${val}</p>`;
+  // Sinon (portail classique ou texte libre)
+  else {
+    contenu = texte || type;
+  }
+
+  return `<p><strong id="editable-portail">🚧 Portail :</strong> ${contenu}</p>`;
 }
 
     function formatDescription(val) {
