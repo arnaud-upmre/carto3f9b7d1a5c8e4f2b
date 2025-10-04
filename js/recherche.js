@@ -1,5 +1,5 @@
 // ===============================
-// 🔍 Moteur de recherche complet – Nono Maps (silencieux)
+// 🔍 Moteur de recherche complet – Nono Maps (version corrigée, silencieuse)
 // ===============================
 
 let lieux = [];
@@ -15,7 +15,7 @@ const URL_POSTES = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a
 const URL_APPAREILS = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/appareils.json";
 
 // ===============================
-// 🔠 Utilitaires (identiques à index pour la recherche)
+// 🔠 Fonctions utilitaires
 // ===============================
 function normalize(str) {
   return (str || "")
@@ -39,7 +39,7 @@ function normalizeNomPoste(name) {
 }
 
 function formatNomCompletLieu(obj) {
-  const base = `${obj.nom || ''} ${obj.type || ''} ${obj.SAT || ''}`.trim();
+  const base = `${obj.nom || ""} ${obj.type || ""} ${obj.SAT || ""}`.trim();
   return obj["accès"] ? `${base} – accès ${obj["accès"]}` : base;
 }
 
@@ -127,7 +127,7 @@ function generateAlias(appareil, nom, sat, posteType) {
 }
 
 // ===============================
-// 📦 Chargement global & Fuse
+// 📦 Chargement global + Fuse.js
 // ===============================
 async function chargerBaseRecherche() {
   if (allItems.length > 0) return allItems;
@@ -167,15 +167,14 @@ async function chargerBaseRecherche() {
 }
 
 // ===============================
-// 🔍 Tri (identique à index)
+// 🔍 Tri complet
 // ===============================
-function trierResultats(results, q) {
-  const qDigits = q.replace(/\D/g, "");
+function trierResultats(results, qId, qNorm) {
+  const qDigits = qId.replace(/\D/g, "");
 
   results.sort((a, b) => {
     const id = x => (x.appareil || "").toString().replace(/\s+/g, "").toLowerCase();
     const idDigits = x => id(x).replace(/\D/g, "");
-    const qId = q;
 
     const aExactId = a.category === "appareil" && (id(a) === qId || (qDigits && idDigits(a) === qDigits));
     const bExactId = b.category === "appareil" && (id(b) === qId || (qDigits && idDigits(b) === qDigits));
@@ -190,16 +189,17 @@ function trierResultats(results, q) {
     if (aAlias && !bAlias) return -1;
     if (bAlias && !aAlias) return 1;
 
-    const norm = s => (s || "").toString().toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").trim().replace(/\s+/g, " ");
+    const norm = s => (s || "").toString().toLowerCase()
+      .normalize("NFD").replace(/[̀-ͯ]/g, "").trim().replace(/\s+/g, " ");
     const aNom = norm(a.nom || "");
     const bNom = norm(b.nom || "");
-    const aStarts = aNom.startsWith(q);
-    const bStarts = bNom.startsWith(q);
+    const aStarts = aNom.startsWith(qNorm);
+    const bStarts = bNom.startsWith(qNorm);
     if (aStarts && !bStarts) return -1;
     if (bStarts && !aStarts) return 1;
 
-    const aExact = aNom === q;
-    const bExact = bNom === q;
+    const aExact = aNom === qNorm;
+    const bExact = bNom === qNorm;
     if (aExact && !bExact) return -1;
     if (bExact && !aExact) return 1;
 
@@ -228,7 +228,7 @@ function trierResultats(results, q) {
 }
 
 // ===============================
-// 🎯 Sélection au clavier (identique à index)
+// 🎯 Sélection clavier
 // ===============================
 function updateSelection(items) {
   items.forEach((li, i) => {
@@ -242,7 +242,7 @@ function updateSelection(items) {
 }
 
 // ===============================
-// 🚀 Initialisation champ de recherche
+// 🚀 Initialisation du champ recherche
 // ===============================
 document.addEventListener("DOMContentLoaded", async () => {
   await chargerBaseRecherche();
@@ -254,6 +254,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   input.addEventListener("input", e => {
     const rawQuery = e.target.value.trim();
     const query = normalize(rawQuery);
+    const cleanedQuery = query.replace(/\s+/g, ""); // ✅ correctif identique à index
     suggestionsEl.innerHTML = "";
     resultEl.innerHTML = "";
     resultEl.style.display = "none";
@@ -264,7 +265,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // ► Recherche brute
     let results = fuseMix.search(query).map(r => r.item);
 
-    // ► Filtre "préfixe" (tt/i/tc/tsa/il/ip/imp/s) + autres mots = nom de poste
+    // ► Filtre préfixe (tt, i, tc, tsa, il, ip, imp, s)
     const queryWords = query.split(/\s+/);
     const prefixes = ["tt","i","tc","tsa","il","ip","imp","s"];
     const lowerWords = queryWords.map(w => w.toLowerCase());
@@ -279,17 +280,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
     }
 
-    // ► Marqueurs alias directs (même si non utilisés, on garde comme dans index)
-    results.forEach(it => {
-      const aliases = Array.isArray(it.alias) ? it.alias : [];
-      it.__directAliasHit = aliases.some(a => normalize(a) === query);
-    });
+    // ► Tri complet
+    results = trierResultats(results, cleanedQuery, query.toLowerCase());
 
-    // ► Tri personnalisé (identique à index)
-    const q = query.toLowerCase();
-    results = trierResultats(results, q);
-
-    // ► Rendu
+    // ► Affichage des suggestions
     const labelFor = (item) =>
       (item.category === "poste")
         ? formatNomCompletLieu(item)
@@ -308,19 +302,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       };
       suggestionsEl.appendChild(li);
     });
-
-    // ► (Optionnel comme dans index) détection d'égalité normalisée sur >=3 caractères
-    if (rawQuery.length >= 3) {
-      const queryNorm = normalizeNomPoste(rawQuery);
-      const exactMatch = results.some(item => {
-        if (item.category === "poste") {
-          return normalizeNomPoste(item.nom) === queryNorm;
-        } else {
-          return normalize(item.appareil || "") === normalize(rawQuery);
-        }
-      });
-      void exactMatch;
-    }
   });
 
   // ► Navigation clavier
