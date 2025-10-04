@@ -357,6 +357,7 @@ window.initSearch = async function(map, allMarkers) {
     console.error("❌ Erreur lors du chargement de la base de recherche :", err);
   }
 };
+
 // ===============================
 // 🎯 Fonctions locales pour map1 — version finale robuste
 // ===============================
@@ -366,16 +367,16 @@ window.showLieu = function (item) {
     return;
   }
 
-  // Recherche du bon marqueur poste
-  const norm = s => (s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").trim();
+  // On cherche un marqueur dont le nom ressemble à celui du poste
+  
   const target = allMarkers.find(m => {
-    const cid = norm(m.options.customId || "");
-    const nom = norm(item.nom);
-    const type = norm(item.type);
-    const sat = norm(item.SAT);
+    const cid = (m.options.customId || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+    const nom = (item.nom || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+    const type = (item.type || "").toLowerCase();
+    const sat = (item.SAT || "").toLowerCase();
     return (
       cid.includes(nom) ||
-      cid.includes(`${nom} ${type}`) ||
+      (nom && cid.includes(`${nom} ${type}`)) ||
       (sat && cid.includes(sat))
     );
   });
@@ -383,8 +384,9 @@ window.showLieu = function (item) {
   if (target) {
     const latlng = target.getLatLng();
     map.setView(latlng, 18, { animate: true });
-    target.openPopup(); // ✅ ouvre la popup du poste existant
+    target.openPopup(); // 🟢 ouvre la vraie popup existante
   } else if (item.latitude && item.longitude) {
+    // 🟡 Si aucun marqueur trouvé, on se centre sur les coordonnées brutes
     const lat = parseFloat(item.latitude);
     const lon = parseFloat(item.longitude);
     if (!isNaN(lat) && !isNaN(lon)) {
@@ -392,8 +394,10 @@ window.showLieu = function (item) {
     }
   }
 
+  // 👇 ferme la barre de recherche après la sélection
   document.getElementById("search-container")?.classList.remove("open");
 };
+
 
 window.showAppareil = function (item) {
   if (!window.map || !window.allMarkers) {
@@ -401,14 +405,12 @@ window.showAppareil = function (item) {
     return;
   }
 
-  const norm = s => (s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").trim();
-
-  // Recherche du bon marqueur appareil
+  // On cherche le marqueur appareil (plus strict sur le code)
   const target = allMarkers.find(m => {
-    const cid = norm(m.options.customId || "");
-    const appareil = norm(item.appareil);
-    const nom = norm(item.nom);
-    const sat = norm(item.SAT);
+    const cid = (m.options.customId || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+    const appareil = (item.appareil || "").toLowerCase().trim();
+    const nom = (item.nom || "").toLowerCase().trim();
+    const sat = (item.SAT || "").toLowerCase().trim();
     return (
       cid.includes(appareil) ||
       cid.includes(`${appareil} ${nom}`) ||
@@ -419,7 +421,7 @@ window.showAppareil = function (item) {
   if (target) {
     const latlng = target.getLatLng();
     map.setView(latlng, 19, { animate: true });
-    target.openPopup(); // ✅ ouvre la vraie popup existante
+    target.openPopup(); // 🟢 ouvre la vraie popup existante
   } else if (item.latitude && item.longitude) {
     const lat = parseFloat(item.latitude);
     const lon = parseFloat(item.longitude);
