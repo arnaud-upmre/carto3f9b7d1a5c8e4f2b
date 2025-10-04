@@ -813,34 +813,55 @@ function imajnetLink(lat, lon, zoom = 18, offset = 0) {
   return `https://gecko.imajnet.net/#map=OSM;zoom=${zoom};loc=${newLat},${newLon};`;
 }
 
-function formatPortail(app) {
-  const type = (app.portail || "").toLowerCase().trim();
-  const lien = app.portail_lien || "";
-  const texte = app.portail_texte || "";
+function formatPortail(val) {
+  if (!val) return `<p><strong id="editable-portail">🚧 Portail :</strong> <span class="placeholder">(non renseigné)</span></p>`;
 
-  let contenu = "";
+  const urlRegex = /(https?:\/\/[^\s]+)/;
+  const urlMatch = val.match(urlRegex);
+  const video = urlMatch ? urlMatch[0] : null;
 
-  // Si rien du tout
-  if (!type && !lien && !texte) {
-    contenu = `<span class="placeholder">(non renseigné)</span>`;
+  const code = val.replace(urlRegex, "").trim();
+
+  const phoneRegex = /^(\d{10}|\d{2}(\s?\d{2}){4})([,\;\*#0-9]*)?$/;
+  let content = "";
+
+  if (phoneRegex.test(code)) {
+    const cleaned = code.replace(/\s+/g, "");
+    content = `<a href="tel:${cleaned}">${code}</a>`;
+  } else {
+    content = code;
   }
 
-  // Si portail sécurisé
-  else if (type === "secure") {
-    contenu = lien
-      ? `<a href="${lien}" target="_blank" rel="noopener">🔐 Voir les informations sécurisées</a>`
-      : `<span class="placeholder">(lien manquant)</span>`;
-    if (texte) contenu += ` – ${texte}`;
-  }
-
-  // Sinon (portail classique ou texte libre)
-  else {
-    contenu = texte || type;
-  }
-
-  return `<p><strong id="editable-portail">🚧 Portail :</strong> ${contenu}</p>`;
+  return `<p><strong id="editable-portail">🚧 Portail :</strong> ${content}</p>`;
 }
 
+
+    function formatPortailDisplay(val, secure) {
+  const isSecure = secure && secure.trim() !== "";
+  const hasPortail = val && val.trim() !== "";
+
+  // Cas : rien du tout
+  if (!hasPortail && !isSecure) {
+    return `<p><strong id="editable-portail">🚧 Portail :</strong> <span class="placeholder">(non renseigné)</span></p>`;
+  }
+
+  // Cas : lien sécurisé
+  if (isSecure) {
+    let html = `<p><strong id="editable-portail">🚧 Portail :</strong> 
+      <a href="${secure}" target="_blank" rel="noopener">🔐 Voir les informations sécurisées</a>`;
+    if (hasPortail) {
+      html += ` – ${val}`;
+    }
+    html += `</p>`;
+    return html;
+  }
+
+  // Cas : juste du texte portail classique
+  return `<p><strong id="editable-portail">🚧 Portail :</strong> ${val}</p>`;
+}
+
+
+    
     function formatDescription(val) {
   return `<p><strong id="editable-description">ℹ️ Informations :</strong> 
     ${val ? `<span class="desc-value">${val}</span>` : '<span class="placeholder">(non renseigné)</span>'}
@@ -1140,7 +1161,7 @@ if (lieu.special === true) {
   const blocs = [];
 
   blocs.push(formatDescription(lieu.description));
-blocs.push(formatPortail(lieu));
+  blocs.push(formatPortail(lieu.portail));
 
   if (blocs.length > 0) {
     html += `<hr class="separator" />` +
@@ -1240,10 +1261,7 @@ blocs.push(
   `<p><strong id="editable-contact">👤 Contact :</strong> <span class="contact-value"><span class="placeholder">(non renseigné)</span></span></p>`
 );
 
-blocs.push(
-  formatPortail(lieu) ||
-  `<p><strong id="editable-portail">🚧 Portail :</strong> <span class="portail-value"><span class="placeholder">(non renseigné)</span></span></p>`
-);
+blocs.push(formatPortailDisplay(lieu.portail, lieu.secure));
 
   
   if (blocs.length > 0) {
@@ -1775,8 +1793,6 @@ if (currentItem.rss) {
 
 originalValues.contact = currentItem.contact || "";
 originalValues.portail = currentItem.portail || "";
-originalValues.portail_lien = currentItem.portail_lien || "";
-originalValues.portail_texte = currentItem.portail_texte || "";
 
 ["editable-nom","editable-type","editable-sat","editable-acces",
  "editable-description","editable-contact","editable-portail",
@@ -2177,14 +2193,11 @@ if (document.getElementById("editable-contact")) {
 }
 
 if (document.getElementById("editable-portail")) {
-  const portailObj = {
-    portail: originalValues.portail,
-    portail_lien: originalValues.portail_lien,
-    portail_texte: originalValues.portail_texte
-  };
+  const portailVal = originalValues.portail || "";
   document.getElementById("editable-portail").parentNode.outerHTML =
-    formatPortail(portailObj);
-}}
+    formatPortail(portailVal);
+}
+  
 
 if (ligneNomEl) ligneNomEl.style.display = "inline";
 
