@@ -1,6 +1,5 @@
 // ===============================
-// 🔍 Moteur de recherche complet – Nono Maps
-// Version silencieuse (aucun console.log)
+// 🔍 Moteur de recherche complet – Nono Maps (silencieux)
 // ===============================
 
 let lieux = [];
@@ -16,7 +15,7 @@ const URL_POSTES = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a
 const URL_APPAREILS = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/appareils.json";
 
 // ===============================
-// 🔠 Fonctions utilitaires
+// 🔠 Utilitaires (identiques à index pour la recherche)
 // ===============================
 function normalize(str) {
   return (str || "")
@@ -40,13 +39,10 @@ function normalizeNomPoste(name) {
 }
 
 function formatNomCompletLieu(obj) {
-  const base = `${obj.nom || ""} ${obj.type || ""} ${obj.SAT || ""}`.trim();
+  const base = `${obj.nom || ''} ${obj.type || ''} ${obj.SAT || ''}`.trim();
   return obj["accès"] ? `${base} – accès ${obj["accès"]}` : base;
 }
 
-// ===============================
-// 🧩 Génération d’alias (fidèle à index.html)
-// ===============================
 function generateAlias(appareil, nom, sat, posteType) {
   const alias = new Set();
   const norm = str => (str || "").toLowerCase().trim();
@@ -131,7 +127,7 @@ function generateAlias(appareil, nom, sat, posteType) {
 }
 
 // ===============================
-// 📦 Chargement global de la base
+// 📦 Chargement global & Fuse
 // ===============================
 async function chargerBaseRecherche() {
   if (allItems.length > 0) return allItems;
@@ -171,22 +167,16 @@ async function chargerBaseRecherche() {
 }
 
 // ===============================
-// 🔍 Recherche + Tri complet
+// 🔍 Tri (identique à index)
 // ===============================
-async function rechercherDansBase(query) {
-  if (!fuseMix) await chargerBaseRecherche();
-  if (!query || query.trim().length < 2) return [];
-
-  const cleanedQuery = normalize(query);
-  let results = fuseMix.search(cleanedQuery).map(r => r.item);
-  const q = cleanedQuery;
+function trierResultats(results, q) {
   const qDigits = q.replace(/\D/g, "");
 
-  // Tri fidèle à l'index.html
   results.sort((a, b) => {
-    const id = x => (x.appareil || "").toLowerCase().replace(/\s+/g, "");
+    const id = x => (x.appareil || "").toString().replace(/\s+/g, "").toLowerCase();
     const idDigits = x => id(x).replace(/\D/g, "");
     const qId = q;
+
     const aExactId = a.category === "appareil" && (id(a) === qId || (qDigits && idDigits(a) === qDigits));
     const bExactId = b.category === "appareil" && (id(b) === qId || (qDigits && idDigits(b) === qDigits));
     if (aExactId && !bExactId) return -1;
@@ -200,7 +190,7 @@ async function rechercherDansBase(query) {
     if (aAlias && !bAlias) return -1;
     if (bAlias && !aAlias) return 1;
 
-    const norm = s => (s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").trim().replace(/\s+/g, " ");
+    const norm = s => (s || "").toString().toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").trim().replace(/\s+/g, " ");
     const aNom = norm(a.nom || "");
     const bNom = norm(b.nom || "");
     const aStarts = aNom.startsWith(q);
@@ -238,7 +228,7 @@ async function rechercherDansBase(query) {
 }
 
 // ===============================
-// 🎯 Gestion affichage suggestions
+// 🎯 Sélection au clavier (identique à index)
 // ===============================
 function updateSelection(items) {
   items.forEach((li, i) => {
@@ -251,6 +241,9 @@ function updateSelection(items) {
   });
 }
 
+// ===============================
+// 🚀 Initialisation champ de recherche
+// ===============================
 document.addEventListener("DOMContentLoaded", async () => {
   await chargerBaseRecherche();
 
@@ -258,26 +251,56 @@ document.addEventListener("DOMContentLoaded", async () => {
   const suggestionsEl = document.getElementById("suggestions");
   const resultEl = document.getElementById("result");
 
-  input.addEventListener("input", async e => {
-    const query = normalize(e.target.value.trim());
+  input.addEventListener("input", e => {
+    const rawQuery = e.target.value.trim();
+    const query = normalize(rawQuery);
     suggestionsEl.innerHTML = "";
     resultEl.innerHTML = "";
     resultEl.style.display = "none";
+    selectedIndex = -1;
 
-    if (!query || query.length < 2) return;
-    const results = await rechercherDansBase(query);
+    if (!query || query.length < 2 || !fuseMix) return;
 
-    suggestionsEl.innerHTML = "";
+    // ► Recherche brute
+    let results = fuseMix.search(query).map(r => r.item);
+
+    // ► Filtre "préfixe" (tt/i/tc/tsa/il/ip/imp/s) + autres mots = nom de poste
+    const queryWords = query.split(/\s+/);
+    const prefixes = ["tt","i","tc","tsa","il","ip","imp","s"];
+    const lowerWords = queryWords.map(w => w.toLowerCase());
+    const prefixWord = lowerWords.find(w => prefixes.includes(w));
+
+    if (prefixWord) {
+      const otherWords = lowerWords.filter(w => w !== prefixWord);
+      results = results.filter(item => {
+        const appareilOk = item.appareil && item.appareil.toLowerCase().startsWith(prefixWord);
+        const nomOk = otherWords.every(w => normalize(item.nom || "").includes(w));
+        return appareilOk && nomOk;
+      });
+    }
+
+    // ► Marqueurs alias directs (même si non utilisés, on garde comme dans index)
+    results.forEach(it => {
+      const aliases = Array.isArray(it.alias) ? it.alias : [];
+      it.__directAliasHit = aliases.some(a => normalize(a) === query);
+    });
+
+    // ► Tri personnalisé (identique à index)
+    const q = query.toLowerCase();
+    results = trierResultats(results, q);
+
+    // ► Rendu
+    const labelFor = (item) =>
+      (item.category === "poste")
+        ? formatNomCompletLieu(item)
+        : `${item.appareil} (${item.nom}${item.type ? ' ' + item.type : ''}${item.SAT ? ' / ' + item.SAT : ''})`;
+
     results.forEach((item, i) => {
       const li = document.createElement("li");
       const icon = (item.category === "poste")
         ? `🚙${item.poste_latitude && item.poste_longitude ? " 📍" : ""}`
         : "💡";
-      const label = (item.category === "poste")
-        ? formatNomCompletLieu(item)
-        : `${item.appareil} (${item.nom}${item.type ? ' ' + item.type : ''}${item.SAT ? ' / ' + item.SAT : ''})`;
-
-      li.innerHTML = `${icon} ${label}`;
+      li.innerHTML = `${icon} ${labelFor(item)}`;
       if (i === 0) li.classList.add("best");
       li.onclick = () => {
         if (item.category === "poste") showLieu(item);
@@ -285,9 +308,22 @@ document.addEventListener("DOMContentLoaded", async () => {
       };
       suggestionsEl.appendChild(li);
     });
+
+    // ► (Optionnel comme dans index) détection d'égalité normalisée sur >=3 caractères
+    if (rawQuery.length >= 3) {
+      const queryNorm = normalizeNomPoste(rawQuery);
+      const exactMatch = results.some(item => {
+        if (item.category === "poste") {
+          return normalizeNomPoste(item.nom) === queryNorm;
+        } else {
+          return normalize(item.appareil || "") === normalize(rawQuery);
+        }
+      });
+      void exactMatch;
+    }
   });
 
-  // Navigation clavier
+  // ► Navigation clavier
   input.addEventListener("keydown", (e) => {
     const items = suggestionsEl.querySelectorAll("li");
 
