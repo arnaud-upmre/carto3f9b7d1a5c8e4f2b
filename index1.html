@@ -1,0 +1,2449 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta name="robots" content="noindex, nofollow" />
+  <meta charset="UTF-8" />
+  <title>Cartographie des postes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+ 
+  <meta property="og:title" content="Nono Maps">
+  <meta property="og:description" content="Cartographie collaborative des postes et accès.">
+  <meta property="og:image" content="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/icon-512.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/index.html">
+
+<link rel="icon" href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/favicon/favicon.ico" type="image/x-icon" sizes="16x16 32x32 48x48 64x64 128x128">
+<link rel="icon" type="image/png" sizes="16x16" href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="96x96" href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/favicon/favicon-96x96.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/favicon/favicon-180x180.png">
+<link rel="apple-touch-icon" sizes="192x192" href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/favicon/icon-192.png">
+<link rel="apple-touch-icon" sizes="512x512" href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/favicon/icon-512.png">
+<link rel="manifest" href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/manifest.json">
+
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0b0c0e">
+  <meta name="mobile-web-app-capable" content="yes"> 
+  <meta name="apple-mobile-web-app-capable" content="yes"> 
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Nono Maps">
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+  <script src="js/recherche.js"></script>
+  <style id="eale-intro-styles">
+
+    .edit-buttons {
+  position: sticky;     
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center; 
+  gap: 12px;              
+  padding: 10px;
+  background: #fff;     
+  border-top: 1px solid #ddd;
+  z-index: 1000;          
+}
+
+    .rep-block.info-block,
+.rep-block.rep-appareil.info-block,
+.rep-block.info-block p {
+  text-align: left !important;
+}
+
+    #edit-toggle-appareil {
+  font-size: 13px;
+  font-style: italic;
+  color: #777;
+  margin-left: 6px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+#edit-toggle-appareil:hover {
+  color: #1a73e8;  
+  text-decoration: underline;
+}
+
+.rep-appareil .info-block {
+  text-align: left !important;
+  font-weight: normal; 
+  margin-left: 4px;    
+}
+
+.rep-appareil .info-block strong {
+  font-weight: 600; 
+}
+  
+  .info-block .desc-value,
+.info-block .placeholder {
+  font-weight: normal !important;
+}
+
+.rep-appareil .info-block {
+  margin-top: 28px !important;
+}
+
+    .rep-block .inline-links {
+  display: flex;
+  justify-content: center; 
+  gap: 8px; 
+  margin-top: 6px; 
+}
+
+    .footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.pill-link {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  border: 1px solid #1a73e8;
+  color: #1a73e8;
+  background: #f5f9ff;
+}
+
+.pill-link:hover {
+  background: #1a73e8;
+  color: #fff;
+}
+
+.version-pill {
+  opacity: 0.85;
+  font-size: 12px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .pill-link {
+    background: #1e1e1e;
+    color: #90caf9;
+    border: 1px solid #90caf9;
+  }
+  .pill-link:hover {
+    background: #90caf9;
+    color: #121212;
+  }
+}
+
+    #streetview-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: none;
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#streetview-box {
+  width: 90%;
+  max-width: 900px;
+  height: 70%;
+  background: rgba(20,20,20,0.95);
+  border-radius: 16px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+  overflow: hidden;
+  position: relative;
+}
+
+#streetview-box iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+#streetview-close {
+  position: absolute;
+  top: 12px; right: 12px;
+  font-size: 24px;
+  background: rgba(0,0,0,0.6);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px; height: 40px;
+  cursor: pointer;
+  z-index: 2;
+}
+
+#btn-carte { 
+  margin-top: 4rem; 
+  display: inline-block;
+}
+    
+    #counters {
+  text-align: center;
+}
+  :root{--eale-intro-bg:#fff;--eale-intro-fg:#222}
+  @media (prefers-color-scheme: dark){
+    :root{--eale-intro-bg:#0b0b0b;--eale-intro-fg:#eee}
+  }
+  .eale-intro-overlay{
+    position:fixed; inset:0;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    background:var(--eale-intro-bg); color:var(--eale-intro-fg);
+    z-index:99999; user-select:none; touch-action:none;
+  }
+  .eale-intro-img{
+    width:min(60vw,260px); height:auto; object-fit:contain; pointer-events:none;
+    animation:eale-zoomIn 1.8s ease-out forwards;
+  }
+  .eale-intro-text{
+    position:fixed; bottom:12vh; left:50%; transform:translateX(-50%);
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size:0.95rem; font-style:italic; text-align:center; opacity:.95; max-width:90%;
+  }
+  @keyframes eale-zoomIn{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+  .eale-intro-hide{opacity:0; transition:opacity .35s ease}
+
+.inline-links.pills-3 {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;  
+  align-items: center;       
+  text-align: center;
+  gap: 8px;
+}
+
+.inline-links.pills-3 a {
+  display: inline-flex;       
+  align-items: center;        
+  vertical-align: middle;     
+  padding: 6px 10px;
+}
+  
+@media (min-width: 420px){
+  .inline-links.pills-3{ flex-wrap: nowrap; }
+}
+
+@media (max-width: 390px){
+  .inline-links.pills-3 a{
+    padding: 6px 8px;
+    font-size: 13.5px;
+  }
+}
+    
+ul#suggestions:empty {
+  margin: 0;
+  padding: 0;
+}
+
+ul#suggestions:not(:empty){
+  margin: .4rem 0 .6rem 0;
+}
+
+.editable-halo {
+  display: inline-block;
+  padding: 2px 4px;
+  border-radius: 6px;
+  position: relative;
+
+  box-shadow: 0 0 6px rgba(26,115,232,0.8),
+              0 0 12px rgba(26,115,232,0.5);
+
+  animation: pulseHalo 1.6s ease-in-out infinite;
+}
+
+@keyframes pulseHalo {
+  0%   { box-shadow: 0 0 4px rgba(26,115,232,0.6), 0 0 8px rgba(26,115,232,0.4); }
+  50%  { box-shadow: 0 0 10px rgba(26,115,232,0.9), 0 0 18px rgba(26,115,232,0.6); }
+  100% { box-shadow: 0 0 4px rgba(26,115,232,0.6), 0 0 8px rgba(26,115,232,0.4); }
+}
+
+.editable-wiggle {
+  animation: wiggle 0.3s infinite; 
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-2deg); }
+  50% { transform: rotate(2deg); }
+}
+    
+#edit-toggle {
+  font-size: 13px;
+  font-style: italic;
+  color: #777;
+  margin-left: 6px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+#edit-toggle:hover {
+  color: #1a73e8;  
+  text-decoration: underline;
+}
+
+#edit-buttons,
+#edit-buttons-appareil {
+  display: none;
+  position: fixed;
+  bottom: 20px;           
+  left: 50%;              
+  transform: translateX(-50%);
+  z-index: 9999;
+
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+
+  padding: 10px 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;      
+  gap: 16px;
+}
+
+@media (prefers-color-scheme: dark) {
+  #edit-buttons,
+  #edit-buttons-appareil {
+    background: rgba(30, 30, 30, 0.92);
+    border: 1px solid #444;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.6);
+  }
+}
+
+.rep-block {
+  display: block;            
+  margin: 1.5rem 0 0.5rem 0;
+  text-align: center;        
+}
+
+    .rep-block p .emoji {
+  display: inline-block;
+  width: 1.6em;  
+  text-align: center;
+}
+
+    .rep-block.poste-only p {
+  transform: translateX(-14px);  
+}
+.placeholder {
+  color: #888;
+  font-style: italic;
+}
+    
+</style>
+  <style>
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #fff;
+  padding: 1rem;
+  color: #333;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;   
+  width: 100%;
+  max-width: 100%;      
+  box-sizing: border-box;
+}
+    #train-container {
+      width: 100%;
+      max-width: 600px;
+      height: 48px;
+      overflow: hidden;
+      margin-bottom: 3rem;
+      position: relative;
+    }
+   
+@media (max-width: 600px){
+  #train-container { margin-bottom: .8rem; }
+  h1 { margin-bottom: .4rem; }
+}
+    #train {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 42px;
+      animation: trainVaEtVient 28s ease-in-out infinite;
+    }
+    @keyframes trainVaEtVient {
+      0%, 100% { left: 0; }
+      45%, 50% { left: calc(100% - 140px); }
+      95% { left: 0; }
+    }
+    h1 {
+      font-size: 20px;
+      margin: 0 0 0.8rem 0;
+      font-weight: 600;
+      width: 100%;
+      max-width: 600px;
+      padding: 0 1rem;
+      text-align: left;
+    }
+input[type="text"] {
+  width: 100%;
+  max-width: 600px;   
+  padding: 12px 16px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+  
+    input[type="text"]:focus {
+      border-color: #1a73e8;
+      box-shadow: 0 4px 14px rgba(26,115,232,0.4);
+    }
+
+    #result {
+      display: none;
+      background: #ffffff;
+      padding: 1rem 1.1rem;
+      border-radius: 18px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      max-width: 600px;
+      width: 100%;
+      color: #444;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+#result h2 {
+  margin-top: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: #1a73e8;
+  text-align: left; 
+}
+
+  
+#search,
+#suggestions,
+#result,
+#counters {
+  width: 100%;
+  max-width: 600px;     
+}
+
+#suggestions,
+#result {
+  box-sizing: border-box;
+}
+
+#result {
+  border: 1px solid transparent; 
+}
+    
+    .inline-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      font-size: 14px;
+      padding: 0 1rem 0 0;
+    }
+    .inline-links a {
+      padding: 6px 10px;
+      font-size: 14px;
+      text-decoration: none;
+      color: #1a73e8;
+      border: 1px solid #1a73e8;
+      border-radius: 10px;
+      transition: 0.3s;
+      white-space: nowrap;
+    }
+    .inline-links a:hover {
+      background-color: #1a73e8;
+      color: white;
+    }
+    .separator {
+      border: none;
+      border-top: 1px solid #eee;
+      margin: .8rem 0;
+    }
+
+ul#suggestions {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 0.5rem 0;
+  max-width: 600px;
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+  background-color: #fff;
+  font-size: 15px;
+  color: #333;
+}
+ul#suggestions li {
+  padding: 12px 16px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+}
+ul#suggestions li:hover {
+  background-color: #f0f8ff;
+  color: #1a73e8;
+}
+
+@media (prefers-color-scheme: dark){
+  ul#suggestions {
+    background-color: #1e1e1e;
+    color: #e5e5e5;
+    box-shadow: 0 6px 15px rgba(255,255,255,0.05);
+  }
+  ul#suggestions li { border-bottom:1px solid #333; }
+  ul#suggestions li:hover { background-color:#1e2a36; color:#90caf9; }
+}
+    
+li.best {
+  background-color: #e6f0ff;
+  font-weight: 600;
+}
+@media (prefers-color-scheme: dark){
+  li.best {
+    background-color: #1b2836; 
+  }
+}
+    @media (prefers-color-scheme: dark) {
+  #result {
+    background: #1e1e1e;   
+    color: #e5e5e5;       
+    box-shadow: 0 8px 24px rgba(255,255,255,0.05); 
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #121212;
+    color: #e5e5e5;
+  }
+
+  h1,
+  #result h2 {
+    color: #90caf9;
+  }
+
+  input[type="text"] {
+    background-color: #1e1e1e;
+    color: #e5e5e5;
+    border: 1px solid #555;
+  }
+
+  .inline-links a {
+    color: #90caf9;
+    border-color: #90caf9;
+  }
+
+  .inline-links a:hover {
+    background-color: #90caf9;
+    color: #121212;
+  }
+}
+
+.titre-lien{
+  color:inherit;
+  text-decoration:none;
+}
+.titre-lien:hover,
+.titre-lien:focus{ opacity:.85; }
+
+.missing-box {
+  background-color:#e6f0ff;
+  border-radius:12px;
+  padding:12px 16px;
+  margin-top:1.2rem;
+  text-align:center;
+  font-size:15px;
+}
+.missing-box a {
+  color:#1a73e8; 
+  font-weight:600;
+}
+    
+#about-footer {
+  width: 100%;
+  text-align: center;
+  padding: 15px 0;
+  font-size: 13px;
+  background: #121212; 
+  border-top: 1px solid #333;
+  margin-top: 40px; 
+}
+
+.footer-version {
+  color: #999;
+  font-size: 11px;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1; 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+@media (prefers-color-scheme: light) {
+  #about-footer {
+    background: #fff;
+    color: #333;
+    border-top: 1px solid #ddd;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  #about-footer {
+    background: #121212;
+    color: #aaa;
+    border-top: 1px solid #333;
+  }
+}
+
+@media (prefers-color-scheme: dark){
+  a, a:visited { 
+    color:#90caf9; 
+  }
+
+  .inline-links a:hover { 
+    background-color:#90caf9; 
+    color:#121212; 
+  }
+
+  .missing-box {
+    background-color:#16202c;
+    border:1px solid #243447;
+  }
+  .missing-box a { 
+    color:#90caf9; 
+  }
+}
+
+.btn-primary {
+  margin: 8px 0;
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 1px solid #1a73e8;
+  background: #f5f9ff;  
+  color: #1a73e8;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 15px;
+  transition: background 0.2s, color 0.2s;
+  text-decoration: none; 
+}
+
+.btn-primary:hover {
+  background: #1a73e8;
+  color: #fff;
+}
+
+@media (prefers-color-scheme: dark) {
+  .btn-primary {
+    background: #1e1e1e;  
+    color: #90caf9;       
+    border: 1px solid #90caf9;
+  }
+  .btn-primary:hover {
+    background: #90caf9;
+    color: #121212;
+  }
+}
+    #btn-localiser { margin-top: 4rem; } 
+
+  #notification {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 240px;
+  max-width: 90%;
+  padding: 12px 18px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  text-align: center;
+  display: none;
+  z-index: 99999;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+#notification.success {
+  background: #e6f4ea;
+  color: #137333;
+  border: 1px solid #137333;
+}
+
+#notification.error {
+  background: #fce8e6;
+  color: #b00020;
+  border: 1px solid #b00020;
+}
+
+#notification.info {
+  background: #e8f0fe;
+  color: #174ea6;
+  border: 1px solid #174ea6;
+}
+
+@media (prefers-color-scheme: dark) {
+  #notification.success {
+    background: #1e2a21;
+    color: #8dd39c;
+    border: 1px solid #8dd39c;
+  }
+  #notification.error {
+    background: #3a1c1c;
+    color: #ff8a80;
+    border: 1px solid #ff8a80;
+  }
+  #notification.info {
+    background: #1a237e;
+    color: #90caf9;
+    border: 1px solid #90caf9;
+  }
+}
+    
+.rep-block.horizontal.rep-appareil {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px; 
+}
+
+.rep-block.horizontal.rep-appareil p {
+  margin: 0;
+  font-weight: 600;
+}
+  
+  </style>
+</head>
+<body> <main>
+  <div id="train-container">
+ <img id="train"
+     src="images/train1.gif"
+     alt="Train animé"
+     title="Clique pour changer de train"
+     style="cursor:pointer" />
+  </div>
+
+<h1>
+  🚘 <a href="itineraire.html" style="color:inherit; text-decoration:none;">
+    Itinéraire et infos
+  </a>
+</h1>
+<input type="text" id="search" placeholder="Entrer un poste ou un appareil" autocomplete="off" />
+<ul id="suggestions"></ul>
+<div id="result"></div>
+
+<div id="edit-buttons" style="display:none;">
+  <button id="btn-save" class="btn-primary">💾 Sauvegarder</button>
+  <button id="btn-cancel" class="btn-primary">❌ Annuler édition</button>
+</div>
+
+  <div id="edit-buttons-appareil" style="display:none;">
+  <button id="btn-save-appareil" class="btn-primary">💾 Sauvegarder</button>
+  <button id="btn-cancel-appareil" class="btn-primary">❌ Annuler édition</button>
+</div>
+
+<button id="btn-localiser" class="btn-primary">
+  📍 À proximité
+</button>
+
+<a id="btn-carte" class="btn-primary" href="map.html" style="display:none;">
+  🗺️ Afficher la carte
+</a>
+<div id="proximite" style="margin-top:1rem; font-size:14px;"></div>
+<div id="proximite-actions" style="text-align:center; margin:10px 0;">
+  <button id="voir-plus" class="btn-primary" style="display:none;">➕ Voir plus</button>
+</div>
+  <script>
+const jsonUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/postes.json";
+const appareilsUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/appareils.json";
+const compteurURL = "https://script.google.com/macros/s/AKfycbzUFaek89LYosR0FSw9gyxn2IZXlFlWXA_dIFIDwox-szE3DgH-l8IVbGfaoIgGK04h/exec";
+const compteurAppareilURL = "https://script.google.com/macros/s/AKfycbwJIlvcfNYREJn1oPiVAhQqHACXXar8ZbRl6aChwYw4TFSAaMTFEHTT5X2T7BKLJ3gsJw/exec";
+
+let lieux = [], appareils = [];
+    let currentItem = null;
+
+function myMapsViewer(lat, lon, z = 19) {
+  return `map.html?lat=${lat}&lon=${lon}&z=${z}`;
+}
+    
+let proximiteIndex = 0;
+const PROX_STEP = 10;
+let proximiteSorted = [];
+    
+function formatContact(val) {
+  if (!val) return `<p><strong id="editable-contact">👤 Contact :</strong> <span class="placeholder">(non renseigné)</span></p>`;
+
+  const phoneRegex = /\d{2}\s?\d{2}\s?\d{2}\s?\d{2}\s?\d{2}/g;
+  const matches = val.match(phoneRegex);
+
+  if (!matches) {
+    return `<p><strong id="editable-contact">👤 Contact :</strong> ${val}</p>`;
+  }
+
+  const texteSansNum = val.replace(phoneRegex, "").trim();
+
+  const boutons = matches.map(num => {
+    const cleaned = num.replace(/\s+/g, "");
+    return `<a href="tel:${cleaned}">${num}</a>`;
+  }).join(" ");
+
+  return `<p><strong id="editable-contact">👤 Contact :</strong> ${texteSansNum} ${boutons}</p>`;
+}
+
+function imajnetLink(lat, lon, zoom = 18, offset = 0) {
+  const R = 6378137;
+  const newLat = lat + (offset / R) * (180 / Math.PI);
+  const newLon = lon;
+  return `https://gecko.imajnet.net/#map=OSM;zoom=${zoom};loc=${newLat},${newLon};`;
+}
+
+function formatPortail(val) {
+  if (!val) return `<p><strong id="editable-portail">🚧 Portail :</strong> <span class="placeholder">(non renseigné)</span></p>`;
+
+  const urlRegex = /(https?:\/\/[^\s]+)/;
+  const urlMatch = val.match(urlRegex);
+  const video = urlMatch ? urlMatch[0] : null;
+
+  const code = val.replace(urlRegex, "").trim();
+
+  const phoneRegex = /^(\d{10}|\d{2}(\s?\d{2}){4})([,\;\*#0-9]*)?$/;
+  let content = "";
+
+  if (phoneRegex.test(code)) {
+    const cleaned = code.replace(/\s+/g, "");
+    content = `<a href="tel:${cleaned}">${code}</a>`;
+  } else {
+    content = code;
+  }
+
+  return `<p><strong id="editable-portail">🔑 Portail / Alarme :</strong> ${content}</p>`;
+}
+
+
+    function formatPortailDisplay(val, secure) {
+  const isSecure = secure && secure.trim() !== "";
+  const hasPortail = val && val.trim() !== "";
+
+  // Cas : rien du tout
+  if (!hasPortail && !isSecure) {
+    return `<p><strong id="editable-portail">🔑 Portail / Alarme :</strong> <span class="placeholder">(non renseigné)</span></p>`;
+  }
+
+  // Cas : lien sécurisé
+  if (isSecure) {
+    let html = `<p><strong id="editable-portail">🔑 Portail / Alarme :</strong> 
+      <a href="${secure}" target="_blank" rel="noopener">🔐 Afficher les codes d’accès</a>`;
+    if (hasPortail) {
+      html += ` – ${val}`;
+    }
+    html += `</p>`;
+    return html;
+  }
+
+  // Cas : juste du texte portail classique
+  return `<p><strong id="editable-portail">🔑 Portail / Alarme :</strong> ${val}</p>`;
+}
+
+
+    
+    function formatDescription(val) {
+  return `<p><strong id="editable-description">ℹ️ Informations :</strong> 
+    ${val ? `<span class="desc-value">${val}</span>` : '<span class="placeholder">(non renseigné)</span>'}
+  </p>`;
+}
+    
+function normalize(str) {
+  return str
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")    
+    .replace(/[^a-z0-9\s]/gi, "") 
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, " ");  
+}
+
+function normalizeNomPoste(name) {
+  if (!name) return "";
+  return name
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")     
+    .toLowerCase()
+    .trim()
+    
+    .replace(/\b(?:a|p|sp|ssp|sspa|l|l-a|prci|lgv|ss|sst)\b$/i, "")
+    .trim();
+}
+
+
+function isAppareilLike(raw){
+  if(!raw) return false;
+  const s = raw.trim().toLowerCase();
+  const prefixes = ["tt","i","tc","tsa","il","ip","imp","s"]; 
+  const first = s.split(/\s+/)[0];
+  const hasDigits = /\d/.test(s);
+  return prefixes.includes(first) || hasDigits;
+}
+
+function isPosteLike(raw){
+  if(!raw) return false;
+  const s = raw.trim();
+  return s.length >= 3 && !isAppareilLike(s);
+}
+
+function formatNomCompletLieu(obj) {
+  const base = `${obj.nom || ''} ${obj.type || ''} ${obj.SAT || ''}`.trim();
+return obj["accès"] ? `${base} – accès ${obj["accès"]}` : base;
+}
+
+function formatNomComplet(obj) {
+  return `${obj.nom || ''} ${obj.type || ''}`.trim();
+}
+function formatRSS(table, showPhones = true) {
+  const tables = {
+    "A": ["03 28 55 82 56", "03 28 55 82 57"],
+    "B": ["03 28 55 82 58", "03 28 55 82 59"],
+    "C": ["03 28 55 82 53", "03 28 55 82 54"]
+  };
+  const tableNum = { "A": "1", "B": "2", "C": "3" };
+
+  if (!tables[table]) {
+    return `<p><strong id="editable-rss">📞 RSS :</strong> ${table}</p>`;
+  }
+
+  let html = `<p><strong id="editable-rss">📞 RSS Table ${tableNum[table] || table}</strong></p>`;
+
+  if (showPhones) {
+    const nums = tables[table]
+      .map(num => `<a href="tel:${num.replace(/\s+/g, '')}">${num}</a>`)
+      .join(" ");
+    html += `<div id="rss-phones" class="inline-links">${nums}</div>`;
+  }
+  return html;
+}
+    
+function generateAppareilListHTML(currentLieu) {
+  const matchingApps = appareils.filter(app => 
+    app.nom  === currentLieu.nom  &&
+    app.type === currentLieu.type
+  );
+
+  const isSAT = currentLieu.SAT && currentLieu.SAT !== "";
+  const isAcces = !!currentLieu.accès;
+
+if (!isSAT && !isAcces) {
+  let groupedAll = {};
+  matchingApps.forEach(app => {
+    const sat = app.SAT || 'Poste';
+    if (!groupedAll[sat]) groupedAll[sat] = [];
+    groupedAll[sat].push(app);
+  });
+
+  for (const sat in groupedAll) {
+    groupedAll[sat].sort((a, b) => a.appareil.localeCompare(b.appareil, "fr", { numeric: true }));
+  }
+
+  let html = `<p><strong>🧩 Appareils trouvés dans ce poste :</strong></p>`;
+  for (const [sat, list] of Object.entries(groupedAll)) {
+    html += `<p><strong>${sat} :</strong> `;
+    html += list.map(app => `<a href="#" onclick='showAppareil(${JSON.stringify(app)})'>${app.appareil}</a>`).join(", ");
+    html += `</p>`;
+  }
+
+  html += `
+    <div class="missing-box">
+      📡 SAT manquant ?
+      <a href="ajout_poste.html?poste=${encodeURIComponent(formatNomCompletLieu(currentLieu))}">Aidez-nous à l’ajouter.</a>
+    </div>
+    <div class="missing-box">
+      🤝 Appareil manquant ?
+      <a href="ajout_appareil.html?poste=${encodeURIComponent(formatNomCompletLieu(currentLieu))}">Aidez-nous à l’ajouter.</a>
+    </div>
+  `;
+
+  return html;
+}
+
+  let html = "";
+
+  if (isSAT) {
+    const matchingAppsForSAT = matchingApps.filter(app => (app.SAT || "") === currentLieu.SAT);
+
+    let groupedSAT = {};
+    matchingAppsForSAT.forEach(app => {
+      const sat = app.SAT || 'Poste';
+      if (!groupedSAT[sat]) groupedSAT[sat] = [];
+      groupedSAT[sat].push(app);
+    });
+
+    for (const sat in groupedSAT) {
+      groupedSAT[sat].sort((a, b) => a.appareil.localeCompare(b.appareil, "fr", { numeric: true }));
+    }
+
+    html += `<p><strong>🧩 Appareils trouvés dans ce SAT :</strong></p>`;
+    for (const [sat, list] of Object.entries(groupedSAT)) {
+      html += `<p>${list.map(app => `<a href="#" onclick='showAppareil(${JSON.stringify(app)})'>${app.appareil}</a>`).join(", ")}</p>`;
+    }
+  }
+
+  let groupedAll = {};
+  matchingApps.forEach(app => {
+    const sat = app.SAT || 'Poste';
+    if (!groupedAll[sat]) groupedAll[sat] = [];
+    groupedAll[sat].push(app);
+  });
+
+  for (const sat in groupedAll) {
+    groupedAll[sat].sort((a, b) => a.appareil.localeCompare(b.appareil, "fr", { numeric: true }));
+  }
+
+  html += `<p><strong>🧩 Appareils trouvés dans ce poste :</strong></p>`;
+  for (const [sat, list] of Object.entries(groupedAll)) {
+    if (sat === currentLieu.SAT) continue; 
+    html += `<p><strong>${sat} :</strong> `;
+    html += list.map(app => `<a href="#" onclick='showAppareil(${JSON.stringify(app)})'>${app.appareil}</a>`).join(", ");
+    html += `</p>`;
+  }
+
+  html += `
+    <div class="missing-box">
+      🤝 Appareil manquant ?
+      <a href="ajout_appareil.html?poste=${encodeURIComponent(formatNomCompletLieu(currentLieu))}">Aidez-nous à l’ajouter.</a>
+    </div>
+  `;
+
+  return html;
+}
+    
+    
+function generateAlias(appareil, nom, sat, posteType) {
+  const alias = new Set();
+  const norm = str => (str || "").toLowerCase().trim();
+
+  const a = norm(appareil); 
+  const n = norm(nom);    
+  const s = norm(sat);
+  const t = norm(posteType);
+
+
+  const match = a.match(/^([a-z]+)(\d+)?$/i);
+  const letters = match ? match[1].toLowerCase() : a; 
+  const root = a.split(/[\s\-]/)[0]; 
+
+ 
+  alias.add(a);                          
+  alias.add(a.replace(/([a-z]+)(\d+)/, "$1 $2"));
+  alias.add(letters);                          
+
+
+  if (n) {
+    alias.add(`${a} ${n}`);
+    alias.add(`${n} ${a}`);
+    alias.add(`${root} ${n}`);
+    alias.add(`${n} ${root}`);
+    alias.add(`${letters} ${n}`);
+    alias.add(`${n} ${letters}`);
+  }
+
+  if (/^(i|ia|il|ip|imp)/i.test(a)) {
+    alias.add("interrupteur");
+    alias.add("inter");                       
+    alias.add(`interrupteur ${a}`);
+    alias.add(`inter ${a}`);               
+    if (n) {
+      alias.add(`interrupteur ${n}`);
+      alias.add(`inter ${n}`);               
+    }
+  }
+
+  if (/^(tt|tc|tsa)/i.test(a)) {
+    alias.add("transformateur");
+    alias.add("transfo");                       
+    alias.add(`transformateur ${a}`);
+    alias.add(`transfo ${a}`);                   
+    if (n) {
+      alias.add(`transformateur ${n}`);
+      alias.add(`transfo ${n}`);           
+    }
+  }
+
+  if (/^s?\d+$/i.test(a) || /^sm/i.test(a) || /^st/i.test(a)) {   
+    alias.add("sectionneur");
+    alias.add(`sectionneur ${a}`);
+    if (n) alias.add(`sectionneur ${n}`);
+  }
+
+  if (n) {
+    const mots = n.split(/\s+/);
+    mots.forEach(m => {
+      alias.add(`${letters} ${m}`);
+      alias.add(`${m} ${letters}`);
+      alias.add(`${letters.toUpperCase()} ${m}`);
+      alias.add(`${m} ${letters.toUpperCase()}`);
+    });
+  }
+
+  if (s) {
+    alias.add(`${a} ${s}`);
+    alias.add(`${s} ${a}`);
+    if (n) {
+      alias.add(`${a} ${n} ${s}`);
+      alias.add(`${n} ${s} ${a}`);
+      alias.add(`${letters} ${n} ${s}`);
+      alias.add(`${n} ${s} ${letters}`);
+    }
+  }
+
+  if (t && n) {
+    alias.add(`${n} ${t}`);
+    alias.add(`${t} ${n}`);
+  }
+
+  return Array.from(alias);
+} 
+
+
+function incrementCounter() {
+  fetch(compteurURL + "?increment=true").catch(() => {});
+}
+
+function incrementCounterAppareil() {
+  fetch(compteurAppareilURL + "?increment=true").catch(() => {});
+}
+
+function showLieu(lieu) {
+    currentItem = lieu;
+
+if (lieu.special === true) {
+  const result = document.getElementById("result");
+  document.getElementById("suggestions").innerHTML = "";
+  result.style.display = "block";
+
+  let html = `<h2>
+  📍 ${lieu.nom}
+</h2>`;
+
+  html += `
+  <div class="rep-block">
+    <p><span class="emoji">🛣️</span> Repérer l’accès :</p>
+    <div class="inline-links pills-3">
+<a href="${myMapsViewer(lieu.latitude, lieu.longitude)}">🛰️ Vue satellite</a>
+
+<a href="#" onclick="openStreetView(${lieu.latitude}, ${lieu.longitude}); return false;">👁️ Street View</a>
+    </div>
+  </div>`;
+
+  html += `
+  <div class="rep-block">
+    <p><span class="emoji">🚙</span> Itinéraires disponibles :</p>
+    <div class="inline-links pills-3">
+      <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🗺️ Maps</a>
+      <a href="https://maps.apple.com/?daddr=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🍎 Plans</a>
+      <a href="https://waze.com/ul?ll=${lieu.latitude},${lieu.longitude}&navigate=yes" target="_blank" rel="noopener">🚗 Waze</a>
+    </div>
+  </div>`;
+
+  const blocs = [];
+
+  blocs.push(formatDescription(lieu.description));
+  blocs.push(formatPortail(lieu.portail));
+
+  if (blocs.length > 0) {
+    html += `<hr class="separator" />` +
+            blocs.map((b,i)=> i===0 ? b : `<hr class="separator" />${b}`).join("");
+  }
+
+  result.innerHTML = html;
+  return; 
+}
+  
+  const result = document.getElementById("result");
+  document.getElementById("suggestions").innerHTML = "";
+  result.style.display = "block";
+  incrementCounter();
+
+const _latPoste = (lieu.poste_latitude ?? "").toString();
+const _lonPoste = (lieu.poste_longitude ?? "").toString();
+const usePoste = _latPoste !== "" && _lonPoste !== "";
+const targetLat = usePoste ? _latPoste : lieu.latitude;
+const targetLon = usePoste ? _lonPoste : lieu.longitude;
+const urlMyMapsPoste = myMapsViewer(targetLat, targetLon, 20);
+
+let html = `<h2>
+  📍 <span id="editable-nom">${lieu.nom}</span> 
+  <span id="editable-type">${lieu.type}</span>
+  ${lieu.SAT ? `<span id="editable-sat"> ${lieu.SAT}</span>` : ""}
+  ${lieu.accès ? `<span id="editable-acces"> – accès ${lieu.accès}</span>` : ""}
+  <a href="#" id="edit-toggle">[modifier]</a>
+</h2>`;
+    
+html += `
+<div class="rep-block poste-only">
+  <p id="editable-rep-poste"><span class="emoji">⚡️</span> Repérer le poste (sat/guérite)</p>
+  <div class="inline-links pills-2">
+    ${
+      usePoste
+        ? `
+          <a href="${myMapsViewer(lieu.poste_latitude || lieu.latitude, lieu.poste_longitude || lieu.longitude)}" target="_blank">🛰️ Vue satellite</a>
+          <a href="${
+            lieu.imajnet && lieu.imajnet.trim() !== "" 
+              ? lieu.imajnet 
+              : imajnetLink(lieu.poste_latitude || lieu.latitude, lieu.poste_longitude || lieu.longitude)
+          }" target="_blank">🚄 Imajnet</a>
+        `
+        : `<span class="placeholder">(non renseigné – fournir un lien Maps)</span>`
+    }
+  </div>
+</div>`;
+
+html += `
+<div class="rep-block">
+  <p id="editable-rep-acces"><span class="emoji">🛣️</span> Repérer l’accès :</p>
+  <div class="inline-links pills-3">
+<a href="${myMapsViewer(lieu.latitude, lieu.longitude)}">🛰️ Vue satellite</a>
+<a href="#" onclick="openStreetView(${lieu.latitude}, ${lieu.longitude}); return false;">👁️ Street View</a> </div>
+</div>`;
+  
+html += `
+<div class="rep-block">
+  <p><span class="emoji">🚙</span> Itinéraires disponibles :</p>
+  <div class="inline-links pills-3">
+    <a href="https://www.google.com/maps?q=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🗺️ Maps</a>
+    <a href="https://maps.apple.com/?daddr=${lieu.latitude},${lieu.longitude}" target="_blank" rel="noopener">🍎 Plans</a>
+    <a href="https://waze.com/ul?ll=${lieu.latitude},${lieu.longitude}&navigate=yes" target="_blank" rel="noopener">🚗 Waze</a>
+  </div>
+</div>`;
+
+const blocs = [];
+
+if (lieu.rss) {
+blocs.push(formatRSS(lieu.rss, true));
+}
+
+const pk = lieu.pk 
+  ? `<strong id="editable-pk">${lieu.pk}</strong>` 
+  : `<span id="editable-pk" class="placeholder">(non renseigné)</span>`;
+
+const numLigne = lieu.numero_ligne 
+  ? `<strong id="editable-numero_ligne">${lieu.numero_ligne}</strong>` 
+  : `<span id="editable-numero_ligne" class="placeholder">(non renseigné)</span>`;
+
+const ligneNom = lieu.lignes 
+  ? ` <span id="ligne-nom">– ${lieu.lignes}</span>` 
+  : "";
+
+blocs.push(`
+  <p>
+    <strong>🚄 PK</strong> ${pk}
+    sur la ligne n°${numLigne}${ligneNom}
+  </p>
+`);
+
+blocs.push(formatDescription(lieu.description));
+  
+blocs.push(
+  formatContact(lieu.contact) ||
+  `<p><strong id="editable-contact">👤 Contact :</strong> <span class="contact-value"><span class="placeholder">(non renseigné)</span></span></p>`
+);
+
+blocs.push(formatPortailDisplay(lieu.portail, lieu.secure));
+
+  
+  if (blocs.length > 0) {
+    html += `<hr class="separator" />` +
+            blocs.map((b,i)=> i===0 ? b : `<hr class="separator" />${b}`).join("");
+  }
+
+  const appareilsHTML = generateAppareilListHTML(lieu);
+  if (appareilsHTML) {
+    html += `<hr class="separator" />${appareilsHTML}`;
+  }
+
+if (lieu.SAT || lieu.accès) {
+  html += `
+    <div class="missing-box" onclick="retourFichePrincipale('${encodeURIComponent(lieu.nom)}','${encodeURIComponent(lieu.type)}')">
+      ⬅️ Retour à la fiche principale<br>
+      <strong>${lieu.nom} ${lieu.type}</strong>
+    </div>
+  `;
+}
+
+  result.innerHTML = html;
+}
+
+  let allItems = [], fuseMix;
+
+chargerBaseRecherche().then(data => {
+  allItems = data;
+  lieux = data.filter(x => x.category === "poste");
+  appareils = data.filter(x => x.category === "appareil");
+
+  console.log("✅ Base de recherche prête dans index1.html :", allItems.length);
+
+  // Gestion du paramètre ?id=...
+  const params = new URLSearchParams(window.location.search);
+  const idParam = decodeURIComponent(params.get("id") || "");
+
+  if (idParam) {
+    console.log("🔍 Paramètre id =", idParam);
+
+    const match = allItems.find(item => {
+      const fullName = formatNomCompletLieu(item);
+      const appareilFull = `${item.appareil || ""} ${item.nom || ""} ${item.type || ""} ${item.SAT || ""}`.trim();
+      return fullName === idParam || appareilFull === idParam;
+    });
+
+    if (match) {
+      console.log("✅ Élément trouvé :", match);
+      if (match.category === "poste") showLieu(match);
+      else showAppareil(match);
+    } else {
+      console.warn("❌ Aucun match trouvé pour", idParam);
+    }
+  }
+});
+    
+    let selectedIndex = -1;
+
+    function updateSelection(items) {
+  items.forEach((li, i) => {
+    if (i === selectedIndex) {
+      li.classList.add("best");
+      li.scrollIntoView({ block: "nearest" });
+    } else {
+      li.classList.remove("best");
+    }
+  });
+}
+    
+
+document.getElementById("search").addEventListener("input", e => {
+  const query = normalize(e.target.value.trim());
+  const suggestionsEl = document.getElementById("suggestions");
+  const resultEl = document.getElementById("result");
+
+  suggestionsEl.innerHTML = "";
+  resultEl.innerHTML = "";
+  resultEl.style.display = "none";
+
+  if (!query || query.length < 2 || !fuseMix) return;
+
+let results = fuseMix.search(query).map(r => r.item);
+  const cleanedQuery = query.replace(/\s+/g, "").toLowerCase();
+
+const queryWords = query.split(/\s+/);
+const prefixes = ["tt","i","tc","tsa","il","ip","imp","s"];
+const lowerWords = queryWords.map(w => w.toLowerCase());
+
+const prefixWord = lowerWords.find(w => prefixes.includes(w));
+
+if (prefixWord) {
+  const otherWords = lowerWords.filter(w => w !== prefixWord);
+
+  results = results.filter(item => {
+    const appareilOk = item.appareil && item.appareil.toLowerCase().startsWith(prefixWord);
+    const nomOk = otherWords.every(w => normalize(item.nom || "").includes(w));
+    return appareilOk && nomOk;
+  });
+}
+
+results.forEach(it => {
+  const aliases = Array.isArray(it.alias) ? it.alias : [];
+  it.__directAliasHit = aliases.some(a => normalize(a) === query);
+});
+
+results.sort((a, b) => {
+  const q = query.toLowerCase();
+
+ 
+  const norm = s => (s || "").toString().toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").trim().replace(/\s+/g, " ");
+  const id = x => (x.appareil || "").toString().replace(/\s+/g, "").toLowerCase();    
+  const idDigits = x => id(x).replace(/\D/g, "");                                   
+
+  const qId = cleanedQuery;          
+  const qDigits = cleanedQuery.replace(/\D/g, "");
+  const aExactId = a.category === "appareil" && (id(a) === qId || (qDigits && idDigits(a) === qDigits));
+  const bExactId = b.category === "appareil" && (id(b) === qId || (qDigits && idDigits(b) === qDigits));
+  if (aExactId && !bExactId) return -1;
+  if (bExactId && !aExactId) return 1;
+
+  const aliasHit = (x) => Array.isArray(x.alias) && x.alias
+      .map(s => s.replace(/\s+/g, "").toLowerCase())
+      .some(s => s === qId || (qDigits && s.replace(/\D/g, "") === qDigits));
+  const aAlias = a.category === "appareil" && aliasHit(a);
+  const bAlias = b.category === "appareil" && aliasHit(b);
+  if (aAlias && !bAlias) return -1;
+  if (bAlias && !aAlias) return 1;
+
+  const aNom = norm(a.nom || "");
+  const bNom = norm(b.nom || "");
+  const aStarts = aNom.startsWith(q);
+  const bStarts = bNom.startsWith(q);
+  if (aStarts && !bStarts) return -1;
+  if (bStarts && !aStarts) return 1;
+
+  const aExact = aNom === q;
+  const bExact = bNom === q;
+  if (aExact && !bExact) return -1;
+  if (bExact && !aExact) return 1;
+
+  const aIsPoste = a.category === "poste" && !a.accès;
+  const bIsPoste = b.category === "poste" && !b.accès;
+  if (aIsPoste && !bIsPoste) return -1;
+  if (bIsPoste && !aIsPoste) return 1;
+
+  const aIsAcces = a.category === "poste" && !!a.accès;
+  const bIsAcces = b.category === "poste" && !!b.accès;
+  if (aIsAcces && !bIsAcces) return -1;
+  if (bIsAcces && !aIsAcces) return 1;
+
+  if (a.category === "appareil" && b.category !== "appareil") return 1;
+  if (b.category === "appareil" && a.category !== "appareil") return -1;
+
+  const label = x =>
+    x.category === "poste"
+      ? `${x.nom || ""} ${x.type || ""} ${x.SAT || ""}`.trim()
+      : `${x.appareil} (${x.nom}${x.type ? " " + x.type : ""}${x.SAT ? " / " + x.SAT : ""})`;
+
+  return label(a).localeCompare(label(b), "fr", { sensitivity: "base" });
+});
+
+const rawQuery = e.target.value.trim();  
+
+suggestionsEl.innerHTML = "";
+
+const labelFor = (item) =>
+  (item.category === "poste")
+    ? formatNomCompletLieu(item)
+    : `${item.appareil} (${item.nom}${item.type ? ' ' + item.type : ''}${item.SAT ? ' / ' + item.SAT : ''})`;
+
+results.forEach((item, i) => {
+  const li = document.createElement("li");
+const icon = (item.category === "poste")
+  ? `🚙${item.poste_latitude && item.poste_longitude ? " 📍" : ""}`
+  : "💡";
+
+li.innerHTML = `${icon} ${labelFor(item)}`;
+
+  if (i === 0) li.classList.add("best");
+
+  li.onclick = () => {
+    if (item.category === "poste") showLieu(item);
+    else showAppareil(item);
+  };
+
+  suggestionsEl.appendChild(li);
+});
+
+if (rawQuery.length >= 3) {
+  const queryNorm = normalizeNomPoste(rawQuery);
+
+  const exactMatch = results.some(item => {
+    if (item.category === "poste") {
+      return normalizeNomPoste(item.nom) === queryNorm;
+    } else {
+      return normalize(item.appareil || "") === normalize(rawQuery);
+    }
+  });
+}
+
+});
+
+    document.getElementById("search").addEventListener("keydown", (e) => {
+  const suggestionsEl = document.getElementById("suggestions");
+  const items = suggestionsEl.querySelectorAll("li");
+
+  if (e.key === "ArrowDown" && items.length) {
+    e.preventDefault();
+    selectedIndex = (selectedIndex + 1) % items.length;
+    updateSelection(items);
+  } 
+  else if (e.key === "ArrowUp" && items.length) {
+    e.preventDefault();
+    selectedIndex = (selectedIndex - 1 + items.length) % items.length;
+    updateSelection(items);
+  } 
+  else if (e.key === "Enter") {
+    e.preventDefault();
+    if (selectedIndex >= 0 && items[selectedIndex]) {
+      items[selectedIndex].click();
+    } else if (items[0]) {
+      items[0].click();
+    }
+  }
+  else if (e.key === "Escape") {
+    e.preventDefault();
+    document.getElementById("result").style.display = "none";
+    document.getElementById("result").innerHTML = "";
+    suggestionsEl.innerHTML = "";
+    selectedIndex = -1;
+  }
+});
+    
+
+function showAppareil(app) {
+  incrementCounterAppareil();
+  const result = document.getElementById("result");
+  const suggestionsEl = document.getElementById("suggestions");
+
+  suggestionsEl.innerHTML = "";
+  result.style.display = "block";
+
+  let html = `<h2>
+    ⚡️ <span id="editable-appareil">${app.appareil}</span>
+(<span id="editable-nomposte">
+${(app.nom || '').trim()}${app.type ? ' ' + app.type.trim() : ''}${app.SAT ? ' ' + app.SAT.trim() : ''}
+</span>)
+    <a href="#" id="edit-toggle-appareil">[modifier]</a>
+  </h2>`;
+
+  html += `
+ <div class="rep-block rep-appareil">
+  <p id="editable-rep-appareil"><span class="emoji">💡</span> Repérer l’appareil :</p>
+  <div class="inline-links pills-2">
+    <a href="${myMapsViewer(app.latitude, app.longitude)}" target="_blank">🛰️ Vue satellite</a>
+    <a href="${
+      app.imajnet && app.imajnet.trim() !== "" 
+        ? app.imajnet 
+        : imajnetLink(app.latitude, app.longitude)
+    }" target="_blank">🚄 Imajnet</a>
+  </div>
+</div>`;
+
+html += formatInformations(app.description);
+
+  let postePrincipal = null;
+  if (app.SAT) {
+    postePrincipal = lieux.find(l =>
+      normalize(l.nom) === normalize(app.nom) &&
+      normalize(l.type) === normalize(app.type) &&
+      normalize(l.SAT) === normalize(app.SAT)
+    );
+  }
+
+  if (!postePrincipal && app.appareil) {
+    postePrincipal = lieux.find(l =>
+      normalize(l.nom) === normalize(app.nom) &&
+      normalize(l.type) === normalize(app.type) &&
+      normalize(l.accès) === normalize(app.appareil)
+    );
+  }
+
+  if (!postePrincipal) {
+    postePrincipal = lieux.find(l =>
+      normalize(l.nom) === normalize(app.nom) &&
+      normalize(l.type) === normalize(app.type) &&
+      !l.SAT && !l.accès
+    );
+  }
+
+  if (postePrincipal) {
+    const sauvegarde = html;
+    showLieu(postePrincipal); 
+    const fichePoste = document.getElementById("result").innerHTML;
+    html = sauvegarde + "<hr class='separator' />" + fichePoste;
+  }
+
+  result.innerHTML = html;
+  currentItem = app;
+}
+    
+
+const TOTAL_TRAINS = 11; 
+
+const trainImg = document.getElementById('train');
+trainImg.onerror = () => { trainImg.src = 'images/train1.gif'; };
+let lastN = null;
+
+function pickRandomTrain() {
+  let n;
+  do {
+    n = Math.floor(Math.random() * TOTAL_TRAINS) + 1;
+  } while (TOTAL_TRAINS > 1 && n === lastN);
+  lastN = n;
+
+  trainImg.src = `images/train${n}.gif`;
+
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', pickRandomTrain);
+} else {
+  pickRandomTrain();
+}
+
+trainImg.addEventListener('click', pickRandomTrain);
+
+function getDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371; 
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLon/2) * Math.sin(dLon/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  return R * c; 
+}
+
+const km = d => d.toFixed(2).replace(".", ","); 
+
+const labelPoste = p =>
+  (`${p.nom || ""}${p.type ? " " + p.type : ""}${p.SAT ? " " + p.SAT : ""}`.trim()) +
+  (p.accès ? ` – accès ${p.accès}` : "");
+
+const labelAppareil = p =>
+  `${p.appareil} (${p.nom}${p.type ? " " + p.type : ""}${p.SAT ? " / " + p.SAT : ""})`;
+    
+function isMobile() {
+  if (navigator.userAgentData && "mobile" in navigator.userAgentData) {
+    return navigator.userAgentData.mobile;
+  }
+
+  return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+}
+
+if (!isMobile()) {
+  document.getElementById("btn-localiser").style.display = "none";
+  document.getElementById("btn-carte").style.display = "inline-block";
+}
+
+document.getElementById("btn-localiser").addEventListener("click", () => {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      showNearby,
+      (error) => {
+        if (error.code === error.PERMISSION_DENIED) {
+          alert("❌ Autorisation refusée pour la géolocalisation.");
+        } else if (error.code === error.POSITION_UNAVAILABLE) {
+          alert("⚠️ Position indisponible (pas de GPS ou réseau).");
+        } else if (error.code === error.TIMEOUT) {
+          alert("⌛ La demande de localisation a expiré.");
+        } else {
+          alert("❌ Erreur inconnue de géolocalisation.");
+        }
+      }
+    );
+  } else {
+    alert("La géolocalisation n’est pas supportée.");
+  }
+});
+
+function renderProximitePage() {
+  const container = document.getElementById("proximite");
+  const ul = container.querySelector("ul");
+  const btnVoirPlus = document.getElementById("voir-plus");
+
+  const slice = proximiteSorted.slice(proximiteIndex, proximiteIndex + PROX_STEP);
+
+  slice.forEach(p => {
+    const icon = p.category === "poste" ? "🚙" : "💡";
+    const label = p.category === "poste" ? labelPoste(p) : labelAppareil(p);
+
+    const li = document.createElement("li");
+    li.style.margin = "15px 0";
+
+    const a = document.createElement("a");
+    a.href = "#";
+    a.style.textDecoration = "none";
+    a.style.color = "inherit";
+    a.style.cursor = "pointer";
+  a.innerHTML = `${icon} ${label} – ${km(p.distance)} km`;
+
+    a.addEventListener("click", ev => {
+      ev.preventDefault();
+      container.innerHTML = "";
+      btnVoirPlus.style.display = "none";
+      if (p.category === "poste") {
+        showLieu(p);
+      } else {
+        showAppareil(p);
+      }
+    });
+
+    li.appendChild(a);
+    ul.appendChild(li);
+  });
+
+  proximiteIndex += slice.length;
+
+  if (proximiteIndex < proximiteSorted.length) {
+    btnVoirPlus.style.display = "inline-block";
+  } else {
+    btnVoirPlus.style.display = "none";
+  }
+}
+
+function showNearby(position) {
+  const lat = position.coords.latitude;
+  const lon = position.coords.longitude;
+
+  if (!allItems || allItems.length === 0) {
+    alert("Les données ne sont pas encore chargées.");
+    return;
+  }
+
+  proximiteSorted = allItems
+    .map(it => ({ ...it, distance: getDistance(lat, lon, it.latitude, it.longitude) }))
+    .sort((a, b) => a.distance - b.distance);
+
+  proximiteIndex = 0;
+
+  const container = document.getElementById("proximite");
+  container.innerHTML = `<h3>📍 À proximité :</h3><ul style="margin:0; padding-left:20px;"></ul>`;
+
+  const btnVoirPlus = document.getElementById("voir-plus");
+  btnVoirPlus.onclick = renderProximitePage;
+
+  renderProximitePage();
+}
+
+const compteurContributionURL = "https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec";
+
+function updateContrib() {
+  const cached = localStorage.getItem("counterContrib");
+  if (cached) {
+  const el1 = document.getElementById("compteur-valeur");
+if (el1) el1.textContent = `(${cached})`;
+  }
+
+  fetch(compteurContributionURL).then(r => r.json()).then(data => {
+    if (data && typeof data.count !== "undefined") {
+      const el2 = document.getElementById("compteur-valeur");
+if (el2) el2.textContent = `(${data.count})`;
+      localStorage.setItem("counterContrib", data.count);
+    }
+  }).catch(() => {});
+}
+
+let editMode = false;
+let originalValues = {};
+
+document.addEventListener("click", function(e){
+  if (e.target.id === "edit-toggle") {
+    e.preventDefault();
+    if (!editMode) {
+      editMode = true;
+      originalValues.nom = document.getElementById("editable-nom").textContent;
+      originalValues.type = document.getElementById("editable-type").textContent;
+ 
+if (currentItem.rss) {
+  originalValues.rss = currentItem.rss;  
+} else {
+  originalValues.rss = "";
+}
+        originalValues.pk = currentItem.pk || "";
+  originalValues.numero_ligne = currentItem.numero_ligne || "";
+      
+      if (document.getElementById("editable-sat")) {
+        originalValues.sat = document.getElementById("editable-sat").textContent.trim();
+      }
+      if (document.getElementById("editable-acces")) {
+       originalValues["accès"] = document.getElementById("editable-acces").textContent.replace("– accès ","").trim();
+      }
+        if (document.getElementById("editable-description")) {
+    originalValues.description = document.getElementById("editable-description").textContent.trim();
+  }
+
+
+originalValues.contact = currentItem.contact || "";
+originalValues.portail = currentItem.portail || "";
+
+["editable-nom","editable-type","editable-sat","editable-acces",
+ "editable-description","editable-contact","editable-portail",
+ "editable-pk","editable-numero_ligne","editable-rss"].forEach(id=>{
+  const el = document.getElementById(id);
+  if (el) {
+    el.classList.add("editable-halo", "editable-wiggle");
+  }
+});
+      ["editable-rep-poste","editable-rep-acces"].forEach(id=>{
+  const el = document.getElementById(id);
+  if (el) {
+    el.classList.add("editable-halo", "editable-wiggle");
+  }
+});
+
+const ligneNomEl = document.getElementById("ligne-nom");
+if (ligneNomEl) ligneNomEl.style.display = "none";
+
+      document.getElementById("edit-buttons").style.display = "flex";
+      navigator.vibrate?.(80);
+    }
+  }
+});
+
+
+let editModeAppareil = false;
+let originalAppareil = {};
+
+document.addEventListener("click", function(e) {
+  if (e.target.id === "edit-toggle-appareil") {
+    e.preventDefault();
+    if (!editModeAppareil) {
+      editModeAppareil = true;
+
+      originalAppareil.appareil = currentItem.appareil || "";
+originalAppareil.nomposte = `${currentItem.nom || ''}${currentItem.type ? ' ' + currentItem.type : ''}${currentItem.SAT ? ' ' + currentItem.SAT : ''}${currentItem.accès ? ' – accès ' + currentItem.accès : ''}`;
+      originalAppareil.description = currentItem.description || "";
+
+      ["editable-appareil","editable-nomposte","editable-rep-appareil","editable-description-appareil"]
+        .forEach(id=>{
+          const el = document.getElementById(id);
+          if (el) el.classList.add("editable-halo","editable-wiggle");
+        });
+
+      document.getElementById("edit-buttons-appareil").style.display = "flex";
+    }
+  }
+});
+
+document.addEventListener("click", function(e) {
+  if (editModeAppareil && e.target.id === "editable-appareil") {
+    const val = originalAppareil.appareil;
+    e.target.innerHTML = `<input type="text" id="input-appareil" value="${val}" style="border:2px solid #1a73e8; padding:3px; border-radius:6px;" />`;
+  }
+
+  if (editModeAppareil && e.target.id === "editable-nomposte") {
+    const val = originalAppareil.nomposte;
+    e.target.innerHTML = `<input type="text" id="input-nomposte" value="${val}" style="border:2px solid #1a73e8; padding:3px; border-radius:6px;" />`;
+  }
+
+if (editModeAppareil && e.target.closest("#editable-rep-appareil")) {
+  const bloc = e.target.closest(".rep-block").querySelector(".inline-links");
+  bloc.innerHTML = `
+    <input type="text" id="input-rep-appareil"
+      placeholder="Coller ici le lien Google Maps"
+      style="width:100%; border:2px solid #1a73e8; border-radius:6px; padding:4px;" />
+  `;
+  navigator.vibrate?.(50);
+}
+
+if (editModeAppareil 
+    && e.target.closest(".info-block") 
+    && !e.target.closest("#input-description-appareil")) {
+  const parent = e.target.closest(".info-block");
+  const val = originalAppareil.description;
+  parent.innerHTML = `
+    <strong id="editable-description-appareil">ℹ️ Informations :</strong>
+    <textarea id="input-description-appareil" style="width:100%; min-height:60px; border:2px solid #1a73e8; padding:4px; border-radius:6px;">${val}</textarea>
+  `;
+  navigator.vibrate?.(50);
+}
+});
+
+document.addEventListener("click", function(e){
+  if (editMode && (
+      ["editable-nom","editable-type","editable-sat","editable-acces","editable-rss",
+       "editable-description","editable-contact","editable-portail",
+       "editable-pk","editable-numero_ligne"].includes(e.target.id) ||
+      e.target.closest("#editable-rss")
+  )) {
+
+ 
+if (["editable-nom","editable-type","editable-sat","editable-acces","editable-pk","editable-numero_ligne"].includes(e.target.id)) {
+  e.target.classList.remove("editable-wiggle");
+}
+    
+if (e.target.id === "editable-rss" || e.target.closest("#editable-rss")) {
+const rssEl = document.getElementById("editable-rss");
+if (!rssEl) return;
+
+const rssBlock = rssEl.closest("p"); 
+const phonesEl = document.getElementById("rss-phones"); 
+if (phonesEl) phonesEl.remove(); 
+
+rssBlock.outerHTML = `
+  <div id="editable-rss" class="inline-links">
+    <button class="btn-primary btn-rss" data-code="A">Table 1</button>
+    <button class="btn-primary btn-rss" data-code="B">Table 2</button>
+    <button class="btn-primary btn-rss" data-code="C">Table 3</button>
+  </div>
+`;
+
+document.querySelectorAll(".btn-rss").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const code = btn.dataset.code;
+    currentItem.rssTemp = code;         
+    currentItem.rssChanged = true;    
+    document.querySelector("#editable-rss").innerHTML =
+      `<strong>📞 RSS Table ${code === "A" ? "1" : code === "B" ? "2" : "3"}</strong>`;
+  });
+});
+
+  return; 
+}
+  
+if (editMode && (e.target.id === "editable-description" || e.target.closest("#editable-description"))) {
+  const parent = document.getElementById("editable-description").parentNode;
+  const val = currentItem.description || "";
+
+  parent.innerHTML = `
+    <strong id="editable-description">ℹ️ Informations :</strong>
+    <textarea id="input-description" style="width:100%; min-height:60px; border:2px solid #1a73e8; padding:4px; border-radius:6px;">${val}</textarea>
+  `;
+
+  document.getElementById("edit-buttons").style.display = "block";
+  navigator.vibrate?.(50);
+  return;
+}
+
+if (e.target.id === "editable-portail") {
+  const parent = e.target.parentNode;
+ const val = originalValues.portail || "";
+  parent.innerHTML = `
+    <strong id="editable-portail">🔑 Portail / Alarme :</strong>
+    <input type="text" id="input-portail" value="${val}" 
+      style="border:2px solid #1a73e8; padding:3px; border-radius:6px; margin-left:6px; width:80%;" />
+  `;
+  document.getElementById("edit-buttons").style.display = "block";
+  navigator.vibrate?.(50);
+  return;
+}
+  if (e.target.id === "editable-contact") {
+  const val = currentItem.contact || ""; 
+  const parent = e.target.parentNode;
+
+  parent.innerHTML = `
+    <strong id="editable-contact">👤 Contact :</strong>
+    <input type="text" id="input-contact" value="${val}" 
+      style="border:2px solid #1a73e8; padding:3px; border-radius:6px; margin-left:6px; width:80%;" />
+  `;
+
+  document.getElementById("edit-buttons").style.display = "block";
+  navigator.vibrate?.(50);
+  return;
+}
+  
+
+    const field = e.target.id.replace("editable-","");
+    let currentVal = e.target.textContent.replace("– accès ","").trim();
+    e.target.innerHTML = `<input type="text" id="input-${field}" value="${currentVal}" style="border:2px solid #1a73e8; padding:3px; border-radius:6px;" />`;
+    document.getElementById("edit-buttons").style.display = "block";
+    navigator.vibrate?.(50);
+  }
+
+if (editMode && e.target.id === "editable-rep-poste") {
+  const bloc = e.target.closest(".rep-block").querySelector(".inline-links");
+  bloc.innerHTML = `
+    <input type="text" id="input-poste-link"
+      placeholder="Coller ici le lien Google Maps"
+      style="width:100%; border:2px solid #1a73e8; border-radius:6px; padding:4px;" />
+  `;
+  navigator.vibrate?.(50);
+  return;
+}
+
+if (editMode && e.target.id === "editable-rep-acces") {
+  const bloc = e.target.closest(".rep-block").querySelector(".inline-links");
+  bloc.innerHTML = `
+    <input type="text" id="input-acces-link"
+      placeholder="Coller ici le lien Google Maps"
+      style="width:100%; border:2px solid #1a73e8; border-radius:6px; padding:4px;" />
+  `;
+  navigator.vibrate?.(50);
+  return;
+}
+  });
+
+function getDemandeur() {
+  let demandeur = localStorage.getItem("demandeur");
+  const regexNom = /^[A-Za-zÀ-ÖØ-öø-ÿ\s\-]{2,}$/;
+
+  while (!demandeur || !regexNom.test(demandeur)) {
+    demandeur = prompt("👉 Entrez votre prénom et nom").trim();
+
+    if (!demandeur || !regexNom.test(demandeur)) {
+      alert("⚠️ Nom invalide. Utilisez uniquement lettres / espaces / accents.");
+      demandeur = "";
+    }
+  }
+
+  localStorage.setItem("demandeur", demandeur);
+  return demandeur;
+}
+    
+document.getElementById("btn-save").addEventListener("click", function(){
+  const btnSave = document.getElementById("btn-save");
+  btnSave.disabled = true;
+  btnSave.textContent = "⏳ Envoi..."; 
+
+  const newNom   = document.getElementById("input-nom")?.value   || originalValues.nom;
+  const newType  = document.getElementById("input-type")?.value  || originalValues.type;
+  const newSat   = document.getElementById("input-sat")?.value   || originalValues.sat || "";
+  const newAcces = document.getElementById("input-acces")?.value || originalValues["accès"] || "";
+  const newDescription = document.getElementById("input-description")?.value || originalValues.description || "";
+  const newContact     = document.getElementById("input-contact")?.value     || originalValues.contact || "";
+  const newPortail     = document.getElementById("input-portail")?.value     || originalValues.portail || "";
+  const newPk   = document.getElementById("input-pk")?.value || currentItem.pk || "";
+  const newNumLigne = document.getElementById("input-numero_ligne")?.value || currentItem.numero_ligne || "";
+  const newPosteLink = document.getElementById("input-poste-link")?.value || "";
+  const newAccesLink = document.getElementById("input-acces-link")?.value || "";
+  
+  const demandeur = getDemandeur();
+  const ficheOrigine = currentItem
+    ? `${currentItem.nom || ''} ${currentItem.type || ''} ${currentItem.SAT || ''} ${currentItem.accès || ''}`.trim()
+    : "";
+
+  const payload = {
+    demandeur,
+    ficheOrigine
+  };
+if (currentItem.rssTemp) {
+  payload.rss = currentItem.rssTemp;
+  payload.rssChanged = true;   
+  originalValues.rss = currentItem.rssTemp;
+  delete currentItem.rssTemp;
+}
+
+  if (newNom !== originalValues.nom) payload.nom = newNom;
+  if (newType !== originalValues.type) payload.type = newType;
+  if (newSat !== (originalValues.sat || "")) payload.sat = newSat;
+ if (newAcces !== (originalValues["accès"] || "")) payload["accès"] = newAcces;
+  if (originalValues.rss) payload.rss = originalValues.rss;
+if (newDescription !== (originalValues.description || "")) payload.description = newDescription;
+if (newContact !== (originalValues.contact || "")) payload.contact = newContact;
+if (newPortail !== (originalValues.portail || "")) payload.portail = newPortail;
+ if (newPk !== (currentItem.pk || "")) payload.pk = newPk;
+if (newNumLigne !== (currentItem.numero_ligne || "")) payload.numero_ligne = newNumLigne;
+    if (newPosteLink) payload.lien_poste = newPosteLink;
+  if (newAccesLink) payload.lien_acces = newAccesLink;
+  
+fetch("https://script.google.com/macros/s/AKfycbyxh3HGR6iHcn0ynwfGzSzOm5Djc7o2e1uA4dvdPurolDerZlNiARcpsiY4daDRPSV1tw/exec", {
+  method: "POST",
+  mode: "no-cors",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(payload)
+})
+.then(() => {
+  showNotification(" Modification envoyée (en attente d’approbation)", "success");
+  originalValues.description = newDescription;
+  originalValues.contact = newContact;
+  originalValues.portail = newPortail;
+  quitEditMode(newNom, newType, newSat, newAcces);
+
+  return fetch("https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec?increment=true");
+})
+.then(() => console.log(" Contribution créditée"))
+.catch(() => showNotification("❌ Échec d’envoi (réseau)", "error"))
+.finally(() => {
+  setTimeout(() => {
+    btnSave.disabled = false;
+    btnSave.textContent = "💾 Sauvegarder"; 
+  }, 3000);
+});
+  }); 
+
+document.getElementById("btn-save-appareil").addEventListener("click", function() {
+  const btn = this;
+  btn.disabled = true;
+  btn.textContent = "⏳ Envoi...";
+
+  const newAppareil    = document.getElementById("input-appareil")?.value.trim() || originalAppareil.appareil;
+  const newNomPoste    = document.getElementById("input-nomposte")?.value.trim() || originalAppareil.nomposte;
+  const newLien        = document.getElementById("input-rep-appareil")?.value.trim() || "";
+  const newDescription = document.getElementById("input-description-appareil")?.value.trim() || originalAppareil.description;
+
+  const demandeur = getDemandeur();
+
+const payload = {
+  category: "appareil",
+  ficheOrigine: originalAppareil.appareil, 
+  nom_orig: currentItem.nom || "",
+  type_orig: currentItem.type || "",
+  sat_orig: currentItem.SAT || "",
+  acces_orig: currentItem.accès || "",
+  demandeur,
+  horodatage: new Date().toISOString()
+};
+
+  if (newAppareil !== originalAppareil.appareil) {
+    payload.appareil = newAppareil;
+  }
+  if (newNomPoste !== originalAppareil.nomposte) {
+    payload.nom = newNomPoste;
+  }
+  if (newLien && newLien !== (originalAppareil.lien || "")) {
+    payload.lien = newLien;
+  }
+  if (newDescription !== (originalAppareil.description || "")) {
+    payload.description = newDescription;
+  }
+
+fetch("https://script.google.com/macros/s/AKfycbyZYV5b-aGdAsFc775xwxsdfBSIZHobE6mGNC7Zixgms77kRTmOaUpwVgNoBoKAiGhm/exec", {
+  method: "POST",
+  mode: "no-cors",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(payload)
+})
+.then(() => {
+  showNotification("✅ Modification appareil envoyée", "success");
+
+
+  fetch("https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec?increment=true")
+    .then(() => console.log("Contribution appareil créditée"))
+    .catch(() => console.warn("⚠️ Échec incrément compteur appareil"));
+})
+.catch(() => showNotification("❌ Erreur envoi appareil", "error"))
+.finally(() => {
+  setTimeout(() => {
+    btn.disabled = false;
+    btn.textContent = "💾 Sauvegarder";
+    if (currentItem) {
+      quitEditModeAppareil(newAppareil, newNomPoste, newLien, newDescription);
+    }
+  }, 2000);
+});
+});
+
+function quitEditMode(nom, type, sat = "", acces = ""){
+  document.getElementById("editable-nom").textContent = nom;
+  document.getElementById("editable-type").textContent = type;
+  if (document.getElementById("editable-sat")) {
+    document.getElementById("editable-sat").textContent = " " + sat;
+  }
+  if (document.getElementById("editable-acces")) {
+    document.getElementById("editable-acces").textContent = " – accès " + acces;
+  }
+
+const pkVal = originalValues.pk || currentItem.pk || "(non renseigné)";
+const numVal = originalValues.numero_ligne || currentItem.numero_ligne || "(non renseigné)";
+const ligneNomEl = document.getElementById("ligne-nom");
+const ligneNomTxt = ligneNomEl ? ligneNomEl.textContent : "";
+
+const pkParent = document.getElementById("editable-pk")?.parentNode;
+if (pkParent) {
+  pkParent.innerHTML = `
+    🚄 PK <strong id="editable-pk">${pkVal}</strong>
+    sur la ligne n°<strong id="editable-numero_ligne">${numVal}</strong>
+    ${ligneNomTxt ? `<span id="ligne-nom">${ligneNomTxt}</span>` : ""}
+  `;
+}
+
+[
+  "editable-nom","editable-type","editable-sat","editable-acces","editable-rss",
+  "editable-description","editable-contact","editable-portail",
+  "editable-pk","editable-numero_ligne"
+].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) {
+    el.classList.remove("editable-halo", "editable-wiggle"); 
+  }
+});
+
+  document.getElementById("edit-buttons").style.display = "none";
+ 
+if (document.getElementById("input-description")) {
+  const descVal = document.getElementById("input-description").value.trim();
+  originalValues.description = descVal; 
+
+  document.getElementById("input-description").parentNode.outerHTML =
+    formatDescription(descVal);
+}
+
+if (document.getElementById("editable-contact")) {
+  const contactVal = originalValues.contact || "";
+  document.getElementById("editable-contact").parentNode.outerHTML =
+    formatContact(contactVal);
+}
+
+if (document.getElementById("editable-portail")) {
+  const portailVal = originalValues.portail || "";
+  document.getElementById("editable-portail").parentNode.outerHTML =
+    formatPortail(portailVal);
+}
+  
+
+if (ligneNomEl) ligneNomEl.style.display = "inline";
+
+const rssEl = document.getElementById("editable-rss");
+if (rssEl) {
+  if (currentItem.rssChanged) {
+
+    const rssVal = originalValues.rss || currentItem.rss || "";
+rssEl.outerHTML = formatRSS(rssVal, true);
+    delete currentItem.rssChanged;
+  } else if (rssEl.querySelector(".btn-rss")) {
+    
+    const rssVal = originalValues.rss || currentItem.rss || "";
+rssEl.outerHTML = formatRSS(rssVal, true);
+  }
+}
+
+const repPosteInput = document.getElementById("input-poste-link");
+if (repPosteInput) {
+  const bloc = repPosteInput.closest(".inline-links");
+  const latPoste = (currentItem.poste_latitude ?? "").toString();
+  const lonPoste = (currentItem.poste_longitude ?? "").toString();
+  const usePoste = latPoste !== "" && lonPoste !== "";
+  const targetLat = usePoste ? latPoste : currentItem.latitude;
+  const targetLon = usePoste ? lonPoste : currentItem.longitude;
+bloc.innerHTML = usePoste
+  ? `<a href="${myMapsViewer(currentItem.poste_latitude || currentItem.latitude, currentItem.poste_longitude || currentItem.longitude)}" target="_blank" rel="noopener">🛰️ Vue satellite</a>`
+  : `<span class="placeholder">(non renseigné – fournir un lien Maps)</span>`;
+}
+
+const repAccesInput = document.getElementById("input-acces-link");
+if (repAccesInput) {
+  const bloc = repAccesInput.closest(".inline-links");
+bloc.innerHTML = `
+<a href="${myMapsViewer(currentItem.latitude, currentItem.longitude)}">🛰️ Vue satellite</a>
+<a href="#" onclick="openStreetView(${currentItem.latitude}, ${currentItem.longitude}); return false;">👁️ Street View</a>
+`;
+}
+
+  document.querySelectorAll(".editable-halo, .editable-wiggle").forEach(el => {
+    el.classList.remove("editable-halo", "editable-wiggle");
+  });
+  editMode = false;
+}
+
+
+    function quitEditModeAppareil(newAppareil, newNomPoste, newLien, newDescription) {
+
+  originalAppareil.appareil = newAppareil;
+  originalAppareil.nomposte = newNomPoste;
+  originalAppareil.lien = newLien;
+  originalAppareil.description = newDescription;
+
+  if (currentItem) {
+    currentItem.appareil = newAppareil;
+    currentItem.nomposte = newNomPoste;
+    currentItem.lien = newLien;
+    currentItem.description = newDescription;
+  }
+
+  editModeAppareil = false;
+  document.getElementById("edit-buttons-appareil").style.display = "none";
+
+
+  showAppareil(currentItem);
+}
+
+document.getElementById("btn-cancel").addEventListener("click", function(){
+  quitEditMode(
+    originalValues.nom,
+    originalValues.type,
+    originalValues.sat || "",
+     originalValues["accès"] || ""
+  );
+  showNotification("🔙 Édition annulée", "info");
+});
+
+document.getElementById("btn-cancel-appareil").addEventListener("click", function(){
+  quitEditModeAppareil(
+    originalAppareil.appareil,
+    originalAppareil.nomposte,
+    originalAppareil.lien || "",
+    originalAppareil.description || ""
+  );
+  showNotification("🔙 Édition appareil annulée", "info");
+});
+
+function formatInformations(val) {
+  return `
+    <div class="rep-block rep-appareil info-block">
+      <p>
+        <strong id="editable-description-appareil">ℹ️ Informations :</strong>
+        ${val && val.trim() !== "" 
+          ? `<span class="desc-value">${val}</span>` 
+          : '<span class="placeholder">(non renseigné)</span>'}
+      </p>
+    </div>
+  `;
+}
+    
+    function showNotification(message, type = "info") {
+  const notif = document.getElementById("notification");
+  notif.textContent = message;
+  notif.className = type; 
+  notif.style.display = "block";
+
+  setTimeout(() => {
+    notif.style.display = "none";
+  }, 4000);
+}
+
+</script> 
+
+</main>
+
+<div id="install-container" style="text-align:center; margin:10px 0;">
+  <a id="installLink" href="#" style="display:none;">📲 Installer l’app</a>
+</div>
+
+<div id="about-footer">
+  <div class="footer-links">
+    <a href="arnaud.html" class="pill-link">🔧 À propos</a>
+   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.10.2</a>
+  </div>
+</div>
+<script>
+(function(){
+  
+  var INTRO_DURATION_MS = 3000;             
+  var STORAGE_KEY       = 'eale_intro_last_day'; 
+
+
+  function todayLocal(){
+    var d=new Date();
+    var y=d.getFullYear();
+    var m=String(d.getMonth()+1).padStart(2,'0');
+    var day=String(d.getDate()).padStart(2,'0');
+    return y+'-'+m+'-'+day;
+  }
+
+  function shouldShowIntro(){
+    try{
+      var last = localStorage.getItem(STORAGE_KEY);
+      var today = todayLocal();
+      if (last === today) return false;
+      localStorage.setItem(STORAGE_KEY, today);
+      return true;
+    }catch(e){ return true; } 
+  }
+
+  function pickPhrase(){
+    var phrases = [
+      "Propulsé par Arnaud.",
+      "Une réalisation signée Arnaud.",
+      "Conçu et développé par Arnaud.",
+      "Réalisé avec soin par Arnaud.",
+      "Par Arnaud.",
+      "Fait par Arnaud.",
+      "Pensé par Arnaud.",
+      "Créé par Arnaud.",
+      "Une idée d’Arnaud.",
+      "Mis en place par Arnaud.",
+      "Lancé par Arnaud.",
+      "Conçu par Arnaud.",
+      "Mis en ligne par Arnaud.",
+      "Mis en route par Arnaud.",
+      "Fait maison par Arnaud.",
+      "Déclenché par Arnaud.",
+      "Organisé par Arnaud.",
+      "Initié par Arnaud.",
+      "Coordonné par Arnaud.",
+      "Centralisé par Arnaud.",
+      "Simplifié par Arnaud.",
+      "Géré par Arnaud.",
+      "Compilé par Arnaud.",
+      "Préparé par Arnaud.",
+      "Piloté par Arnaud.",
+      "Structuré par Arnaud.",
+      "Distribué par Arnaud.",
+      "Diffusé par Arnaud.",
+      "Rendu accessible par Arnaud.",
+      "Chargé par Arnaud.",
+      "Interface pensée par Arnaud."
+    ];
+    return phrases[Math.floor(Math.random()*phrases.length)];
+  }
+
+  function mountIntro(){
+    var overlay = document.createElement('div');
+    overlay.className = 'eale-intro-overlay';
+    overlay.setAttribute('aria-hidden','true');
+    overlay.innerHTML =
+   '<img class="eale-intro-img" alt="Logo EALE" src="https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/Logo%20EALE.png">' +
+      '<div class="eale-intro-text" id="eale-intro-text"></div>';
+    document.body.appendChild(overlay);
+    document.getElementById('eale-intro-text').textContent = pickPhrase();
+
+    setTimeout(function(){
+      overlay.classList.add('eale-intro-hide');
+      setTimeout(function(){ overlay.remove(); }, 380);
+    }, INTRO_DURATION_MS);
+  }
+
+  if (document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', function(){ if (shouldShowIntro()) mountIntro(); });
+  } else {
+    if (shouldShowIntro()) mountIntro();
+  }
+})();
+</script>
+  <script>
+let deferredPrompt;
+const installLink = document.getElementById("installLink");
+
+const isStandalone = window.matchMedia('(display-mode: standalone)').matches 
+                  || window.navigator.standalone === true;
+
+
+if (!isStandalone && !/iphone|ipad|ipod/i.test(navigator.userAgent)) {
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    installLink.style.display = "inline";
+
+    installLink.onclick = async (evt) => {
+      evt.preventDefault();
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const choice = await deferredPrompt.userChoice;
+        if (choice.outcome === "accepted") {
+          console.log("PWA installée");
+        }
+        deferredPrompt = null;
+        installLink.style.display = "none";
+      }
+    };
+  });
+} else {
+
+  installLink.style.display = "none";
+}
+</script>
+  <div id="notification"></div>
+<div id="streetview-overlay" style="display:none;">
+  <div id="streetview-box">
+    <button id="streetview-close">❌</button>
+    <iframe id="streetview-frame"></iframe>
+  </div>
+</div>
+
+<script>
+function openStreetView(lat, lon) {
+  const iframe = document.getElementById("streetview-frame");
+  iframe.src = `https://www.google.com/maps?q=&layer=c&cbll=${lat},${lon}&cbp=11,0,0,0,0&output=svembed`;
+  document.getElementById("streetview-overlay").style.display = "flex";
+}
+
+document.getElementById("streetview-close").onclick = () => {
+  document.getElementById("streetview-overlay").style.display = "none";
+  document.getElementById("streetview-frame").src = "";
+};
+
+  function retourFichePrincipale(nom, type) {
+  const postePrincipal = lieux.find(l => 
+    normalize(l.nom) === normalize(decodeURIComponent(nom)) &&
+    normalize(l.type) === normalize(decodeURIComponent(type)) &&
+    !l.SAT && !l.accès
+  );
+
+  if (postePrincipal) {
+    showLieu(postePrincipal);
+  } else {
+    alert("⚠️ Poste principal introuvable");
+  }
+}
+</script>   
+</body>
+</html>
