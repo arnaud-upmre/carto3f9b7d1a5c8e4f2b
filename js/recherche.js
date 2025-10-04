@@ -342,43 +342,27 @@ document.addEventListener("DOMContentLoaded", async () => {
 // ===============================
 // 🌍 Intégration Nono Maps – compatibilité map1.html
 // ===============================
-window.initSearch = async function(map, allMarkers) {
+// ===============================
+// 🌍 Intégration Nono Maps – compatibilité map1.html
+// ===============================
+window.initSearch = function(map, allMarkers) {
   console.log("🔍 [recherche.js] initSearch appelée depuis map1");
 
-  try {
-    await chargerBaseRecherche();
-    console.log("✅ Base de recherche prête (map1)");
+  // on s’assure que les variables globales existent bien
+  window.map = map;
+  window.allMarkers = allMarkers;
 
-    // On attend que la page soit bien chargée avant d'accéder au DOM
-    window.addEventListener("load", () => {
-      const input = document.getElementById("search");
-      const container = document.getElementById("search-container");
-
-      if (!input) {
-        console.warn("⚠️ Aucun champ de recherche (#search) sur cette page — recherche désactivée");
-        return;
-      }
-
-      if (!container) {
-        console.warn("⚠️ Barre de recherche absente sur map1");
-        return;
-      }
-
-      console.log("🔍 Champ de recherche détecté sur map1 – moteur actif");
+  // on charge la base sans bloquer la définition
+  chargerBaseRecherche()
+    .then(() => {
+      console.log("✅ Base de recherche prête (map1)");
+    })
+    .catch(err => {
+      console.error("❌ Erreur lors du chargement de la base de recherche :", err);
     });
-  } catch (err) {
-    console.error("❌ Erreur lors du chargement de la base de recherche :", err);
-  }
-};
-window.toggleSearch = function() {
-  const bar = document.getElementById("search-container");
-  if (!bar) {
-    console.warn("🔎 Barre de recherche absente sur map1");
-    return;
-  }
-  bar.classList.toggle("open");
-  const input = bar.querySelector("input");
-  if (bar.classList.contains("open")) input?.focus();
+
+  // log de contrôle pour confirmer la présence
+  console.log("✅ window.initSearch définie et opérationnelle");
 };
 
 // ===============================
