@@ -4,11 +4,9 @@
   <meta charset="UTF-8" />
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
-  />
+    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"/>
   <title>➕ Ajouter un appareil</title>
 
-  <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 
@@ -121,7 +119,6 @@ input.error{border:2px solid #c62828!important;background:#ffecec}
 
 .map-wrap.error { border: 2px solid #c62828 !important; }
 
-    /* ✅ Masquer le bouton Annuler uniquement à la confirmation */
 #confirmationStep.active ~ #cancel-row {
   display: none;
 }
@@ -134,7 +131,7 @@ input.error{border:2px solid #c62828!important;background:#ffecec}
     <div id="progress">Étape 1/10</div>
     <form id="formAppareil" novalidate>
 
-<!-- Étape d’introduction (ne compte pas dans le total) -->
+
 <div class="step active" id="introStep">
   <p style="text-align:center;color:var(--muted);margin-bottom:20px;line-height:1.5">
     ⏱️ Quelques secondes suffisent pour ajouter un appareil.</p>
@@ -143,7 +140,7 @@ input.error{border:2px solid #c62828!important;background:#ffecec}
   </div>
 </div>
 
-      <!-- Étape 1 -->
+  
       <div class="step">
         <label>👤 Demandeur :</label>
         <input id="demandeur" required>
@@ -152,7 +149,7 @@ input.error{border:2px solid #c62828!important;background:#ffecec}
         </div>
       </div>
 
-      <!-- Étape 2 -->
+   
       <div class="step">
         <label>📌 Poste :</label>
         <input id="poste" required placeholder="Ex : Hazebrouck">
@@ -164,7 +161,6 @@ input.error{border:2px solid #c62828!important;background:#ffecec}
         </div>
       </div>
 
-      <!-- Étape 3 -->
       <div class="step">
 <label>📌 SAT associé :</label>
 <span style="font-weight:normal;color:var(--muted);font-size:14px">
@@ -177,7 +173,6 @@ Remplir uniquement si l’appareil dépend d’un SAT
         </div>
       </div>
 
-      <!-- Étape 4 -->
       <div class="step">
         <label>💡 Nom de l’appareil :</label>
         <input id="appareil" required placeholder="Ex : I7112">
@@ -187,7 +182,7 @@ Remplir uniquement si l’appareil dépend d’un SAT
         </div>
       </div>
 
-      <!-- Étape 5 -->
+   
       <div class="step">
       <label>📍 Comment localiser l’appareil ?</label>
 <div class="pill-group">
@@ -201,7 +196,7 @@ Remplir uniquement si l’appareil dépend d’un SAT
         </div>
       </div>
 
-      <!-- Étape 6 -->
+  
       <div class="step">
         <div id="mapDeviceWrap" class="map-wrap" style="display:none">
           <div>Déplacez le curseur pour ajuster l’appareil.</div>
@@ -225,7 +220,7 @@ Remplir uniquement si l’appareil dépend d’un SAT
         </div>
       </div>
 
-<!-- Étape 7 -->
+
 <div class="step">
   <label>🚪 L’appareil a-t-il un accès routier distinct ?<br>
   <span style="font-weight:normal;color:var(--muted);font-size:14px">
@@ -246,7 +241,6 @@ Remplir uniquement si l’appareil dépend d’un SAT
   </div>
 </div>
 
-      <!-- Étape 8 (nouvelle) -->
 <div class="step" id="accessMethodStep">
   <label>🆔 Identifier l’accès à l’appareil :</label>
   <div class="pill-group">
@@ -262,8 +256,6 @@ Remplir uniquement si l’appareil dépend d’un SAT
   </div>
 </div>
       
-
-   <!-- Étape 9 (adaptée) -->
 <div class="step" id="accessDetailsStep">
   <!-- Carte -->
   <div id="mapAccessWrap" class="map-wrap" style="display:none">
@@ -276,7 +268,7 @@ Remplir uniquement si l’appareil dépend d’un SAT
   </div>
   <div id="coordsAccessDisplay" style="display:none;color:var(--muted);margin:8px 0"></div>
 
-  <!-- Champ lien -->
+
   <div id="lienAccessField" style="display:none">
     <label>🔗 Lien Google Maps accès :</label>
     <input id="lienAccess" type="url" placeholder="https://maps.app.goo.gl/…">
@@ -290,7 +282,7 @@ Remplir uniquement si l’appareil dépend d’un SAT
   </div>
 </div>
       
-      <!-- Étape 9 -->
+   
       <div class="step">
         <label>📝 Notes complémentaires :</label>
         <textarea id="infos" placeholder="Accès, portail…"></textarea>
@@ -300,7 +292,7 @@ Remplir uniquement si l’appareil dépend d’un SAT
         </div>
       </div>
 
-    <!-- Étape 10 -->
+
 <div class="step">
   <p style="line-height:1.5">
     🎉 Super, presque terminé !<br>
@@ -314,7 +306,8 @@ Remplir uniquement si l’appareil dépend d’un SAT
     <button type="submit" class="btn primary">📩 Envoyer</button>
   </div>
 </div>
-<!-- Étape confirmation -->
+
+      
 <div class="step" id="confirmationStep">
   <h3 style="text-align:center;margin:16px 0">✅ Merci ! Votre demande a bien été envoyée.</h3>
   <div class="btn-row">
@@ -352,7 +345,7 @@ progress.textContent = `${pct}%`;
     startLocDevice(); 
   }
   setTimeout(() => mapDevice && mapDevice.invalidateSize(), 300);
-// 🚀 Localisation auto dès l’ouverture
+
 setTimeout(() => $("btnRecenterDevice").click(), 500);
 
 
@@ -385,30 +378,25 @@ if (navigator.geolocation && $("presentValue").value === "oui") {
   
 
 if (i === 8) { 
-  // 👉 afficher le conteneur avant tout
-  toggle($("mapAccessWrap"), 1);
 
-  // 👉 puis seulement créer la carte
+  toggle($("mapAccessWrap"), 1);
   if (!mapAccess) {
     startLocAccess();
   }
 
-  // ✅ recalcul taille + centrage + recharge fond + marker
   requestAnimationFrame(() => {
     if (mapAccess) {
-      mapAccess.eachLayer(l => mapAccess.removeLayer(l)); // vide les couches
-      orthoIGN.addTo(mapAccess); // fond par défaut
-      if (markerAccess) markerAccess.addTo(mapAccess); // 🔵 remettre le curseur
+      mapAccess.eachLayer(l => mapAccess.removeLayer(l)); 
+      orthoIGN.addTo(mapAccess); 
+      if (markerAccess) markerAccess.addTo(mapAccess); 
 
       mapAccess.invalidateSize();
       mapAccess.setView(lastFix ? [lastFix.lat, lastFix.lon] : HAZE, 18);
     }
   });
 
-  // 🚀 auto-localisation dès l’ouverture
   setTimeout(() => $("btnRecenterAccess").click(), 500);
 
-  // 🛰️ Attente GPS seulement si mode GPS
   if (navigator.geolocation && $("accessMethod").value === "gps") {
     const btn = $("btnRecenterAccess");
     const oldTxt = btn.textContent;
@@ -647,7 +635,7 @@ $("pill-oui").onclick = () => {
   toggle($("lienField"), 0);
 
   setTimeout(() => mapDevice && mapDevice.invalidateSize(), 300);
-  // 🚀 Localisation auto dès l’ouverture
+
 setTimeout(() => $("btnRecenterDevice").click(), 500);
 
   markError($("lien"), $("lienHelp"), false);
@@ -710,7 +698,7 @@ $("pill-acces-oui").onclick=()=>{
   $("pill-acces-oui").classList.add("active");
   $("pill-acces-non").classList.remove("active");
   toggle($("mapAccessWrap"),1);
-// ✅ recalcul robuste pour forcer l’affichage
+
 requestAnimationFrame(() => {
   if (mapAccess) {
     mapAccess.invalidateSize();
@@ -745,7 +733,6 @@ $("pill-access-gps").onclick = () => {
   toggle($("mapAccessWrap"), 1);
   toggle($("lienAccessField"), 0);
 
-  // ✅ recalcul affichage
   requestAnimationFrame(() => {
     if (mapAccess) {
       mapAccess.invalidateSize();
@@ -968,12 +955,11 @@ const confirmFromFix = (fix) => {
     $("mapAccessWrap").classList.remove("error");
     setMapTo(map, marker, fix.lat, fix.lon, "access");
   }
-  // ❌ on ne remet pas encore le texte
+
   return true;
 };
   
 if (confirmFromFix(lastFix)) {
-  // Force l’affichage du texte "🛰️ Attente GPS…" pendant 2 sec
   setTimeout(() => {
     btn.textContent = oldTxt; 
     btn.disabled = false;
@@ -989,7 +975,6 @@ if (navigator.geolocation) {
         confirmFromFix({ lat: p.coords.latitude, lon: p.coords.longitude });
         map.invalidateSize();
 
-        // ✅ Réactive le bouton après 2 sec
         setTimeout(() => {
           btn.textContent = oldTxt;
           btn.disabled = false;
