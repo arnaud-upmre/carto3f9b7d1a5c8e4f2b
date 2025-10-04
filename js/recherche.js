@@ -342,18 +342,34 @@ document.addEventListener("DOMContentLoaded", async () => {
 // ===============================
 // 🌍 Intégration Nono Maps – compatibilité map1.html
 // ===============================
-window.initSearch = function(map, allMarkers) {
+window.initSearch = async function(map, allMarkers) {
   console.log("🔍 [recherche.js] initSearch appelée depuis map1");
-  document.addEventListener("DOMContentLoaded", async () => {
-    try {
-      await chargerBaseRecherche();
-      console.log("✅ Base de recherche prête (map1)");
-    } catch (err) {
-      console.error("❌ Erreur lors du chargement de la base de recherche :", err);
-    }
-  });
-};
 
+  try {
+    await chargerBaseRecherche();
+    console.log("✅ Base de recherche prête (map1)");
+
+    // On attend que la page soit bien chargée avant d'accéder au DOM
+    window.addEventListener("load", () => {
+      const input = document.getElementById("search");
+      const container = document.getElementById("search-container");
+
+      if (!input) {
+        console.warn("⚠️ Aucun champ de recherche (#search) sur cette page — recherche désactivée");
+        return;
+      }
+
+      if (!container) {
+        console.warn("⚠️ Barre de recherche absente sur map1");
+        return;
+      }
+
+      console.log("🔍 Champ de recherche détecté sur map1 – moteur actif");
+    });
+  } catch (err) {
+    console.error("❌ Erreur lors du chargement de la base de recherche :", err);
+  }
+};
 window.toggleSearch = function() {
   const bar = document.getElementById("search-container");
   if (!bar) {
