@@ -2,19 +2,21 @@
 // 🔍 Moteur de recherche commun Nono Maps
 // ===============================
 
-// Déclaration sur window → évite tout conflit entre pages
-window.lieux = [];
-window.appareils = [];
-window.allItems = [];
-window.fuseMix = null;
+let lieux = [];
+let appareils = [];
+let allItems = [];
+let fuseMix = null;
 
-// URLs des sources
+// ===============================
+// 🌐 URLs des sources JSON
+// ===============================
 const URL_POSTES = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/postes.json";
 const URL_APPAREILS = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/appareils.json";
 
 // ===============================
-// 🔠 Fonctions utilitaires communes
+// 🔠 Fonctions utilitaires
 // ===============================
+
 function normalize(str) {
   return (str || "")
     .normalize("NFD")
@@ -25,9 +27,11 @@ function normalize(str) {
     .replace(/\s+/g, " ");
 }
 
+// Génère des alias pour améliorer la recherche (TT1 → TT 1 → transformateur, etc.)
 function generateAlias(appareil, nom, sat, posteType) {
   const alias = new Set();
   const norm = s => (s || "").toLowerCase().trim();
+
   const a = norm(appareil);
   const n = norm(nom);
   const s = norm(sat);
@@ -35,13 +39,43 @@ function generateAlias(appareil, nom, sat, posteType) {
 
   const match = a.match(/^([a-z]+)(\d+)?$/i);
   const letters = match ? match[1].toLowerCase() : a;
+  const root = a.split(/[\s\-]/)[0];
 
   alias.add(a);
   alias.add(a.replace(/([a-z]+)(\d+)/, "$1 $2"));
   alias.add(letters);
-  if (n) alias.add(`${a} ${n}`);
-  if (s) alias.add(`${a} ${s}`);
-  if (t && n) alias.add(`${n} ${t}`);
+
+  if (n) {
+    alias.add(`${a} ${n}`);
+    alias.add(`${n} ${a}`);
+    alias.add(`${root} ${n}`);
+    alias.add(`${n} ${root}`);
+  }
+
+  if (/^(i|ia|il|ip|imp)/i.test(a)) {
+    alias.add("interrupteur");
+    alias.add("inter");
+  }
+
+  if (/^(tt|tc|tsa)/i.test(a)) {
+    alias.add("transformateur");
+    alias.add("transfo");
+  }
+
+  if (/^s?\d+$/i.test(a) || /^sm/i.test(a) || /^st/i.test(a)) {
+    alias.add("sectionneur");
+  }
+
+  if (s) {
+    alias.add(`${a} ${s}`);
+    alias.add(`${s} ${a}`);
+  }
+
+  if (t && n) {
+    alias.add(`${n} ${t}`);
+    alias.add(`${t} ${n}`);
+  }
+
   return Array.from(alias);
 }
 
@@ -82,7 +116,7 @@ async function chargerBaseRecherche() {
     ignoreLocation: true
   });
 
-  console.log("✅ Base de recherche Nono Maps chargée :", allItems.length, "éléments");
+  console.log("✅ Base de recherche chargée :", allItems.length, "éléments");
   return allItems;
 }
 
@@ -93,15 +127,4 @@ async function rechercherDansBase(query) {
   if (!fuseMix) await chargerBaseRecherche();
   if (!query || query.trim().length < 2) return [];
   return fuseMix.search(normalize(query)).map(r => r.item);
-}
-
-// ===============================
-// 🧭 Outils simples pour map.html
-// ===============================
-function myMapsViewer(lat, lon, z = 19) {
-  return `map.html?lat=${lat}&lon=${lon}&z=${z}`;
-}
-
-function imajnetLink(lat, lon, zoom = 18) {
-  return `https://gecko.imajnet.net/#map=OSM;zoom=${zoom};loc=${lat},${lon};`;
 }
