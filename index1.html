@@ -1775,6 +1775,8 @@ if (currentItem.rss) {
 
 originalValues.contact = currentItem.contact || "";
 originalValues.portail = currentItem.portail || "";
+originalValues.portail_lien = currentItem.portail_lien || "";
+originalValues.portail_texte = currentItem.portail_texte || "";
 
 ["editable-nom","editable-type","editable-sat","editable-acces",
  "editable-description","editable-contact","editable-portail",
@@ -2176,13 +2178,13 @@ if (document.getElementById("editable-contact")) {
 
 if (document.getElementById("editable-portail")) {
   const portailObj = {
-    portail: originalValues.portail || "",
-    portail_lien: currentItem.portail_lien || "",
-    portail_texte: currentItem.portail_texte || ""
+    portail: originalValues.portail,
+    portail_lien: originalValues.portail_lien,
+    portail_texte: originalValues.portail_texte
   };
   document.getElementById("editable-portail").parentNode.outerHTML =
     formatPortail(portailObj);
-}
+}}
 
 if (ligneNomEl) ligneNomEl.style.display = "inline";
 
