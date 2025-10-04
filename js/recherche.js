@@ -380,3 +380,42 @@ window.toggleSearch = function() {
   const input = bar.querySelector("input");
   if (bar.classList.contains("open")) input?.focus();
 };
+
+// ===============================
+// 🎯 Fonctions locales pour map1
+// ===============================
+window.showLieu = function (item) {
+  if (!window.map) {
+    console.warn("❌ Carte non initialisée pour showLieu()");
+    return;
+  }
+  if (item.latitude && item.longitude) {
+    const lat = parseFloat(item.latitude);
+    const lon = parseFloat(item.longitude);
+    if (!isNaN(lat) && !isNaN(lon)) {
+      map.setView([lat, lon], 18, { animate: true });
+      L.popup({ offset: [0, -10] })
+        .setLatLng([lat, lon])
+        .setContent(`<b>${item.nom}</b><br>${item.type || ""} ${item.SAT || ""}`)
+        .openOn(map);
+    }
+  }
+};
+
+window.showAppareil = function (item) {
+  if (!window.map) {
+    console.warn("❌ Carte non initialisée pour showAppareil()");
+    return;
+  }
+  if (item.latitude && item.longitude) {
+    const lat = parseFloat(item.latitude);
+    const lon = parseFloat(item.longitude);
+    if (!isNaN(lat) && !isNaN(lon)) {
+      map.setView([lat, lon], 19, { animate: true });
+      L.popup({ offset: [0, -10] })
+        .setLatLng([lat, lon])
+        .setContent(`<b>${item.appareil}</b><br>${item.nom || ""} ${item.type || ""} ${item.SAT || ""}`)
+        .openOn(map);
+    }
+  }
+};
