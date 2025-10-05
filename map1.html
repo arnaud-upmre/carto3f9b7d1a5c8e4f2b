@@ -1478,6 +1478,11 @@ function showToast(message) {
   <div id="result"></div>
 </div>
 
+  <script>
+  window.map = map;
+  window.allMarkers = allMarkers;
+</script>
+
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
 <script src="recherche.js"></script>
 <script>
@@ -1511,6 +1516,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("searchWrapper")?.remove();
   }
 });
+
 </script>
 
 </body>
