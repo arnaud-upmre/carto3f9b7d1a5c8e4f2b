@@ -19,19 +19,23 @@
   position: fixed;
   top: 20px;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%) translateY(-20px);
   background: rgba(0,0,0,0.7);
   backdrop-filter: blur(8px);
   border-radius: 12px;
   padding: 10px;
   box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-  display: none;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s ease;
   z-index: 10001;
   width: 360px;
   max-width: 90%;
 }
 #searchWrapper.open {
-  display: block;
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: auto;
 }
 #search {
   width: 100%;
@@ -63,7 +67,8 @@
 }
 
 
-
+  
+  
 .fab-container {
   position: fixed;
   bottom: 20px;
@@ -1443,7 +1448,8 @@ function showToast(message) {
 }
 </script>
 
-<!-- 🔍 Barre de recherche (PC uniquement) -->
+
+
 <div id="searchWrapper">
   <input type="text" id="search" placeholder="Rechercher un poste ou un appareil..." autocomplete="off" />
   <ul id="suggestions"></ul>
@@ -1453,15 +1459,22 @@ function showToast(message) {
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
 <script src="recherche.js"></script>
 <script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  if (typeof initSearch === "function") {
+    initSearch(window.map, window.allMarkers);
+    console.log("🔎 Recherche initialisée (Ctrl + Espace pour ouvrir)");
+  }
 
 
-  initSearch(map, allMarkers);
   document.addEventListener("keydown", (e) => {
     if (e.ctrlKey && e.code === "Space") {
+      e.preventDefault();
       const wrap = document.getElementById("searchWrapper");
-      if (!wrap) return;
-      wrap.classList.toggle("open");
       const input = document.getElementById("search");
+      if (!wrap || !input) return;
+
+      wrap.classList.toggle("open");
       if (wrap.classList.contains("open")) input.focus();
       else input.blur();
     }
@@ -1472,6 +1485,7 @@ function showToast(message) {
     const wrap = document.getElementById("searchWrapper");
     if (wrap) wrap.remove();
   }
+});
 </script>
 
 </body>
