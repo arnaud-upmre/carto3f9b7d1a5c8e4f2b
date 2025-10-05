@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>🔧 À propos</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <style>
+
+
+    .pill-link {
+  display: inline-block;
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  border: 1px solid #1a73e8;
+  color: #1a73e8;
+  background: #f5f9ff;
+}
+
+.pill-link:hover {
+  background: #1a73e8;
+  color: #fff;
+}
+
+.home-pill {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+@media (prefers-color-scheme: dark) {
+  .pill-link {
+    background: #1e1e1e;
+    color: #90caf9;
+    border: 1px solid #90caf9;
+  }
+  .pill-link:hover {
+    background: #90caf9;
+    color: #121212;
+  }
+}
+    
+    a {
+  color: #0055cc;
+  text-decoration: underline;
+}
+a:hover {
+  color: #0040a8;
+}
+
+@media (prefers-color-scheme: dark) {
+  a {
+    color: #4da3ff;  
+  }
+  a:hover {
+    color: #82c0ff; 
+  }
+}
+    body {
+      font-family: 'Segoe UI', 'Inter', sans-serif;
+      background-color: #f5f5f5;
+      color: #333;
+      margin: 0;
+      padding: 1rem;
+      padding-bottom: 7rem;
+      line-height: 1.8;
+      user-select: none;
+    }
+    h1 {
+      font-size: 1.6rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    h2 {
+      font-size: 1.3rem;
+      margin-top: 0;
+      margin-bottom: 0.8rem;
+    }
+    p {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      text-align: justify;
+    }
+    .mt-lg { margin-top: 1.25rem; }
+    .mt-xl { margin-top: 1.8rem; }
+
+    blockquote {
+      margin: 1.8rem 0 0 0;
+      padding: 1rem 1.2rem;
+      background: #f0f0f0;
+      border-left: 4px solid #ccc;
+      font-style: italic;
+      border-radius: 4px;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      max-width: 1000px;
+      margin: auto;
+    }
+    .card,
+    .stats-box {
+      background: #fff;
+      border-radius: 0.6rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      padding: 2rem 1.5rem;
+      flex: 1 1 auto;
+      box-sizing: border-box;
+    }
+
+    .stats-content {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+      margin-top: 0.5rem;
+    }
+    .stat-pill {
+      background: #0055cc;
+      color: #fff;
+      padding: 0.5rem 0.9rem;
+      border-radius: 999px;
+      font-weight: 500;
+      font-size: 0.95rem;
+      white-space: nowrap;
+    }
+
+    .conclusion-card { position: relative; }
+    .badge-rd {
+      position: absolute;
+      top: 0.8rem;
+      right: 1rem;
+      background: #0055cc;
+      color: #fff;
+      padding: 0.3rem 0.7rem;
+      border-radius: 999px;
+      font-weight: 500;
+      font-size: 0.8rem;
+      white-space: nowrap;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+    }
+
+    .btn-box {
+      background: #fff;
+      border-radius: 0.6rem 0.6rem 0 0;
+      box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
+      padding: 1rem;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      max-width: 1000px;
+      margin: auto;
+      box-sizing: border-box;
+    }
+    .btn-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      justify-content: center;
+    }
+    .btn {
+      flex: 1 1 calc(50% - 0.6rem);
+      text-align: center;
+      padding: 0.8rem;
+      background-color: #0055cc;
+      color: white;
+      border-radius: 0.5rem;
+      font-size: 0.95rem;
+      text-decoration: none;
+      font-weight: 500;
+      transition: background-color 0.3s ease;
+      white-space: nowrap;
+      max-width: 200px;
+    }
+    .btn:hover { background-color: #0040a8; }
+
+    @media (max-width: 480px) {
+      .btn { flex: 1 1 100%; max-width: none; }
+      body { padding-bottom: 9rem; }
+    }
+    @media (prefers-color-scheme: dark) {
+      body { background-color: #121212; color: #e0e0e0; }
+      .card, .stats-box, .btn-box {
+        background: #1e1e1e;
+        box-shadow: 0 2px 8px rgba(255,255,255,0.05);
+      }
+      blockquote { background: #2a2a2a; border-left: 4px solid #555; }
+      .btn { background-color: #1976d2; }
+      .btn:hover { background-color: #1565c0; }
+      .badge-rd, .stat-pill { box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+    }
+  </style>
+</head>
+<body>
+  
+  <h1>🔧 À propos</h1>
+  
+  <div class="container">
+ 
+    <div class="card">
+      <p>Au départ, on s’échangeait juste quelques points GPS entre collègues.<br>
+      C’était pratique, mais vite limité… chacun bricolait de son côté.</p>
+
+      <p>Alors l’idée est venue : <strong>mettre tout en commun</strong>.</p>
+
+      <p class="mt-lg">Et petit à petit, cette simple carte s’est transformée en un vrai outil collaboratif, pensé pour nous simplifier la vie au quotidien.</p>
+
+      <blockquote class="mt-xl">
+        “Le partage de connaissances et de ressources dans le monde professionnel est le fondement d’une collaboration fructueuse et de la croissance collective.”<br>— John C. Maxwell
+      </blockquote>
+    </div>
+    
+
+    <div class="card">
+      <h2>🧐 Le déclic</h2>
+      <p>Une de mes premières nuits d’astreinte, j’ai dû intervenir pour la première fois au poste de Rodelinghem.<br>
+      Peu d’indications, aucune consigne… j’ai marché <s>plusieurs centaines de mètres</s> le long de la voie, dans le noir, avant de trouver l’appareil.<br>
+      Et là, surprise : il y avait un portail d’accès juste à côté de l’interrupteur 😅</p>
+      <p>Ce soir-là, je me suis dit :<br>
+      « Plus jamais ça ! »</p>
+      <p>Depuis, chaque point ajouté sert à ça : faire gagner du temps et rendre nos interventions plus simples et plus sûres.</p>
+    </div>
+
+
+    <div class="card">
+      <h2>📌 Une carte adoptée</h2>
+      <p>La carte MyMaps a vite été adoptée : elle est devenue un outil du quotidien.<br>
+      Même les plus anciens, pourtant habitués au terrain, s’en servent 😃</p>
+      <p>Parce qu’au fond, ça arrive à tout le monde : on ne se souvient plus de la localisation exacte d’un appareil, ni de son environnement précis.<br>
+      Dans ces situations, la carte est vraiment utile.</p>
+      <p>L’idée de créer une webapp s’est imposée : un outil plus souple, plus rapide, taillé sur mesure pour le terrain et pensé dès le départ pour être utilisé sur smartphone.</p>
+    </div>
+
+  
+    <div class="card">
+      <h2>🚀 Et la suite ?</h2>
+      <p>La carte évolue un peu plus chaque jour.<br>
+      Grâce aux partages de chacun, elle grandit et devient toujours plus utile.</p>
+      <p>🎯 L’idée est simple : avancer ensemble, et garder un outil clair, fiable et facile à utiliser sur le terrain.</p>
+    </div>
+
+    <div class="stats-box" id="statsBox">
+      <h2>🚀 Notre avancement</h2>
+      <div class="stats-content" id="stats"></div>
+    </div>
+
+    <div class="card">
+  <h2>⚡ Bilan d’utilisation</h2>
+  <p>
+    Depuis septembre 2021, la carte MyMaps totalise plus de 
+    <strong>20 800 affichages</strong>.
+  </p>
+  <p>
+    Depuis son lancement, la webapp a déjà généré 
+    <strong id="total-req">…</strong> requêtes :
+  </p>
+
+<div class="stats-content">
+  <span class="stat-pill">📍 <span id="counterPostes">Chargement…</span> recherches de postes</span>
+  <span class="stat-pill">💡 <span id="counterAppareils">Chargement…</span> recherches d’appareils</span>
+</div>
+
+<p style="margin-top:2rem;">Elle compte aussi :</p>
+<div class="stats-content" style="margin-top:0.8rem;">
+  <span class="stat-pill">🙌 <span id="counterContrib">Chargement…</span> contributions</span>
+</div>
+</div>
+
+<div class="card conclusion-card">
+  <span class="badge-rd">🕒 +120h R&D</span>
+  <h2>✨ En conclusion</h2>
+<p>Derrière cette webapp, il y a déjà plus de 120 heures passées à chercher, tester et recommencer.</p>
+<p>Au final, la carte ou cette webapp, ça reste des outils. <strong>L’essentiel, c’est qu’ils rendent nos déplacements plus simples, plus sûrs.</strong></p>
+<p></p>
+  <p><em>Le vrai gain, c’est quand on peut compter les uns sur les autres :</em></p>
+<p>Traitez les gens avec respect, faites un effort pour intégrer les nouveaux, partagez, soutenez, aidez-vous les uns les autres, célébrez + partagez joies / succès ensemble, soyez solidaires, saluez-vous et communiquez entre vous, créez des liens avec d’autres équipes, faites passer les informations sans relâche, soyez conscient, acceptez la pression, utilisez la concurrence de façon saine.</p>
+<p>Ferroviairement,<br><strong>Arnaud</strong></p>
+</div>
+
+ 
+<div class="btn-box">
+  <div class="btn-container">
+    <a href="index.html" class="pill-link home-pill">🏠 Retour à l’accueil</a>
+  </div>
+  </div>
+  
+  <script>
+    async function fetchCounts() {
+      try {
+        const [lieuxRes, appareilsRes] = await Promise.all([
+          fetch('https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/postes.json'),
+          fetch('https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/appareils.json')
+        ]);
+        const lieux = await lieuxRes.json();
+        const appareils = await appareilsRes.json();
+        document.getElementById('stats').innerHTML = `
+          <span class="stat-pill">📍 ${lieux.length} accès routiers</span>
+          <span class="stat-pill">⚡ ${appareils.length} appareils</span>
+        `;
+      } catch (error) {
+        console.error("Erreur chargement JSON :", error);
+      }
+    }
+    fetchCounts();
+  </script>
+  <script>
+    ['contextmenu','selectstart','copy','cut','paste','dragstart'].forEach(evt => {
+      document.addEventListener(evt, e => e.preventDefault(), { passive: false });
+    });
+  </script>
+    <script>
+  async function fetchBilan() {
+    try {
+      
+      const urlPostes = "https://script.google.com/macros/s/AKfycbzUFaek89LYosR0FSw9gyxn2IZXlFlWXA_dIFIDwox-szE3DgH-l8IVbGfaoIgGK04h/exec";
+      const urlAppareils = "https://script.google.com/macros/s/AKfycbwJIlvcfNYREJn1oPiVAhQqHACXXar8ZbRl6aChwYw4TFSAaMTFEHTT5X2T7BKLJ3gsJw/exec";
+      const urlContrib = "https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec";
+      const [resPostes, resAppareils, resContrib] = await Promise.all([
+        fetch(urlPostes),
+        fetch(urlAppareils),
+        fetch(urlContrib)
+      ]);
+
+      const dataPostes = await resPostes.json();
+      const dataAppareils = await resAppareils.json();
+      const dataContrib = await resContrib.json();
+      const nbPostes = dataPostes.count || 0;
+      const nbAppareils = dataAppareils.count || 0;
+      const nbContrib = dataContrib.count || 0;
+      const total = nbPostes + nbAppareils;
+
+      document.getElementById("counterPostes").textContent = nbPostes;
+      document.getElementById("counterAppareils").textContent = nbAppareils;
+      document.getElementById("counterContrib").textContent = nbContrib;
+      document.getElementById("total-req").textContent = total;
+    } catch (err) {
+      console.error("Erreur chargement compteurs :", err);
+    }
+  }
+
+  fetchBilan();
+</script>
+</body>
+</html>
