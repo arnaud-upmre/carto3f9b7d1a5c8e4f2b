@@ -1485,6 +1485,20 @@ function showToast(message) {
 
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
 <script src="js/recherche.js"></script>
+  
+<script>
+document.addEventListener("input", (e) => {
+  if (e.target.id === "search") {
+    const suggestions = document.getElementById("suggestions");
+    if (!suggestions) return;
+    if (e.target.value.trim().length >= 2 && suggestions.children.length > 0) {
+      suggestions.classList.add("show");
+    } else {
+      suggestions.classList.remove("show");
+    }
+  }
+});
+</script>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   console.log("⌛ Attente du chargement des marqueurs pour activer la recherche...");
