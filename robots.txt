@@ -1,3 +1,2 @@
 User-agent: *
-Disallow: /lieux.json
-Disallow: /index.html
+Disallow: /
