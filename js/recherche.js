@@ -379,72 +379,174 @@ window.showLieu = function (item) {
     item.type || "",
     item.SAT || "",
     item["accès"] || item.acces || ""
-  ].filter(Boolean).join(" ").toLowerCase().trim();
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase()
+    .trim();
 
-  const target = window.allMarkers.find(m => {
+  const matches = window.allMarkers.filter(m => {
     const id = (m.options.customId || "").toLowerCase().trim();
     return id === targetId;
   });
 
-  if (target) {
-    const latlng = target.getLatLng();
-    map.flyTo(latlng, 19, { animate: true, duration: 0.8 });
-
-    // ⏳ Ouvre la popup une fois le zoom terminé (clusters inclus)
-    map.once("moveend", () => {
-      const popup = target.getPopup();
-      if (popup) {
-        target.openPopup();
-      } else {
-        console.warn("⚠️ Aucun popup trouvé pour :", targetId);
-      }
-    });
-  } else {
+  if (matches.length === 0) {
     console.warn("⚠️ Aucun marqueur trouvé pour :", targetId);
+    return;
   }
 
+  const first = matches[0];
+  const latlng = first.getLatLng();
+
+  // 📍 Récupère tous les marqueurs à la même position
+  const sameCoords = window.allMarkers.filter(m => {
+    const ll = m.getLatLng();
+    return ll.lat === latlng.lat && ll.lng === latlng.lng;
+  });
+
+  // ✅ Si un seul → popup normale
+  if (sameCoords.length === 1) {
+    map.flyTo(latlng, 19, { animate: true, duration: 0.8 });
+    sameCoords[0].openPopup();
+    closeSearchBar();
+    return;
+  }
+
+  // ✅ Si plusieurs → popup groupée
+  const items = sameCoords.map((m, i) => {
+    const id = (m.options.customId || "").toUpperCase();
+    let iconFile = "poste.png";
+    if (id.includes("ACCES")) iconFile = "acces.png";
+
+    return `
+      <a href="#" class="cluster-link" data-idx="${i}" style="display:flex;align-items:center;gap:6px;">
+        <img src="ico/${iconFile}" style="width:16px;height:16px;">
+        <span>${id}</span>
+      </a>`;
+  }).join("");
+
+  const html = `<div style="min-width:220px;display:flex;flex-direction:column;gap:6px">${items}</div>`;
+
+  L.popup().setLatLng(latlng).setContent(html).openOn(map);
+
+  // 🧭 Clics sur chaque sous-élément
+  setTimeout(() => {
+    document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
+      link.addEventListener("click", ev => {
+        ev.preventDefault();
+        const idx = +ev.currentTarget.dataset.idx;
+        const target = sameCoords[idx];
+        const content = target.getPopup()?.getContent() || "";
+        L.popup({ maxWidth: 240 })
+          .setLatLng(target.getLatLng())
+          .setContent(content)
+          .openOn(map);
+        map.panTo(target.getLatLng());
+      });
+    });
+  }, 0);
+
+  map.flyTo(latlng, 18, { animate: true, duration: 0.8 });
   closeSearchBar();
 };
-
 
 
 
 window.showAppareil = function (item) {
   if (!window.map || !window.allMarkers) return;
 
+  // 🧩 Clé texte
   const targetId = [
     item.appareil || "",
     item.nom || "",
     item.type || "",
     item.SAT || "",
     item["accès"] || item.acces || ""
-  ].filter(Boolean).join(" ").toLowerCase().trim();
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase()
+    .trim();
 
-  const target = window.allMarkers.find(m => {
+  // 🔍 Trouve tous les marqueurs correspondants
+  const matches = window.allMarkers.filter(m => {
     const id = (m.options.customId || "").toLowerCase().trim();
     return id === targetId;
   });
 
-  if (target) {
-    const latlng = target.getLatLng();
-    map.flyTo(latlng, 21, { animate: true, duration: 0.8 });
-
-    // ⏳ Attendre la fin du mouvement avant d’ouvrir la popup
-    map.once("moveend", () => {
-      const popup = target.getPopup();
-      if (popup) {
-        target.openPopup();
-      } else {
-        console.warn("⚠️ Aucun popup trouvé pour :", targetId);
-      }
-    });
-  } else {
+  if (matches.length === 0) {
     console.warn("⚠️ Aucun marqueur trouvé pour :", targetId);
+    return;
   }
 
+  const first = matches[0];
+  const latlng = first.getLatLng();
+
+  // ⚡ Recherche de tous les marqueurs à la même position
+  const sameCoords = window.allMarkers.filter(m => {
+    const ll = m.getLatLng();
+    return ll.lat === latlng.lat && ll.lng === latlng.lng;
+  });
+
+  // 🟢 Si un seul marqueur → popup classique
+  if (sameCoords.length === 1) {
+    map.flyTo(latlng, 21, { animate: true, duration: 0.8 });
+    sameCoords[0].openPopup();
+    closeSearchBar();
+    return;
+  }
+
+  // 🧱 Si plusieurs → popup groupée
+  const items = sameCoords
+    .map((m, i) => {
+      const id = (m.options.customId || "").toUpperCase();
+      let iconFile = null;
+
+      if (id.startsWith("I") || id.startsWith("SI") || id.startsWith("D")) iconFile = "int.png";
+      else if (id.startsWith("TT") || id.startsWith("TSA") || id.startsWith("TC") || id.startsWith("TRA")) iconFile = "TT.png";
+      else if (/^[0-9]/.test(id) || id.startsWith("S") || id.startsWith("ST") || id.startsWith("F") || id.startsWith("P") || id.startsWith("FB") || id.startsWith("B")) iconFile = "sect.png";
+      else if (id.startsWith("ALIM")) iconFile = "alim.png";
+      else if (id.startsWith("DU")) iconFile = "stop.png";
+
+      return `
+        <a href="#" class="cluster-link" data-idx="${i}" style="display:flex;align-items:center;gap:6px;">
+          ${iconFile ? `<img src="ico/${iconFile}" style="width:16px;height:16px;">` : ""}
+          <span>${id}</span>
+        </a>`;
+    })
+    .join("");
+
+  const html = `
+    <div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
+      ${items}
+    </div>
+  `;
+
+  L.popup()
+    .setLatLng(latlng)
+    .setContent(html)
+    .openOn(map);
+
+  // 🎯 Active le clic sur chaque lien du groupe
+  setTimeout(() => {
+    document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
+      link.addEventListener("click", ev => {
+        ev.preventDefault();
+        const idx = +ev.currentTarget.dataset.idx;
+        const target = sameCoords[idx];
+        const content = target.getPopup()?.getContent() || "";
+        L.popup({ maxWidth: 240 })
+          .setLatLng(target.getLatLng())
+          .setContent(content)
+          .openOn(map);
+        map.panTo(target.getLatLng());
+      });
+    });
+  }, 0);
+
+  map.flyTo(latlng, 20, { animate: true, duration: 0.8 });
   closeSearchBar();
 };
-
 
 
 function closeSearchBar() {
