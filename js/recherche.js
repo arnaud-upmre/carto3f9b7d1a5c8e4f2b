@@ -380,7 +380,11 @@ window.showLieu = function (item) {
     item.type || "",
     item.SAT || "",
     item["accès"] || item.acces || ""
-  ].filter(Boolean).join(" ").trim().toLowerCase();
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .trim()
+    .toLowerCase();
 
   // 🔎 Recherche du marqueur correspondant uniquement par texte
   const target = window.allMarkers.find(m => {
@@ -389,8 +393,16 @@ window.showLieu = function (item) {
   });
 
   if (target) {
-    map.flyTo(target.getLatLng(), 19, { animate: true, duration: 0.8 });
-    target.fire("click");
+    const latlng = target.getLatLng();
+    map.flyTo(latlng, 19, { animate: true, duration: 0.8 });
+
+    // 🟢 Ouvre la vraie popup liée au marqueur
+    const popup = target.getPopup();
+    if (popup) {
+      target.openPopup();
+    } else {
+      console.warn("⚠️ Aucun popup trouvé pour :", targetId);
+    }
   } else {
     console.warn("Aucun marqueur trouvé pour :", targetId);
     L.popup({ offset: [0, -10] })
@@ -406,26 +418,42 @@ window.showLieu = function (item) {
 window.showAppareil = function (item) {
   if (!window.map || !window.allMarkers) return;
 
+  // 🧩 Clé unique à partir des champs connus
   const targetId = [
     item.appareil || "",
     item.nom || "",
     item.type || "",
     item.SAT || ""
-  ].filter(Boolean).join(" ").trim().toLowerCase();
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .trim()
+    .toLowerCase();
 
+  // 🔎 Trouve le marqueur correspondant dans la carte
   const target = window.allMarkers.find(m => {
     const id = (m.options.customId || "").toLowerCase().trim();
     return id.includes(targetId);
   });
 
   if (target) {
-    map.flyTo(target.getLatLng(), 21, { animate: true, duration: 0.8 });
-    target.fire("click");
+    const latlng = target.getLatLng();
+    map.flyTo(latlng, 21, { animate: true, duration: 0.8 });
+
+    // 🟢 Ouvre la vraie popup associée au marqueur
+    const popup = target.getPopup();
+    if (popup) {
+      target.openPopup();
+    } else {
+      console.warn("⚠️ Aucun popup trouvé pour :", targetId);
+    }
   } else {
     console.warn("Aucun marqueur trouvé pour :", targetId);
     L.popup({ offset: [0, -10] })
       .setLatLng(map.getCenter())
-      .setContent(`<b>${item.appareil}</b><br>${item.nom || ""} ${item.type || ""} ${item.SAT || ""}`)
+      .setContent(
+        `<b>${item.appareil}</b><br>${item.nom || ""} ${item.type || ""} ${item.SAT || ""}`
+      )
       .openOn(map);
   }
 
