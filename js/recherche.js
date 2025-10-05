@@ -374,7 +374,7 @@ window.initSearch = function(map, allMarkers) {
 window.showLieu = function (item) {
   if (!window.map || !window.allMarkers) return;
 
-  // 🧩 Construction d'une clé d'identification claire
+  // 🧩 Clé d'identification identique au customId des postes
   const targetId = [
     item.nom || "",
     item.type || "",
@@ -383,13 +383,13 @@ window.showLieu = function (item) {
   ]
     .filter(Boolean)
     .join(" ")
-    .trim()
-    .toLowerCase();
+    .toLowerCase()
+    .trim();
 
-  // 🔎 Recherche du marqueur correspondant uniquement par texte
+  // 🔍 Recherche stricte du marqueur
   const target = window.allMarkers.find(m => {
     const id = (m.options.customId || "").toLowerCase().trim();
-    return id.includes(targetId);
+    return id === targetId;
   });
 
   if (target) {
@@ -404,43 +404,44 @@ window.showLieu = function (item) {
       console.warn("⚠️ Aucun popup trouvé pour :", targetId);
     }
   } else {
-    console.warn("Aucun marqueur trouvé pour :", targetId);
-    L.popup({ offset: [0, -10] })
-      .setLatLng(map.getCenter())
-      .setContent(`<b>${item.nom}</b><br>${item.type || ""} ${item.SAT || ""}`)
-      .openOn(map);
+    console.warn("⚠️ Aucun marqueur trouvé pour :", targetId);
   }
 
   closeSearchBar();
 };
 
 
+
+
+
+
 window.showAppareil = function (item) {
   if (!window.map || !window.allMarkers) return;
 
-  // 🧩 Clé unique à partir des champs connus
+  // 🧩 Clé identique au customId des appareils
   const targetId = [
     item.appareil || "",
     item.nom || "",
     item.type || "",
-    item.SAT || ""
+    item.SAT || "",
+    item["accès"] || item.acces || ""
   ]
     .filter(Boolean)
     .join(" ")
-    .trim()
-    .toLowerCase();
+    .toLowerCase()
+    .trim();
 
-  // 🔎 Trouve le marqueur correspondant dans la carte
+  // 🔍 Recherche stricte dans la liste des marqueurs
   const target = window.allMarkers.find(m => {
     const id = (m.options.customId || "").toLowerCase().trim();
-    return id.includes(targetId);
+    return id === targetId;
   });
 
   if (target) {
     const latlng = target.getLatLng();
     map.flyTo(latlng, 21, { animate: true, duration: 0.8 });
 
-    // 🟢 Ouvre la vraie popup associée au marqueur
+    // 🟢 Ouvre la vraie popup du marqueur
     const popup = target.getPopup();
     if (popup) {
       target.openPopup();
@@ -448,20 +449,15 @@ window.showAppareil = function (item) {
       console.warn("⚠️ Aucun popup trouvé pour :", targetId);
     }
   } else {
-    console.warn("Aucun marqueur trouvé pour :", targetId);
-    L.popup({ offset: [0, -10] })
-      .setLatLng(map.getCenter())
-      .setContent(
-        `<b>${item.appareil}</b><br>${item.nom || ""} ${item.type || ""} ${item.SAT || ""}`
-      )
-      .openOn(map);
+    console.warn("⚠️ Aucun marqueur trouvé pour :", targetId);
   }
 
   closeSearchBar();
 };
 
 
-// ✅ Fermer automatiquement la barre de recherche après clic sur un résultat
+
+
 function closeSearchBar() {
   const searchWrapper = document.getElementById("searchWrapper");
   const searchInput = document.getElementById("search");
