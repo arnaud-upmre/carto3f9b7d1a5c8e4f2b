@@ -374,53 +374,62 @@ window.initSearch = function(map, allMarkers) {
 window.showLieu = function (item) {
   if (!window.map || !window.allMarkers) return;
 
-  const lat = parseFloat(item.latitude);
-  const lon = parseFloat(item.longitude);
-  if (isNaN(lat) || isNaN(lon)) return;
+  // 🧩 Construction d'une clé d'identification claire
+  const targetId = [
+    item.nom || "",
+    item.type || "",
+    item.SAT || "",
+    item["accès"] || item.acces || ""
+  ].filter(Boolean).join(" ").trim().toLowerCase();
 
-  // Cherche le marqueur correspondant dans allMarkers
+  // 🔎 Recherche du marqueur correspondant uniquement par texte
   const target = window.allMarkers.find(m => {
-    const pos = m.getLatLng();
-    return Math.abs(pos.lat - lat) < 0.0001 && Math.abs(pos.lng - lon) < 0.0001;
+    const id = (m.options.customId || "").toLowerCase().trim();
+    return id.includes(targetId);
   });
 
   if (target) {
-    map.setView([lat, lon], 18, { animate: true });
-    target.fire('click'); // 🟢 ouvre la vraie popup
+    map.flyTo(target.getLatLng(), 19, { animate: true, duration: 0.8 });
+    target.fire("click");
   } else {
-    // fallback : si aucun marqueur trouvé, popup générique
+    console.warn("Aucun marqueur trouvé pour :", targetId);
     L.popup({ offset: [0, -10] })
-      .setLatLng([lat, lon])
+      .setLatLng(map.getCenter())
       .setContent(`<b>${item.nom}</b><br>${item.type || ""} ${item.SAT || ""}`)
       .openOn(map);
   }
 
-  document.getElementById("search-container")?.classList.remove("open");
+  closeSearchBar();
 };
+
 
 window.showAppareil = function (item) {
   if (!window.map || !window.allMarkers) return;
 
-  const lat = parseFloat(item.latitude);
-  const lon = parseFloat(item.longitude);
-  if (isNaN(lat) || isNaN(lon)) return;
+  const targetId = [
+    item.appareil || "",
+    item.nom || "",
+    item.type || "",
+    item.SAT || ""
+  ].filter(Boolean).join(" ").trim().toLowerCase();
 
   const target = window.allMarkers.find(m => {
-    const pos = m.getLatLng();
-    return Math.abs(pos.lat - lat) < 0.0001 && Math.abs(pos.lng - lon) < 0.0001;
+    const id = (m.options.customId || "").toLowerCase().trim();
+    return id.includes(targetId);
   });
 
   if (target) {
-    map.setView([lat, lon], 19, { animate: true });
-    target.fire('click'); // 🟢 ouvre la vraie popup liée au marqueur
+    map.flyTo(target.getLatLng(), 21, { animate: true, duration: 0.8 });
+    target.fire("click");
   } else {
+    console.warn("Aucun marqueur trouvé pour :", targetId);
     L.popup({ offset: [0, -10] })
-      .setLatLng([lat, lon])
+      .setLatLng(map.getCenter())
       .setContent(`<b>${item.appareil}</b><br>${item.nom || ""} ${item.type || ""} ${item.SAT || ""}`)
       .openOn(map);
   }
 
-  document.getElementById("search-container")?.classList.remove("open");
+  closeSearchBar();
 };
 
 
