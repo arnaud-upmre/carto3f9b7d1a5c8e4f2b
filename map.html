@@ -1014,8 +1014,11 @@ allMarkers.push(m);
       }
 
     });
-_tryOpenFromURL();
+setTimeout(() => {
+  map.whenReady(() => {
+    _tryOpenFromURL();
   });
+}, 800);
     
 chargerBaseRecherche().then(allData => {
   const data = allData.filter(x => x.category === "appareil");
@@ -1106,8 +1109,11 @@ if (ref.startsWith("DU")) {
       appareilsLayer.addLayer(m);
       allMarkers.push(m);
       });
+setTimeout(() => {
+  map.whenReady(() => {
     _tryOpenFromURL();
   });
+}, 800);
 
 const pnClasses = {
   10: "PN public pour voitures sans barrières (protection assurée par un agent)",
