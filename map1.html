@@ -1346,11 +1346,13 @@ function focusRandomPoste() {
   const ll = randomMarker.getLatLng();
 
   map.flyTo(ll, 19, { animate: true, duration: 0.7 });
-
-  setTimeout(() => {
-    if (randomMarker.getPopup) randomMarker.openPopup();
-  }, 900);
-}
+  
+setTimeout(() => {
+  if (randomMarker.getPopup) {
+    randomMarker.openPopup();
+    console.log("📍 Popup ouverte sur :", randomMarker.options.customId);
+  }
+}, 900);
 
 // ✅ On ne lance le poste aléatoire que si AUCUN paramètre de position n’est dans l’URL
 if (isNaN(lat) || isNaN(lon)) {
