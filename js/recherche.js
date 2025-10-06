@@ -468,7 +468,7 @@ function iconForMarker(m) {
 // ===============================
 // ✅ showLieu (version finale : postes OK + accès groupés comme showAppareil)
 // ===============================
-window.showLieu = function (item) {
+window.showLieu = async function (item) {
   console.log("✅ showLieu appelé !", item);
   if (!window.map || !window.allMarkers) return;
 
@@ -577,10 +577,15 @@ window.showLieu = function (item) {
   const latlng = matches[0].getLatLng();
 
 // --- Incrémentation compteur (carte) ---
-const currentIsMap = window.location.href.includes("map.html");
-if (currentIsMap) {
-  if (typeof incrementCounter === "function") incrementCounter();
-  console.log("📈 +1 poste/acces (recherche validée sur la carte)");
+try {
+  const currentIsMap = window.location.pathname.includes("map.html");
+  if (currentIsMap) {
+    console.log("🧮 incrementCounter() appelé depuis showLieu()");
+    await fetch(compteurURL + "?increment=true");
+    console.log("📈 +1 poste/acces (recherche validée sur la carte)");
+  }
+} catch (err) {
+  console.error("❌ Erreur compteur showLieu :", err);
 }
 
   // ✅ Poste seul → popup directe
@@ -593,7 +598,7 @@ if (currentIsMap) {
 // ===============================
 // ✅ showAppareil
 // ===============================
-window.showAppareil = function (item) {
+window.showAppareil = async function (item) {
     console.log("✅ showAppareil appelé !", item);
   if (!window.map || !window.allMarkers) return;
 
@@ -660,10 +665,15 @@ setTimeout(() => {
 
 
 // --- Incrémentation compteur (carte) ---
-const currentIsMap = window.location.href.includes("map.html");
-if (currentIsMap) {
-  if (typeof incrementCounterAppareil === "function") incrementCounterAppareil();
-  console.log("📈 +1 appareil (recherche validée sur la carte)");
+try {
+  const currentIsMap = window.location.pathname.includes("map.html");
+  if (currentIsMap) {
+    console.log("🧮 incrementCounterAppareil() appelé depuis showAppareil()");
+    await fetch(compteurAppareilURL + "?increment=true");
+    console.log("📈 +1 appareil (recherche validée sur la carte)");
+  }
+} catch (err) {
+  console.error("❌ Erreur compteur showAppareil :", err);
 }
   
   map.flyTo(latlng, 20, { animate: true, duration: 0.6 });
