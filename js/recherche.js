@@ -463,8 +463,9 @@ function iconForMarker(m) {
 }
 
 
-
-//SHOWLIEU
+// ===============================
+// ✅ showLieu
+// ===============================
 
 window.showLieu = function (item) {
   if (!window.map || !window.allMarkers) return;
@@ -473,7 +474,7 @@ window.showLieu = function (item) {
   if (item.force === "poste" && item.poste_latitude && item.poste_longitude) {
     const lat = parseFloat(item.poste_latitude);
     const lng = parseFloat(item.poste_longitude);
-    map.flyTo([lat, lng], 19, { animate: true, duration: 0.6 });
+    openMarkerPopup({ getLatLng: () => L.latLng(lat, lng), getPopup: () => null }, 19);
     closeSearchBar();
     return;
   }
@@ -481,7 +482,7 @@ window.showLieu = function (item) {
   if (item.force === "acces" && item.latitude && item.longitude) {
     const lat = parseFloat(item.latitude);
     const lng = parseFloat(item.longitude);
-    map.flyTo([lat, lng], 19, { animate: true, duration: 0.6 });
+    openMarkerPopup({ getLatLng: () => L.latLng(lat, lng), getPopup: () => null }, 19);
     closeSearchBar();
     return;
   }
@@ -508,7 +509,7 @@ window.showLieu = function (item) {
     return ll.lat === latlng.lat && ll.lng === latlng.lng;
   });
 
-  // ✅ Cas 1 : un seul point → on ouvre la popup directement
+  // ✅ Cas 1 : un seul point → on ouvre la popup (pas juste zoom)
   if (sameCoords.length === 1) {
     openMarkerPopup(sameCoords[0], 19);
     closeSearchBar();
@@ -516,16 +517,14 @@ window.showLieu = function (item) {
   }
 
   // ✅ Cas 2 : plusieurs marqueurs (plusieurs accès au même poste)
-  // → on affiche une popup groupée avec la liste des accès
   const html = `
     <div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
-      <p style="margin:0 0 4px;font-weight:bold;">Choisir un accès :</p>
       ${sameCoords.map((m, i) => {
         const id = (m.options.customId || "").toUpperCase();
         const iconFile = iconForMarker(m);
         return `
           <a href="#" class="cluster-link" data-idx="${i}" 
-             style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:#fff2;">
+             style="display:flex;align-items:center;gap:6px;padding:4px 6px;border-radius:8px;background:#fff2;">
             ${iconFile ? `<img src="ico/${iconFile}" style="width:16px;height:16px;">` : ""}
             <span>${id}</span>
           </a>`;
@@ -533,13 +532,12 @@ window.showLieu = function (item) {
     </div>
   `;
 
-  // Ouverture de la popup avec la liste des accès
   const popup = L.popup({ maxWidth: 260 })
     .setLatLng(latlng)
     .setContent(html)
     .openOn(map);
 
-  // 🧠 Quand on clique sur un lien, on charge la vraie popup correspondante
+  // 🧠 Gestion du clic dans la popup groupée
   setTimeout(() => {
     document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach((link) => {
       link.addEventListener("click", (ev) => {
@@ -558,8 +556,7 @@ window.showLieu = function (item) {
     });
   }, 0);
 
-  // Zoom doux vers la zone
-  map.flyTo(latlng, 18, { animate: true, duration: 0.6 });
+  map.flyTo(latlng, 19, { animate: true, duration: 0.6 });
   closeSearchBar();
 };
 
