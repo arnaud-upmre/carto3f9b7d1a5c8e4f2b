@@ -1574,8 +1574,18 @@ document.addEventListener("DOMContentLoaded", () => {
       const input = document.getElementById("search");
       if (!wrap || !input) return;
       wrap.classList.toggle("open");
-      if (wrap.classList.contains("open")) input.focus();
-      else input.blur();
+
+      
+      if (wrap.classList.contains("open")) {
+  input.value = ""; // 🧹 Efface le texte précédent
+  input.focus();
+  const suggestions = document.getElementById("suggestions");
+  const resultEl = document.getElementById("result");
+  if (suggestions) suggestions.innerHTML = "";
+  if (resultEl) resultEl.innerHTML = "";
+} else {
+  input.blur();
+}
     }
   });
 
