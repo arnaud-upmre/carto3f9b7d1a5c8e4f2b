@@ -11,11 +11,17 @@ const compteurURL = "https://script.google.com/macros/s/AKfycbzUFaek89LYosR0FSw9
 const compteurAppareilURL = "https://script.google.com/macros/s/AKfycbwJIlvcfNYREJn1oPiVAhQqHACXXar8ZbRl6aChwYw4TFSAaMTFEHTT5X2T7BKLJ3gsJw/exec";
 
 function incrementCounter() {
-  fetch(compteurURL + "?increment=true").catch(() => {});
+  console.log("🧮 incrementCounter() appelé !");
+  fetch(compteurURL + "?increment=true")
+    .then(r => console.log("✅ Réponse poste :", r.status))
+    .catch(err => console.error("❌ Erreur compteur poste :", err));
 }
 
 function incrementCounterAppareil() {
-  fetch(compteurAppareilURL + "?increment=true").catch(() => {});
+  console.log("🧮 incrementCounterAppareil() appelé !");
+  fetch(compteurAppareilURL + "?increment=true")
+    .then(r => console.log("✅ Réponse appareil :", r.status))
+    .catch(err => console.error("❌ Erreur compteur appareil :", err));
 }
 
 function normalize(str) {
