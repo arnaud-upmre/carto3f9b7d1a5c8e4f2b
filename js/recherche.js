@@ -394,17 +394,25 @@ window.initSearch = function(map, allMarkers) {
 
 
 
-// 🔧 Helper : ouvre la popup d’un marker même s’il est encore dans un cluster
-function openMarkerPopup(marker, targetZoom = 20) {
+let isAnimating = false;
+
+function openMarkerPopup(marker, targetZoom = 19) {
+  if (isAnimating) return; // ✅ empêche un double flyTo
+  isAnimating = true;
+
   const ll = marker.getLatLng();
   let finished = false;
 
   const finish = () => {
     if (finished) return;
     finished = true;
-    map.flyTo(ll, targetZoom, { animate: true, duration: 0.6 });
-    // ouvre après l’animation / la déclusterisation
-    setTimeout(() => { if (marker.getPopup) marker.openPopup(); }, 300);
+
+    map.flyTo(ll, targetZoom, { animate: true, duration: 0.7 });
+
+    setTimeout(() => {
+      if (marker.getPopup) marker.openPopup();
+      isAnimating = false; // ✅ débloque à la fin
+    }, 650);
   };
 
   const tryGroup = (grp) => {
@@ -415,10 +423,9 @@ function openMarkerPopup(marker, targetZoom = 20) {
     return false;
   };
 
-  // on essaye dans chaque cluster group (selon le type, un seul matchera)
+  // essaye de trouver le marker dans les clusters
   if (!tryGroup(postesLayer) && !tryGroup(accesLayer) && !tryGroup(appareilsLayer)) {
-    // pas dans un cluster group (ou déjà visible) → fallback
-    finish();
+    finish(); // sinon, zoom directement
   }
 }
 
