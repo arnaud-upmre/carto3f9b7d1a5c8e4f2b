@@ -578,6 +578,7 @@ window.showLieu = function (item) {
 if (isMap) {
   if (typeof incrementCounter === "function") incrementCounter();
   console.log("📈 +1 poste/acces (recherche validée sur la carte)");
+  console.log("DEBUG isMap dans showLieu =", isMap);
 }
 
   // ✅ Poste seul → popup directe
@@ -660,6 +661,7 @@ setTimeout(() => {
 if (isMap) {
   if (typeof incrementCounterAppareil === "function") incrementCounterAppareil();
   console.log("📈 +1 appareil (recherche validée sur la carte)");
+  console.log("DEBUG isMap dans showAppareil =", isMap);
 }
   
   map.flyTo(latlng, 20, { animate: true, duration: 0.6 });
