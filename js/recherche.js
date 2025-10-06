@@ -543,13 +543,18 @@ window.showLieu = function (item) {
       return;
     }
 
-    // Sinon, ouvre normalement
-    const marker = findMarkerByCoords(lat, lng);
-    if (marker) openMarkerPopup(marker, 19);
-    else map.flyTo([lat, lng], 19, { animate: true, duration: 0.6 });
-    closeSearchBar();
-    return;
-  }
+// Sinon, ouvre normalement avec zoom
+const marker = findMarkerByCoords(lat, lng);
+if (marker) {
+  map.flyTo([lat, lng], 19, { animate: true, duration: 0.6 });
+  setTimeout(() => {
+    openMarkerPopup(marker, 19);
+  }, 600);
+} else {
+  map.flyTo([lat, lng], 19, { animate: true, duration: 0.6 });
+}
+closeSearchBar();
+return;
 
   // 🧱 Identifiant textuel complet
   const targetId = [
