@@ -5,14 +5,128 @@
   <title>Nono Maps</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+<script src="js/recherche.js"></script>
 
+  
 <style>
+
+.submenu {
+  margin-top: 6px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  padding: 8px 10px;
+  animation: fadeIn 0.2s ease;
+}
+
+.submenu-inner p {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 6px 0;
+  color: #1e40af;
+}
+
+.submenu-inner button {
+  background: none;
+  border: none;
+  display: block;
+  width: 100%;
+  text-align: left;
+  font-size: 15px;
+  padding: 4px 0;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.submenu-inner button:hover {
+  background: rgba(37,99,235,0.1);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+#searchWrapper {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-10px);
+  background: rgba(15, 17, 23, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 50px;
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s ease;
+  z-index: 10001;
+  width: 320px;
+  max-width: 85%;
+}
+#searchWrapper.open {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: auto;
+}
+
+#searchWrapper::before {
+  content: "🔍";
+  font-size: 18px;
+  color: white;
+  margin-left: 6px;
+}
+
+#search {
+  flex: 1;
+  padding: 8px 10px;
+  font-size: 15px;
+  border: none;
+  border-radius: 30px;
+  outline: none;
+  background: #fff;
+  color: #111;
+}
+#suggestions {
+  position: absolute;
+  top: 48px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 320px;
+  max-width: 85%;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: rgba(255,255,255,0.95);
+  border-radius: 10px;
+  overflow: hidden;
+  display: none;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+}
+#suggestions.show {
+  display: block;
+}
+#suggestions li {
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #111;
+}
+#suggestions li:hover,
+#suggestions li.best {
+  background: #2563eb;
+  color: #fff;
+}
 
 .fab-container {
   position: fixed;
@@ -412,8 +526,8 @@ html, body {
   </div>
 </div>
   <script>
-const defaultCenter = [49.8, 2.5]; 
-const defaultZoom = 8;          
+const defaultCenter = [50.3, 2.6];
+const defaultZoom = 9;          
 
 
 const boundsFrance = [
@@ -423,8 +537,7 @@ const boundsFrance = [
 
 const map = L.map('map', {
   zoomControl: false,
-  attributionControl: false,
-  minZoom: 5,                  
+  attributionControl: false,              
   maxZoom: 21,                 
   maxBounds: boundsFrance,     
   maxBoundsViscosity: 1.0      
@@ -469,23 +582,31 @@ editIcon.style = `
 document.body.appendChild(editIcon);
 
 document.addEventListener("keydown", function(e) {
-  if (e.key.toLowerCase() === "i") {
+  // ✅ Activation/désactivation du mode édition avec CTRL + I
+  if (e.ctrlKey && e.key.toLowerCase() === "i") {
+    e.preventDefault(); // empêche l'effet par défaut du navigateur
     editMode = !editMode;
 
-    editBanner.textContent = editMode ? "ℹ️ Mode information activé" : "❌ Mode information désactivé";
+    editBanner.textContent = editMode
+      ? "ℹ️ Mode information activé"
+      : "❌ Mode information désactivé";
     editBanner.style.display = "block";
-    setTimeout(() => { editBanner.style.display = "none"; }, 2000);
+    setTimeout(() => {
+      editBanner.style.display = "none";
+    }, 2000);
 
     editIcon.textContent = "ℹ️";
     editIcon.style.display = editMode ? "block" : "none";
   }
 
-
+  // ❌ Sortie du mode édition avec Échap
   if (e.key === "Escape" && editMode) {
     editMode = false;
     editBanner.textContent = "❌ Mode information désactivé";
     editBanner.style.display = "block";
-    setTimeout(() => { editBanner.style.display = "none"; }, 2000);
+    setTimeout(() => {
+      editBanner.style.display = "none";
+    }, 2000);
     editIcon.style.display = "none";
   }
 });
@@ -533,18 +654,20 @@ if (marker.options.isAcces) {
 } else if (id.includes("POSTE")) {
   iconFile = "poste.png";
 } else {
-
-  if (id.startsWith("I") || id.startsWith("SI") || id.startsWith("D")) {
-    iconFile = "int.png";
+  if (id.startsWith("DU")) {
+    iconFile = "stop.png";          
+  } else if (id.startsWith("I") || id.startsWith("SI") || id.startsWith("D")) {
+    iconFile = "int.png";              // ⚡ Tous les I, SI et D (y compris DA)
   } else if (id.startsWith("TT") || id.startsWith("TSA") || id.startsWith("TC") || id.startsWith("TRA")) {
     iconFile = "TT.png";
   } else if (/^[0-9]/.test(id) || id.startsWith("S") || id.startsWith("ST") || id.startsWith("F") || id.startsWith("P") || id.startsWith("FB") || id.startsWith("B")) {
     iconFile = "sect.png";
   } else if (id.startsWith("ALIM")) {
     iconFile = "alim.png";
-  } else if (id.startsWith("DU")) {
-    iconFile = "stop.png";
   }
+  else {
+  iconFile = "int.png"; // icône par défaut
+}
 }
 
         return `
@@ -774,9 +897,8 @@ const iconAcces = L.divIcon({
   popupAnchor: [0, -48]
 });
 
-fetch("postes.json")
-  .then(r => r.json())
-  .then(data => {
+chargerBaseRecherche().then(allData => {
+  const data = allData.filter(x => x.category === "poste");
     const seenPostes = new Set();
 
     data.forEach(item => {
@@ -862,11 +984,6 @@ let content = `
   <div style="margin-bottom:10px;">
 ✍🏻 <strong>Information :</strong> ${ renderInformation(item.description) }
   </div>
-
-
-  <div style="margin-bottom:10px;">
-    📞 <strong>Contact :</strong> ${ renderContact(item.contact) }
-  </div>
  
   <a href="index.html?id=${encodeURIComponent(
     (`${item.nom || ''} ${item.type || ''} ${item.SAT || ''}`)
@@ -894,28 +1011,53 @@ allMarkers.push(m);
 _tryOpenFromURL();
   });
     
-fetch("appareils.json")
-  .then(r => r.json())
-  .then(data => {
+chargerBaseRecherche().then(allData => {
+  const data = allData.filter(x => x.category === "appareil");
     data.forEach(item => {
       if (!item.latitude || !item.longitude) return;
 
       let appareilIcon;
-      const ref = (item.appareil || "").toUpperCase();
 
-      if (ref.startsWith("I") || ref.startsWith("SI") || ref.startsWith("D")) {
-        appareilIcon = L.divIcon({ html:`<img src="ico/int.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,32], popupAnchor:[0,-32] });
-      } else if (ref.startsWith("TT") || ref.startsWith("TSA") || ref.startsWith("TC") || ref.startsWith("TRA")) {
-        appareilIcon = L.divIcon({ html:`<img src="ico/TT.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,32], popupAnchor:[0,-32] });
-      } else if (/^[0-9]/.test(ref) || ref.startsWith("S") || ref.startsWith("ST") || ref.startsWith("F") || ref.startsWith("P") || ref.startsWith("FB") || ref.startsWith("B")) {
-        appareilIcon = L.divIcon({ html:`<img src="ico/sect.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,32], popupAnchor:[0,-32] });
-      } else if (ref.startsWith("ALIM")) {
-        appareilIcon = L.divIcon({ html:`<img src="ico/alim.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,32], popupAnchor:[0,-32] });
-      } else if (ref.startsWith("DU")) {
-        appareilIcon = L.divIcon({ html:`<img src="ico/stop.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,32], popupAnchor:[0,-32] });
-      } else {
-        appareilIcon = iconAppareil;
-      }
+      const ref = (item.appareil || "").toUpperCase().replace(/[^A-Z0-9]/g, ""); // nettoyage
+
+if (ref.startsWith("DU")) {
+  appareilIcon = L.divIcon({
+    html: `<img src="ico/stop.png" class="icon-halo-appareil">`,
+    className: "",
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32]
+  });
+} else if (ref.startsWith("I") || ref.startsWith("SI") || ref.startsWith("D")) {
+  appareilIcon = L.divIcon({
+    html: `<img src="ico/int.png" class="icon-halo-appareil">`,
+    className: "",
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32]
+  });
+} else if (ref.startsWith("TT") || ref.startsWith("TSA") || ref.startsWith("TC") || ref.startsWith("TRA")) {
+  appareilIcon = L.divIcon({
+    html: `<img src="ico/TT.png" class="icon-halo-appareil">`,
+    className: "",
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32]
+  });
+} else if (/^[0-9]/.test(ref) || ref.startsWith("S") || ref.startsWith("ST") || ref.startsWith("F") || ref.startsWith("P") || ref.startsWith("FB") || ref.startsWith("B")) {
+  appareilIcon = L.divIcon({
+    html: `<img src="ico/sect.png" class="icon-halo-appareil">`,
+    className: "",
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32]
+  });
+} else if (ref.startsWith("ALIM")) {
+  appareilIcon = L.divIcon({
+    html: `<img src="ico/alim.png" class="icon-halo-appareil">`,
+    className: "",
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32]
+  });
+} else {
+  appareilIcon = iconAppareil; // icône par défaut
+}
 
       let content = `
 <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
@@ -1083,17 +1225,21 @@ appareilsLayer.on('clusterclick', function (e) {
           const id = (marker.options.customId || "").toUpperCase();
           let iconFile = null;
 
-          if (id.startsWith("I") || id.startsWith("SI") || id.startsWith("D")) {
-            iconFile = "int.png";
-          } else if (id.startsWith("TT") || id.startsWith("TSA") || id.startsWith("TC") || id.startsWith("TRA")) {
-            iconFile = "TT.png";
-          } else if (/^[0-9]/.test(id) || id.startsWith("S") || id.startsWith("ST") || id.startsWith("F") || id.startsWith("P") || id.startsWith("FB") || id.startsWith("B")) {
-            iconFile = "sect.png";
-          } else if (id.startsWith("ALIM")) {
-            iconFile = "alim.png";
-          } else if (id.startsWith("DU")) {
-            iconFile = "stop.png";
-          }
+          const cleanId = (id || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+
+if (cleanId.startsWith("DU")) {
+  iconFile = "stop.png";
+} else if (cleanId.startsWith("I") || cleanId.startsWith("SI") || cleanId.startsWith("D")) {
+  iconFile = "int.png";
+} else if (cleanId.startsWith("TT") || cleanId.startsWith("TSA") || cleanId.startsWith("TC") || cleanId.startsWith("TRA")) {
+  iconFile = "TT.png";
+} else if (/^[0-9]/.test(cleanId) || cleanId.startsWith("S") || cleanId.startsWith("ST") || cleanId.startsWith("F") || cleanId.startsWith("P") || cleanId.startsWith("FB") || cleanId.startsWith("B")) {
+  iconFile = "sect.png";
+} else if (cleanId.startsWith("ALIM")) {
+  iconFile = "alim.png";
+} else {
+  iconFile = "int.png"; // icône par défaut
+}
 
           return `
             <a href="#" class="cluster-link" data-idx="${it.idx}" style="display:flex;align-items:center;gap:6px;">
@@ -1152,17 +1298,13 @@ L.DomEvent.disableScrollPropagation(backBtn);
   
 
 const recenterBtn = L.DomUtil.create("div", "btn-toggle", topGroup);
-recenterBtn.innerHTML = "🎯";
+recenterBtn.innerHTML = "🔀";
 
 recenterBtn.onclick = () => {
   if (allMarkers.length > 0) {
     recenterBtn.classList.add("active"); 
- map.setView(defaultCenter, defaultZoom);
-
-
-    setTimeout(() => {
-      recenterBtn.classList.remove("active");
-    }, 800); 
+    focusRandomPoste(); // 👈 va à un poste aléatoire
+    setTimeout(() => recenterBtn.classList.remove("active"), 800);
   }
 };
 
@@ -1214,12 +1356,36 @@ L.DomEvent.disableScrollPropagation(locateBtn);
 };
 leftControls.addTo(map);
 
-if (!id) {
+    // ✅ Choisit un poste aléatoire et ouvre sa popup
+function focusRandomPoste() {
+  if (!window.allMarkers || window.allMarkers.length === 0) return;
+
+  const postes = window.allMarkers.filter(m => 
+    m.options.customId && m.options.customId.toLowerCase().includes("poste")
+  );
+
+  if (postes.length === 0) return;
+
+  const randomMarker = postes[Math.floor(Math.random() * postes.length)];
+  const ll = randomMarker.getLatLng();
+
+  map.flyTo(ll, 19, { animate: true, duration: 0.7 });
+  
+  setTimeout(() => {
+    if (randomMarker.getPopup) randomMarker.openPopup();
+  }, 900);
+}
+
+// ✅ On ne lance le poste aléatoire que si AUCUN paramètre de position n’est dans l’URL
+if (isNaN(lat) || isNaN(lon)) {
   map.whenReady(() => {
     if (allMarkers.length > 0) {
       const group = L.featureGroup(allMarkers);
       map.fitBounds(group.getBounds());
     }
+
+    // 👇 affiche un poste aléatoire uniquement si on n’a pas de lat/lon dans l’URL
+    setTimeout(focusRandomPoste, 1500);
   });
 }
     
@@ -1243,15 +1409,8 @@ console.info("[Nono Maps] boot", {
 });
 
 
-Promise.allSettled([
-  fetch("postes.json").then(r => r.json()).then(d => { console.log("postes.json OK", d.length); return d; })
-    .catch(e => { console.error("postes.json KO", e); return []; }),
-  fetch("appareils.json").then(r => r.json()).then(d => { console.log("appareils.json OK", d.length); return d; })
-    .catch(e => { console.error("appareils.json KO", e); return []; })
-]);
 
 if (isNaN(lat) || isNaN(lon)) { console.warn("URL lat/lon invalides", {lat, lon}); }
-
 
 
     function makeTelHtml(labelEmoji, value) {
@@ -1391,6 +1550,78 @@ function showToast(message) {
     toast.classList.remove("show");
   }, 2000);
 }
+</script>
+
+
+
+<div id="searchWrapper">
+  <input type="text" id="search" placeholder="Rechercher un poste ou un appareil..." autocomplete="off" />
+  <ul id="suggestions"></ul>
+  <div id="result"></div>
+</div>
+
+  <script>
+  window.map = map;
+  window.allMarkers = allMarkers;
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+  
+<script>
+document.addEventListener("input", (e) => {
+  if (e.target.id === "search") {
+    const suggestions = document.getElementById("suggestions");
+    if (!suggestions) return;
+    if (e.target.value.trim().length >= 2 && suggestions.children.length > 0) {
+      suggestions.classList.add("show");
+    } else {
+      suggestions.classList.remove("show");
+    }
+  }
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("⌛ Attente du chargement des marqueurs pour activer la recherche...");
+
+
+  const checkInterval = setInterval(() => {
+    if (window.allMarkers && window.allMarkers.length > 0 && typeof initSearch === "function") {
+      clearInterval(checkInterval);
+      initSearch(window.map, window.allMarkers);
+      console.log("🔎 Recherche initialisée !");
+    }
+  }, 300);
+
+
+  document.addEventListener("keydown", (e) => {
+    if (e.ctrlKey && e.code === "Space") {
+      e.preventDefault();
+      const wrap = document.getElementById("searchWrapper");
+      const input = document.getElementById("search");
+      if (!wrap || !input) return;
+      wrap.classList.toggle("open");
+
+      
+      if (wrap.classList.contains("open")) {
+  input.value = ""; // 🧹 Efface le texte précédent
+  input.focus();
+  const suggestions = document.getElementById("suggestions");
+  const resultEl = document.getElementById("result");
+  if (suggestions) suggestions.innerHTML = "";
+  if (resultEl) resultEl.innerHTML = "";
+} else {
+  input.blur();
+}
+    }
+  });
+
+
+  if (/Mobi|Android/i.test(navigator.userAgent)) {
+    document.getElementById("searchWrapper")?.remove();
+  }
+});
+
 </script>
 
 </body>
