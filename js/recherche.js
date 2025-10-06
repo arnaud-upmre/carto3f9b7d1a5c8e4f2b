@@ -393,42 +393,32 @@ window.initSearch = function(map, allMarkers) {
 };
 
 
-let isFlying = false;
 
-function openMarkerPopup(marker, targetZoom = 19) {
-  if (isFlying) return; // évite un nouveau zoom pendant l'animation
-  isFlying = true;
-
+// 🔧 Helper : ouvre la popup d’un marker même s’il est encore dans un cluster
+function openMarkerPopup(marker, targetZoom = 20) {
   const ll = marker.getLatLng();
+  let finished = false;
 
-  // on attend la fin du zoom avant d'ouvrir la popup
-  const openPopupAfterZoom = () => {
-    if (marker.getPopup) marker.openPopup();
-    isFlying = false;
+  const finish = () => {
+    if (finished) return;
+    finished = true;
+    map.flyTo(ll, targetZoom, { animate: true, duration: 0.6 });
+    // ouvre après l’animation / la déclusterisation
+    setTimeout(() => { if (marker.getPopup) marker.openPopup(); }, 300);
   };
 
-const showMarker = () => {
-  // 💡 décale légèrement le centrage pour que la popup ne soit pas coupée
-  const bounds = map.getBounds();
-  const latOffset = (bounds.getNorth() - bounds.getSouth()) * 0.20; // ajuste ici : 0.10–0.20 selon taille popup
-  const adjustedLat = ll.lat - latOffset;
-  const adjustedLL = L.latLng(adjustedLat, ll.lng);
-
-  map.flyTo(adjustedLL, targetZoom, { animate: true, duration: 0.7 });
-  map.once("moveend", openPopupAfterZoom);
-};
-
-  // si le marker est dans un cluster
-  const tryCluster = (grp) => {
-    if (grp && grp.hasLayer && grp.hasLayer(marker) && grp.zoomToShowLayer) {
-      grp.zoomToShowLayer(marker, showMarker);
+  const tryGroup = (grp) => {
+    if (grp && typeof grp.hasLayer === "function" && grp.hasLayer(marker) && typeof grp.zoomToShowLayer === "function") {
+      grp.zoomToShowLayer(marker, finish);
       return true;
     }
     return false;
   };
 
-  if (!tryCluster(postesLayer) && !tryCluster(accesLayer) && !tryCluster(appareilsLayer)) {
-    showMarker(); // sinon zoom direct
+  // on essaye dans chaque cluster group (selon le type, un seul matchera)
+  if (!tryGroup(postesLayer) && !tryGroup(accesLayer) && !tryGroup(appareilsLayer)) {
+    // pas dans un cluster group (ou déjà visible) → fallback
+    finish();
   }
 }
 
