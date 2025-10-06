@@ -1279,12 +1279,8 @@ recenterBtn.innerHTML = "🎯";
 recenterBtn.onclick = () => {
   if (allMarkers.length > 0) {
     recenterBtn.classList.add("active"); 
- map.setView(defaultCenter, defaultZoom);
-
-
-    setTimeout(() => {
-      recenterBtn.classList.remove("active");
-    }, 800); 
+    focusRandomPoste(); // 👈 va à un poste aléatoire
+    setTimeout(() => recenterBtn.classList.remove("active"), 800);
   }
 };
 
@@ -1336,12 +1332,35 @@ L.DomEvent.disableScrollPropagation(locateBtn);
 };
 leftControls.addTo(map);
 
+    // ✅ Choisit un poste aléatoire et ouvre sa popup
+function focusRandomPoste() {
+  if (!window.allMarkers || window.allMarkers.length === 0) return;
+
+  const postes = window.allMarkers.filter(m => 
+    m.options.customId && m.options.customId.toLowerCase().includes("poste")
+  );
+
+  if (postes.length === 0) return;
+
+  const randomMarker = postes[Math.floor(Math.random() * postes.length)];
+  const ll = randomMarker.getLatLng();
+
+  map.flyTo(ll, 19, { animate: true, duration: 0.7 });
+
+  setTimeout(() => {
+    if (randomMarker.getPopup) randomMarker.openPopup();
+  }, 600);
+}
+
 if (!id) {
   map.whenReady(() => {
     if (allMarkers.length > 0) {
       const group = L.featureGroup(allMarkers);
       map.fitBounds(group.getBounds());
     }
+
+    // 👇 nouvelle ligne : affiche un poste aléatoire au démarrage
+    setTimeout(focusRandomPoste, 1200);
   });
 }
     
