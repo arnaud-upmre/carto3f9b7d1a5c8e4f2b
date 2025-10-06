@@ -903,9 +903,8 @@ const iconAcces = L.divIcon({
   popupAnchor: [0, -48]
 });
 
-fetch("postes.json")
-  .then(r => r.json())
-  .then(data => {
+chargerBaseRecherche().then(allData => {
+  const data = allData.filter(x => x.category === "poste");
     const seenPostes = new Set();
 
     data.forEach(item => {
@@ -1018,9 +1017,8 @@ allMarkers.push(m);
 _tryOpenFromURL();
   });
     
-fetch("appareils.json")
-  .then(r => r.json())
-  .then(data => {
+chargerBaseRecherche().then(allData => {
+  const data = allData.filter(x => x.category === "appareil");
     data.forEach(item => {
       if (!item.latitude || !item.longitude) return;
 
@@ -1417,15 +1415,8 @@ console.info("[Nono Maps] boot", {
 });
 
 
-Promise.allSettled([
-  fetch("postes.json").then(r => r.json()).then(d => { console.log("postes.json OK", d.length); return d; })
-    .catch(e => { console.error("postes.json KO", e); return []; }),
-  fetch("appareils.json").then(r => r.json()).then(d => { console.log("appareils.json OK", d.length); return d; })
-    .catch(e => { console.error("appareils.json KO", e); return []; })
-]);
 
 if (isNaN(lat) || isNaN(lon)) { console.warn("URL lat/lon invalides", {lat, lon}); }
-
 
 
     function makeTelHtml(labelEmoji, value) {
