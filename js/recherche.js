@@ -7,6 +7,17 @@ let selectedIndex = -1;
 const URL_POSTES = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/postes.json";
 const URL_APPAREILS = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/appareils.json";
 
+const compteurURL = "https://script.google.com/macros/s/AKfycbzUFaek89LYosR0FSw9gyxn2IZXlFlWXA_dIFIDwox-szE3DgH-l8IVbGfaoIgGK04h/exec";
+const compteurAppareilURL = "https://script.google.com/macros/s/AKfycbwJIlvcfNYREJn1oPiVAhQqHACXXar8ZbRl6aChwYw4TFSAaMTFEHTT5X2T7BKLJ3gsJw/exec";
+
+function incrementCounter() {
+  fetch(compteurURL + "?increment=true").catch(() => {});
+}
+
+function incrementCounterAppareil() {
+  fetch(compteurAppareilURL + "?increment=true").catch(() => {});
+}
+
 function normalize(str) {
   return (str || "")
     .normalize("NFD")
