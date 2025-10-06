@@ -11,6 +11,7 @@ const compteurURL = "https://script.google.com/macros/s/AKfycbzUFaek89LYosR0FSw9
 const compteurAppareilURL = "https://script.google.com/macros/s/AKfycbwJIlvcfNYREJn1oPiVAhQqHACXXar8ZbRl6aChwYw4TFSAaMTFEHTT5X2T7BKLJ3gsJw/exec";
 
 const isMap = window.location.href.includes("map.html");
+console.log("📍 Page détectée :", window.location.href, "| isMap =", isMap);
 
 function incrementCounter() {
   console.log("🧮 incrementCounter() appelé !");
