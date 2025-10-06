@@ -1126,7 +1126,8 @@ Promise.all([
       _tryOpenFromURL();
     }, 600);
   });
-});
+}); // ← ferme le Promise.all
+});   // ← ferme le .then(allData => { du chargement des appareils)
 
 const pnClasses = {
   10: "PN public pour voitures sans barrières (protection assurée par un agent)",
