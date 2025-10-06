@@ -10,6 +10,8 @@ const URL_APPAREILS = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7
 const compteurURL = "https://script.google.com/macros/s/AKfycbzUFaek89LYosR0FSw9gyxn2IZXlFlWXA_dIFIDwox-szE3DgH-l8IVbGfaoIgGK04h/exec";
 const compteurAppareilURL = "https://script.google.com/macros/s/AKfycbwJIlvcfNYREJn1oPiVAhQqHACXXar8ZbRl6aChwYw4TFSAaMTFEHTT5X2T7BKLJ3gsJw/exec";
 
+const isMap = window.location.pathname.includes("map");
+
 function incrementCounter() {
   console.log("🧮 incrementCounter() appelé !");
   fetch(compteurURL + "?increment=true")
@@ -565,8 +567,8 @@ window.showLieu = function (item) {
 
   const latlng = matches[0].getLatLng();
 
-  // --- Incrémentation compteur (carte) ---
-if (window.location.pathname.includes("map1")) {
+// --- Incrémentation compteur (carte) ---
+if (isMap) {
   if (typeof incrementCounter === "function") incrementCounter();
   console.log("📈 +1 poste/acces (recherche validée sur la carte)");
 }
@@ -646,9 +648,10 @@ setTimeout(() => {
 }, 0);
 
 
-  // --- Incrémentation compteur (carte) ---
-if (window.location.pathname.includes("map1")) {
+// --- Incrémentation compteur (carte) ---
+if (isMap) {
   if (typeof incrementCounterAppareil === "function") incrementCounterAppareil();
+  console.log("📈 +1 appareil (recherche validée sur la carte)");
 }
   
   map.flyTo(latlng, 20, { animate: true, duration: 0.6 });
