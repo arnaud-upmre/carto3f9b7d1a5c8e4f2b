@@ -413,129 +413,131 @@ function iconForMarker(m) {
 }
 
 // ===============================
+// 🎯 Fonctions locales pour map1
+// ===============================
+
+// 🔧 Helper : ouvre la popup d’un marker même s’il est encore dans un cluster
+function openMarkerPopup(marker, targetZoom = 20) {
+  const ll = marker.getLatLng();
+  let finished = false;
+
+  const finish = () => {
+    if (finished) return;
+    finished = true;
+    map.flyTo(ll, targetZoom, { animate: true, duration: 0.6 });
+    // ouvre après l’animation / la déclusterisation
+    setTimeout(() => {
+      if (marker.getPopup) marker.openPopup();
+    }, 300);
+  };
+
+  const tryGroup = (grp) => {
+    if (
+      grp &&
+      typeof grp.hasLayer === "function" &&
+      grp.hasLayer(marker) &&
+      typeof grp.zoomToShowLayer === "function"
+    ) {
+      grp.zoomToShowLayer(marker, finish);
+      return true;
+    }
+    return false;
+  };
+
+  // on essaye dans chaque cluster group (selon le type, un seul matchera)
+  if (
+    !tryGroup(postesLayer) &&
+    !tryGroup(accesLayer) &&
+    !tryGroup(appareilsLayer)
+  ) {
+    // pas dans un cluster group (ou déjà visible) → fallback
+    finish();
+  }
+}
+
+// 🔎 icône affichée dans la popup groupée
+function iconForMarker(m) {
+  const id = (m.options.customId || "").toUpperCase();
+  if (m.options.isAcces) return "acces.png";
+  if (id.includes("POSTE")) return "poste.png";
+  if (id.startsWith("I") || id.startsWith("SI") || id.startsWith("D")) return "int.png";
+  if (id.startsWith("TT") || id.startsWith("TSA") || id.startsWith("TC") || id.startsWith("TRA")) return "TT.png";
+  if (/^[0-9]/.test(id) || id.startsWith("S") || id.startsWith("ST") || id.startsWith("F") || id.startsWith("P") || id.startsWith("FB") || id.startsWith("B")) return "sect.png";
+  if (id.startsWith("ALIM")) return "alim.png";
+  if (id.startsWith("DU")) return "stop.png";
+  return null;
+}
+
+// ===============================
 // ✅ showLieu (poste ou accès)
-// ===============================
-// ===============================
-// ✅ showLieu (poste ou accès) – Option 1 avec choix + ouverture popup
 // ===============================
 window.showLieu = function (item) {
   if (!window.map || !window.allMarkers) return;
 
-  // Helper : trouve le marker le plus proche d'une coordonnée (tolérance en mètres)
-  function getNearestMarker(lat, lng, maxDistM = 30) {
-    const target = L.latLng(lat, lng);
-    let best = null;
-    let bestDist = Infinity;
-    for (const m of window.allMarkers) {
-      const d = map.distance(target, m.getLatLng());
-      if (d < bestDist) { bestDist = d; best = m; }
-    }
-    return (best && bestDist <= maxDistM) ? best : null;
-  }
-
-  // ✅ Cas spécial : le JSON possède 2 jeux de coordonnées (accès + poste)
-  const hasDoubleCoords = item.poste_latitude && item.poste_longitude;
-  if (hasDoubleCoords) {
-    const latAcces  = parseFloat(item.latitude);
-    const lonAcces  = parseFloat(item.longitude);
-    const latPoste  = parseFloat(item.poste_latitude);
-    const lonPoste  = parseFloat(item.poste_longitude);
-
-    const mPoste = getNearestMarker(latPoste, lonPoste, 40);
-    const mAcces = getNearestMarker(latAcces, lonAcces, 40);
-
-    // Position du popup à mi-chemin
-    const midLat = (latAcces + latPoste) / 2;
-    const midLon = (lonAcces + lonPoste) / 2;
-
-    const html = `
-      <div style="min-width:220px;display:flex;flex-direction:column;gap:8px;font-size:15px;font-family:Inter,system-ui,-apple-system,sans-serif;text-align:center;">
-        <p style="margin:0 0 6px 0;font-weight:600;color:#111;">${item.nom || "Choisir la destination"}</p>
-        <button id="btnPoste" style="padding:8px 10px;border:none;border-radius:10px;background:#2563eb;color:#fff;font-weight:600;cursor:pointer;">📍 Aller au poste</button>
-        <button id="btnAcces" style="padding:8px 10px;border:none;border-radius:10px;background:#6b7280;color:#fff;font-weight:600;cursor:pointer;">🚪 Aller à l’accès</button>
-      </div>
-    `;
-
-    const popup = L.popup({ closeOnClick: true, className: "popup-choix-lieu" })
-      .setLatLng([midLat, midLon])
-      .setContent(html)
-      .openOn(map);
-
-    setTimeout(() => {
-      const btnPoste = document.getElementById("btnPoste");
-      const btnAcces = document.getElementById("btnAcces");
-
-      if (btnPoste) btnPoste.addEventListener("click", () => {
-        map.closePopup(popup);
-        if (mPoste) {
-          openMarkerPopup(mPoste, 19);   // ✅ ouvre la popup du marker POSTE
-        } else {
-          map.flyTo([latPoste, lonPoste], 19, { animate: true, duration: 0.6 });
-        }
-        closeSearchBar();
-      });
-
-      if (btnAcces) btnAcces.addEventListener("click", () => {
-        map.closePopup(popup);
-        if (mAcces) {
-          openMarkerPopup(mAcces, 19);   // ✅ ouvre la popup du marker ACCÈS
-        } else {
-          map.flyTo([latAcces, lonAcces], 19, { animate: true, duration: 0.6 });
-        }
-        closeSearchBar();
-      });
-    }, 50);
-
-    return;
-  }
-
-  // 🔸 Cas normal (un seul point) — inchangé
   const targetId = [
     item.nom || "",
     item.type || "",
     item.SAT || "",
     item["accès"] || item.acces || ""
-  ].filter(Boolean).join(" ").toLowerCase().trim();
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase()
+    .trim();
 
-  const matches = window.allMarkers.filter(m =>
-    (m.options.customId || "").toLowerCase().trim() === targetId
+  const matches = window.allMarkers.filter(
+    (m) => (m.options.customId || "").toLowerCase().trim() === targetId
   );
   if (!matches.length) return;
 
   const latlng = matches[0].getLatLng();
 
-  const sameCoords = window.allMarkers.filter(m => {
+  // Tous les marqueurs strictement à la même coordonnée
+  const sameCoords = window.allMarkers.filter((m) => {
     const ll = m.getLatLng();
     return ll.lat === latlng.lat && ll.lng === latlng.lng;
   });
 
+  // Un seul → on “dé-clusterise” et on ouvre sa popup
   if (sameCoords.length === 1) {
     openMarkerPopup(sameCoords[0], 19);
     closeSearchBar();
     return;
   }
 
+  // Plusieurs → popup groupée
   const html = `
     <div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
-      ${sameCoords.map((m, i) => {
-        const id = (m.options.customId || "").toUpperCase();
-        const iconFile = iconForMarker(m);
-        return `
-          <a href="#" class="cluster-link" data-idx="${i}" style="display:flex;align-items:center;gap:6px;">
-            ${iconFile ? `<img src="ico/${iconFile}" style="width:16px;height:16px;">` : ""}
-            <span>${id}</span>
-          </a>`;
-      }).join("")}
+      ${sameCoords
+        .map((m, i) => {
+          const id = (m.options.customId || "").toUpperCase();
+          const iconFile = iconForMarker(m);
+          return `
+            <a href="#" class="cluster-link" data-idx="${i}" style="display:flex;align-items:center;gap:6px;">
+              ${iconFile ? `<img src="ico/${iconFile}" style="width:16px;height:16px;">` : ""}
+              <span>${id}</span>
+            </a>`;
+        })
+        .join("")}
     </div>
   `;
   L.popup().setLatLng(latlng).setContent(html).openOn(map);
 
+  // ✅ clic → remplace le contenu de la popup existante
   setTimeout(() => {
-    document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
-      link.addEventListener("click", ev => {
+    document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach((link) => {
+      link.addEventListener("click", (ev) => {
         ev.preventDefault();
         const idx = +ev.currentTarget.dataset.idx;
-        openMarkerPopup(sameCoords[idx], 19);
+        const target = sameCoords[idx];
+        const content = target.getPopup()?.getContent() || "";
+
+        const popup = L.popup({ maxWidth: 260 })
+          .setLatLng(target.getLatLng())
+          .setContent(content);
+
+        map.openPopup(popup);
+        map.panTo(target.getLatLng());
       });
     });
   }, 0);
@@ -543,10 +545,6 @@ window.showLieu = function (item) {
   map.flyTo(latlng, 18, { animate: true, duration: 0.6 });
   closeSearchBar();
 };
-
-
-
-
 
 // ===============================
 // ✅ showAppareil
@@ -559,15 +557,21 @@ window.showAppareil = function (item) {
     item.nom || "",
     item.type || "",
     item.SAT || ""
-  ].filter(Boolean).join(" ").toLowerCase().trim();
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase()
+    .trim();
 
-  const matches = window.allMarkers.filter(m =>
-    (m.options.customId || "").toLowerCase().trim() === targetId
+  const matches = window.allMarkers.filter(
+    (m) => (m.options.customId || "").toLowerCase().trim() === targetId
   );
   if (!matches.length) return;
 
   const latlng = matches[0].getLatLng();
-  const sameCoords = window.allMarkers.filter(m => {
+
+  // Tous les marqueurs à la même coordonnée
+  const sameCoords = window.allMarkers.filter((m) => {
     const ll = m.getLatLng();
     return ll.lat === latlng.lat && ll.lng === latlng.lng;
   });
@@ -578,27 +582,39 @@ window.showAppareil = function (item) {
     return;
   }
 
+  // Plusieurs → popup groupée
   const html = `
     <div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
-      ${sameCoords.map((m, i) => {
-        const id = (m.options.customId || "").toUpperCase();
-        const iconFile = iconForMarker(m);
-        return `
-          <a href="#" class="cluster-link" data-idx="${i}" style="display:flex;align-items:center;gap:6px;">
-            ${iconFile ? `<img src="ico/${iconFile}" style="width:16px;height:16px;">` : ""}
-            <span>${id}</span>
-          </a>`;
-      }).join("")}
+      ${sameCoords
+        .map((m, i) => {
+          const id = (m.options.customId || "").toUpperCase();
+          const iconFile = iconForMarker(m);
+          return `
+            <a href="#" class="cluster-link" data-idx="${i}" style="display:flex;align-items:center;gap:6px;">
+              ${iconFile ? `<img src="ico/${iconFile}" style="width:16px;height:16px;">` : ""}
+              <span>${id}</span>
+            </a>`;
+        })
+        .join("")}
     </div>
   `;
   L.popup().setLatLng(latlng).setContent(html).openOn(map);
 
+  // ✅ clic → remplace le contenu de la popup existante
   setTimeout(() => {
-    document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
-      link.addEventListener("click", ev => {
+    document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach((link) => {
+      link.addEventListener("click", (ev) => {
         ev.preventDefault();
         const idx = +ev.currentTarget.dataset.idx;
-        openMarkerPopup(sameCoords[idx], 21);
+        const target = sameCoords[idx];
+        const content = target.getPopup()?.getContent() || "";
+
+        const popup = L.popup({ maxWidth: 260 })
+          .setLatLng(target.getLatLng())
+          .setContent(content);
+
+        map.openPopup(popup);
+        map.panTo(target.getLatLng());
       });
     });
   }, 0);
@@ -607,11 +623,9 @@ window.showAppareil = function (item) {
   closeSearchBar();
 };
 
-
-
-
-
-
+// ===============================
+// 🔒 Fermeture de la barre de recherche
+// ===============================
 function closeSearchBar() {
   const searchWrapper = document.getElementById("searchWrapper");
   const searchInput = document.getElementById("search");
