@@ -542,6 +542,12 @@ const map = L.map('map', {
   maxBounds: boundsFrance,     
   maxBoundsViscosity: 1.0      
 }).setView(defaultCenter, defaultZoom);
+    // Correction du problème de carte blanche après redirection
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    map.invalidateSize();
+  }, 600);
+});
 
     
 let editMode = false;   
