@@ -407,10 +407,16 @@ function openMarkerPopup(marker, targetZoom = 19) {
     isFlying = false;
   };
 
-  const showMarker = () => {
-    map.flyTo(ll, targetZoom, { animate: true, duration: 0.7 });
-    map.once("moveend", openPopupAfterZoom); // ✅ ouvre seulement à la fin du fly
-  };
+const showMarker = () => {
+  // 💡 décale légèrement le centrage pour que la popup ne soit pas coupée
+  const bounds = map.getBounds();
+  const latOffset = (bounds.getNorth() - bounds.getSouth()) * 0.20; // ajuste ici : 0.10–0.20 selon taille popup
+  const adjustedLat = ll.lat - latOffset;
+  const adjustedLL = L.latLng(adjustedLat, ll.lng);
+
+  map.flyTo(adjustedLL, targetZoom, { animate: true, duration: 0.7 });
+  map.once("moveend", openPopupAfterZoom);
+};
 
   // si le marker est dans un cluster
   const tryCluster = (grp) => {
