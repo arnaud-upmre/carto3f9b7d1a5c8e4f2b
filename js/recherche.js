@@ -470,6 +470,11 @@ function iconForMarker(m) {
 // ===============================
 window.showLieu = async function (item) {
   console.log("✅ showLieu appelé !", item);
+  console.log("🧩 DEBUG compteurURL =", compteurURL);
+console.log("🧩 URL finale =", compteurURL + "?increment=true");
+console.log("🧩 Page courante =", window.location.pathname);
+console.log("🧩 isMap =", window.location.pathname.includes("map.html"));
+  
   if (!window.map || !window.allMarkers) return;
 
   // 🔍 Helper : cherche un marker proche de coordonnées données
@@ -597,6 +602,10 @@ if (currentIsMap) {
 // ===============================
 window.showAppareil = async function (item) {
     console.log("✅ showAppareil appelé !", item);
+  console.log("🧩 DEBUG compteurAppareilURL =", compteurAppareilURL);
+console.log("🧩 URL finale =", compteurAppareilURL + "?increment=true");
+console.log("🧩 Page courante =", window.location.pathname);
+console.log("🧩 isMap =", window.location.pathname.includes("map.html"));
   if (!window.map || !window.allMarkers) return;
 
   const targetId = [
