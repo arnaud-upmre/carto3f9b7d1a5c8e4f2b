@@ -462,12 +462,9 @@ function iconForMarker(m) {
   return null;
 }
 
-
 // ===============================
-// ✅ showLieu
+// ✅ showLieu (corrigé - ouvre popup poste / accès comme showAppareil)
 // ===============================
-
-
 window.showLieu = function (item) {
   if (!window.map || !window.allMarkers) return;
 
@@ -475,7 +472,16 @@ window.showLieu = function (item) {
   if (item.force === "poste" && item.poste_latitude && item.poste_longitude) {
     const lat = parseFloat(item.poste_latitude);
     const lng = parseFloat(item.poste_longitude);
-    openMarkerPopup({ getLatLng: () => L.latLng(lat, lng), getPopup: () => null }, 19);
+
+    // 🔍 On cherche le vrai marker à cette position
+    const target = window.allMarkers.find(m => {
+      const ll = m.getLatLng();
+      return Math.abs(ll.lat - lat) < 0.00001 && Math.abs(ll.lng - lng) < 0.00001;
+    });
+
+    if (target) openMarkerPopup(target, 19);
+    else map.flyTo([lat, lng], 19, { animate: true, duration: 0.6 });
+
     closeSearchBar();
     return;
   }
@@ -483,12 +489,21 @@ window.showLieu = function (item) {
   if (item.force === "acces" && item.latitude && item.longitude) {
     const lat = parseFloat(item.latitude);
     const lng = parseFloat(item.longitude);
-    openMarkerPopup({ getLatLng: () => L.latLng(lat, lng), getPopup: () => null }, 19);
+
+    // 🔍 Idem pour l’accès
+    const target = window.allMarkers.find(m => {
+      const ll = m.getLatLng();
+      return Math.abs(ll.lat - lat) < 0.00001 && Math.abs(ll.lng - lng) < 0.00001;
+    });
+
+    if (target) openMarkerPopup(target, 19);
+    else map.flyTo([lat, lng], 19, { animate: true, duration: 0.6 });
+
     closeSearchBar();
     return;
   }
 
-  // 🧱 Construction de l'identifiant du poste
+  // 🧱 Construction de l'identifiant texte du poste
   const targetId = [
     item.nom || "",
     item.type || "",
@@ -496,22 +511,38 @@ window.showLieu = function (item) {
     item["accès"] || item.acces || ""
   ].filter(Boolean).join(" ").toLowerCase().trim();
 
-  // 🔍 On cherche les marqueurs correspondants
+  // 🔍 Recherche des marqueurs correspondants
   const matches = window.allMarkers.filter(m =>
     (m.options.customId || "").toLowerCase().trim() === targetId
   );
-  console.log("🔍 showLieu found", matches.length, "marker(s) for", targetId);
-  if (!matches.length) return;
 
+  console.log("🔍 showLieu found", matches.length, "marker(s) for", targetId);
+
+  // 🔁 Si aucun ne correspond (souvent à cause de noms identiques), on tente par coordonnées
+  if (!matches.length && item.latitude && item.longitude) {
+    const lat = parseFloat(item.latitude);
+    const lng = parseFloat(item.longitude);
+    const target = window.allMarkers.find(m => {
+      const ll = m.getLatLng();
+      return Math.abs(ll.lat - lat) < 0.00001 && Math.abs(ll.lng - lng) < 0.00001;
+    });
+    if (target) {
+      openMarkerPopup(target, 19);
+      closeSearchBar();
+      return;
+    }
+  }
+
+  if (!matches.length) return;
   const latlng = matches[0].getLatLng();
 
-  // 📍 On cherche tous les marqueurs strictement au même endroit
+  // 📍 Tous les marqueurs strictement à la même coordonnée
   const sameCoords = window.allMarkers.filter(m => {
     const ll = m.getLatLng();
     return ll.lat === latlng.lat && ll.lng === latlng.lng;
   });
 
-  // ✅ Cas 1 : un seul marker → on ouvre la popup
+  // ✅ Cas 1 : un seul marker → ouvre directement la popup
   if (sameCoords.length === 1) {
     openMarkerPopup(sameCoords[0], 19);
     closeSearchBar();
@@ -557,8 +588,6 @@ window.showLieu = function (item) {
   map.flyTo(latlng, 19, { animate: true, duration: 0.6 });
   closeSearchBar();
 };
-
-
 
 
 // ===============================
