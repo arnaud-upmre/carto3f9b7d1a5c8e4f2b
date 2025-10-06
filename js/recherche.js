@@ -467,38 +467,115 @@ function iconForMarker(m) {
 // ===============================
 window.showLieu = function (item) {
   if (!window.map || !window.allMarkers) return;
-if (item.force === "poste" && item.poste_latitude && item.poste_longitude) {
+
+
+  if (item.force === "poste" && item.poste_latitude && item.poste_longitude) {
   const lat = parseFloat(item.poste_latitude);
   const lng = parseFloat(item.poste_longitude);
 
-  // Trouve le marker correspondant au poste
-  const match = window.allMarkers.find(m => {
+  // 🔎 Trouve tous les markers du poste
+  const matches = window.allMarkers.filter(m => {
     const ll = m.getLatLng();
     return Math.abs(ll.lat - lat) < 0.00001 && Math.abs(ll.lng - lng) < 0.00001;
   });
 
   map.flyTo([lat, lng], 19, { animate: true, duration: 0.6 });
+
   setTimeout(() => {
-    if (match) openMarkerPopup(match, 19);
+    if (matches.length === 1) {
+      openMarkerPopup(matches[0], 19);
+    } else if (matches.length > 1) {
+      const html = `
+        <div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
+          ${matches.map((m, i) => {
+            const id = (m.options.customId || "").toUpperCase();
+            const iconFile = iconForMarker(m);
+            return `
+              <a href="#" class="cluster-link" data-idx="${i}" 
+                 style="display:flex;align-items:center;gap:6px;padding:4px 6px;border-radius:8px;background:#fff2;">
+                ${iconFile ? `<img src="ico/${iconFile}" style="width:16px;height:16px;">` : ""}
+                <span>${id}</span>
+              </a>`;
+          }).join("")}
+        </div>
+      `;
+
+      L.popup({ maxWidth: 260 })
+        .setLatLng([lat, lng])
+        .setContent(html)
+        .openOn(map);
+
+      setTimeout(() => {
+        document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach((link) => {
+          link.addEventListener("click", (ev) => {
+            ev.preventDefault();
+            ev.stopPropagation();
+            const idx = +ev.currentTarget.dataset.idx;
+            const target = matches[idx];
+            const content = target.getPopup()?.getContent() || "";
+            const popup = document.querySelector(".leaflet-popup-content");
+            if (popup) popup.innerHTML = content;
+          });
+        });
+      }, 0);
+    }
   }, 400);
 
   closeSearchBar();
   return;
 }
 
+
 if (item.force === "acces" && item.latitude && item.longitude) {
   const lat = parseFloat(item.latitude);
   const lng = parseFloat(item.longitude);
 
-  // Trouve le marker correspondant à l'accès
-  const match = window.allMarkers.find(m => {
+  // 🔎 Trouve tous les accès sur cette coordonnée
+  const matches = window.allMarkers.filter(m => {
     const ll = m.getLatLng();
     return Math.abs(ll.lat - lat) < 0.00001 && Math.abs(ll.lng - lng) < 0.00001;
   });
 
   map.flyTo([lat, lng], 19, { animate: true, duration: 0.6 });
+
   setTimeout(() => {
-    if (match) openMarkerPopup(match, 19);
+    if (matches.length === 1) {
+      openMarkerPopup(matches[0], 19);
+    } else if (matches.length > 1) {
+      const html = `
+        <div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
+          ${matches.map((m, i) => {
+            const id = (m.options.customId || "").toUpperCase();
+            const iconFile = iconForMarker(m);
+            return `
+              <a href="#" class="cluster-link" data-idx="${i}" 
+                 style="display:flex;align-items:center;gap:6px;padding:4px 6px;border-radius:8px;background:#fff2;">
+                ${iconFile ? `<img src="ico/${iconFile}" style="width:16px;height:16px;">` : ""}
+                <span>${id}</span>
+              </a>`;
+          }).join("")}
+        </div>
+      `;
+
+      L.popup({ maxWidth: 260 })
+        .setLatLng([lat, lng])
+        .setContent(html)
+        .openOn(map);
+
+      setTimeout(() => {
+        document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach((link) => {
+          link.addEventListener("click", (ev) => {
+            ev.preventDefault();
+            ev.stopPropagation();
+            const idx = +ev.currentTarget.dataset.idx;
+            const target = matches[idx];
+            const content = target.getPopup()?.getContent() || "";
+            const popup = document.querySelector(".leaflet-popup-content");
+            if (popup) popup.innerHTML = content;
+          });
+        });
+      }, 0);
+    }
   }, 400);
 
   closeSearchBar();
