@@ -469,7 +469,7 @@ function iconForMarker(m) {
 window.showLieu = function (item) {
   if (!window.map || !window.allMarkers) return;
 
-  // 🧭 Cas “force” (venant du menu déroulant)
+  // --- Cas "force" (clic sur bouton du menu déroulant)
   if (item.force === "poste" && item.poste_latitude && item.poste_longitude) {
     const lat = parseFloat(item.poste_latitude);
     const lng = parseFloat(item.poste_longitude);
@@ -477,7 +477,6 @@ window.showLieu = function (item) {
     closeSearchBar();
     return;
   }
-
   if (item.force === "acces" && item.latitude && item.longitude) {
     const lat = parseFloat(item.latitude);
     const lng = parseFloat(item.longitude);
@@ -486,7 +485,7 @@ window.showLieu = function (item) {
     return;
   }
 
-  // 🧱 Construction de l’identifiant complet du poste
+  // --- Identifiant texte complet (même logique que ton code initial)
   const targetId = [
     item.nom || "",
     item.type || "",
@@ -494,30 +493,44 @@ window.showLieu = function (item) {
     item["accès"] || item.acces || ""
   ].filter(Boolean).join(" ").toLowerCase().trim();
 
-  // 🔍 On cherche le marqueur correspondant à cet ID
-  const matches = window.allMarkers.filter(m =>
+  // --- On récupère le premier marker correspondant
+  let matches = window.allMarkers.filter(m =>
     (m.options.customId || "").toLowerCase().trim() === targetId
   );
 
-  if (!matches.length) return; // rien trouvé → stop
+  // 🟡 Si aucun marker ne correspond strictement, on tente un fallback par coordonnées
+  if (!matches.length && (item.latitude || item.poste_latitude)) {
+    const lat = parseFloat(item.latitude || item.poste_latitude);
+    const lng = parseFloat(item.longitude || item.poste_longitude);
+    matches = window.allMarkers.filter(m => {
+      const ll = m.getLatLng();
+      return ll.lat === lat && ll.lng === lng;
+    });
+  }
 
-  // 🎯 Prend le premier match comme référence
-  const latlng = matches[0].getLatLng();
+  if (!matches.length) {
+    console.warn("Aucun marker trouvé pour", targetId);
+    return;
+  }
 
-  // 🔍 Trouve tous les marqueurs à la même coordonnée (même logique que showAppareil)
+  // --- Référence : premier marker trouvé
+  const refMarker = matches[0];
+  const latlng = refMarker.getLatLng();
+
+  // --- Tous les markers exactement à la même coordonnée
   const sameCoords = window.allMarkers.filter(m => {
     const ll = m.getLatLng();
     return ll.lat === latlng.lat && ll.lng === latlng.lng;
   });
 
-  // ✅ Cas 1 : un seul point → ouvre la vraie popup
+  // ✅ Cas 1 : un seul marker -> ouvrir sa popup
   if (sameCoords.length === 1) {
-    openMarkerPopup(sameCoords[0], 19);
+    openMarkerPopup(refMarker, 19);
     closeSearchBar();
     return;
   }
 
-  // ✅ Cas 2 : plusieurs marqueurs → popup groupée identique à showAppareil
+  // ✅ Cas 2 : plusieurs markers -> afficher la popup groupée (identique à showAppareil)
   const html = `
     <div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
       ${sameCoords.map((m, i) => {
@@ -533,13 +546,12 @@ window.showLieu = function (item) {
     </div>
   `;
 
-  // Ouvre la popup groupée
-  L.popup({ maxWidth: 260 })
+  const popup = L.popup({ maxWidth: 260 })
     .setLatLng(latlng)
     .setContent(html)
     .openOn(map);
 
-  // Clic sur un lien → remplace contenu sans fermer la popup
+  // --- Gestion clics : remplacer le contenu sans fermer la popup
   setTimeout(() => {
     document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach((link) => {
       link.addEventListener("click", (ev) => {
@@ -549,13 +561,13 @@ window.showLieu = function (item) {
         const target = sameCoords[idx];
         const popupContainer = document.querySelector(".leaflet-popup-content");
         if (popupContainer && target.getPopup) {
-          popupContainer.innerHTML = target.getPopup()?.getContent() || "<p>(Aucune donnée)</p>";
+          const originalContent = target.getPopup()?.getContent() || "<p>(Aucune donnée)</p>";
+          popupContainer.innerHTML = originalContent;
         }
       });
     });
   }, 0);
 
-  // Zoom doux vers la zone
   map.flyTo(latlng, 19, { animate: true, duration: 0.6 });
   closeSearchBar();
 };
