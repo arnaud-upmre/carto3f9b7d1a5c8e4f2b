@@ -466,18 +466,21 @@ window.showLieu = function (item) {
     .setContent(html)
     .openOn(map);
 
-  // 🪄 clic sur un élément → remplacer le contenu au lieu de rouvrir la popup
-  setTimeout(() => {
-    document.querySelectorAll(".cluster-link").forEach(link => {
-      link.addEventListener("click", ev => {
-        ev.preventDefault();
-        const idx = +ev.currentTarget.dataset.idx;
-        const target = sameCoords[idx];
-        const content = target.getPopup()?.getContent() || "";
-        popup.setContent(content); // ✅ remplace le contenu au lieu de rouvrir
-      });
+setTimeout(() => {
+  document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach((link) => {
+    link.addEventListener("click", (ev) => {
+      ev.preventDefault();
+      ev.stopPropagation(); // ✅ empêche Leaflet de fermer la popup
+      const idx = +ev.currentTarget.dataset.idx;
+      const target = sameCoords[idx];
+      const content = target.getPopup()?.getContent() || "";
+
+      // ✅ remplace le contenu sans fermer la popup
+      const popup = document.querySelector(".leaflet-popup-content");
+      if (popup) popup.innerHTML = content;
     });
-  }, 0);
+  });
+}, 0);
 
   map.flyTo(latlng, 18, { animate: true, duration: 0.6 });
   closeSearchBar();
@@ -536,18 +539,21 @@ window.showAppareil = function (item) {
     .setContent(html)
     .openOn(map);
 
-  // 🪄 clic → remplace le contenu de la popup
-  setTimeout(() => {
-    document.querySelectorAll(".cluster-link").forEach(link => {
-      link.addEventListener("click", ev => {
-        ev.preventDefault();
-        const idx = +ev.currentTarget.dataset.idx;
-        const target = sameCoords[idx];
-        const content = target.getPopup()?.getContent() || "";
-        popup.setContent(content); // ✅ remplace uniquement le contenu
-      });
+setTimeout(() => {
+  document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach((link) => {
+    link.addEventListener("click", (ev) => {
+      ev.preventDefault();
+      ev.stopPropagation(); // ✅ empêche Leaflet de fermer la popup
+      const idx = +ev.currentTarget.dataset.idx;
+      const target = sameCoords[idx];
+      const content = target.getPopup()?.getContent() || "";
+
+      // ✅ remplace le contenu sans fermer la popup
+      const popup = document.querySelector(".leaflet-popup-content");
+      if (popup) popup.innerHTML = content;
     });
-  }, 0);
+  });
+}, 0);
 
   map.flyTo(latlng, 20, { animate: true, duration: 0.6 });
   closeSearchBar();
