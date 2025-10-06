@@ -371,6 +371,50 @@ window.initSearch = function(map, allMarkers) {
 // ===============================
 // 🎯 Fonctions locales pour map1
 // ===============================
+// 🔧 Helper : ouvre la popup d’un marker même s’il est encore dans un cluster
+function openMarkerPopup(marker, targetZoom = 20) {
+  const ll = marker.getLatLng();
+  let finished = false;
+
+  const finish = () => {
+    if (finished) return;
+    finished = true;
+    map.flyTo(ll, targetZoom, { animate: true, duration: 0.6 });
+    // ouvre après l’animation / la déclusterisation
+    setTimeout(() => { if (marker.getPopup) marker.openPopup(); }, 300);
+  };
+
+  const tryGroup = (grp) => {
+    if (grp && typeof grp.hasLayer === "function" && grp.hasLayer(marker) && typeof grp.zoomToShowLayer === "function") {
+      grp.zoomToShowLayer(marker, finish);
+      return true;
+    }
+    return false;
+  };
+
+  // on essaye dans chaque cluster group (selon le type, un seul matchera)
+  if (!tryGroup(postesLayer) && !tryGroup(accesLayer) && !tryGroup(appareilsLayer)) {
+    // pas dans un cluster group (ou déjà visible) → fallback
+    finish();
+  }
+}
+
+// 🔎 icône affichée dans la popup groupée
+function iconForMarker(m) {
+  const id = (m.options.customId || "").toUpperCase();
+  if (m.options.isAcces) return "acces.png";
+  if (id.includes("POSTE")) return "poste.png";
+  if (id.startsWith("I") || id.startsWith("SI") || id.startsWith("D")) return "int.png";
+  if (id.startsWith("TT") || id.startsWith("TSA") || id.startsWith("TC") || id.startsWith("TRA")) return "TT.png";
+  if (/^[0-9]/.test(id) || id.startsWith("S") || id.startsWith("ST") || id.startsWith("F") || id.startsWith("P") || id.startsWith("FB") || id.startsWith("B")) return "sect.png";
+  if (id.startsWith("ALIM")) return "alim.png";
+  if (id.startsWith("DU")) return "stop.png";
+  return null;
+}
+
+// ===============================
+// ✅ showLieu (poste ou accès)
+// ===============================
 window.showLieu = function (item) {
   if (!window.map || !window.allMarkers) return;
 
@@ -379,105 +423,64 @@ window.showLieu = function (item) {
     item.type || "",
     item.SAT || "",
     item["accès"] || item.acces || ""
-  ]
-    .filter(Boolean)
-    .join(" ")
-    .toLowerCase()
-    .trim();
+  ].filter(Boolean).join(" ").toLowerCase().trim();
 
-  const matches = window.allMarkers.filter(m => {
-    const id = (m.options.customId || "").toLowerCase().trim();
-    return id === targetId;
-  });
+  const matches = window.allMarkers.filter(m =>
+    (m.options.customId || "").toLowerCase().trim() === targetId
+  );
+  if (!matches.length) return;
 
-  if (matches.length === 0) {
-    console.warn("⚠️ Aucun marqueur trouvé pour :", targetId);
-    return;
-  }
+  const latlng = matches[0].getLatLng();
 
-  const first = matches[0];
-  const latlng = first.getLatLng();
-
-  // 📍 Récupère tous les marqueurs à la même position
+  // Tous les marqueurs strictement à la même coordonnée
   const sameCoords = window.allMarkers.filter(m => {
     const ll = m.getLatLng();
     return ll.lat === latlng.lat && ll.lng === latlng.lng;
   });
 
-  // ✅ Si un seul → on zoom ET on ouvre sa popup (avec petit délai)
+  // Un seul → on “dé-clusterise” et on ouvre sa popup
   if (sameCoords.length === 1) {
-    map.flyTo(latlng, 19, { animate: true, duration: 0.8 });
-
-    // 💡 On attend que le zoom soit fini pour ouvrir la popup
-    setTimeout(() => {
-      const marker = sameCoords[0];
-      if (marker && marker.getPopup()) {
-        marker.openPopup();
-      } else {
-        console.warn("⚠️ Pas de popup liée au marker :", marker.options.customId);
-      }
-    }, 600); // délai léger pour laisser Leaflet finir l’animation
-
+    openMarkerPopup(sameCoords[0], 19);
     closeSearchBar();
     return;
   }
 
-  // ✅ Si plusieurs → popup groupée avec icônes correctes
-  const items = sameCoords.map((m, i) => {
-    const id = (m.options.customId || "").toUpperCase();
-    let iconFile = null;
-
-    if (m.options.isAcces) iconFile = "acces.png";
-    else if (id.includes("POSTE")) iconFile = "poste.png";
-    else if (id.startsWith("I") || id.startsWith("SI") || id.startsWith("D")) iconFile = "int.png";
-    else if (id.startsWith("TT") || id.startsWith("TSA") || id.startsWith("TC") || id.startsWith("TRA")) iconFile = "TT.png";
-    else if (/^[0-9]/.test(id) || id.startsWith("S") || id.startsWith("ST") || id.startsWith("F") || id.startsWith("P") || id.startsWith("FB") || id.startsWith("B")) iconFile = "sect.png";
-    else if (id.startsWith("ALIM")) iconFile = "alim.png";
-    else if (id.startsWith("DU")) iconFile = "stop.png";
-
-    return `
-      <a href="#" class="cluster-link" data-idx="${i}" style="display:flex;align-items:center;gap:6px;">
-        ${iconFile ? `<img src="ico/${iconFile}" style="width:16px;height:16px;">` : ""}
-        <span>${id}</span>
-      </a>`;
-  }).join("");
-
+  // Plusieurs → popup groupée
   const html = `
     <div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
-      ${items}
+      ${sameCoords.map((m, i) => {
+        const id = (m.options.customId || "").toUpperCase();
+        const iconFile = iconForMarker(m);
+        return `
+          <a href="#" class="cluster-link" data-idx="${i}" style="display:flex;align-items:center;gap:6px;">
+            ${iconFile ? `<img src="ico/${iconFile}" style="width:16px;height:16px;">` : ""}
+            <span>${id}</span>
+          </a>`;
+      }).join("")}
     </div>
   `;
-
   L.popup().setLatLng(latlng).setContent(html).openOn(map);
 
-  // 🎯 Clic sur chaque lien du groupe
   setTimeout(() => {
     document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
       link.addEventListener("click", ev => {
         ev.preventDefault();
         const idx = +ev.currentTarget.dataset.idx;
-        const target = sameCoords[idx];
-        const content = target.getPopup()?.getContent() || "";
-        L.popup({ maxWidth: 240 })
-          .setLatLng(target.getLatLng())
-          .setContent(content)
-          .openOn(map);
-        map.panTo(target.getLatLng());
+        openMarkerPopup(sameCoords[idx], 19);
       });
     });
   }, 0);
 
-  map.flyTo(latlng, 18, { animate: true, duration: 0.8 });
+  map.flyTo(latlng, 18, { animate: true, duration: 0.6 });
   closeSearchBar();
 };
 
-
-
-
+// ===============================
+// ✅ showAppareil
+// ===============================
 window.showAppareil = function (item) {
   if (!window.map || !window.allMarkers) return;
 
-  // 🧩 Clé d’identification alignée avec ton ancien map.html
   const targetId = [
     item.appareil || "",
     item.nom || "",
@@ -485,82 +488,56 @@ window.showAppareil = function (item) {
     item.SAT || ""
   ].filter(Boolean).join(" ").toLowerCase().trim();
 
-  // 🔍 Trouve les marqueurs correspondants
   const matches = window.allMarkers.filter(m =>
     (m.options.customId || "").toLowerCase().trim() === targetId
   );
+  if (!matches.length) return;
 
-  if (matches.length === 0) {
-    console.warn("⚠️ Aucun marqueur trouvé pour :", targetId);
-    return;
-  }
-
-  const first = matches[0];
-  const latlng = first.getLatLng();
-
-  // ⚡ Regroupe les marqueurs à la même position
+  const latlng = matches[0].getLatLng();
   const sameCoords = window.allMarkers.filter(m => {
     const ll = m.getLatLng();
     return ll.lat === latlng.lat && ll.lng === latlng.lng;
   });
 
-  // 🟢 Cas simple : un seul appareil → popup classique
   if (sameCoords.length === 1) {
-    map.flyTo(latlng, 21, { animate: true, duration: 0.8 });
-    sameCoords[0].openPopup();
+    openMarkerPopup(sameCoords[0], 21);
     closeSearchBar();
     return;
   }
 
-  // 🧱 Cas multiple → popup groupée (identique à ton ancien _tryOpenFromURL)
-  const items = sameCoords.map((m, i) => {
-    const id = (m.options.customId || "").toUpperCase();
-    let iconFile = null;
-
-    if (id.startsWith("I") || id.startsWith("SI") || id.startsWith("D")) iconFile = "int.png";
-    else if (id.startsWith("TT") || id.startsWith("TSA") || id.startsWith("TC") || id.startsWith("TRA")) iconFile = "TT.png";
-    else if (/^[0-9]/.test(id) || id.startsWith("S") || id.startsWith("ST") || id.startsWith("F") || id.startsWith("P") || id.startsWith("FB") || id.startsWith("B")) iconFile = "sect.png";
-    else if (id.startsWith("ALIM")) iconFile = "alim.png";
-    else if (id.startsWith("DU")) iconFile = "stop.png";
-
-    return `
-      <a href="#" class="cluster-link" data-idx="${i}" 
-         style="display:flex;align-items:center;gap:6px;">
-        ${iconFile ? `<img src="ico/${iconFile}" style="width:16px;height:16px;">` : ""}
-        <span>${id}</span>
-      </a>`;
-  }).join("");
-
   const html = `
     <div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
-      ${items}
-    </div>`;
+      ${sameCoords.map((m, i) => {
+        const id = (m.options.customId || "").toUpperCase();
+        const iconFile = iconForMarker(m);
+        return `
+          <a href="#" class="cluster-link" data-idx="${i}" style="display:flex;align-items:center;gap:6px;">
+            ${iconFile ? `<img src="ico/${iconFile}" style="width:16px;height:16px;">` : ""}
+            <span>${id}</span>
+          </a>`;
+      }).join("")}
+    </div>
+  `;
+  L.popup().setLatLng(latlng).setContent(html).openOn(map);
 
-  L.popup()
-    .setLatLng(latlng)
-    .setContent(html)
-    .openOn(map);
-
-  // 🎯 Gestion du clic sur les liens groupés
   setTimeout(() => {
     document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
       link.addEventListener("click", ev => {
         ev.preventDefault();
         const idx = +ev.currentTarget.dataset.idx;
-        const target = sameCoords[idx];
-        const content = target.getPopup()?.getContent() || "";
-        L.popup({ maxWidth: 240 })
-          .setLatLng(target.getLatLng())
-          .setContent(content)
-          .openOn(map);
-        map.panTo(target.getLatLng());
+        openMarkerPopup(sameCoords[idx], 21);
       });
     });
   }, 0);
 
-  map.flyTo(latlng, 20, { animate: true, duration: 0.8 });
+  map.flyTo(latlng, 20, { animate: true, duration: 0.6 });
   closeSearchBar();
 };
+
+
+
+
+
 
 function closeSearchBar() {
   const searchWrapper = document.getElementById("searchWrapper");
