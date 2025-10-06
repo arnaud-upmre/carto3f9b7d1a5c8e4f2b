@@ -289,26 +289,53 @@ document.addEventListener("DOMContentLoaded", async () => {
     // ► Tri complet
     results = trierResultats(results, cleanedQuery, query.toLowerCase());
 
-    // ► Affichage des suggestions
-    const labelFor = (item) =>
-      (item.category === "poste")
-        ? formatNomCompletLieu(item)
-        : `${item.appareil} (${item.nom}${item.type ? ' ' + item.type : ''}${item.SAT ? ' / ' + item.SAT : ''})`;
+// 💬 Affichage amélioré : différencier poste / accès / appareil uniquement sur map1
+const isMap1 = window.location.pathname.includes("map1.html");
 
-    results.forEach((item, i) => {
-      const li = document.createElement("li");
-      const icon = (item.category === "poste")
-        ? `🚙${item.poste_latitude && item.poste_longitude ? " 📍" : ""}`
-        : "💡";
-      li.innerHTML = `${icon} ${labelFor(item)}`;
-      if (i === 0) li.classList.add("best");
-  li.onclick = () => {
-  if (item.category === "poste") showLieu(item);
-  else showAppareil(item);
-  closeSearchBar(); // ✅ ferme la barre
+const labelFor = (item) => {
+  if (item.category === "poste") {
+    const nomBase = `${item.nom || ""} ${item.type || ""} ${item.SAT || ""}`.trim();
+
+    if (!isMap1) {
+      // ✅ comportement standard pour index.html
+      return item["accès"] ? `${nomBase} – accès ${item["accès"]}` : nomBase;
+    } else {
+      // ✅ affichage clair sur map1.html
+      if (item["accès"]) return `${nomBase} – accès ${item["accès"]}`;
+      else return `${nomBase} (poste)`;
+    }
+  }
+
+  // Appareils → inchangé
+  return `${item.appareil} (${item.nom}${item.type ? ' ' + item.type : ''}${item.SAT ? ' / ' + item.SAT : ''})`;
 };
-      suggestionsEl.appendChild(li);
-    });
+
+// 🧭 Icônes selon le type
+results.forEach((item, i) => {
+  const li = document.createElement("li");
+
+  let icon = "💡"; // par défaut → appareil
+  if (item.category === "poste") {
+    if (isMap1) {
+      // 📍 pour accès, 🚙 pour poste
+      icon = item["accès"] ? "📍" : "🚙";
+    } else {
+      // comportement inchangé sur index.html
+      icon = `🚙${item["accès"] ? " 📍" : ""}`;
+    }
+  }
+
+  li.innerHTML = `${icon} ${labelFor(item)}`;
+  if (i === 0) li.classList.add("best");
+
+  li.onclick = () => {
+    if (item.category === "poste") showLieu(item);
+    else showAppareil(item);
+    closeSearchBar(); // ✅ ferme la barre après clic
+  };
+
+  suggestionsEl.appendChild(li);
+});
   });
 
   // ► Navigation clavier
