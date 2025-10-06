@@ -472,29 +472,21 @@ window.showLieu = function (item) {
 };
 
 
-
-
 window.showAppareil = function (item) {
   if (!window.map || !window.allMarkers) return;
 
-  // 🧩 Clé d’identification textuelle
+  // 🧩 Clé d’identification alignée avec ton ancien map.html
   const targetId = [
     item.appareil || "",
     item.nom || "",
     item.type || "",
-    item.SAT || "",
-    item["accès"] || item.acces || ""
-  ]
-    .filter(Boolean)
-    .join(" ")
-    .toLowerCase()
-    .trim();
+    item.SAT || ""
+  ].filter(Boolean).join(" ").toLowerCase().trim();
 
   // 🔍 Trouve les marqueurs correspondants
-  const matches = window.allMarkers.filter(m => {
-    const id = (m.options.customId || "").toLowerCase().trim();
-    return id === targetId;
-  });
+  const matches = window.allMarkers.filter(m =>
+    (m.options.customId || "").toLowerCase().trim() === targetId
+  );
 
   if (matches.length === 0) {
     console.warn("⚠️ Aucun marqueur trouvé pour :", targetId);
@@ -504,87 +496,61 @@ window.showAppareil = function (item) {
   const first = matches[0];
   const latlng = first.getLatLng();
 
-  // ⚡ Recherche de tous les marqueurs aux mêmes coordonnées
+  // ⚡ Regroupe les marqueurs à la même position
   const sameCoords = window.allMarkers.filter(m => {
     const ll = m.getLatLng();
     return ll.lat === latlng.lat && ll.lng === latlng.lng;
   });
 
-  // 🟢 Si un seul marqueur → affiche la popup normale du marker
+  // 🟢 Cas simple : un seul appareil → popup classique
   if (sameCoords.length === 1) {
     map.flyTo(latlng, 21, { animate: true, duration: 0.8 });
-
-    const target = sameCoords[0];
-    const popup = target.getPopup();
-
-    if (popup) {
-      target.openPopup(); // ✅ vraie popup liée au marqueur
-    } else {
-      // 🩹 fallback si pas de popup bindée
-      const content = target.options.popupContent || `<b>${(target.options.customId || "").toUpperCase()}</b>`;
-      L.popup({ maxWidth: 300 })
-        .setLatLng(latlng)
-        .setContent(content)
-        .openOn(map);
-    }
-
+    sameCoords[0].openPopup();
     closeSearchBar();
     return;
   }
 
-  // 🧱 Si plusieurs → popup groupée avec icônes
-  const items = sameCoords
-    .map((m, i) => {
-      const id = (m.options.customId || "").toUpperCase();
-      let iconFile = "sect.png";
+  // 🧱 Cas multiple → popup groupée (identique à ton ancien _tryOpenFromURL)
+  const items = sameCoords.map((m, i) => {
+    const id = (m.options.customId || "").toUpperCase();
+    let iconFile = null;
 
-      if (id.startsWith("I") || id.startsWith("SI") || id.startsWith("D")) iconFile = "int.png";
-      else if (id.startsWith("TT") || id.startsWith("TSA") || id.startsWith("TC") || id.startsWith("TRA")) iconFile = "TT.png";
-      else if (/^[0-9]/.test(id) || id.startsWith("S") || id.startsWith("ST") || id.startsWith("F") || id.startsWith("P") || id.startsWith("FB") || id.startsWith("B")) iconFile = "sect.png";
-      else if (id.startsWith("ALIM")) iconFile = "alim.png";
-      else if (id.startsWith("DU")) iconFile = "stop.png";
+    if (id.startsWith("I") || id.startsWith("SI") || id.startsWith("D")) iconFile = "int.png";
+    else if (id.startsWith("TT") || id.startsWith("TSA") || id.startsWith("TC") || id.startsWith("TRA")) iconFile = "TT.png";
+    else if (/^[0-9]/.test(id) || id.startsWith("S") || id.startsWith("ST") || id.startsWith("F") || id.startsWith("P") || id.startsWith("FB") || id.startsWith("B")) iconFile = "sect.png";
+    else if (id.startsWith("ALIM")) iconFile = "alim.png";
+    else if (id.startsWith("DU")) iconFile = "stop.png";
 
-      return `
-        <a href="#" class="cluster-link" data-idx="${i}" 
-           style="display:flex;align-items:center;gap:6px;padding:3px 4px;text-decoration:none;">
-          <img src="ico/${iconFile}" style="width:16px;height:16px;">
-          <span>${id}</span>
-        </a>`;
-    })
-    .join("");
+    return `
+      <a href="#" class="cluster-link" data-idx="${i}" 
+         style="display:flex;align-items:center;gap:6px;">
+        ${iconFile ? `<img src="ico/${iconFile}" style="width:16px;height:16px;">` : ""}
+        <span>${id}</span>
+      </a>`;
+  }).join("");
 
   const html = `
-    <div style="min-width:220px;display:flex;flex-direction:column;gap:4px;">
+    <div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
       ${items}
-    </div>
-  `;
+    </div>`;
 
-  // 📍 Popup groupée
-  L.popup({ maxWidth: 260 })
+  L.popup()
     .setLatLng(latlng)
     .setContent(html)
     .openOn(map);
 
-  // 🎯 Interaction sur chaque lien de la popup groupée
+  // 🎯 Gestion du clic sur les liens groupés
   setTimeout(() => {
     document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
       link.addEventListener("click", ev => {
         ev.preventDefault();
         const idx = +ev.currentTarget.dataset.idx;
         const target = sameCoords[idx];
-        const popup = target.getPopup();
-
-        if (popup) {
-          target.openPopup(); // ✅ ouvre la vraie popup de ce marker
-        } else {
-          // fallback visuel
-          const content = target.options.popupContent || `<b>${(target.options.customId || "").toUpperCase()}</b>`;
-          L.popup({ maxWidth: 300 })
-            .setLatLng(target.getLatLng())
-            .setContent(content)
-            .openOn(map);
-        }
-
+        const content = target.getPopup()?.getContent() || "";
+        L.popup({ maxWidth: 240 })
+          .setLatLng(target.getLatLng())
+          .setContent(content)
+          .openOn(map);
         map.panTo(target.getLatLng());
       });
     });
@@ -593,7 +559,6 @@ window.showAppareil = function (item) {
   map.flyTo(latlng, 20, { animate: true, duration: 0.8 });
   closeSearchBar();
 };
-
 
 function closeSearchBar() {
   const searchWrapper = document.getElementById("searchWrapper");
