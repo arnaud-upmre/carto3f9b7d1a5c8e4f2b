@@ -1582,8 +1582,6 @@ document.addEventListener("input", (e) => {
 </script>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("⌛ Attente du chargement des marqueurs pour activer la recherche...");
-
 
   const checkInterval = setInterval(() => {
     if (window.allMarkers && window.allMarkers.length > 0 && typeof initSearch === "function") {
