@@ -404,43 +404,42 @@ window.showLieu = function (item) {
     return ll.lat === latlng.lat && ll.lng === latlng.lng;
   });
 
-  // ✅ Si un seul → popup normale
+  // ✅ Si un seul → on zoom ET on ouvre sa popup
   if (sameCoords.length === 1) {
     map.flyTo(latlng, 19, { animate: true, duration: 0.8 });
-    sameCoords[0].openPopup();
+
+    // 🧩 ouverture forcée de la popup
+    const marker = sameCoords[0];
+    const popup = marker.getPopup();
+    if (popup) {
+      marker.openPopup();
+    } else {
+      console.warn("⚠️ Pas de popup liée au marker :", marker.options.customId);
+    }
+
     closeSearchBar();
     return;
   }
 
   // ✅ Si plusieurs → popup groupée avec icônes correctes
-  const items = sameCoords
-    .map((m, i) => {
-      const id = (m.options.customId || "").toUpperCase();
-      let iconFile = null;
+  const items = sameCoords.map((m, i) => {
+    const id = (m.options.customId || "").toUpperCase();
+    let iconFile = null;
 
-      if (m.options.isAcces) {
-        iconFile = "acces.png";
-      } else if (id.includes("POSTE")) {
-        iconFile = "poste.png";
-      } else if (id.startsWith("I") || id.startsWith("SI") || id.startsWith("D")) {
-        iconFile = "int.png";
-      } else if (id.startsWith("TT") || id.startsWith("TSA") || id.startsWith("TC") || id.startsWith("TRA")) {
-        iconFile = "TT.png";
-      } else if (/^[0-9]/.test(id) || id.startsWith("S") || id.startsWith("ST") || id.startsWith("F") || id.startsWith("P") || id.startsWith("FB") || id.startsWith("B")) {
-        iconFile = "sect.png";
-      } else if (id.startsWith("ALIM")) {
-        iconFile = "alim.png";
-      } else if (id.startsWith("DU")) {
-        iconFile = "stop.png";
-      }
+    if (m.options.isAcces) iconFile = "acces.png";
+    else if (id.includes("POSTE")) iconFile = "poste.png";
+    else if (id.startsWith("I") || id.startsWith("SI") || id.startsWith("D")) iconFile = "int.png";
+    else if (id.startsWith("TT") || id.startsWith("TSA") || id.startsWith("TC") || id.startsWith("TRA")) iconFile = "TT.png";
+    else if (/^[0-9]/.test(id) || id.startsWith("S") || id.startsWith("ST") || id.startsWith("F") || id.startsWith("P") || id.startsWith("FB") || id.startsWith("B")) iconFile = "sect.png";
+    else if (id.startsWith("ALIM")) iconFile = "alim.png";
+    else if (id.startsWith("DU")) iconFile = "stop.png";
 
-      return `
-        <a href="#" class="cluster-link" data-idx="${i}" style="display:flex;align-items:center;gap:6px;">
-          ${iconFile ? `<img src="ico/${iconFile}" style="width:16px;height:16px;">` : ""}
-          <span>${id}</span>
-        </a>`;
-    })
-    .join("");
+    return `
+      <a href="#" class="cluster-link" data-idx="${i}" style="display:flex;align-items:center;gap:6px;">
+        ${iconFile ? `<img src="ico/${iconFile}" style="width:16px;height:16px;">` : ""}
+        <span>${id}</span>
+      </a>`;
+  }).join("");
 
   const html = `
     <div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
@@ -470,7 +469,6 @@ window.showLieu = function (item) {
   map.flyTo(latlng, 18, { animate: true, duration: 0.8 });
   closeSearchBar();
 };
-
 
 window.showAppareil = function (item) {
   if (!window.map || !window.allMarkers) return;
