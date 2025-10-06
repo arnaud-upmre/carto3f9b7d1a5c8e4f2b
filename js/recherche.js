@@ -10,7 +10,7 @@ const URL_APPAREILS = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7
 const compteurURL = "https://script.google.com/macros/s/AKfycbzUFaek89LYosR0FSw9gyxn2IZXlFlWXA_dIFIDwox-szE3DgH-l8IVbGfaoIgGK04h/exec";
 const compteurAppareilURL = "https://script.google.com/macros/s/AKfycbwJIlvcfNYREJn1oPiVAhQqHACXXar8ZbRl6aChwYw4TFSAaMTFEHTT5X2T7BKLJ3gsJw/exec";
 
-const isMap = window.location.pathname.endsWith("map.html");
+const isMap = window.location.href.includes("map.html");
 
 function incrementCounter() {
   console.log("🧮 incrementCounter() appelé !");
