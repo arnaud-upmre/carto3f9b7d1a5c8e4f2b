@@ -438,7 +438,7 @@ window.showLieu = function (item) {
     return ll.lat === latlng.lat && ll.lng === latlng.lng;
   });
 
-  // Un seul → on “dé-clusterise” et on ouvre sa popup
+  // Un seul → on ouvre directement sa popup
   if (sameCoords.length === 1) {
     openMarkerPopup(sameCoords[0], 19);
     closeSearchBar();
@@ -452,21 +452,29 @@ window.showLieu = function (item) {
         const id = (m.options.customId || "").toUpperCase();
         const iconFile = iconForMarker(m);
         return `
-          <a href="#" class="cluster-link" data-idx="${i}" style="display:flex;align-items:center;gap:6px;">
+          <a href="#" class="cluster-link" data-idx="${i}" 
+             style="display:flex;align-items:center;gap:6px;padding:4px 6px;border-radius:8px;background:#fff2;">
             ${iconFile ? `<img src="ico/${iconFile}" style="width:16px;height:16px;">` : ""}
             <span>${id}</span>
           </a>`;
       }).join("")}
     </div>
   `;
-  L.popup().setLatLng(latlng).setContent(html).openOn(map);
 
+  const popup = L.popup({ maxWidth: 260 })
+    .setLatLng(latlng)
+    .setContent(html)
+    .openOn(map);
+
+  // 🪄 clic sur un élément → remplacer le contenu au lieu de rouvrir la popup
   setTimeout(() => {
-    document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
+    document.querySelectorAll(".cluster-link").forEach(link => {
       link.addEventListener("click", ev => {
         ev.preventDefault();
         const idx = +ev.currentTarget.dataset.idx;
-        openMarkerPopup(sameCoords[idx], 19);
+        const target = sameCoords[idx];
+        const content = target.getPopup()?.getContent() || "";
+        popup.setContent(content); // ✅ remplace le contenu au lieu de rouvrir
       });
     });
   }, 0);
@@ -474,6 +482,8 @@ window.showLieu = function (item) {
   map.flyTo(latlng, 18, { animate: true, duration: 0.6 });
   closeSearchBar();
 };
+
+
 
 // ===============================
 // ✅ showAppareil
@@ -494,6 +504,7 @@ window.showAppareil = function (item) {
   if (!matches.length) return;
 
   const latlng = matches[0].getLatLng();
+
   const sameCoords = window.allMarkers.filter(m => {
     const ll = m.getLatLng();
     return ll.lat === latlng.lat && ll.lng === latlng.lng;
@@ -511,21 +522,29 @@ window.showAppareil = function (item) {
         const id = (m.options.customId || "").toUpperCase();
         const iconFile = iconForMarker(m);
         return `
-          <a href="#" class="cluster-link" data-idx="${i}" style="display:flex;align-items:center;gap:6px;">
+          <a href="#" class="cluster-link" data-idx="${i}" 
+             style="display:flex;align-items:center;gap:6px;padding:4px 6px;border-radius:8px;background:#fff2;">
             ${iconFile ? `<img src="ico/${iconFile}" style="width:16px;height:16px;">` : ""}
             <span>${id}</span>
           </a>`;
       }).join("")}
     </div>
   `;
-  L.popup().setLatLng(latlng).setContent(html).openOn(map);
 
+  const popup = L.popup({ maxWidth: 260 })
+    .setLatLng(latlng)
+    .setContent(html)
+    .openOn(map);
+
+  // 🪄 clic → remplace le contenu de la popup
   setTimeout(() => {
-    document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
+    document.querySelectorAll(".cluster-link").forEach(link => {
       link.addEventListener("click", ev => {
         ev.preventDefault();
         const idx = +ev.currentTarget.dataset.idx;
-        openMarkerPopup(sameCoords[idx], 21);
+        const target = sameCoords[idx];
+        const content = target.getPopup()?.getContent() || "";
+        popup.setContent(content); // ✅ remplace uniquement le contenu
       });
     });
   }, 0);
@@ -533,9 +552,6 @@ window.showAppareil = function (item) {
   map.flyTo(latlng, 20, { animate: true, duration: 0.6 });
   closeSearchBar();
 };
-
-
-
 
 
 
