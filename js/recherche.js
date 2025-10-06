@@ -336,23 +336,23 @@ if (
     `;
 
     li.appendChild(submenu);
-
-    // 📍 Clic sur "Poste"
-    submenu.querySelector(".btn-poste").addEventListener("click", (ev) => {
-      ev.stopPropagation();
-      showLieu({ ...item, force: "poste" });
-      closeSearchBar();
-    });
+// 📍 Clic sur "Poste"
+submenu.querySelector(".btn-poste").addEventListener("click", (ev) => {
+  ev.stopPropagation();
+  submenu.remove(); // ✅ ferme le menu avant de centrer
+  showLieu({ ...item, force: "poste" });
+  closeSearchBar();
+});
 
 // 🚙 Clic sur "Accès"
 submenu.querySelector(".btn-acces").addEventListener("click", (ev) => {
   ev.stopPropagation();
+  submenu.remove(); // ✅ ferme le menu avant de centrer
   showLieu({ ...item, force: "acces" });
   closeSearchBar();
 });
 
-// ✅ on laisse le return pour bloquer le clic principal,
-// mais le compteur est déclenché par showLieu() dans les sous-boutons
+// ✅ garde le return ici, c’est lui qui empêche le clic principal de “manger” le menu
 return;
   }
 
