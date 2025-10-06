@@ -423,47 +423,28 @@ window.initSearch = function(map, allMarkers) {
 // ===============================
 // 🔧 Helper : ouvre la popup d’un marker même s’il est encore dans un cluster
 function openMarkerPopup(marker, targetZoom = 20) {
-  if (!marker || !map) return;
-
   const ll = marker.getLatLng();
   let finished = false;
 
   const finish = () => {
     if (finished) return;
     finished = true;
-
-    // 🧭 Calcul du point légèrement décalé pour que la popup soit bien visible
-    const containerCenter = map.latLngToContainerPoint(ll);
-    const offsetCenter = L.point(containerCenter.x, containerCenter.y);
-    const centeredLatLng = map.containerPointToLatLng(offsetCenter);
-
-    // 🚀 Centre la carte d’abord
-    map.flyTo(centeredLatLng, targetZoom, { animate: true, duration: 0.6 });
-
-    // ⏱️ Ouvre la popup après l’animation
-    setTimeout(() => {
-      if (marker.getPopup) marker.openPopup();
-    }, 600);
+    map.flyTo(ll, targetZoom, { animate: true, duration: 0.6 });
+    // ouvre après l’animation / la déclusterisation
+    setTimeout(() => { if (marker.getPopup) marker.openPopup(); }, 300);
   };
 
   const tryGroup = (grp) => {
-    if (
-      grp &&
-      typeof grp.hasLayer === "function" &&
-      grp.hasLayer(marker) &&
-      typeof grp.zoomToShowLayer === "function"
-    ) {
+    if (grp && typeof grp.hasLayer === "function" && grp.hasLayer(marker) && typeof grp.zoomToShowLayer === "function") {
       grp.zoomToShowLayer(marker, finish);
       return true;
     }
     return false;
   };
 
-  if (
-    !tryGroup(postesLayer) &&
-    !tryGroup(accesLayer) &&
-    !tryGroup(appareilsLayer)
-  ) {
+  // on essaye dans chaque cluster group (selon le type, un seul matchera)
+  if (!tryGroup(postesLayer) && !tryGroup(accesLayer) && !tryGroup(appareilsLayer)) {
+    // pas dans un cluster group (ou déjà visible) → fallback
     finish();
   }
 }
@@ -480,6 +461,7 @@ function iconForMarker(m) {
   if (id.startsWith("DU")) return "stop.png";
   return null;
 }
+
 
 // ===============================
 // ✅ showLieu (version finale : postes OK + accès groupés comme showAppareil)
