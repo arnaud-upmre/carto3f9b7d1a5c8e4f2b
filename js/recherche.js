@@ -422,9 +422,11 @@ function openMarkerPopup(marker, targetZoom = 20) {
   }
 }
 
-// 🔎 icône affichée dans la popup groupée
+
 function iconForMarker(m) {
-  const id = (m.options.customId || "").toUpperCase();
+  let id = (m.options.customId || "").toUpperCase();
+  id = id.replace(/[^A-Z0-9]/g, ""); // 🔧 nettoyage
+
   if (m.options.isAcces) return "acces.png";
   if (id.includes("POSTE")) return "poste.png";
   if (id.startsWith("I") || id.startsWith("SI") || id.startsWith("D")) return "int.png";
