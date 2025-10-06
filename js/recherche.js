@@ -463,22 +463,32 @@ function iconForMarker(m) {
 }
 
 
+// ===============================
+// ✅ showLieu
+// ===============================
+
+
 window.showLieu = function (item) {
   if (!window.map || !window.allMarkers) return;
 
-  // --- Cas "force" (clic sur menu)
+  // 🧭 Si l'appel vient du menu déplié (force = "poste" ou "acces")
   if (item.force === "poste" && item.poste_latitude && item.poste_longitude) {
-    map.flyTo([parseFloat(item.poste_latitude), parseFloat(item.poste_longitude)], 19, { animate: true, duration: 0.6 });
-    closeSearchBar();
-    return;
-  }
-  if (item.force === "acces" && item.latitude && item.longitude) {
-    map.flyTo([parseFloat(item.latitude), parseFloat(item.longitude)], 19, { animate: true, duration: 0.6 });
+    const lat = parseFloat(item.poste_latitude);
+    const lng = parseFloat(item.poste_longitude);
+    openMarkerPopup({ getLatLng: () => L.latLng(lat, lng), getPopup: () => null }, 19);
     closeSearchBar();
     return;
   }
 
-  // --- Identifiant texte (nom + type + SAT + accès)
+  if (item.force === "acces" && item.latitude && item.longitude) {
+    const lat = parseFloat(item.latitude);
+    const lng = parseFloat(item.longitude);
+    openMarkerPopup({ getLatLng: () => L.latLng(lat, lng), getPopup: () => null }, 19);
+    closeSearchBar();
+    return;
+  }
+
+  // 🧱 Construction de l'identifiant du poste
   const targetId = [
     item.nom || "",
     item.type || "",
@@ -486,58 +496,35 @@ window.showLieu = function (item) {
     item["accès"] || item.acces || ""
   ].filter(Boolean).join(" ").toLowerCase().trim();
 
-  // --- Étape 1 : tentative avec customId exact
-  let matches = window.allMarkers.filter(m =>
+  // 🔍 On cherche les marqueurs correspondants
+  const matches = window.allMarkers.filter(m =>
     (m.options.customId || "").toLowerCase().trim() === targetId
   );
+  if (!matches.length) return;
 
-  // --- Étape 2 : fallback par proximité (tolérance ≈ 1 m)
-  const tolerance = 0.000009; // ≈ 1 m
-  if (!matches.length && (item.latitude || item.poste_latitude)) {
-    const refLat = parseFloat(item.latitude || item.poste_latitude);
-    const refLng = parseFloat(item.longitude || item.poste_longitude);
+  const latlng = matches[0].getLatLng();
 
-    matches = window.allMarkers.filter(m => {
-      const ll = m.getLatLng();
-      return (
-        Math.abs(ll.lat - refLat) <= tolerance &&
-        Math.abs(ll.lng - refLng) <= tolerance
-      );
-    });
-  }
-
-  if (!matches.length) {
-    console.warn("Aucun marker trouvé pour", targetId);
-    return;
-  }
-
-  const refMarker = matches[0];
-  const latlng = refMarker.getLatLng();
-
-  // --- Recherche des markers très proches (≤ 1 m)
+  // 📍 On cherche tous les marqueurs strictement au même endroit
   const sameCoords = window.allMarkers.filter(m => {
     const ll = m.getLatLng();
-    return (
-      Math.abs(ll.lat - latlng.lat) <= tolerance &&
-      Math.abs(ll.lng - latlng.lng) <= tolerance
-    );
+    return ll.lat === latlng.lat && ll.lng === latlng.lng;
   });
 
-  // ✅ Cas 1 : un seul marker -> ouvre la popup
+  // ✅ Cas 1 : un seul marker → on ouvre la popup
   if (sameCoords.length === 1) {
-    openMarkerPopup(refMarker, 19);
+    openMarkerPopup(sameCoords[0], 19);
     closeSearchBar();
     return;
   }
 
-  // ✅ Cas 2 : plusieurs markers très proches -> popup groupée
+  // ✅ Cas 2 : plusieurs marqueurs → popup groupée (même logique que showAppareil)
   const html = `
     <div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
       ${sameCoords.map((m, i) => {
         const id = (m.options.customId || "").toUpperCase();
         const iconFile = iconForMarker(m);
         return `
-          <a href="#" class="cluster-link" data-idx="${i}"
+          <a href="#" class="cluster-link" data-idx="${i}" 
              style="display:flex;align-items:center;gap:6px;padding:4px 6px;border-radius:8px;background:#fff2;">
             ${iconFile ? `<img src="ico/${iconFile}" style="width:16px;height:16px;">` : ""}
             <span>${id}</span>
@@ -551,7 +538,7 @@ window.showLieu = function (item) {
     .setContent(html)
     .openOn(map);
 
-  // --- Interaction : clic sur un lien -> affiche la popup d’origine
+  // 🧠 Clic sur un lien = remplace le contenu par la popup du marker sélectionné
   setTimeout(() => {
     document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach((link) => {
       link.addEventListener("click", (ev) => {
@@ -559,10 +546,9 @@ window.showLieu = function (item) {
         ev.stopPropagation();
         const idx = +ev.currentTarget.dataset.idx;
         const target = sameCoords[idx];
-        const popupContainer = document.querySelector(".leaflet-popup-content");
-        if (popupContainer && target.getPopup) {
-          popupContainer.innerHTML = target.getPopup()?.getContent() || "<p>(Aucune donnée)</p>";
-        }
+        const content = target.getPopup()?.getContent() || "";
+        const popupEl = document.querySelector(".leaflet-popup-content");
+        if (popupEl) popupEl.innerHTML = content;
       });
     });
   }, 0);
@@ -570,6 +556,7 @@ window.showLieu = function (item) {
   map.flyTo(latlng, 19, { animate: true, duration: 0.6 });
   closeSearchBar();
 };
+
 
 
 
