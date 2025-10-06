@@ -463,29 +463,22 @@ function iconForMarker(m) {
 }
 
 
-// ===============================
-// ✅ showLieu
-// ===============================
 window.showLieu = function (item) {
   if (!window.map || !window.allMarkers) return;
 
-  // --- Cas "force" (clic sur bouton du menu déroulant)
+  // --- Cas "force" (clic sur menu)
   if (item.force === "poste" && item.poste_latitude && item.poste_longitude) {
-    const lat = parseFloat(item.poste_latitude);
-    const lng = parseFloat(item.poste_longitude);
-    map.flyTo([lat, lng], 19, { animate: true, duration: 0.6 });
+    map.flyTo([parseFloat(item.poste_latitude), parseFloat(item.poste_longitude)], 19, { animate: true, duration: 0.6 });
     closeSearchBar();
     return;
   }
   if (item.force === "acces" && item.latitude && item.longitude) {
-    const lat = parseFloat(item.latitude);
-    const lng = parseFloat(item.longitude);
-    map.flyTo([lat, lng], 19, { animate: true, duration: 0.6 });
+    map.flyTo([parseFloat(item.latitude), parseFloat(item.longitude)], 19, { animate: true, duration: 0.6 });
     closeSearchBar();
     return;
   }
 
-  // --- Identifiant texte complet (même logique que ton code initial)
+  // --- Identifiant texte (nom + type + SAT + accès)
   const targetId = [
     item.nom || "",
     item.type || "",
@@ -493,18 +486,23 @@ window.showLieu = function (item) {
     item["accès"] || item.acces || ""
   ].filter(Boolean).join(" ").toLowerCase().trim();
 
-  // --- On récupère le premier marker correspondant
+  // --- Étape 1 : tentative avec customId exact
   let matches = window.allMarkers.filter(m =>
     (m.options.customId || "").toLowerCase().trim() === targetId
   );
 
-  // 🟡 Si aucun marker ne correspond strictement, on tente un fallback par coordonnées
+  // --- Étape 2 : fallback par proximité (tolérance ≈ 1 m)
+  const tolerance = 0.000009; // ≈ 1 m
   if (!matches.length && (item.latitude || item.poste_latitude)) {
-    const lat = parseFloat(item.latitude || item.poste_latitude);
-    const lng = parseFloat(item.longitude || item.poste_longitude);
+    const refLat = parseFloat(item.latitude || item.poste_latitude);
+    const refLng = parseFloat(item.longitude || item.poste_longitude);
+
     matches = window.allMarkers.filter(m => {
       const ll = m.getLatLng();
-      return ll.lat === lat && ll.lng === lng;
+      return (
+        Math.abs(ll.lat - refLat) <= tolerance &&
+        Math.abs(ll.lng - refLng) <= tolerance
+      );
     });
   }
 
@@ -513,24 +511,26 @@ window.showLieu = function (item) {
     return;
   }
 
-  // --- Référence : premier marker trouvé
   const refMarker = matches[0];
   const latlng = refMarker.getLatLng();
 
-  // --- Tous les markers exactement à la même coordonnée
+  // --- Recherche des markers très proches (≤ 1 m)
   const sameCoords = window.allMarkers.filter(m => {
     const ll = m.getLatLng();
-    return ll.lat === latlng.lat && ll.lng === latlng.lng;
+    return (
+      Math.abs(ll.lat - latlng.lat) <= tolerance &&
+      Math.abs(ll.lng - latlng.lng) <= tolerance
+    );
   });
 
-  // ✅ Cas 1 : un seul marker -> ouvrir sa popup
+  // ✅ Cas 1 : un seul marker -> ouvre la popup
   if (sameCoords.length === 1) {
     openMarkerPopup(refMarker, 19);
     closeSearchBar();
     return;
   }
 
-  // ✅ Cas 2 : plusieurs markers -> afficher la popup groupée (identique à showAppareil)
+  // ✅ Cas 2 : plusieurs markers très proches -> popup groupée
   const html = `
     <div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
       ${sameCoords.map((m, i) => {
@@ -551,7 +551,7 @@ window.showLieu = function (item) {
     .setContent(html)
     .openOn(map);
 
-  // --- Gestion clics : remplacer le contenu sans fermer la popup
+  // --- Interaction : clic sur un lien -> affiche la popup d’origine
   setTimeout(() => {
     document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach((link) => {
       link.addEventListener("click", (ev) => {
@@ -561,8 +561,7 @@ window.showLieu = function (item) {
         const target = sameCoords[idx];
         const popupContainer = document.querySelector(".leaflet-popup-content");
         if (popupContainer && target.getPopup) {
-          const originalContent = target.getPopup()?.getContent() || "<p>(Aucune donnée)</p>";
-          popupContainer.innerHTML = originalContent;
+          popupContainer.innerHTML = target.getPopup()?.getContent() || "<p>(Aucune donnée)</p>";
         }
       });
     });
@@ -571,6 +570,7 @@ window.showLieu = function (item) {
   map.flyTo(latlng, 19, { animate: true, duration: 0.6 });
   closeSearchBar();
 };
+
 
 
 // ===============================
