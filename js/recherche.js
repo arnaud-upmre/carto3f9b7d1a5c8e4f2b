@@ -404,18 +404,19 @@ window.showLieu = function (item) {
     return ll.lat === latlng.lat && ll.lng === latlng.lng;
   });
 
-  // ✅ Si un seul → on zoom ET on ouvre sa popup
+  // ✅ Si un seul → on zoom ET on ouvre sa popup (avec petit délai)
   if (sameCoords.length === 1) {
     map.flyTo(latlng, 19, { animate: true, duration: 0.8 });
 
-    // 🧩 ouverture forcée de la popup
-    const marker = sameCoords[0];
-    const popup = marker.getPopup();
-    if (popup) {
-      marker.openPopup();
-    } else {
-      console.warn("⚠️ Pas de popup liée au marker :", marker.options.customId);
-    }
+    // 💡 On attend que le zoom soit fini pour ouvrir la popup
+    setTimeout(() => {
+      const marker = sameCoords[0];
+      if (marker && marker.getPopup()) {
+        marker.openPopup();
+      } else {
+        console.warn("⚠️ Pas de popup liée au marker :", marker.options.customId);
+      }
+    }, 600); // délai léger pour laisser Leaflet finir l’animation
 
     closeSearchBar();
     return;
@@ -469,6 +470,9 @@ window.showLieu = function (item) {
   map.flyTo(latlng, 18, { animate: true, duration: 0.8 });
   closeSearchBar();
 };
+
+
+
 
 window.showAppareil = function (item) {
   if (!window.map || !window.allMarkers) return;
