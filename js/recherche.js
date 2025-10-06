@@ -393,39 +393,36 @@ window.initSearch = function(map, allMarkers) {
 };
 
 
-
-let isAnimating = false;
+let isFlying = false;
 
 function openMarkerPopup(marker, targetZoom = 19) {
-  if (isAnimating) return; // ✅ empêche un double flyTo
-  isAnimating = true;
+  if (isFlying) return; // évite un nouveau zoom pendant l'animation
+  isFlying = true;
 
   const ll = marker.getLatLng();
-  let finished = false;
 
-  const finish = () => {
-    if (finished) return;
-    finished = true;
-
-    map.flyTo(ll, targetZoom, { animate: true, duration: 0.7 });
-
-    setTimeout(() => {
-      if (marker.getPopup) marker.openPopup();
-      isAnimating = false; // ✅ débloque à la fin
-    }, 650);
+  // on attend la fin du zoom avant d'ouvrir la popup
+  const openPopupAfterZoom = () => {
+    if (marker.getPopup) marker.openPopup();
+    isFlying = false;
   };
 
-  const tryGroup = (grp) => {
-    if (grp && typeof grp.hasLayer === "function" && grp.hasLayer(marker) && typeof grp.zoomToShowLayer === "function") {
-      grp.zoomToShowLayer(marker, finish);
+  const showMarker = () => {
+    map.flyTo(ll, targetZoom, { animate: true, duration: 0.7 });
+    map.once("moveend", openPopupAfterZoom); // ✅ ouvre seulement à la fin du fly
+  };
+
+  // si le marker est dans un cluster
+  const tryCluster = (grp) => {
+    if (grp && grp.hasLayer && grp.hasLayer(marker) && grp.zoomToShowLayer) {
+      grp.zoomToShowLayer(marker, showMarker);
       return true;
     }
     return false;
   };
 
-  // essaye de trouver le marker dans les clusters
-  if (!tryGroup(postesLayer) && !tryGroup(accesLayer) && !tryGroup(appareilsLayer)) {
-    finish(); // sinon, zoom directement
+  if (!tryCluster(postesLayer) && !tryCluster(accesLayer) && !tryCluster(appareilsLayer)) {
+    showMarker(); // sinon zoom direct
   }
 }
 
