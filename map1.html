@@ -1352,14 +1352,15 @@ function focusRandomPoste() {
   }, 600);
 }
 
-if (!id) {
+// ✅ On ne lance le poste aléatoire que si AUCUN paramètre de position n’est dans l’URL
+if (isNaN(lat) || isNaN(lon)) {
   map.whenReady(() => {
     if (allMarkers.length > 0) {
       const group = L.featureGroup(allMarkers);
       map.fitBounds(group.getBounds());
     }
 
-    // 👇 nouvelle ligne : affiche un poste aléatoire au démarrage
+    // 👇 affiche un poste aléatoire uniquement si on n’a pas de lat/lon dans l’URL
     setTimeout(focusRandomPoste, 1200);
   });
 }
