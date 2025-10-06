@@ -500,6 +500,7 @@ window.showLieu = function (item) {
   const matches = window.allMarkers.filter(m =>
     (m.options.customId || "").toLowerCase().trim() === targetId
   );
+  console.log("🔍 showLieu found", matches.length, "marker(s) for", targetId);
   if (!matches.length) return;
 
   const latlng = matches[0].getLatLng();
