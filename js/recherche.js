@@ -467,23 +467,43 @@ function iconForMarker(m) {
 // ===============================
 window.showLieu = function (item) {
   if (!window.map || !window.allMarkers) return;
+if (item.force === "poste" && item.poste_latitude && item.poste_longitude) {
+  const lat = parseFloat(item.poste_latitude);
+  const lng = parseFloat(item.poste_longitude);
 
-  // 🧭 Si l'appel vient du menu déplié (force = "poste" ou "acces")
-  if (item.force === "poste" && item.poste_latitude && item.poste_longitude) {
-    const lat = parseFloat(item.poste_latitude);
-    const lng = parseFloat(item.poste_longitude);
-    map.flyTo([lat, lng], 19, { animate: true, duration: 0.6 });
-    closeSearchBar();
-    return;
-  }
+  // Trouve le marker correspondant au poste
+  const match = window.allMarkers.find(m => {
+    const ll = m.getLatLng();
+    return Math.abs(ll.lat - lat) < 0.00001 && Math.abs(ll.lng - lng) < 0.00001;
+  });
 
-  if (item.force === "acces" && item.latitude && item.longitude) {
-    const lat = parseFloat(item.latitude);
-    const lng = parseFloat(item.longitude);
-    map.flyTo([lat, lng], 19, { animate: true, duration: 0.6 });
-    closeSearchBar();
-    return;
-  }
+  map.flyTo([lat, lng], 19, { animate: true, duration: 0.6 });
+  setTimeout(() => {
+    if (match) openMarkerPopup(match, 19);
+  }, 400);
+
+  closeSearchBar();
+  return;
+}
+
+if (item.force === "acces" && item.latitude && item.longitude) {
+  const lat = parseFloat(item.latitude);
+  const lng = parseFloat(item.longitude);
+
+  // Trouve le marker correspondant à l'accès
+  const match = window.allMarkers.find(m => {
+    const ll = m.getLatLng();
+    return Math.abs(ll.lat - lat) < 0.00001 && Math.abs(ll.lng - lng) < 0.00001;
+  });
+
+  map.flyTo([lat, lng], 19, { animate: true, duration: 0.6 });
+  setTimeout(() => {
+    if (match) openMarkerPopup(match, 19);
+  }, 400);
+
+  closeSearchBar();
+  return;
+}
 
   // 🧱 le reste est 100 % ton code d'origine :
   const targetId = [
