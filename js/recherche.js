@@ -474,6 +474,15 @@ window.showLieu = async function (item) {
 console.log("🧩 URL finale =", compteurURL + "?increment=true");
 console.log("🧩 Page courante =", window.location.pathname);
 console.log("🧩 isMap =", window.location.pathname.includes("map.html"));
+
+    // --- Incrémentation compteur (carte) ---
+  const currentIsMap = window.location.pathname.includes("map.html");
+  if (currentIsMap) {
+    console.log("🧮 incrementCounter() appelé depuis showLieu()");
+    fetch(compteurURL + "?increment=true")
+      .then(r => console.log("✅ Réponse poste :", r.status))
+      .catch(err => console.error("❌ Erreur compteur showLieu :", err));
+  }
   
   if (!window.map || !window.allMarkers) return;
 
@@ -580,15 +589,7 @@ console.log("🧩 isMap =", window.location.pathname.includes("map.html"));
   if (!matches.length) return;
 
   const latlng = matches[0].getLatLng();
-  
-// --- Incrémentation compteur (carte) ---
-const currentIsMap = window.location.pathname.includes("map.html");
-if (currentIsMap) {
-  console.log("🧮 incrementCounter() appelé depuis showLieu()");
-  fetch(compteurURL + "?increment=true")
-    .then(r => console.log("✅ Réponse poste :", r.status))
-    .catch(err => console.error("❌ Erreur compteur showLieu :", err));
-}
+
 
   // ✅ Poste seul → popup directe
   openMarkerPopup(matches[0], 19);
@@ -606,6 +607,17 @@ window.showAppareil = async function (item) {
 console.log("🧩 URL finale =", compteurAppareilURL + "?increment=true");
 console.log("🧩 Page courante =", window.location.pathname);
 console.log("🧩 isMap =", window.location.pathname.includes("map.html"));
+
+  
+  // --- Incrémentation compteur (carte) ---
+  const currentIsMap = window.location.pathname.includes("map.html");
+  if (currentIsMap) {
+    console.log("🧮 incrementCounterAppareil() appelé depuis showAppareil()");
+    fetch(compteurAppareilURL + "?increment=true")
+      .then(r => console.log("✅ Réponse appareil :", r.status))
+      .catch(err => console.error("❌ Erreur compteur showAppareil :", err));
+  }
+  
   if (!window.map || !window.allMarkers) return;
 
   const targetId = [
@@ -670,14 +682,6 @@ setTimeout(() => {
 }, 0);
 
 
-// --- Incrémentation compteur (carte) ---
-const currentIsMap = window.location.pathname.includes("map.html");
-if (currentIsMap) {
-  console.log("🧮 incrementCounterAppareil() appelé depuis showAppareil()");
-  fetch(compteurAppareilURL + "?increment=true")
-    .then(r => console.log("✅ Réponse appareil :", r.status))
-    .catch(err => console.error("❌ Erreur compteur showAppareil :", err));
-}
   
   map.flyTo(latlng, 20, { animate: true, duration: 0.6 });
   closeSearchBar();
