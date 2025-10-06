@@ -302,11 +302,61 @@ document.addEventListener("DOMContentLoaded", async () => {
         : "💡";
       li.innerHTML = `${icon} ${labelFor(item)}`;
       if (i === 0) li.classList.add("best");
-  li.onclick = () => {
+
+
+li.onclick = (e) => {
+  e.preventDefault();
+
+  // 🧩 On vérifie si on est sur la page map1.html
+  const isMap1 = window.location.pathname.includes("map1");
+
+  // 🟢 Si on est sur map1 et que le poste a deux coordonnées (poste + accès)
+  if (isMap1 && item.category === "poste" && item.poste_latitude && item.latitude) {
+    // Vérifie s'il y a déjà un menu ouvert → on le ferme si on reclique
+    const existing = li.querySelector(".submenu");
+    if (existing) {
+      existing.remove();
+      return;
+    }
+
+    // Crée le menu déplié
+    const submenu = document.createElement("div");
+    submenu.className = "submenu";
+    submenu.innerHTML = `
+      <div class="submenu-inner">
+        <p>Aller à :</p>
+        <button class="btn-poste">📍 Poste</button>
+        <button class="btn-acces">🚙 Accès</button>
+      </div>
+    `;
+
+    li.appendChild(submenu);
+
+    // 📍 Clic sur "Poste"
+    submenu.querySelector(".btn-poste").addEventListener("click", (ev) => {
+      ev.stopPropagation();
+      showLieu({ ...item, force: "poste" });
+      closeSearchBar();
+    });
+
+    // 🚙 Clic sur "Accès"
+    submenu.querySelector(".btn-acces").addEventListener("click", (ev) => {
+      ev.stopPropagation();
+      showLieu({ ...item, force: "acces" });
+      closeSearchBar();
+    });
+
+    return; // ⛔ on ne fait rien d’autre, on laisse le menu ouvert
+  }
+
+  // ⚙️ Sinon (index ou autre cas), comportement normal
   if (item.category === "poste") showLieu(item);
   else showAppareil(item);
-  closeSearchBar(); // ✅ ferme la barre
+  closeSearchBar();
 };
+
+
+      
       suggestionsEl.appendChild(li);
     });
   });
@@ -418,6 +468,24 @@ function iconForMarker(m) {
 window.showLieu = function (item) {
   if (!window.map || !window.allMarkers) return;
 
+  // 🧭 Si l'appel vient du menu déplié (force = "poste" ou "acces")
+  if (item.force === "poste" && item.poste_latitude && item.poste_longitude) {
+    const lat = parseFloat(item.poste_latitude);
+    const lng = parseFloat(item.poste_longitude);
+    map.flyTo([lat, lng], 19, { animate: true, duration: 0.6 });
+    closeSearchBar();
+    return;
+  }
+
+  if (item.force === "acces" && item.latitude && item.longitude) {
+    const lat = parseFloat(item.latitude);
+    const lng = parseFloat(item.longitude);
+    map.flyTo([lat, lng], 19, { animate: true, duration: 0.6 });
+    closeSearchBar();
+    return;
+  }
+
+  // 🧱 le reste est 100 % ton code d'origine :
   const targetId = [
     item.nom || "",
     item.type || "",
@@ -466,26 +534,25 @@ window.showLieu = function (item) {
     .setContent(html)
     .openOn(map);
 
-setTimeout(() => {
-  document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach((link) => {
-    link.addEventListener("click", (ev) => {
-      ev.preventDefault();
-      ev.stopPropagation(); // ✅ empêche Leaflet de fermer la popup
-      const idx = +ev.currentTarget.dataset.idx;
-      const target = sameCoords[idx];
-      const content = target.getPopup()?.getContent() || "";
+  setTimeout(() => {
+    document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach((link) => {
+      link.addEventListener("click", (ev) => {
+        ev.preventDefault();
+        ev.stopPropagation(); // ✅ empêche Leaflet de fermer la popup
+        const idx = +ev.currentTarget.dataset.idx;
+        const target = sameCoords[idx];
+        const content = target.getPopup()?.getContent() || "";
 
-      // ✅ remplace le contenu sans fermer la popup
-      const popup = document.querySelector(".leaflet-popup-content");
-      if (popup) popup.innerHTML = content;
+        // ✅ remplace le contenu sans fermer la popup
+        const popup = document.querySelector(".leaflet-popup-content");
+        if (popup) popup.innerHTML = content;
+      });
     });
-  });
-}, 0);
+  }, 0);
 
   map.flyTo(latlng, 18, { animate: true, duration: 0.6 });
   closeSearchBar();
 };
-
 
 
 // ===============================
