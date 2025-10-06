@@ -1022,11 +1022,6 @@ allMarkers.push(m);
       }
 
     });
-setTimeout(() => {
-  map.whenReady(() => {
-    _tryOpenFromURL();
-  });
-}, 800);
   });
     
 chargerBaseRecherche().then(allData => {
@@ -1118,12 +1113,20 @@ if (ref.startsWith("DU")) {
       appareilsLayer.addLayer(m);
       allMarkers.push(m);
       });
-setTimeout(() => {
+  
+// ✅ Attendre que toutes les données soient chargées avant d'ouvrir la popup
+Promise.all([
+  chargerBaseRecherche(), // pour postes
+  chargerBaseRecherche()  // pour appareils
+]).then(() => {
+  console.log("✅ Données prêtes, ouverture possible");
   map.whenReady(() => {
-    _tryOpenFromURL();
+    setTimeout(() => {
+      map.invalidateSize();
+      _tryOpenFromURL();
+    }, 600);
   });
-}, 800);
-  });
+});
 
 const pnClasses = {
   10: "PN public pour voitures sans barrières (protection assurée par un agent)",
