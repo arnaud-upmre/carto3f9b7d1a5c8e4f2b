@@ -308,9 +308,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 li.onclick = (e) => {
   e.preventDefault();
 
-  const isMap1 = window.location.pathname.includes("map1");
+const isMapPage = window.location.pathname.includes("map");
 
-  if (isMap1 && item.category === "poste" && item.poste_latitude && item.latitude) {
+if (isMapPage && item.category === "poste" && item.poste_latitude && item.latitude) {
     // Vérifie s'il y a déjà un menu ouvert → on le ferme si on reclique
     const existing = li.querySelector(".submenu");
     if (existing) {
