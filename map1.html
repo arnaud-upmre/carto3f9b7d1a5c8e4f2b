@@ -660,18 +660,20 @@ if (marker.options.isAcces) {
 } else if (id.includes("POSTE")) {
   iconFile = "poste.png";
 } else {
-
-  if (id.startsWith("I") || id.startsWith("SI") || id.startsWith("D")) {
-    iconFile = "int.png";
+  if (id.startsWith("DU")) {
+    iconFile = "stop.png";          
+  } else if (id.startsWith("I") || id.startsWith("SI") || id.startsWith("D")) {
+    iconFile = "int.png";              // ⚡ Tous les I, SI et D (y compris DA)
   } else if (id.startsWith("TT") || id.startsWith("TSA") || id.startsWith("TC") || id.startsWith("TRA")) {
     iconFile = "TT.png";
   } else if (/^[0-9]/.test(id) || id.startsWith("S") || id.startsWith("ST") || id.startsWith("F") || id.startsWith("P") || id.startsWith("FB") || id.startsWith("B")) {
     iconFile = "sect.png";
   } else if (id.startsWith("ALIM")) {
     iconFile = "alim.png";
-  } else if (id.startsWith("DU")) {
-    iconFile = "stop.png";
   }
+  else {
+  iconFile = "int.png"; // icône par défaut
+}
 }
 
         return `
