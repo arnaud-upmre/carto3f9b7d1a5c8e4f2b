@@ -566,7 +566,7 @@ window.showLieu = function (item) {
   const latlng = matches[0].getLatLng();
 
   // --- Incrémentation compteur (carte) ---
-if (window.location.pathname.includes("map")) {
+if (window.location.pathname.includes("map1")) {
   if (typeof incrementCounter === "function") incrementCounter();
   console.log("📈 +1 poste/acces (recherche validée sur la carte)");
 }
@@ -647,7 +647,7 @@ setTimeout(() => {
 
 
   // --- Incrémentation compteur (carte) ---
-if (window.location.pathname.includes("map")) {
+if (window.location.pathname.includes("map1")) {
   if (typeof incrementCounterAppareil === "function") incrementCounterAppareil();
 }
   
