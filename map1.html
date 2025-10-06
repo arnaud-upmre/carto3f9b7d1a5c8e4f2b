@@ -993,11 +993,6 @@ let content = `
   <div style="margin-bottom:10px;">
 ✍🏻 <strong>Information :</strong> ${ renderInformation(item.description) }
   </div>
-
-
-  <div style="margin-bottom:10px;">
-    📞 <strong>Contact :</strong> ${ renderContact(item.contact) }
-  </div>
  
   <a href="index.html?id=${encodeURIComponent(
     (`${item.nom || ''} ${item.type || ''} ${item.SAT || ''}`)
