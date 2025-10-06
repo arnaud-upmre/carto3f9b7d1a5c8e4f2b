@@ -546,23 +546,31 @@ editIcon.style = `
 document.body.appendChild(editIcon);
 
 document.addEventListener("keydown", function(e) {
-  if (e.key.toLowerCase() === "i") {
+  // ✅ Activation/désactivation du mode édition avec CTRL + I
+  if (e.ctrlKey && e.key.toLowerCase() === "i") {
+    e.preventDefault(); // empêche l'effet par défaut du navigateur
     editMode = !editMode;
 
-    editBanner.textContent = editMode ? "ℹ️ Mode information activé" : "❌ Mode information désactivé";
+    editBanner.textContent = editMode
+      ? "ℹ️ Mode information activé"
+      : "❌ Mode information désactivé";
     editBanner.style.display = "block";
-    setTimeout(() => { editBanner.style.display = "none"; }, 2000);
+    setTimeout(() => {
+      editBanner.style.display = "none";
+    }, 2000);
 
     editIcon.textContent = "ℹ️";
     editIcon.style.display = editMode ? "block" : "none";
   }
 
-
+  // ❌ Sortie du mode édition avec Échap
   if (e.key === "Escape" && editMode) {
     editMode = false;
     editBanner.textContent = "❌ Mode information désactivé";
     editBanner.style.display = "block";
-    setTimeout(() => { editBanner.style.display = "none"; }, 2000);
+    setTimeout(() => {
+      editBanner.style.display = "none";
+    }, 2000);
     editIcon.style.display = "none";
   }
 });
