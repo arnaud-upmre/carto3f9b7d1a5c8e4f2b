@@ -472,10 +472,12 @@ window.showLieu = function (item) {
 };
 
 
+
+
 window.showAppareil = function (item) {
   if (!window.map || !window.allMarkers) return;
 
-  // 🧩 Clé texte
+  // 🧩 Clé d’identification textuelle
   const targetId = [
     item.appareil || "",
     item.nom || "",
@@ -488,7 +490,7 @@ window.showAppareil = function (item) {
     .toLowerCase()
     .trim();
 
-  // 🔍 Trouve tous les marqueurs correspondants
+  // 🔍 Trouve les marqueurs correspondants
   const matches = window.allMarkers.filter(m => {
     const id = (m.options.customId || "").toLowerCase().trim();
     return id === targetId;
@@ -502,25 +504,39 @@ window.showAppareil = function (item) {
   const first = matches[0];
   const latlng = first.getLatLng();
 
-  // ⚡ Recherche de tous les marqueurs à la même position
+  // ⚡ Recherche de tous les marqueurs aux mêmes coordonnées
   const sameCoords = window.allMarkers.filter(m => {
     const ll = m.getLatLng();
     return ll.lat === latlng.lat && ll.lng === latlng.lng;
   });
 
-  // 🟢 Si un seul marqueur → popup classique
+  // 🟢 Si un seul marqueur → affiche la popup normale du marker
   if (sameCoords.length === 1) {
     map.flyTo(latlng, 21, { animate: true, duration: 0.8 });
-    sameCoords[0].openPopup();
+
+    const target = sameCoords[0];
+    const popup = target.getPopup();
+
+    if (popup) {
+      target.openPopup(); // ✅ vraie popup liée au marqueur
+    } else {
+      // 🩹 fallback si pas de popup bindée
+      const content = target.options.popupContent || `<b>${(target.options.customId || "").toUpperCase()}</b>`;
+      L.popup({ maxWidth: 300 })
+        .setLatLng(latlng)
+        .setContent(content)
+        .openOn(map);
+    }
+
     closeSearchBar();
     return;
   }
 
-  // 🧱 Si plusieurs → popup groupée
+  // 🧱 Si plusieurs → popup groupée avec icônes
   const items = sameCoords
     .map((m, i) => {
       const id = (m.options.customId || "").toUpperCase();
-      let iconFile = null;
+      let iconFile = "sect.png";
 
       if (id.startsWith("I") || id.startsWith("SI") || id.startsWith("D")) iconFile = "int.png";
       else if (id.startsWith("TT") || id.startsWith("TSA") || id.startsWith("TC") || id.startsWith("TRA")) iconFile = "TT.png";
@@ -529,36 +545,46 @@ window.showAppareil = function (item) {
       else if (id.startsWith("DU")) iconFile = "stop.png";
 
       return `
-        <a href="#" class="cluster-link" data-idx="${i}" style="display:flex;align-items:center;gap:6px;">
-          ${iconFile ? `<img src="ico/${iconFile}" style="width:16px;height:16px;">` : ""}
+        <a href="#" class="cluster-link" data-idx="${i}" 
+           style="display:flex;align-items:center;gap:6px;padding:3px 4px;text-decoration:none;">
+          <img src="ico/${iconFile}" style="width:16px;height:16px;">
           <span>${id}</span>
         </a>`;
     })
     .join("");
 
   const html = `
-    <div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
+    <div style="min-width:220px;display:flex;flex-direction:column;gap:4px;">
       ${items}
     </div>
   `;
 
-  L.popup()
+  // 📍 Popup groupée
+  L.popup({ maxWidth: 260 })
     .setLatLng(latlng)
     .setContent(html)
     .openOn(map);
 
-  // 🎯 Active le clic sur chaque lien du groupe
+  // 🎯 Interaction sur chaque lien de la popup groupée
   setTimeout(() => {
     document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
       link.addEventListener("click", ev => {
         ev.preventDefault();
         const idx = +ev.currentTarget.dataset.idx;
         const target = sameCoords[idx];
-        const content = target.getPopup()?.getContent() || "";
-        L.popup({ maxWidth: 240 })
-          .setLatLng(target.getLatLng())
-          .setContent(content)
-          .openOn(map);
+        const popup = target.getPopup();
+
+        if (popup) {
+          target.openPopup(); // ✅ ouvre la vraie popup de ce marker
+        } else {
+          // fallback visuel
+          const content = target.options.popupContent || `<b>${(target.options.customId || "").toUpperCase()}</b>`;
+          L.popup({ maxWidth: 300 })
+            .setLatLng(target.getLatLng())
+            .setContent(content)
+            .openOn(map);
+        }
+
         map.panTo(target.getLatLng());
       });
     });
