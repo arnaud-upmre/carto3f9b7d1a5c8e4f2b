@@ -575,17 +575,14 @@ window.showLieu = async function (item) {
   if (!matches.length) return;
 
   const latlng = matches[0].getLatLng();
-
+  
 // --- Incrémentation compteur (carte) ---
-try {
-  const currentIsMap = window.location.pathname.includes("map.html");
-  if (currentIsMap) {
-    console.log("🧮 incrementCounter() appelé depuis showLieu()");
-    await fetch(compteurURL + "?increment=true");
-    console.log("📈 +1 poste/acces (recherche validée sur la carte)");
-  }
-} catch (err) {
-  console.error("❌ Erreur compteur showLieu :", err);
+const currentIsMap = window.location.pathname.includes("map.html");
+if (currentIsMap) {
+  console.log("🧮 incrementCounter() appelé depuis showLieu()");
+  fetch(compteurURL + "?increment=true")
+    .then(r => console.log("✅ Réponse poste :", r.status))
+    .catch(err => console.error("❌ Erreur compteur showLieu :", err));
 }
 
   // ✅ Poste seul → popup directe
@@ -665,15 +662,12 @@ setTimeout(() => {
 
 
 // --- Incrémentation compteur (carte) ---
-try {
-  const currentIsMap = window.location.pathname.includes("map.html");
-  if (currentIsMap) {
-    console.log("🧮 incrementCounterAppareil() appelé depuis showAppareil()");
-    await fetch(compteurAppareilURL + "?increment=true");
-    console.log("📈 +1 appareil (recherche validée sur la carte)");
-  }
-} catch (err) {
-  console.error("❌ Erreur compteur showAppareil :", err);
+const currentIsMap = window.location.pathname.includes("map.html");
+if (currentIsMap) {
+  console.log("🧮 incrementCounterAppareil() appelé depuis showAppareil()");
+  fetch(compteurAppareilURL + "?increment=true")
+    .then(r => console.log("✅ Réponse appareil :", r.status))
+    .catch(err => console.error("❌ Erreur compteur showAppareil :", err));
 }
   
   map.flyTo(latlng, 20, { animate: true, duration: 0.6 });
