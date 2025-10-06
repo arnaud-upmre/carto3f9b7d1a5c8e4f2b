@@ -351,7 +351,7 @@ if (
       closeSearchBar();
     });
 
-    return; // ⛔ on ne fait rien d’autre, on laisse le menu ouvert
+// return; // ⛔ retiré pour permettre au compteur de s’incrémenter sur map
   }
 
   // ⚙️ Sinon (index ou autre cas), comportement normal
