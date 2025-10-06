@@ -466,15 +466,14 @@ function iconForMarker(m) {
 // ===============================
 // ✅ showLieu
 // ===============================
-
 window.showLieu = function (item) {
   if (!window.map || !window.allMarkers) return;
 
-  // 🧭 Si l'appel vient du menu déplié (force = "poste" ou "acces")
+  // 🧭 Cas “force” (venant du menu déroulant)
   if (item.force === "poste" && item.poste_latitude && item.poste_longitude) {
     const lat = parseFloat(item.poste_latitude);
     const lng = parseFloat(item.poste_longitude);
-    openMarkerPopup({ getLatLng: () => L.latLng(lat, lng), getPopup: () => null }, 19);
+    map.flyTo([lat, lng], 19, { animate: true, duration: 0.6 });
     closeSearchBar();
     return;
   }
@@ -482,12 +481,12 @@ window.showLieu = function (item) {
   if (item.force === "acces" && item.latitude && item.longitude) {
     const lat = parseFloat(item.latitude);
     const lng = parseFloat(item.longitude);
-    openMarkerPopup({ getLatLng: () => L.latLng(lat, lng), getPopup: () => null }, 19);
+    map.flyTo([lat, lng], 19, { animate: true, duration: 0.6 });
     closeSearchBar();
     return;
   }
 
-  // 🧱 Construction de l'identifiant du poste
+  // 🧱 Construction de l’identifiant complet du poste
   const targetId = [
     item.nom || "",
     item.type || "",
@@ -495,35 +494,37 @@ window.showLieu = function (item) {
     item["accès"] || item.acces || ""
   ].filter(Boolean).join(" ").toLowerCase().trim();
 
-  // 🧩 On cherche les marqueurs correspondants
+  // 🔍 On cherche le marqueur correspondant à cet ID
   const matches = window.allMarkers.filter(m =>
     (m.options.customId || "").toLowerCase().trim() === targetId
   );
-  if (!matches.length) return;
 
+  if (!matches.length) return; // rien trouvé → stop
+
+  // 🎯 Prend le premier match comme référence
   const latlng = matches[0].getLatLng();
 
-  // Tous les marqueurs strictement à la même coordonnée
+  // 🔍 Trouve tous les marqueurs à la même coordonnée (même logique que showAppareil)
   const sameCoords = window.allMarkers.filter(m => {
     const ll = m.getLatLng();
     return ll.lat === latlng.lat && ll.lng === latlng.lng;
   });
 
-  // ✅ Cas 1 : un seul point → on ouvre la popup (pas juste zoom)
+  // ✅ Cas 1 : un seul point → ouvre la vraie popup
   if (sameCoords.length === 1) {
     openMarkerPopup(sameCoords[0], 19);
     closeSearchBar();
     return;
   }
 
-  // ✅ Cas 2 : plusieurs marqueurs (plusieurs accès au même poste)
+  // ✅ Cas 2 : plusieurs marqueurs → popup groupée identique à showAppareil
   const html = `
     <div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
       ${sameCoords.map((m, i) => {
         const id = (m.options.customId || "").toUpperCase();
         const iconFile = iconForMarker(m);
         return `
-          <a href="#" class="cluster-link" data-idx="${i}" 
+          <a href="#" class="cluster-link" data-idx="${i}"
              style="display:flex;align-items:center;gap:6px;padding:4px 6px;border-radius:8px;background:#fff2;">
             ${iconFile ? `<img src="ico/${iconFile}" style="width:16px;height:16px;">` : ""}
             <span>${id}</span>
@@ -532,30 +533,29 @@ window.showLieu = function (item) {
     </div>
   `;
 
-  const popup = L.popup({ maxWidth: 260 })
+  // Ouvre la popup groupée
+  L.popup({ maxWidth: 260 })
     .setLatLng(latlng)
     .setContent(html)
     .openOn(map);
 
-  // 🧠 Gestion du clic dans la popup groupée
+  // Clic sur un lien → remplace contenu sans fermer la popup
   setTimeout(() => {
     document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach((link) => {
       link.addEventListener("click", (ev) => {
         ev.preventDefault();
         ev.stopPropagation();
-
         const idx = +ev.currentTarget.dataset.idx;
         const target = sameCoords[idx];
         const popupContainer = document.querySelector(".leaflet-popup-content");
-
         if (popupContainer && target.getPopup) {
-          const originalContent = target.getPopup()?.getContent() || "<p>(Aucune donnée)</p>";
-          popupContainer.innerHTML = originalContent;
+          popupContainer.innerHTML = target.getPopup()?.getContent() || "<p>(Aucune donnée)</p>";
         }
       });
     });
   }, 0);
 
+  // Zoom doux vers la zone
   map.flyTo(latlng, 19, { animate: true, duration: 0.6 });
   closeSearchBar();
 };
