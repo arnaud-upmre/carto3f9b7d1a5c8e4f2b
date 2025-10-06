@@ -1349,7 +1349,7 @@ function focusRandomPoste() {
 
   setTimeout(() => {
     if (randomMarker.getPopup) randomMarker.openPopup();
-  }, 600);
+  }, 900);
 }
 
 // ✅ On ne lance le poste aléatoire que si AUCUN paramètre de position n’est dans l’URL
@@ -1361,7 +1361,7 @@ if (isNaN(lat) || isNaN(lon)) {
     }
 
     // 👇 affiche un poste aléatoire uniquement si on n’a pas de lat/lon dans l’URL
-    setTimeout(focusRandomPoste, 1200);
+    setTimeout(focusRandomPoste, 1500);
   });
 }
     
