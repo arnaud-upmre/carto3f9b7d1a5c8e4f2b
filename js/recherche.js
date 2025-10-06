@@ -461,6 +461,7 @@ function iconForMarker(m) {
 // ✅ showLieu (version finale : postes OK + accès groupés comme showAppareil)
 // ===============================
 window.showLieu = function (item) {
+  console.log("✅ showLieu appelé !", item);
   if (!window.map || !window.allMarkers) return;
 
   // 🔍 Helper : cherche un marker proche de coordonnées données
@@ -584,6 +585,7 @@ if (isMap) {
 // ✅ showAppareil
 // ===============================
 window.showAppareil = function (item) {
+    console.log("✅ showAppareil appelé !", item);
   if (!window.map || !window.allMarkers) return;
 
   const targetId = [
