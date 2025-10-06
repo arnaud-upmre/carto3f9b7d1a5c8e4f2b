@@ -344,14 +344,16 @@ if (
       closeSearchBar();
     });
 
-    // 🚙 Clic sur "Accès"
-    submenu.querySelector(".btn-acces").addEventListener("click", (ev) => {
-      ev.stopPropagation();
-      showLieu({ ...item, force: "acces" });
-      closeSearchBar();
-    });
+// 🚙 Clic sur "Accès"
+submenu.querySelector(".btn-acces").addEventListener("click", (ev) => {
+  ev.stopPropagation();
+  showLieu({ ...item, force: "acces" });
+  closeSearchBar();
+});
 
-// return; // ⛔ retiré pour permettre au compteur de s’incrémenter sur map
+// ✅ on laisse le return pour bloquer le clic principal,
+// mais le compteur est déclenché par showLieu() dans les sous-boutons
+return;
   }
 
   // ⚙️ Sinon (index ou autre cas), comportement normal
