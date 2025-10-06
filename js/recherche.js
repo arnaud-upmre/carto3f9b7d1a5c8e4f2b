@@ -462,23 +462,22 @@ function iconForMarker(m) {
   return null;
 }
 
-
 // ===============================
-// ✅ showLieu (version finale : postes OK + accès groupés comme showAppareil)
+// ✅ showLieu (version stable, même logique que showAppareil)
 // ===============================
 window.showLieu = function (item) {
   if (!window.map || !window.allMarkers) return;
 
-  // 🔍 Helper : cherche un marker proche de coordonnées données
+  // 🔍 Helper : trouve le marker le plus proche de coordonnées données
   function findMarkerByCoords(lat, lng) {
-    const tol = 0.00001; // ≈ 1 mètre
+    const tol = 0.00001; // ≈1 m
     return window.allMarkers.find(m => {
       const ll = m.getLatLng();
       return Math.abs(ll.lat - lat) < tol && Math.abs(ll.lng - lng) < tol;
     });
   }
 
-  // 🧭 Cas appel direct (force = poste ou acces)
+  // 🧭 Si l'appel vient du menu déplié (force = "poste" ou "acces")
   if (item.force === "poste" && item.poste_latitude && item.poste_longitude) {
     const lat = parseFloat(item.poste_latitude);
     const lng = parseFloat(item.poste_longitude);
@@ -492,58 +491,6 @@ window.showLieu = function (item) {
   if (item.force === "acces" && item.latitude && item.longitude) {
     const lat = parseFloat(item.latitude);
     const lng = parseFloat(item.longitude);
-
-    // ✅ Cherche tous les accès au même endroit (groupement)
-    const sameAcces = window.allMarkers.filter(m => {
-      const ll = m.getLatLng();
-      return (
-        Math.abs(ll.lat - lat) < 0.00001 &&
-        Math.abs(ll.lng - lng) < 0.00001
-      );
-    });
-
-    if (sameAcces.length > 1) {
-      // Popup groupée comme showAppareil
-      const html = `
-        <div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
-          ${sameAcces.map((m, i) => {
-            const id = (m.options.customId || "").toUpperCase();
-            const iconFile = iconForMarker(m);
-            return `
-              <a href="#" class="cluster-link" data-idx="${i}"
-                 style="display:flex;align-items:center;gap:6px;padding:4px 6px;
-                        border-radius:8px;background:#fff2;">
-                ${iconFile ? `<img src="ico/${iconFile}" style="width:16px;height:16px;">` : ""}
-                <span>${id}</span>
-              </a>`;
-          }).join("")}
-        </div>
-      `;
-
-      L.popup({ maxWidth: 260 })
-        .setLatLng([lat, lng])
-        .setContent(html)
-        .openOn(map);
-
-      setTimeout(() => {
-        document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
-          link.addEventListener("click", ev => {
-            ev.preventDefault();
-            ev.stopPropagation();
-            const idx = +ev.currentTarget.dataset.idx;
-            const target = sameAcces[idx];
-            const content = target.getPopup()?.getContent() || "";
-            const popupEl = document.querySelector(".leaflet-popup-content");
-            if (popupEl) popupEl.innerHTML = content;
-          });
-        });
-      }, 0);
-
-      closeSearchBar();
-      return;
-    }
-
-    // Sinon, ouvre normalement
     const marker = findMarkerByCoords(lat, lng);
     if (marker) openMarkerPopup(marker, 19);
     else map.flyTo([lat, lng], 19, { animate: true, duration: 0.6 });
@@ -551,7 +498,7 @@ window.showLieu = function (item) {
     return;
   }
 
-  // 🧱 Identifiant textuel complet
+  // 🧱 Identifiant textuel
   const targetId = [
     item.nom || "",
     item.type || "",
@@ -559,28 +506,75 @@ window.showLieu = function (item) {
     item["accès"] || item.acces || ""
   ].filter(Boolean).join(" ").toLowerCase().trim();
 
-  // 🔎 Recherche du marker
+  // 🔎 Recherche par customId
   let matches = window.allMarkers.filter(m =>
     (m.options.customId || "").toLowerCase().trim() === targetId
   );
 
+  console.log("🔍 showLieu →", matches.length, "marker(s) for", targetId);
+
+  // 🔁 Si aucun match textuel, tentative par coordonnées
   if (!matches.length && item.latitude && item.longitude) {
     const marker = findMarkerByCoords(parseFloat(item.latitude), parseFloat(item.longitude));
     if (marker) matches = [marker];
   }
 
   if (!matches.length) return;
-
   const latlng = matches[0].getLatLng();
 
-  // ✅ Poste seul → popup directe
-  openMarkerPopup(matches[0], 19);
+  // 📍 Regroupe ceux à la même position
+  const sameCoords = window.allMarkers.filter(m => {
+    const ll = m.getLatLng();
+    return ll.lat === latlng.lat && ll.lng === latlng.lng;
+  });
+
+  // ✅ Un seul marker → popup directe
+  if (sameCoords.length === 1) {
+    openMarkerPopup(sameCoords[0], 19);
+    closeSearchBar();
+    return;
+  }
+
+  // ✅ Plusieurs → popup groupée
+  const html = `
+    <div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
+      ${sameCoords.map((m, i) => {
+        const id = (m.options.customId || "").toUpperCase();
+        const iconFile = iconForMarker(m);
+        return `
+          <a href="#" class="cluster-link" data-idx="${i}"
+             style="display:flex;align-items:center;gap:6px;padding:4px 6px;
+                    border-radius:8px;background:#fff2;">
+            ${iconFile ? `<img src="ico/${iconFile}" style="width:16px;height:16px;">` : ""}
+            <span>${id}</span>
+          </a>`;
+      }).join("")}
+    </div>
+  `;
+
+  L.popup({ maxWidth: 260 })
+    .setLatLng(latlng)
+    .setContent(html)
+    .openOn(map);
+
+  // 🧠 Click = charge la vraie popup
+  setTimeout(() => {
+    document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
+      link.addEventListener("click", ev => {
+        ev.preventDefault();
+        ev.stopPropagation();
+        const idx = +ev.currentTarget.dataset.idx;
+        const target = sameCoords[idx];
+        const content = target.getPopup()?.getContent() || "";
+        const popupEl = document.querySelector(".leaflet-popup-content");
+        if (popupEl) popupEl.innerHTML = content;
+      });
+    });
+  }, 0);
+
+  map.flyTo(latlng, 19, { animate: true, duration: 0.6 });
   closeSearchBar();
 };
-
-
-
-
 
 // ===============================
 // ✅ showAppareil
