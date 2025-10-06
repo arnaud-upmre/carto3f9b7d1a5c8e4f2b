@@ -1,24 +1,12 @@
-OK Popup
-
-// ===============================
-// 🔍 Moteur de recherche complet – Nono Maps (version corrigée, silencieuse)
-// ===============================
-
 let lieux = [];
 let appareils = [];
 let allItems = [];
 let fuseMix = null;
 let selectedIndex = -1;
 
-// ===============================
-// 📦 URLs des sources JSON
-// ===============================
 const URL_POSTES = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/postes.json";
 const URL_APPAREILS = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/appareils.json";
 
-// ===============================
-// 🔠 Fonctions utilitaires
-// ===============================
 function normalize(str) {
   return (str || "")
     .normalize("NFD")
@@ -128,9 +116,7 @@ function generateAlias(appareil, nom, sat, posteType) {
   return Array.from(alias);
 }
 
-// ===============================
-// 📦 Chargement global + Fuse.js
-// ===============================
+
 async function chargerBaseRecherche() {
   if (allItems.length > 0) return allItems;
 
@@ -168,9 +154,7 @@ async function chargerBaseRecherche() {
   return allItems;
 }
 
-// ===============================
-// 🔍 Tri complet
-// ===============================
+
 function trierResultats(results, qId, qNorm) {
   const qDigits = qId.replace(/\D/g, "");
 
@@ -229,9 +213,7 @@ function trierResultats(results, qId, qNorm) {
   return results;
 }
 
-// ===============================
-// 🎯 Sélection clavier
-// ===============================
+
 function updateSelection(items) {
   items.forEach((li, i) => {
     if (i === selectedIndex) {
@@ -243,9 +225,7 @@ function updateSelection(items) {
   });
 }
 
-// ===============================
-// 🚀 Initialisation du champ recherche
-// ===============================
+
 document.addEventListener("DOMContentLoaded", async () => {
   await chargerBaseRecherche();
 
@@ -253,7 +233,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const suggestionsEl = document.getElementById("suggestions");
   const resultEl = document.getElementById("result");
 
-  // ✅ Ajout de la sécurité pour éviter l’erreur sur map1
+
   if (!input) {
     console.warn("🔎 Aucun champ de recherche (#search) sur cette page — recherche désactivée");
     return;
@@ -262,7 +242,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   input.addEventListener("input", e => {
     const rawQuery = e.target.value.trim();
     const query = normalize(rawQuery);
-    const cleanedQuery = query.replace(/\s+/g, ""); // ✅ correctif identique à index
+    const cleanedQuery = query.replace(/\s+/g, ""); 
     suggestionsEl.innerHTML = "";
     resultEl.innerHTML = "";
     resultEl.style.display = "none";
@@ -309,10 +289,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 li.onclick = (e) => {
   e.preventDefault();
 
-  // 🧩 On vérifie si on est sur la page map1.html
   const isMap1 = window.location.pathname.includes("map1");
 
-  // 🟢 Si on est sur map1 et que le poste a deux coordonnées (poste + accès)
   if (isMap1 && item.category === "poste" && item.poste_latitude && item.latitude) {
     // Vérifie s'il y a déjà un menu ouvert → on le ferme si on reclique
     const existing = li.querySelector(".submenu");
@@ -392,12 +370,8 @@ li.onclick = (e) => {
   });
 }); // ✅ ferme le DOMContentLoaded
 
-// ===============================
-// 🌍 Intégration Nono Maps – compatibilité map1.html
-// ===============================
-// ===============================
-// 🌍 Intégration Nono Maps – compatibilité map1.html
-// ===============================
+
+
 window.initSearch = function(map, allMarkers) {
   console.log("🔍 [recherche.js] initSearch appelée depuis map1");
 
@@ -420,9 +394,6 @@ window.initSearch = function(map, allMarkers) {
 
 
 
-// ===============================
-// 🎯 Fonctions locales pour map1
-// ===============================
 // 🔧 Helper : ouvre la popup d’un marker même s’il est encore dans un cluster
 function openMarkerPopup(marker, targetZoom = 20) {
   const ll = marker.getLatLng();
