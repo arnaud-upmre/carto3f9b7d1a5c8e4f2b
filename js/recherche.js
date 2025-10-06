@@ -10,7 +10,7 @@ const URL_APPAREILS = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7
 const compteurURL = "https://script.google.com/macros/s/AKfycbzUFaek89LYosR0FSw9gyxn2IZXlFlWXA_dIFIDwox-szE3DgH-l8IVbGfaoIgGK04h/exec";
 const compteurAppareilURL = "https://script.google.com/macros/s/AKfycbwJIlvcfNYREJn1oPiVAhQqHACXXar8ZbRl6aChwYw4TFSAaMTFEHTT5X2T7BKLJ3gsJw/exec";
 
-const isMap = window.location.pathname.includes("map");
+const isMap = window.location.pathname.endsWith("map.html");
 
 function incrementCounter() {
   console.log("🧮 incrementCounter() appelé !");
@@ -308,9 +308,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 li.onclick = (e) => {
   e.preventDefault();
 
-const isMapPage = window.location.pathname.includes("map");
+if (
+  isMap &&
+  item.category === "poste" &&
+  item.poste_latitude && item.poste_longitude &&
+  (item.latitude || item.acces_latitude || item.accesLongitude || item.longitude)
+) {
 
-if (isMapPage && item.category === "poste" && item.poste_latitude && item.latitude) {
+  
     // Vérifie s'il y a déjà un menu ouvert → on le ferme si on reclique
     const existing = li.querySelector(".submenu");
     if (existing) {
@@ -392,7 +397,7 @@ if (isMapPage && item.category === "poste" && item.poste_latitude && item.latitu
 
 
 window.initSearch = function(map, allMarkers) {
-  console.log("🔍 [recherche.js] initSearch appelée depuis map1");
+  console.log("🔍 [recherche.js] initSearch appelée depuis map");
 
   // on s’assure que les variables globales existent bien
   window.map = map;
@@ -401,7 +406,7 @@ window.initSearch = function(map, allMarkers) {
   // on charge la base sans bloquer la définition
   chargerBaseRecherche()
     .then(() => {
-      console.log("✅ Base de recherche prête (map1)");
+      console.log("✅ Base de recherche prête (map)");
     })
     .catch(err => {
       console.error("❌ Erreur lors du chargement de la base de recherche :", err);
