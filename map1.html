@@ -1033,7 +1033,7 @@ fetch("appareils.json")
         appareilIcon = L.divIcon({ html:`<img src="ico/sect.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,32], popupAnchor:[0,-32] });
       } else if (ref.startsWith("ALIM")) {
         appareilIcon = L.divIcon({ html:`<img src="ico/alim.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,32], popupAnchor:[0,-32] });
-      } else if (ref.startsWith("DU")) {
+      } else if (ref.replace(/[^A-Z0-9]/g, "").startsWith("DU")) {
         appareilIcon = L.divIcon({ html:`<img src="ico/stop.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,32], popupAnchor:[0,-32] });
       } else {
         appareilIcon = iconAppareil;
