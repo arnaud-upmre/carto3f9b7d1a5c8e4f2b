@@ -548,6 +548,12 @@ window.showLieu = function (item) {
 
   const latlng = matches[0].getLatLng();
 
+  // --- Incrémentation compteur (carte) ---
+if (window.location.pathname.includes("map")) {
+  if (typeof incrementCounter === "function") incrementCounter();
+  console.log("📈 +1 poste/acces (recherche validée sur la carte)");
+}
+
   // ✅ Poste seul → popup directe
   openMarkerPopup(matches[0], 19);
   closeSearchBar();
@@ -622,6 +628,12 @@ setTimeout(() => {
   });
 }, 0);
 
+
+  // --- Incrémentation compteur (carte) ---
+if (window.location.pathname.includes("map")) {
+  if (typeof incrementCounterAppareil === "function") incrementCounterAppareil();
+}
+  
   map.flyTo(latlng, 20, { animate: true, duration: 0.6 });
   closeSearchBar();
 };
