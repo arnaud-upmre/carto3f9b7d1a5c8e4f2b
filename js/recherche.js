@@ -468,135 +468,95 @@ function iconForMarker(m) {
 window.showLieu = function (item) {
   if (!window.map || !window.allMarkers) return;
 
-  // 🧭 Si clic sur "Poste"
+  // 🟩 Cas 1 : clic sur un poste → ouverture directe de la bonne popup
   if (item.force === "poste" && item.poste_latitude && item.poste_longitude) {
-    const lat = parseFloat(item.poste_latitude);
-    const lng = parseFloat(item.poste_longitude);
+    const targetId = [
+      item.nom || "",
+      item.type || "",
+      item.SAT || ""
+    ].filter(Boolean).join(" ").toLowerCase().trim();
 
-    // 🔎 Trouve via customId (nom/type/SAT)
+    const match = window.allMarkers.find(m =>
+      (m.options.customId || "").toLowerCase().trim() === targetId &&
+      m.options.isAcces !== true
+    );
+
+    if (!match) return;
+    const ll = match.getLatLng();
+    map.flyTo(ll, 19, { animate: true, duration: 0.6 });
+
+    setTimeout(() => openMarkerPopup(match, 19), 400);
+    closeSearchBar();
+    return;
+  }
+
+  // 🟦 Cas 2 : clic sur un accès → popup groupée seulement s’il y a plusieurs accès
+  if (item.force === "acces" && item.latitude && item.longitude) {
     const targetId = [
       item.nom || "",
       item.type || "",
       item.SAT || "",
+      item["accès"] || item.acces || ""
     ].filter(Boolean).join(" ").toLowerCase().trim();
 
+    // 👉 On prend uniquement les accès
     const matches = window.allMarkers.filter(m =>
-      (m.options.customId || "").toLowerCase().trim().startsWith(targetId)
+      (m.options.customId || "").toLowerCase().trim() === targetId &&
+      m.options.isAcces === true
     );
 
-    map.flyTo([lat, lng], 19, { animate: true, duration: 0.6 });
+    // S’il y a zéro ou un seul accès, on ouvre directement sa popup
+    if (matches.length <= 1) {
+      if (!matches.length) return;
+      const ll = matches[0].getLatLng();
+      map.flyTo(ll, 19, { animate: true, duration: 0.6 });
+      setTimeout(() => openMarkerPopup(matches[0], 19), 400);
+      closeSearchBar();
+      return;
+    }
 
-    // 🕒 Délai léger avant ouverture
+    // 🧩 Plusieurs accès → popup groupée (et seulement eux)
+    const latlng = matches[0].getLatLng();
+    const html = `
+      <div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
+        ${matches.map((m, i) => {
+          const id = (m.options.customId || "").toUpperCase();
+          const iconFile = iconForMarker(m);
+          return `
+            <a href="#" class="cluster-link" data-idx="${i}" 
+               style="display:flex;align-items:center;gap:6px;padding:4px 6px;border-radius:8px;background:#fff2;">
+              ${iconFile ? `<img src="ico/${iconFile}" style="width:16px;height:16px;">` : ""}
+              <span>${id}</span>
+            </a>`;
+        }).join("")}
+      </div>
+    `;
+
+    const popup = L.popup({ maxWidth: 260 })
+      .setLatLng(latlng)
+      .setContent(html)
+      .openOn(map);
+
     setTimeout(() => {
-      if (matches.length === 1) {
-        openMarkerPopup(matches[0], 19);
-      } else if (matches.length > 1) {
-        const html = `
-          <div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
-            ${matches.map((m, i) => {
-              const id = (m.options.customId || "").toUpperCase();
-              const iconFile = iconForMarker(m);
-              return `
-                <a href="#" class="cluster-link" data-idx="${i}"
-                   style="display:flex;align-items:center;gap:6px;padding:4px 6px;border-radius:8px;background:#fff2;">
-                  ${iconFile ? `<img src="ico/${iconFile}" style="width:16px;height:16px;">` : ""}
-                  <span>${id}</span>
-                </a>`;
-            }).join("")}
-          </div>
-        `;
+      document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
+        link.addEventListener("click", ev => {
+          ev.preventDefault();
+          ev.stopPropagation();
+          const idx = +ev.currentTarget.dataset.idx;
+          const target = matches[idx];
+          const content = target.getPopup()?.getContent() || "";
+          const popup = document.querySelector(".leaflet-popup-content");
+          if (popup) popup.innerHTML = content;
+        });
+      });
+    }, 0);
 
-        L.popup({ maxWidth: 260 })
-          .setLatLng([lat, lng])
-          .setContent(html)
-          .openOn(map);
-
-        setTimeout(() => {
-          document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach((link) => {
-            link.addEventListener("click", (ev) => {
-              ev.preventDefault();
-              ev.stopPropagation();
-              const idx = +ev.currentTarget.dataset.idx;
-              const target = matches[idx];
-              const content = target.getPopup()?.getContent() || "";
-              const popup = document.querySelector(".leaflet-popup-content");
-              if (popup) popup.innerHTML = content;
-            });
-          });
-        }, 0);
-      }
-    }, 400);
-
+    map.flyTo(latlng, 19, { animate: true, duration: 0.6 });
     closeSearchBar();
     return;
   }
-// 🧭 Si clic sur "Accès"
-if (item.force === "acces" && item.latitude && item.longitude) {
-  const lat = parseFloat(item.latitude);
-  const lng = parseFloat(item.longitude);
 
-  const targetId = [
-    item.nom || "",
-    item.type || "",
-    item.SAT || "",
-    item["accès"] || item.acces || ""
-  ].filter(Boolean).join(" ").toLowerCase().trim();
-
-  // 🔍 On garde uniquement les accès (pas les postes)
-  const matches = window.allMarkers.filter(m =>
-    (m.options.customId || "").toLowerCase().trim() === targetId &&
-    m.options.isAcces === true
-  );
-
-  if (!matches.length) return;
-
-  map.flyTo([lat, lng], 19, { animate: true, duration: 0.6 });
-
-  setTimeout(() => {
-    if (matches.length === 1) {
-      openMarkerPopup(matches[0], 19);
-    } else {
-      const html = `
-        <div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
-          ${matches.map((m, i) => {
-            const id = (m.options.customId || "").toUpperCase();
-            const iconFile = iconForMarker(m);
-            return `
-              <a href="#" class="cluster-link" data-idx="${i}"
-                 style="display:flex;align-items:center;gap:6px;padding:4px 6px;border-radius:8px;background:#fff2;">
-                ${iconFile ? `<img src="ico/${iconFile}" style="width:16px;height:16px;">` : ""}
-                <span>${id}</span>
-              </a>`;
-          }).join("")}
-        </div>
-      `;
-
-      L.popup({ maxWidth: 260 })
-        .setLatLng([lat, lng])
-        .setContent(html)
-        .openOn(map);
-
-      setTimeout(() => {
-        document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach((link) => {
-          link.addEventListener("click", (ev) => {
-            ev.preventDefault();
-            ev.stopPropagation();
-            const idx = +ev.currentTarget.dataset.idx;
-            const target = matches[idx];
-            const content = target.getPopup()?.getContent() || "";
-            const popup = document.querySelector(".leaflet-popup-content");
-            if (popup) popup.innerHTML = content;
-          });
-        });
-      }, 0);
-    }
-  }, 400);
-
-  closeSearchBar();
-  return;
-}
-
-  // 🧱 le reste est 100 % ton code d'origine :
+  // 🟨 Fallback : logique standard (inchangée)
   const targetId = [
     item.nom || "",
     item.type || "",
@@ -610,28 +570,24 @@ if (item.force === "acces" && item.latitude && item.longitude) {
   if (!matches.length) return;
 
   const latlng = matches[0].getLatLng();
-
-  // Tous les marqueurs strictement à la même coordonnée
   const sameCoords = window.allMarkers.filter(m => {
     const ll = m.getLatLng();
     return ll.lat === latlng.lat && ll.lng === latlng.lng;
   });
 
-  // Un seul → on ouvre directement sa popup
   if (sameCoords.length === 1) {
     openMarkerPopup(sameCoords[0], 19);
     closeSearchBar();
     return;
   }
 
-  // Plusieurs → popup groupée
   const html = `
     <div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
       ${sameCoords.map((m, i) => {
         const id = (m.options.customId || "").toUpperCase();
         const iconFile = iconForMarker(m);
         return `
-          <a href="#" class="cluster-link" data-idx="${i}"
+          <a href="#" class="cluster-link" data-idx="${i}" 
              style="display:flex;align-items:center;gap:6px;padding:4px 6px;border-radius:8px;background:#fff2;">
             ${iconFile ? `<img src="ico/${iconFile}" style="width:16px;height:16px;">` : ""}
             <span>${id}</span>
@@ -640,21 +596,19 @@ if (item.force === "acces" && item.latitude && item.longitude) {
     </div>
   `;
 
-  const popup = L.popup({ maxWidth: 260 })
+  L.popup({ maxWidth: 260 })
     .setLatLng(latlng)
     .setContent(html)
     .openOn(map);
 
   setTimeout(() => {
-    document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach((link) => {
-      link.addEventListener("click", (ev) => {
+    document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
+      link.addEventListener("click", ev => {
         ev.preventDefault();
-        ev.stopPropagation(); // ✅ empêche Leaflet de fermer la popup
+        ev.stopPropagation();
         const idx = +ev.currentTarget.dataset.idx;
         const target = sameCoords[idx];
         const content = target.getPopup()?.getContent() || "";
-
-        // ✅ remplace le contenu sans fermer la popup
         const popup = document.querySelector(".leaflet-popup-content");
         if (popup) popup.innerHTML = content;
       });
