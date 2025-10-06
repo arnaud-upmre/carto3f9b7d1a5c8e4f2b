@@ -463,21 +463,21 @@ function iconForMarker(m) {
 }
 
 // ===============================
-// ✅ showLieu (version stable, même logique que showAppareil)
+// ✅ showLieu (version finale, popup groupée comme showAppareil)
 // ===============================
 window.showLieu = function (item) {
   if (!window.map || !window.allMarkers) return;
 
-  // 🔍 Helper : trouve le marker le plus proche de coordonnées données
+  // 🔍 Helper : cherche un marker proche de coordonnées données
   function findMarkerByCoords(lat, lng) {
-    const tol = 0.00001; // ≈1 m
+    const tol = 0.00001; // ≈ 1 mètre
     return window.allMarkers.find(m => {
       const ll = m.getLatLng();
       return Math.abs(ll.lat - lat) < tol && Math.abs(ll.lng - lng) < tol;
     });
   }
 
-  // 🧭 Si l'appel vient du menu déplié (force = "poste" ou "acces")
+  // 🧭 Cas appel direct (force = poste ou acces)
   if (item.force === "poste" && item.poste_latitude && item.poste_longitude) {
     const lat = parseFloat(item.poste_latitude);
     const lng = parseFloat(item.poste_longitude);
@@ -498,7 +498,7 @@ window.showLieu = function (item) {
     return;
   }
 
-  // 🧱 Identifiant textuel
+  // 🧱 Identifiant textuel complet
   const targetId = [
     item.nom || "",
     item.type || "",
@@ -506,14 +506,14 @@ window.showLieu = function (item) {
     item["accès"] || item.acces || ""
   ].filter(Boolean).join(" ").toLowerCase().trim();
 
-  // 🔎 Recherche par customId
+  // 🔎 Recherche par customId exact
   let matches = window.allMarkers.filter(m =>
     (m.options.customId || "").toLowerCase().trim() === targetId
   );
 
   console.log("🔍 showLieu →", matches.length, "marker(s) for", targetId);
 
-  // 🔁 Si aucun match textuel, tentative par coordonnées
+  // 🔁 Si aucun match textuel → recherche par coordonnées
   if (!matches.length && item.latitude && item.longitude) {
     const marker = findMarkerByCoords(parseFloat(item.latitude), parseFloat(item.longitude));
     if (marker) matches = [marker];
@@ -522,20 +522,20 @@ window.showLieu = function (item) {
   if (!matches.length) return;
   const latlng = matches[0].getLatLng();
 
-  // 📍 Regroupe ceux à la même position
+  // 📍 Récupère tous les markers aux mêmes coordonnées
   const sameCoords = window.allMarkers.filter(m => {
     const ll = m.getLatLng();
     return ll.lat === latlng.lat && ll.lng === latlng.lng;
   });
 
-  // ✅ Un seul marker → popup directe
+  // ✅ Cas 1 : un seul marker → popup directe
   if (sameCoords.length === 1) {
     openMarkerPopup(sameCoords[0], 19);
     closeSearchBar();
     return;
   }
 
-  // ✅ Plusieurs → popup groupée
+  // ✅ Cas 2 : plusieurs markers → popup groupée (comme showAppareil)
   const html = `
     <div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
       ${sameCoords.map((m, i) => {
@@ -552,15 +552,15 @@ window.showLieu = function (item) {
     </div>
   `;
 
-  L.popup({ maxWidth: 260 })
+  const popup = L.popup({ maxWidth: 260 })
     .setLatLng(latlng)
     .setContent(html)
     .openOn(map);
 
-  // 🧠 Click = charge la vraie popup
+  // 🧠 Clic sur un lien → affiche la popup réelle du marker
   setTimeout(() => {
     document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
-      link.addEventListener("click", ev => {
+      link.addEventListener("click", (ev) => {
         ev.preventDefault();
         ev.stopPropagation();
         const idx = +ev.currentTarget.dataset.idx;
@@ -575,7 +575,6 @@ window.showLieu = function (item) {
   map.flyTo(latlng, 19, { animate: true, duration: 0.6 });
   closeSearchBar();
 };
-
 // ===============================
 // ✅ showAppareil
 // ===============================
