@@ -914,6 +914,7 @@ const iconAcces = L.divIcon({
     // ✅ Synchronisation des chargements JSON
 let dataReadyCount = 0;
 function markDataReady() {
+  console.log("✅ markDataReady() appelé — nombre actuel :", dataReadyCount + 1);
   dataReadyCount++;
   if (dataReadyCount === 2) {
     console.log("✅ Données prêtes, ouverture possible");
@@ -922,6 +923,7 @@ function markDataReady() {
         if (allMarkers.length > 0) {
           clearInterval(checkReady);
           map.invalidateSize();
+          console.log("🧭 Ouverture de la popup depuis URL — marqueurs :", allMarkers.length);
           _tryOpenFromURL();
         }
       }, 200);
@@ -1040,6 +1042,7 @@ allMarkers.push(m);
       }
 
     });
+  console.log("📦 JSON POSTES chargé :", allMarkers.length, "marqueurs au total pour l'instant");
   markDataReady();
   });
     
@@ -1133,7 +1136,7 @@ if (ref.startsWith("DU")) {
       allMarkers.push(m);
       });
   
-
+console.log("📦 JSON APPAREILS chargé :", allMarkers.length, "marqueurs au total pour l'instant");
   markDataReady();
 });   // ← ferme le .then(allData => { du chargement des appareils)
 
