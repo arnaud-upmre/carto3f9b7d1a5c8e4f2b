@@ -676,12 +676,17 @@ L.control.zoom({ position: 'topright' }).addTo(map);
 
 // Bouton Z+
 (function() {
-const zBtn = L.DomUtil.create('a', '', document.querySelector('.leaflet-control-zoom'));
-zBtn.textContent = 'Z+';
-document.querySelector('.leaflet-control-zoom').insertBefore(zBtn, document.querySelector('.leaflet-control-zoom-in'));
-zBtn.style.fontSize = '12px';
-zBtn.style.lineHeight = '26px';
-  zBtn.classList.add('leaflet-disabled');
+  const zoomContainer = document.querySelector('.leaflet-control-zoom');
+  const zBtn = L.DomUtil.create('a', '', zoomContainer);
+  zBtn.textContent = 'Z+';
+  zBtn.href = '#';
+  zoomContainer.insertBefore(zBtn, zoomContainer.firstChild); // met Z+ au-dessus du +
+
+  zBtn.className = 'leaflet-control-zoom-in leaflet-disabled'; // même style Leaflet
+  zBtn.style.fontSize = ''; // pas de surstyle
+  zBtn.style.lineHeight = ''; 
+  zBtn.style.fontWeight = '';
+  zBtn.style.opacity = '';
 
   let zoomNum = false;
   map.setMaxZoom(19);
@@ -690,17 +695,17 @@ zBtn.style.lineHeight = '26px';
     const z = map.getZoom();
     if (z < 19) {
       zoomNum = false;
-      zBtn.classList.add('leaflet-disabled');
+      L.DomUtil.addClass(zBtn, 'leaflet-disabled');
       map.setMaxZoom(19);
     } else if (z >= 19) {
-      zBtn.classList.remove('leaflet-disabled');
+      L.DomUtil.removeClass(zBtn, 'leaflet-disabled');
     }
   });
 
   zBtn.onclick = (e) => {
     e.preventDefault();
     const z = map.getZoom();
-    if (z < 19) return; // inactif
+    if (z < 19) return;
     if (!zoomNum) {
       zoomNum = true;
       map.setMaxZoom(21);
