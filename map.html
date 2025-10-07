@@ -672,7 +672,41 @@ orthoIGN.addTo(map);
       {}
     ).addTo(map);
 
-    L.control.zoom({ position: 'topright' }).addTo(map);
+L.control.zoom({ position: 'topright' }).addTo(map);
+
+// Bouton Z+
+(function() {
+  const zBtn = L.DomUtil.create('a', 'leaflet-control-zoom-in', document.querySelector('.leaflet-control-zoom'));
+  zBtn.textContent = 'Z+';
+  zBtn.classList.add('leaflet-disabled');
+
+  let zoomNum = false;
+  map.setMaxZoom(19);
+
+  map.on('zoomend', () => {
+    const z = map.getZoom();
+    if (z < 19) {
+      zoomNum = false;
+      zBtn.classList.add('leaflet-disabled');
+      map.setMaxZoom(19);
+    } else if (z >= 19) {
+      zBtn.classList.remove('leaflet-disabled');
+    }
+  });
+
+  zBtn.onclick = (e) => {
+    e.preventDefault();
+    const z = map.getZoom();
+    if (z < 19) return; // inactif
+    if (!zoomNum) {
+      zoomNum = true;
+      map.setMaxZoom(21);
+      map.setZoom(20);
+    } else if (z === 20) {
+      map.setZoom(21);
+    }
+  };
+})();
 
     planIGN.on("tileerror", e => console.warn("IGN PLAN tile error", e));
     orthoIGN.on("tileerror", e => console.warn("IGN ORTHO tile error", e));
