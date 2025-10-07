@@ -917,8 +917,10 @@ function spiderfyDuplicates() {
 }
 
 // Appeler la fonction une fois que les appareils sont chargés et affichés
-map.whenReady(() => {
-  setTimeout(spiderfyDuplicates, 800); // petit délai pour laisser Leaflet tout dessiner
+map.on("zoomend", () => {
+  if (map.getZoom() >= 19) {
+    setTimeout(spiderfyDuplicates, 300);
+  }
 });
 
 
