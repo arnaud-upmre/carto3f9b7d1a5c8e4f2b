@@ -695,6 +695,9 @@ L.control.zoom({ position: 'topright' }).addTo(map);
       zoomNum = false;
       L.DomUtil.addClass(zBtn, 'leaflet-disabled');
       map.setMaxZoom(19);
+      editBanner.textContent = "❌ Zoom numérique désactivé";
+editBanner.style.display = "block";
+setTimeout(() => editBanner.style.display = "none", 1500);
     } else if (z >= 19) {
       L.DomUtil.removeClass(zBtn, 'leaflet-disabled');
     }
@@ -708,6 +711,9 @@ L.control.zoom({ position: 'topright' }).addTo(map);
       zoomNum = true;
       map.setMaxZoom(21);
       map.setZoom(20);
+      editBanner.textContent = "🔍 Zoom numérique activé";
+editBanner.style.display = "block";
+setTimeout(() => editBanner.style.display = "none", 1500);
     } else if (z === 20) {
       map.setZoom(21);
     }
