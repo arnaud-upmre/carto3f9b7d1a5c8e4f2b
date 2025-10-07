@@ -685,7 +685,7 @@ const appareilsLayer = L.markerClusterGroup({
   spiderfyOnMaxZoom: true,
   showCoverageOnHover: false,
   zoomToBoundsOnClick: false,   
-  disableClusteringAtZoom: 19,
+  disableClusteringAtZoom: null,
   maxClusterRadius: function(zoom) {
     return zoom > 18 ? 20 : 60;
   }
