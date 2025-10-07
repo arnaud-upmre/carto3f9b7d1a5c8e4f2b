@@ -672,53 +672,7 @@ orthoIGN.addTo(map);
       {}
     ).addTo(map);
 
-L.control.zoom({ position: 'topright' }).addTo(map);
-
-// Ajout du bouton Z+
-(function() {
-  const zoomContainer = document.querySelector('.leaflet-control-zoom');
-  const zoomInBtn = zoomContainer.querySelector('.leaflet-control-zoom-in');
-
-  const zBtn = L.DomUtil.create('a', 'leaflet-control-zoom-in leaflet-disabled', zoomContainer);
-  zBtn.href = '#';
-  zBtn.title = 'Zoom numérique';
-  zBtn.textContent = 'Z+';
-
-  zoomContainer.insertBefore(zBtn, zoomInBtn); // place Z+ au-dessus de +
-  
-  let zoomNum = false;
-  map.setMaxZoom(19);
-
-  map.on('zoomend', () => {
-    const z = map.getZoom();
-    if (z < 19) {
-      zoomNum = false;
-      L.DomUtil.addClass(zBtn, 'leaflet-disabled');
-      map.setMaxZoom(19);
-      editBanner.textContent = "❌ Zoom numérique désactivé";
-editBanner.style.display = "block";
-setTimeout(() => editBanner.style.display = "none", 1500);
-    } else if (z >= 19) {
-      L.DomUtil.removeClass(zBtn, 'leaflet-disabled');
-    }
-  });
-
-  zBtn.onclick = (e) => {
-    e.preventDefault();
-    const z = map.getZoom();
-    if (z < 19) return;
-    if (!zoomNum) {
-      zoomNum = true;
-      map.setMaxZoom(21);
-      map.setZoom(20);
-      editBanner.textContent = "🔍 Zoom numérique activé";
-editBanner.style.display = "block";
-setTimeout(() => editBanner.style.display = "none", 1500);
-    } else if (z === 20) {
-      map.setZoom(21);
-    }
-  };
-})();
+    L.control.zoom({ position: 'topright' }).addTo(map);
 
     planIGN.on("tileerror", e => console.warn("IGN PLAN tile error", e));
     orthoIGN.on("tileerror", e => console.warn("IGN ORTHO tile error", e));
