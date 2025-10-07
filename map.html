@@ -1169,6 +1169,21 @@ appareilsLayer.on('clusterclick', function (e) {
   }
 });
 
+    // 🕸️ Déclenche automatiquement l’éclatement des appareils identiques si le cluster est superposé
+appareilsLayer.on("clusterclick", function (e) {
+  const markers = e.layer.getAllChildMarkers();
+  if (markers.length <= 1) return;
+
+  const first = markers[0].getLatLng();
+  const allSame = markers.every(m => m.getLatLng().equals(first));
+
+  if (allSame) {
+    e.originalEvent.preventDefault();
+    e.originalEvent.stopPropagation();
+    e.layer.spiderfy();
+  }
+});
+
 const leftControls = L.control({ position: "topleft" });
 leftControls.onAdd = function() {
   const container = L.DomUtil.create("div");
