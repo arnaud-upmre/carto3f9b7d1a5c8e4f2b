@@ -1070,14 +1070,6 @@ appareilsLayer.on('clusterclick', function (e) {
   const allSameCoords = childMarkers.every(m => m.getLatLng().equals(first));
 
   if (allSameCoords) {
-
-    // ✅ Si on est déjà bien zoomé (z ≥ 19), déplier sans rezoom
-if (map.getZoom() >= 19) {
-  e.originalEvent.preventDefault();
-  e.originalEvent.stopPropagation();
-  e.layer.spiderfy();
-  return;
-}
     
     if (id) {
 
