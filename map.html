@@ -897,7 +897,7 @@ _tryOpenFromURL();
      });
 
     
-// 🔄 Éclatement automatique des appareils superposés au chargement
+// 🔄 Éclatement automatique des appareils superposés à partir du zoom 19
 function spiderfyDuplicates() {
   const groups = {};
   appareilsLayer.eachLayer(layer => {
@@ -907,20 +907,25 @@ function spiderfyDuplicates() {
     groups[key].push(layer);
   });
 
-  Object.values(groups).forEach(group => {
-    if (group.length > 1) {
-      const first = group[0];
-      const cluster = appareilsLayer.getVisibleParent(first);
-      if (cluster && cluster.spiderfy) cluster.spiderfy();
-    }
-  });
+  // Écarte légèrement les doublons si zoom >= 19
+  if (map.getZoom() >= 19) {
+    Object.values(groups).forEach(group => {
+      if (group.length > 1) {
+        const angleStep = (2 * Math.PI) / group.length;
+        const radius = 0.00005; // ≈ 5 m
+        group.forEach((marker, i) => {
+          const lat = marker.getLatLng().lat + Math.sin(i * angleStep) * radius;
+          const lng = marker.getLatLng().lng + Math.cos(i * angleStep) * radius;
+          marker.setLatLng([lat, lng]);
+        });
+      }
+    });
+  }
 }
 
-// Appeler la fonction une fois que les appareils sont chargés et affichés
+// Appliquer automatiquement quand on zoome
 map.on("zoomend", () => {
-  if (map.getZoom() >= 19) {
-    setTimeout(spiderfyDuplicates, 300);
-  }
+  spiderfyDuplicates();
 });
 
 
