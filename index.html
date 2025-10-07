@@ -1064,7 +1064,7 @@ html += `
     ${
       usePoste
         ? `
-          <a href="${myMapsViewer(lieu.poste_latitude || lieu.latitude, lieu.poste_longitude || lieu.longitude)}" target="_blank">🛰️ Vue satellite</a>
+          <a href="${myMapsViewer(lieu.poste_latitude || lieu.latitude, lieu.poste_longitude || lieu.longitude)}">🛰️ Vue satellite</a>
           <a href="${
             lieu.imajnet && lieu.imajnet.trim() !== "" 
               ? lieu.imajnet 
@@ -1207,7 +1207,7 @@ ${(app.nom || '').trim()}${app.type ? ' ' + app.type.trim() : ''}${app.SAT ? ' '
  <div class="rep-block rep-appareil">
   <p id="editable-rep-appareil"><span class="emoji">💡</span> Repérer l’appareil :</p>
   <div class="inline-links pills-2">
-    <a href="${myMapsViewer(app.latitude, app.longitude)}" target="_blank">🛰️ Vue satellite</a>
+    <a href="${myMapsViewer(app.latitude, app.longitude)}">🛰️ Vue satellite</a>
     <a href="${
       app.imajnet && app.imajnet.trim() !== "" 
         ? app.imajnet 
