@@ -894,27 +894,31 @@ allMarkers.push(m);
 
     });
 _tryOpenFromURL();
+
     
-    // 🔄 Éclatement automatique des appareils superposés
-appareilsLayer.on('animationend', function () {
-  const clusters = [];
+// 🔄 Éclatement automatique des appareils superposés au chargement
+function spiderfyDuplicates() {
+  const groups = {};
   appareilsLayer.eachLayer(layer => {
     const ll = layer.getLatLng();
     const key = `${ll.lat.toFixed(6)}_${ll.lng.toFixed(6)}`;
-    clusters[key] = clusters[key] || [];
-    clusters[key].push(layer);
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(layer);
   });
 
-  Object.values(clusters).forEach(group => {
+  Object.values(groups).forEach(group => {
     if (group.length > 1) {
       const first = group[0];
-      // force le spiderfy pour ce groupe
       const cluster = appareilsLayer.getVisibleParent(first);
       if (cluster && cluster.spiderfy) cluster.spiderfy();
     }
   });
+}
+
+// Appeler la fonction une fois que les appareils sont chargés et affichés
+map.whenReady(() => {
+  setTimeout(spiderfyDuplicates, 800); // petit délai pour laisser Leaflet tout dessiner
 });
-  });
 
 
     
