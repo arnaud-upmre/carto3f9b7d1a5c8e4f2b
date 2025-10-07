@@ -30,7 +30,7 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
-  <script src="js/recherche.js"></script>
+   
   <style id="eale-intro-styles">
 
     .edit-buttons {
@@ -772,8 +772,13 @@ main {
   <button id="voir-plus" class="btn-primary" style="display:none;">➕ Voir plus</button>
 </div>
   <script>
+const jsonUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/postes.json";
+const appareilsUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/appareils.json";
+const compteurURL = "https://script.google.com/macros/s/AKfycbzUFaek89LYosR0FSw9gyxn2IZXlFlWXA_dIFIDwox-szE3DgH-l8IVbGfaoIgGK04h/exec";
+const compteurAppareilURL = "https://script.google.com/macros/s/AKfycbwJIlvcfNYREJn1oPiVAhQqHACXXar8ZbRl6aChwYw4TFSAaMTFEHTT5X2T7BKLJ3gsJw/exec";
 
-let currentItem = null;
+let lieux = [], appareils = [];
+    let currentItem = null;
 
 function myMapsViewer(lat, lon, z = 19) {
   return `map.html?lat=${lat}&lon=${lon}&z=${z}`;
@@ -865,7 +870,52 @@ function formatPortail(val) {
   </p>`;
 }
     
+function normalize(str) {
+  return str
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")    
+    .replace(/[^a-z0-9\s]/gi, "") 
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, " ");  
+}
 
+function normalizeNomPoste(name) {
+  if (!name) return "";
+  return name
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")     
+    .toLowerCase()
+    .trim()
+    
+    .replace(/\b(?:a|p|sp|ssp|sspa|l|l-a|prci|lgv|ss|sst)\b$/i, "")
+    .trim();
+}
+
+
+function isAppareilLike(raw){
+  if(!raw) return false;
+  const s = raw.trim().toLowerCase();
+  const prefixes = ["tt","i","tc","tsa","il","ip","imp","s"]; 
+  const first = s.split(/\s+/)[0];
+  const hasDigits = /\d/.test(s);
+  return prefixes.includes(first) || hasDigits;
+}
+
+function isPosteLike(raw){
+  if(!raw) return false;
+  const s = raw.trim();
+  return s.length >= 3 && !isAppareilLike(s);
+}
+
+function formatNomCompletLieu(obj) {
+  const base = `${obj.nom || ''} ${obj.type || ''} ${obj.SAT || ''}`.trim();
+return obj["accès"] ? `${base} – accès ${obj["accès"]}` : base;
+}
+
+function formatNomComplet(obj) {
+  return `${obj.nom || ''} ${obj.type || ''}`.trim();
+}
 function formatRSS(table, showPhones = true) {
   const tables = {
     "A": ["03 28 55 82 56", "03 28 55 82 57"],
@@ -982,6 +1032,93 @@ if (!isSAT && !isAcces) {
   return html;
 }
     
+    
+function generateAlias(appareil, nom, sat, posteType) {
+  const alias = new Set();
+  const norm = str => (str || "").toLowerCase().trim();
+
+  const a = norm(appareil); 
+  const n = norm(nom);    
+  const s = norm(sat);
+  const t = norm(posteType);
+
+
+  const match = a.match(/^([a-z]+)(\d+)?$/i);
+  const letters = match ? match[1].toLowerCase() : a; 
+  const root = a.split(/[\s\-]/)[0]; 
+
+ 
+  alias.add(a);                          
+  alias.add(a.replace(/([a-z]+)(\d+)/, "$1 $2"));
+  alias.add(letters);                          
+
+
+  if (n) {
+    alias.add(`${a} ${n}`);
+    alias.add(`${n} ${a}`);
+    alias.add(`${root} ${n}`);
+    alias.add(`${n} ${root}`);
+    alias.add(`${letters} ${n}`);
+    alias.add(`${n} ${letters}`);
+  }
+
+  if (/^(i|ia|il|ip|imp)/i.test(a)) {
+    alias.add("interrupteur");
+    alias.add("inter");                       
+    alias.add(`interrupteur ${a}`);
+    alias.add(`inter ${a}`);               
+    if (n) {
+      alias.add(`interrupteur ${n}`);
+      alias.add(`inter ${n}`);               
+    }
+  }
+
+  if (/^(tt|tc|tsa)/i.test(a)) {
+    alias.add("transformateur");
+    alias.add("transfo");                       
+    alias.add(`transformateur ${a}`);
+    alias.add(`transfo ${a}`);                   
+    if (n) {
+      alias.add(`transformateur ${n}`);
+      alias.add(`transfo ${n}`);           
+    }
+  }
+
+  if (/^s?\d+$/i.test(a) || /^sm/i.test(a) || /^st/i.test(a)) {   
+    alias.add("sectionneur");
+    alias.add(`sectionneur ${a}`);
+    if (n) alias.add(`sectionneur ${n}`);
+  }
+
+  if (n) {
+    const mots = n.split(/\s+/);
+    mots.forEach(m => {
+      alias.add(`${letters} ${m}`);
+      alias.add(`${m} ${letters}`);
+      alias.add(`${letters.toUpperCase()} ${m}`);
+      alias.add(`${m} ${letters.toUpperCase()}`);
+    });
+  }
+
+  if (s) {
+    alias.add(`${a} ${s}`);
+    alias.add(`${s} ${a}`);
+    if (n) {
+      alias.add(`${a} ${n} ${s}`);
+      alias.add(`${n} ${s} ${a}`);
+      alias.add(`${letters} ${n} ${s}`);
+      alias.add(`${n} ${s} ${letters}`);
+    }
+  }
+
+  if (t && n) {
+    alias.add(`${n} ${t}`);
+    alias.add(`${t} ${n}`);
+  }
+
+  return Array.from(alias);
+} 
+
 
 function incrementCounter() {
   fetch(compteurURL + "?increment=true").catch(() => {});
@@ -1151,40 +1288,245 @@ if (lieu.SAT || lieu.accès) {
   result.innerHTML = html;
 }
 
-    // ⚙️ Variables globales réutilisées depuis recherche.js
-window.allItems = [];
-window.fuseMix = null;
+  let allItems = [], fuseMix;
 
-chargerBaseRecherche().then(data => {
-  window.allItems = data;
-  window.lieux = data.filter(x => x.category === "poste");
-  window.appareils = data.filter(x => x.category === "appareil");
+Promise.all([
+  fetch(jsonUrl).then(r => r.json()),
+  fetch(appareilsUrl).then(r => r.json())
+]).then(([postes, apps]) => {
+  lieux = postes;
+  appareils = apps;
 
-  console.log("✅ Base de recherche commune chargée :", window.allItems.length);
+  appareils.forEach(app => {
+    app.alias = generateAlias(app.appareil, app.nom, app.SAT, app.type);
+  });
 
-  // Gestion du paramètre ?id=...
+  const postesTagged = postes.map(p => ({ ...p, category: "poste" }));
+  const appsTagged   = apps.map(a => ({ ...a, category: "appareil" }));
+  allItems = [...postesTagged, ...appsTagged];
+
+  fuseMix = new Fuse(allItems, {
+    keys: [
+      { name: "nom", weight: 0.8 },
+      { name: "type", weight: 0.2 },
+      { name: "SAT", weight: 0.2 },
+      { name: "appareil", weight: 0.6 },
+      { name: "alias", weight: 0.7 },
+      { name: "accès", getFn: o => o.accès?.toString?.() || "", weight: 0.2 }
+    ],
+    includeScore: true,
+    threshold: 0.30,
+    distance: 50,
+    minMatchCharLength: 2,
+    ignoreLocation: true
+  });
+
   const params = new URLSearchParams(window.location.search);
-  const idParam = decodeURIComponent(params.get("id") || "");
+const idParam = decodeURIComponent(params.get("id") || "");
 
-  if (idParam) {
-    console.log("🔍 Paramètre id =", idParam);
+if (idParam) {
+  console.log("🔍 Paramètre id =", JSON.stringify(idParam));
 
-    const match = window.allItems.find(item => {
-      const fullName = formatNomCompletLieu(item);
-      const appareilFull = `${item.appareil || ""} ${item.nom || ""} ${item.type || ""} ${item.SAT || ""}`.trim();
-      return fullName === idParam || appareilFull === idParam;
+
+  const matchPoste = lieux.find(l => formatNomCompletLieu(l) === idParam);
+
+  if (matchPoste) {
+    console.log("✅ Poste/Accès trouvé:", matchPoste);
+    showLieu(matchPoste);
+  } else {
+
+    
+    const matchApp = appareils.find(a => {
+      const candidate = `${a.appareil} ${a.nom || ""} ${a.type || ""} ${a.SAT || ""}`.trim();
+      return candidate === idParam;
     });
 
-    if (match) {
-      console.log("✅ Élément trouvé :", match);
-      if (match.category === "poste") showLieu(match);
-      else showAppareil(match);
+    if (matchApp) {
+      console.log("✅ Appareil trouvé:", matchApp);
+      showAppareil(matchApp);
     } else {
-      console.warn("❌ Aucun match trouvé pour", idParam);
+      console.warn("❌ Aucun match pour", JSON.stringify(idParam));
     }
   }
-});
+}
+  });
+
+    let selectedIndex = -1;
+
+    function updateSelection(items) {
+  items.forEach((li, i) => {
+    if (i === selectedIndex) {
+      li.classList.add("best");
+      li.scrollIntoView({ block: "nearest" });
+    } else {
+      li.classList.remove("best");
+    }
+  });
+}
     
+
+document.getElementById("search").addEventListener("input", e => {
+  const query = normalize(e.target.value.trim());
+  const suggestionsEl = document.getElementById("suggestions");
+  const resultEl = document.getElementById("result");
+
+  suggestionsEl.innerHTML = "";
+  resultEl.innerHTML = "";
+  resultEl.style.display = "none";
+
+  if (!query || query.length < 2 || !fuseMix) return;
+
+let results = fuseMix.search(query).map(r => r.item);
+  const cleanedQuery = query.replace(/\s+/g, "").toLowerCase();
+
+const queryWords = query.split(/\s+/);
+const prefixes = ["tt","i","tc","tsa","il","ip","imp","s"];
+const lowerWords = queryWords.map(w => w.toLowerCase());
+
+const prefixWord = lowerWords.find(w => prefixes.includes(w));
+
+if (prefixWord) {
+  const otherWords = lowerWords.filter(w => w !== prefixWord);
+
+  results = results.filter(item => {
+    const appareilOk = item.appareil && item.appareil.toLowerCase().startsWith(prefixWord);
+    const nomOk = otherWords.every(w => normalize(item.nom || "").includes(w));
+    return appareilOk && nomOk;
+  });
+}
+
+results.forEach(it => {
+  const aliases = Array.isArray(it.alias) ? it.alias : [];
+  it.__directAliasHit = aliases.some(a => normalize(a) === query);
+});
+
+results.sort((a, b) => {
+  const q = query.toLowerCase();
+
+ 
+  const norm = s => (s || "").toString().toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").trim().replace(/\s+/g, " ");
+  const id = x => (x.appareil || "").toString().replace(/\s+/g, "").toLowerCase();    
+  const idDigits = x => id(x).replace(/\D/g, "");                                   
+
+  const qId = cleanedQuery;          
+  const qDigits = cleanedQuery.replace(/\D/g, "");
+  const aExactId = a.category === "appareil" && (id(a) === qId || (qDigits && idDigits(a) === qDigits));
+  const bExactId = b.category === "appareil" && (id(b) === qId || (qDigits && idDigits(b) === qDigits));
+  if (aExactId && !bExactId) return -1;
+  if (bExactId && !aExactId) return 1;
+
+  const aliasHit = (x) => Array.isArray(x.alias) && x.alias
+      .map(s => s.replace(/\s+/g, "").toLowerCase())
+      .some(s => s === qId || (qDigits && s.replace(/\D/g, "") === qDigits));
+  const aAlias = a.category === "appareil" && aliasHit(a);
+  const bAlias = b.category === "appareil" && aliasHit(b);
+  if (aAlias && !bAlias) return -1;
+  if (bAlias && !aAlias) return 1;
+
+  const aNom = norm(a.nom || "");
+  const bNom = norm(b.nom || "");
+  const aStarts = aNom.startsWith(q);
+  const bStarts = bNom.startsWith(q);
+  if (aStarts && !bStarts) return -1;
+  if (bStarts && !aStarts) return 1;
+
+  const aExact = aNom === q;
+  const bExact = bNom === q;
+  if (aExact && !bExact) return -1;
+  if (bExact && !aExact) return 1;
+
+  const aIsPoste = a.category === "poste" && !a.accès;
+  const bIsPoste = b.category === "poste" && !b.accès;
+  if (aIsPoste && !bIsPoste) return -1;
+  if (bIsPoste && !aIsPoste) return 1;
+
+  const aIsAcces = a.category === "poste" && !!a.accès;
+  const bIsAcces = b.category === "poste" && !!b.accès;
+  if (aIsAcces && !bIsAcces) return -1;
+  if (bIsAcces && !aIsAcces) return 1;
+
+  if (a.category === "appareil" && b.category !== "appareil") return 1;
+  if (b.category === "appareil" && a.category !== "appareil") return -1;
+
+  const label = x =>
+    x.category === "poste"
+      ? `${x.nom || ""} ${x.type || ""} ${x.SAT || ""}`.trim()
+      : `${x.appareil} (${x.nom}${x.type ? " " + x.type : ""}${x.SAT ? " / " + x.SAT : ""})`;
+
+  return label(a).localeCompare(label(b), "fr", { sensitivity: "base" });
+});
+
+const rawQuery = e.target.value.trim();  
+
+suggestionsEl.innerHTML = "";
+
+const labelFor = (item) =>
+  (item.category === "poste")
+    ? formatNomCompletLieu(item)
+    : `${item.appareil} (${item.nom}${item.type ? ' ' + item.type : ''}${item.SAT ? ' / ' + item.SAT : ''})`;
+
+results.forEach((item, i) => {
+  const li = document.createElement("li");
+const icon = (item.category === "poste")
+  ? `🚙${item.poste_latitude && item.poste_longitude ? " 📍" : ""}`
+  : "💡";
+
+li.innerHTML = `${icon} ${labelFor(item)}`;
+
+  if (i === 0) li.classList.add("best");
+
+  li.onclick = () => {
+    if (item.category === "poste") showLieu(item);
+    else showAppareil(item);
+  };
+
+  suggestionsEl.appendChild(li);
+});
+
+if (rawQuery.length >= 3) {
+  const queryNorm = normalizeNomPoste(rawQuery);
+
+  const exactMatch = results.some(item => {
+    if (item.category === "poste") {
+      return normalizeNomPoste(item.nom) === queryNorm;
+    } else {
+      return normalize(item.appareil || "") === normalize(rawQuery);
+    }
+  });
+}
+
+});
+
+    document.getElementById("search").addEventListener("keydown", (e) => {
+  const suggestionsEl = document.getElementById("suggestions");
+  const items = suggestionsEl.querySelectorAll("li");
+
+  if (e.key === "ArrowDown" && items.length) {
+    e.preventDefault();
+    selectedIndex = (selectedIndex + 1) % items.length;
+    updateSelection(items);
+  } 
+  else if (e.key === "ArrowUp" && items.length) {
+    e.preventDefault();
+    selectedIndex = (selectedIndex - 1 + items.length) % items.length;
+    updateSelection(items);
+  } 
+  else if (e.key === "Enter") {
+    e.preventDefault();
+    if (selectedIndex >= 0 && items[selectedIndex]) {
+      items[selectedIndex].click();
+    } else if (items[0]) {
+      items[0].click();
+    }
+  }
+  else if (e.key === "Escape") {
+    e.preventDefault();
+    document.getElementById("result").style.display = "none";
+    document.getElementById("result").innerHTML = "";
+    suggestionsEl.innerHTML = "";
+    selectedIndex = -1;
+  }
+});
     
 
 function showAppareil(app) {
@@ -1207,7 +1549,7 @@ ${(app.nom || '').trim()}${app.type ? ' ' + app.type.trim() : ''}${app.SAT ? ' '
  <div class="rep-block rep-appareil">
   <p id="editable-rep-appareil"><span class="emoji">💡</span> Repérer l’appareil :</p>
   <div class="inline-links pills-2">
-    <a href="${myMapsViewer(app.latitude, app.longitude)}">🛰️ Vue satellite</a>
+    <a href="${myMapsViewer(app.latitude, app.longitude)}" target="_blank">🛰️ Vue satellite</a>
     <a href="${
       app.imajnet && app.imajnet.trim() !== "" 
         ? app.imajnet 
@@ -1980,7 +2322,7 @@ function formatInformations(val) {
 <div id="about-footer">
   <div class="footer-links">
     <a href="arnaud.html" class="pill-link">🔧 À propos</a>
-   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.11</a>
+   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.10.3</a>
   </div>
 </div>
 <script>
