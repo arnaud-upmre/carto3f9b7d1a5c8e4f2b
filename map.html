@@ -413,7 +413,7 @@ html, body {
 </div>
   <script>
 const defaultCenter = [50.3, 2.6];
-const defaultZoom = 9;          
+const defaultZoom = 9;      
 
 
 const boundsFrance = [
@@ -469,7 +469,7 @@ editIcon.style = `
 document.body.appendChild(editIcon);
 
 document.addEventListener("keydown", function(e) {
- if (e.ctrlKey && e.key.toLowerCase() === "i") {
+  if (e.key.toLowerCase() === "i") {
     editMode = !editMode;
 
     editBanner.textContent = editMode ? "ℹ️ Mode information activé" : "❌ Mode information désactivé";
@@ -507,7 +507,7 @@ if (matches.length > 0) {
   const first = matches[0].getLatLng();
   const allSameCoords = matches.every(m => m.getLatLng().equals(first));
 
-map.setView(first, zoom);
+  map.setView(first, Math.max(zoom, 21));
 
  setTimeout(() => {
   if (matches.length === 1) {
@@ -685,12 +685,10 @@ const appareilsLayer = L.markerClusterGroup({
   spiderfyOnMaxZoom: true,
   showCoverageOnHover: false,
   zoomToBoundsOnClick: false,   
-  disableClusteringAtZoom: 19,
+  disableClusteringAtZoom: null,
   maxClusterRadius: function(zoom) {
-    return zoom > 17 ? 20 : 60;
-  },
-  spiderLegPolylineOptions: { weight: 1.5, color: '#999', opacity: 0.7 },
-  removeOutsideVisibleBounds: false
+    return zoom > 18 ? 20 : 60;
+  }
 });
 const accesLayer = L.markerClusterGroup({
   spiderfyOnMaxZoom: false,
@@ -894,42 +892,7 @@ allMarkers.push(m);
 
     });
 _tryOpenFromURL();
-     });
-
-    
-// 🔄 Éclatement automatique des appareils superposés à partir du zoom 19
-function spiderfyDuplicates() {
-  const groups = {};
-  appareilsLayer.eachLayer(layer => {
-    const ll = layer.getLatLng();
-    const key = `${ll.lat.toFixed(6)}_${ll.lng.toFixed(6)}`;
-    if (!groups[key]) groups[key] = [];
-    groups[key].push(layer);
   });
-
-  // Écarte légèrement les doublons si zoom >= 19
-  if (map.getZoom() >= 19) {
-    Object.values(groups).forEach(group => {
-      if (group.length > 1) {
-        const angleStep = (2 * Math.PI) / group.length;
-        const radius = 0.00005; // ≈ 5 m
-        group.forEach((marker, i) => {
-          const lat = marker.getLatLng().lat + Math.sin(i * angleStep) * radius;
-          const lng = marker.getLatLng().lng + Math.cos(i * angleStep) * radius;
-          marker.setLatLng([lat, lng]);
-        });
-      }
-    });
-  }
-}
-
-// Appliquer automatiquement quand on zoome
-map.on("zoomend", () => {
-  spiderfyDuplicates();
-});
-
-
-    
     
 fetch("appareils.json")
   .then(r => r.json())
@@ -1171,21 +1134,6 @@ appareilsLayer.on('clusterclick', function (e) {
   } else {
 
     map.fitBounds(e.layer.getBounds());
-  }
-});
-
-    // 🕸️ Déclenche automatiquement l’éclatement des appareils identiques si le cluster est superposé
-appareilsLayer.on("clusterclick", function (e) {
-  const markers = e.layer.getAllChildMarkers();
-  if (markers.length <= 1) return;
-
-  const first = markers[0].getLatLng();
-  const allSame = markers.every(m => m.getLatLng().equals(first));
-
-  if (allSame) {
-    e.originalEvent.preventDefault();
-    e.originalEvent.stopPropagation();
-    e.layer.spiderfy();
   }
 });
 
