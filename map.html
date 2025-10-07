@@ -469,7 +469,7 @@ editIcon.style = `
 document.body.appendChild(editIcon);
 
 document.addEventListener("keydown", function(e) {
-  if (e.key.toLowerCase() === "i") {
+ if (e.ctrlKey && e.key.toLowerCase() === "i") {
     editMode = !editMode;
 
     editBanner.textContent = editMode ? "ℹ️ Mode information activé" : "❌ Mode information désactivé";
