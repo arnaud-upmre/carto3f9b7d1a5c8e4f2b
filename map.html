@@ -1593,6 +1593,25 @@ function showToast(message) {
     toast.classList.remove("show");
   }, 2000);
 }
+
+    // 🧩 Correctif iOS : forcer le redraw de Leaflet quand la page devient visible
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') {
+    console.log("📱 iOS → redraw forcé (visibilitychange)");
+    setTimeout(() => {
+      map.invalidateSize(true);
+    }, 600);
+  }
+});
+
+// 🔁 Sécurité supplémentaire : redessin automatique après 1.5s
+setTimeout(() => {
+  if (typeof map !== "undefined" && allMarkers.length > 0) {
+    console.log("⏱️ iOS → redraw de secours après 1.5s");
+    map.invalidateSize(true);
+  }
+}, 1500);
+    
 </script>
 
 
