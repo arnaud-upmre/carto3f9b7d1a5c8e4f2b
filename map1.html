@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Nono Maps</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+
+<style>
+
+.fab-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column-reverse; 
+  align-items: center;
+  gap: 20px; 
+}
+
+.fab {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.75);
+  color: white;
+  font-size: 28px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s;
+}
+
+.fab-options {
+  width: 70px;
+  background: rgba(0,0,0,0.7);
+  border-radius: 40px;
+  padding: 12px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  pointer-events: none;
+  transition: all 0.35s ease;
+}
+.fab-options.show {
+  opacity: 1;
+  max-height: 400px;
+  pointer-events: auto;
+}
+
+.fab-options button {
+  border: none;
+  background: none;   
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.fab-options button img {
+  width: 36px;
+  height: 36px;
+  transition: opacity .2s, filter .2s;
+}
+
+
+.fab-options button:not(.active) img {
+  opacity: 0.5;
+  filter: none;
+}
+
+
+.fab-options button.active {
+  background: rgba(255,255,255,0.50); 
+}
+.fab-options button.active img {
+  opacity: 1;  /* remet l’icône normale */
+}
+  
+.toast {
+  position: fixed;
+  bottom: 140px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(37,99,235,0.9);
+  color: white;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s;
+  z-index: 10001;
+}
+.toast.show {
+  opacity: 1;
+}
+
+
+.leaflet-popup-content-wrapper {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.8) 0%,
+    rgba(255, 255, 255, 0.7) 100%
+  );
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.45);
+  box-shadow: inset 0 1px 4px rgba(255,255,255,0.4),
+              0 8px 24px rgba(0,0,0,0.25);
+}
+.leaflet-popup-tip {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.8) 0%,
+    rgba(255, 255, 255, 0.7) 100%
+  );
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+}
+.leaflet-popup-content {
+  max-width: 240px !important; 
+  min-width: 240px; 
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,sans-serif;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #111;
+  overflow: hidden;    
+  text-align: left;      
+}
+.leaflet-popup-content div,
+.leaflet-popup-content p {
+  display: flex;
+  align-items: center;
+  gap: 6px;           
+  margin: 4px 0;
+  flex-wrap: wrap;      
+}
+.leaflet-popup-content img,
+.leaflet-popup-content svg,
+.leaflet-popup-content i {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+.leaflet-popup-content a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-decoration: none;
+}
+.leaflet-popup-content a.cluster-link {
+  display: block;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: #f3f4f6;
+  color: #007aff;
+  text-decoration: none;
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,sans-serif;
+  font-size: 14px;
+  margin: 2px 0;
+  transition: background 0.2s;
+}
+.leaflet-popup-content a.cluster-link:hover,
+.leaflet-popup-content a.cluster-link:active {
+  background: #e5e7eb;
+}
+
+#streetview-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(6px);     
+  -webkit-backdrop-filter: blur(6px);
+  display: none;
+  z-index: 9999;
+  display: flex;             
+  align-items: center;
+  justify-content: center;
+}
+#streetview-box {
+  width: 90%;
+  max-width: 900px;
+  height: 70%;
+  background: rgba(20,20,20,0.95);
+  border-radius: 16px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+  overflow: hidden;
+  position: relative;
+}
+#streetview-box iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+#streetview-close {
+  position: absolute;
+  top: 12px; right: 12px;
+  font-size: 24px;
+  background: rgba(0,0,0,0.6);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px; height: 40px;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.btn-return {
+  position: relative;
+  animation: pulseHalo 1.8s infinite;
+}
+@keyframes pulseHalo {
+  0%   { box-shadow: 0 0 0px rgba(255,255,255,0.6); }
+  50%  { box-shadow: 0 0 15px rgba(255,255,255,0.9), 0 0 30px rgba(255,255,255,0.4); }
+  100% { box-shadow: 0 0 0px rgba(255,255,255,0.6); }
+}
+.icon-halo {
+  width: 48px;  
+  height: 48px;
+  filter: drop-shadow(0 0 2px white) drop-shadow(0 0 4px white);
+}
+.icon-halo-appareil {
+  width: 24px;  
+  height: 24px;
+  filter: drop-shadow(0 0 4px white) drop-shadow(0 0 8px white);
+}
+.icon-wrapper {
+  display: inline-block;
+  border-radius: 50%;         
+  padding: 4px;            
+  background: white;       
+  box-shadow: 0 0 6px rgba(0,0,0,0.4); 
+}
+.icon-wrapper img {
+  width: 44px;
+  height: 44px;
+  display: block;
+}
+
+/* CLUSTERS */
+.marker-cluster {
+  background: transparent !important; 
+  border-radius: 50%;
+}
+.marker-cluster div {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: -apple-system, BlinkMacSystemFont,"Segoe UI",Roboto,Inter,sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  color: #ffffff;
+  text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 0 6px rgba(0,0,0,0.6); 
+  background: rgba(255, 255, 255, 0.15);   
+  backdrop-filter: blur(10px);             
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.25);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+  transition: transform 0.25s ease, background 0.3s ease;
+}
+.marker-cluster:hover div {
+  transform: scale(1.12);
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.control-group {
+  margin-bottom: 10px; 
+}
+.control-group + .control-group {
+  margin-top: 45px; 
+}
+.leaflet-control-custom {
+  background: rgba(0,0,0,0.7);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 50%;
+  width: 44px; height: 44px;          
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  color: #fff;
+  cursor: pointer;
+  margin: 5px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.25);
+  user-select: none;
+  line-height: 1;                   
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn-toggle{
+  background: rgba(0,0,0,.7);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 50%;
+  width: 44px; height: 44px;       
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;                
+  color: #fff;
+  cursor: pointer;
+  margin: 10px 5px;              
+  box-shadow: 0 4px 12px rgba(0,0,0,.25);
+  user-select: none;
+  line-height: 1;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.btn-toggle.active {
+  background: #fff;
+  color: #111;
+}
+
+:root {
+  --accent:#4f46e5;
+  --bg:#0b0c0e;
+  --ink:#f9fafb;
+  --glass:rgba(17,19,23,.65);
+  --border:rgba(255,255,255,.12);
+}
+html, body {
+  height:100%;
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+}
+#map {
+  width:100%;
+  height:100%;
+}
+
+.icon-circle {
+  width:26px;
+  height:26px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:white;
+  font-size:15px;
+  font-weight:bold;
+}
+.poste { background:#e11d48; }
+.appareil { background:#facc15; }
+.acces { background:#3b82f6; }
+
+#version-label {
+  position: fixed;
+  bottom: 6px;
+  left: 8px;   
+  font-size: 11px;
+  color: rgba(255,255,255,0.45);
+  font-family: system-ui, sans-serif;
+  pointer-events: none;
+  user-select: none;
+}
+
+</style>
+
+
+  
+</head>
+<body>
+  
+  <div id="map"></div>
+
+<div class="fab-container">
+  <button class="fab" id="fabBtn">☰</button>
+
+  <div class="fab-options" id="fabOptions">
+    <button class="btn-toggle active" onclick="toggleLayer(accesLayer, this, 'Accès routiers')">
+      <img src="ico/acces.png" alt="Accès routiers">
+    </button>
+    <button class="btn-toggle active" onclick="toggleLayer(postesLayer, this, 'Postes')">
+      <img src="ico/poste.png" alt="Postes">
+    </button>
+    <button class="btn-toggle active" onclick="toggleLayer(appareilsLayer, this, 'Appareils')">
+      <img src="ico/int.png" alt="Appareils">
+    </button>
+    <button class="btn-toggle" onclick="toggleLayer(pnLayer, this, 'Passages à niveau')">
+      <img src="ico/pn.png" alt="Passages à niveau">
+    </button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div id="streetview-overlay">
+  <div id="streetview-box">
+    <button id="streetview-close">❌</button>
+    <iframe id="streetview-frame"></iframe>
+  </div>
+</div>
+  <script>
+const defaultCenter = [49.8, 2.5]; 
+const defaultZoom = 8;          
+
+
+const boundsFrance = [
+  [41.0, -5.5],  
+  [51.5, 9.5]    
+];
+
+const map = L.map('map', {
+  zoomControl: false,
+  attributionControl: false,
+  minZoom: 5,                  
+  maxZoom: 21,                 
+  maxBounds: boundsFrance,     
+  maxBoundsViscosity: 1.0      
+}).setView(defaultCenter, defaultZoom);
+
+    
+let editMode = false;   
+let holdTimeout;       
+
+const editBanner = document.createElement("div");
+editBanner.style = `
+  position: fixed;
+  bottom: 10px; left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.8);
+  color: white;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  z-index: 9999;
+  display: none;
+`;
+document.body.appendChild(editBanner);
+
+const editIcon = document.createElement("div");
+editIcon.textContent = "✏️";
+editIcon.style = `
+  position: fixed;
+  bottom: 40px; left: 12px;
+  font-size: 18px;
+  background: rgba(0,0,0,0.75);
+  color: white;
+  padding: 6px 8px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  z-index: 9999;
+  display: none;
+  font-family: system-ui, sans-serif;
+`;
+document.body.appendChild(editIcon);
+
+document.addEventListener("keydown", function(e) {
+  if (e.key.toLowerCase() === "i") {
+    editMode = !editMode;
+
+    editBanner.textContent = editMode ? "ℹ️ Mode information activé" : "❌ Mode information désactivé";
+    editBanner.style.display = "block";
+    setTimeout(() => { editBanner.style.display = "none"; }, 2000);
+
+    editIcon.textContent = "ℹ️";
+    editIcon.style.display = editMode ? "block" : "none";
+  }
+
+
+  if (e.key === "Escape" && editMode) {
+    editMode = false;
+    editBanner.textContent = "❌ Mode information désactivé";
+    editBanner.style.display = "block";
+    setTimeout(() => { editBanner.style.display = "none"; }, 2000);
+    editIcon.style.display = "none";
+  }
+});
+    
+    const allMarkers = [];
+
+let _datasetsLoaded = 0;
+function _tryOpenFromURL() {
+  _datasetsLoaded++;
+  if (_datasetsLoaded < 2) return; 
+
+  if (!isNaN(lat) && !isNaN(lon)) {
+    const matches = allMarkers.filter(m => {
+      const ll = m.getLatLng();
+      return ll.lat === lat && ll.lng === lon;
+    });
+
+if (matches.length > 0) {
+  const first = matches[0].getLatLng();
+  const allSameCoords = matches.every(m => m.getLatLng().equals(first));
+
+  map.setView(first, Math.max(zoom, 21));
+
+ setTimeout(() => {
+  if (matches.length === 1) {
+
+    matches[0].openPopup();
+
+  } else if (allSameCoords) {
+
+    const items = matches.map((m, i) => {
+      let label = m.options.customId || `Élément ${i + 1}`;
+      return { label: label.replace(/\bposte\b/gi, "").trim(), idx: i };
+    }).sort((a, b) => a.label.localeCompare(b.label, "fr", { numeric: true, sensitivity: "base" }));
+
+    const html = `<div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
+      ${items.map(it => {
+       const marker = matches[it.idx];
+        const id = (marker.options.customId || "").toUpperCase();
+        
+let iconFile = null;
+
+if (marker.options.isAcces) {
+  iconFile = "acces.png";
+} else if (id.includes("POSTE")) {
+  iconFile = "poste.png";
+} else {
+
+  if (id.startsWith("I") || id.startsWith("SI") || id.startsWith("D")) {
+    iconFile = "int.png";
+  } else if (id.startsWith("TT") || id.startsWith("TSA") || id.startsWith("TC") || id.startsWith("TRA")) {
+    iconFile = "TT.png";
+  } else if (/^[0-9]/.test(id) || id.startsWith("S") || id.startsWith("ST") || id.startsWith("F") || id.startsWith("P") || id.startsWith("FB") || id.startsWith("B")) {
+    iconFile = "sect.png";
+  } else if (id.startsWith("ALIM")) {
+    iconFile = "alim.png";
+  } else if (id.startsWith("DU")) {
+    iconFile = "stop.png";
+  }
+}
+
+        return `
+          <a href="#" class="cluster-link" data-idx="${it.idx}" style="display:flex;align-items:center;gap:6px;">
+            ${iconFile ? `<img src="ico/${iconFile}" style="width:16px;height:16px;">` : ""}
+            <span>${it.label}</span>
+          </a>`;
+      }).join("")}
+    </div>`;
+
+    L.popup()
+      .setLatLng(first)
+      .setContent(html)
+      .openOn(map);
+
+    setTimeout(() => {
+      document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
+        link.addEventListener("click", (ev) => {
+          ev.preventDefault();
+          const idx = +ev.currentTarget.dataset.idx;
+          const target = matches[idx];
+          const content = target.getPopup() ? target.getPopup().getContent() : "";
+          L.popup({ maxWidth: 240 })
+            .setLatLng(target.getLatLng())
+            .setContent(content)
+            .openOn(map);
+          map.panTo(target.getLatLng());
+        });
+      });
+    }, 0);
+  } else {
+
+    const group = L.featureGroup(matches);
+    map.fitBounds(group.getBounds());
+  }
+}, 300);
+
+   
+} else {
+  map.setView([lat, lon], zoom);
+}
+  }
+}
+
+
+
+const params = new URLSearchParams(window.location.search);
+const lat = parseFloat(params.get("lat"));
+const lon = parseFloat(params.get("lon"));
+const zoom = parseInt(params.get("z")) || 19;
+const id = params.get("id") ? decodeURIComponent(params.get("id")) : null;
+
+  const planIGN = L.tileLayer(
+  "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
+  + "&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&STYLE=normal&FORMAT=image/png"
+  + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
+  {
+    attribution: "",
+    maxZoom: 21,       
+    maxNativeZoom: 19, 
+    tileSize: 256,
+    crossOrigin: 'anonymous'
+  }
+);
+
+const orthoIGN = L.tileLayer(
+  "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
+  + "&LAYER=ORTHOIMAGERY.ORTHOPHOTOS&STYLE=normal&FORMAT=image/jpeg"
+  + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
+  {
+    attribution: "© IGN – Géoplateforme",
+    maxZoom: 21,      
+    maxNativeZoom: 19, 
+    tileSize: 256,
+    crossOrigin: 'anonymous'
+  }
+);
+
+const osm = L.tileLayer(
+  "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+  { 
+    attribution: "© OpenStreetMap contributors", 
+    maxZoom: 21,        
+    maxNativeZoom: 19   
+  }
+);
+
+const esriSat = L.tileLayer(
+  "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+  {
+    attribution: "© Esri, Maxar, Earthstar Geographics",
+    maxZoom: 21,       
+    maxNativeZoom: 19, 
+    tileSize: 256
+  }
+);
+
+const mixte = L.layerGroup([
+  orthoIGN,
+  L.tileLayer(
+    "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
+    + "&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&STYLE=normal&FORMAT=image/png"
+    + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
+    {
+      attribution: "© IGN – Géoplateforme",
+      maxZoom: 19,
+      tileSize: 256,
+      crossOrigin: 'anonymous',
+      opacity: 0.4  
+    }
+  )
+]);
+
+orthoIGN.addTo(map);
+
+
+    L.control.layers(
+      { 
+        "🛰️ Satellite IGN": orthoIGN,
+        "🛰️ Satellite Open": esriSat,
+        "🗺️ Plan IGN (défaut)": planIGN,
+        "🌍 Plan Open": osm,
+        "🛰️+🗺️ Mixte": mixte
+      },
+      {}
+    ).addTo(map);
+
+    L.control.zoom({ position: 'topright' }).addTo(map);
+
+    planIGN.on("tileerror", e => console.warn("IGN PLAN tile error", e));
+    orthoIGN.on("tileerror", e => console.warn("IGN ORTHO tile error", e));
+
+
+const postesLayer = L.markerClusterGroup({
+  disableClusteringAtZoom: 18
+});
+const appareilsLayer = L.markerClusterGroup({
+  spiderfyOnMaxZoom: true,
+  showCoverageOnHover: false,
+  zoomToBoundsOnClick: false,   
+  disableClusteringAtZoom: null,
+  maxClusterRadius: function(zoom) {
+    return zoom > 18 ? 20 : 60;
+  }
+});
+const accesLayer = L.markerClusterGroup({
+  spiderfyOnMaxZoom: false,
+  showCoverageOnHover: false,
+  zoomToBoundsOnClick: false
+});
+
+    const pnLayer = L.markerClusterGroup({
+  spiderfyOnMaxZoom: false,
+  showCoverageOnHover: false,
+  zoomToBoundsOnClick: true
+});
+
+accesLayer.on('clusterclick', function (e) {
+  const childMarkers = e.layer.getAllChildMarkers();
+  if (childMarkers.length === 0) return;
+
+  const first = childMarkers[0].getLatLng();
+  const allSameCoords = childMarkers.every(m => m.getLatLng().equals(first));
+
+  if (allSameCoords) {
+    const items = childMarkers.map((m, i) => {
+      let label = m.options.customId || `Accès ${i + 1}`;
+      return { label: label.replace(/\bposte\b/gi, "").trim(), idx: i };
+    }).sort((a, b) => a.label.localeCompare(b.label, "fr", { numeric: true, sensitivity: "base" }));
+
+    const html = `<div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
+      ${items.map(it => `
+        <a href="#" class="cluster-link" data-idx="${it.idx}" 
+           style="display:flex;align-items:center;gap:6px;">
+          <img src="ico/acces.png" style="width:16px;height:16px;">
+          <span>${it.label}</span>
+        </a>`).join("")}
+    </div>`;
+
+    L.popup()
+      .setLatLng(first)
+      .setContent(html)
+      .openOn(map);
+
+setTimeout(() => {
+  document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
+    link.addEventListener("click", (ev) => {
+      ev.preventDefault();
+      const idx = +ev.currentTarget.dataset.idx;
+      const target = childMarkers[idx];
+
+      const content = target.getPopup() ? target.getPopup().getContent() : "";
+      L.popup({ maxWidth: 240 })
+        .setLatLng(target.getLatLng())
+        .setContent(content)
+        .openOn(map);
+
+      map.panTo(target.getLatLng());
+    });
+  });
+}, 0);
+
+  } else {
+    map.fitBounds(e.layer.getBounds());
+  }
+});
+
+
+map.addLayer(postesLayer);
+map.addLayer(appareilsLayer);
+map.addLayer(accesLayer);
+
+
+const iconPoste = L.divIcon({
+  html: `<img src="ico/poste.png" class="icon-halo">`,
+  className: "", 
+  iconAnchor: [24, 48],
+  popupAnchor: [0, -48]
+});
+
+const iconAppareil= L.divIcon({className:"icon-circle appareil",html:"⚡"});
+
+const iconAcces = L.divIcon({
+  html: `<img src="ico/acces.png" class="icon-halo">`,
+  className: "",
+  iconAnchor: [24, 48],
+  popupAnchor: [0, -48]
+});
+
+fetch("postes.json")
+  .then(r => r.json())
+  .then(data => {
+    const seenPostes = new Set();
+
+    data.forEach(item => {
+
+     if (item.latitude && item.longitude) {
+  const accesVal = (item["accès"] ?? item.acces ?? "").toString().trim();
+
+const cid = [item.nom, item.type, item.SAT, accesVal]
+  .filter(Boolean)
+  .join(" ");
+
+let content = `
+<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
+            font-size:14px; color:#111; line-height:1.4; position:relative;">
+
+
+<div style="font-weight:600; font-size:16px; margin-bottom:14px; padding-right:32px;">
+  🚙 ${item.nom || "Sans nom"}
+  ${item.type ? " " + item.type : ""}
+  ${item.SAT ? " " + item.SAT : ""}
+  ${accesVal ? " – accès " + accesVal : ""}
+</div>
+
+<span onclick="openStreetView(${item.latitude}, ${item.longitude})"
+      style="cursor:pointer; position:absolute; top:10px; right:12px;">
+  <img src="ico/street.png" alt="Street View" style="width:26px; height:26px;">
+</span>
+             
+
+<div style="margin-bottom:10px;">
+✍🏻 <strong>Information :</strong> ${ renderInformation(item.description) }
+</div>
+
+  <a href="index.html?id=${encodeURIComponent(
+    (`${item.nom || ''} ${item.type || ''} ${item.SAT || ''}${accesVal ? ' – accès ' + accesVal : ''}`)
+      .replace(/\s+/g, " ")
+      .trim()
+  )}"
+     style="display:flex;align-items:center;justify-content:center;gap:6px;
+            background:#007aff;color:#fff;padding:10px 14px;border-radius:8px;
+            text-decoration:none;width:100%;font-size:15px;font-weight:500;">
+    ➕ Voir plus
+  </a>
+</div>
+`;
+
+const m = L.marker([item.latitude, item.longitude], {
+  icon: iconAcces,
+  customId: cid,
+  isAcces: true   
+}).bindPopup(content).addTo(accesLayer);
+
+  allMarkers.push(m);
+}
+
+      if (item.poste_latitude && item.poste_longitude) {
+        const key = `${item.poste_latitude}_${item.poste_longitude}`;
+        
+        if (!seenPostes.has(key)) {
+          seenPostes.add(key);
+
+  const cid = [item.nom, item.type, item.SAT, "poste"].filter(Boolean).join(" ");
+
+let content = `
+<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
+            font-size:14px; color:#111; line-height:1.4;">
+
+
+  <div style="font-weight:600; font-size:16px; margin-bottom:14px;">
+    📍 ${item.nom || "Sans nom"} 
+    ${item.type ? " " + item.type : ""} 
+    ${item.SAT ? " " + item.SAT : ""}
+  </div>
+
+
+<div style="margin-bottom:10px;">
+  🚄 PK <strong>${item.pk || "(non renseigné)"}</strong>
+  sur la ligne n°<strong>${item.numero_ligne || "(non renseigné)"}</strong>
+  ${item.lignes ? " – " + item.lignes : ""}
+</div>
+
+
+  <div style="margin-bottom:10px;">
+✍🏻 <strong>Information :</strong> ${ renderInformation(item.description) }
+  </div>
+
+
+  <div style="margin-bottom:10px;">
+    📞 <strong>Contact :</strong> ${ renderContact(item.contact) }
+  </div>
+ 
+  <a href="index.html?id=${encodeURIComponent(
+    (`${item.nom || ''} ${item.type || ''} ${item.SAT || ''}`)
+      .replace(/\s+/g, " ")
+      .trim()
+  )}"
+     style="display:flex;align-items:center;justify-content:center;gap:6px;
+            background:#007aff;color:#fff;padding:10px 14px;border-radius:8px;
+            text-decoration:none;width:100%;font-size:15px;font-weight:500;">
+    ➕ Voir plus
+  </a>
+</div>
+`;
+
+const m = L.marker([item.poste_latitude, item.poste_longitude], {
+  icon: iconPoste,
+  customId: cid
+}).bindPopup(content).addTo(postesLayer);
+
+allMarkers.push(m);
+        }
+      }
+
+    });
+_tryOpenFromURL();
+  });
+    
+fetch("appareils.json")
+  .then(r => r.json())
+  .then(data => {
+    data.forEach(item => {
+      if (!item.latitude || !item.longitude) return;
+
+      let appareilIcon;
+      const ref = (item.appareil || "").toUpperCase();
+
+      if (ref.startsWith("I") || ref.startsWith("SI") || ref.startsWith("D")) {
+        appareilIcon = L.divIcon({ html:`<img src="ico/int.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,32], popupAnchor:[0,-32] });
+      } else if (ref.startsWith("TT") || ref.startsWith("TSA") || ref.startsWith("TC") || ref.startsWith("TRA")) {
+        appareilIcon = L.divIcon({ html:`<img src="ico/TT.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,32], popupAnchor:[0,-32] });
+      } else if (/^[0-9]/.test(ref) || ref.startsWith("S") || ref.startsWith("ST") || ref.startsWith("F") || ref.startsWith("P") || ref.startsWith("FB") || ref.startsWith("B")) {
+        appareilIcon = L.divIcon({ html:`<img src="ico/sect.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,32], popupAnchor:[0,-32] });
+      } else if (ref.startsWith("ALIM")) {
+        appareilIcon = L.divIcon({ html:`<img src="ico/alim.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,32], popupAnchor:[0,-32] });
+      } else if (ref.startsWith("DU")) {
+        appareilIcon = L.divIcon({ html:`<img src="ico/stop.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,32], popupAnchor:[0,-32] });
+      } else {
+        appareilIcon = iconAppareil;
+      }
+
+      let content = `
+<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
+            font-size:14px; color:#111; line-height:1.4;">
+
+<div style="font-size:15px; margin-bottom:10px;">
+  ⚡ <span style="font-weight:600;">${item.appareil || "Sans référence"}</span>
+  ${item.nom || item.type || item.SAT 
+    ? " (" + 
+        [item.nom, item.type, item.SAT]
+          .filter(Boolean)               
+          .join(" ")                     
+          .trim() + ")"                  
+    : ""}
+</div>
+
+  ${item.description ? `<div style="margin-bottom:14px;">✍🏻 <strong>Information :</strong> ${item.description}</div>` : ""}
+
+  <a href="index.html?id=${encodeURIComponent(
+    [item.appareil, item.nom, item.type, item.SAT].filter(Boolean).join(" ").trim()
+  )}"
+     style="display:flex;align-items:center;justify-content:center;gap:6px;
+            background:#007aff;color:#fff;padding:10px 14px;border-radius:8px;
+            text-decoration:none;width:100%;font-size:15px;font-weight:500;
+            margin-top:10px;">
+    ➕ Voir plus
+  </a>
+</div>
+`;
+
+      const cid = [item.appareil, item.nom, item.type, item.SAT]
+        .filter(Boolean)
+        .join(" ");
+
+      const m = L.marker([item.latitude, item.longitude], {
+        icon: appareilIcon,
+        customId: cid
+      }).bindPopup(content);
+
+      appareilsLayer.addLayer(m);
+      allMarkers.push(m);
+      });
+    _tryOpenFromURL();
+  });
+
+const pnClasses = {
+  10: "PN public pour voitures sans barrières (protection assurée par un agent)",
+  11: "PN public pour voitures avec barrières gardé sans passage piétons accolé (manœuvré à pied d'œuvre)",
+  12: "PN public pour voitures avec barrières gardé sans passage piétons accolé (manœuvré à distance)",
+  13: "PN public pour voitures avec barrières gardé sans passage piétons accolé (manœuvré pied d'œuvre + distance)",
+  14: "PN public pour voitures avec barrières gardé avec passage piétons accolé (manœuvré à pied d'œuvre)",
+  15: "PN public pour voitures avec barrières gardé avec passage piétons accolé (manœuvré à distance)",
+  16: "PN public pour voitures avec barrières gardé avec passage piétons accolé (manœuvré pied d'œuvre + distance)",
+  17: "PN public pour voitures avec barrières ou 1/2 barrières non gardé à SAL 2 / SAL 2B",
+  18: "PN public pour voitures avec barrières ou 1/2 barrières non gardé à SAL 2 + îlot séparateur",
+  19: "PN public pour voitures avec barrières ou 1/2 barrières non gardé à SAL 4",
+  20: "PN public pour voitures sans barrières sans SAL",
+  21: "PN public pour voitures sans barrières avec SAL 0",
+  31: "PN public isolé pour piétons sans portillons",
+  32: "PN public isolé pour piétons avec portillons",
+  41: "PN privé pour voitures sans barrières",
+  42: "PN privé pour voitures avec barrières sans passage piétons accolé",
+  43: "PN privé pour voitures avec barrières avec passage piétons accolé public",
+  44: "PN privé pour voitures avec barrières avec passage piétons accolé privé",
+  45: "PN privé isolé pour piétons sans portillons",
+  46: "PN privé isolé pour piétons avec portillons"
+};
+
+function translateObstacle(obs) {
+  if (!obs) return "";
+  if (obs.toLowerCase() === "autre") return ""; 
+  if (obs.startsWith("VC")) return "Voie communale";
+  if (obs.startsWith("CD")) return "Route départementale " + obs.replace("CD", "").trim();
+  if (obs.startsWith("RN")) return "Route nationale " + obs.replace("RN", "").trim();
+  if (obs.startsWith("CP")) return "Chemin privé";
+  return obs;
+}
+
+    fetch("pn.json")
+  .then(r => r.json())
+  .then(data => {
+    data.forEach(pn => {
+      if (!pn.geo_point_2d) return;
+      const lat = pn.geo_point_2d.lat;
+      const lon = pn.geo_point_2d.lon;
+
+      const iconPN = L.divIcon({
+        html: `<img src="ico/pn.png" class="icon-halo-appareil">`,
+        className: "",
+        iconAnchor: [16, 32],
+        popupAnchor: [0, -32]
+      });
+
+
+      const classeCode = (pn.mnemo || "").replace("CLASSE ", "").trim();
+      const classeTexte = pnClasses[classeCode] 
+        ? `🛑 Classe ${classeCode} : ${pnClasses[classeCode]}` 
+        : "";
+
+      let libelle = (pn.libelle || "").trim();
+      if (/^PN\s*/i.test(libelle)) {
+        libelle = libelle.replace(/^PN\s*/i, "");
+      }
+
+      const marker = L.marker([lat, lon], { icon: iconPN })
+        .bindPopup(`
+          <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
+                      font-size:14px; color:#111; line-height:1.5; text-align:left;">
+
+  
+            <div style="font-weight:700; font-size:16px; margin-bottom:8px;">
+              🚧 PN ${libelle}
+            </div>
+
+         
+            <div>🚄 PK ${pn.pk || "?"} sur la ligne n°${pn.code_ligne || "?"}</div>
+
+      
+            ${classeTexte ? `<div>${classeTexte}</div>` : ""}
+
+       
+            <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px;align-items:center;">
+              <a href="https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${lat},${lon};" 
+                 target="_blank"
+                 style="display:block;width:100%;max-width:200px;padding:10px 12px;
+                        border-radius:8px;background:#10b981;color:white;
+                        text-decoration:none;font-size:14px;font-weight:500;text-align:center;">
+                🛣️ Voir sur Imajnet
+              </a>
+              <button onclick="openStreetView(${lat},${lon})"
+                 style="display:block;width:100%;max-width:200px;padding:10px 12px;
+                        border:none;border-radius:8px;background:#3b82f6;
+                        color:white;cursor:pointer;font-size:14px;font-weight:500;">
+                🌍 Voir en Street View
+              </button>
+            </div>
+          </div>
+        `);
+
+      pnLayer.addLayer(marker);
+      allMarkers.push(marker);
+    });
+  })
+  .catch(err => console.error("Erreur chargement PN:", err));
+
+    
+appareilsLayer.on('clusterclick', function (e) {
+  const childMarkers = e.layer.getAllChildMarkers();
+  if (childMarkers.length === 0) return;
+
+  const first = childMarkers[0].getLatLng();
+  const allSameCoords = childMarkers.every(m => m.getLatLng().equals(first));
+
+  if (allSameCoords) {
+    if (id) {
+
+      const items = childMarkers.map((m, i) => {
+        let label = m.options.customId || `Appareil ${i + 1}`;
+        return { label: label.trim(), idx: i };
+      }).sort((a, b) => a.label.localeCompare(b.label, "fr", { numeric:true, sensitivity:"base" }));
+
+      const html = `<div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
+        ${items.map(it => {
+          const marker = childMarkers[it.idx];
+          const id = (marker.options.customId || "").toUpperCase();
+          let iconFile = null;
+
+          if (id.startsWith("I") || id.startsWith("SI") || id.startsWith("D")) {
+            iconFile = "int.png";
+          } else if (id.startsWith("TT") || id.startsWith("TSA") || id.startsWith("TC") || id.startsWith("TRA")) {
+            iconFile = "TT.png";
+          } else if (/^[0-9]/.test(id) || id.startsWith("S") || id.startsWith("ST") || id.startsWith("F") || id.startsWith("P") || id.startsWith("FB") || id.startsWith("B")) {
+            iconFile = "sect.png";
+          } else if (id.startsWith("ALIM")) {
+            iconFile = "alim.png";
+          } else if (id.startsWith("DU")) {
+            iconFile = "stop.png";
+          }
+
+          return `
+            <a href="#" class="cluster-link" data-idx="${it.idx}" style="display:flex;align-items:center;gap:6px;">
+              ${iconFile ? `<img src="ico/${iconFile}" style="width:16px;height:16px;">` : ""}
+              <span>${it.label}</span>
+            </a>`;
+        }).join("")}
+      </div>`;
+
+      L.popup()
+        .setLatLng(first)
+        .setContent(html)
+        .openOn(map);
+
+      setTimeout(() => {
+        document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
+          link.addEventListener("click", (ev) => {
+            ev.preventDefault();
+            const idx = +ev.currentTarget.dataset.idx;
+            const target = childMarkers[idx];
+            const content = target.getPopup() ? target.getPopup().getContent() : "";
+            L.popup({ maxWidth: 240 })
+              .setLatLng(target.getLatLng())
+              .setContent(content)
+              .openOn(map);
+            map.panTo(target.getLatLng());
+          });
+        });
+      }, 0);
+
+    } else {
+
+      e.originalEvent.preventDefault();
+      e.originalEvent.stopPropagation();
+      e.layer.spiderfy();
+    }
+
+  } else {
+
+    map.fitBounds(e.layer.getBounds());
+  }
+});
+
+const leftControls = L.control({ position: "topleft" });
+leftControls.onAdd = function() {
+  const container = L.DomUtil.create("div");
+  const topGroup = L.DomUtil.create("div", "control-group", container);
+const backBtn = L.DomUtil.create("div", "btn-toggle btn-return", topGroup);
+backBtn.innerHTML = "🔍";
+
+backBtn.onclick = () => {
+  window.location.href = "index.html";
+};
+L.DomEvent.disableClickPropagation(backBtn);
+L.DomEvent.disableScrollPropagation(backBtn);
+  
+
+const recenterBtn = L.DomUtil.create("div", "btn-toggle", topGroup);
+recenterBtn.innerHTML = "🎯";
+
+recenterBtn.onclick = () => {
+  if (allMarkers.length > 0) {
+    recenterBtn.classList.add("active"); 
+ map.setView(defaultCenter, defaultZoom);
+
+
+    setTimeout(() => {
+      recenterBtn.classList.remove("active");
+    }, 800); 
+  }
+};
+
+L.DomEvent.disableClickPropagation(recenterBtn);
+L.DomEvent.disableScrollPropagation(recenterBtn);
+
+let userMarker;
+let geoWatchId = null;
+const locateBtn = L.DomUtil.create("div", "btn-toggle", topGroup);
+locateBtn.innerHTML = "📍";
+
+locateBtn.onclick = () => {
+  if (!navigator.geolocation) return alert("Géolocalisation non supportée.");
+
+  if (geoWatchId !== null) {
+    navigator.geolocation.clearWatch(geoWatchId);
+    geoWatchId = null;
+    if (userMarker) {
+      map.removeLayer(userMarker);
+      userMarker = null;
+    }
+    locateBtn.classList.remove("active");
+    return;
+  }
+
+  geoWatchId = navigator.geolocation.watchPosition(pos => {
+    const lat = pos.coords.latitude, lng = pos.coords.longitude;
+    if (userMarker) {
+      userMarker.setLatLng([lat, lng]);
+    } else {
+      userMarker = L.circleMarker([lat, lng], {
+        radius: 8,
+        color: "#3b82f6",
+        fillColor: "#3b82f6",
+        fillOpacity: 0.6
+      }).addTo(map);
+    }
+    map.setView([lat, lng], 15);
+  });
+
+  locateBtn.classList.add("active");
+};
+
+L.DomEvent.disableClickPropagation(locateBtn);
+L.DomEvent.disableScrollPropagation(locateBtn);
+
+
+  return container;
+};
+leftControls.addTo(map);
+
+if (!id) {
+  map.whenReady(() => {
+    if (allMarkers.length > 0) {
+      const group = L.featureGroup(allMarkers);
+      map.fitBounds(group.getBounds());
+    }
+  });
+}
+    
+ function openStreetView(lat, lng) {
+    const iframe = document.getElementById("streetview-frame");
+    iframe.src = `https://www.google.com/maps?q=&layer=c&cbll=${lat},${lng}&cbp=11,0,0,0,0&output=svembed`;
+    document.getElementById("streetview-overlay").style.display = "flex";
+  }
+
+  document.getElementById("streetview-close").onclick = () => {
+    document.getElementById("streetview-overlay").style.display = "none";
+    document.getElementById("streetview-frame").src = ""; 
+  };
+document.getElementById("streetview-overlay").style.display = "none";
+document.getElementById("streetview-frame").src = "";
+
+
+console.info("[Nono Maps] boot", {
+  leaflet: L.version,
+  clusters: { postes: !!postesLayer, appareils: !!appareilsLayer, acces: !!accesLayer }
+});
+
+
+Promise.allSettled([
+  fetch("postes.json").then(r => r.json()).then(d => { console.log("postes.json OK", d.length); return d; })
+    .catch(e => { console.error("postes.json KO", e); return []; }),
+  fetch("appareils.json").then(r => r.json()).then(d => { console.log("appareils.json OK", d.length); return d; })
+    .catch(e => { console.error("appareils.json KO", e); return []; })
+]);
+
+if (isNaN(lat) || isNaN(lon)) { console.warn("URL lat/lon invalides", {lat, lon}); }
+
+
+
+    function makeTelHtml(labelEmoji, value) {
+  if (!value) return "";
+
+  if (value.indexOf("#") !== -1) return `<div>${labelEmoji} ${value}</div>`;
+
+  const digitsOnly = ("" + value).replace(/\D/g, "");
+  if (digitsOnly.length < 10) return `<div>${labelEmoji} ${value}</div>`;
+
+  const hrefSafe = ("" + value).replace(/[^\d+]/g, "");
+  if (!hrefSafe) return `<div>${labelEmoji} ${value}</div>`;
+
+  return `<div>${labelEmoji} <a href="tel:${hrefSafe}" style="color:#007aff; text-decoration:none;">${value}</a></div>`;
+}
+
+function renderInformation(value) {
+  if (!value) {
+    return `<span style="color:#777;font-style:italic;">Non renseigné</span>`;
+  }
+
+  return escHtml(String(value));
+}
+
+
+    function renderContact(value) {
+  if (!value) {
+    return `<span style="color:#777;font-style:italic;">Non renseigné</span>`;
+  }
+
+  const str = String(value);
+
+  return str.split(/(\d{2}(?:\s?\d{2}){4})/g).map(part => {
+    const digits = part.replace(/\D/g, "");
+    if (digits.length === 10) {
+ 
+      return `<a href="tel:${digits}" style="color:#007aff; text-decoration:none;">${part.trim()}</a>`;
+    }
+    return part; 
+  }).join("");
+}
+
+let activeEditPopup = null; 
+
+function escHtml(s){return String(s).replace(/[&<>"]/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[m]));}
+
+
+map.on('click', (e) => {
+  if (!editMode) return;
+
+  const lat = Number(e.latlng.lat.toFixed(5));
+  const lng = Number(e.latlng.lng.toFixed(5));
+  const coordsText = `${lat}, ${lng}`;
+
+  const popupContent = `
+  <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
+              font-size:14px;min-width:240px;">
+
+    <div style="font-weight:600; font-size:16px; margin-bottom:12px;"> ℹ️ Information : </div>
+
+    <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+      <pre style="margin:0; background:#f3f4f6; padding:6px 10px; border-radius:6px; font-size:13px; flex:1;">
+${coordsText}</pre>
+      <button id="btn-copy"
+        style="padding:6px 10px; border:none; border-radius:6px; background:#f59e0b; color:white; cursor:pointer;">
+        📋 Copier
+      </button>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:8px;">
+      <button id="btn-gmaps" 
+        style="padding:8px 12px; border:none; border-radius:6px; background:#3b82f6; color:white; cursor:pointer;">
+        🔎 Google Maps
+      </button>
+
+      <button id="btn-imajnet" 
+        style="padding:8px 12px; border:none; border-radius:6px; background:#10b981; color:white; cursor:pointer;">
+        🛣️ Imajnet
+      </button>
+    </div>
+  </div>`;
+
+  if (activeEditPopup) map.closePopup(activeEditPopup);
+
+  activeEditPopup = L.popup({ autoClose: false, closeOnClick: false })
+    .setLatLng(e.latlng)
+    .setContent(popupContent)
+    .openOn(map);
+
+
+  setTimeout(() => {
+    const flash = (txt) => {
+      editBanner.textContent = txt;
+      editBanner.style.display = "block";
+      setTimeout(() => { editBanner.style.display = "none"; }, 1200);
+    };
+
+    document.getElementById('btn-copy')?.addEventListener('click', () => {
+      navigator.clipboard.writeText(coordsText).then(() => flash("✅ Coordonnées copiées"));
+    });
+
+    document.getElementById('btn-gmaps')?.addEventListener('click', () => {
+      window.open(`https://www.google.com/maps?q=${lat},${lng}`, '_blank');
+    });
+
+    document.getElementById('btn-imajnet')?.addEventListener('click', () => {
+      window.open(`https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${lat},${lng};`, '_blank');
+    });
+  }, 50); 
+});
+
+const fabBtn = document.getElementById("fabBtn");
+const fabOptions = document.getElementById("fabOptions");
+const toast = document.getElementById("toast");
+
+fabBtn.addEventListener("click", () => {
+  fabBtn.classList.toggle("open");
+  fabOptions.classList.toggle("show");
+});
+
+function toggleLayer(layer, btn, label) {
+  if (map.hasLayer(layer)) {
+    map.removeLayer(layer);
+    btn.classList.remove("active");
+    showToast(`❌ ${label} masqués`);
+  } else {
+    map.addLayer(layer);
+    btn.classList.add("active");
+    showToast(`✅ ${label} affichés`);
+  }
+}
+
+function showToast(message) {
+  toast.textContent = message;
+  toast.classList.add("show");
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 2000);
+}
+</script>
+
+</body>
+</html>
