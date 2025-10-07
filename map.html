@@ -507,7 +507,7 @@ if (matches.length > 0) {
   const first = matches[0].getLatLng();
   const allSameCoords = matches.every(m => m.getLatLng().equals(first));
 
-  map.setView(first, Math.max(zoom, 21));
+map.setView(first, zoom);
 
  setTimeout(() => {
   if (matches.length === 1) {
