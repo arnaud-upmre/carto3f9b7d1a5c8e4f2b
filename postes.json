@@ -3938,8 +3938,8 @@
     "type": "SP",
     "SAT": "",
     "accès": "",
-    "latitude": 50.708114,
-    "longitude": 2.675934,
+    "latitude": 50.70811,
+    "longitude": 2.67593,
     "description": "",
     "rss": "A",
     "contact": "",
@@ -3947,8 +3947,8 @@
     "lignes": "LILLE à LES FONTINETTES",
     "numero_ligne": 295000,
     "pk": "36,523",
-    "poste_latitude": "50.708170",
-    "poste_longitude": "2.675777",
+    "poste_latitude": "50.70816",
+    "poste_longitude": "2.67577",
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.70822738458969,2.6755064809479254;"
   },
   {
