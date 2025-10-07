@@ -676,8 +676,11 @@ L.control.zoom({ position: 'topright' }).addTo(map);
 
 // Bouton Z+
 (function() {
-  const zBtn = L.DomUtil.create('a', 'leaflet-control-zoom-in', document.querySelector('.leaflet-control-zoom'));
-  zBtn.textContent = 'Z+';
+const zBtn = L.DomUtil.create('a', '', document.querySelector('.leaflet-control-zoom'));
+zBtn.textContent = 'Z+';
+document.querySelector('.leaflet-control-zoom').insertBefore(zBtn, document.querySelector('.leaflet-control-zoom-in'));
+zBtn.style.fontSize = '12px';
+zBtn.style.lineHeight = '26px';
   zBtn.classList.add('leaflet-disabled');
 
   let zoomNum = false;
