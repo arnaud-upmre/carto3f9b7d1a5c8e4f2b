@@ -685,10 +685,12 @@ const appareilsLayer = L.markerClusterGroup({
   spiderfyOnMaxZoom: true,
   showCoverageOnHover: false,
   zoomToBoundsOnClick: false,   
- disableClusteringAtZoom: 19,
+  disableClusteringAtZoom: 19,
   maxClusterRadius: function(zoom) {
     return zoom > 17 ? 20 : 60;
-  }
+  },
+  spiderLegPolylineOptions: { weight: 1.5, color: '#999', opacity: 0.7 },
+  removeOutsideVisibleBounds: false
 });
 const accesLayer = L.markerClusterGroup({
   spiderfyOnMaxZoom: false,
@@ -892,7 +894,30 @@ allMarkers.push(m);
 
     });
 _tryOpenFromURL();
+    
+    // 🔄 Éclatement automatique des appareils superposés
+appareilsLayer.on('animationend', function () {
+  const clusters = [];
+  appareilsLayer.eachLayer(layer => {
+    const ll = layer.getLatLng();
+    const key = `${ll.lat.toFixed(6)}_${ll.lng.toFixed(6)}`;
+    clusters[key] = clusters[key] || [];
+    clusters[key].push(layer);
   });
+
+  Object.values(clusters).forEach(group => {
+    if (group.length > 1) {
+      const first = group[0];
+      // force le spiderfy pour ce groupe
+      const cluster = appareilsLayer.getVisibleParent(first);
+      if (cluster && cluster.spiderfy) cluster.spiderfy();
+    }
+  });
+});
+  });
+
+
+    
     
 fetch("appareils.json")
   .then(r => r.json())
