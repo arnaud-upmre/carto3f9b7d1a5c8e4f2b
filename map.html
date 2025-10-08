@@ -681,15 +681,17 @@ orthoIGN.addTo(map);
 const postesLayer = L.markerClusterGroup({
   disableClusteringAtZoom: 18
 });
+
 const appareilsLayer = L.markerClusterGroup({
-  spiderfyOnMaxZoom: true,
+  spiderfyOnMaxZoom: false, // 👈 on va gérer nous-mêmes
   showCoverageOnHover: false,
-  zoomToBoundsOnClick: false,   
-  disableClusteringAtZoom: null,
-  maxClusterRadius: function(zoom) {
+  zoomToBoundsOnClick: false, // 👈 on garde le contrôle
+  disableClusteringAtZoom: 21, // 👈 le cluster reste actif jusqu'au zoom max
+  maxClusterRadius: function (zoom) {
     return zoom > 18 ? 20 : 60;
   }
 });
+    
 const accesLayer = L.markerClusterGroup({
   spiderfyOnMaxZoom: false,
   showCoverageOnHover: false,
