@@ -683,14 +683,16 @@ const postesLayer = L.markerClusterGroup({
 });
 
 const appareilsLayer = L.markerClusterGroup({
-  spiderfyOnMaxZoom: false, // 👈 on va gérer nous-mêmes
+  spiderfyOnMaxZoom: false,      // on gère nous-mêmes
+  spiderfyOnEveryZoom: false,    // 👈 empêche le refermeture
   showCoverageOnHover: false,
-  zoomToBoundsOnClick: false, // 👈 on garde le contrôle
-  disableClusteringAtZoom: 21, // 👈 le cluster reste actif jusqu'au zoom max
+  zoomToBoundsOnClick: false,    // on garde le contrôle
+  disableClusteringAtZoom: 22,   // 👈 dépasse maxZoom pour bloquer l'auto-zoom
   maxClusterRadius: function (zoom) {
     return zoom > 18 ? 20 : 60;
   }
 });
+
     
 const accesLayer = L.markerClusterGroup({
   spiderfyOnMaxZoom: false,
@@ -1064,82 +1066,32 @@ function translateObstacle(obs) {
   .catch(err => console.error("Erreur chargement PN:", err));
 
 appareilsLayer.on('clusterclick', function (e) {
-  const childMarkers = e.layer.getAllChildMarkers();
-  if (childMarkers.length === 0) return;
+  const markers = e.layer.getAllChildMarkers();
+  if (markers.length <= 1) return;
 
-  const first = childMarkers[0].getLatLng();
-  const allSameCoords = childMarkers.every(m => m.getLatLng().equals(first));
-  const currentZoom = map.getZoom();
+  const first = markers[0].getLatLng();
+  const allSameCoords = markers.every(m => m.getLatLng().equals(first));
+  const zoom = map.getZoom();
 
-  // 🧭 Cas A : depuis index?id=... → popup groupée (inchangé)
-  if (id && allSameCoords) {
-    const items = childMarkers.map((m, i) => {
-      let label = m.options.customId || `Appareil ${i + 1}`;
-      return { label: label.trim(), idx: i };
-    }).sort((a, b) => a.label.localeCompare(b.label, "fr", { numeric:true, sensitivity:"base" }));
+  // Si plusieurs appareils aux mêmes coordonnées
+  if (allSameCoords && zoom >= 19) {
+    e.originalEvent.preventDefault();
+    e.originalEvent.stopPropagation();
+    map.closePopup();
 
-    const html = `<div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
-      ${items.map(it => {
-        const marker = childMarkers[it.idx];
-        const idu = (marker.options.customId || "").toUpperCase();
-        let iconFile = null;
-        if (idu.startsWith("I") || idu.startsWith("SI") || idu.startsWith("D")) iconFile = "int.png";
-        else if (idu.startsWith("TT") || idu.startsWith("TSA") || idu.startsWith("TC") || idu.startsWith("TRA")) iconFile = "TT.png";
-        else if (/^[0-9]/.test(idu) || idu.startsWith("S") || idu.startsWith("ST") || idu.startsWith("F") || idu.startsWith("P") || idu.startsWith("FB") || idu.startsWith("B")) iconFile = "sect.png";
-        else if (idu.startsWith("ALIM")) iconFile = "alim.png";
-        else if (idu.startsWith("DU")) iconFile = "stop.png";
-        return `
-          <a href="#" class="cluster-link" data-idx="${it.idx}" style="display:flex;align-items:center;gap:6px;">
-            ${iconFile ? `<img src="ico/${iconFile}" style="width:16px;height:16px;">` : ""}
-            <span>${it.label}</span>
-          </a>`;
-      }).join("")}
-    </div>`;
-
-    L.popup().setLatLng(first).setContent(html).openOn(map);
-
-    setTimeout(() => {
-      document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
-        link.addEventListener("click", (ev) => {
-          ev.preventDefault();
-          const idx = +ev.currentTarget.dataset.idx;
-          const target = childMarkers[idx];
-          const content = target.getPopup() ? target.getPopup().getContent() : "";
-          L.popup({ maxWidth: 240 })
-            .setLatLng(target.getLatLng())
-            .setContent(content)
-            .openOn(map);
-          map.panTo(target.getLatLng());
-        });
-      });
-    }, 0);
+    // Déplie sans zoom
+    if (!e.layer._spiderfied) e.layer.spiderfy();
+    else e.layer.unspiderfy();
     return;
   }
 
-  // ⚡ Cas B : plusieurs appareils même coordonnées
-  if (allSameCoords && childMarkers.length > 1) {
-    if (currentZoom >= 19) {
-      // Empêche totalement le zoom automatique du cluster
-      e.preventDefault();
-      e.originalEvent?.stopPropagation?.();
-      map.stop();
-
-      // Déplie uniquement
-      if (!e.layer._spiderfied) {
-        e.layer.spiderfy();
-      } else {
-        e.layer.unspiderfy();
-      }
-    } else {
-      // En dessous de z19 → zoom normal
-      e.layer.zoomToBounds(); 
-    }
-    return;
-  }
-
-  // 📍 Cas C : coordonnées différentes → zoom standard
-  e.layer.zoomToBounds();
+  // Si coordonnées différentes, zoom standard
+  map.fitBounds(e.layer.getBounds());
 });
+
+
+
+    
 
 const leftControls = L.control({ position: "topleft" });
 leftControls.onAdd = function() {
