@@ -1068,10 +1068,11 @@ appareilsLayer.on('clusterclick', function (e) {
 
   const first = childMarkers[0].getLatLng();
   const allSameCoords = childMarkers.every(m => m.getLatLng().equals(first));
+  const currentZoom = map.getZoom(); // 👈 ajout
 
   if (allSameCoords) {
     if (id) {
-
+      // ✅ inchangé : popup groupée si on vient de index?id=...
       const items = childMarkers.map((m, i) => {
         let label = m.options.customId || `Appareil ${i + 1}`;
         return { label: label.trim(), idx: i };
@@ -1083,7 +1084,7 @@ appareilsLayer.on('clusterclick', function (e) {
           const id = (marker.options.customId || "").toUpperCase();
           let iconFile = null;
 
-          if (id.startsWith("I") || id.startsWith("SI") || id.startsWith("D")) {
+          if (id.startsWith("I") || id.startsWith("SI") || id.startsWith("DA")) {
             iconFile = "int.png";
           } else if (id.startsWith("TT") || id.startsWith("TSA") || id.startsWith("TC") || id.startsWith("TRA")) {
             iconFile = "TT.png";
@@ -1125,14 +1126,18 @@ appareilsLayer.on('clusterclick', function (e) {
       }, 0);
 
     } else {
-
-      e.originalEvent.preventDefault();
-      e.originalEvent.stopPropagation();
-      e.layer.spiderfy();
+      // 🔁 NOUVELLE LOGIQUE : à partir de z19 on déplie; en-dessous on zoom
+      if (currentZoom >= 19) {
+        e.originalEvent.preventDefault();
+        e.originalEvent.stopPropagation();
+        e.layer.spiderfy(); // pas de toggle pour rester fidèle à ton comportement actuel
+      } else {
+        map.fitBounds(e.layer.getBounds()); // zoom standard sous z19
+      }
     }
 
   } else {
-
+    // ✅ inchangé : coordonnées différentes → zoom vers les marqueurs
     map.fitBounds(e.layer.getBounds());
   }
 });
