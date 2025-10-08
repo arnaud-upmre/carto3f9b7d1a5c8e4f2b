@@ -534,17 +534,17 @@ if (marker.options.isAcces) {
   iconFile = "poste.png";
 } else {
 
-  if (id.startsWith("I") || id.startsWith("SI") || id.startsWith("D")) {
-    iconFile = "int.png";
-  } else if (id.startsWith("TT") || id.startsWith("TSA") || id.startsWith("TC") || id.startsWith("TRA")) {
-    iconFile = "TT.png";
-  } else if (/^[0-9]/.test(id) || id.startsWith("S") || id.startsWith("ST") || id.startsWith("F") || id.startsWith("P") || id.startsWith("FB") || id.startsWith("B")) {
-    iconFile = "sect.png";
-  } else if (id.startsWith("ALIM")) {
-    iconFile = "alim.png";
-  } else if (id.startsWith("DU")) {
-    iconFile = "stop.png";
-  }
+if (id.startsWith("DU")) {
+  iconFile = "stop.png";
+} else if (id.startsWith("I") || id.startsWith("SI") || id.startsWith("D")) {
+  iconFile = "int.png";
+} else if (id.startsWith("TT") || id.startsWith("TSA") || id.startsWith("TC") || id.startsWith("TRA")) {
+  iconFile = "TT.png";
+} else if (/^[0-9]/.test(id) || id.startsWith("S") || id.startsWith("ST") || id.startsWith("F") || id.startsWith("P") || id.startsWith("FB") || id.startsWith("B")) {
+  iconFile = "sect.png";
+} else if (id.startsWith("ALIM")) {
+  iconFile = "alim.png";
+}
 }
 
         return `
@@ -907,19 +907,19 @@ fetch("appareils.json")
       let appareilIcon;
       const ref = (item.appareil || "").toUpperCase();
 
-      if (ref.startsWith("I") || ref.startsWith("SI") || ref.startsWith("D")) {
-        appareilIcon = L.divIcon({ html:`<img src="ico/int.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,32], popupAnchor:[0,-32] });
-      } else if (ref.startsWith("TT") || ref.startsWith("TSA") || ref.startsWith("TC") || ref.startsWith("TRA")) {
-        appareilIcon = L.divIcon({ html:`<img src="ico/TT.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,32], popupAnchor:[0,-32] });
-      } else if (/^[0-9]/.test(ref) || ref.startsWith("S") || ref.startsWith("ST") || ref.startsWith("F") || ref.startsWith("P") || ref.startsWith("FB") || ref.startsWith("B")) {
-        appareilIcon = L.divIcon({ html:`<img src="ico/sect.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,32], popupAnchor:[0,-32] });
-      } else if (ref.startsWith("ALIM")) {
-        appareilIcon = L.divIcon({ html:`<img src="ico/alim.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,32], popupAnchor:[0,-32] });
-      } else if (ref.startsWith("DU")) {
-        appareilIcon = L.divIcon({ html:`<img src="ico/stop.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,32], popupAnchor:[0,-32] });
-      } else {
-        appareilIcon = iconAppareil;
-      }
+if (ref.startsWith("DU")) {
+  appareilIcon = L.divIcon({ html:`<img src="ico/stop.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,32], popupAnchor:[0,-32] });
+} else if (ref.startsWith("I") || ref.startsWith("SI") || ref.startsWith("D")) {
+  appareilIcon = L.divIcon({ html:`<img src="ico/int.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,32], popupAnchor:[0,-32] });
+} else if (ref.startsWith("TT") || ref.startsWith("TSA") || ref.startsWith("TC") || ref.startsWith("TRA")) {
+  appareilIcon = L.divIcon({ html:`<img src="ico/TT.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,32], popupAnchor:[0,-32] });
+} else if (/^[0-9]/.test(ref) || ref.startsWith("S") || ref.startsWith("ST") || ref.startsWith("F") || ref.startsWith("P") || ref.startsWith("FB") || ref.startsWith("B")) {
+  appareilIcon = L.divIcon({ html:`<img src="ico/sect.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,32], popupAnchor:[0,-32] });
+} else if (ref.startsWith("ALIM")) {
+  appareilIcon = L.divIcon({ html:`<img src="ico/alim.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,32], popupAnchor:[0,-32] });
+} else {
+  appareilIcon = iconAppareil;
+}
 
       let content = `
 <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
