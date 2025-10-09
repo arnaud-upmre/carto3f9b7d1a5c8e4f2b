@@ -608,28 +608,33 @@ const lon = parseFloat(params.get("lon"));
 const zoom = parseInt(params.get("z")) || 19;
 const id = params.get("id") ? decodeURIComponent(params.get("id")) : null;
 
-  const planIGN = L.tileLayer(
-  "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
-  + "&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&STYLE=normal&FORMAT=image/png"
-  + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
+const planIGN = L.tileLayer(
+  "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0" +
+  "&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&STYLE=normal&FORMAT=image/png" +
+  "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
   {
     attribution: "",
-    maxZoom: 21,       
-    maxNativeZoom: 19, 
-    tileSize: 256,
+    maxZoom: 21,
+    maxNativeZoom: 19,
+    updateWhenZooming: false,
+    keepBuffer: 5,
+    reuseTiles: true,
     crossOrigin: 'anonymous'
   }
 );
 
 const orthoIGN = L.tileLayer(
-  "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
-  + "&LAYER=ORTHOIMAGERY.ORTHOPHOTOS&STYLE=normal&FORMAT=image/jpeg"
-  + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
+  "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0" +
+  "&LAYER=ORTHOIMAGERY.ORTHOPHOTOS&STYLE=normal&FORMAT=image/jpeg" +
+  "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
   {
     attribution: "© IGN – Géoplateforme",
-    maxZoom: 21,      
-    maxNativeZoom: 19, 
+    maxZoom: 21,          // zoom max autorisé dans Leaflet
+    maxNativeZoom: 19,    // IGN s’arrête ici
     tileSize: 256,
+    updateWhenZooming: false,  // ← empêche le recalcul au zoom numérique
+    keepBuffer: 5,             // garde les tuiles en mémoire
+    reuseTiles: true,          // réutilise les tuiles existantes
     crossOrigin: 'anonymous'
   }
 );
