@@ -586,14 +586,16 @@ if (id.startsWith("DU")) {
 } else {
   map.setView([lat, lon], zoom);
 
-  // 🧭 Correction du léger décalage IGN à z20–21
-  map.whenReady(() => {
-    setTimeout(() => {
-      const center = map.getCenter();
-      map.panTo(center, { animate: false });
-    }, 700);
-  });
-}
+    // 🧭 Correction du léger décalage IGN à z20–21
+      map.whenReady(() => {
+        setTimeout(() => {
+          const center = map.getCenter();
+          map.panTo(center, { animate: false });
+        }, 700);
+      });
+    }
+  }
+} 
 
 
 
