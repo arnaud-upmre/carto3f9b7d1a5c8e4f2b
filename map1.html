@@ -586,23 +586,18 @@ if (id.startsWith("DU")) {
 } else {
   map.setView([lat, lon], zoom);
 
-    // 🧭 Correction du léger décalage IGN à z20–21
-      map.whenReady(() => {
-        setTimeout(() => {
-          const center = map.getCenter();
-          map.panTo(center, { animate: false });
-        }, 700);
-      });
     }
   }
 } 
 
+// 🧭 Correction du décalage IGN uniquement pour les zooms < 19
 map.on('zoomend', () => {
   const z = map.getZoom();
-  if (z >= 18 && z <= 19) {
+  // On corrige seulement quand on est en dessous de Z19
+  if (z < 19) {
     const c = map.getCenter();
-    // Ajusté pour Strazeele et globalement tout le Nord / Pas-de-Calais
-    map.panTo([c.lat - 0.000006, c.lng + 0.000009], { animate: false });
+    // Ajustement léger pour réaligner IGN à basse résolution
+    map.panBy([8, -6], { animate: false }); // décalage visuel ≈ 0.5m
   }
 });
 
