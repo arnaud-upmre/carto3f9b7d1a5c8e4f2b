@@ -597,6 +597,14 @@ if (id.startsWith("DU")) {
   }
 } 
 
+    // 🧭 Correction automatique du léger décalage IGN à Z18–Z19
+map.on('zoomend', () => {
+  const z = map.getZoom();
+  if (z >= 18 && z <= 19) {
+    const c = map.getCenter();
+    map.panTo([c.lat + 0.000005, c.lng - 0.000007], { animate: false });
+  }
+});
 
 
 const params = new URLSearchParams(window.location.search);
