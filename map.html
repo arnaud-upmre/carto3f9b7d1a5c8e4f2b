@@ -44,7 +44,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.3s;
 }
 
 .fab-options {
@@ -252,20 +251,7 @@
   height: 24px;
   filter: drop-shadow(0 0 4px white) drop-shadow(0 0 8px white);
 }
-.icon-wrapper {
-  display: inline-block;
-  border-radius: 50%;         
-  padding: 4px;            
-  background: white;       
-  box-shadow: 0 0 6px rgba(0,0,0,0.4); 
-}
-.icon-wrapper img {
-  width: 44px;
-  height: 44px;
-  display: block;
-}
 
-/* CLUSTERS */
 .marker-cluster {
   background: transparent !important; 
   border-radius: 50%;
@@ -297,24 +283,7 @@
 .control-group {
   margin-bottom: 10px; 
 }
-.control-group + .control-group {
-  margin-top: 45px; 
-}
-.leaflet-control-custom {
-  background: rgba(0,0,0,0.7);
-  border: 1px solid rgba(255,255,255,.12);
-  border-radius: 50%;
-  width: 44px; height: 44px;          
-  display: flex; align-items: center; justify-content: center;
-  font-size: 20px;
-  color: #fff;
-  cursor: pointer;
-  margin: 5px;
-  box-shadow: 0 4px 12px rgba(0,0,0,.25);
-  user-select: none;
-  line-height: 1;                   
-  -webkit-tap-highlight-color: transparent;
-}
+
 
 .btn-toggle{
   background: rgba(0,0,0,.7);
@@ -363,21 +332,8 @@ html, body {
   font-size:15px;
   font-weight:bold;
 }
-.poste { background:#e11d48; }
+
 .appareil { background:#facc15; }
-.acces { background:#3b82f6; }
-
-#version-label {
-  position: fixed;
-  bottom: 6px;
-  left: 8px;   
-  font-size: 11px;
-  color: rgba(255,255,255,0.45);
-  font-family: system-ui, sans-serif;
-  pointer-events: none;
-  user-select: none;
-}
-
 
 
 </style>
@@ -437,7 +393,7 @@ const map = L.map('map', {
 
     
 let editMode = false;   
-let holdTimeout;       
+  
 
 const editBanner = document.createElement("div");
 editBanner.style = `
@@ -600,7 +556,7 @@ const params = new URLSearchParams(window.location.search);
 const lat = parseFloat(params.get("lat"));
 const lon = parseFloat(params.get("lon"));
 const zoom = parseInt(params.get("z")) || 19;
-const id = params.get("id") ? decodeURIComponent(params.get("id")) : null;
+
 
   const planIGN = L.tileLayer(
   "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
@@ -992,18 +948,6 @@ const pnClasses = {
   45: "PN privé isolé pour piétons sans portillons",
   46: "PN privé isolé pour piétons avec portillons"
 };
-
-function translateObstacle(obs) {
-  if (!obs) return "";
-  if (obs.toLowerCase() === "autre") return ""; 
-  if (obs.startsWith("VC")) return "Voie communale";
-  if (obs.startsWith("CD")) return "Route départementale " + obs.replace("CD", "").trim();
-  if (obs.startsWith("RN")) return "Route nationale " + obs.replace("RN", "").trim();
-  if (obs.startsWith("CP")) return "Chemin privé";
-  return obs;
-}
-
-
     
 
 appareilsLayer.on('clusterclick', function (e) {
@@ -1229,29 +1173,8 @@ console.info("[Nono Maps] boot", {
 });
 
 
-Promise.allSettled([
-  fetch("postes.json").then(r => r.json()).then(d => { console.log("postes.json OK", d.length); return d; })
-    .catch(e => { console.error("postes.json KO", e); return []; }),
-  fetch("appareils.json").then(r => r.json()).then(d => { console.log("appareils.json OK", d.length); return d; })
-    .catch(e => { console.error("appareils.json KO", e); return []; })
-]);
-
 if (isNaN(lat) || isNaN(lon)) { console.warn("URL lat/lon invalides", {lat, lon}); }
 
-
-    function makeTelHtml(labelEmoji, value) {
-  if (!value) return "";
-
-  if (value.indexOf("#") !== -1) return `<div>${labelEmoji} ${value}</div>`;
-
-  const digitsOnly = ("" + value).replace(/\D/g, "");
-  if (digitsOnly.length < 10) return `<div>${labelEmoji} ${value}</div>`;
-
-  const hrefSafe = ("" + value).replace(/[^\d+]/g, "");
-  if (!hrefSafe) return `<div>${labelEmoji} ${value}</div>`;
-
-  return `<div>${labelEmoji} <a href="tel:${hrefSafe}" style="color:#007aff; text-decoration:none;">${value}</a></div>`;
-}
 
 function renderInformation(value) {
   if (!value) {
@@ -1353,7 +1276,6 @@ const fabOptions = document.getElementById("fabOptions");
 const toast = document.getElementById("toast");
 
 fabBtn.addEventListener("click", () => {
-  fabBtn.classList.toggle("open");
   fabOptions.classList.toggle("show");
 });
 
