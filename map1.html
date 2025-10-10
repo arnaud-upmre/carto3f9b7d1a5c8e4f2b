@@ -1126,15 +1126,16 @@ document.addEventListener("DOMContentLoaded", () => {
                   <div style="margin-bottom:6px;">${lib}</div>
                   <div style="margin-bottom:6px;">📏 PKD <strong>${pkd}</strong> — PKF <strong>${pkf}</strong></div>
                   <div style="margin-bottom:14px;">🏷️ Type : <strong>${type}</strong></div>
-                  <div style="display:flex;flex-direction:column;gap:8px;align-items:center;">
-                    <a href="https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${lat},${lng};"
-                       target="_blank"
-                       style="display:block;width:100%;max-width:200px;padding:10px 12px;
-                              border-radius:8px;background:#10b981;color:white;
-                              text-decoration:none;font-size:14px;font-weight:500;text-align:center;">
-                      🛣️ Voir sur Imajnet
-                    </a>
-                  </div>
+                <div style="display:flex;justify-content:center;margin-top:12px;">
+  <a href="https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${lat},${lng};"
+     target="_blank"
+     style="display:inline-flex;align-items:center;justify-content:center;
+            gap:6px;padding:10px 16px;border-radius:8px;
+            background:#10b981;color:white;text-decoration:none;
+            font-size:14px;font-weight:500;">
+    🛣️ Voir sur Imajnet
+  </a>
+</div>
                 </div>`;
               L.popup({ maxWidth: 280 })
                 .setLatLng(e.latlng)
