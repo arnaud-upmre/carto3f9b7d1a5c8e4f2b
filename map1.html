@@ -1029,6 +1029,7 @@ appareilsLayer.on('clusterclick', function (e) {
 let pnLoaded = false; // pour éviter de recharger plusieurs fois
 
 function chargerPN() {
+  console.log("🔄 Déclenchement du chargement PN (lazy load)");
   if (pnLoaded) return; // déjà chargé
   pnLoaded = true;
 
