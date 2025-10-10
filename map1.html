@@ -1053,7 +1053,7 @@ function chargerPN(btn) {
         const lat = f.geo_point_2d[0];
         const lon = f.geo_point_2d[1];
         // Limites Hauts-de-France élargies vers le sud (~+20 km)
-        return lat >= 48.6 && lat <= 51.2 && lon >= 1.4 && lon <= 4.5;
+        return lat >= 49.2 && lat <= 51.2 && lon >= 1.4 && lon <= 4.5;
       });
 
       console.info(`✅ ${records.length} PN filtrés (Hauts-de-France + 20 km au sud)`);
