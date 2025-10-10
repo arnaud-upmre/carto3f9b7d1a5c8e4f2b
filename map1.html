@@ -1089,46 +1089,63 @@ btnLignes.addEventListener("click", () => {
       .then(r => r.json())
       .then(data => {
         data.records.forEach(record => {
-          const ligne = record.fields;
-          if (!ligne.geo_shape) return;
+          const f = record.fields;
+          if (!f.geo_shape) return;
 
-          // 🎨 Couleur selon le type
+          // Couleur selon type
           const couleur =
-            ligne.type_ligne?.toLowerCase().includes("raccordement") ? "#ff9800" :
-            ligne.type_ligne?.toLowerCase().includes("desserte") ? "#10b981" :
+            f.type_ligne?.toLowerCase().includes("raccordement") ? "#ff9800" :
+            f.type_ligne?.toLowerCase().includes("desserte") ? "#10b981" :
             "#0074D9";
 
-          // 🎚 Style de tracé
-          const poly = L.geoJSON(ligne.geo_shape, {
-            style: { color: couleur, weight: 3, opacity: 0.85 }
+          const poly = L.geoJSON(f.geo_shape, {
+            style: { color: couleur, weight: 3, opacity: 0.9 }
           });
 
-          // 🧭 Lorsqu’on clique, on ouvre une popup dynamique
+          // Popup dynamique avec données exactes du clic
           poly.on("click", e => {
             const lat = e.latlng.lat.toFixed(5);
             const lng = e.latlng.lng.toFixed(5);
 
-            const popupContent = `
-              <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
-                          font-size:14px;color:#111;line-height:1.5;text-align:left;min-width:220px;">
+            const code = f.code_ligne || f.CODE_LIGNE || "—";
+            const nom = f.lib_ligne || f.LIB_LIGNE || "—";
+            const pkd = f.pkd || f.PKD || "—";
+            const pkf = f.pkf || f.PKF || "—";
+            const type = f.type_ligne || f.TYPE_LIGNE || "—";
 
+            const popup = `
+              <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
+                          font-size:14px;color:#111;line-height:1.5;text-align:left;min-width:230px;">
                 <div style="font-weight:700;font-size:16px;margin-bottom:8px;">
-                  🚄 Ligne n°${ligne.libelle_ligne || "?"} — ${ligne.type_ligne || "Inconnu"}
+                  🚄 Ligne n°${code}
                 </div>
 
-                <div style="margin-top:14px;display:flex;flex-direction:column;gap:8px;align-items:center;">
+                <div style="margin-bottom:4px;">
+                  <strong>${nom}</strong>
+                </div>
+
+                <div style="margin-bottom:4px;">
+                  PKD : <strong>${pkd}</strong> — PKF : <strong>${pkf}</strong>
+                </div>
+
+                <div style="margin-bottom:12px;">
+                  Type : <strong>${type}</strong>
+                </div>
+
+                <div style="display:flex;justify-content:center;">
                   <button onclick="openImajnet(${lat},${lng})"
-                    style="display:block;width:100%;max-width:200px;padding:10px 12px;
-                           border:none;border-radius:8px;background:#10b981;
-                           color:white;cursor:pointer;font-size:14px;font-weight:500;">
-                    🛣️ Voir sur Imajnet
+                    style="display:flex;align-items:center;gap:6px;
+                           background:#10b981;color:white;border:none;
+                           padding:10px 14px;border-radius:8px;
+                           font-size:14px;font-weight:500;cursor:pointer;">
+                    <img src='ico/imajnet.png' style='width:18px;height:18px;'> Voir sur Imajnet
                   </button>
                 </div>
               </div>`;
 
             L.popup({ maxWidth: 260 })
               .setLatLng(e.latlng)
-              .setContent(popupContent)
+              .setContent(popup)
               .openOn(map);
           });
 
@@ -1155,7 +1172,7 @@ btnLignes.addEventListener("click", () => {
   }
 });
 
-// 🔗 Fonction Imajnet (même logique que PN)
+// Bouton Imajnet
 function openImajnet(lat, lng) {
   window.open(`https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${lat},${lng};`, "_blank");
 }
