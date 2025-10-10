@@ -1092,7 +1092,7 @@ function chargerPN(btn) {
     ${classeTexte ? `<div>${classeTexte}</div>` : ""}
 
     <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px;align-items:center;">
-      <a href="https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${f.geo_point_2d[0]},${f.geo_point_2d[1]};" 
+<a href="#" onclick="openImajnetPN(${f.geo_point_2d[0]}, ${f.geo_point_2d[1]}); return false;"
          target="_blank"
          style="display:block;width:100%;max-width:200px;padding:10px 12px;
                 border-radius:8px;background:#10b981;color:white;
@@ -1243,6 +1243,14 @@ Promise.allSettled([
 
 if (isNaN(lat) || isNaN(lon)) { console.warn("URL lat/lon invalides", {lat, lon}); }
 
+
+    function openImajnetPN(lat, lon) {
+  // Décale légèrement la position (≈ 12 m vers le sud-ouest)
+  const offsetLat = lat - 0.00011; // environ -12 m nord/sud
+  const offsetLon = lon - 0.00018; // environ -12 m est/ouest
+  const url = `https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${offsetLat.toFixed(6)},${offsetLon.toFixed(6)};`;
+  window.open(url, '_blank');
+}
 
 
     function makeTelHtml(labelEmoji, value) {
