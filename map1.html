@@ -16,12 +16,13 @@
 
 <style>
 
-  html, body {
-  background: #000; /* fond uni qui s’étend sous la barre Safari */
+html, body {
+  background: #f4f6f8; /* fond clair, comme sur tes autres pages */
   height: 100%;
   margin: 0;
   padding: 0;
   overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
 }
 
 body {
@@ -29,7 +30,13 @@ body {
   inset: env(safe-area-inset-top) env(safe-area-inset-right)
          env(safe-area-inset-bottom) env(safe-area-inset-left);
   overflow: hidden;
+  background: #f4f6f8; /* même fond pour combler les bords sur Safari iOS */
 }
+
+
+
+
+  
 
 #map {
   position: absolute;
