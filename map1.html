@@ -1040,22 +1040,11 @@ function chargerPN(btn) {
   pnLoaded = true;
   toast.textContent = "⏳ Chargement des passages à niveau en cours...";
   toast.classList.add("show");
-  
-fetch("https://ressources.data.sncf.com/api/records/1.0/search/?dataset=liste-des-passages-a-niveau&rows=10000&refine.region=Hauts-de-France")
+
+  fetch("https://ressources.data.sncf.com/api/records/1.0/search/?dataset=liste-des-passages-a-niveau&rows=10000&refine.region=Hauts-de-France")
     .then(r => r.json())
     .then(data => {
-
-      let records = data.records || [];
-
-// 🔍 On garde seulement les PN situés dans les Hauts-de-France (~48.8 à 51.2 N, 1.4 à 4.5 E)
-records = records.filter(r => {
-  const f = r.fields;
-  if (!f || !f.geo_point_2d) return false;
-  const [lat, lon] = f.geo_point_2d;
-  return lat >= 48.8 && lat <= 51.2 && lon >= 1.4 && lon <= 4.5;
-});
-
-console.info(`✅ ${records.length} PN filtrés dans les Hauts-de-France`);
+      const records = data.records || [];
       console.info(`✅ ${records.length} PN trouvés dans les Hauts-de-France`);
 
       records.forEach(pn => {
