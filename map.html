@@ -688,11 +688,11 @@ const postesLayer = L.markerClusterGroup({
 });
 
 const appareilsLayer = L.markerClusterGroup({
-  spiderfyOnMaxZoom: false,      
-  spiderfyOnEveryZoom: false, 
+  spiderfyOnMaxZoom: false,    
+  spiderfyOnEveryZoom: false,  
   showCoverageOnHover: false,
-  zoomToBoundsOnClick: false,  
-  disableClusteringAtZoom: 22,   
+  zoomToBoundsOnClick: false,   
+  disableClusteringAtZoom: 22, 
   maxClusterRadius: function (zoom) {
     return zoom > 18 ? 20 : 60;
   }
@@ -1014,19 +1014,16 @@ appareilsLayer.on('clusterclick', function (e) {
   const allSameCoords = markers.every(m => m.getLatLng().equals(first));
   const zoom = map.getZoom();
 
-
   if (allSameCoords && zoom >= 19) {
     e.originalEvent.preventDefault();
     e.originalEvent.stopPropagation();
     map.closePopup();
-
 
     if (!e.layer._spiderfied) e.layer.spiderfy();
     else e.layer.unspiderfy();
     return;
   }
 
- 
   map.fitBounds(e.layer.getBounds());
 });
 
@@ -1035,6 +1032,7 @@ let pnLoaded = false;
 
 function chargerPN(btn) {
   console.log("🔄 Déclenchement du chargement PN (lazy load)");
+
 
   if (pnLoaded) {
     toggleLayer(pnLayer, btn, "Passages à niveau");
@@ -1045,22 +1043,16 @@ function chargerPN(btn) {
   toast.textContent = "⏳ Chargement des passages à niveau en cours...";
   toast.classList.add("show");
 
-  fetch("https://ressources.data.sncf.com/api/records/1.0/search/?dataset=liste-des-passages-a-niveau&rows=10000")
+fetch("https://ressources.data.sncf.com/api/records/1.0/search/"
+  + "?dataset=liste-des-passages-a-niveau"
+  + "&geofilter.bbox=49.4,1.4,51.2,4.5"
+  + "&rows=3000")
+  
   .then(r => r.json())
   .then(data => {
       let records = data.records || [];
 
-
-      records = records.filter(r => {
-        const f = r.fields;
-        if (!f || !f.geo_point_2d) return false;
-        const lat = f.geo_point_2d[0];
-        const lon = f.geo_point_2d[1];
-
-        return lat >= 49.2 && lat <= 51.2 && lon >= 1.4 && lon <= 4.5;
-      });
-
-      console.info(`✅ ${records.length} PN filtrés (Hauts-de-France + 20 km au sud)`);
+      console.info(`✅ ${records.length} PN filtrés (Hauts-de-France + 10 km au sud)`);
   
   
       records.forEach(pn => {
@@ -1117,11 +1109,10 @@ function chargerPN(btn) {
         allMarkers.push(marker);
       });
 
-    
       toast.textContent = `✅ ${records.length} passages à niveau chargés`;
       setTimeout(() => {
         toast.classList.remove("show");
-        toggleLayer(pnLayer, btn, "Passages à niveau"); 
+        toggleLayer(pnLayer, btn, "Passages à niveau");
       }, 1500);
     })
     .catch(err => {
