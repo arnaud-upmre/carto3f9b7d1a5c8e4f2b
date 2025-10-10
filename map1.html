@@ -399,7 +399,9 @@ html, body {
     </button>
     <button class="btn-toggle" onclick="toggleLayer(pnLayer, this, 'Passages à niveau')">
       <img src="ico/pn.png" alt="Passages à niveau">
-    </button>
+<button class="btn-toggle" onclick="toggleLayer(daeLayer, this, 'Défibrillateurs')">
+  <img src="ico/dae.png" alt="Défibrillateurs">
+</button>
   </div>
 </div>
 
@@ -585,21 +587,10 @@ if (id.startsWith("DU")) {
    
 } else {
   map.setView([lat, lon], zoom);
-
-    }
+}
   }
-} 
+}
 
-// 🧭 Correction du décalage IGN uniquement pour les zooms < 19
-map.on('zoomend', () => {
-  const z = map.getZoom();
-  // On corrige seulement quand on est en dessous de Z19
-  if (z < 19) {
-    const c = map.getCenter();
-    // Ajustement léger pour réaligner IGN à basse résolution
-    map.panBy([8, -6], { animate: false }); // décalage visuel ≈ 0.5m
-  }
-});
 
 
 const params = new URLSearchParams(window.location.search);
@@ -608,33 +599,28 @@ const lon = parseFloat(params.get("lon"));
 const zoom = parseInt(params.get("z")) || 19;
 const id = params.get("id") ? decodeURIComponent(params.get("id")) : null;
 
-const planIGN = L.tileLayer(
-  "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0" +
-  "&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&STYLE=normal&FORMAT=image/png" +
-  "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
+  const planIGN = L.tileLayer(
+  "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
+  + "&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&STYLE=normal&FORMAT=image/png"
+  + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
   {
     attribution: "",
-    maxZoom: 21,
-    maxNativeZoom: 19,
-    updateWhenZooming: false,
-    keepBuffer: 5,
-    reuseTiles: true,
+    maxZoom: 21,       
+    maxNativeZoom: 19, 
+    tileSize: 256,
     crossOrigin: 'anonymous'
   }
 );
 
 const orthoIGN = L.tileLayer(
-  "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0" +
-  "&LAYER=ORTHOIMAGERY.ORTHOPHOTOS&STYLE=normal&FORMAT=image/jpeg" +
-  "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
+  "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
+  + "&LAYER=ORTHOIMAGERY.ORTHOPHOTOS&STYLE=normal&FORMAT=image/jpeg"
+  + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
   {
     attribution: "© IGN – Géoplateforme",
-    maxZoom: 21,          // zoom max autorisé dans Leaflet
-    maxNativeZoom: 19,    // IGN s’arrête ici
+    maxZoom: 21,      
+    maxNativeZoom: 19, 
     tileSize: 256,
-    updateWhenZooming: false,  // ← empêche le recalcul au zoom numérique
-    keepBuffer: 5,             // garde les tuiles en mémoire
-    reuseTiles: true,          // réutilise les tuiles existantes
     crossOrigin: 'anonymous'
   }
 );
@@ -722,6 +708,12 @@ const accesLayer = L.markerClusterGroup({
   zoomToBoundsOnClick: true
 });
 
+    const daeLayer = L.markerClusterGroup({
+  spiderfyOnMaxZoom: false,
+  showCoverageOnHover: false,
+  zoomToBoundsOnClick: true
+});
+    
 accesLayer.on('clusterclick', function (e) {
   const childMarkers = e.layer.getAllChildMarkers();
   if (childMarkers.length === 0) return;
@@ -1081,6 +1073,64 @@ function translateObstacle(obs) {
   })
   .catch(err => console.error("Erreur chargement PN:", err));
 
+
+
+let daeLoaded = false;
+
+function loadDAE() {
+  if (daeLoaded) return; // ne charge qu’une fois
+  daeLoaded = true;
+
+  // Coordonnées par défaut (Hauts-de-France)
+  const defaultLat = 50.63;  
+  const defaultLon = 3.06;   
+  const radius = 5000;       
+
+  // Si GPS dispo → on prend la position réelle
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      pos => fetchDAE(pos.coords.latitude, pos.coords.longitude, radius),
+      () => fetchDAE(defaultLat, defaultLon, radius)
+    );
+  } else {
+    fetchDAE(defaultLat, defaultLon, radius);
+  }
+}
+
+function fetchDAE(lat, lon, rayon) {
+  const apiUrl = `https://api.data.gouv.fr/api/1/databases/base-nationale-des-defibrillateurs/records/?geofilter.distance=${lat},${lon},${rayon}`;
+  
+  fetch(apiUrl)
+    .then(r => r.json())
+    .then(data => {
+      if (!data.records) return;
+      data.records.forEach(item => {
+        const props = item.record.fields;
+        if (!props.coordonnees_geographiques) return;
+
+        const [lon, lat] = props.coordonnees_geographiques;
+        const marker = L.marker([lat, lon], {
+          icon: L.divIcon({
+            html: `<img src="ico/dae.png" class="icon-halo-appareil">`,
+            className: "",
+            iconAnchor: [16, 32],
+            popupAnchor: [0, -32]
+          })
+        }).bindPopup(`
+          <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;font-size:14px;">
+            <div style="font-weight:600;font-size:16px;margin-bottom:6px;">💚 ${props.nom_du_site || "DAE"}</div>
+            <div>${props.adresse || ""} ${props.commune || ""}</div>
+          </div>
+        `);
+        daeLayer.addLayer(marker);
+      });
+      showToast("✅ Défibrillateurs chargés");
+    })
+    .catch(err => console.error("Erreur chargement DAE:", err));
+}
+
+    
+
 appareilsLayer.on('clusterclick', function (e) {
   const markers = e.layer.getAllChildMarkers();
   if (markers.length <= 1) return;
@@ -1105,9 +1155,6 @@ appareilsLayer.on('clusterclick', function (e) {
   map.fitBounds(e.layer.getBounds());
 });
 
-
-
-    
 
 const leftControls = L.control({ position: "topleft" });
 leftControls.onAdd = function() {
@@ -1350,6 +1397,8 @@ function toggleLayer(layer, btn, label) {
     btn.classList.remove("active");
     showToast(`❌ ${label} masqués`);
   } else {
+    // 🔹 ajout spécifique pour le layer DAE :
+    if (layer === daeLayer) loadDAE(); // charge les DAE uniquement au premier affichage
     map.addLayer(layer);
     btn.classList.add("active");
     showToast(`✅ ${label} affichés`);
