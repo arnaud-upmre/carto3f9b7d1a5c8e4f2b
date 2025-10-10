@@ -1041,12 +1041,24 @@ function chargerPN(btn) {
   toast.textContent = "⏳ Chargement des passages à niveau en cours...";
   toast.classList.add("show");
 
-  fetch("https://ressources.data.sncf.com/api/records/1.0/search/?dataset=liste-des-passages-a-niveau&rows=10000&refine.region=Hauts-de-France")
-    .then(r => r.json())
-    .then(data => {
-      const records = data.records || [];
-      console.info(`✅ ${records.length} PN trouvés dans les Hauts-de-France`);
+  fetch("https://ressources.data.sncf.com/api/records/1.0/search/?dataset=liste-des-passages-a-niveau&rows=10000")
+  .then(r => r.json())
+  .then(data => {
+      let records = data.records || [];
 
+      // 🔍 On garde seulement les PN situés dans les Hauts-de-France + 20 km au sud
+      records = records.filter(r => {
+        const f = r.fields;
+        if (!f || !f.geo_point_2d) return false;
+        const lat = f.geo_point_2d[0];
+        const lon = f.geo_point_2d[1];
+        // Limites Hauts-de-France élargies vers le sud (~+20 km)
+        return lat >= 48.6 && lat <= 51.2 && lon >= 1.4 && lon <= 4.5;
+      });
+
+      console.info(`✅ ${records.length} PN filtrés (Hauts-de-France + 20 km au sud)`);
+  
+  
       records.forEach(pn => {
         const f = pn.fields;
         if (!f || !f.geo_point_2d) return;
