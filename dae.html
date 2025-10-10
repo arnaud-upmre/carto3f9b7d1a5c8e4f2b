@@ -13,13 +13,14 @@
       margin: 0;
       padding: 0;
       height: 100%;
-      font-family: system-ui, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
       background: #f4f6f8;
       color: #222;
-      overflow: hidden; /* évite le scroll inutile sur iOS */
+      overflow: hidden;
     }
 
     header {
+      position: relative;
       background: linear-gradient(135deg, #1e88e5, #1565c0);
       color: white;
       padding: 12px 16px;
@@ -30,34 +31,90 @@
       line-height: 28px;
     }
 
-    iframe {
-      display: block;
-      position: absolute;
-      top: 52px;         /* sous le header */
-      left: 0;
-      width: 100%;
-      height: calc(100% - 52px); /* prend le reste de l'écran */
-      border: none;
+    /* --- MENU BURGER (même style que sur map) --- */
+    .fab-container {
+      position: fixed;
+      top: 12px;
+      right: 14px;
+      z-index: 10000;
+      display: flex;
+      flex-direction: column-reverse;
+      align-items: center;
+      gap: 16px;
     }
 
     .fab {
-      position: fixed;
-      bottom: 16px;
-      right: 16px;
-      background: #1e88e5;
-      color: white;
-      border: none;
+      width: 54px;
+      height: 54px;
       border-radius: 50%;
-      width: 56px;
-      height: 56px;
+      background: rgba(0,0,0,0.75);
+      color: white;
       font-size: 26px;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+      border: none;
       cursor: pointer;
-      transition: transform 0.2s ease;
-      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.3s;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
     }
-    .fab:hover { transform: scale(1.08); }
+    .fab:hover { transform: scale(1.1); }
 
+    .fab-options {
+      width: 70px;
+      background: rgba(0,0,0,0.7);
+      border-radius: 40px;
+      padding: 12px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      pointer-events: none;
+      transition: all 0.35s ease;
+    }
+    .fab-options.show {
+      opacity: 1;
+      max-height: 300px;
+      pointer-events: auto;
+    }
+
+    .fab-options button {
+      border: none;
+      background: none;
+      padding: 0;
+      margin: 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .fab-options button img {
+      width: 34px;
+      height: 34px;
+      filter: drop-shadow(0 0 2px white);
+      transition: opacity .2s, transform .2s;
+    }
+    .fab-options button:hover img {
+      opacity: 0.9;
+      transform: scale(1.1);
+    }
+
+    /* IFRAME */
+    iframe {
+      display: block;
+      position: absolute;
+      top: 52px;
+      left: 0;
+      width: 100%;
+      height: calc(100% - 52px);
+      border: none;
+    }
+
+    /* MESSAGE CHARGEMENT */
     #loading {
       position: absolute;
       top: 50%;
@@ -73,6 +130,19 @@
 <body>
   <header>🩺 Défibrillateurs (DAE)</header>
 
+  <!-- Menu Burger style "map" -->
+  <div class="fab-container">
+    <button class="fab" id="fabBtn">☰</button>
+    <div class="fab-options" id="fabOptions">
+      <button onclick="window.location.href='index.html'">
+        🏠
+      </button>
+      <button onclick="window.location.href='map.html'">
+        <img src="ico/int.png" alt="Carte principale">
+      </button>
+    </div>
+  </div>
+
   <div id="loading">📍 Localisation en cours...</div>
 
   <iframe
@@ -82,16 +152,31 @@
   </iframe>
 
   <script>
+    // --- Animation burger identique à map ---
+    const fabBtn = document.getElementById("fabBtn");
+    const fabOptions = document.getElementById("fabOptions");
+
+    fabBtn.addEventListener("click", () => {
+      fabBtn.classList.toggle("open");
+      fabOptions.classList.toggle("show");
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!fabOptions.contains(e.target) && !fabBtn.contains(e.target)) {
+        fabOptions.classList.remove("show");
+      }
+    });
+
+    // --- Détection géoloc et chargement iframe ---
     const iframe = document.getElementById("daeFrame");
     const loading = document.getElementById("loading");
 
-    // Détermine la zone selon la position GPS
     function citycodeFromPosition(lat, lon) {
       if (lat >= 50.25 && lon >= 3.30) return "59599"; // Valenciennes
       if (lat >= 50.45 && lat <= 50.80 && lon >= 2.80 && lon <= 3.25) return "59350"; // Lille
       if (lat < 50.05 && lon >= 2.00 && lon <= 3.30) return "80021"; // Amiens
       if (lat >= 50.65 && lon < 2.80) return "59295"; // Hazebrouck
-      return "59295"; // fallback Hazebrouck
+      return "59295";
     }
 
     navigator.geolocation.getCurrentPosition(
@@ -111,7 +196,5 @@
 
     iframe.onload = () => loading.style.display = "none";
   </script>
-
-  <button class="fab" onclick="window.location.href='index.html'">🏠</button>
 </body>
 </html>
