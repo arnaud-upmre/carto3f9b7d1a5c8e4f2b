@@ -688,11 +688,11 @@ const postesLayer = L.markerClusterGroup({
 });
 
 const appareilsLayer = L.markerClusterGroup({
-  spiderfyOnMaxZoom: false,      // on gère nous-mêmes
-  spiderfyOnEveryZoom: false,    // 👈 empêche le refermeture
+  spiderfyOnMaxZoom: false,    
+  spiderfyOnEveryZoom: false,  
   showCoverageOnHover: false,
-  zoomToBoundsOnClick: false,    // on garde le contrôle
-  disableClusteringAtZoom: 22,   // 👈 dépasse maxZoom pour bloquer l'auto-zoom
+  zoomToBoundsOnClick: false,   
+  disableClusteringAtZoom: 22, 
   maxClusterRadius: function (zoom) {
     return zoom > 18 ? 20 : 60;
   }
@@ -1014,13 +1014,11 @@ appareilsLayer.on('clusterclick', function (e) {
   const allSameCoords = markers.every(m => m.getLatLng().equals(first));
   const zoom = map.getZoom();
 
-  // Si plusieurs appareils aux mêmes coordonnées
   if (allSameCoords && zoom >= 19) {
     e.originalEvent.preventDefault();
     e.originalEvent.stopPropagation();
     map.closePopup();
 
-    // Déplie sans zoom
     if (!e.layer._spiderfied) e.layer.spiderfy();
     else e.layer.unspiderfy();
     return;
@@ -1047,7 +1045,7 @@ function chargerPN(btn) {
 
 fetch("https://ressources.data.sncf.com/api/records/1.0/search/"
   + "?dataset=liste-des-passages-a-niveau"
-  + "&geofilter.bbox=49.3,1.4,51.2,4.5"
+  + "&geofilter.bbox=49.4,1.4,51.2,4.5"
   + "&rows=3000")
   
   .then(r => r.json())
@@ -1111,11 +1109,10 @@ fetch("https://ressources.data.sncf.com/api/records/1.0/search/"
         allMarkers.push(marker);
       });
 
-      // Quand le chargement est terminé :
       toast.textContent = `✅ ${records.length} passages à niveau chargés`;
       setTimeout(() => {
         toast.classList.remove("show");
-        toggleLayer(pnLayer, btn, "Passages à niveau"); // 👈 active la couche maintenant
+        toggleLayer(pnLayer, btn, "Passages à niveau");
       }, 1500);
     })
     .catch(err => {
