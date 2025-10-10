@@ -1069,14 +1069,32 @@ function chargerPN(btn) {
         if (/^PN\s*/i.test(libelle)) libelle = libelle.replace(/^PN\s*/i, "");
 
         const popup = `
-          <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
-                      font-size:14px; color:#111; line-height:1.5;">
-            <div style="font-weight:700; font-size:16px; margin-bottom:8px;">
-              🚧 PN ${libelle}
-            </div>
-            <div>🚄 PK ${f.pk || "?"} sur la ligne n°${f.code_ligne || "?"}</div>
-            ${classeTexte ? `<div>${classeTexte}</div>` : ""}
-          </div>`;
+  <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
+              font-size:14px; color:#111; line-height:1.5; text-align:left;">
+  
+    <div style="font-weight:700; font-size:16px; margin-bottom:8px;">
+      🚧 PN ${libelle}
+    </div>
+
+    <div>🚄 PK ${f.pk || "?"} sur la ligne n°${f.code_ligne || "?"}</div>
+    ${classeTexte ? `<div>${classeTexte}</div>` : ""}
+
+    <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px;align-items:center;">
+      <a href="https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${f.geo_point_2d[0]},${f.geo_point_2d[1]};" 
+         target="_blank"
+         style="display:block;width:100%;max-width:200px;padding:10px 12px;
+                border-radius:8px;background:#10b981;color:white;
+                text-decoration:none;font-size:14px;font-weight:500;text-align:center;">
+        🛣️ Voir sur Imajnet
+      </a>
+      <button onclick="openStreetView(${f.geo_point_2d[0]},${f.geo_point_2d[1]})"
+         style="display:block;width:100%;max-width:200px;padding:10px 12px;
+                border:none;border-radius:8px;background:#3b82f6;
+                color:white;cursor:pointer;font-size:14px;font-weight:500;">
+        🌍 Voir en Street View
+      </button>
+    </div>
+  </div>`;
 
         const marker = L.marker([lat, lon], { icon: iconPN }).bindPopup(popup);
         pnLayer.addLayer(marker);
