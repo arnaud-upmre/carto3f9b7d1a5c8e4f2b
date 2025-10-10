@@ -5,14 +5,21 @@
   <title>Nono Maps</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
 
 <style>
+
+  #map {
+  width:100%;
+  height:100%;
+}
+
 
 .fab-container {
   position: fixed;
@@ -344,10 +351,6 @@ html, body {
   background:var(--bg);
   color:var(--ink);
 }
-#map {
-  width:100%;
-  height:100%;
-}
 
 .icon-circle {
   width:26px;
@@ -375,6 +378,8 @@ html, body {
   user-select: none;
 }
 
+
+
 </style>
 
 
@@ -397,9 +402,9 @@ html, body {
     <button class="btn-toggle active" onclick="toggleLayer(appareilsLayer, this, 'Appareils')">
       <img src="ico/int.png" alt="Appareils">
     </button>
-    <button class="btn-toggle" onclick="toggleLayer(pnLayer, this, 'Passages à niveau')">
-      <img src="ico/pn.png" alt="Passages à niveau">
-    </button>
+<button class="btn-toggle" onclick="chargerPN(this)">
+  <img src="ico/pn.png" alt="Passages à niveau">
+</button>
   </div>
 </div>
 
@@ -683,11 +688,11 @@ const postesLayer = L.markerClusterGroup({
 });
 
 const appareilsLayer = L.markerClusterGroup({
-  spiderfyOnMaxZoom: false,      // on gère nous-mêmes
-  spiderfyOnEveryZoom: false,    // 👈 empêche le refermeture
+  spiderfyOnMaxZoom: false,      
+  spiderfyOnEveryZoom: false, 
   showCoverageOnHover: false,
-  zoomToBoundsOnClick: false,    // on garde le contrôle
-  disableClusteringAtZoom: 22,   // 👈 dépasse maxZoom pour bloquer l'auto-zoom
+  zoomToBoundsOnClick: false,  
+  disableClusteringAtZoom: 22,   
   maxClusterRadius: function (zoom) {
     return zoom > 18 ? 20 : 60;
   }
@@ -998,72 +1003,8 @@ function translateObstacle(obs) {
   return obs;
 }
 
-    fetch("pn.json")
-  .then(r => r.json())
-  .then(data => {
-    data.forEach(pn => {
-      if (!pn.geo_point_2d) return;
-      const lat = pn.geo_point_2d.lat;
-      const lon = pn.geo_point_2d.lon;
 
-      const iconPN = L.divIcon({
-        html: `<img src="ico/pn.png" class="icon-halo-appareil">`,
-        className: "",
-        iconAnchor: [16, 32],
-        popupAnchor: [0, -32]
-      });
-
-
-      const classeCode = (pn.mnemo || "").replace("CLASSE ", "").trim();
-      const classeTexte = pnClasses[classeCode] 
-        ? `🛑 Classe ${classeCode} : ${pnClasses[classeCode]}` 
-        : "";
-
-      let libelle = (pn.libelle || "").trim();
-      if (/^PN\s*/i.test(libelle)) {
-        libelle = libelle.replace(/^PN\s*/i, "");
-      }
-
-      const marker = L.marker([lat, lon], { icon: iconPN })
-        .bindPopup(`
-          <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
-                      font-size:14px; color:#111; line-height:1.5; text-align:left;">
-
-  
-            <div style="font-weight:700; font-size:16px; margin-bottom:8px;">
-              🚧 PN ${libelle}
-            </div>
-
-         
-            <div>🚄 PK ${pn.pk || "?"} sur la ligne n°${pn.code_ligne || "?"}</div>
-
-      
-            ${classeTexte ? `<div>${classeTexte}</div>` : ""}
-
-       
-            <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px;align-items:center;">
-              <a href="https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${lat},${lon};" 
-                 target="_blank"
-                 style="display:block;width:100%;max-width:200px;padding:10px 12px;
-                        border-radius:8px;background:#10b981;color:white;
-                        text-decoration:none;font-size:14px;font-weight:500;text-align:center;">
-                🛣️ Voir sur Imajnet
-              </a>
-              <button onclick="openStreetView(${lat},${lon})"
-                 style="display:block;width:100%;max-width:200px;padding:10px 12px;
-                        border:none;border-radius:8px;background:#3b82f6;
-                        color:white;cursor:pointer;font-size:14px;font-weight:500;">
-                🌍 Voir en Street View
-              </button>
-            </div>
-          </div>
-        `);
-
-      pnLayer.addLayer(marker);
-      allMarkers.push(marker);
-    });
-  })
-  .catch(err => console.error("Erreur chargement PN:", err));
+    
 
 appareilsLayer.on('clusterclick', function (e) {
   const markers = e.layer.getAllChildMarkers();
@@ -1073,24 +1014,122 @@ appareilsLayer.on('clusterclick', function (e) {
   const allSameCoords = markers.every(m => m.getLatLng().equals(first));
   const zoom = map.getZoom();
 
-  // Si plusieurs appareils aux mêmes coordonnées
+
   if (allSameCoords && zoom >= 19) {
     e.originalEvent.preventDefault();
     e.originalEvent.stopPropagation();
     map.closePopup();
 
-    // Déplie sans zoom
+
     if (!e.layer._spiderfied) e.layer.spiderfy();
     else e.layer.unspiderfy();
     return;
   }
 
-  // Si coordonnées différentes, zoom standard
+ 
   map.fitBounds(e.layer.getBounds());
 });
 
 
+let pnLoaded = false; 
 
+function chargerPN(btn) {
+  console.log("🔄 Déclenchement du chargement PN (lazy load)");
+
+  if (pnLoaded) {
+    toggleLayer(pnLayer, btn, "Passages à niveau");
+    return;
+  }
+
+  pnLoaded = true;
+  toast.textContent = "⏳ Chargement des passages à niveau en cours...";
+  toast.classList.add("show");
+
+  fetch("https://ressources.data.sncf.com/api/records/1.0/search/?dataset=liste-des-passages-a-niveau&rows=10000")
+  .then(r => r.json())
+  .then(data => {
+      let records = data.records || [];
+
+
+      records = records.filter(r => {
+        const f = r.fields;
+        if (!f || !f.geo_point_2d) return false;
+        const lat = f.geo_point_2d[0];
+        const lon = f.geo_point_2d[1];
+
+        return lat >= 49.2 && lat <= 51.2 && lon >= 1.4 && lon <= 4.5;
+      });
+
+      console.info(`✅ ${records.length} PN filtrés (Hauts-de-France + 20 km au sud)`);
+  
+  
+      records.forEach(pn => {
+        const f = pn.fields;
+        if (!f || !f.geo_point_2d) return;
+        const lat = f.geo_point_2d[0];
+        const lon = f.geo_point_2d[1];
+
+        const iconPN = L.divIcon({
+          html: `<img src="ico/pn.png" class="icon-halo-appareil">`,
+          className: "",
+          iconAnchor: [16, 32],
+          popupAnchor: [0, -32]
+        });
+
+        const classeCode = (f.mnemo || "").replace("CLASSE ", "").trim();
+        const classeTexte = pnClasses[classeCode]
+          ? `🛑 Classe ${classeCode} : ${pnClasses[classeCode]}`
+          : "";
+
+        let libelle = (f.libelle || "").trim();
+        if (/^PN\s*/i.test(libelle)) libelle = libelle.replace(/^PN\s*/i, "");
+
+        const popup = `
+  <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
+              font-size:14px; color:#111; line-height:1.5; text-align:left;">
+  
+    <div style="font-weight:700; font-size:16px; margin-bottom:8px;">
+      🚧 PN ${libelle}
+    </div>
+
+    <div>🚄 PK ${f.pk || "?"} sur la ligne n°${f.code_ligne || "?"}</div>
+    ${classeTexte ? `<div>${classeTexte}</div>` : ""}
+
+    <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px;align-items:center;">
+<a href="https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${f.geo_point_2d[0]},${f.geo_point_2d[1]};" 
+         target="_blank"
+         style="display:block;width:100%;max-width:200px;padding:10px 12px;
+                border-radius:8px;background:#10b981;color:white;
+                text-decoration:none;font-size:14px;font-weight:500;text-align:center;">
+        🛣️ Voir sur Imajnet
+      </a>
+      <button onclick="openStreetView(${f.geo_point_2d[0]},${f.geo_point_2d[1]})"
+         style="display:block;width:100%;max-width:200px;padding:10px 12px;
+                border:none;border-radius:8px;background:#3b82f6;
+                color:white;cursor:pointer;font-size:14px;font-weight:500;">
+        🌍 Voir en Street View
+      </button>
+    </div>
+  </div>`;
+
+        const marker = L.marker([lat, lon], { icon: iconPN }).bindPopup(popup);
+        pnLayer.addLayer(marker);
+        allMarkers.push(marker);
+      });
+
+    
+      toast.textContent = `✅ ${records.length} passages à niveau chargés`;
+      setTimeout(() => {
+        toast.classList.remove("show");
+        toggleLayer(pnLayer, btn, "Passages à niveau"); 
+      }, 1500);
+    })
+    .catch(err => {
+      console.error("❌ Erreur API PN SNCF :", err);
+      toast.textContent = "⚠️ Erreur de chargement depuis le site SNCF Open Data";
+      setTimeout(() => toast.classList.remove("show"), 2500);
+    });
+}
     
 
 const leftControls = L.control({ position: "topleft" });
@@ -1207,7 +1246,6 @@ Promise.allSettled([
 ]);
 
 if (isNaN(lat) || isNaN(lon)) { console.warn("URL lat/lon invalides", {lat, lon}); }
-
 
 
     function makeTelHtml(labelEmoji, value) {
