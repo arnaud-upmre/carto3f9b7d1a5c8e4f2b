@@ -31,25 +31,25 @@
       line-height: 28px;
     }
 
-    /* --- MENU BURGER (même style que sur map) --- */
+    /* --- MENU BURGER STYLE "MAP" --- */
     .fab-container {
       position: fixed;
-      top: 12px;
-      right: 14px;
+      bottom: 90px; /* relevé pour ne pas gêner les boutons zoom */
+      right: 20px;
       z-index: 10000;
       display: flex;
       flex-direction: column-reverse;
       align-items: center;
-      gap: 16px;
+      gap: 18px;
     }
 
     .fab {
-      width: 54px;
-      height: 54px;
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
       background: rgba(0,0,0,0.75);
       color: white;
-      font-size: 26px;
+      font-size: 28px;
       border: none;
       cursor: pointer;
       display: flex;
@@ -93,8 +93,8 @@
     }
 
     .fab-options button img {
-      width: 34px;
-      height: 34px;
+      width: 36px;
+      height: 36px;
       filter: drop-shadow(0 0 2px white);
       transition: opacity .2s, transform .2s;
     }
@@ -103,7 +103,6 @@
       transform: scale(1.1);
     }
 
-    /* IFRAME */
     iframe {
       display: block;
       position: absolute;
@@ -114,7 +113,6 @@
       border: none;
     }
 
-    /* MESSAGE CHARGEMENT */
     #loading {
       position: absolute;
       top: 50%;
@@ -130,13 +128,11 @@
 <body>
   <header>🩺 Défibrillateurs (DAE)</header>
 
-  <!-- Menu Burger style "map" -->
+  <!-- FAB identique à map -->
   <div class="fab-container">
     <button class="fab" id="fabBtn">☰</button>
     <div class="fab-options" id="fabOptions">
-      <button onclick="window.location.href='index.html'">
-        🏠
-      </button>
+      <button onclick="window.location.href='index.html'">🏠</button>
       <button onclick="window.location.href='map.html'">
         <img src="ico/int.png" alt="Carte principale">
       </button>
@@ -152,12 +148,11 @@
   </iframe>
 
   <script>
-    // --- Animation burger identique à map ---
+    // --- Burger identique à la carte ---
     const fabBtn = document.getElementById("fabBtn");
     const fabOptions = document.getElementById("fabOptions");
 
     fabBtn.addEventListener("click", () => {
-      fabBtn.classList.toggle("open");
       fabOptions.classList.toggle("show");
     });
 
@@ -167,7 +162,7 @@
       }
     });
 
-    // --- Détection géoloc et chargement iframe ---
+    // --- Localisation et chargement iframe ---
     const iframe = document.getElementById("daeFrame");
     const loading = document.getElementById("loading");
 
@@ -176,7 +171,7 @@
       if (lat >= 50.45 && lat <= 50.80 && lon >= 2.80 && lon <= 3.25) return "59350"; // Lille
       if (lat < 50.05 && lon >= 2.00 && lon <= 3.30) return "80021"; // Amiens
       if (lat >= 50.65 && lon < 2.80) return "59295"; // Hazebrouck
-      return "59295";
+      return "59295"; // fallback
     }
 
     navigator.geolocation.getCurrentPosition(
