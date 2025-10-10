@@ -9,12 +9,16 @@
   <meta name="theme-color" content="#1e88e5" />
 
   <style>
-    body {
+    html, body {
       margin: 0;
+      padding: 0;
+      height: 100%;
       font-family: system-ui, sans-serif;
       background: #f4f6f8;
       color: #222;
+      overflow: hidden; /* évite le scroll inutile sur iOS */
     }
+
     header {
       background: linear-gradient(135deg, #1e88e5, #1565c0);
       color: white;
@@ -22,17 +26,24 @@
       font-weight: 600;
       text-align: center;
       box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      height: 52px;
+      line-height: 28px;
     }
+
     iframe {
+      display: block;
+      position: absolute;
+      top: 52px;         /* sous le header */
+      left: 0;
       width: 100%;
-      height: calc(100vh - 64px);
+      height: calc(100% - 52px); /* prend le reste de l'écran */
       border: none;
-      border-radius: 0;
     }
+
     .fab {
       position: fixed;
-      bottom: 20px;
-      right: 20px;
+      bottom: 16px;
+      right: 16px;
       background: #1e88e5;
       color: white;
       border: none;
@@ -43,8 +54,10 @@
       box-shadow: 0 3px 8px rgba(0,0,0,0.3);
       cursor: pointer;
       transition: transform 0.2s ease;
+      z-index: 9999;
     }
     .fab:hover { transform: scale(1.08); }
+
     #loading {
       position: absolute;
       top: 50%;
@@ -74,19 +87,13 @@
 
     // Détermine la zone selon la position GPS
     function citycodeFromPosition(lat, lon) {
-      // Valenciennes (Est)
-      if (lat >= 50.25 && lon >= 3.30) return "59599";
-      // Lille (métropole)
-      if (lat >= 50.45 && lat <= 50.80 && lon >= 2.80 && lon <= 3.25) return "59350";
-      // Amiens (Sud-Ouest HDF)
-      if (lat < 50.05 && lon >= 2.00 && lon <= 3.30) return "80021";
-      // Hazebrouck (Nord-Ouest)
-      if (lat >= 50.65 && lon < 2.80) return "59295";
-      // Par défaut : Hazebrouck
-      return "59295";
+      if (lat >= 50.25 && lon >= 3.30) return "59599"; // Valenciennes
+      if (lat >= 50.45 && lat <= 50.80 && lon >= 2.80 && lon <= 3.25) return "59350"; // Lille
+      if (lat < 50.05 && lon >= 2.00 && lon <= 3.30) return "80021"; // Amiens
+      if (lat >= 50.65 && lon < 2.80) return "59295"; // Hazebrouck
+      return "59295"; // fallback Hazebrouck
     }
 
-    // Géolocalisation
     navigator.geolocation.getCurrentPosition(
       pos => {
         const { latitude, longitude } = pos.coords;
@@ -96,7 +103,6 @@
       },
       err => {
         console.warn("Géolocalisation refusée :", err.message);
-        // Fallback : Hazebrouck
         iframe.src = "https://www.defibrillateurs.info/index.php?citycode=59295";
         loading.style.display = "none";
       },
@@ -106,7 +112,6 @@
     iframe.onload = () => loading.style.display = "none";
   </script>
 
-  <!-- Bouton retour / accueil -->
   <button class="fab" onclick="window.location.href='index.html'">🏠</button>
 </body>
 </html>
