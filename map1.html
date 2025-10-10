@@ -1098,7 +1098,7 @@ function loadDAE() {
 }
 
 function fetchDAE(lat, lon, rayon) {
-  const apiUrl = `https://api.data.gouv.fr/api/1/databases/base-nationale-des-defibrillateurs/records/?geofilter.distance=${lat},${lon},${rayon}`;
+const apiUrl = `https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/osm-france-defibrillator/records?geofilter.distance=${lat},${lon},${rayon}`;
   
   fetch(apiUrl)
     .then(r => r.json())
