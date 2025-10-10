@@ -1092,19 +1092,45 @@ btnLignes.addEventListener("click", () => {
           const ligne = record.fields;
           if (!ligne.geo_shape) return;
 
+          // 🎨 Couleur selon le type
           const couleur =
             ligne.type_ligne?.toLowerCase().includes("raccordement") ? "#ff9800" :
             ligne.type_ligne?.toLowerCase().includes("desserte") ? "#10b981" :
-            "#0074D9"; // par défaut : bleu
+            "#0074D9";
 
+          // 🎚 Style de tracé
           const poly = L.geoJSON(ligne.geo_shape, {
             style: { color: couleur, weight: 3, opacity: 0.85 }
           });
 
-          poly.bindPopup(`
-            <b>${ligne.libelle_ligne || "Ligne"}</b><br>
-            Type : ${ligne.type_ligne || "Inconnu"}
-          `);
+          // 🧭 Lorsqu’on clique, on ouvre une popup dynamique
+          poly.on("click", e => {
+            const lat = e.latlng.lat.toFixed(5);
+            const lng = e.latlng.lng.toFixed(5);
+
+            const popupContent = `
+              <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
+                          font-size:14px;color:#111;line-height:1.5;text-align:left;min-width:220px;">
+
+                <div style="font-weight:700;font-size:16px;margin-bottom:8px;">
+                  🚄 Ligne n°${ligne.libelle_ligne || "?"} — ${ligne.type_ligne || "Inconnu"}
+                </div>
+
+                <div style="margin-top:14px;display:flex;flex-direction:column;gap:8px;align-items:center;">
+                  <button onclick="openImajnet(${lat},${lng})"
+                    style="display:block;width:100%;max-width:200px;padding:10px 12px;
+                           border:none;border-radius:8px;background:#10b981;
+                           color:white;cursor:pointer;font-size:14px;font-weight:500;">
+                    🛣️ Voir sur Imajnet
+                  </button>
+                </div>
+              </div>`;
+
+            L.popup({ maxWidth: 260 })
+              .setLatLng(e.latlng)
+              .setContent(popupContent)
+              .openOn(map);
+          });
 
           lignesLayer.addLayer(poly);
         });
@@ -1128,6 +1154,11 @@ btnLignes.addEventListener("click", () => {
     }
   }
 });
+
+// 🔗 Fonction Imajnet (même logique que PN)
+function openImajnet(lat, lng) {
+  window.open(`https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${lat},${lng};`, "_blank");
+}
     
     
 const leftControls = L.control({ position: "topleft" });
