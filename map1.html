@@ -1041,7 +1041,7 @@ function chargerPN(btn) {
   toast.textContent = "⏳ Chargement des passages à niveau en cours...";
   toast.classList.add("show");
   
-fetch("https://ressources.data.sncf.com/api/records/1.0/search/?dataset=liste-des-passages-a-niveau&rows=12000&geofilter.bbox=48.9,1.5,51.2,4.5")
+  fetch('https://ressources.data.sncf.com/api/records/1.0/search/?dataset=liste-des-passages-a-niveau&rows=12000&geofilter.bbox=48.9,1.5,51.2,4.5')
     .then(r => r.json())
     .then(data => {
       const records = data.records || [];
