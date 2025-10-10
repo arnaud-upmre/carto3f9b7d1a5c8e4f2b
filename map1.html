@@ -1026,12 +1026,11 @@ appareilsLayer.on('clusterclick', function (e) {
     return;
   }
 
-  // Si coordonnées différentes, zoom standard
   map.fitBounds(e.layer.getBounds());
 });
 
 
-let pnLoaded = false; // pour éviter de recharger plusieurs fois
+let pnLoaded = false; 
 
 function chargerPN(btn) {
   console.log("🔄 Déclenchement du chargement PN (lazy load)");
@@ -1048,14 +1047,14 @@ function chargerPN(btn) {
 
 fetch("https://ressources.data.sncf.com/api/records/1.0/search/"
   + "?dataset=liste-des-passages-a-niveau"
-  + "&geofilter.bbox=49.2,1.4,51.2,4.5"
+  + "&geofilter.bbox=49.3,1.4,51.2,4.5"
   + "&rows=3000")
   
   .then(r => r.json())
   .then(data => {
       let records = data.records || [];
 
-      console.info(`✅ ${records.length} PN filtrés (Hauts-de-France + 20 km au sud)`);
+      console.info(`✅ ${records.length} PN filtrés (Hauts-de-France + 10 km au sud)`);
   
   
       records.forEach(pn => {
