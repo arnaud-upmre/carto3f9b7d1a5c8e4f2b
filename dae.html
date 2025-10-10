@@ -44,14 +44,23 @@
       cursor: pointer;
       transition: transform 0.2s ease;
     }
-    .fab:hover {
-      transform: scale(1.08);
+    .fab:hover { transform: scale(1.08); }
+    #loading {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #555;
+      font-size: 16px;
+      text-align: center;
     }
   </style>
 </head>
 
 <body>
   <header>🩺 Défibrillateurs (DAE)</header>
+
+  <div id="loading">📍 Localisation en cours...</div>
 
   <iframe
     id="daeFrame"
@@ -60,24 +69,41 @@
   </iframe>
 
   <script>
-    // Géolocalisation de l'utilisateur
+    const iframe = document.getElementById("daeFrame");
+    const loading = document.getElementById("loading");
+
+    // Détermine la zone selon la position GPS
+    function citycodeFromPosition(lat, lon) {
+      // Valenciennes (Est)
+      if (lat >= 50.25 && lon >= 3.30) return "59599";
+      // Lille (métropole)
+      if (lat >= 50.45 && lat <= 50.80 && lon >= 2.80 && lon <= 3.25) return "59350";
+      // Amiens (Sud-Ouest HDF)
+      if (lat < 50.05 && lon >= 2.00 && lon <= 3.30) return "80021";
+      // Hazebrouck (Nord-Ouest)
+      if (lat >= 50.65 && lon < 2.80) return "59295";
+      // Par défaut : Hazebrouck
+      return "59295";
+    }
+
+    // Géolocalisation
     navigator.geolocation.getCurrentPosition(
       pos => {
         const { latitude, longitude } = pos.coords;
-        let citycode = "59350"; // défaut Lille
-        if (latitude < 49.8 && longitude > 2.5) citycode = "80021"; // Amiens
-        else if (latitude < 50.5 && longitude > 3.0) citycode = "59599"; // Valenciennes
-
-        document.getElementById("daeFrame").src =
-          `https://www.defibrillateurs.info/index.php?citycode=${citycode}`;
+        const citycode = citycodeFromPosition(latitude, longitude);
+        iframe.src = `https://www.defibrillateurs.info/index.php?citycode=${citycode}`;
+        loading.style.display = "none";
       },
       err => {
         console.warn("Géolocalisation refusée :", err.message);
-        document.getElementById("daeFrame").src =
-          "https://www.defibrillateurs.info/index.php?citycode=59350"; // fallback
+        // Fallback : Hazebrouck
+        iframe.src = "https://www.defibrillateurs.info/index.php?citycode=59295";
+        loading.style.display = "none";
       },
-      { timeout: 5000 } // évite un blocage long
+      { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
     );
+
+    iframe.onload = () => loading.style.display = "none";
   </script>
 
   <!-- Bouton retour / accueil -->
