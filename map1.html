@@ -1030,13 +1030,13 @@ appareilsLayer.on('clusterclick', function (e) {
   map.fitBounds(e.layer.getBounds());
 });
 
-// --- 🧠 Lazy-load des Passages à Niveau (chargement à la demande) ---
+
 let pnLoaded = false; // pour éviter de recharger plusieurs fois
 
 function chargerPN(btn) {
   console.log("🔄 Déclenchement du chargement PN (lazy load)");
 
-  // Si déjà chargé, simple affichage / masquage
+
   if (pnLoaded) {
     toggleLayer(pnLayer, btn, "Passages à niveau");
     return;
@@ -1046,20 +1046,14 @@ function chargerPN(btn) {
   toast.textContent = "⏳ Chargement des passages à niveau en cours...";
   toast.classList.add("show");
 
-  fetch("https://ressources.data.sncf.com/api/records/1.0/search/?dataset=liste-des-passages-a-niveau&rows=10000")
+fetch("https://ressources.data.sncf.com/api/records/1.0/search/"
+  + "?dataset=liste-des-passages-a-niveau"
+  + "&geofilter.bbox=49.2,1.4,51.2,4.5"
+  + "&rows=2000")
+  
   .then(r => r.json())
   .then(data => {
       let records = data.records || [];
-
-      // 🔍 On garde seulement les PN situés dans les Hauts-de-France + 20 km au sud
-      records = records.filter(r => {
-        const f = r.fields;
-        if (!f || !f.geo_point_2d) return false;
-        const lat = f.geo_point_2d[0];
-        const lon = f.geo_point_2d[1];
-        // Limites Hauts-de-France élargies vers le sud (~+20 km)
-        return lat >= 49.2 && lat <= 51.2 && lon >= 1.4 && lon <= 4.5;
-      });
 
       console.info(`✅ ${records.length} PN filtrés (Hauts-de-France + 20 km au sud)`);
   
