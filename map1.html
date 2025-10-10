@@ -345,8 +345,13 @@ html, body {
   color:var(--ink);
 }
 #map {
-  width:100%;
-  height:100%;
+  position: absolute;
+  top: 0; left: 0;
+  right: 0; bottom: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 .icon-circle {
@@ -374,6 +379,23 @@ html, body {
   pointer-events: none;
   user-select: none;
 }
+
+
+  html, body {
+  background: #000; /* évite le halo gris/noir autour */
+  overscroll-behavior: none;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+}
+  
 
 </style>
 
@@ -1092,7 +1114,7 @@ function chargerPN(btn) {
     ${classeTexte ? `<div>${classeTexte}</div>` : ""}
 
     <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px;align-items:center;">
-<a href="#" onclick="openImajnetPN(${f.geo_point_2d[0]}, ${f.geo_point_2d[1]}); return false;"
+<a href="https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${f.geo_point_2d[0]},${f.geo_point_2d[1]};" 
          target="_blank"
          style="display:block;width:100%;max-width:200px;padding:10px 12px;
                 border-radius:8px;background:#10b981;color:white;
@@ -1242,14 +1264,6 @@ Promise.allSettled([
 ]);
 
 if (isNaN(lat) || isNaN(lon)) { console.warn("URL lat/lon invalides", {lat, lon}); }
-
-
-    function openImajnetPN(lat, lon) {
-  const offsetLat = lat + 0.00022;
-  const offsetLon = lon + 0.00036; 
-  const url = `https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${offsetLat.toFixed(6)},${offsetLon.toFixed(6)};`;
-  window.open(url, '_blank');
-}
 
 
     function makeTelHtml(labelEmoji, value) {
