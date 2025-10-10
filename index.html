@@ -33,20 +33,6 @@
    
   <style id="eale-intro-styles">
 
-    .edit-buttons {
-  position: sticky;     
-  bottom: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: center; 
-  gap: 12px;              
-  padding: 10px;
-  background: #fff;     
-  border-top: 1px solid #ddd;
-  z-index: 1000;          
-}
-
     .rep-block.info-block,
 .rep-block.rep-appareil.info-block,
 .rep-block.info-block p {
@@ -185,9 +171,6 @@
   display: inline-block;
 }
     
-    #counters {
-  text-align: center;
-}
   :root{--eale-intro-bg:#fff;--eale-intro-fg:#222}
   @media (prefers-color-scheme: dark){
     :root{--eale-intro-bg:#0b0b0b;--eale-intro-fg:#eee}
@@ -579,11 +562,6 @@ li.best {
   margin-top: 40px; 
 }
 
-.footer-version {
-  color: #999;
-  font-size: 11px;
-}
-
 html, body {
   height: 100%;
   margin: 0;
@@ -717,18 +695,7 @@ main {
     border: 1px solid #90caf9;
   }
 }
-    
-.rep-block.horizontal.rep-appareil {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px; 
-}
-
-.rep-block.horizontal.rep-appareil p {
-  margin: 0;
-  font-weight: 600;
-}
+  
   
   </style>
 </head>
@@ -880,42 +847,14 @@ function normalize(str) {
     .replace(/\s+/g, " ");  
 }
 
-function normalizeNomPoste(name) {
-  if (!name) return "";
-  return name
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")     
-    .toLowerCase()
-    .trim()
-    
-    .replace(/\b(?:a|p|sp|ssp|sspa|l|l-a|prci|lgv|ss|sst)\b$/i, "")
-    .trim();
-}
 
-
-function isAppareilLike(raw){
-  if(!raw) return false;
-  const s = raw.trim().toLowerCase();
-  const prefixes = ["tt","i","tc","tsa","il","ip","imp","s"]; 
-  const first = s.split(/\s+/)[0];
-  const hasDigits = /\d/.test(s);
-  return prefixes.includes(first) || hasDigits;
-}
-
-function isPosteLike(raw){
-  if(!raw) return false;
-  const s = raw.trim();
-  return s.length >= 3 && !isAppareilLike(s);
-}
 
 function formatNomCompletLieu(obj) {
   const base = `${obj.nom || ''} ${obj.type || ''} ${obj.SAT || ''}`.trim();
 return obj["accès"] ? `${base} – accès ${obj["accès"]}` : base;
 }
 
-function formatNomComplet(obj) {
-  return `${obj.nom || ''} ${obj.type || ''}`.trim();
-}
+
 function formatRSS(table, showPhones = true) {
   const tables = {
     "A": ["03 28 55 82 56", "03 28 55 82 57"],
@@ -1747,21 +1686,6 @@ function showNearby(position) {
 
 const compteurContributionURL = "https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec";
 
-function updateContrib() {
-  const cached = localStorage.getItem("counterContrib");
-  if (cached) {
-  const el1 = document.getElementById("compteur-valeur");
-if (el1) el1.textContent = `(${cached})`;
-  }
-
-  fetch(compteurContributionURL).then(r => r.json()).then(data => {
-    if (data && typeof data.count !== "undefined") {
-      const el2 = document.getElementById("compteur-valeur");
-if (el2) el2.textContent = `(${data.count})`;
-      localStorage.setItem("counterContrib", data.count);
-    }
-  }).catch(() => {});
-}
 
 let editMode = false;
 let originalValues = {};
