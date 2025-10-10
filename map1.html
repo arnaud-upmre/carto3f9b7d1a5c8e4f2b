@@ -1246,8 +1246,8 @@ if (isNaN(lat) || isNaN(lon)) { console.warn("URL lat/lon invalides", {lat, lon}
 
     function openImajnetPN(lat, lon) {
   // Décale légèrement la position (≈ 12 m vers le sud-ouest)
-  const offsetLat = lat - 0.00011; // environ -12 m nord/sud
-  const offsetLon = lon - 0.00018; // environ -12 m est/ouest
+  const offsetLat = lat + 0.00011; // environ -12 m nord/sud
+  const offsetLon = lon + 0.00018; // environ -12 m est/ouest
   const url = `https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${offsetLat.toFixed(6)},${offsetLon.toFixed(6)};`;
   window.open(url, '_blank');
 }
