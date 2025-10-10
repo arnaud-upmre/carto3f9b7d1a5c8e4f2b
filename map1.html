@@ -1102,30 +1102,35 @@ const apiUrl = `https://public.opendatasoft.com/api/explore/v2.1/catalog/dataset
   
   fetch(apiUrl)
     .then(r => r.json())
-    .then(data => {
-      if (!data.records) return;
-      data.records.forEach(item => {
-        const props = item.record.fields;
-        if (!props.coordonnees_geographiques) return;
+.then(data => {
+  if (!data.results) return;
+  data.results.forEach(item => {
+    const props = item;
 
-        const [lon, lat] = props.coordonnees_geographiques;
-        const marker = L.marker([lat, lon], {
-          icon: L.divIcon({
-            html: `<img src="ico/dae.png" class="icon-halo-appareil">`,
-            className: "",
-            iconAnchor: [16, 32],
-            popupAnchor: [0, -32]
-          })
-        }).bindPopup(`
-          <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;font-size:14px;">
-            <div style="font-weight:600;font-size:16px;margin-bottom:6px;">💚 ${props.nom_du_site || "DAE"}</div>
-            <div>${props.adresse || ""} ${props.commune || ""}</div>
-          </div>
-        `);
-        daeLayer.addLayer(marker);
-      });
-      showToast("✅ Défibrillateurs chargés");
-    })
+    // Vérifie les deux formats possibles de coordonnées
+    const lat = props.lat_coor1 || props.lat_coor;
+    const lon = props.long_coor1 || props.long_coor;
+    if (!lat || !lon) return;
+
+    const marker = L.marker([lat, lon], {
+      icon: L.divIcon({
+        html: `<img src="ico/dae.png" class="icon-halo-appareil">`,
+        className: "",
+        iconAnchor: [16, 32],
+        popupAnchor: [0, -32]
+      })
+    }).bindPopup(`
+      <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;font-size:14px;">
+        <div style="font-weight:600;font-size:16px;margin-bottom:6px;">💚 ${props.name || "Défibrillateur"}</div>
+        <div>${props.adr_voie || ""} ${props.com_nom || ""}</div>
+        ${props.meta_osm_url ? `<a href="${props.meta_osm_url}" target="_blank" style="color:#007aff;text-decoration:none;">🔗 Voir sur OpenStreetMap</a>` : ""}
+      </div>
+    `);
+
+    daeLayer.addLayer(marker);
+  });
+  showToast("✅ Défibrillateurs chargés");
+})
     .catch(err => console.error("Erreur chargement DAE:", err));
 }
 
