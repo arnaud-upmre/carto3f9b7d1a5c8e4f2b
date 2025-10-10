@@ -16,11 +16,6 @@
 
 <style>
 
-.leaflet-popup-content > div[style*="text-align:center"] {
-  display: flex !important;
-  justify-content: center !important;
-}
-
   html, body {
   height: 100%;
   margin: 0;
@@ -1131,16 +1126,20 @@ document.addEventListener("DOMContentLoaded", () => {
                   <div style="margin-bottom:6px;">${lib}</div>
                   <div style="margin-bottom:6px;">📏 PKD <strong>${pkd}</strong> — PKF <strong>${pkf}</strong></div>
                   <div style="margin-bottom:14px;">🏷️ Type : <strong>${type}</strong></div>
-<div style="text-align:center; margin-top:12px;">
+
+<div style="display:flex;justify-content:center;width:100%;margin-top:14px;">
   <a href="https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${lat},${lng};"
      target="_blank"
-     style="display:inline-flex;align-items:center;justify-content:center;
+     style="display:flex;align-items:center;justify-content:center;
             gap:6px;padding:10px 16px;border-radius:8px;
             background:#10b981;color:white;text-decoration:none;
-            font-size:14px;font-weight:500;">
-    🛣️ Voir sur Imajnet
+            font-size:14px;font-weight:500;text-align:center;
+            box-sizing:border-box;min-width:160px;">
+    <img src='ico/imajnet.png' alt='' style='width:18px;height:18px;'> 
+    Voir sur Imajnet
   </a>
 </div>
+
                 </div>`;
               L.popup({ maxWidth: 280 })
                 .setLatLng(e.latlng)
