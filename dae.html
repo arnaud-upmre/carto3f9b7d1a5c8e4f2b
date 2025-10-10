@@ -16,7 +16,7 @@
       font-family: system-ui, sans-serif;
       background: #f4f6f8;
       color: #222;
-      overflow: hidden; /* évite le scroll inutile sur iOS */
+      overflow: hidden;
     }
 
     header {
@@ -28,34 +28,36 @@
       box-shadow: 0 2px 8px rgba(0,0,0,0.2);
       height: 52px;
       line-height: 28px;
+      z-index: 2;
+      position: relative;
     }
 
     iframe {
       display: block;
       position: absolute;
-      top: 52px;         /* sous le header */
+      top: 52px;
       left: 0;
       width: 100%;
-      height: calc(100% - 52px); /* prend le reste de l'écran */
       border: none;
+      border-radius: 0;
     }
 
-    .fab {
-      position: fixed;
-      bottom: 16px;
-      right: 16px;
-      background: #1e88e5;
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 56px;
-      height: 56px;
-      font-size: 26px;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.3);
-      cursor: pointer;
-      transition: transform 0.2s ease;
-      z-index: 9999;
-    }
+.fab {
+  position: fixed;
+  top: 90px;        /* décale vers le bas pour ne pas gêner le menu de carte */
+  right: 16px;      /* garde la marge droite */
+  background: #1e88e5;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 48px;      /* un peu plus petit en haut */
+  height: 48px;
+  font-size: 22px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  z-index: 9999;
+}
     .fab:hover { transform: scale(1.08); }
 
     #loading {
@@ -84,6 +86,15 @@
   <script>
     const iframe = document.getElementById("daeFrame");
     const loading = document.getElementById("loading");
+
+    // Ajuste dynamiquement la hauteur visible (corrige le bug iOS Safari)
+    function resizeIframe() {
+      const vh = window.innerHeight - 52; // header
+      iframe.style.height = vh + "px";
+    }
+    window.addEventListener("resize", resizeIframe);
+    window.addEventListener("orientationchange", resizeIframe);
+    resizeIframe(); // initial
 
     // Détermine la zone selon la position GPS
     function citycodeFromPosition(lat, lon) {
