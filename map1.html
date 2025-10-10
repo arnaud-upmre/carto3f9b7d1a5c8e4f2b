@@ -1089,63 +1089,63 @@ btnLignes.addEventListener("click", () => {
       .then(r => r.json())
       .then(data => {
         data.records.forEach(record => {
-          const f = record.fields;
+          const f = record.fields || {};
           if (!f.geo_shape) return;
 
-          // Couleur selon type
+          // Couleur bien visible + largeur accentuée
           const couleur =
-            f.type_ligne?.toLowerCase().includes("raccordement") ? "#ff9800" :
-            f.type_ligne?.toLowerCase().includes("desserte") ? "#10b981" :
-            "#0074D9";
+            (f.type_ligne || "").toLowerCase().includes("raccordement") ? "#ff9800" :
+            (f.type_ligne || "").toLowerCase().includes("desserte")     ? "#10b981" :
+            "#00bcd4"; // cyan par défaut, bien visible sur satellite
 
           const poly = L.geoJSON(f.geo_shape, {
-            style: { color: couleur, weight: 3, opacity: 0.9 }
+            style: { color: couleur, weight: 5, opacity: 0.9 }
           });
 
-          // Popup dynamique avec données exactes du clic
-          poly.on("click", e => {
+          // Popup au clic
+          poly.on("click", (e) => {
             const lat = e.latlng.lat.toFixed(5);
             const lng = e.latlng.lng.toFixed(5);
 
-            const code = f.code_ligne || f.CODE_LIGNE || "—";
-            const nom = f.lib_ligne || f.LIB_LIGNE || "—";
-            const pkd = f.pkd || f.PKD || "—";
-            const pkf = f.pkf || f.PKF || "—";
-            const type = f.type_ligne || f.TYPE_LIGNE || "—";
+            const code = f.code_ligne ?? f.CODE_LIGNE ?? "?";
+            const lib  = f.lib_ligne ?? f.libelle_ligne ?? f.LIB_LIGNE ?? "—";
+            const pkd  = f.pkd ?? f.PKD ?? "—";
+            const pkf  = f.pkf ?? f.PKF ?? "—";
+            const type = f.type_ligne ?? f.TYPE_LIGNE ?? "—";
 
-            const popup = `
+            const html = `
               <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
-                          font-size:14px;color:#111;line-height:1.5;text-align:left;min-width:230px;">
+                          font-size:14px;color:#111;line-height:1.5;min-width:230px;text-align:left;">
                 <div style="font-weight:700;font-size:16px;margin-bottom:8px;">
                   🚄 Ligne n°${code}
                 </div>
 
-                <div style="margin-bottom:4px;">
-                  <strong>${nom}</strong>
+                <div style="margin-bottom:6px;">
+                  ${lib}
                 </div>
 
-                <div style="margin-bottom:4px;">
-                  PKD : <strong>${pkd}</strong> — PKF : <strong>${pkf}</strong>
+                <div style="margin-bottom:6px;">
+                  📏 PKD <strong>${pkd}</strong> — PKF <strong>${pkf}</strong>
                 </div>
 
-                <div style="margin-bottom:12px;">
-                  Type : <strong>${type}</strong>
+                <div style="margin-bottom:14px;">
+                  🏷️ Type : <strong>${type}</strong>
                 </div>
 
-                <div style="display:flex;justify-content:center;">
-                  <button onclick="openImajnet(${lat},${lng})"
-                    style="display:flex;align-items:center;gap:6px;
-                           background:#10b981;color:white;border:none;
-                           padding:10px 14px;border-radius:8px;
-                           font-size:14px;font-weight:500;cursor:pointer;">
-                    <img src='ico/imajnet.png' style='width:18px;height:18px;'> Voir sur Imajnet
-                  </button>
+                <div style="display:flex;flex-direction:column;gap:8px;align-items:center;">
+                  <a href="https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${lat},${lng};"
+                     target="_blank"
+                     style="display:block;width:100%;max-width:200px;padding:10px 12px;
+                            border-radius:8px;background:#10b981;color:white;
+                            text-decoration:none;font-size:14px;font-weight:500;text-align:center;">
+                    🛣️ Voir sur Imajnet
+                  </a>
                 </div>
               </div>`;
 
-            L.popup({ maxWidth: 260 })
+            L.popup({ maxWidth: 280 })
               .setLatLng(e.latlng)
-              .setContent(popup)
+              .setContent(html)
               .openOn(map);
           });
 
@@ -1171,11 +1171,6 @@ btnLignes.addEventListener("click", () => {
     }
   }
 });
-
-// Bouton Imajnet
-function openImajnet(lat, lng) {
-  window.open(`https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${lat},${lng};`, "_blank");
-}
     
     
 const leftControls = L.control({ position: "topleft" });
