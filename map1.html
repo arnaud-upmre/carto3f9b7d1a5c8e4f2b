@@ -4,8 +4,7 @@
   <meta charset="UTF-8" />
   <title>Nono Maps</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#000000">
-  <meta name="apple-mobile-web-app-capable" content="yes">
+
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
@@ -15,37 +14,6 @@
 <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
 
 <style>
-
-html, body {
-  background: #f4f6f8; /* fond clair, comme sur tes autres pages */
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  overscroll-behavior: none;
-  -webkit-overflow-scrolling: touch;
-}
-
-body {
-  position: fixed;
-  inset: env(safe-area-inset-top) env(safe-area-inset-right)
-         env(safe-area-inset-bottom) env(safe-area-inset-left);
-  overflow: hidden;
-  background: #f4f6f8; /* même fond pour combler les bords sur Safari iOS */
-}
-
-
-
-
-  
-
-#map {
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  width: 100%;
-  height: 100%;
-}
-
-  
 
 .fab-container {
   position: fixed;
@@ -405,7 +373,13 @@ html, body {
 }
 
 
-
+#map,
+.leaflet-container {
+  background: color-mix(in srgb, canvas 100%, transparent) !important;
+  /* utilise la couleur de fond système (iOS/macOS) */
+  -webkit-transform: translateZ(0);
+  -webkit-background-clip: border-box;
+}
 
 </style>
 
