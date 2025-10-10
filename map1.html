@@ -1098,40 +1098,52 @@ function loadDAE() {
 }
 
 function fetchDAE(lat, lon, rayon) {
-const apiUrl = `https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/osm-france-defibrillator/records?geofilter.distance=${lat},${lon},${rayon}`;
+  const apiUrl = `https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/osm-france-defibrillator/records?geofilter.distance=${lat},${lon},${rayon}`;
   
+  console.log("🔎 Requête DAE :", apiUrl); // debug console
+
   fetch(apiUrl)
     .then(r => r.json())
-.then(data => {
-  if (!data.results) return;
-  data.results.forEach(item => {
-    const props = item;
+    .then(data => {
+      if (!data.results || !Array.isArray(data.results)) {
+        console.warn("⚠️ Pas de résultats DAE", data);
+        return;
+      }
 
-    // Vérifie les deux formats possibles de coordonnées
-    const lat = props.lat_coor1 || props.lat_coor;
-    const lon = props.long_coor1 || props.long_coor;
-    if (!lat || !lon) return;
+      let count = 0;
+      data.results.forEach(item => {
+        const lat = item.lat_coor1;
+        const lon = item.long_coor1;
 
-    const marker = L.marker([lat, lon], {
-      icon: L.divIcon({
-        html: `<img src="ico/dae.png" class="icon-halo-appareil">`,
-        className: "",
-        iconAnchor: [16, 32],
-        popupAnchor: [0, -32]
-      })
-    }).bindPopup(`
-      <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;font-size:14px;">
-        <div style="font-weight:600;font-size:16px;margin-bottom:6px;">💚 ${props.name || "Défibrillateur"}</div>
-        <div>${props.adr_voie || ""} ${props.com_nom || ""}</div>
-        ${props.meta_osm_url ? `<a href="${props.meta_osm_url}" target="_blank" style="color:#007aff;text-decoration:none;">🔗 Voir sur OpenStreetMap</a>` : ""}
-      </div>
-    `);
+        if (!lat || !lon) return;
 
-    daeLayer.addLayer(marker);
-  });
-  showToast("✅ Défibrillateurs chargés");
-})
-    .catch(err => console.error("Erreur chargement DAE:", err));
+        const marker = L.marker([lat, lon], {
+          icon: L.divIcon({
+            html: `<img src="ico/dae.png" class="icon-halo-appareil">`,
+            className: "",
+            iconAnchor: [16, 32],
+            popupAnchor: [0, -32]
+          })
+        }).bindPopup(`
+          <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;font-size:14px;">
+            <div style="font-weight:600;font-size:16px;margin-bottom:6px;">💚 ${item.com_nom || "Défibrillateur"}</div>
+            <div>${item.acc_complt || ""}</div>
+            <div style="color:#555;font-size:13px;margin-top:4px;">${item.meta_name_dep || ""} – ${item.meta_name_reg || ""}</div>
+            ${item.meta_osm_url ? `<a href="${item.meta_osm_url}" target="_blank" style="color:#007aff;text-decoration:none;">🔗 Voir sur OpenStreetMap</a>` : ""}
+          </div>
+        `);
+
+        daeLayer.addLayer(marker);
+        count++;
+      });
+
+      if (count === 0) showToast("⚠️ Aucun DAE trouvé à proximité");
+      else showToast(`✅ ${count} défibrillateurs chargés`);
+    })
+    .catch(err => {
+      console.error("Erreur chargement DAE:", err);
+      showToast("❌ Erreur chargement DAE");
+    });
 }
 
     
