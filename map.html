@@ -1143,15 +1143,6 @@ L.DomEvent.disableScrollPropagation(locateBtn);
   return container;
 };
 leftControls.addTo(map);
-
-if (!id) {
-  map.whenReady(() => {
-    if (allMarkers.length > 0) {
-      const group = L.featureGroup(allMarkers);
-      map.fitBounds(group.getBounds());
-    }
-  });
-}
     
  function openStreetView(lat, lng) {
     const iframe = document.getElementById("streetview-frame");
