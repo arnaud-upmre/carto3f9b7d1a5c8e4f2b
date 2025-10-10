@@ -1045,21 +1045,17 @@ fetch("https://ressources.data.sncf.com/api/records/1.0/search/?dataset=liste-de
     .then(r => r.json())
     .then(data => {
 
-.then(data => {
-  let records = data.records || [];
+      let records = data.records || [];
 
-  // 🔍 Filtrage géographique des Hauts-de-France (~48.8 à 51.2 N, 1.4 à 4.5 E)
-  records = records.filter(r => {
-    const f = r.fields;
-    if (!f || !f.geo_point_2d) return false;
-    const lat = f.geo_point_2d[0];
-    const lon = f.geo_point_2d[1];
-    return lat >= 48.8 && lat <= 51.2 && lon >= 1.4 && lon <= 4.5;
-  });
+// 🔍 On garde seulement les PN situés dans les Hauts-de-France (~48.8 à 51.2 N, 1.4 à 4.5 E)
+records = records.filter(r => {
+  const f = r.fields;
+  if (!f || !f.geo_point_2d) return false;
+  const [lat, lon] = f.geo_point_2d;
+  return lat >= 48.8 && lat <= 51.2 && lon >= 1.4 && lon <= 4.5;
+});
 
-  console.info(`✅ ${records.length} PN filtrés dans les Hauts-de-France`);
-
-  // --- Suite du code existant ---
+console.info(`✅ ${records.length} PN filtrés dans les Hauts-de-France`);
       console.info(`✅ ${records.length} PN trouvés dans les Hauts-de-France`);
 
       records.forEach(pn => {
