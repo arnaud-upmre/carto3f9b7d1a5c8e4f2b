@@ -11,7 +11,10 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<link rel="preload" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" as="script" crossorigin="anonymous">
+<link rel="preload" href="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js" as="script">
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
 
 <style>
@@ -334,11 +337,7 @@
 
 .appareil { background:#facc15; }
 
-
 </style>
-
-
-  
 </head>
 <body>
   
@@ -656,8 +655,7 @@ const appareilsLayer = L.markerClusterGroup({
     return zoom > 18 ? 20 : 60;
   }
 });
-
-    
+ 
 const accesLayer = L.markerClusterGroup({
   spiderfyOnMaxZoom: false,
   showCoverageOnHover: false,
@@ -829,11 +827,6 @@ let content = `
 
   <div style="margin-bottom:10px;">
 ✍🏻 <strong>Information :</strong> ${ renderInformation(item.description) }
-  </div>
-
-
-  <div style="margin-bottom:10px;">
-    📞 <strong>Contact :</strong> ${ renderContact(item.contact) }
   </div>
  
   <a href="index.html?id=${encodeURIComponent(
@@ -1277,24 +1270,6 @@ function renderInformation(value) {
   }
 
   return escHtml(String(value));
-}
-
-
-    function renderContact(value) {
-  if (!value) {
-    return `<span style="color:#777;font-style:italic;">Non renseigné</span>`;
-  }
-
-  const str = String(value);
-
-  return str.split(/(\d{2}(?:\s?\d{2}){4})/g).map(part => {
-    const digits = part.replace(/\D/g, "");
-    if (digits.length === 10) {
- 
-      return `<a href="tel:${digits}" style="color:#007aff; text-decoration:none;">${part.trim()}</a>`;
-    }
-    return part; 
-  }).join("");
 }
 
 let activeEditPopup = null; 
