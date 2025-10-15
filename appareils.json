@@ -4962,5 +4962,27 @@
     "longitude": 3.015416,
     "description": "",
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.45605840300826,3.015275135788091;uid=cdcfcffa-dbf4-46f0-aceb-a29ba0619451_932;"
+  },
+  {
+    "nom": "Harponlieu",
+    "type": "L-A",
+    "SAT": "",
+    "accès": "",
+    "appareil": "I1040",
+    "latitude": 50.45511,
+    "longitude": 3.01669,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.45522592530385,3.016571695945211;uid=cdcfcffa-dbf4-46f0-aceb-a29ba0619451_889;"
+  },
+  {
+    "nom": "Harponlieu",
+    "type": "L-A",
+    "SAT": "",
+    "accès": "",
+    "appareil": "I1037",
+    "latitude": 50.454182,
+    "longitude": 3.018119,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.45427017916544,3.018028741104198;uid=cdcfcffa-dbf4-46f0-aceb-a29ba0619451_840;"
   }
 ]
