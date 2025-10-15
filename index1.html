@@ -2458,9 +2458,13 @@ document.getElementById("streetview-close").onclick = () => {
   const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=notification&_=${Date.now()}`;
 
   try {
-    const res = await fetch(url);
-    const text = await res.text();
-    const json = JSON.parse(text.substring(47).slice(0, -2));
+
+  const res = await fetch(url);
+  const text = await res.text();
+  console.log("📄 Contenu brut reçu :", text); 
+  const json = JSON.parse(text.substring(47).slice(0, -2));
+  console.log("✅ JSON parsé :", json);
+    
 
     const now = new Date();
     const rows = json.table.rows
