@@ -2476,7 +2476,14 @@ document.getElementById("streetview-close").onclick = () => {
       .filter(n => n.date && n.duree && n.message);
 
     const valid = rows.filter(row => {
-      const start = new Date(row.date);
+
+let start;
+if (typeof row.date === "string" && row.date.startsWith("Date(")) {
+  const nums = row.date.match(/\d+/g);
+  start = new Date(nums[0], nums[1], nums[2]);
+} else {
+  start = new Date(row.date);
+}
       const end = new Date(start);
       end.setDate(start.getDate() + row.duree);
       return now >= start && now <= end;
