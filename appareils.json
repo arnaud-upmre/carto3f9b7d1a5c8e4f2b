@@ -4918,5 +4918,27 @@
     "longitude": 1.98881,
     "description": "",
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.778571683881935,1.9887460067970553;"
+  },
+  {
+    "nom": "Harponlieu",
+    "type": "L-A",
+    "SAT": "",
+    "accès": "",
+    "appareil": "I1039",
+    "latitude": 50.455890,
+    "longitude": 3.015496,
+    "description": "",
+    "imajnet": ""
+  },
+  {
+    "nom": "Harponlieu",
+    "type": "L-A",
+    "SAT": "",
+    "accès": "",
+    "appareil": "S2 IA1",
+    "latitude": 50.455842,
+    "longitude": 3.015416,
+    "description": "",
+    "imajnet": ""
   }
 ]
