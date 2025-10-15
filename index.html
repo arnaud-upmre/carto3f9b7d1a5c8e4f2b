@@ -33,7 +33,78 @@
    
   <style id="eale-intro-styles">
 
-    .rep-block.info-block,
+/* ====== Container global ====== */
+.nono-banner-container {
+  position: fixed;
+  top: -100px; /* caché au départ */
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  z-index: 999999;
+  opacity: 0;
+   transition: top 1.5s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 1.2s ease;
+}
+
+/* ====== Bloc principal (fond translucide + flou) ====== */
+.nono-banner {
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.2);
+  border-radius: 20px;
+  padding: 14px 20px;
+  min-width: 320px;
+  max-width: 90vw;
+  color: #111;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all 0.9s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+/* ====== Style de chaque ligne de notification ====== */
+.nono-banner + .nono-banner {
+  border-top: 1px solid rgba(0,0,0,0.05);
+  margin-top: -8px;
+}
+
+/* ====== Apparition ====== */
+.nono-banner.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ====== Container visible ====== */
+.nono-banner-container.show {
+  top: 30px;
+  opacity: 1;
+}
+
+/* ====== Mode sombre ====== */
+@media (prefers-color-scheme: dark) {
+  .nono-banner {
+    background: rgba(28,28,28,0.85);
+    color: #f3f3f3;
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.5);
+  }
+  .nono-banner + .nono-banner {
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+}
+
+
+
+    
+
+.rep-block.info-block,
 .rep-block.rep-appareil.info-block,
 .rep-block.info-block p {
   text-align: left !important;
@@ -2409,5 +2480,73 @@ document.getElementById("streetview-close").onclick = () => {
   }
 }
 </script>   
+  
+<div class="nono-banner-container" id="nono-banner-container"></div>
+
+<script>
+(async () => {
+  const SHEET_ID = "1cBRNy-Ihlrz82SYeENPLoHDNm32nedQ0Gyia17-rYwY";
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=notification&_=${Date.now()}`;
+
+  try {
+    const res = await fetch(url);
+    const text = await res.text();
+    const json = JSON.parse(text.substring(47).slice(0, -2));
+
+    const now = new Date();
+    const rows = json.table.rows
+      .map(r => ({
+        date: r.c[0]?.v,
+        duree: parseInt(r.c[1]?.v),
+        message: r.c[2]?.v
+      }))
+      .filter(n => n.date && n.duree && n.message);
+
+    // 🔧 Corrige format de date Google "Date(2025,9,15)"
+    const convertDate = d => {
+      if (typeof d === "string" && d.startsWith("Date(")) {
+        const nums = d.match(/\d+/g);
+        return new Date(nums[0], nums[1], nums[2]);
+      }
+      return new Date(d);
+    };
+
+    // 🔍 Filtre les notifs valides (encore dans la durée)
+    const valid = rows.filter(row => {
+      const start = convertDate(row.date);
+      const end = new Date(start);
+      end.setDate(start.getDate() + row.duree);
+      return now >= start && now <= end;
+    });
+
+    if (!valid.length) return;
+
+    const container = document.getElementById("nono-banner-container");
+    container.classList.add("show");
+
+    // 🔔 Affiche toutes les notifs ensemble
+    for (const notif of valid) {
+      const key = `notif_seen_${notif.message}`;
+      if (localStorage.getItem(key)) continue;
+
+      const div = document.createElement("div");
+      div.className = "nono-banner";
+      div.textContent = notif.message;
+      container.appendChild(div);
+
+      requestAnimationFrame(() => div.classList.add("show"));
+      localStorage.setItem(key, "1");
+    }
+
+    // ⏱️ Laisse visible 6s puis retire
+    await new Promise(r => setTimeout(r, 6000));
+    container.classList.remove("show");
+    setTimeout(() => container.innerHTML = "", 600);
+
+  } catch (err) {
+    console.warn("⚠️ Erreur récupération notifications :", err);
+  }
+})();
+</script>
 </body>
 </html>
