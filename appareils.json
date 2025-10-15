@@ -4928,7 +4928,7 @@
     "latitude": 50.455890,
     "longitude": 3.015496,
     "description": "",
-    "imajnet": ""
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.45605840300826,3.015275135788091;uid=cdcfcffa-dbf4-46f0-aceb-a29ba0619451_932;"
   },
   {
     "nom": "Harponlieu",
@@ -4939,6 +4939,6 @@
     "latitude": 50.455842,
     "longitude": 3.015416,
     "description": "",
-    "imajnet": ""
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.45605840300826,3.015275135788091;uid=cdcfcffa-dbf4-46f0-aceb-a29ba0619451_932;"
   }
 ]
