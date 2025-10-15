@@ -33,45 +33,76 @@
    
   <style id="eale-intro-styles">
 
+/* ====== Container global ====== */
+.nono-banner-container {
+  position: fixed;
+  top: -100px; /* caché au départ */
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  z-index: 999999;
+  opacity: 0;
+  transition: top 0.6s ease, opacity 0.6s ease;
+}
 
-      .nono-toast-container {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 10px;
-    z-index: 999999;
+/* ====== Bloc principal (fond translucide + flou) ====== */
+.nono-banner {
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.2);
+  border-radius: 20px;
+  padding: 14px 20px;
+  min-width: 320px;
+  max-width: 90vw;
+  color: #111;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all 0.5s ease;
+}
+
+/* ====== Style de chaque ligne de notification ====== */
+.nono-banner + .nono-banner {
+  border-top: 1px solid rgba(0,0,0,0.05);
+  margin-top: -8px;
+}
+
+/* ====== Apparition ====== */
+.nono-banner.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ====== Container visible ====== */
+.nono-banner-container.show {
+  top: 30px;
+  opacity: 1;
+}
+
+/* ====== Mode sombre ====== */
+@media (prefers-color-scheme: dark) {
+  .nono-banner {
+    background: rgba(28,28,28,0.85);
+    color: #f3f3f3;
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.5);
   }
-  .nono-toast {
-    background: rgba(255,255,255,0.9);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    color: #111;
-    border: 1px solid rgba(0,0,0,0.08);
-    border-radius: 18px;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.12);
-    font-family: 'Inter', sans-serif;
-    font-size: 15px;
-    padding: 12px 18px;
-    max-width: 280px;
-    opacity: 0;
-    transform: translateY(20px);
-    transition: all 0.4s ease;
+  .nono-banner + .nono-banner {
+    border-top: 1px solid rgba(255,255,255,0.08);
   }
-  .nono-toast.show {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  @media (prefers-color-scheme: dark) {
-    .nono-toast {
-      background: rgba(30,30,30,0.9);
-      color: #eee;
-      border: 1px solid rgba(255,255,255,0.08);
-      box-shadow: 0 4px 14px rgba(255,255,255,0.05);
-    }
-  }
+}
+
+
+
+    
 
 .rep-block.info-block,
 .rep-block.rep-appareil.info-block,
@@ -2450,7 +2481,7 @@ document.getElementById("streetview-close").onclick = () => {
 }
 </script>   
   
-  <div class="nono-toast-container" id="nono-toast-container"></div>
+<div class="nono-banner-container" id="nono-banner-container"></div>
 
 <script>
 (async () => {
@@ -2458,13 +2489,9 @@ document.getElementById("streetview-close").onclick = () => {
   const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=notification&_=${Date.now()}`;
 
   try {
-
-  const res = await fetch(url);
-  const text = await res.text();
-  console.log("📄 Contenu brut reçu :", text); 
-  const json = JSON.parse(text.substring(47).slice(0, -2));
-  console.log("✅ JSON parsé :", json);
-    
+    const res = await fetch(url);
+    const text = await res.text();
+    const json = JSON.parse(text.substring(47).slice(0, -2));
 
     const now = new Date();
     const rows = json.table.rows
@@ -2475,40 +2502,47 @@ document.getElementById("streetview-close").onclick = () => {
       }))
       .filter(n => n.date && n.duree && n.message);
 
-    const valid = rows.filter(row => {
+    // 🔧 Corrige format de date Google "Date(2025,9,15)"
+    const convertDate = d => {
+      if (typeof d === "string" && d.startsWith("Date(")) {
+        const nums = d.match(/\d+/g);
+        return new Date(nums[0], nums[1], nums[2]);
+      }
+      return new Date(d);
+    };
 
-let start;
-if (typeof row.date === "string" && row.date.startsWith("Date(")) {
-  const nums = row.date.match(/\d+/g);
-  start = new Date(nums[0], nums[1], nums[2]);
-} else {
-  start = new Date(row.date);
-}
+    // 🔍 Filtre les notifs valides (encore dans la durée)
+    const valid = rows.filter(row => {
+      const start = convertDate(row.date);
       const end = new Date(start);
       end.setDate(start.getDate() + row.duree);
       return now >= start && now <= end;
     });
 
-    const container = document.getElementById("nono-toast-container");
+    if (!valid.length) return;
 
+    const container = document.getElementById("nono-banner-container");
+    container.classList.add("show");
+
+    // 🔔 Affiche toutes les notifs ensemble
     for (const notif of valid) {
       const key = `notif_seen_${notif.message}`;
       if (localStorage.getItem(key)) continue;
 
       const div = document.createElement("div");
-      div.className = "nono-toast";
+      div.className = "nono-banner";
       div.textContent = notif.message;
       container.appendChild(div);
 
       requestAnimationFrame(() => div.classList.add("show"));
-
       localStorage.setItem(key, "1");
-
-      await new Promise(r => setTimeout(r, 5000));
-      div.classList.remove("show");
-      await new Promise(r => setTimeout(r, 400));
-      div.remove();
     }
+
+    // ⏱️ Laisse visible 6s puis retire
+    await new Promise(r => setTimeout(r, 6000));
+    container.classList.remove("show");
+    setTimeout(() => container.innerHTML = "", 600);
+
   } catch (err) {
     console.warn("⚠️ Erreur récupération notifications :", err);
   }
