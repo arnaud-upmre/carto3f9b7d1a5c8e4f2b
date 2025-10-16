@@ -251,18 +251,15 @@
   50%  { box-shadow: 0 0 15px rgba(255,255,255,0.9), 0 0 30px rgba(255,255,255,0.4); }
   100% { box-shadow: 0 0 0px rgba(255,255,255,0.6); }
 }
+  
 .icon-halo {
-  width: 36px;  
+  width: 36px;
   height: 36px;
-  filter: drop-shadow(0 0 2px white) drop-shadow(0 0 4px white);
-}
-
-  .icon-halo {
-  width: 32px;
-  height: 32px;
   display: block;
   image-rendering: crisp-edges;
-  transform: translateZ(0); /* stabilise le rendu subpixel */
+  transform: translateZ(0);
+  will-change: transform;
+  filter: drop-shadow(0 0 2px white) drop-shadow(0 0 4px white);
 }
   
 .icon-halo-appareil {
@@ -753,10 +750,11 @@ const iconPoste = L.divIcon({
 const iconAppareil= L.divIcon({className:"icon-circle appareil",html:"⚡"});
 
 const iconAcces = L.divIcon({
-  html: `<img src="ico/acces.png" class="icon-halo">`,
+  html: `<img src="ico/acces.png" class="icon-halo" style="width:36px;height:36px;">`,
   className: "",
-  iconAnchor: [16, 0],   // point GPS = haut de l’image
-  popupAnchor: [0, 0]
+  iconSize: [36, 36],
+  iconAnchor: [18, 6],   // ~haut-centre (léger offset pour réalisme)
+  popupAnchor: [0, -10]
 });
 
 fetch("postes.json")
