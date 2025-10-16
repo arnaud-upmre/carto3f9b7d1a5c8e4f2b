@@ -19,6 +19,13 @@
 
 <style>
 
+  .leaflet-marker-icon.icon-glow {
+  filter: drop-shadow(0 0 3px rgba(255,255,255,0.9))
+          drop-shadow(0 0 6px rgba(255,255,255,0.7));
+  transform: translateZ(0);
+  will-change: transform;
+}
+
   html, body {
   height: 100%;
   margin: 0;
@@ -251,12 +258,8 @@
   50%  { box-shadow: 0 0 15px rgba(255,255,255,0.9), 0 0 30px rgba(255,255,255,0.4); }
   100% { box-shadow: 0 0 0px rgba(255,255,255,0.6); }
 }
-.icon-halo {
-  width: 36px;  
-  height: 36px;
-  filter: drop-shadow(0 0 2px white) drop-shadow(0 0 4px white);
-}
-.icon-halo-appareil {
+
+  .icon-halo-appareil {
   width: 24px;  
   height: 24px;
   filter: drop-shadow(0 0 4px white) drop-shadow(0 0 8px white);
@@ -742,11 +745,12 @@ const iconPoste = L.divIcon({
 
 const iconAppareil= L.divIcon({className:"icon-circle appareil",html:"⚡"});
 
-const iconAcces = L.divIcon({
-  html: `<img src="ico/acces.png" class="icon-halo">`,
-  className: "",
-  iconAnchor: [24, 48],
-  popupAnchor: [0, -48]
+const iconAcces = L.icon({
+  iconUrl: "ico/acces.png",
+  iconSize: [36, 36],
+  iconAnchor: [18, 28],   // ancrage plus bas, presque en bas du disque
+  popupAnchor: [0, -10],
+  className: "icon-glow"
 });
 
 fetch("postes.json")
