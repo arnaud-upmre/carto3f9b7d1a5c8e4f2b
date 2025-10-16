@@ -755,8 +755,8 @@ const iconAppareil= L.divIcon({className:"icon-circle appareil",html:"⚡"});
 const iconAcces = L.divIcon({
   html: `<img src="ico/acces.png" class="icon-halo">`,
   className: "",
-  iconAnchor: [16, 16],   // centre l'icône au bon point
-  popupAnchor: [0, -16]
+  iconAnchor: [16, 0],   // point GPS = haut de l’image
+  popupAnchor: [0, 0]
 });
 
 fetch("postes.json")
