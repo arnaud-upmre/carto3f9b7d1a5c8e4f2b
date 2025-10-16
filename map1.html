@@ -251,17 +251,11 @@
   50%  { box-shadow: 0 0 15px rgba(255,255,255,0.9), 0 0 30px rgba(255,255,255,0.4); }
   100% { box-shadow: 0 0 0px rgba(255,255,255,0.6); }
 }
-  
 .icon-halo {
-  width: 36px;
+  width: 36px;  
   height: 36px;
-  display: block;
-  image-rendering: crisp-edges;
-  transform: translateZ(0);
-  will-change: transform;
   filter: drop-shadow(0 0 2px white) drop-shadow(0 0 4px white);
 }
-  
 .icon-halo-appareil {
   width: 24px;  
   height: 24px;
@@ -674,8 +668,7 @@ const appareilsLayer = L.markerClusterGroup({
 const accesLayer = L.markerClusterGroup({
   spiderfyOnMaxZoom: false,
   showCoverageOnHover: false,
-  zoomToBoundsOnClick: false,
-  disableClusteringAtZoom: 0 
+  zoomToBoundsOnClick: false
 });
 
     const pnLayer = L.markerClusterGroup({
@@ -742,9 +735,10 @@ map.addLayer(accesLayer);
 
 const iconPoste = L.divIcon({
   html: `<img src="ico/poste.png" class="icon-halo">`,
-  className: "", 
-  iconAnchor: [24, 48],
-  popupAnchor: [0, -48]
+  className: "",
+  iconSize: [36, 36],
+  iconAnchor: [18, 28],   
+  popupAnchor: [0, -10]
 });
 
 const iconAppareil= L.divIcon({className:"icon-circle appareil",html:"⚡"});
@@ -752,11 +746,10 @@ const iconAppareil= L.divIcon({className:"icon-circle appareil",html:"⚡"});
 const iconAcces = L.icon({
   iconUrl: "ico/acces.png",
   iconSize: [36, 36],
-  iconAnchor: [18, 28],   // ancrage plus bas, presque en bas du disque
-  popupAnchor: [0, -10],
-  className: "icon-glow"
+  iconAnchor: [18, 28],   
+  popupAnchor: [0, -10]
 });
-
+ 
 fetch("postes.json")
   .then(r => r.json())
   .then(data => {
@@ -1385,7 +1378,6 @@ function showToast(message) {
     toast.classList.remove("show");
   }, 2000);
 }
-    
 </script>
 
 </body>
