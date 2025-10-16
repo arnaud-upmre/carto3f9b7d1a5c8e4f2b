@@ -1385,6 +1385,15 @@ function showToast(message) {
     toast.classList.remove("show");
   }, 2000);
 }
+
+    // === TEST DE POSITION LEAFLET ===
+map.on("zoomend", () => {
+  const testLat = 50.7043617;
+  const testLon = 2.4793572;
+  const p = map.latLngToLayerPoint([testLat, testLon]);
+  console.log("Zoom", map.getZoom(), "→ Pixel position:", p);
+});
+    
 </script>
 
 </body>
