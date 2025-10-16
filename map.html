@@ -251,8 +251,12 @@
   50%  { box-shadow: 0 0 15px rgba(255,255,255,0.9), 0 0 30px rgba(255,255,255,0.4); }
   100% { box-shadow: 0 0 0px rgba(255,255,255,0.6); }
 }
-
-  .icon-halo-appareil {
+.icon-halo {
+  width: 36px;  
+  height: 36px;
+  filter: drop-shadow(0 0 2px white) drop-shadow(0 0 4px white);
+}
+.icon-halo-appareil {
   width: 24px;  
   height: 24px;
   filter: drop-shadow(0 0 4px white) drop-shadow(0 0 8px white);
@@ -742,9 +746,9 @@ const iconAcces = L.icon({
   iconUrl: "ico/acces.png",
   iconSize: [36, 36],
   iconAnchor: [18, 28],   
-  popupAnchor: [0, -10],
+  popupAnchor: [0, -10]
 });
-
+ 
 fetch("postes.json")
   .then(r => r.json())
   .then(data => {
