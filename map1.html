@@ -752,8 +752,9 @@ const iconAppareil= L.divIcon({className:"icon-circle appareil",html:"⚡"});
 const iconAcces = L.icon({
   iconUrl: "ico/acces.png",
   iconSize: [36, 36],
-  iconAnchor: [18, 18],  
-  popupAnchor: [0, -18]
+  iconAnchor: [18, 28],   // ancrage plus bas, presque en bas du disque
+  popupAnchor: [0, -10],
+  className: "icon-glow"
 });
 
 fetch("postes.json")
