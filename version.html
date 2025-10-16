@@ -212,106 +212,117 @@
   <div class="container">
     <p class="intro">Ce journal présente les <strong>dernières mises à jour détaillées</strong>. Les périodes plus anciennes sont <strong>regroupées</strong> et repliables pour garder une lecture fluide.</p>
 
-    <!-- ===== Dernières mises à jour ===== -->
+
     <div class="section-title">🆕 Dernières mises à jour</div>
 
     <article class="card">
   <header class="version">
-    <span class="tag">v1.10.7</span>
-    <span class="date">15/10/2025 22:17</span>
+    <span class="tag">v1.10.8</span>
+    <span class="date">16/10/2025 21:42</span>
   </header>
-  <ul>
-    <li>🔔 Les notifications font leur entrée — visibles, utiles, mais discrètes.</li>
-  </ul>
-</article>
-
-    <article class="card">
-  <header class="version">
-    <span class="tag">v1.10.6</span>
-    <span class="date">12/10/2025 23:23</span>
-  </header>
-
-  <ul>
-    <li>🚆 <strong>Ajout des lignes SNCF régionales par type</strong> — affichage dynamique des tracés selon la catégorie de ligne.</li>
-    <li>🛰️ <strong>Intégration Imajnet</strong> — possibilité de visualiser directement les lignes sur Imajnet pour un rendu terrain précis.</li>
-  </ul>
-</article>
-
-<article class="card">
-  <header class="version">
-    <span class="tag">v1.10.5</span>
-    <span class="date">10/10/2025 20:51</span>
-  </header>
-
+  <p><em>Un petit décalage discret, mais assez têtu pour me faire tourner en rond quelques jours !</em> 🔧</p>
   <p>
-    ⚙️ <strong>Optimisation en profondeur</strong><br>
-    Visuellement, rien ne change… mais en coulisse, tout a bougé.  
-    Le code est plus léger, plus fluide, et le chargement gagne même quelques millisecondes 😉 😀  
-    Environ <strong>4 heures d’optimisation</strong> pour un site plus stable et prêt pour la suite.
+    Le zoom intempestif (corrigé en v1.10.4) n’était pas le seul souci visuel : un léger décalage des marqueurs selon le niveau de zoom persistait.  
+    Après plusieurs jours et des dizaines d’essais, tout reste enfin parfaitement calé — peu importe le niveau de zoom.
   </p>
-
-  <ul style="margin-top: 10px;">
-    <li>
-      🛰️ <strong>API Open Data SNCF</strong> — 
-      Les données Open Source SNCF arrivent désormais <strong>à la demande (via l'API) </strong>, pile quand il faut.  
-      <em>8× plus rapide, 10× moins de data et un CPU enfin au repos 😴</em>
-    </li>
-
-    <li>
-      📄 <strong>Index</strong> — Un petit régime pour la page d’accueil 🍃  
-      Moins lourde, plus nerveuse et plus agréable à charger.  
-      <em>4 % de données en moins et +300 ms gagnés au démarrage.</em>
-    </li>
-
-    <li>
-      🗺️ <strong>Carte principale</strong> — La carte s’est offert un vrai lifting ✨  
-      Plus légère, plus fluide et d’une réactivité bluffante.  
-      <em>11 % de données économisées et 400 ms de gain au chargement initial.</em>
-    </li>
-  </ul>
 </article>
+
+  
+    <div class="section-title">📅 Historique regroupé</div>
+
+    <details open>
+  <summary>Octobre 2025</summary>
+  <div class="content">
 
     <article class="card">
-  <header class="version">
-    <span class="tag">v1.10.4</span>
-    <span class="date">08/10/2025 07:21</span>
-  </header>
-  <ul>
-    <li>🐛 <strong>Correction d’un bug de zoom intempestif</strong> : lorsqu’on cliquait sur un cluster d’appareils ayant les mêmes coordonnées, la carte zoomait automatiquement (jusqu’à z21) avant de refermer le groupe.<br>
-    ➜ Désormais, à partir de <strong>z19</strong>, le dépliage est immédiat, sans saut ni fermeture automatique.</li>
-
-    <li>🔧 <strong>Ajustements mineurs des paramètres du cluster</strong> (<code>disableClusteringAtZoom</code> et <code>spiderfyOnEveryZoom</code>) pour un comportement plus fluide et cohérent avec les accès routiers.</li>
-  </ul>
-</article>
-
+      <header class="version">
+        <span class="tag">v1.10.7</span>
+        <span class="date">15/10/2025 22:17</span>
+      </header>
+      <ul>
+        <li>🔔 Les notifications font leur entrée — visibles, utiles, mais discrètes.</li>
+      </ul>
+    </article>
 
     <article class="card">
-  <header class="version">
-    <span class="tag">v1.10.3</span>
-    <span class="date">05/10/2025 23:58</span>
-  </header>
-  <ul>
-    <li>🔒 Mise à jour technique et amélioration des bonnes pratiques de sécurité.</li>
-    <li>📥 Enrichissement des bases de données → ajout et mise à jour de plusieurs entrées postes et appareils.</li>
-  </ul>
-</article>
+      <header class="version">
+        <span class="tag">v1.10.6</span>
+        <span class="date">12/10/2025 23:23</span>
+      </header>
+      <ul>
+        <li>🚆 <strong>Ajout des lignes SNCF régionales par type</strong> — affichage dynamique des tracés selon la catégorie de ligne.</li>
+        <li>🛰️ <strong>Intégration Imajnet</strong> — possibilité de visualiser directement les lignes sur Imajnet pour un rendu terrain précis.</li>
+      </ul>
+    </article>
 
+    <article class="card">
+      <header class="version">
+        <span class="tag">v1.10.5</span>
+        <span class="date">10/10/2025 20:51</span>
+      </header>
+      <p>
+        ⚙️ <strong>Optimisation en profondeur</strong><br>
+        Visuellement, rien ne change… mais en coulisse, tout a bougé.  
+        Le code est plus léger, plus fluide, et le chargement gagne même quelques millisecondes 😉 😀  
+        Environ <strong>4 heures d’optimisation</strong> pour un site plus stable et prêt pour la suite.
+      </p>
+      <ul style="margin-top: 10px;">
+        <li>
+          🛰️ <strong>API Open Data SNCF</strong> — 
+          Les données Open Source SNCF arrivent désormais <strong>à la demande (via l'API)</strong>, pile quand il faut.  
+          <em>8× plus rapide, 10× moins de data et un CPU enfin au repos 😴</em>
+        </li>
+        <li>
+          📄 <strong>Index</strong> — Un petit régime pour la page d’accueil 🍃  
+          Moins lourde, plus nerveuse et plus agréable à charger.  
+          <em>4 % de données en moins et +300 ms gagnés au démarrage.</em>
+        </li>
+        <li>
+          🗺️ <strong>Carte principale</strong> — La carte s’est offert un vrai lifting ✨  
+          Plus légère, plus fluide et d’une réactivité bluffante.  
+          <em>11 % de données économisées et 400 ms de gain au chargement initial.</em>
+        </li>
+      </ul>
+    </article>
 
-<article class="card">
-  <header class="version">
-    <span class="tag">v1.10.2</span>
-    <span class="date">04/10/2025 18:27</span>
-  </header>
-  <ul>
-    <li>
-      🔐 <strong>Sécurisation renforcée → les informations sensibles (codes portails, alarmes) sont accessibles uniquement après authentification forte SNCF.</strong><br>
-      ℹ️ Il vous suffit de vous identifier avec votre compte SNCF (CP / mot de passe de session) pour afficher ces informations.
-    </li>
-    <li>
-      📥 <strong>Enrichissement des données → ajout d’une dizaine d’entrées dans les bases postes et appareils.</strong>
-    </li>
-  </ul>
-</article>
+    <article class="card">
+      <header class="version">
+        <span class="tag">v1.10.4</span>
+        <span class="date">08/10/2025 07:21</span>
+      </header>
+      <ul>
+        <li>🐛 <strong>Correction d’un bug de zoom intempestif</strong> : lorsqu’on cliquait sur un cluster d’appareils ayant les mêmes coordonnées, la carte zoomait automatiquement (jusqu’à z21) avant de refermer le groupe.<br>
+        ➜ Désormais, à partir de <strong>z19</strong>, le dépliage est immédiat, sans saut ni fermeture automatique.</li>
+        <li>🔧 <strong>Ajustements mineurs des paramètres du cluster</strong> (<code>disableClusteringAtZoom</code> et <code>spiderfyOnEveryZoom</code>) pour un comportement plus fluide et cohérent avec les accès routiers.</li>
+      </ul>
+    </article>
+
+    <article class="card">
+      <header class="version">
+        <span class="tag">v1.10.3</span>
+        <span class="date">05/10/2025 23:58</span>
+      </header>
+      <ul>
+        <li>🔒 Mise à jour technique et amélioration des bonnes pratiques de sécurité.</li>
+        <li>📥 Enrichissement des bases de données → ajout et mise à jour de plusieurs entrées postes et appareils.</li>
+      </ul>
+    </article>
+
+    <article class="card">
+      <header class="version">
+        <span class="tag">v1.10.2</span>
+        <span class="date">04/10/2025 18:27</span>
+      </header>
+      <ul>
+        <li>
+          🔐 <strong>Sécurisation renforcée</strong> → les informations sensibles (codes portails, alarmes) sont accessibles uniquement après authentification forte SNCF.<br>
+          ℹ️ Il suffit de s’identifier avec un compte SNCF (CP / mot de passe de session) pour afficher ces informations.
+        </li>
+        <li>
+          📥 <strong>Enrichissement des données</strong> → ajout d’une dizaine d’entrées dans les bases postes et appareils.
+        </li>
+      </ul>
+    </article>
 
     <article class="card">
       <header class="version">
@@ -321,11 +332,10 @@
       <ul>
         <li>✏️ <strong>Ajout de la fonction de modification d’un appareil</strong><br>
           Les informations d’un appareil peuvent désormais être éditées directement.  
-          <em>(Après quelques galères et quelques heures..., la modif’ d’appareil fonctionne enfin 🎉💪) </em>
+          <em>(Après quelques galères et quelques heures..., la modif’ d’appareil fonctionne enfin 🎉💪)</em>
         </li>
       </ul>
     </article>
-
 
     <article class="card">
       <header class="version">
@@ -334,7 +344,8 @@
       </header>
       <ul>
         <li>🍔 <strong>Création d’un menu burger “Filtres” sur la carte</strong><br>
-          Permet de choisir dynamiquement quels éléments afficher <em>(appareils, accès, postes, passages à niveau)</em>. Pensé pour améliorer l’ergonomie surtout sur <strong>mobile</strong>.
+          Permet de choisir dynamiquement quels éléments afficher <em>(appareils, accès, postes, passages à niveau)</em>.  
+          Pensé pour améliorer l’ergonomie surtout sur <strong>mobile</strong>.
         </li>
         <li>🌐 <strong>Intégration de la source Open Data SNCF – Passages à niveau</strong><br>
           Nouveaux points ajoutés sur la carte pour enrichir la vision terrain <em>(désactivé par défaut)</em>.
@@ -342,9 +353,8 @@
       </ul>
     </article>
 
-
-    <div class="section-title">📅 Historique regroupé</div>
-
+  </div>
+</details>
  
     <details>
       <summary>Septembre 2025</summary>
