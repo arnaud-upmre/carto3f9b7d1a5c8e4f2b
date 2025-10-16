@@ -727,17 +727,16 @@ setTimeout(() => {
   }
 });
 
-
 map.addLayer(postesLayer);
 map.addLayer(appareilsLayer);
 map.addLayer(accesLayer);
 
-
 const iconPoste = L.divIcon({
   html: `<img src="ico/poste.png" class="icon-halo">`,
-  className: "", 
-  iconAnchor: [24, 48],
-  popupAnchor: [0, -48]
+  className: "",
+  iconSize: [36, 36],
+  iconAnchor: [18, 36],   
+  popupAnchor: [0, -10]
 });
 
 const iconAppareil= L.divIcon({className:"icon-circle appareil",html:"⚡"});
