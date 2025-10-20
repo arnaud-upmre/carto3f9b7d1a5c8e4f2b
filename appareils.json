@@ -4984,5 +4984,16 @@
     "longitude": 3.018119,
     "description": "",
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.45427017916544,3.018028741104198;uid=cdcfcffa-dbf4-46f0-aceb-a29ba0619451_840;"
+  },
+  {
+    "nom": "Mercatel",
+    "type": "SP",
+    "SAT": "SAT3",
+    "accès": "",
+    "appareil": "I189 24",
+    "latitude": 50.268985,
+    "longitude": 2.763932,
+    "description": "",
+    "imajnet": ""
   }
 ]
