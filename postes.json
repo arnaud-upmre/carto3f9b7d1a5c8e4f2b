@@ -2813,17 +2813,19 @@
     "type": "SP",
     "SAT": "SAT3",
     "accès": "",
-    "latitude": 50.274671,
-    "longitude": 2.764318,
-    "description": "Accès via le C2MI",
+    "latitude": 50.28057,
+    "longitude": 2.77277,
+    "description": "",
     "rss": "A",
     "contact": "",
     "portail": "",
     "lignes": "Raccordement d'ARRAS-SUD",
     "numero_ligne": "226306",
-    "pk": "8,055",
+    "pk": "",
     "poste_latitude": "50.271636",
-    "poste_longitude": "2.763497"
+    "poste_longitude": "2.763497",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.271352746620344,2.763685697192217;uid=ede4b7f3-0f7b-4d0a-abab-ccd7517c9f60_1216;"
+    
   },
   {
     "nom": "Moulin",
