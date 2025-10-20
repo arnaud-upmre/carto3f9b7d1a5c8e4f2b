@@ -2840,7 +2840,8 @@
     "numero_ligne": "226306",
     "pk": "",
     "poste_latitude": "50.25198",
-    "poste_longitude": "2.76505"
+    "poste_longitude": "2.76505",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.252214634521806,2.7652001681483647;uid=6932045e-e131-437a-8eb5-2e5805feabd6_1401;"
   },
   {
     "nom": "Mercatel",
