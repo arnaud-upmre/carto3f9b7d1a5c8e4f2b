@@ -5278,7 +5278,8 @@
     "numero_ligne": "",
     "pk": "",
     "poste_latitude": "",
-    "poste_longitude": ""
+    "poste_longitude": "",
+    "special": true
   },
   {
     "nom": "Formation Arras",
