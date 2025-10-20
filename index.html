@@ -1182,7 +1182,7 @@ if (lieu.special === true) {
   const blocs = [];
 
   blocs.push(formatDescription(lieu.description));
-  blocs.push(formatPortail(lieu.portail));
+  blocs.push(formatPortailDisplay(lieu.portail, lieu.secure));
 
   if (blocs.length > 0) {
     html += `<hr class="separator" />` +
