@@ -2809,6 +2809,23 @@
     "poste_longitude": "2.77582"
   },
   {
+    "nom": "Mercatel",
+    "type": "SP",
+    "SAT": "SAT3",
+    "accès": "",
+    "latitude": 50.274671,
+    "longitude": 2.764318,
+    "description": "Accès via le C2MI",
+    "rss": "A",
+    "contact": "",
+    "portail": "",
+    "lignes": "Raccordement d'ARRAS-SUD",
+    "numero_ligne": "226306",
+    "pk": "8,055",
+    "poste_latitude": "50.271636",
+    "poste_longitude": "2.763497"
+  },
+  {
     "nom": "Moulin",
     "type": "S",
     "SAT": "",
