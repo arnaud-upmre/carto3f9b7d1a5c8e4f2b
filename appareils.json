@@ -5017,5 +5017,27 @@
     "longitude": 2.763637,
     "description": "",
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.27248244326403,2.763609078611238;uid=ede4b7f3-0f7b-4d0a-abab-ccd7517c9f60_1175;"
+  },
+  {
+    "nom": "Mercatel",
+    "type": "SP",
+    "SAT": "SAT2",
+    "accès": "",
+    "appareil": "I39",
+    "latitude": 50.251221,
+    "longitude": 2.765119,
+    "description": "",
+    "imajnet": ""
+  },
+  {
+    "nom": "Mercatel",
+    "type": "SP",
+    "SAT": "SAT2",
+    "accès": "",
+    "appareil": "I41",
+    "latitude": 50.251337,
+    "longitude": 2.765131,
+    "description": "",
+    "imajnet": ""
   }
 ]
