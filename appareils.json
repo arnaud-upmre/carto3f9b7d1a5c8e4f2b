@@ -4995,5 +4995,16 @@
     "longitude": 2.763582,
     "description": "",
     "imajnet": ""
+  },
+  {
+    "nom": "Mercatel",
+    "type": "SP",
+    "SAT": "SAT3",
+    "accès": "",
+    "appareil": "189 24",
+    "latitude": 50.268985,
+    "longitude": 2.763932,
+    "description": "",
+    "imajnet": ""
   }
 ]
