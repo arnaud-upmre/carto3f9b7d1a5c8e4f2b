@@ -4990,10 +4990,10 @@
     "type": "SP",
     "SAT": "SAT3",
     "accès": "",
-    "appareil": "I189 24",
+    "appareil": "189 24",
     "latitude": 50.268985,
     "longitude": 2.763932,
     "description": "",
-    "imajnet": ""
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.26890849736659,2.7638952488043564;uid=886f4a18-5d4a-4d61-b080-1b3ea804efff_2503;"
   }
 ]
