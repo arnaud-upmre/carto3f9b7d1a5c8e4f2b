@@ -1556,13 +1556,10 @@ function showAppareil(app) {
   suggestionsEl.innerHTML = "";
   result.style.display = "block";
 
-  let html = `<h2>
-    ⚡️ <span id="editable-appareil">${app.appareil}</span>
-(<span id="editable-nomposte">
-${[app.nom, app.type].filter(Boolean).map(s => s.trim()).join(' ')}${app.SAT ? '/' + app.SAT.trim() : ''}
-</span>)
-    <a href="#" id="edit-toggle-appareil">[modifier]</a>
-  </h2>`;
+let html = `<h2>
+  ⚡️<span id="editable-appareil">${app.appareil}</span> (<span id="editable-nomposte">${[app.nom, app.type].filter(v => v && v.trim() !== '').map(s => s.trim()).join(' ')}${app.SAT ? '/' + app.SAT.trim() : ''}</span>)
+  <a href="#" id="edit-toggle-appareil">[modifier]</a>
+</h2>`;
 
   html += `
  <div class="rep-block rep-appareil">
