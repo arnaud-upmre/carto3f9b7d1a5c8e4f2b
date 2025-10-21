@@ -5061,5 +5061,38 @@
     "longitude": 2.7664,
     "description": "",
     "imajnet": ""
+  },
+  {
+    "nom": "Le Quesnoy",
+    "type": "SSP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "IL1",
+    "latitude": 50.250747,
+    "longitude": 3.645701,
+    "description": "",
+    "imajnet": ""
+  },
+  {
+    "nom": "Le Quesnoy",
+    "type": "SSP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "IMP",
+    "latitude": 50.250767,
+    "longitude": 3.645664,
+    "description": "",
+    "imajnet": ""
+  },
+  {
+    "nom": "Le Quesnoy",
+    "type": "SSP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "IL2",
+    "latitude": 50.250777,
+    "longitude": 3.645631,
+    "description": "",
+    "imajnet": ""
   }
 ]
