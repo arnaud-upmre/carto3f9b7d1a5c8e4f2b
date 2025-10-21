@@ -5094,5 +5094,27 @@
     "longitude": 3.645631,
     "description": "",
     "imajnet": ""
+  },
+  {
+    "nom": "Le Quesnoy",
+    "type": "SSP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT Sel4 Ssr Maing - Le Quesnoy V2",
+    "latitude": 50.25076,
+    "longitude": 3.6456,
+    "description": "PA",
+    "imajnet": ""
+  },
+  {
+    "nom": "Le Quesnoy",
+    "type": "SSP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT Sel7 - Ssr Le Quesnoy - Berlaimont V1",
+    "latitude": 50.25073,
+    "longitude": 3.6456,
+    "description": "PA",
+    "imajnet": ""
   }
 ]
