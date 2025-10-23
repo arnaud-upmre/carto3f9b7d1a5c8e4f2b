@@ -5463,5 +5463,24 @@
     "poste_latitude": "49.888155",
     "poste_longitude": "2.300535",
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.88818681875912,2.300868375300649;uid=849d805c-d2bd-4352-8b63-3c20e112f8be_2017;"
+   },
+ {
+    "nom": "Essigny le Petit",
+    "type": "SS",
+    "SAT": "",
+    "accès": "",
+    "latitude": "49.897676",
+    "longitude": "3.366197",
+    "description": "",
+    "rss": "B",
+    "contact": "",
+    "portail": "Clé 121",
+    "secure": "",
+    "lignes": "CREIL à JEUMONT",
+    "numero_ligne": 242000,
+    "pk": "162,230",
+    "poste_latitude": "49.897510",
+    "poste_longitude": "3.366077",
+    "imajnet": ""
    }
 ]
