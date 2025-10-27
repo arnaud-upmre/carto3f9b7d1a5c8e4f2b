@@ -872,17 +872,46 @@ fetch("appareils.json")
 
       let appareilIcon;
       const ref = (item.appareil || "").toUpperCase();
-
+      
 if (ref.startsWith("DU")) {
-  appareilIcon = L.divIcon({ html:`<img src="ico/stop.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,38], popupAnchor:[0,-20] });
+  appareilIcon = L.divIcon({
+    html:`<img src="ico/stop.png" class="icon-halo-appareil">`,
+    className:"",
+    iconAnchor:[12,28],
+    popupAnchor:[0,-18]
+  });
 } else if (ref.startsWith("I") || ref.startsWith("SI") || ref.startsWith("D")) {
-  appareilIcon = L.divIcon({ html:`<img src="ico/int.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,38], popupAnchor:[0,-20] });
+  appareilIcon = L.divIcon({
+    html:`<img src="ico/int.png" class="icon-halo-appareil">`,
+    className:"",
+    iconAnchor:[12,28],
+    popupAnchor:[0,-18]
+  });
 } else if (ref.startsWith("TT") || ref.startsWith("TSA") || ref.startsWith("TC") || ref.startsWith("TRA")) {
-  appareilIcon = L.divIcon({ html:`<img src="ico/TT.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,38], popupAnchor:[0,-20] });
-} else if (/^[0-9]/.test(ref) || ref.startsWith("S") || ref.startsWith("ST") || ref.startsWith("F") || ref.startsWith("P") || ref.startsWith("FB") || ref.startsWith("B")) {
-  appareilIcon = L.divIcon({ html:`<img src="ico/sect.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,38], popupAnchor:[0,-20] });
+  appareilIcon = L.divIcon({
+    html:`<img src="ico/TT.png" class="icon-halo-appareil">`,
+    className:"",
+    iconAnchor:[12,28],
+    popupAnchor:[0,-18]
+  });
+} else if (
+  /^[0-9]/.test(ref) ||
+  ref.startsWith("S") || ref.startsWith("ST") || ref.startsWith("F") ||
+  ref.startsWith("P") || ref.startsWith("FB") || ref.startsWith("B")
+) {
+  appareilIcon = L.divIcon({
+    html:`<img src="ico/sect.png" class="icon-halo-appareil">`,
+    className:"",
+    iconAnchor:[12,28],
+    popupAnchor:[0,-18]
+  });
 } else if (ref.startsWith("ALIM")) {
-  appareilIcon = L.divIcon({ html:`<img src="ico/alim.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,38], popupAnchor:[0,-20] });
+  appareilIcon = L.divIcon({
+    html:`<img src="ico/alim.png" class="icon-halo-appareil">`,
+    className:"",
+    iconAnchor:[12,28],
+    popupAnchor:[0,-18]
+  });
 } else {
   appareilIcon = iconAppareil;
 }
