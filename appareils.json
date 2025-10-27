@@ -5127,5 +5127,38 @@
     "longitude": 3.2034095,
     "description": "",
     "imajnet": ""
+  },
+  {
+    "nom": "Blecourt",
+    "type": "S",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT Sin Blecourt",
+    "latitude": 50.2196036,
+    "longitude": 3.2035178,
+    "description": "",
+    "imajnet": ""
+  },
+  {
+    "nom": "Blecourt",
+    "type": "S",
+    "SAT": "",
+    "accès": "",
+    "appareil": "IP1",
+    "latitude": 50.219015,
+    "longitude": 3.203425,
+    "description": "",
+    "imajnet": ""
+  },
+  {
+    "nom": "Blecourt",
+    "type": "S",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT Cambrai Blecourt",
+    "latitude": 50.218698,
+    "longitude": 3.203166,
+    "description": "",
+    "imajnet": ""
   }
 ]
