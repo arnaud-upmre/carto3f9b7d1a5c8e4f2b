@@ -5116,5 +5116,16 @@
     "longitude": 3.64567,
     "description": "PA",
     "imajnet": ""
+  },
+  {
+    "nom": "Blecourt",
+    "type": "S",
+    "SAT": "",
+    "accès": "",
+    "appareil": "SM1",
+    "latitude": 50.2191535,
+    "longitude": 3.2034095,
+    "description": "",
+    "imajnet": ""
   }
 ]
