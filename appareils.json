@@ -5123,10 +5123,21 @@
     "SAT": "",
     "accès": "",
     "appareil": "SM1",
-    "latitude": 50.2191535,
-    "longitude": 3.2034095,
+    "latitude": 50.2192,
+    "longitude": 3.20361,
     "description": "",
-    "imajnet": ""
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.219063481110275,3.2034484735244453;uid=2c7d00f9-bae0-4a47-bc13-19ef4d6d3b44_246;"
+  },
+  {
+    "nom": "Blecourt",
+    "type": "S",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TSA",
+    "latitude": 50.21923,
+    "longitude": 3.20364,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.219159153938385,3.203525017925239;uid=2c7d00f9-bae0-4a47-bc13-19ef4d6d3b44_242;"
   },
   {
     "nom": "Blecourt",
@@ -5134,10 +5145,10 @@
     "SAT": "",
     "accès": "",
     "appareil": "TT Sin Blecourt",
-    "latitude": 50.2196036,
-    "longitude": 3.2035178,
+    "latitude": 50.21949,
+    "longitude": 3.20384,
     "description": "",
-    "imajnet": ""
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.21937504108667,3.2036974522160553;uid=2c7d00f9-bae0-4a47-bc13-19ef4d6d3b44_233;"
   },
   {
     "nom": "Blecourt",
@@ -5148,7 +5159,7 @@
     "latitude": 50.219015,
     "longitude": 3.203425,
     "description": "",
-    "imajnet": ""
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.2189153174494,3.203329823111707;uid=2c7d00f9-bae0-4a47-bc13-19ef4d6d3b44_252;"
   },
   {
     "nom": "Blecourt",
@@ -5156,9 +5167,9 @@
     "SAT": "",
     "accès": "",
     "appareil": "TT Cambrai Blecourt",
-    "latitude": 50.218698,
-    "longitude": 3.203166,
+    "latitude": 50.2187,
+    "longitude": 3.2032,
     "description": "",
-    "imajnet": ""
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.218615654432256,3.203090080624642;uid=2c7d00f9-bae0-4a47-bc13-19ef4d6d3b44_264;"
   }
 ]
