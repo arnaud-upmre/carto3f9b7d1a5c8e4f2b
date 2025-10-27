@@ -5482,5 +5482,24 @@
     "poste_latitude": "49.897510",
     "poste_longitude": "3.366077",
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.89749007564915,3.366309669367649;uid=ca3594a6-0278-41fb-a419-4743d9f7416f_2140;"
+   },
+ {
+    "nom": "Blecourt",
+    "type": "S",
+    "SAT": "",
+    "accès": "",
+    "latitude": "50.223358",
+    "longitude": "3.196657",
+    "description": "",
+    "rss": "B",
+    "contact": "",
+    "portail": "",
+    "secure": "",
+    "lignes": "SAINT-JUST à DOUAI",
+    "numero_ligne": "259000",
+    "pk": "200,525",
+    "poste_latitude": "50.219083",
+    "poste_longitude": "3.203522",
+    "imajnet": ""
    }
 ]
