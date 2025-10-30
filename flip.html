@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>test arnaud</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<style>
+  body{
+    font-family:Inter,system-ui,Arial;
+    margin:0;
+    background:#0b1220;
+    color:#e6eef6;
+    display:flex;
+    height:100vh;
+  }
+  .conteneur{
+    display:flex;
+    gap:12px;
+    padding:12px;
+    width:100%;
+  }
+  .zone-schema{
+    flex:1;
+    background:#071024;
+    border-radius:8px;
+    padding:12px;
+    position:relative;
+  }
+  .zone-controle{
+    width:340px;
+    background:#081423;
+    border-radius:8px;
+    padding:12px;
+    overflow:auto;
+  }
+  svg{
+    width:100%;
+    height:80vh;
+  }
+  .bouton{
+    padding:8px 10px;
+    border-radius:6px;
+    border:0;
+    background:#ef7a1a;
+    color:#071023;
+    cursor:pointer;
+  }
+  .journal{/* console texte */
+    font-size:13px;
+    color:#a9b6c6;
+    height:60vh;
+    overflow:auto;
+  }
+
+  /* Fils */
+  .fil-alimente{stroke:#ffd166;stroke-width:3}
+  .fil-coupe{stroke:#3a556b;stroke-width:2}
+
+  /* Contact */
+  .contact-ferme{fill:#ffd166}
+  .contact-ouvert{fill:#183040}
+
+  /* Lampe */
+  .lampe-allumee{
+    fill:#ffd166;
+    filter:drop-shadow(0 0 6px rgba(255,209,102,0.6))
+  }
+  .lampe-eteinte{fill:#24343f}
+</style>
+</head>
+
+<body>
+<div class="conteneur">
+
+  <!-- Zone de visualisation -->
+  <div class="zone-schema">
+    <svg id="schema" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+
+      <!-- Alimentation -->
+      <text x="20" y="30" fill="#bcd" font-size="14">+12V</text>
+      <line id="fil_12v" x1="60" y1="30" x2="220" y2="30" class="fil-coupe" />
+
+      <!-- Bouton start -->
+      <g id="svg_BP_START" transform="translate(220,12)" cursor="pointer">
+        <rect x="0" y="0" width="80" height="36" rx="6" fill="#0f2b3a" stroke="#2b4657"/>
+        <text x="40" y="22" fill="#e6eef6" text-anchor="middle" font-size="12">BP START</text>
+      </g>
+
+      <!-- Fil bouton -> bobine -->
+      <line id="fil_start" x1="300" y1="30" x2="420" y2="30" class="fil-coupe" />
+
+      <!-- Bobine relais K1 -->
+      <g id="svg_K1_bobine" transform="translate(420,6)">
+        <rect x="0" y="0" width="40" height="40" rx="6" fill="#0c2633" stroke="#173844"/>
+        <text x="20" y="24" fill="#bcd" font-size="11" text-anchor="middle">BOBINE</text>
+      </g>
+
+      <!-- Fil bobine -> contact -->
+      <line id="fil_bobine" x1="460" y1="30" x2="620" y2="30" class="fil-coupe" />
+
+      <!-- Contact du relais K1 (NO) -->
+      <g id="svg_K1_contact" transform="translate(620,10)">
+        <rect x="0" y="0" width="60" height="20" rx="4" fill="#0b2630" stroke="#153344"/>
+        <circle id="k1_contact_bille" cx="12" cy="10" r="6" class="contact-ouvert"/>
+        <rect x="26" y="6" width="28" height="8" rx="2" fill="#1f3b49"/>
+      </g>
+
+      <!-- Fil contact -> lampe -->
+      <line id="fil_lampe" x1="680" y1="20" x2="760" y2="20" class="fil-coupe" />
+
+      <!-- Lampe -->
+      <g id="svg_LAMPE" transform="translate(740,2)">
+        <circle id="lampe_ampoule" cx="0" cy="20" r="12" class="lampe-eteinte"/>
+        <text x="-30" y="55" fill="#a9b6c6" font-size="12">LAMPE</text>
+      </g>
+
+      <!-- Masse -->
+      <text x="60" y="90" fill="#bcd" font-size="13">MASSE</text>
+      <line x1="60" y1="95" x2="760" y2="95" stroke="#234" />
+    </svg>
+  </div>
+
+  <!-- Zone de commandes -->
+  <div class="zone-controle">
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <button class="bouton" id="btn_appuyer">Appuyer BP</button>
+      <button class="bouton" id="btn_panne">Panne bobine</button>
+      <button class="bouton" id="btn_reset">Réinitialiser</button>
+    </div>
+
+    <div class="journal" id="journal"></div>
+  </div>
+
+</div>
+
+<script>
+/* === État du système === */
+const etat = {
+  reseaux: { "+12V":1, "NET_START":0, "NET_LAMPE":0, "MASSE":0 },
+  composants: {
+    BP_START: { type:'bouton', appuye:false },
+    K1_bobine: { type:'bobine', alimente:false, en_bon_etat:true },
+    K1_contact: { type:'contact', ferme:false },
+    LAMPE: { type:'lampe', allume:false }
+  }
+};
+
+const $ = id => document.getElementById(id);
+const journal = $('journal');
+
+function log(msg){
+  const t = new Date().toLocaleTimeString();
+  journal.innerHTML = `<div>[${t}] ${msg}</div>` + journal.innerHTML;
+}
+
+/* === Propagation logique === */
+function propager(){
+
+  const bobineDoitColer = (etat.reseaux.NET_START === 1) && etat.composants.K1_bobine.en_bon_etat;
+
+  if (etat.composants.K1_bobine.alimente !== bobineDoitColer){
+    etat.composants.K1_bobine.alimente = bobineDoitColer;
+    log("Bobine K1 " + (bobineDoitColer ? "alimentée" : "coupée"));
+  }
+
+  const contactDoitFermer = etat.composants.K1_bobine.alimente;
+  if (etat.composants.K1_contact.ferme !== contactDoitFermer){
+    etat.composants.K1_contact.ferme = contactDoitFermer;
+    log("Contact K1 " + (contactDoitFermer ? "fermé" : "ouvert"));
+  }
+
+  etat.reseaux.NET_LAMPE = (etat.composants.K1_contact.ferme && etat.reseaux["+12V"]===1) ? 1 : 0;
+  etat.composants.LAMPE.allume = (etat.reseaux.NET_LAMPE === 1);
+
+  mettreAJourAffichage();
+}
+
+/* === Animation SVG === */
+function mettreFil(id, alimente){
+  const el = $(id);
+  el.classList.toggle('fil-alimente', !!alimente);
+  el.classList.toggle('fil-coupe', !alimente);
+}
+
+function mettreAJourAffichage(){
+  mettreFil('fil_12v', true);
+  mettreFil('fil_start', etat.reseaux.NET_START===1);
+  mettreFil('fil_bobine', etat.composants.K1_bobine.alimente);
+  mettreFil('fil_lampe', etat.reseaux.NET_LAMPE===1);
+
+  $('k1_contact_bille').classList.toggle('contact-ferme', etat.composants.K1_contact.ferme);
+  $('k1_contact_bille').classList.toggle('contact-ouvert', !etat.composants.K1_contact.ferme);
+
+  $('lampe_ampoule').classList.toggle('lampe-allumee', etat.composants.LAMPE.allume);
+  $('lampe_ampoule').classList.toggle('lampe-eteinte', !etat.composants.LAMPE.allume);
+}
+
+/* === Boutons === */
+$('btn_appuyer').onclick = ()=>{
+  etat.composants.BP_START.appuye = true;
+  etat.reseaux.NET_START = 1;
+  log("BP START appuyé");
+  propager();
+
+  // relâcher automatiquement
+  setTimeout(()=>{
+    etat.composants.BP_START.appuye = false;
+    etat.reseaux.NET_START = 0;
+    log("BP START relâché");
+    propager();
+  },700);
+};
+
+$('btn_panne').onclick = ()=>{
+  etat.composants.K1_bobine.en_bon_etat = false;
+  log("PANNE : bobine K1 coupée");
+  propager();
+};
+
+$('btn_reset').onclick = ()=>{
+  etat.composants.K1_bobine.en_bon_etat = true;
+  etat.composants.K1_bobine.alimente = false;
+  etat.composants.K1_contact.ferme = false;
+  etat.reseaux.NET_START = 0;
+  etat.reseaux.NET_LAMPE = 0;
+  etat.composants.LAMPE.allume = false;
+  log("Réinitialisation du système");
+  propager();
+};
+
+/* Click direct sur le schéma */
+$('svg_BP_START').onclick = ()=> $('btn_appuyer').click();
+
+/* Init */
+propager();
+log("Simulateur chargé ✅");
+</script>
+
+</body>
+</html>
