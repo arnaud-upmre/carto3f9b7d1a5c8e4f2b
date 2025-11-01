@@ -5211,7 +5211,7 @@
     "SAT": "",
     "accès": "",
     "appareil": "TSA",
-    "latitude": 50.61743,
+    "latitude": 50.61741,
     "longitude": 3.26325,
     "description": "",
     "imajnet": ""
@@ -5222,7 +5222,7 @@
     "SAT": "",
     "accès": "",
     "appareil": "IMP Fives",
-    "latitude": 50.61742,
+    "latitude": 50.61741,
     "longitude": 3.26332,
     "description": "",
     "imajnet": ""
@@ -5233,7 +5233,7 @@
     "SAT": "",
     "accès": "",
     "appareil": "IL1",
-    "latitude": 50.61742,
+    "latitude": 50.61741,
     "longitude": 3.26339,
     "description": "",
     "imajnet": ""
@@ -5244,7 +5244,7 @@
     "SAT": "",
     "accès": "",
     "appareil": "TC1",
-    "latitude": 50.61742,
+    "latitude": 50.61741,
     "longitude": 3.26339,
     "description": "",
     "imajnet": ""
@@ -5255,7 +5255,7 @@
     "SAT": "",
     "accès": "",
     "appareil": "IMP Froye.",
-    "latitude": 50.61742,
+    "latitude": 50.61741,
     "longitude": 3.26345,
     "description": "",
     "imajnet": ""
@@ -5266,8 +5266,8 @@
     "SAT": "",
     "accès": "",
     "appareil": "TT A",
-    "latitude": 50.61742,
-    "longitude": 3.2635,
+    "latitude": 50.61741,
+    "longitude": 3.26351,
     "description": "",
     "imajnet": ""
   },
