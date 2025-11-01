@@ -442,7 +442,7 @@
     "appareil": "TT1",
     "latitude": 50.995208,
     "longitude": 2.390762,
-    "description": "🏗️ Accessible en nacelle",
+    "description": "🏗️ Accessible en nacelle<br><br> ➡️PA sur TT",
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.995181864558816,2.3909020534106884;uid=da519a1f-3850-4381-b4ad-de849f9d5996_1299;"
   },
   {
@@ -486,7 +486,7 @@
     "appareil": "TT13",
     "latitude": 50.995166,
     "longitude": 2.390830,
-    "description": "🏗️ Accessible en nacelle",
+    "description": "🏗️ Accessible en nacelle<br><br> ➡️PA sur TT",
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.99511697085506,2.3909857065348703;uid=da519a1f-3850-4381-b4ad-de849f9d5996_1296;"
   },
   {
@@ -5202,7 +5202,7 @@
     "appareil": "TT B",
     "latitude": 50.61751,
     "longitude": 3.2634,
-    "description": "",
+    "description": "➡️ PA sur TTB (TT Sel 5241)",
     "imajnet": ""
   },
   {
@@ -5268,7 +5268,7 @@
     "appareil": "TT A",
     "latitude": 50.61740,
     "longitude": 3.26351,
-    "description": "",
+    "description": "➡️ PA sur TTA (TT Sel 5242)",
     "imajnet": ""
   },
   {
