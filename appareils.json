@@ -5171,5 +5171,38 @@
     "longitude": 3.2032,
     "description": "",
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.218615654432256,3.203090080624642;uid=2c7d00f9-bae0-4a47-bc13-19ef4d6d3b44_264;"
+  },
+  {
+    "nom": "Baisieux",
+    "type": "SSP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT 5238",
+    "latitude": 50.61744,
+    "longitude": 3.26275,
+    "description": "",
+    "imajnet": ""
+  },
+  {
+    "nom": "Baisieux",
+    "type": "SSP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT 5237",
+    "latitude": 50.61752,
+    "longitude": 3.26334,
+    "description": "",
+    "imajnet": ""
+  },
+  {
+    "nom": "Baisieux",
+    "type": "SSP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT B",
+    "latitude": 50.61751,
+    "longitude": 3.2634,
+    "description": "",
+    "imajnet": ""
   }
 ]
