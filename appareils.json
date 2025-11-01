@@ -5189,7 +5189,7 @@
     "SAT": "",
     "accès": "",
     "appareil": "TT 5237",
-    "latitude": 50.61752,
+    "latitude": 50.61751,
     "longitude": 3.26334,
     "description": "",
     "imajnet": ""
@@ -5202,6 +5202,94 @@
     "appareil": "TT B",
     "latitude": 50.61751,
     "longitude": 3.2634,
+    "description": "",
+    "imajnet": ""
+  },
+  {
+    "nom": "Baisieux",
+    "type": "SSP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TSA",
+    "latitude": 50.61743,
+    "longitude": 3.26325,
+    "description": "",
+    "imajnet": ""
+  },
+  {
+    "nom": "Baisieux",
+    "type": "SSP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "IMP Fives",
+    "latitude": 50.61742,
+    "longitude": 3.26332,
+    "description": "",
+    "imajnet": ""
+  },
+  {
+    "nom": "Baisieux",
+    "type": "SSP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "IL1",
+    "latitude": 50.61742,
+    "longitude": 3.26339,
+    "description": "",
+    "imajnet": ""
+  },
+  {
+    "nom": "Baisieux",
+    "type": "SSP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TC1",
+    "latitude": 50.61742,
+    "longitude": 3.26339,
+    "description": "",
+    "imajnet": ""
+  },
+  {
+    "nom": "Baisieux",
+    "type": "SSP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "IMP Froye.",
+    "latitude": 50.61742,
+    "longitude": 3.26345,
+    "description": "",
+    "imajnet": ""
+  },
+  {
+    "nom": "Baisieux",
+    "type": "SSP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT A",
+    "latitude": 50.61742,
+    "longitude": 3.2635,
+    "description": "",
+    "imajnet": ""
+  },
+  {
+    "nom": "Baisieux",
+    "type": "SSP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "IL2",
+    "latitude": 50.61741,
+    "longitude": 3.26358,
+    "description": "",
+    "imajnet": ""
+  },
+  {
+    "nom": "Baisieux",
+    "type": "SSP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TC2",
+    "latitude": 50.61741,
+    "longitude": 3.26358,
     "description": "",
     "imajnet": ""
   }
