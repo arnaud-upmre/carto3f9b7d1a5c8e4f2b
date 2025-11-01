@@ -931,7 +931,7 @@ if (ref.startsWith("DU")) {
     : ""}
 </div>
 
-  ${item.description ? `<div style="margin-bottom:14px;">✍🏻 <strong>Information :</strong> ${item.description}</div>` : ""}
+ ${item.description ? `<div style="margin-bottom:14px;">✍🏻 <strong>Information :</strong> ${renderInformation(item.description)}</div>` : ""}
 
   <a href="index.html?id=${encodeURIComponent(
     [item.appareil, item.nom, item.type, item.SAT].filter(Boolean).join(" ").trim()
@@ -1307,7 +1307,22 @@ function renderInformation(value) {
     return `<span style="color:#777;font-style:italic;">Non renseigné</span>`;
   }
 
-  return escHtml(String(value));
+  let text = String(value);
+
+  // Remplace les <br> textuels par un tag <br> réel
+  text = text
+    .replace(/&lt;br\s*\/?&gt;/gi, "<br>")  // si déjà échappé
+    .replace(/<br\s*\/?>/gi, "<br>");      // autorise <br>
+
+  // Sécurise le reste du HTML
+  text = text.replace(/[&<>"]/g, m => ({ 
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'
+  }[m]));
+
+  // Ré-injecte nos <br> propres
+  text = text.replace(/&lt;br&gt;/g, "<br>");
+
+  return text;
 }
 
 let activeEditPopup = null; 
