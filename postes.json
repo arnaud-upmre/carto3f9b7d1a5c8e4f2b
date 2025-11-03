@@ -5513,9 +5513,6 @@
     "rss": "A",
     "contact": "Agent E : 03 28 24 81 77",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
-    "pk": "",
     "poste_latitude": "50.99362",
     "poste_longitude": "2.27986",
     "special": true
@@ -5531,11 +5528,23 @@
     "rss": "B",
     "contact": "Agent E : 03 28 55 72 28",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
-    "pk": "",
     "poste_latitude": "50.622899",
     "poste_longitude": "2.983567",
+    "special": true
+  },
+  {
+    "nom": "Agent E",
+    "type": "(Frethun)",
+    "SAT": "",
+    "accès": "",
+    "latitude": 50.931476,
+    "longitude": 1.839949,
+    "description": "",
+    "rss": "A",
+    "contact": "Agent E : 03 21 46 82 34",
+    "portail": "",
+    "poste_latitude": "50.93139",
+    "poste_longitude": "1.84125",
     "special": true
   }
 ]
