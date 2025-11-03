@@ -1155,17 +1155,25 @@ if (lieu.special === true) {
   document.getElementById("suggestions").innerHTML = "";
   result.style.display = "block";
 
-  let html = `<h2>
+let html = `<h2>
   📍 ${lieu.nom}
 </h2>`;
 
-  html += `
-  <div class="rep-block">
-    <p><span class="emoji">🛣️</span> Repérer l’accès :</p>
-    <div class="inline-links pills-3">
-<a href="${myMapsViewer(lieu.latitude, lieu.longitude)}">🛰️ Vue satellite</a>
+const latPoste = lieu.poste_latitude || lieu.latitude;
+const lonPoste = lieu.poste_longitude || lieu.longitude;
+const latAcces = lieu.latitude;
+const lonAcces = lieu.longitude;
 
-<a href="#" onclick="openStreetView(${lieu.latitude}, ${lieu.longitude}); return false;">👁️ Street View</a>
+html += `
+  <div class="rep-block">
+    <p><span class="emoji">🛣️</span> Repérer le poste & l’accès :</p>
+    <div class="inline-links pills-3">
+
+      <a href="${myMapsViewer(latPoste, lonPoste)}">🛰️ Poste</a>
+      <a href="${myMapsViewer(latAcces, lonAcces)}">🛰️ Accès</a>
+      <a href="#" onclick="openStreetView(${latAcces}, ${lonAcces}); return false;">
+        👁️ Street View
+      </a>
     </div>
   </div>`;
 
