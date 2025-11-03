@@ -5519,5 +5519,23 @@
     "poste_latitude": "50.99362",
     "poste_longitude": "2.27986",
     "special": true
+  },
+  {
+    "nom": "Delivrance",
+    "type": "Agent E",
+    "SAT": "",
+    "accès": "",
+    "latitude": 50.623062,
+    "longitude": 2.983871,
+    "description": "",
+    "rss": "B",
+    "contact": "Agent E : 03 28 55 72 28",
+    "portail": "",
+    "lignes": "",
+    "numero_ligne": "",
+    "pk": "",
+    "poste_latitude": "50.622899",
+    "poste_longitude": "2.983567",
+    "special": true
   }
 ]
