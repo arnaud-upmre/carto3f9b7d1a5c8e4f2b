@@ -5504,7 +5504,7 @@
    },
   {
     "nom": "Agent E",
-    "type": "(Dunkerque P8)",
+    "type": "Dunkerque P8",
     "SAT": "",
     "accès": "",
     "latitude": 50.99328,
@@ -5519,7 +5519,7 @@
   },
   {
     "nom": "Agent E",
-    "type": "(Delivrance)",
+    "type": "Delivrance",
     "SAT": "",
     "accès": "",
     "latitude": 50.623062,
@@ -5534,7 +5534,7 @@
   },
   {
     "nom": "Agent E",
-    "type": "(Frethun)",
+    "type": "Frethun",
     "SAT": "",
     "accès": "",
     "latitude": 50.931476,
@@ -5549,7 +5549,7 @@
   },
   {
     "nom": "Agent E",
-    "type": "(Hazebrouck)",
+    "type": "Hazebrouck",
     "SAT": "",
     "accès": "",
     "latitude": 50.724571,
@@ -5564,7 +5564,7 @@
   },
   {
     "nom": "Agent E",
-    "type": "(Hellemmes)",
+    "type": "- Hellemmes",
     "SAT": "",
     "accès": "",
     "latitude": 50.62342,
