@@ -5504,9 +5504,6 @@
    },
   {
     "nom": "Agent E (Dunkerque P8)",
-    "type": "",
-    "SAT": "",
-    "accès": "",
     "latitude": 50.99328,
     "longitude": 2.27973,
     "description": "",
@@ -5519,9 +5516,6 @@
   },
   {
     "nom": "Agent E (Delivrance)",
-    "type": "",
-    "SAT": "",
-    "accès": "",
     "latitude": 50.623062,
     "longitude": 2.983871,
     "description": "",
@@ -5534,9 +5528,6 @@
   },
   {
     "nom": "Agent E (Frethun)",
-    "type": "",
-    "SAT": "",
-    "accès": "",
     "latitude": 50.931476,
     "longitude": 1.839949,
     "description": "",
@@ -5549,9 +5540,6 @@
   },
   {
     "nom": "Agent E (Hazebrouck)",
-    "type": "",
-    "SAT": "",
-    "accès": "",
     "latitude": 50.724571,
     "longitude": 2.543193,
     "description": "",
@@ -5564,9 +5552,6 @@
   },
   {
     "nom": "Agent E (Hellemmes)",
-    "type": "",
-    "SAT": "",
-    "accès": "",
     "latitude": 50.62342,
     "longitude": 3.10786,
     "description": "Pour la manoeuvre de l'IA2 et du SIA2 de Fives SSP / SAT4",
@@ -5576,5 +5561,31 @@
     "poste_latitude": "50.62196",
     "poste_longitude": "3.10901",
     "special": true
+  },
+  {
+    "nom": "Agent E (Saint Sauveur)",
+    "latitude": 50.6144462,
+    "longitude": 3.0891581,
+    "description": "dit "Champs de Mars",
+    "rss": "A",
+    "contact": "Agent E : 03 28 55 71 08",
+    "portail": "Ouverture du portail par Agent E",
+    "poste_latitude": "50.61531",
+    "poste_longitude": "3.08938",
+    "special": true
+  },
+  {
+    "nom": "Agent E (Tourcoing)",
+    "latitude": 50.7189629,
+    "longitude": 3.1774752,
+    "description": "",
+    "rss": "A",
+    "contact": "Agent E : 03 20 11 68 07  03 20 11 68 20",
+    "portail": "",
+    "poste_latitude": "50.71817",
+    "poste_longitude": "3.17659",
+    "special": true
   }
 ]
+
+
