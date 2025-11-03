@@ -5501,5 +5501,23 @@
     "poste_latitude": "50.219083",
     "poste_longitude": "3.203522",
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.21892995692643,3.203341647960769;uid=f4f1997d-4f48-46e6-9952-278cd7e917d4_1941;"
-   }
+   },
+  {
+    "nom": "Dunkerque P8",
+    "type": "Agent E",
+    "SAT": "",
+    "accès": "",
+    "latitude": 50.99328,
+    "longitude": 2.27973,
+    "description": "",
+    "rss": "A",
+    "contact": "Agent E : 03 28 24 81 77",
+    "portail": "",
+    "lignes": "",
+    "numero_ligne": ,
+    "pk": "",
+    "poste_latitude": "50.99362",
+    "poste_longitude": "2.27986"
+    "special": true
+  }
 ]
