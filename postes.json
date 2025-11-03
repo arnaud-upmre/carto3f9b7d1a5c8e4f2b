@@ -5503,8 +5503,8 @@
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.21892995692643,3.203341647960769;uid=f4f1997d-4f48-46e6-9952-278cd7e917d4_1941;"
    },
   {
-    "nom": "Dunkerque P8",
-    "type": "Agent E",
+    "nom": "Agent E",
+    "type": "(Dunkerque P8)",
     "SAT": "",
     "accès": "",
     "latitude": 50.99328,
@@ -5518,8 +5518,8 @@
     "special": true
   },
   {
-    "nom": "Delivrance",
-    "type": "Agent E",
+    "nom": "Agent E",
+    "type": "(Delivrance)",
     "SAT": "",
     "accès": "",
     "latitude": 50.623062,
@@ -5545,6 +5545,36 @@
     "portail": "",
     "poste_latitude": "50.93139",
     "poste_longitude": "1.84125",
+    "special": true
+  },
+  {
+    "nom": "Agent E",
+    "type": "(Hazebrouck)",
+    "SAT": "",
+    "accès": "",
+    "latitude": 50.724571,
+    "longitude": 2.543193,
+    "description": "",
+    "rss": "A",
+    "contact": "Agent E : 03.28.43.77.57",
+    "portail": "",
+    "poste_latitude": "50.72414",
+    "poste_longitude": "2.54797",
+    "special": true
+  },
+  {
+    "nom": "Agent E",
+    "type": "(Hellemmes)",
+    "SAT": "",
+    "accès": "",
+    "latitude": 50.62342,
+    "longitude": 3.10786,
+    "description": "Pour la manoeuvre de l'IA2 et du SIA2 de Fives SSP / SAT4",
+    "rss": "A",
+    "contact": "Agent E : 06 17 01 92 65",
+    "portail": "",
+    "poste_latitude": "50.62196",
+    "poste_longitude": "3.10901",
     "special": true
   }
 ]
