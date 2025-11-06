@@ -5292,5 +5292,16 @@
     "longitude": 3.26358,
     "description": "",
     "imajnet": ""
+  },
+  {
+    "nom": "Achiet",
+    "type": "SST",
+    "SAT": "SAT1",
+    "accès": "",
+    "appareil": "I22",
+    "latitude": 50.127977,
+    "longitude": 2.780158,
+    "description": "",
+    "imajnet": ""
   }
 ]
