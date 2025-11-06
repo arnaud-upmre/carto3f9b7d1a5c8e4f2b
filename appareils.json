@@ -5303,5 +5303,60 @@
     "longitude": 2.780158,
     "description": "",
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.127851553689666,2.7800653784079814;uid=6369e924-e08a-4d03-bf74-4d6fa1f3e253_1008;"
+  },
+  {
+    "nom": "Arneke",
+    "type": "SSP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "IMP",
+    "latitude": 50.8312,
+    "longitude": 2.40834,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.83145367269037,2.408290209536079;uid=03d7faab-709a-4db2-8a31-5497f9f6f8df_2239;"
+  },
+  {
+    "nom": "Arneke",
+    "type": "SSP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "IL1",
+    "latitude": 50.8312,
+    "longitude": 2.40835,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.83145367269037,2.408290209536079;uid=03d7faab-709a-4db2-8a31-5497f9f6f8df_2239;"
+  },
+  {
+    "nom": "Arneke",
+    "type": "SSP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "IL2",
+    "latitude": 50.8312,
+    "longitude": 2.40835,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.83145367269037,2.408290209536079;uid=03d7faab-709a-4db2-8a31-5497f9f6f8df_2239;"
+  },
+  {
+    "nom": "Arneke",
+    "type": "SSP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT2",
+    "latitude": 50.83126,
+    "longitude": 2.40831,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.83145367269037,2.408290209536079;uid=03d7faab-709a-4db2-8a31-5497f9f6f8df_2239;"
+  },
+  {
+    "nom": "Arneke",
+    "type": "SSP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT1",
+    "latitude": 50.83121,
+    "longitude": 2.4083,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.83145367269037,2.408290209536079;uid=03d7faab-709a-4db2-8a31-5497f9f6f8df_2239;"
   }
 ]
