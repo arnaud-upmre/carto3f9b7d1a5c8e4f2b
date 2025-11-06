@@ -51,6 +51,23 @@
     "poste_longitude": "2.78181"
   },
   {
+    "nom": "Achiet",
+    "type": "SST",
+    "SAT": "SAT1",
+    "accès": "",
+    "latitude": 50.131653,
+    "longitude": 2.779952,
+    "description": "",
+    "rss": "C",
+    "contact": "",
+    "portail": "",
+    "lignes": "PARIS-NORD à LILLE",
+    "numero_ligne": 272000,
+    "pk": "",
+    "poste_latitude": "50.128810",
+    "poste_longitude": "2.780311"
+  },
+  {
     "nom": "Alleux",
     "type": "SP",
     "SAT": "",
