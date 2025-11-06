@@ -5358,5 +5358,60 @@
     "longitude": 2.4083,
     "description": "",
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.83145367269037,2.408290209536079;uid=03d7faab-709a-4db2-8a31-5497f9f6f8df_2239;"
+  },
+  {
+    "nom": "Lillers",
+    "type": "SSP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "IL1",
+    "latitude": 50.5611,
+    "longitude": 2.47944,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.56127458475546,2.4791157801408867;uid=a65ef5f3-acbe-478d-9f34-e0bd7f024b73_915;"
+  },
+  {
+    "nom": "Lillers",
+    "type": "SSP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "IL2",
+    "latitude": 50.56111,
+    "longitude": 2.47942,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.56127458475546,2.4791157801408867;uid=a65ef5f3-acbe-478d-9f34-e0bd7f024b73_915;"
+  },
+  {
+    "nom": "Lillers",
+    "type": "SSP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "IMP",
+    "latitude": 50.56114,
+    "longitude": 2.4794,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.56127458475546,2.4791157801408867;uid=a65ef5f3-acbe-478d-9f34-e0bd7f024b73_915;"
+  },
+  {
+    "nom": "Lillers",
+    "type": "SSP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT SSr Bethune Lillers V2 - Sel 8",
+    "latitude": 50.56112,
+    "longitude": 2.47935,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.56127458475546,2.4791157801408867;uid=a65ef5f3-acbe-478d-9f34-e0bd7f024b73_915;"
+  },
+  {
+    "nom": "Lillers",
+    "type": "SSP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT SSr Bethune Lillers V1 - Sel 19",
+    "latitude": 50.56108,
+    "longitude": 2.47939,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.56127458475546,2.4791157801408867;uid=a65ef5f3-acbe-478d-9f34-e0bd7f024b73_915;"
   }
 ]
