@@ -65,7 +65,8 @@
     "numero_ligne": 272000,
     "pk": "",
     "poste_latitude": "50.128810",
-    "poste_longitude": "2.780311"
+    "poste_longitude": "2.780311",
+    "imajnet":"https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.128738300363686,2.780246186209973;uid=6369e924-e08a-4d03-bf74-4d6fa1f3e253_975;"
   },
   {
     "nom": "Alleux",
