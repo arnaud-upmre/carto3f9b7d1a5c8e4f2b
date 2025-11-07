@@ -106,7 +106,7 @@
   background: rgba(255,255,255,0.50); 
 }
 .fab-options button.active img {
-  opacity: 1;  /* remet l’icône normale */
+  opacity: 1; 
 }
   
 .toast {
@@ -638,11 +638,11 @@ const ormRails = L.tileLayer(
 );
 
 
-const mixte = L.layerGroup([orthoIGN]);
-ignLabels.addTo(map);
+const mixte = L.layerGroup([orthoIGN, ignLabels]);
 
 const mixteRails = L.layerGroup([
   orthoIGN,
+  ignLabels,
   ormRails
 ]);
 mixte.addTo(map);
