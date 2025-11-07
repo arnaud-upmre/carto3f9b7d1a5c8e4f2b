@@ -625,14 +625,26 @@ const ignLabels = L.tileLayer(
   }
 );
 
+
+const ormRails = L.tileLayer(
+  "https://tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png",
+  {
+    attribution: "© OpenRailwayMap / OSM",
+    maxZoom: 19,
+    tileSize: 256,
+    opacity: 0.75,
+    crossOrigin: "anonymous"
+  }
+);
+
+
 const mixte = L.layerGroup([orthoIGN, ignLabels]);
 
-    const mixteRails = L.layerGroup([
+const mixteRails = L.layerGroup([
   orthoIGN,
   ignLabels,
   ormRails
 ]);
-
 mixte.addTo(map);
 
 
@@ -640,7 +652,7 @@ L.control.layers(
   { 
     "🛰️ Satellite IGN": orthoIGN,
     "🛰️ Satellite Open": esriSat,
-    "🗺️ Plan IGN (défaut)": planIGN,
+    "🗺️ Plan IGN": planIGN,
     "🌍 Plan Open": osm,
     "🛰️+🗺️ Mixte": mixte,
     "🛰️+🗺️ Mixte + Lignes": mixteRails
@@ -681,17 +693,7 @@ const accesLayer = L.markerClusterGroup({
   zoomToBoundsOnClick: true
 });
 
-    const ormRails = L.tileLayer(
-  "https://tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png",
-  {
-    attribution: "© OpenRailwayMap / OSM",
-    maxZoom: 19,
-    tileSize: 256,
-    opacity: 0.75,
-    crossOrigin: "anonymous"
-  }
-);
-    
+
 
 accesLayer.on('clusterclick', function (e) {
   const childMarkers = e.layer.getAllChildMarkers();
