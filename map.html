@@ -392,12 +392,20 @@ const boundsFrance = [
 
 const map = L.map('map', {
   zoomControl: false,
-  attributionControl: false,
+  attributionControl: true,
   minZoom: 5,                  
   maxZoom: 21,                 
   maxBounds: boundsFrance,     
   maxBoundsViscosity: 1.0      
 }).setView(defaultCenter, defaultZoom);
+
+
+map.attributionControl.setPrefix('');
+map.attributionControl.addAttribution("© IGN");
+map.attributionControl.addAttribution("© OpenStreetMap contributors");
+map.attributionControl.addAttribution("© OpenRailwayMap / OSM");
+map.attributionControl.addAttribution("© Esri");
+map.attributionControl.addAttribution("Nono Maps – v1.11");
 
     
 let editMode = false;   
