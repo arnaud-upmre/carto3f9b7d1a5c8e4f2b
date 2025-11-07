@@ -369,9 +369,6 @@
   <img src="ico/pn.png" alt="Passages à niveau">
 </button>
 
-<button class="btn-toggle" id="btn-lignes" title="Afficher les lignes ferroviaires">
-  <img src="ico/ligne.png" alt="Lignes ferroviaires">
-</button>
   </div>
 </div>
 
@@ -628,35 +625,28 @@ const ignLabels = L.tileLayer(
   }
 );
 
-const ormRails = L.tileLayer(
-  "https://tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png",
-  {
-    attribution: "© OpenRailwayMap / OSM",
-    maxZoom: 19,
-    tileSize: 256,
-    opacity: 0.75,
-    crossOrigin: "anonymous"
-  }
-);
+const mixte = L.layerGroup([orthoIGN, ignLabels]);
 
-const mixte = L.layerGroup([
+    const mixteRails = L.layerGroup([
   orthoIGN,
-  ignLabels
+  ignLabels,
+  ormRails
 ]);
 
 mixte.addTo(map);
 
 
-    L.control.layers(
-      { 
-        "🛰️ Satellite IGN": orthoIGN,
-        "🛰️ Satellite Open": esriSat,
-        "🗺️ Plan IGN (défaut)": planIGN,
-        "🌍 Plan Open": osm,
-        "🛰️+🗺️ Mixte": mixte
-      },
-      {}
-    ).addTo(map);
+L.control.layers(
+  { 
+    "🛰️ Satellite IGN": orthoIGN,
+    "🛰️ Satellite Open": esriSat,
+    "🗺️ Plan IGN (défaut)": planIGN,
+    "🌍 Plan Open": osm,
+    "🛰️+🗺️ Mixte": mixte,
+    "🛰️+🗺️ Mixte + Lignes": mixteRails
+  },
+  {}
+).addTo(map);
 
     L.control.zoom({ position: 'topright' }).addTo(map);
 
@@ -690,6 +680,18 @@ const accesLayer = L.markerClusterGroup({
   showCoverageOnHover: false,
   zoomToBoundsOnClick: true
 });
+
+    const ormRails = L.tileLayer(
+  "https://tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png",
+  {
+    attribution: "© OpenRailwayMap / OSM",
+    maxZoom: 19,
+    tileSize: 256,
+    opacity: 0.75,
+    crossOrigin: "anonymous"
+  }
+);
+    
 
 accesLayer.on('clusterclick', function (e) {
   const childMarkers = e.layer.getAllChildMarkers();
@@ -1116,25 +1118,6 @@ fetch("https://ressources.data.sncf.com/api/records/1.0/search/"
     });
 }
 
-
-const btnLignes = document.getElementById("btn-lignes");
-let railsVisible = false;
-
-btnLignes.addEventListener("click", () => {
-  if (!railsVisible) {
-    map.addLayer(ormRails);
-    btnLignes.classList.add("active");
-    showToast("✅ Lignes ferroviaires affichées");
-  } else {
-    map.removeLayer(ormRails);
-    btnLignes.classList.remove("active");
-    showToast("❌ Lignes ferroviaires masquées");
-  }
-  railsVisible = !railsVisible;
-});
-    
-
-    
     
 const leftControls = L.control({ position: "topleft" });
 leftControls.onAdd = function() {
