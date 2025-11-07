@@ -643,10 +643,27 @@ const ormRails = L.tileLayer(
   }
 );
 
+    const ormVitesse = L.tileLayer(
+  "https://tiles.openrailwaymap.org/maxspeed/{z}/{x}/{y}.png",
+  {
+    attribution: "© OpenRailwayMap / OSM",
+    maxZoom: 21,
+    maxNativeZoom: 19,
+    tileSize: 256,
+    opacity: 0.9,         // lisible mais pas agressif
+    crossOrigin: "anonymous"
+  }
+);
+
 
 const mixteRails = L.layerGroup([
   orthoIGN,
   ormRails
+]);
+
+    const mixteVitesse = L.layerGroup([
+  orthoIGN,
+  ormVitesse
 ]);
     
 mixteRails.addTo(map);
@@ -656,7 +673,8 @@ const baseLayers = {
   "🛰️ Satellite Open": esriSat,
   "🗺️ Plan IGN": planIGN,
   "🌍 Plan Open": osm,
-  "🛰️+🚅 Satellite + Lignes": mixteRails
+  "🛰️+🚅 Satellite + Lignes": mixteRails,
+  "🛰️+🚅 Satellite + VitesseMax": mixteVitesse
 };
 
 const layerControl = L.control.layers(baseLayers, {}).addTo(map);
