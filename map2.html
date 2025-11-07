@@ -30,7 +30,6 @@
   height:100%;
 }
 
-
 .fab-container {
   position: fixed;
   bottom: 20px;
@@ -88,19 +87,16 @@
   justify-content: center;
 }
 
-
 .fab-options button img {
   width: 36px;
   height: 36px;
   transition: opacity .2s, filter .2s;
 }
 
-
 .fab-options button:not(.active) img {
   opacity: 0.5;
   filter: none;
 }
-
 
 .fab-options button.active {
   background: rgba(255,255,255,0.50); 
@@ -127,7 +123,6 @@
 .toast.show {
   opacity: 1;
 }
-
 
 .leaflet-popup-content-wrapper {
   background: linear-gradient(
@@ -294,7 +289,6 @@
   margin-bottom: 10px; 
 }
 
-
 .btn-toggle{
   background: rgba(0,0,0,.7);
   border: 1px solid rgba(255,255,255,.12);
@@ -384,7 +378,6 @@
 const defaultCenter = [50.3, 2.6];
 const defaultZoom = 9;      
 
-
 const boundsFrance = [
   [41.0, -5.5],  
   [51.5, 9.5]    
@@ -404,7 +397,7 @@ let editMode = false;
   
 
 const editBanner = document.createElement("div");
-editBanner.style = `
+editBanner.style = 
   position: fixed;
   bottom: 10px; left: 50%;
   transform: translateX(-50%);
@@ -417,12 +410,12 @@ editBanner.style = `
   box-shadow: 0 4px 12px rgba(0,0,0,0.4);
   z-index: 9999;
   display: none;
-`;
+;
 document.body.appendChild(editBanner);
 
 const editIcon = document.createElement("div");
 editIcon.textContent = "✏️";
-editIcon.style = `
+editIcon.style = 
   position: fixed;
   bottom: 40px; left: 12px;
   font-size: 18px;
@@ -434,7 +427,7 @@ editIcon.style = `
   z-index: 9999;
   display: none;
   font-family: system-ui, sans-serif;
-`;
+;
 document.body.appendChild(editIcon);
 
 document.addEventListener("keydown", function(e) {
@@ -448,7 +441,6 @@ document.addEventListener("keydown", function(e) {
     editIcon.textContent = "ℹ️";
     editIcon.style.display = editMode ? "block" : "none";
   }
-
 
   if (e.key === "Escape" && editMode) {
     editMode = false;
@@ -486,7 +478,7 @@ map.setView(first, zoom);
   } else if (allSameCoords) {
 
     const items = matches.map((m, i) => {
-      let label = m.options.customId || `Élément ${i + 1}`;
+      let label = m.options.customId || Élément ${i + 1};
       return { label: label.replace(/\bposte\b/gi, "").trim(), idx: i };
     }).sort((a, b) => a.label.localeCompare(b.label, "fr", { numeric: true, sensitivity: "base" }));
 
@@ -516,11 +508,11 @@ if (id.startsWith("DU")) {
 }
 }
 
-        return `
+        return 
           <a href="#" class="cluster-link" data-idx="${it.idx}" style="display:flex;align-items:center;gap:6px;">
-            ${iconFile ? `<img src="ico/${iconFile}" style="width:16px;height:16px;">` : ""}
+            ${iconFile ? <img src="ico/${iconFile}" style="width:16px;height:16px;"> : ""}
             <span>${it.label}</span>
-          </a>`;
+          </a>;
       }).join("")}
     </div>`;
 
@@ -558,13 +550,10 @@ if (id.startsWith("DU")) {
   }
 }
 
-
-
 const params = new URLSearchParams(window.location.search);
 const lat = parseFloat(params.get("lat"));
 const lon = parseFloat(params.get("lon"));
 const zoom = parseInt(params.get("z")) || 19;
-
 
   const planIGN = L.tileLayer(
   "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
@@ -592,17 +581,23 @@ const orthoIGN = L.tileLayer(
   }
 );
 
-    const ignLabels = L.tileLayer(
-  "https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}",
+const ignLabels = L.tileLayer(
+  "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
+  + "&LAYER=GEOGRAPHICALNAMES.NAMES"
+  + "&STYLE=normal"
+  + "&FORMAT=image/png"
+  + "&TILEMATRIXSET=PM"
+  + "&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
   {
-    attribution: "",
+    attribution: "© IGN – Géoplateforme",
     maxZoom: 21,
     maxNativeZoom: 19,
     tileSize: 256,
-    opacity: 1,
-    zIndex: 500  
+    transparent: true,
+    crossOrigin: "anonymous",
+    zIndex: 500
   }
-);
+););
 
 const osm = L.tileLayer(
   "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
@@ -637,22 +632,9 @@ const ormRails = L.tileLayer(
   }
 );
 
-    const ormVitesse = L.tileLayer(
-  "https://tiles.openrailwaymap.org/maxspeed/{z}/{x}/{y}.png",
-  {
-    attribution: "© OpenRailwayMap / OSM",
-    maxZoom: 21,
-    maxNativeZoom: 19,
-    tileSize: 256,
-    opacity: 0.9,
-    crossOrigin: "anonymous"
-  }
-);
-
 const mixteRails = L.layerGroup([
   orthoIGN,
-  ormRails,
-  ormVitesse
+  ormRails
 ]);
     
 mixteRails.addTo(map);
@@ -679,7 +661,6 @@ map.on("baselayerchange", function(e) {
 
     planIGN.on("tileerror", e => console.warn("IGN PLAN tile error", e));
     orthoIGN.on("tileerror", e => console.warn("IGN ORTHO tile error", e));
-
 
 const postesLayer = L.markerClusterGroup({
   disableClusteringAtZoom: 18
@@ -708,8 +689,6 @@ const accesLayer = L.markerClusterGroup({
   zoomToBoundsOnClick: true
 });
 
-
-
 accesLayer.on('clusterclick', function (e) {
   const childMarkers = e.layer.getAllChildMarkers();
   if (childMarkers.length === 0) return;
@@ -719,18 +698,18 @@ accesLayer.on('clusterclick', function (e) {
 
   if (allSameCoords) {
     const items = childMarkers.map((m, i) => {
-      let label = m.options.customId || `Accès ${i + 1}`;
+      let label = m.options.customId || Accès ${i + 1};
       return { label: label.replace(/\bposte\b/gi, "").trim(), idx: i };
     }).sort((a, b) => a.label.localeCompare(b.label, "fr", { numeric: true, sensitivity: "base" }));
 
-    const html = `<div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
-      ${items.map(it => `
+    const html = <div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
+      ${items.map(it => 
         <a href="#" class="cluster-link" data-idx="${it.idx}" 
            style="display:flex;align-items:center;gap:6px;">
           <img src="ico/acces.png" style="width:16px;height:16px;">
           <span>${it.label}</span>
-        </a>`).join("")}
-    </div>`;
+        </a>).join("")}
+    </div>;
 
     L.popup()
       .setLatLng(first)
@@ -765,7 +744,7 @@ map.addLayer(appareilsLayer);
 map.addLayer(accesLayer);
 
 const iconPoste = L.divIcon({
-  html: `<img src="ico/poste.png" class="icon-halo">`,
+  html: <img src="ico/poste.png" class="icon-halo">,
   className: "",
   iconSize: [36, 36],
   iconAnchor: [18, 36],   
@@ -775,7 +754,7 @@ const iconPoste = L.divIcon({
 const iconAppareil= L.divIcon({className:"icon-circle appareil",html:"⚡"});
 
 const iconAcces = L.divIcon({
-  html: `<img src="ico/acces.png" class="icon-halo">`,
+  html: <img src="ico/acces.png" class="icon-halo">,
   className: "",
   iconSize: [36, 36],
   iconAnchor: [18, 28], 
@@ -800,7 +779,6 @@ let content = `
 <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
             font-size:14px; color:#111; line-height:1.4; position:relative;">
 
-
 <div style="font-weight:600; font-size:16px; margin-bottom:14px; padding-right:32px;">
   🚙 ${item.nom || "Sans nom"}
   ${item.type ? " " + item.type : ""}
@@ -819,7 +797,7 @@ let content = `
 </div>
 
   <a href="index.html?id=${encodeURIComponent(
-    (`${item.nom || ''} ${item.type || ''} ${item.SAT || ''}${accesVal ? ' – accès ' + accesVal : ''}`)
+    (${item.nom || ''} ${item.type || ''} ${item.SAT || ''}${accesVal ? ' – accès ' + accesVal : ''})
       .replace(/\s+/g, " ")
       .trim()
   )}"
@@ -841,7 +819,7 @@ const m = L.marker([item.latitude, item.longitude], {
 }
 
       if (item.poste_latitude && item.poste_longitude) {
-        const key = `${item.poste_latitude}_${item.poste_longitude}`;
+        const key = ${item.poste_latitude}_${item.poste_longitude};
         
         if (!seenPostes.has(key)) {
           seenPostes.add(key);
@@ -852,13 +830,11 @@ let content = `
 <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
             font-size:14px; color:#111; line-height:1.4;">
 
-
   <div style="font-weight:600; font-size:16px; margin-bottom:14px;">
     📍 ${item.nom || "Sans nom"} 
     ${item.type ? " " + item.type : ""} 
     ${item.SAT ? " " + item.SAT : ""}
   </div>
-
 
 <div style="margin-bottom:10px;">
   🚄 PK <strong>${item.pk || "(non renseigné)"}</strong>
@@ -866,13 +842,12 @@ let content = `
   ${item.lignes ? " – " + item.lignes : ""}
 </div>
 
-
   <div style="margin-bottom:10px;">
 ✍🏻 <strong>Information :</strong> ${ renderInformation(item.description) }
   </div>
  
   <a href="index.html?id=${encodeURIComponent(
-    (`${item.nom || ''} ${item.type || ''} ${item.SAT || ''}`)
+    (${item.nom || ''} ${item.type || ''} ${item.SAT || ''})
       .replace(/\s+/g, " ")
       .trim()
   )}"
@@ -908,21 +883,21 @@ fetch("appareils.json")
       
 if (ref.startsWith("DU")) {
   appareilIcon = L.divIcon({
-    html:`<img src="ico/stop.png" class="icon-halo-appareil">`,
+    html:<img src="ico/stop.png" class="icon-halo-appareil">,
     className:"",
     iconAnchor:[12,28],
     popupAnchor:[0,-18]
   });
 } else if (ref.startsWith("I") || ref.startsWith("SI") || ref.startsWith("D")) {
   appareilIcon = L.divIcon({
-    html:`<img src="ico/int.png" class="icon-halo-appareil">`,
+    html:<img src="ico/int.png" class="icon-halo-appareil">,
     className:"",
     iconAnchor:[12,28],
     popupAnchor:[0,-18]
   });
 } else if (ref.startsWith("TT") || ref.startsWith("TSA") || ref.startsWith("TC") || ref.startsWith("TRA")) {
   appareilIcon = L.divIcon({
-    html:`<img src="ico/TT.png" class="icon-halo-appareil">`,
+    html:<img src="ico/TT.png" class="icon-halo-appareil">,
     className:"",
     iconAnchor:[12,28],
     popupAnchor:[0,-18]
@@ -933,14 +908,14 @@ if (ref.startsWith("DU")) {
   ref.startsWith("P") || ref.startsWith("FB") || ref.startsWith("B")
 ) {
   appareilIcon = L.divIcon({
-    html:`<img src="ico/sect.png" class="icon-halo-appareil">`,
+    html:<img src="ico/sect.png" class="icon-halo-appareil">,
     className:"",
     iconAnchor:[12,28],
     popupAnchor:[0,-18]
   });
 } else if (ref.startsWith("ALIM")) {
   appareilIcon = L.divIcon({
-    html:`<img src="ico/alim.png" class="icon-halo-appareil">`,
+    html:<img src="ico/alim.png" class="icon-halo-appareil">,
     className:"",
     iconAnchor:[12,28],
     popupAnchor:[0,-18]
@@ -964,7 +939,7 @@ if (ref.startsWith("DU")) {
     : ""}
 </div>
 
- ${item.description ? `<div style="margin-bottom:14px;">✍🏻 <strong>Information :</strong> ${renderInformation(item.description)}</div>` : ""}
+ ${item.description ? <div style="margin-bottom:14px;">✍🏻 <strong>Information :</strong> ${renderInformation(item.description)}</div> : ""}
 
   <a href="index.html?id=${encodeURIComponent(
     [item.appareil, item.nom, item.type, item.SAT].filter(Boolean).join(" ").trim()
@@ -1038,12 +1013,10 @@ appareilsLayer.on('clusterclick', function (e) {
   map.fitBounds(e.layer.getBounds());
 });
 
-
 let pnLoaded = false; 
 
 function chargerPN(btn) {
   console.log("🔄 Déclenchement du chargement PN (lazy load)");
-
 
   if (pnLoaded) {
     toggleLayer(pnLayer, btn, "Passages à niveau");
@@ -1063,7 +1036,7 @@ fetch("https://ressources.data.sncf.com/api/records/1.0/search/"
   .then(data => {
       let records = data.records || [];
 
-      console.info(`✅ ${records.length} PN filtrés (Hauts-de-France + 10 km au sud)`);
+      console.info(✅ ${records.length} PN filtrés (Hauts-de-France + 10 km au sud));
   
   
       records.forEach(pn => {
@@ -1073,7 +1046,7 @@ fetch("https://ressources.data.sncf.com/api/records/1.0/search/"
         const lon = f.geo_point_2d[1];
 
         const iconPN = L.divIcon({
-          html: `<img src="ico/pn.png" class="icon-halo-appareil">`,
+          html: <img src="ico/pn.png" class="icon-halo-appareil">,
           className: "",
           iconAnchor: [16, 32],
           popupAnchor: [0, -32]
@@ -1081,7 +1054,7 @@ fetch("https://ressources.data.sncf.com/api/records/1.0/search/"
 
         const classeCode = (f.mnemo || "").replace("CLASSE ", "").trim();
         const classeTexte = pnClasses[classeCode]
-          ? `🛑 Classe ${classeCode} : ${pnClasses[classeCode]}`
+          ? 🛑 Classe ${classeCode} : ${pnClasses[classeCode]}
           : "";
 
         let libelle = (f.libelle || "").trim();
@@ -1096,7 +1069,7 @@ fetch("https://ressources.data.sncf.com/api/records/1.0/search/"
     </div>
 
     <div>🚄 PK ${f.pk || "?"} sur la ligne n°${f.code_ligne || "?"}</div>
-    ${classeTexte ? `<div>${classeTexte}</div>` : ""}
+    ${classeTexte ? <div>${classeTexte}</div> : ""}
 
 <div style="display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:16px;width:100%;">
   <a href="https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${f.geo_point_2d[0]},${f.geo_point_2d[1]};"
@@ -1122,7 +1095,7 @@ fetch("https://ressources.data.sncf.com/api/records/1.0/search/"
         allMarkers.push(marker);
       });
 
-      toast.textContent = `✅ ${records.length} passages à niveau chargés`;
+      toast.textContent = ✅ ${records.length} passages à niveau chargés;
       setTimeout(() => {
         toast.classList.remove("show");
         toggleLayer(pnLayer, btn, "Passages à niveau");
@@ -1157,7 +1130,6 @@ recenterBtn.onclick = () => {
   if (allMarkers.length > 0) {
     recenterBtn.classList.add("active"); 
  map.setView(defaultCenter, defaultZoom);
-
 
     setTimeout(() => {
       recenterBtn.classList.remove("active");
@@ -1208,14 +1180,13 @@ locateBtn.onclick = () => {
 L.DomEvent.disableClickPropagation(locateBtn);
 L.DomEvent.disableScrollPropagation(locateBtn);
 
-
   return container;
 };
 leftControls.addTo(map);
     
  function openStreetView(lat, lng) {
     const iframe = document.getElementById("streetview-frame");
-    iframe.src = `https://www.google.com/maps?q=&layer=c&cbll=${lat},${lng}&cbp=11,0,0,0,0&output=svembed`;
+    iframe.src = https://www.google.com/maps?q=&layer=c&cbll=${lat},${lng}&cbp=11,0,0,0,0&output=svembed;
     document.getElementById("streetview-overlay").style.display = "flex";
   }
 
@@ -1226,19 +1197,16 @@ leftControls.addTo(map);
 document.getElementById("streetview-overlay").style.display = "none";
 document.getElementById("streetview-frame").src = "";
 
-
 console.info("[Nono Maps] boot", {
   leaflet: L.version,
   clusters: { postes: !!postesLayer, appareils: !!appareilsLayer, acces: !!accesLayer }
 });
 
-
 if (isNaN(lat) || isNaN(lon)) { console.warn("URL lat/lon invalides", {lat, lon}); }
-
 
 function renderInformation(value) {
   if (!value) {
-    return `<span style="color:#777;font-style:italic;">Non renseigné</span>`;
+    return <span style="color:#777;font-style:italic;">Non renseigné</span>;
   }
 
   let text = String(value);
@@ -1263,13 +1231,12 @@ let activeEditPopup = null;
 
 function escHtml(s){return String(s).replace(/[&<>"]/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[m]));}
 
-
 map.on('click', (e) => {
   if (!editMode) return;
 
   const lat = Number(e.latlng.lat.toFixed(5));
   const lng = Number(e.latlng.lng.toFixed(5));
-  const coordsText = `${lat}, ${lng}`;
+  const coordsText = ${lat}, ${lng};
 
   const popupContent = `
   <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
@@ -1306,7 +1273,6 @@ ${coordsText}</pre>
     .setContent(popupContent)
     .openOn(map);
 
-
   setTimeout(() => {
     const flash = (txt) => {
       editBanner.textContent = txt;
@@ -1319,11 +1285,11 @@ ${coordsText}</pre>
     });
 
     document.getElementById('btn-gmaps')?.addEventListener('click', () => {
-      window.open(`https://www.google.com/maps?q=${lat},${lng}`, '_blank');
+      window.open(https://www.google.com/maps?q=${lat},${lng}, '_blank');
     });
 
     document.getElementById('btn-imajnet')?.addEventListener('click', () => {
-      window.open(`https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${lat},${lng};`, '_blank');
+      window.open(https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${lat},${lng};, '_blank');
     });
   }, 50); 
 });
@@ -1340,11 +1306,11 @@ function toggleLayer(layer, btn, label) {
   if (map.hasLayer(layer)) {
     map.removeLayer(layer);
     btn.classList.remove("active");
-    showToast(`❌ ${label} masqués`);
+    showToast(❌ ${label} masqués);
   } else {
     map.addLayer(layer);
     btn.classList.add("active");
-    showToast(`✅ ${label} affichés`);
+    showToast(✅ ${label} affichés);
   }
 }
 
