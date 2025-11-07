@@ -5446,5 +5446,27 @@
     "longitude": 4.07673,
     "description": "",
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.29165576914505,4.076460358343655;uid=0b8b6eed-4203-41eb-a609-3ab811e9bc32_209;"
+  },
+  {
+    "nom": "Jeumont",
+    "type": "SSPA",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TTIA25",
+    "latitude": 50.29174,
+    "longitude": 4.07673,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.29165576914505,4.076460358343655;uid=0b8b6eed-4203-41eb-a609-3ab811e9bc32_209;"
+  },
+  {
+    "nom": "Jeumont",
+    "type": "SSPA",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TCIA25",
+    "latitude": 50.29174,
+    "longitude": 4.07673,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.29165576914505,4.076460358343655;uid=0b8b6eed-4203-41eb-a609-3ab811e9bc32_209;"
   }
 ]
