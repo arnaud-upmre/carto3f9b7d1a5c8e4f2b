@@ -848,7 +848,7 @@
     "appareil": "TT7239",
     "latitude": 50.9407177,
     "longitude": 1.8497929,
-    "description": ""
+    "description": "Grillage autour du TT"
   },
   {
     "nom": "Curie",
@@ -858,7 +858,7 @@
     "appareil": "TT7401",
     "latitude": 50.9403366,
     "longitude": 1.8497526,
-    "description": ""
+    "description": "Grillage autour du TT"
   },
   {
     "nom": "Curie",
@@ -868,7 +868,7 @@
     "appareil": "TT7402",
     "latitude": 50.9403653,
     "longitude": 1.8499163,
-    "description": ""
+    "description": "Grillage autour du TT"
   },
   {
     "nom": "Curie",
@@ -878,7 +878,7 @@
     "appareil": "TT7406",
     "latitude": 50.9407726,
     "longitude": 1.8499458,
-    "description": ""
+    "description": "Grillage autour du TT"
   },
   {
     "nom": "Curie",
@@ -918,7 +918,7 @@
     "appareil": "TT7404",
     "latitude": 50.9415009,
     "longitude": 1.8487698,
-    "description": ""
+    "description": "Grillage autour du TT"
   },
   {
     "nom": "Curie",
@@ -966,18 +966,18 @@
     "SAT": "SAT3",
     "accès": "",
     "appareil": "TT7520",
-    "latitude": 50.9424802,
-    "longitude": 1.8472562,
-    "description": ""
+    "latitude": 50.9424669,
+    "longitude": 1.8472824,
+    "description": "Grillage autour du TT"
   },
   {
     "nom": "Curie",
     "type": "SSP",
     "SAT": "SAT4",
     "accès": "",
-    "appareil": "IA",
-    "latitude": 50.9457326,
-    "longitude": 1.8410581,
+    "appareil": "IA1",
+    "latitude": 50.94572,
+    "longitude": 1.84106,
     "description": ""
   },
   {
@@ -986,8 +986,8 @@
     "SAT": "SAT4",
     "accès": "",
     "appareil": "TC IA1",
-    "latitude": 50.9457148,
-    "longitude": 1.8410836,
+    "latitude": 50.94572,
+    "longitude": 1.84106,
     "description": ""
   },
   {
@@ -996,9 +996,9 @@
     "SAT": "SAT4",
     "accès": "",
     "appareil": "TT7521",
-    "latitude": 50.9457478,
-    "longitude": 1.8410286,
-    "description": ""
+    "latitude": 50.94572,
+    "longitude": 1.84106,
+    "description": "Grillage autour du TT"
   },
   {
     "nom": "Dannes",
