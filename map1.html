@@ -592,15 +592,21 @@ const orthoIGN = L.tileLayer(
   }
 );
 
-    const ignLabels = L.tileLayer(
-  "https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}",
+const ignLabels = L.tileLayer(
+  "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
+  + "&LAYER=GEOGRAPHICALNAMES.NAMES"
+  + "&STYLE=normal"
+  + "&FORMAT=image/png"
+  + "&TILEMATRIXSET=PM"
+  + "&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
   {
-    attribution: "",
+    attribution: "© IGN – Géoplateforme",
     maxZoom: 21,
     maxNativeZoom: 19,
     tileSize: 256,
-    opacity: 1,
-    zIndex: 500  
+    transparent: true,
+    crossOrigin: "anonymous",
+    zIndex: 500
   }
 );
 
