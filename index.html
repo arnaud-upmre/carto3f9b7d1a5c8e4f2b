@@ -862,6 +862,10 @@ function imajnetLink(lat, lon, zoom = 18, offset = 0) {
   return `https://gecko.imajnet.net/#map=OSM;zoom=${zoom};loc=${newLat},${newLon};`;
 }
 
+    function cartoTchooLink(lat, lon, zoom = 17) {
+  return `https://carto.tchoo.net/${lat},${lon},${zoom},0,0`;
+}
+
 function formatPortail(val) {
   if (!val) return `<p><strong id="editable-portail">🚧 Portail :</strong> <span class="placeholder">(non renseigné)</span></p>`;
 
@@ -1235,6 +1239,9 @@ html += `
               ? lieu.imajnet 
               : imajnetLink(lieu.poste_latitude || lieu.latitude, lieu.poste_longitude || lieu.longitude)
           }" target="_blank">🚄 Imajnet</a>
+          <a href="${cartoTchooLink(lieu.poste_latitude || lieu.latitude, lieu.poste_longitude || lieu.longitude)}" target="_blank">
+  🗺️ Carto Tchoo
+</a>
         `
         : `<span class="placeholder">(non renseigné – fournir un lien Maps)</span>`
     }
