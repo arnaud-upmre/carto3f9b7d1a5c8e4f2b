@@ -5419,10 +5419,32 @@
     "type": "SSPA",
     "SAT": "",
     "accès": "",
-    "appareil": "IL-2",
-    "latitude": 50.29172,
-    "longitude": 4.07667,
+    "appareil": "IL2",
+    "latitude": 50.2917,
+    "longitude": 4.07666,
     "description": "",
-    "imajnet": ""
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.29165576914505,4.076460358343655;uid=0b8b6eed-4203-41eb-a609-3ab811e9bc32_209;"
+  },
+  {
+    "nom": "Jeumont",
+    "type": "SSPA",
+    "SAT": "",
+    "accès": "",
+    "appareil": "IL1",
+    "latitude": 50.29172,
+    "longitude": 4.0767,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.29165576914505,4.076460358343655;uid=0b8b6eed-4203-41eb-a609-3ab811e9bc32_209;"
+  },
+  {
+    "nom": "Jeumont",
+    "type": "SSPA",
+    "SAT": "",
+    "accès": "",
+    "appareil": "IA25",
+    "latitude": 50.29174,
+    "longitude": 4.07673,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.29165576914505,4.076460358343655;uid=0b8b6eed-4203-41eb-a609-3ab811e9bc32_209;"
   }
 ]
