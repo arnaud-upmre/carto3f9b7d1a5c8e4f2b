@@ -611,19 +611,6 @@ const esriSat = L.tileLayer(
   }
 );
 
-const ignLabels = L.tileLayer(
-  "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
-  + "&LAYER=GEOGRAPHICALNAMES.NAMES&STYLE=normal&FORMAT=image/png"
-  + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
-  {
-    attribution: "© IGN – Géoplateforme",
-    maxZoom: 21,
-    maxNativeZoom: 19,
-    tileSize: 256,
-    transparent: true,
-    crossOrigin: "anonymous"
-  }
-);
     
 
 const ormRails = L.tileLayer(
@@ -638,8 +625,6 @@ const ormRails = L.tileLayer(
 );
 
 
-const mixte = L.layerGroup([orthoIGN, ignLabels]);
-
 const mixteRails = L.layerGroup([
   orthoIGN,
   ormRails
@@ -653,8 +638,7 @@ L.control.layers(
     "🛰️ Satellite Open": esriSat,
     "🗺️ Plan IGN": planIGN,
     "🌍 Plan Open": osm,
-    "🛰️+🗺️ Mixte": mixte,
-    "🛰️+🗺️ Mixte + Lignes": mixteRails
+    "🛰️+🗺️ Satellite + Lignes": mixteRails
   },
   {}
 ).addTo(map);
