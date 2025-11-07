@@ -638,7 +638,8 @@ const ormRails = L.tileLayer(
 );
 
 
-const mixte = L.layerGroup([orthoIGN, ignLabels]);
+const mixte = L.layerGroup([orthoIGN]);
+ignLabels.addTo(map);
 
 const mixteRails = L.layerGroup([
   orthoIGN,
