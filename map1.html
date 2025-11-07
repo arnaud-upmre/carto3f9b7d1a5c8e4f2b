@@ -624,7 +624,8 @@ const ignLabels = L.tileLayer(
     crossOrigin: "anonymous"
   }
 );
-
+    
+ignLabels.addTo(map);
 
 const ormRails = L.tileLayer(
   "https://tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png",
@@ -642,7 +643,6 @@ const mixte = L.layerGroup([orthoIGN, ignLabels]);
 
 const mixteRails = L.layerGroup([
   orthoIGN,
-  ignLabels,
   ormRails
 ]);
 mixte.addTo(map);
