@@ -106,7 +106,7 @@
   background: rgba(255,255,255,0.50); 
 }
 .fab-options button.active img {
-  opacity: 1;  /* remet l’icône normale */
+  opacity: 1; 
 }
   
 .toast {
@@ -369,9 +369,6 @@
   <img src="ico/pn.png" alt="Passages à niveau">
 </button>
 
-<button class="btn-toggle" id="btn-lignes" title="Afficher les lignes ferroviaires">
-  <img src="ico/ligne.png" alt="Lignes ferroviaires">
-</button>
   </div>
 </div>
 
@@ -595,6 +592,18 @@ const orthoIGN = L.tileLayer(
   }
 );
 
+    const ignLabels = L.tileLayer(
+  "https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}",
+  {
+    attribution: "",
+    maxZoom: 21,
+    maxNativeZoom: 19,
+    tileSize: 256,
+    opacity: 1,
+    zIndex: 500  
+  }
+);
+
 const osm = L.tileLayer(
   "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
   { 
@@ -614,49 +623,57 @@ const esriSat = L.tileLayer(
   }
 );
 
-const ignLabels = L.tileLayer(
-  "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
-  + "&LAYER=GEOGRAPHICALNAMES.NAMES&STYLE=normal&FORMAT=image/png"
-  + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
-  {
-    attribution: "© IGN – Géoplateforme",
-    maxZoom: 21,
-    maxNativeZoom: 19,
-    tileSize: 256,
-    transparent: true,
-    crossOrigin: "anonymous"
-  }
-);
+    
 
 const ormRails = L.tileLayer(
   "https://tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png",
   {
     attribution: "© OpenRailwayMap / OSM",
-    maxZoom: 19,
+    maxZoom: 21,
+    maxNativeZoom: 19,
     tileSize: 256,
-    opacity: 0.75
+    opacity: 0.75,
+    crossOrigin: "anonymous"
   }
 );
 
-const mixte = L.layerGroup([
+    const ormVitesse = L.tileLayer(
+  "https://tiles.openrailwaymap.org/maxspeed/{z}/{x}/{y}.png",
+  {
+    attribution: "© OpenRailwayMap / OSM",
+    maxZoom: 21,
+    maxNativeZoom: 19,
+    tileSize: 256,
+    opacity: 0.9,
+    crossOrigin: "anonymous"
+  }
+);
+
+const mixteRails = L.layerGroup([
   orthoIGN,
-  ignLabels,
-  ormRails
+  ormRails,
+  ormVitesse
 ]);
+    
+mixteRails.addTo(map);
 
-mixte.addTo(map);
+const baseLayers = {
+  "🛰️ Satellite IGN": orthoIGN,
+  "🛰️ Satellite Open": esriSat,
+  "🗺️ Plan IGN": planIGN,
+  "🌍 Plan Open": osm,
+  "🛰️+🗺️ Satellite + Lignes": mixteRails
+};
 
+const layerControl = L.control.layers(baseLayers, {}).addTo(map);
 
-    L.control.layers(
-      { 
-        "🛰️ Satellite IGN": orthoIGN,
-        "🛰️ Satellite Open": esriSat,
-        "🗺️ Plan IGN (défaut)": planIGN,
-        "🌍 Plan Open": osm,
-        "🛰️+🗺️ Mixte": mixte
-      },
-      {}
-    ).addTo(map);
+map.on("baselayerchange", function(e) {
+  if (e.name === "🛰️ Satellite IGN") {
+    map.addLayer(ignLabels);
+  } else {
+    map.removeLayer(ignLabels);
+  }
+});
 
     L.control.zoom({ position: 'topright' }).addTo(map);
 
@@ -690,6 +707,8 @@ const accesLayer = L.markerClusterGroup({
   showCoverageOnHover: false,
   zoomToBoundsOnClick: true
 });
+
+
 
 accesLayer.on('clusterclick', function (e) {
   const childMarkers = e.layer.getAllChildMarkers();
@@ -1116,105 +1135,6 @@ fetch("https://ressources.data.sncf.com/api/records/1.0/search/"
     });
 }
 
-
-
-    
-// === LIGNES FERROVIAIRES ===
-document.addEventListener("DOMContentLoaded", () => {
-  const btnLignes = document.getElementById("btn-lignes");
-  if (!btnLignes) return console.error("❌ Bouton Lignes introuvable");
-
-  let lignesLayer = L.markerClusterGroup({
-    disableClusteringAtZoom: 16,
-    spiderfyOnMaxZoom: false,
-  });
-  let lignesLoaded = false;
-
-  btnLignes.addEventListener("click", () => {
-    if (!lignesLoaded) {
-      btnLignes.classList.add("loading");
-
-      fetch("https://ressources.data.sncf.com/api/records/1.0/search/"
-        + "?dataset=lignes-par-type"
-        + "&geofilter.bbox=49.4,1.4,51.2,4.5"
-        + "&rows=3000")
-        .then(r => r.json())
-        .then(data => {
-          data.records.forEach(record => {
-            const f = record.fields || {};
-            if (!f.geo_shape) return;
-
-            // Couleur flashy + trait plus épais
-            const couleur =
-              (f.type_ligne || "").toLowerCase().includes("raccordement") ? "#ff9800" :
-              (f.type_ligne || "").toLowerCase().includes("desserte")     ? "#00e676" :
-              (f.type_ligne || "").toLowerCase().includes("embranchement") ? "#f50057" :
-              "#00bcd4"; // cyan vif par défaut
-
-            const poly = L.geoJSON(f.geo_shape, {
-              style: { color: couleur, weight: 6, opacity: 0.9 }
-            });
-
-            poly.on("click", (e) => {
-              const lat = e.latlng.lat.toFixed(5);
-              const lng = e.latlng.lng.toFixed(5);
-              const code = f.code_ligne ?? "?";
-              const lib  = f.lib_ligne ?? "—";
-              const pkd  = f.pkd ?? "—";
-              const pkf  = f.pkf ?? "—";
-              const type = f.type_ligne ?? "—";
-
-              const html = `
-                <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
-                            font-size:14px;color:#111;line-height:1.5;min-width:230px;text-align:left;">
-                  <div style="font-weight:700;font-size:16px;margin-bottom:8px;">
-                    🚧 Ligne n°${code}
-                  </div>
-                  <div style="margin-bottom:6px;">${lib}</div>
-                  <div style="margin-bottom:6px;">📏 PKD <strong>${pkd}</strong> — PKF <strong>${pkf}</strong></div>
-                  <div style="margin-bottom:14px;">🏷️ Type : <strong>${type}</strong></div>
-
-<div style="display:flex;justify-content:center;width:100%;margin-top:14px;">
-  <a href="https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${lat},${lng};"
-     target="_blank"
-     style="display:inline-flex;align-items:center;justify-content:center;
-            gap:6px;padding:10px 16px;border-radius:8px;
-            background:#10b981;color:white;text-decoration:none;
-            font-size:14px;font-weight:500;text-align:center;
-            box-sizing:border-box;min-width:160px;">
-    🚄 Voir sur Imajnet
-  </a>
-</div>
-
-                </div>`;
-              L.popup({ maxWidth: 280 })
-                .setLatLng(e.latlng)
-                .setContent(html)
-                .openOn(map);
-            });
-
-            lignesLayer.addLayer(poly);
-          });
-
-          map.addLayer(lignesLayer);
-          lignesLoaded = true;
-          btnLignes.classList.remove("loading");
-          btnLignes.classList.add("active");
-          showToast("✅ Lignes ferroviaires affichées");
-        })
-        .catch(err => {
-          console.error("Erreur chargement lignes :", err);
-          btnLignes.classList.remove("loading");
-          showToast("⚠️ Erreur de chargement");
-        });
-    } else {
-      toggleLayer(lignesLayer, btnLignes, "Lignes ferroviaires");
-    }
-  });
-});
-
-
-    
     
 const leftControls = L.control({ position: "topleft" });
 leftControls.onAdd = function() {
