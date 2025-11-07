@@ -401,15 +401,13 @@ const map = L.map('map', {
 
 
 map.attributionControl.setPrefix('');
+map.attributionControl.addAttribution("Nono Maps – v1.11")
 map.attributionControl.addAttribution("© IGN");
 map.attributionControl.addAttribution("© OpenStreetMap contributors");
 map.attributionControl.addAttribution("© OpenRailwayMap / OSM");
 map.attributionControl.addAttribution("© Esri");
-map.attributionControl.addAttribution("Nono Maps – v1.11");
-
     
-let editMode = false;   
-  
+let editMode = false;     
 
 const editBanner = document.createElement("div");
 editBanner.style = `
