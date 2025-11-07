@@ -692,12 +692,9 @@ const ignRailways = L.tileLayer(
 );
 
 const mixte = L.layerGroup([
-  orthoIGN,        // Photo IGN
-  ignLabels,       // Noms des villes
-  ignRoutes,       // Routes
-  ignRoadsDetail,  // Chemins / voirie fine
-  ignRoadNames,    // Noms des rues
-  ignRailways      // Chemins de fer
+  orthoIGN,     // Photo IGN
+  ignLabels,    // Nom des villes
+  ignRailways   // Voies ferrées
 ]);
 
 mixte.addTo(map);
