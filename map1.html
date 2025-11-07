@@ -19,13 +19,6 @@
 
 <style>
 
-.leaflet-tile-container img[src*="GEOGRAPHICALNAMES.NAMES"] {
-  image-rendering: auto;
-  -ms-interpolation-mode: bicubic;
-  filter: brightness(1.05) contrast(1.08);
-  transform: translateZ(0); 
-}
-  
   html, body {
   height: 100%;
   margin: 0;
@@ -635,50 +628,7 @@ const ignLabels = L.tileLayer(
   }
 );
 
-// Routes principales, secondaires et rues
-const ignRoutes = L.tileLayer(
-  "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
-  + "&LAYER=TRANSPORTNETWORKS.ROADS&STYLE=normal&FORMAT=image/png"
-  + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}", 
-  {
-    attribution: "© IGN – Géoplateforme",
-    maxZoom: 21,
-    maxNativeZoom: 19,
-    transparent: true,
-    crossOrigin: "anonymous"
-  }
-);
-
-// Voirie fine (chemins ruraux, petites rues)
-const ignRoadsDetail = L.tileLayer(
-  "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
-  + "&LAYER=TRANSPORTNETWORKS.ROADS_DETAIL&STYLE=normal&FORMAT=image/png"
-  + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
-  {
-    attribution: "© IGN – Géoplateforme",
-    maxZoom: 21,
-    maxNativeZoom: 19,
-    transparent: true,
-    crossOrigin: "anonymous"
-  }
-);
-
-// Noms des rues (D937, Rue de la Gare…)
-const ignRoadNames = L.tileLayer(
-  "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
-  + "&LAYER=TRANSPORTNETWORKS.ROADS.NAME&STYLE=normal&FORMAT=image/png"
-  + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
-  {
-    attribution: "© IGN – Géoplateforme",
-    maxZoom: 21,
-    maxNativeZoom: 19,
-    transparent: true,
-    crossOrigin: "anonymous"
-  }
-);
-
-// Voies ferrées
-const ignRailways = L.tileLayer(
+    const ignRailways = L.tileLayer(
   "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
   + "&LAYER=TRANSPORTNETWORKS.RAILWAYS&STYLE=normal&FORMAT=image/png"
   + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}", 
@@ -692,9 +642,9 @@ const ignRailways = L.tileLayer(
 );
 
 const mixte = L.layerGroup([
-  orthoIGN,     // Photo IGN
-  ignLabels,    // Nom des villes
-  ignRailways   // Voies ferrées
+  orthoIGN,
+  ignLabels,
+  ignRailways
 ]);
 
 mixte.addTo(map);
