@@ -2655,13 +2655,5 @@ document.getElementById("streetview-close").onclick = () => {
 })();
 </script>
 
-<script>
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("/carto3f9b7d1a5c8e4f2b/service-worker.js")
-    .then(() => console.log("✅ Service worker actif"))
-    .catch(err => console.error("❌ SW erreur :", err));
-}
-</script>
-  
 </body>
 </html>
