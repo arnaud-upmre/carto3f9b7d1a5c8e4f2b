@@ -192,8 +192,6 @@
   {
     "nom": "Arques",
     "type": "P",
-    "SAT": "",
-    "accès": "",
     "latitude": 50.74569,
     "longitude": 2.31635,
     "description": "",
@@ -209,8 +207,6 @@
   {
     "nom": "A2000",
     "type": "Atelier",
-    "SAT": "",
-    "accès": "",
     "latitude": 50.6203,
     "longitude": 3.08726,
     "description": "",
@@ -227,8 +223,6 @@
   {
     "nom": "Lens",
     "type": "Atelier",
-    "SAT": "",
-    "accès": "",
     "latitude": 50.40689,
     "longitude": 2.85233,
     "description": "",
@@ -244,8 +238,6 @@
   {
     "nom": "Audruicq",
     "type": "L",
-    "SAT": "",
-    "accès": "",
     "latitude": 50.87213,
     "longitude": 2.10028,
     "description": "",
@@ -590,8 +582,6 @@
   {
     "nom": "Broxeele",
     "type": "P",
-    "SAT": "",
-    "accès": "",
     "latitude": 50.80804,
     "longitude": 2.35351,
     "description": "",
@@ -829,8 +819,6 @@
   {
     "nom": "Coudekerque",
     "type": "SST",
-    "SAT": "",
-    "accès": "",
     "latitude": 50.99517,
     "longitude": 2.39034,
     "description": "",
