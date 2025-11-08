@@ -1194,15 +1194,6 @@ html += `
   const blocs = [];
 
   blocs.push(formatDescription(lieu.description));
-  // Bloc Accès (affiché seulement si renseigné)
-if (lieu.description_acces && lieu.description_acces.trim() !== "") {
-  blocs.push(`
-    <p>
-      <strong>🚙 Accès :</strong>
-      <span class="desc-value">${lieu.description_acces}</span>
-    </p>
-  `);
-}
   blocs.push(formatContact(lieu.contact));
   blocs.push(formatPortailDisplay(lieu.portail, lieu.secure));
 
@@ -1300,7 +1291,20 @@ blocs.push(`
   </p>
 `);
 
+
+
+  
 blocs.push(formatDescription(lieu.description));
+
+if (lieu.description_acces && lieu.description_acces.trim() !== "") {
+  blocs.push(`
+    <p>
+      <strong>🚙 Accès :</strong>
+      <span class="desc-value">${lieu.description_acces}</span>
+    </p>
+  `);
+}
+  
   
 blocs.push(
   formatContact(lieu.contact) ||
