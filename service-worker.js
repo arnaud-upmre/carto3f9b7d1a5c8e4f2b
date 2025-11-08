@@ -28,11 +28,12 @@ const APP_ASSETS = [
 ];
 
 const TILE_DOMAINS = [
-  "server.arcgisonline.com",   // ESRI satellite
-  "tile.openstreetmap.org"     // OSM
+  "server.arcgisonline.com",
+  "tile.openstreetmap.org"
 ];
 
-// INSTALL
+
+// INSTALLATION
 self.addEventListener("install", event => {
   event.waitUntil(
     caches.open(APP_CACHE).then(cache => cache.addAll(APP_ASSETS))
@@ -40,7 +41,8 @@ self.addEventListener("install", event => {
   self.skipWaiting();
 });
 
-// ACTIVATE
+
+// ACTIVATION
 self.addEventListener("activate", event => {
   event.waitUntil(
     caches.keys().then(keys =>
@@ -54,25 +56,57 @@ self.addEventListener("activate", event => {
   self.clients.claim();
 });
 
+
 // FETCH
 self.addEventListener("fetch", event => {
-  const url = event.request.url;
+  const req = event.request;
+  const url = req.url;
 
-  // Toujours online pour les JSON
+  // ✅ Bloquer POST/PUT
+  if (req.method !== "GET") return;
+
+  // ✅ Ne gérer que ton dossier GitHub Pages
+  if (!url.startsWith(self.location.origin + BASE)) return;
+
+
+  // ✅ JSON : Stale-While-Revalidate
   if (url.endsWith("postes.json") || url.endsWith("appareils.json")) {
+    event.respondWith(
+      (async () => {
+        const cache = await caches.open(APP_CACHE);
+        const cached = await cache.match(req);
+
+        // Téléchargement en arrière-plan
+        const networkFetch = fetch(req)
+          .then(response => {
+            if (response.ok) {
+              cache.put(req, response.clone());
+            }
+            return response;
+          })
+          .catch(() => null);
+
+        // Si offline : renvoie cache
+        if (cached) return cached;
+
+        // Si online mais cache vide : réseau
+        return networkFetch;
+      })()
+    );
     return;
   }
 
-  // Cache tuiles ESRI + OSM
+
+  // ✅ Cache ESRI / OSM (tuiles satellite)
   if (TILE_DOMAINS.some(domain => url.includes(domain))) {
     event.respondWith(
       caches.open(TILE_CACHE).then(async cache => {
-        const cached = await cache.match(event.request);
+        const cached = await cache.match(req);
         if (cached) return cached;
 
         try {
-          const response = await fetch(event.request, { mode: "no-cors" });
-          cache.put(event.request, response.clone());
+          const response = await fetch(req, { mode: "no-cors" });
+          cache.put(req, response.clone());
           limitTileCache();
           return response;
         } catch {
@@ -83,23 +117,28 @@ self.addEventListener("fetch", event => {
     return;
   }
 
-  // Documents HTML → network-first (toujours à jour)
-  event.respondWith(
-    (async () => {
-      const req = event.request;
 
-      if (req.destination === "document") {
+  // ✅ HTML : toujours mise à jour
+  if (req.destination === "document") {
+    event.respondWith(
+      (async () => {
         try {
           const fresh = await fetch(req);
           const cache = await caches.open(APP_CACHE);
           cache.put(req, fresh.clone());
           return fresh;
         } catch {
-          return caches.match(req);  // offline fallback
+          return caches.match(req);
         }
-      }
+      })()
+    );
+    return;
+  }
 
-      // Le reste → cache-first
+
+  // ✅ Le reste : cache-first
+  event.respondWith(
+    (async () => {
       const cached = await caches.match(req);
       if (cached) return cached;
 
@@ -115,7 +154,8 @@ self.addEventListener("fetch", event => {
   );
 });
 
-// LIMITE TUILES
+
+// ✅ Limitation du cache des tuiles
 async function limitTileCache() {
   const cache = await caches.open(TILE_CACHE);
   const keys = await cache.keys();
