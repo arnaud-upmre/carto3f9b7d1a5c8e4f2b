@@ -709,11 +709,12 @@ map.on("zoomend", () => {
 });
 
 const baseLayers = {
+  "🛰️+🗺️ Satellite + Lignes": mixteRails,
   "🛰️ Satellite IGN": orthoIGN,
   "🛰️ Satellite Open": esriSat,
   "🗺️ Plan IGN": planIGN,
-  "🌍 Plan Open": osm,
-  "🛰️+🗺️ Satellite + Lignes": mixteRails
+  "🌍 Plan Open": osm
+  
 };
 
 const layerControl = L.control.layers(baseLayers, {}).addTo(map);
