@@ -33,33 +33,6 @@
    
   <style id="eale-intro-styles">
 
-    
-    .telecom-pill {
-  display: inline-block;
-  padding: 3px 8px;
-  margin-left: 8px;
-  border-radius: 12px;
-  font-size: 11px;
-  font-weight: 600;
-
-  color: #1a73e8;
-  border: 1px solid #1a73e8;
-  background: rgba(26,115,232,0.10);
-
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  vertical-align: middle;
-  opacity: 0.9;
-}
-
-@media (prefers-color-scheme: dark) {
-  .telecom-pill {
-    color: #90caf9;
-    border-color: #90caf9;
-    background: rgba(144,202,249,0.12);
-  }
-}
-
 /* ====== Container global ====== */
 .nono-banner-container {
   position: fixed;
@@ -499,18 +472,14 @@ input[type="text"] {
       font-size: 15px;
       line-height: 1.5;
     }
-    
 #result h2 {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 6px;
+  margin-top: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: #1a73e8;
+  text-align: left; 
 }
 
-#result h2 .telecom-pill {
-  margin-left: 6px;
-  white-space: nowrap;
-}
   
 #search,
 #suggestions,
@@ -1249,33 +1218,30 @@ const targetLat = usePoste ? _latPoste : lieu.latitude;
 const targetLon = usePoste ? _lonPoste : lieu.longitude;
 const urlMyMapsPoste = myMapsViewer(targetLat, targetLon, 20);
 
-
-// Badges télécommande intégrés dans le titre
-let telecomBadge = "";
-if (lieu.description_telecommande) {
-  const parts = lieu.description_telecommande
-    .split("/")
-    .map(s => s.trim())
-    .filter(Boolean);
-
-  telecomBadge = parts
-    .map(p => `<span class="telecom-pill">${p}</span>`)
-    .join("");
-}
-
-
-  
 let html = `<h2>
   📍 <span id="editable-nom">${lieu.nom}</span> 
   <span id="editable-type">${lieu.type}</span>
   ${lieu.SAT ? `<span id="editable-sat"> ${lieu.SAT}</span>` : ""}
   ${lieu.accès ? `<span id="editable-acces"> – accès ${lieu.accès}</span>` : ""}
   <a href="#" id="edit-toggle">[modifier]</a>
-  ${telecomBadge}
 </h2>`;
 
-  
+  // ===== Pills "Fibre / ACS25" =====
+let pillTelecom = "";
+if (lieu.description_telecommande) {
+  const parts = lieu.description_telecommande
+    .split("/")
+    .map(s => s.trim())
+    .filter(s => s.length > 0);
 
+  pillTelecom = `
+    <div class="inline-links pills-2" style="margin-top:6px; margin-bottom:4px;">
+      ${parts.map(p => `<a class="pill-link">${p}</a>`).join("")}
+    </div>
+  `;
+}
+
+html += pillTelecom;
 
   
     
