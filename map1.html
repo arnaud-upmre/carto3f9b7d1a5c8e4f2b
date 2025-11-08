@@ -712,35 +712,30 @@ map.on("baselayerchange", function(e) {
 });
 
 
-// Bloc zoom + localisation en style Leaflet natif
+
 const ZLControl = L.Control.extend({
   onAdd: function () {
     const container = L.DomUtil.create("div", "leaflet-control-zoom leaflet-bar");
 
-    // Bouton +
+  
     const zoomIn = L.DomUtil.create("a", "leaflet-control-zoom-in", container);
     zoomIn.href = "#";
     zoomIn.title = "Zoom avant";
     zoomIn.innerHTML = "+";
     zoomIn.onclick = e => { e.preventDefault(); map.zoomIn(); };
 
-    // Bouton -
+  
     const zoomOut = L.DomUtil.create("a", "leaflet-control-zoom-out", container);
     zoomOut.href = "#";
     zoomOut.title = "Zoom arrière";
     zoomOut.innerHTML = "-";
     zoomOut.onclick = e => { e.preventDefault(); map.zoomOut(); };
 
-    // Bouton localisation
+
     const locateBtn = L.DomUtil.create("a", "leaflet-control-zoom-in", container);
     locateBtn.href = "#";
     locateBtn.title = "Me localiser";
-    locateBtn.innerHTML = `
-<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-  <path d="M12 3 L15.5 14 H8.5 Z" />
-  <circle cx="12" cy="18" r="2.2" />
-</svg>
-`;
+    locateBtn.innerHTML = `<img src="ico/arrow.png" style="width:18px;height:18px;">`;
 
     let userMarker = null;
     let watchId = null;
