@@ -402,6 +402,7 @@ const map = L.map('map', {
   maxBoundsViscosity: 1.0      
 }).setView(defaultCenter, defaultZoom);
 
+    let currentBaseLayerName = "🛰️+🗺️ Satellite + Lignes"; 
 
 map.attributionControl.setPrefix('');
 map.attributionControl.addAttribution("Nono Maps – v1.11")
@@ -676,20 +677,18 @@ mixteRails.addTo(map);
 map.on("zoomend", () => {
   const z = map.getZoom();
 
+  if (currentBaseLayerName !== "🛰️+🗺️ Satellite + Lignes") {
+    map.removeLayer(ormRails);
+    map.removeLayer(ormSpeed);
+    return;
+  }
+
   if (z >= 21) {
-    if (!map.hasLayer(ormSpeed)) {
-      map.addLayer(ormSpeed);
-    }
-    if (map.hasLayer(ormRails)) {
-      map.removeLayer(ormRails);
-    }
+    map.addLayer(ormSpeed);
+    map.removeLayer(ormRails);
   } else {
-    if (map.hasLayer(ormSpeed)) {
-      map.removeLayer(ormSpeed);
-    }
-    if (!map.hasLayer(ormRails)) {
-      map.addLayer(ormRails);
-    }
+    map.removeLayer(ormSpeed);
+    map.addLayer(ormRails);
   }
 });
 
@@ -704,10 +703,23 @@ const baseLayers = {
 const layerControl = L.control.layers(baseLayers, {}).addTo(map);
 
 map.on("baselayerchange", function(e) {
+
+   currentBaseLayerName = e.name;
+
+
   if (e.name === "🛰️ Satellite IGN") {
     map.addLayer(ignLabels);
   } else {
     map.removeLayer(ignLabels);
+  }
+
+
+  map.removeLayer(ormRails);
+  map.removeLayer(ormSpeed);
+
+
+  if (e.name === "🛰️+🗺️ Satellite + Lignes") {
+    map.addLayer(ormRails);
   }
 });
 
