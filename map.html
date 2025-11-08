@@ -402,7 +402,8 @@ const map = L.map('map', {
   maxZoom: 21,                 
   maxBounds: boundsFrance,     
   maxBoundsViscosity: 1.0,
-  keepBuffer: 6 
+  keepBuffer: 6,
+  preferCanvas: true
 }).setView(defaultCenter, defaultZoom);
 
     let currentBaseLayerName = "🛰️+🗺️ Satellite + Lignes"; 
@@ -604,6 +605,7 @@ const orthoIGN = L.tileLayer(
     crossOrigin: 'anonymous',
     updateWhenIdle: true,
     updateWhenZooming: false,
+    reuseTiles: true,
   }
 );
 
@@ -657,6 +659,7 @@ const ormRails = L.tileLayer(
     crossOrigin: "anonymous",
     updateWhenIdle: true,
     updateWhenZooming: false,
+    reuseTiles: true,
   }
 );
 
