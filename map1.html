@@ -19,32 +19,19 @@
 
 <style>
 
-  /* Bouton localisation style NonoMaps (même style que tes btn-toggle) */
-.leaflet-control-locate {
-  background: rgba(0,0,0,.7);
-  border: 1px solid rgba(255,255,255,.12);
-  width: 44px;
-  height: 44px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.leaflet-control-locate-btn {
+  width: 26px;
+  height: 26px;
+  line-height: 26px;
+  text-align: center;
   cursor: pointer;
-  color: #fff;
-  font-size: 20px;
-  box-shadow: 0 4px 12px rgba(0,0,0,.25);
-  transition: background .2s, color .2s;
-}
-
-.leaflet-control-locate:hover {
-  background: rgba(0,0,0,.85);
-}
-
-.leaflet-control-locate.active {
+  font-size: 18px;
+  color: #333;
   background: #fff;
-  color: #111;
 }
-
+.leaflet-control-locate-btn:hover {
+  background: #f4f4f4;
+}
 
 
   
@@ -738,83 +725,73 @@ map.on("baselayerchange", function(e) {
   }
 });
 
-    L.control.zoom({ position: 'topright' }).addTo(map);
 
-    // Bouton Localisation façon OSM + style Nono Maps
-const locateControl = L.control({ position: "topright" });
+    
+// Ajout du bouton localisation DANS le même bloc que + et -
+const Locate = L.Control.extend({
+  onAdd: function() {
+    const container = L.DomUtil.create("div", "leaflet-bar");
 
-locateControl.onAdd = function () {
-  const div = L.DomUtil.create("div", "leaflet-control-locate");
+    // Bouton "+"
+    const zoomIn = L.DomUtil.create("a", "", container);
+    zoomIn.innerHTML = "+";
+    zoomIn.href = "#";
+    zoomIn.onclick = e => { e.preventDefault(); map.zoomIn(); };
 
-  // Icône de localisation façon OSM (SVG pur)
-  div.innerHTML = `
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
-         stroke="currentColor" stroke-width="2" stroke-linecap="round"
-         stroke-linejoin="round">
-      <circle cx="12" cy="12" r="3"></circle>
-      <line x1="12" y1="2" x2="12" y2="5"></line>
-      <line x1="12" y1="19" x2="12" y2="22"></line>
-      <line x1="2" y1="12" x2="5" y2="12"></line>
-      <line x1="19" y1="12" x2="22" y2="12"></line>
-    </svg>
-  `;
+    // Bouton "-"
+    const zoomOut = L.DomUtil.create("a", "", container);
+    zoomOut.innerHTML = "-";
+    zoomOut.href = "#";
+    zoomOut.onclick = e => { e.preventDefault(); map.zoomOut(); };
 
-  let marker = null;
-  let watchId = null;
+    // Bouton Localisation
+    const locateBtn = L.DomUtil.create("a", "leaflet-control-locate-btn", container);
+    locateBtn.innerHTML = "⊕";
+    locateBtn.href = "#";
 
-  div.onclick = () => {
-    // Stop localiser
-    if (watchId !== null) {
-      navigator.geolocation.clearWatch(watchId);
-      watchId = null;
-      if (marker) {
-        map.removeLayer(marker);
-        marker = null;
+    let userMarker = null;
+    let watchId = null;
+
+    locateBtn.onclick = e => {
+      e.preventDefault();
+
+      if (watchId !== null) {
+        navigator.geolocation.clearWatch(watchId);
+        watchId = null;
+        if (userMarker) map.removeLayer(userMarker);
+        userMarker = null;
+        return;
       }
-      div.classList.remove("active");
-      return;
-    }
 
-    // Start
-    if (!navigator.geolocation) {
-      alert("Géolocalisation non supportée.");
-      return;
-    }
+      if (!navigator.geolocation) return alert("Géolocalisation non supportée.");
 
-    div.classList.add("active");
+      watchId = navigator.geolocation.watchPosition(pos => {
+        const lat = pos.coords.latitude, lng = pos.coords.longitude;
 
-    watchId = navigator.geolocation.watchPosition(
-      pos => {
-        const lat = pos.coords.latitude;
-        const lng = pos.coords.longitude;
-
-        if (!marker) {
-          marker = L.circleMarker([lat, lng], {
+        if (!userMarker) {
+          userMarker = L.circleMarker([lat, lng], {
             radius: 8,
             color: "#3b82f6",
             fillColor: "#3b82f6",
             fillOpacity: 0.6
           }).addTo(map);
         } else {
-          marker.setLatLng([lat, lng]);
+          userMarker.setLatLng([lat, lng]);
         }
 
-        map.setView([lat, lng], 16);
-      },
-      err => {
-        console.error(err);
-        div.classList.remove("active");
-      }
-    );
-  };
+        map.setView([lat, lng], 15);
+      });
+    };
 
-  L.DomEvent.disableClickPropagation(div);
-  L.DomEvent.disableScrollPropagation(div);
+    return container;
+  }
+});
 
-  return div;
-};
+new Locate({ position: "topright" }).addTo(map);
 
-locateControl.addTo(map);
+
+
+    
 
     planIGN.on("tileerror", e => console.warn("IGN PLAN tile error", e));
     orthoIGN.on("tileerror", e => console.warn("IGN ORTHO tile error", e));
