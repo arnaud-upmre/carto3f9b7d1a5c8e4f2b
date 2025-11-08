@@ -792,14 +792,6 @@ const ZLControl = L.Control.extend({
 new ZLControl({ position: "topright" }).addTo(map);
 
 
-    
-
-
-    
-
-    planIGN.on("tileerror", e => console.warn("IGN PLAN tile error", e));
-    orthoIGN.on("tileerror", e => console.warn("IGN ORTHO tile error", e));
-
 
 const postesLayer = L.markerClusterGroup({
   disableClusteringAtZoom: 18
@@ -1309,8 +1301,6 @@ leftControls.addTo(map);
     document.getElementById("streetview-overlay").style.display = "none";
     document.getElementById("streetview-frame").src = ""; 
   };
-document.getElementById("streetview-overlay").style.display = "none";
-document.getElementById("streetview-frame").src = "";
 
 
 console.info("[Nono Maps] boot", {
@@ -1346,9 +1336,6 @@ function renderInformation(value) {
 }
 
 let activeEditPopup = null; 
-
-function escHtml(s){return String(s).replace(/[&<>"]/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[m]));}
-
 
 map.on('click', (e) => {
   if (!editMode) return;
