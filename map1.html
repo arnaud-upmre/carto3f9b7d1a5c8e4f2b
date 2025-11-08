@@ -735,7 +735,13 @@ const ZLControl = L.Control.extend({
     const locateBtn = L.DomUtil.create("a", "leaflet-control-zoom-in", container);
     locateBtn.href = "#";
     locateBtn.title = "Me localiser";
-    locateBtn.innerHTML = "⊕";
+    locateBtn.innerHTML = `
+<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"
+     xmlns="http://www.w3.org/2000/svg">
+  <path d="M12 2L15 14H9L12 2Z" />
+  <circle cx="12" cy="18" r="2" />
+</svg>
+`;
 
     let userMarker = null;
     let watchId = null;
