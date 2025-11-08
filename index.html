@@ -903,7 +903,7 @@ const PROX_STEP = 10;
 let proximiteSorted = [];
     
 function formatContact(val) {
-  if (!val) return `<p><strong id="editable-contact">👤 Contact :</strong> <span class="placeholder">(non renseigné)</span></p>`;
+  if (!val) return `<p><strong id="editable-contact">👤 Contact :</strong> <span class="placeholder">(Complétez cette info en modifiant la fiche)</span></p>`;
 
   const phoneRegex = /\d{2}\s?\d{2}\s?\d{2}\s?\d{2}\s?\d{2}/g;
   const matches = val.match(phoneRegex);
@@ -962,7 +962,7 @@ function formatPortail(val) {
 
   // Cas : rien du tout
   if (!hasPortail && !isSecure) {
-    return `<p><strong id="editable-portail">🔑 Portail / Alarme :</strong> <span class="placeholder">(Non renseigné — complétez cette info en modifiant la fiche)</span></p>`;
+    return `<p><strong id="editable-portail">🔑 Portail / Alarme :</strong> <span class="placeholder">(Complétez cette info en modifiant la fiche)</span></p>`;
   }
 
   // Cas : lien sécurisé
@@ -1377,7 +1377,7 @@ blocs.push(`
 <p><strong id="editable-description">ℹ️ Informations :</strong>
   ${lieu.description
     ? `<span class="desc-value">${lieu.description}</span>`
-    : '<span class="placeholder">(Non renseigné — complétez cette info en modifiant la fiche)</span>'}
+    : '<span class="placeholder">(Complétez cette info en modifiant la fiche)</span>'}
   ${
     lieu.description_acces && lieu.description_acces.trim() !== ""
       ? `<br><br><strong>🚙 Accès :</strong> <span class="desc-value">${lieu.description_acces}</span>`
@@ -1388,7 +1388,7 @@ blocs.push(`
   
 blocs.push(
   formatContact(lieu.contact) ||
-  `<p><strong id="editable-contact">👤 Contact :</strong> <span class="contact-value"><span class="placeholder">(Non renseigné — complétez cette info en modifiant la fiche)</span></span></p>`
+  `<p><strong id="editable-contact">👤 Contact :</strong> <span class="contact-value"><span class="placeholder">(Non renseigné)</span></span></p>`
 );
 
 blocs.push(formatPortailDisplay(lieu.portail, lieu.secure));
