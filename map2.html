@@ -392,16 +392,22 @@ const boundsFrance = [
 
 const map = L.map('map', {
   zoomControl: false,
-  attributionControl: false,
+  attributionControl: true,
   minZoom: 5,                  
   maxZoom: 21,                 
   maxBounds: boundsFrance,     
   maxBoundsViscosity: 1.0      
 }).setView(defaultCenter, defaultZoom);
 
+
+map.attributionControl.setPrefix('');
+map.attributionControl.addAttribution("Nono Maps – v1.11")
+map.attributionControl.addAttribution("© IGN");
+map.attributionControl.addAttribution("© OpenStreetMap contributors");
+map.attributionControl.addAttribution("© OpenRailwayMap / OSM");
+map.attributionControl.addAttribution("© Esri");
     
-let editMode = false;   
-  
+let editMode = false;     
 
 const editBanner = document.createElement("div");
 editBanner.style = `
@@ -636,7 +642,7 @@ const ormRails = L.tileLayer(
   {
     attribution: "© OpenRailwayMap / OSM",
     maxZoom: 21,
-    maxNativeZoom: 19,
+    maxNativeZoom: 20,
     tileSize: 256,
     opacity: 0.75,
     crossOrigin: "anonymous"
@@ -811,6 +817,11 @@ let content = `
 <div style="margin-bottom:10px;">
 ✍🏻 <strong>Information :</strong> ${ renderInformation(item.description) }
 </div>
+
+${item.portail ? `
+<div style="margin-bottom:6px;">
+  🔑 <strong>Portail / Alarme :</strong> ${item.portail}
+</div>` : ""}
 
   <a href="index.html?id=${encodeURIComponent(
     (`${item.nom || ''} ${item.type || ''} ${item.SAT || ''}${accesVal ? ' – accès ' + accesVal : ''}`)
