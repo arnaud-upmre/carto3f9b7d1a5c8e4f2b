@@ -2,12 +2,10 @@ const TILE_CACHE = 'tiles-pro-v1';
 const MAX_TILES = 3000;
 
 const CACHE_DOMAINS = [
-  'openrailwaymap.org',
   'tile.openstreetmap.org',
   'data.geopf.fr',
-  '/MapServer/'  // Esri
+  '/MapServer/'
 ];
-
 
 async function limitCacheSize(cacheName, maxItems) {
   const cache = await caches.open(cacheName);
