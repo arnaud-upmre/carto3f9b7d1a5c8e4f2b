@@ -19,20 +19,6 @@
 
 <style>
 
-.leaflet-control-locate-btn {
-  width: 26px;
-  height: 26px;
-  line-height: 26px;
-  text-align: center;
-  cursor: pointer;
-  font-size: 18px;
-  color: #333;
-  background: #fff;
-}
-.leaflet-control-locate-btn:hover {
-  background: #f4f4f4;
-}
-
 
   
 
@@ -726,28 +712,30 @@ map.on("baselayerchange", function(e) {
 });
 
 
-    
-// Bloc zoom + localisation avec style Leaflet intact
+// Bloc zoom + localisation en style Leaflet natif
 const ZLControl = L.Control.extend({
   onAdd: function () {
     const container = L.DomUtil.create("div", "leaflet-control-zoom leaflet-bar");
 
     // Bouton +
     const zoomIn = L.DomUtil.create("a", "leaflet-control-zoom-in", container);
-    zoomIn.innerHTML = "+";
     zoomIn.href = "#";
+    zoomIn.title = "Zoom avant";
+    zoomIn.innerHTML = "+";
     zoomIn.onclick = e => { e.preventDefault(); map.zoomIn(); };
 
     // Bouton -
     const zoomOut = L.DomUtil.create("a", "leaflet-control-zoom-out", container);
-    zoomOut.innerHTML = "-";
     zoomOut.href = "#";
+    zoomOut.title = "Zoom arrière";
+    zoomOut.innerHTML = "-";
     zoomOut.onclick = e => { e.preventDefault(); map.zoomOut(); };
 
-    // Bouton localisation (AJOUT, même style Leaflet)
+    // Bouton localisation
     const locateBtn = L.DomUtil.create("a", "leaflet-control-zoom-in", container);
-    locateBtn.innerHTML = "⊕";
     locateBtn.href = "#";
+    locateBtn.title = "Me localiser";
+    locateBtn.innerHTML = "⊕";
 
     let userMarker = null;
     let watchId = null;
@@ -755,34 +743,33 @@ const ZLControl = L.Control.extend({
     locateBtn.onclick = e => {
       e.preventDefault();
 
-      // Stop
       if (watchId !== null) {
         navigator.geolocation.clearWatch(watchId);
         watchId = null;
-        if (userMarker) map.removeLayer(userMarker);
-        userMarker = null;
+        if (userMarker) {
+          map.removeLayer(userMarker);
+          userMarker = null;
+        }
         return;
       }
 
-      // Start
       if (!navigator.geolocation) return alert("Géolocalisation non supportée.");
 
       watchId = navigator.geolocation.watchPosition(pos => {
-        const lat = pos.coords.latitude;
-        const lng = pos.coords.longitude;
+        const { latitude, longitude } = pos.coords;
 
         if (!userMarker) {
-          userMarker = L.circleMarker([lat, lng], {
+          userMarker = L.circleMarker([latitude, longitude], {
             radius: 8,
             color: "#3b82f6",
             fillColor: "#3b82f6",
             fillOpacity: 0.6
           }).addTo(map);
         } else {
-          userMarker.setLatLng([lat, lng]);
+          userMarker.setLatLng([latitude, longitude]);
         }
 
-        map.setView([lat, lng], 16);
+        map.setView([latitude, longitude], 16);
       });
     };
 
@@ -790,10 +777,7 @@ const ZLControl = L.Control.extend({
   }
 });
 
-// On ajoute NOTRE propre bloc zoom+localisation, pas celui par défaut
-map.zoomControl.remove();  
 new ZLControl({ position: "topright" }).addTo(map);
-
 
 
     
@@ -1297,45 +1281,6 @@ recenterBtn.onclick = () => {
 L.DomEvent.disableClickPropagation(recenterBtn);
 L.DomEvent.disableScrollPropagation(recenterBtn);
 
-let userMarker;
-let geoWatchId = null;
-const locateBtn = L.DomUtil.create("div", "btn-toggle", topGroup);
-locateBtn.innerHTML = "📍";
-
-locateBtn.onclick = () => {
-  if (!navigator.geolocation) return alert("Géolocalisation non supportée.");
-
-  if (geoWatchId !== null) {
-    navigator.geolocation.clearWatch(geoWatchId);
-    geoWatchId = null;
-    if (userMarker) {
-      map.removeLayer(userMarker);
-      userMarker = null;
-    }
-    locateBtn.classList.remove("active");
-    return;
-  }
-
-  geoWatchId = navigator.geolocation.watchPosition(pos => {
-    const lat = pos.coords.latitude, lng = pos.coords.longitude;
-    if (userMarker) {
-      userMarker.setLatLng([lat, lng]);
-    } else {
-      userMarker = L.circleMarker([lat, lng], {
-        radius: 8,
-        color: "#3b82f6",
-        fillColor: "#3b82f6",
-        fillOpacity: 0.6
-      }).addTo(map);
-    }
-    map.setView([lat, lng], 15);
-  });
-
-  locateBtn.classList.add("active");
-};
-
-L.DomEvent.disableClickPropagation(locateBtn);
-L.DomEvent.disableScrollPropagation(locateBtn);
 
 
   return container;
