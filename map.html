@@ -401,7 +401,8 @@ const map = L.map('map', {
   minZoom: 5,                  
   maxZoom: 21,                 
   maxBounds: boundsFrance,     
-  maxBoundsViscosity: 1.0      
+  maxBoundsViscosity: 1.0,
+  keepBuffer: 6 
 }).setView(defaultCenter, defaultZoom);
 
     let currentBaseLayerName = "🛰️+🗺️ Satellite + Lignes"; 
@@ -600,7 +601,8 @@ const orthoIGN = L.tileLayer(
     maxZoom: 21,      
     maxNativeZoom: 19, 
     tileSize: 256,
-    crossOrigin: 'anonymous'
+    crossOrigin: 'anonymous',
+    updateWhenIdle: true
   }
 );
 
@@ -651,7 +653,8 @@ const ormRails = L.tileLayer(
     maxNativeZoom: 19,
     tileSize: 256,
     opacity: 0.75,
-    crossOrigin: "anonymous"
+    crossOrigin: "anonymous",
+    updateWhenIdle: true 
   }
 );
 
@@ -673,7 +676,10 @@ const mixteRails = L.layerGroup([
   ormRails
 ]);
     
-orthoIGN.addTo(map);
+setTimeout(() => {
+  orthoIGN.addTo(map);
+}, 120);
+
 setTimeout(() => {
   ormRails.addTo(map);
 }, 350);
