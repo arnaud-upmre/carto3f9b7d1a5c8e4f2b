@@ -19,6 +19,9 @@
 
 <style>
 
+
+  
+
   html, body {
   height: 100%;
   margin: 0;
@@ -399,6 +402,7 @@ const map = L.map('map', {
   maxBoundsViscosity: 1.0      
 }).setView(defaultCenter, defaultZoom);
 
+    let currentBaseLayerName = "🛰️+🗺️ Satellite + Lignes"; 
 
 map.attributionControl.setPrefix('');
 map.attributionControl.addAttribution("Nono Maps – v1.11")
@@ -673,20 +677,18 @@ mixteRails.addTo(map);
 map.on("zoomend", () => {
   const z = map.getZoom();
 
+  if (currentBaseLayerName !== "🛰️+🗺️ Satellite + Lignes") {
+    map.removeLayer(ormRails);
+    map.removeLayer(ormSpeed);
+    return;
+  }
+
   if (z >= 21) {
-    if (!map.hasLayer(ormSpeed)) {
-      map.addLayer(ormSpeed);
-    }
-    if (map.hasLayer(ormRails)) {
-      map.removeLayer(ormRails);
-    }
+    map.addLayer(ormSpeed);
+    map.removeLayer(ormRails);
   } else {
-    if (map.hasLayer(ormSpeed)) {
-      map.removeLayer(ormSpeed);
-    }
-    if (!map.hasLayer(ormRails)) {
-      map.addLayer(ormRails);
-    }
+    map.removeLayer(ormSpeed);
+    map.addLayer(ormRails);
   }
 });
 
@@ -701,14 +703,99 @@ const baseLayers = {
 const layerControl = L.control.layers(baseLayers, {}).addTo(map);
 
 map.on("baselayerchange", function(e) {
+
+   currentBaseLayerName = e.name;
+
+
   if (e.name === "🛰️ Satellite IGN") {
     map.addLayer(ignLabels);
   } else {
     map.removeLayer(ignLabels);
   }
+
+
+  map.removeLayer(ormRails);
+  map.removeLayer(ormSpeed);
+
+
+  if (e.name === "🛰️+🗺️ Satellite + Lignes") {
+    map.addLayer(ormRails);
+  }
 });
 
-    L.control.zoom({ position: 'topright' }).addTo(map);
+
+
+const ZLControl = L.Control.extend({
+  onAdd: function () {
+    const container = L.DomUtil.create("div", "leaflet-control-zoom leaflet-bar");
+
+  
+    const zoomIn = L.DomUtil.create("a", "leaflet-control-zoom-in", container);
+    zoomIn.href = "#";
+    zoomIn.title = "Zoom avant";
+    zoomIn.innerHTML = "+";
+    zoomIn.onclick = e => { e.preventDefault(); map.zoomIn(); };
+
+  
+    const zoomOut = L.DomUtil.create("a", "leaflet-control-zoom-out", container);
+    zoomOut.href = "#";
+    zoomOut.title = "Zoom arrière";
+    zoomOut.innerHTML = "-";
+    zoomOut.onclick = e => { e.preventDefault(); map.zoomOut(); };
+
+
+    const locateBtn = L.DomUtil.create("a", "leaflet-control-zoom-in", container);
+    locateBtn.href = "#";
+    locateBtn.title = "Me localiser";
+    locateBtn.innerHTML = `<img src="ico/arrow.png" style="width:18px;height:18px;">`;
+
+    let userMarker = null;
+    let watchId = null;
+
+    locateBtn.onclick = e => {
+      e.preventDefault();
+
+      if (watchId !== null) {
+        navigator.geolocation.clearWatch(watchId);
+        watchId = null;
+        if (userMarker) {
+          map.removeLayer(userMarker);
+          userMarker = null;
+        }
+        return;
+      }
+
+      if (!navigator.geolocation) return alert("Géolocalisation non supportée.");
+
+      watchId = navigator.geolocation.watchPosition(pos => {
+        const { latitude, longitude } = pos.coords;
+
+        if (!userMarker) {
+          userMarker = L.circleMarker([latitude, longitude], {
+            radius: 8,
+            color: "#3b82f6",
+            fillColor: "#3b82f6",
+            fillOpacity: 0.6
+          }).addTo(map);
+        } else {
+          userMarker.setLatLng([latitude, longitude]);
+        }
+
+        map.setView([latitude, longitude], 16);
+      });
+    };
+
+    return container;
+  }
+});
+
+new ZLControl({ position: "topright" }).addTo(map);
+
+
+    
+
+
+    
 
     planIGN.on("tileerror", e => console.warn("IGN PLAN tile error", e));
     orthoIGN.on("tileerror", e => console.warn("IGN ORTHO tile error", e));
@@ -1206,45 +1293,6 @@ recenterBtn.onclick = () => {
 L.DomEvent.disableClickPropagation(recenterBtn);
 L.DomEvent.disableScrollPropagation(recenterBtn);
 
-let userMarker;
-let geoWatchId = null;
-const locateBtn = L.DomUtil.create("div", "btn-toggle", topGroup);
-locateBtn.innerHTML = "📍";
-
-locateBtn.onclick = () => {
-  if (!navigator.geolocation) return alert("Géolocalisation non supportée.");
-
-  if (geoWatchId !== null) {
-    navigator.geolocation.clearWatch(geoWatchId);
-    geoWatchId = null;
-    if (userMarker) {
-      map.removeLayer(userMarker);
-      userMarker = null;
-    }
-    locateBtn.classList.remove("active");
-    return;
-  }
-
-  geoWatchId = navigator.geolocation.watchPosition(pos => {
-    const lat = pos.coords.latitude, lng = pos.coords.longitude;
-    if (userMarker) {
-      userMarker.setLatLng([lat, lng]);
-    } else {
-      userMarker = L.circleMarker([lat, lng], {
-        radius: 8,
-        color: "#3b82f6",
-        fillColor: "#3b82f6",
-        fillOpacity: 0.6
-      }).addTo(map);
-    }
-    map.setView([lat, lng], 15);
-  });
-
-  locateBtn.classList.add("active");
-};
-
-L.DomEvent.disableClickPropagation(locateBtn);
-L.DomEvent.disableScrollPropagation(locateBtn);
 
 
   return container;
