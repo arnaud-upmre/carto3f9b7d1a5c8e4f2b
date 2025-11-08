@@ -1194,7 +1194,7 @@ html += `
   const blocs = [];
 
   blocs.push(formatDescription(lieu.description));
-  
+  // Bloc Accès (affiché seulement si renseigné)
 if (lieu.description_acces && lieu.description_acces.trim() !== "") {
   blocs.push(`
     <p>
@@ -1203,8 +1203,6 @@ if (lieu.description_acces && lieu.description_acces.trim() !== "") {
     </p>
   `);
 }
-
-  
   blocs.push(formatContact(lieu.contact));
   blocs.push(formatPortailDisplay(lieu.portail, lieu.secure));
 
