@@ -33,6 +33,73 @@
    
   <style id="eale-intro-styles">
 
+#result {
+  position: relative !important;
+}
+
+.telecom-zone {
+  position:absolute;
+  top:18px;
+  right:18px;
+  display:flex;
+  gap:8px;
+}
+
+    
+.telecom-mini {
+  display:inline-block;
+  padding:4px 14px;
+  font-size:12px;
+  font-weight:600;
+  border-radius:14px;
+  white-space:nowrap;
+
+  /* VERRE DÉPOLI gris perlé */
+  background:rgba(240,240,240,0.45);            /* moins blanc, plus gris */
+  border:1px solid rgba(170,170,170,0.40);      /* bordure douce visible */
+  color:#1a63e0;
+
+  backdrop-filter: blur(18px) saturate(170%);   /* vrai effet verre */
+  -webkit-backdrop-filter: blur(18px) saturate(170%);
+
+  /* profondeur / relief */
+  box-shadow:
+    0 3px 8px rgba(0,0,0,0.10),
+    0 8px 20px rgba(0,0,0,0.06),
+    inset 0 0 2px rgba(255,255,255,0.55);
+
+  transition:0.22s ease;
+}
+
+/* HOVER : plus clair, bord plus contrasté, verre plus marqué */
+.telecom-mini:hover {
+  background:rgba(255,255,255,0.60);
+  border-color:rgba(150,150,150,0.55);
+  box-shadow:
+    0 4px 10px rgba(0,0,0,0.14),
+    0 12px 24px rgba(0,0,0,0.10),
+    inset 0 0 2px rgba(255,255,255,0.70);
+}
+    
+
+@media (prefers-color-scheme: dark) {
+  .telecom-mini {
+    background:rgba(255,255,255,0.10);
+    border:1px solid rgba(255,255,255,0.25);
+    color:#cfe5ff;
+    box-shadow:
+      0 1px 3px rgba(0,0,0,0.45),
+      inset 0 0 0 0.5px rgba(255,255,255,0.08);
+  }
+  .telecom-mini:hover {
+    background:rgba(255,255,255,0.18);
+    border-color:rgba(255,255,255,0.35);
+  }
+}
+
+
+    
+
 /* ====== Container global ====== */
 .nono-banner-container {
   position: fixed;
@@ -1218,6 +1285,16 @@ const targetLat = usePoste ? _latPoste : lieu.latitude;
 const targetLon = usePoste ? _lonPoste : lieu.longitude;
 const urlMyMapsPoste = myMapsViewer(targetLat, targetLon, 20);
 
+
+let telecomIcons = "";
+if (lieu.description_telecommande) {
+  telecomIcons = lieu.description_telecommande
+    .split("/")
+    .map(t => `<span class="telecom-mini">${t.trim()}</span>`)
+    .join("");
+}
+
+  
 let html = `<h2>
   📍 <span id="editable-nom">${lieu.nom}</span> 
   <span id="editable-type">${lieu.type}</span>
@@ -1225,6 +1302,9 @@ let html = `<h2>
   ${lieu.accès ? `<span id="editable-acces"> – accès ${lieu.accès}</span>` : ""}
   <a href="#" id="edit-toggle">[modifier]</a>
 </h2>`;
+
+html += `<div class="telecom-zone">${telecomIcons}</div>`;
+
     
 html += `
 <div class="rep-block poste-only">
