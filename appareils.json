@@ -3988,7 +3988,8 @@
     "appareil": "IMPF",
     "latitude": 50.7082,
     "longitude": 2.67608,
-    "description": ""
+    "description": "",
+    "imajnet":"https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.70823139278624,2.6759553520567407;uid=16beb0c5-421e-44bd-94f4-8cce07755ba9_1173;"
   },
   {
     "nom": "Strazeele",
@@ -3998,7 +3999,8 @@
     "appareil": "IMPR",
     "latitude": 50.7082,
     "longitude": 2.67601,
-    "description": ""
+    "description": "",
+    "imajnet":"https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.70823042103493,2.6758654796567503;uid=16beb0c5-421e-44bd-94f4-8cce07755ba9_1175;"
   },
   {
     "nom": "Strazeele",
@@ -4008,7 +4010,8 @@
     "appareil": "IP1",
     "latitude": 50.7082,
     "longitude": 2.67595,
-    "description": ""
+    "description": "",
+    "imajnet":"https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.70822994014469,2.6758205609426167;uid=16beb0c5-421e-44bd-94f4-8cce07755ba9_1176;"
   },
   {
     "nom": "Strazeele",
@@ -4018,7 +4021,8 @@
     "appareil": "IP2",
     "latitude": 50.7082,
     "longitude": 2.67601,
-    "description": ""
+    "description": "",
+    "imajnet":"https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.70823042103493,2.6758654796567503;uid=16beb0c5-421e-44bd-94f4-8cce07755ba9_1175;"
   },
   {
     "nom": "Strazeele",
@@ -4069,7 +4073,8 @@
     "appareil": "TSA",
     "latitude": 50.7082,
     "longitude": 2.67589,
-    "description": ""
+    "description": "",
+    "imajnet":"https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.708229045477786,2.675730760989815;uid=16beb0c5-421e-44bd-94f4-8cce07755ba9_1178;"
   },
   {
     "nom": "Strazeele",
