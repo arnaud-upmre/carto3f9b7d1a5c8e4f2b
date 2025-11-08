@@ -1,28 +1,30 @@
+const BASE = "/carto3f9b7d1a5c8e4f2b";
+
 const APP_CACHE = "nonomaps-app-v1";
 const TILE_CACHE = "nonomaps-tiles-v1";
 const MAX_TILES = 3000;
 
 const APP_ASSETS = [
-  "/",                 
-  "/index.html",
-  "/map.html",
-  "/itineraire.html",
-  "/arnaud.html",
-  "/ajout_appareil.html",
-  "/ajout_poste.html",
-  "/version.html",
-  "/manifest.json",
-  "/robots.txt",
+  `${BASE}/`,
+  `${BASE}/index.html`,
+  `${BASE}/map.html`,
+  `${BASE}/itineraire.html`,
+  `${BASE}/arnaud.html`,
+  `${BASE}/ajout_appareil.html`,
+  `${BASE}/ajout_poste.html`,
+  `${BASE}/version.html`,
+  `${BASE}/manifest.json`,
+  `${BASE}/robots.txt`,
 
-  "/ico/acces.png",
-  "/ico/poste.png",
-  "/ico/int.png",
-  "/ico/TT.png",
-  "/ico/sect.png",
-  "/ico/stop.png",
-  "/ico/arrow.png",
-  "/favicon/favicon.ico",
-  "/Logo EALE.png"
+  `${BASE}/ico/acces.png`,
+  `${BASE}/ico/poste.png`,
+  `${BASE}/ico/int.png`,
+  `${BASE}/ico/TT.png`,
+  `${BASE}/ico/sect.png`,
+  `${BASE}/ico/stop.png`,
+  `${BASE}/ico/arrow.png`,
+  `${BASE}/favicon/favicon.ico`,
+  `${BASE}/Logo EALE.png`
 ];
 
 const TILE_DOMAINS = [
@@ -56,12 +58,12 @@ self.addEventListener("activate", event => {
 self.addEventListener("fetch", event => {
   const url = event.request.url;
 
-  // Toujours online pour les JSON (données fraîches)
+  // Toujours online pour les JSON
   if (url.endsWith("postes.json") || url.endsWith("appareils.json")) {
     return;
   }
 
-  // Cache des tuiles satellite + OSM
+  // Cache tuiles ESRI + OSM
   if (TILE_DOMAINS.some(domain => url.includes(domain))) {
     event.respondWith(
       caches.open(TILE_CACHE).then(async cache => {
@@ -81,7 +83,7 @@ self.addEventListener("fetch", event => {
     return;
   }
 
-  // HTML toujours à jour (network first)
+  // Documents HTML → network-first (toujours à jour)
   event.respondWith(
     (async () => {
       const req = event.request;
@@ -93,11 +95,11 @@ self.addEventListener("fetch", event => {
           cache.put(req, fresh.clone());
           return fresh;
         } catch {
-          return caches.match(req); // fallback offline
+          return caches.match(req);  // offline fallback
         }
       }
 
-      // Le reste : cache-first
+      // Le reste → cache-first
       const cached = await caches.match(req);
       if (cached) return cached;
 
@@ -120,7 +122,6 @@ async function limitTileCache() {
 
   if (keys.length > MAX_TILES) {
     const excess = keys.length - MAX_TILES;
-
     for (let i = 0; i < excess; i++) {
       await cache.delete(keys[i]);
     }
