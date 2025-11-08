@@ -657,13 +657,13 @@ const mixteRails = L.layerGroup([
     
 mixteRails.addTo(map);
 
-const ormLabels = L.tileLayer(
-  "https://tiles.openrailwaymap.org/labels/{z}/{x}/{y}.png",
+const ormPK = L.tileLayer(
+  "https://tiles.openrailwaymap.org/maxspeed/{z}/{x}/{y}.png",
   {
-    minZoom: 14,         // n’apparaît qu’à partir du zoom 14
+    minZoom: 14,
     maxZoom: 21,
     opacity: 1,
-    zIndex: 800,         // toujours au-dessus des fonds
+    zIndex: 800,
     crossOrigin: "anonymous"
   }
 );
@@ -1375,9 +1375,9 @@ function showToast(message) {
 
 map.on("zoomend", () => {
   if (map.getZoom() >= 14) {
-    if (!map.hasLayer(ormLabels)) map.addLayer(ormLabels);
+    if (!map.hasLayer(ormPK)) map.addLayer(ormPK);
   } else {
-    if (map.hasLayer(ormLabels)) map.removeLayer(ormLabels);
+    if (map.hasLayer(ormPK)) map.removeLayer(ormPK);
   }
 });
 </script>
