@@ -587,7 +587,6 @@ const zoom = parseInt(params.get("z")) || 19;
     maxZoom: 21,       
     maxNativeZoom: 19, 
     tileSize: 256,
-    crossOrigin: 'anonymous'
   }
 );
 
@@ -600,7 +599,6 @@ const orthoIGN = L.tileLayer(
     maxZoom: 21,      
     maxNativeZoom: 19, 
     tileSize: 256,
-    crossOrigin: 'anonymous'
   }
 );
 
@@ -617,7 +615,6 @@ const ignLabels = L.tileLayer(
     maxNativeZoom: 19,
     tileSize: 256,
     transparent: true,
-    crossOrigin: "anonymous",
     zIndex: 500
   }
 );
