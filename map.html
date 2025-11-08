@@ -602,7 +602,8 @@ const orthoIGN = L.tileLayer(
     maxNativeZoom: 19, 
     tileSize: 256,
     crossOrigin: 'anonymous',
-    updateWhenIdle: true
+    updateWhenIdle: true,
+    updateWhenZooming: false,
   }
 );
 
@@ -654,7 +655,8 @@ const ormRails = L.tileLayer(
     tileSize: 256,
     opacity: 0.75,
     crossOrigin: "anonymous",
-    updateWhenIdle: true 
+    updateWhenIdle: true,
+    updateWhenZooming: false,
   }
 );
 
