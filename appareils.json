@@ -3176,9 +3176,10 @@
     "SAT": "",
     "accès": "",
     "appareil": "TT 5833",
-    "latitude": 50.8056178,
-    "longitude": 1.7283007,
-    "description": ""
+    "latitude": 50.80559,
+    "longitude": 1.7283,
+    "description": "TT avec grillage.",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.80560699912938,1.728482346667809;uid=a65e1b9b-e3d2-43f3-8780-05d7ca0842e8_2275;"
   },
   {
     "nom": "Marquise",
@@ -3186,9 +3187,10 @@
     "SAT": "",
     "accès": "",
     "appareil": "TT 5834",
-    "latitude": 50.8057113,
-    "longitude": 1.728337,
-    "description": ""
+    "latitude": 50.80568,
+    "longitude": 1.72831,
+    "description": "TT avec grillage.",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.80563697244964,1.7285181681642119;uid=cac35c07-3119-4957-94ad-77b33e9fb6fe_1774;"
   },
   {
     "nom": "Marquise",
@@ -3196,9 +3198,10 @@
     "SAT": "",
     "accès": "",
     "appareil": "TT 5837",
-    "latitude": 50.8055296,
-    "longitude": 1.7294567,
-    "description": ""
+    "latitude": 50.80549,
+    "longitude": 1.72944,
+    "description": "TT avec grillage.",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.80551550753236,1.7296419430555587;uid=a65e1b9b-e3d2-43f3-8780-05d7ca0842e8_2248;"
   },
   {
     "nom": "Marquise",
@@ -3218,7 +3221,8 @@
     "appareil": "I5838",
     "latitude": 50.806742,
     "longitude": 1.7425758,
-    "description": ""
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.80666365692494,1.7425081060935306;uid=006e59c8-d759-4847-89d7-e299311453c8_174;"
   },
   {
     "nom": "Marquise",
@@ -3226,9 +3230,10 @@
     "SAT": "SAT2",
     "accès": "",
     "appareil": "TT5836",
-    "latitude": 50.8067378,
-    "longitude": 1.742561,
-    "description": ""
+    "latitude": 50.806742,
+    "longitude": 1.7425758,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.80666365692494,1.7425081060935306;uid=006e59c8-d759-4847-89d7-e299311453c8_174;"
   },
   {
     "nom": "Moulin",
