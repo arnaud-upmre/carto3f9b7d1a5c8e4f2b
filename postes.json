@@ -4105,28 +4105,6 @@
     "poste_longitude": "3.13492"
   },
   {
-  "nom": "Thiennes_ESSAIS",
-  "type": "SP",
-  "SAT": "",
-  "accès": "",
-  "latitude": 50.658,
-  "longitude": 2.479,
-  "description": {
-    "acces": "Essais accès",
-    "telecommande": "💻 Télécommande: ACS25",
-    "particularite": "⚡️ Sectionneur 263-16 (se situe à Hazebrouck) à manœuvrer sur demande du régulateur pour les consignations C",
-    "nacelle": "Essais nacelle",
-    "notes": "Essais notes",
-  "rss": "C",
-  "contact": "",
-  "portail": "",
-  "lignes": "ARRAS à DUNKERQUE",
-  "numero_ligne": 301000,
-  "pk": "253,0935",
-  "poste_latitude": "50.658",
-  "poste_longitude": "2.480"
-  },
-  {
     "nom": "Thiennes",
     "type": "SP",
     "SAT": "",
