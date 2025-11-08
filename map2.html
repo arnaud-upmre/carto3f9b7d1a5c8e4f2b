@@ -48,25 +48,50 @@
     
 .telecom-mini {
   display:inline-block;
-  padding:3px 10px;
+  padding:4px 12px;
   font-size:11px;
   font-weight:600;
-  border-radius:12px;
+  border-radius:14px;
   white-space:nowrap;
 
-  background:rgba(56,132,255,0.18);
-  color:#1a73e8;
-  border:1px solid rgba(56,132,255,0.40);
-  box-shadow:0 0 6px rgba(56,132,255,0.25);
+  background:rgba(255,255,255,0.28);
+  border:1px solid rgba(255,255,255,0.55);
+  color:#0f5bd7;
+  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+
+  box-shadow:
+    0 1px 3px rgba(0,0,0,0.10),
+    inset 0 0 0 0.5px rgba(255,255,255,0.35);
+
+  transition:0.2s ease;
 }
+
+.telecom-mini:hover {
+  background:rgba(255,255,255,0.40);
+  border-color:rgba(255,255,255,0.75);
+  box-shadow:
+    0 2px 4px rgba(0,0,0,0.15),
+    inset 0 0 0 0.5px rgba(255,255,255,0.45);
+}
+
 @media (prefers-color-scheme: dark) {
   .telecom-mini {
-    background:rgba(144,202,249,0.15);
-    color:#90caf9;
-    border-color:rgba(144,202,249,0.45);
-    box-shadow:0 0 6px rgba(144,202,249,0.25);
+    background:rgba(255,255,255,0.10);
+    border:1px solid rgba(255,255,255,0.25);
+    color:#cfe5ff;
+    box-shadow:
+      0 1px 3px rgba(0,0,0,0.45),
+      inset 0 0 0 0.5px rgba(255,255,255,0.08);
+  }
+  .telecom-mini:hover {
+    background:rgba(255,255,255,0.18);
+    border-color:rgba(255,255,255,0.35);
   }
 }
+
+
+    
 
 /* ====== Container global ====== */
 .nono-banner-container {
