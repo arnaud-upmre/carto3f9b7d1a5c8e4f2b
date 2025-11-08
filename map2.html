@@ -33,7 +33,19 @@
    
   <style id="eale-intro-styles">
 
+#result {
+  position: relative !important;
+}
 
+.telecom-zone {
+  position:absolute;
+  top:18px;
+  right:18px;
+  display:flex;
+  gap:8px;
+}
+
+    
 .telecom-mini {
   display:inline-block;
   padding:3px 10px;
@@ -1259,7 +1271,7 @@ let html = `<h2>
   <a href="#" id="edit-toggle">[modifier]</a>
 </h2>`;
 
-html += `<div style="position:absolute; right:24px; margin-top:-40px;">${telecomIcons}</div>`;
+html += `<div class="telecom-zone">${telecomIcons}</div>`;
 
     
 html += `
