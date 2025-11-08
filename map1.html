@@ -19,6 +19,36 @@
 
 <style>
 
+  /* Bouton localisation style NonoMaps (même style que tes btn-toggle) */
+.leaflet-control-locate {
+  background: rgba(0,0,0,.7);
+  border: 1px solid rgba(255,255,255,.12);
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #fff;
+  font-size: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.25);
+  transition: background .2s, color .2s;
+}
+
+.leaflet-control-locate:hover {
+  background: rgba(0,0,0,.85);
+}
+
+.leaflet-control-locate.active {
+  background: #fff;
+  color: #111;
+}
+
+
+
+  
+
   html, body {
   height: 100%;
   margin: 0;
@@ -641,7 +671,7 @@ const ormRails = L.tileLayer(
   "https://tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png",
   {
     attribution: "© OpenRailwayMap / OSM",
-    maxZoom: 21,
+    maxZoom: 20,
     maxNativeZoom: 19,
     tileSize: 256,
     opacity: 0.75,
@@ -649,6 +679,18 @@ const ormRails = L.tileLayer(
   }
 );
 
+const ormSpeed = L.tileLayer(
+  "https://tiles.openrailwaymap.org/maxspeed/{z}/{x}/{y}.png",
+  {
+    attribution: "© OpenRailwayMap / OSM",
+    maxZoom: 21,
+    maxNativeZoom: 19,
+    tileSize: 256,
+    opacity: 1,
+    zIndex: 9999, 
+    crossOrigin: "anonymous"
+  }
+);
 
 const mixteRails = L.layerGroup([
   orthoIGN,
@@ -657,16 +699,26 @@ const mixteRails = L.layerGroup([
     
 mixteRails.addTo(map);
 
-const ormPK = L.tileLayer(
-  "https://tiles.openrailwaymap.org/maxspeed/{z}/{x}/{y}.png",
-  {
-    minZoom: 14,
-    maxZoom: 21,
-    opacity: 1,
-    zIndex: 800,
-    crossOrigin: "anonymous"
+    
+map.on("zoomend", () => {
+  const z = map.getZoom();
+
+  if (z >= 21) {
+    if (!map.hasLayer(ormSpeed)) {
+      map.addLayer(ormSpeed);
+    }
+    if (map.hasLayer(ormRails)) {
+      map.removeLayer(ormRails);
+    }
+  } else {
+    if (map.hasLayer(ormSpeed)) {
+      map.removeLayer(ormSpeed);
+    }
+    if (!map.hasLayer(ormRails)) {
+      map.addLayer(ormRails);
+    }
   }
-);
+});
 
 const baseLayers = {
   "🛰️ Satellite IGN": orthoIGN,
@@ -687,6 +739,82 @@ map.on("baselayerchange", function(e) {
 });
 
     L.control.zoom({ position: 'topright' }).addTo(map);
+
+    // Bouton Localisation façon OSM + style Nono Maps
+const locateControl = L.control({ position: "topright" });
+
+locateControl.onAdd = function () {
+  const div = L.DomUtil.create("div", "leaflet-control-locate");
+
+  // Icône de localisation façon OSM (SVG pur)
+  div.innerHTML = `
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="2" stroke-linecap="round"
+         stroke-linejoin="round">
+      <circle cx="12" cy="12" r="3"></circle>
+      <line x1="12" y1="2" x2="12" y2="5"></line>
+      <line x1="12" y1="19" x2="12" y2="22"></line>
+      <line x1="2" y1="12" x2="5" y2="12"></line>
+      <line x1="19" y1="12" x2="22" y2="12"></line>
+    </svg>
+  `;
+
+  let marker = null;
+  let watchId = null;
+
+  div.onclick = () => {
+    // Stop localiser
+    if (watchId !== null) {
+      navigator.geolocation.clearWatch(watchId);
+      watchId = null;
+      if (marker) {
+        map.removeLayer(marker);
+        marker = null;
+      }
+      div.classList.remove("active");
+      return;
+    }
+
+    // Start
+    if (!navigator.geolocation) {
+      alert("Géolocalisation non supportée.");
+      return;
+    }
+
+    div.classList.add("active");
+
+    watchId = navigator.geolocation.watchPosition(
+      pos => {
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+
+        if (!marker) {
+          marker = L.circleMarker([lat, lng], {
+            radius: 8,
+            color: "#3b82f6",
+            fillColor: "#3b82f6",
+            fillOpacity: 0.6
+          }).addTo(map);
+        } else {
+          marker.setLatLng([lat, lng]);
+        }
+
+        map.setView([lat, lng], 16);
+      },
+      err => {
+        console.error(err);
+        div.classList.remove("active");
+      }
+    );
+  };
+
+  L.DomEvent.disableClickPropagation(div);
+  L.DomEvent.disableScrollPropagation(div);
+
+  return div;
+};
+
+locateControl.addTo(map);
 
     planIGN.on("tileerror", e => console.warn("IGN PLAN tile error", e));
     orthoIGN.on("tileerror", e => console.warn("IGN ORTHO tile error", e));
@@ -1371,15 +1499,6 @@ function showToast(message) {
     toast.classList.remove("show");
   }, 2000);
 }
-
-
-map.on("zoomend", () => {
-  if (map.getZoom() >= 14) {
-    if (!map.hasLayer(ormPK)) map.addLayer(ormPK);
-  } else {
-    if (map.hasLayer(ormPK)) map.removeLayer(ormPK);
-  }
-});
 </script>
 
 </body>
