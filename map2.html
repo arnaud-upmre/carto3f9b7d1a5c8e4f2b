@@ -34,16 +34,26 @@
   <style id="eale-intro-styles">
 
 
-    .telecom-mini {
+.telecom-mini {
   display:inline-block;
-  padding:2px 6px;
+  padding:3px 10px;
   font-size:11px;
   font-weight:600;
-  border-radius:10px;
-  background:rgba(26,115,232,0.10);
+  border-radius:12px;
+  white-space:nowrap;
+
+  background:rgba(56,132,255,0.18);
   color:#1a73e8;
-  border:1px solid #1a73e8;
-  margin-left:4px;
+  border:1px solid rgba(56,132,255,0.40);
+  box-shadow:0 0 6px rgba(56,132,255,0.25);
+}
+@media (prefers-color-scheme: dark) {
+  .telecom-mini {
+    background:rgba(144,202,249,0.15);
+    color:#90caf9;
+    border-color:rgba(144,202,249,0.45);
+    box-shadow:0 0 6px rgba(144,202,249,0.25);
+  }
 }
 
 /* ====== Container global ====== */
@@ -1249,7 +1259,7 @@ let html = `<h2>
   <a href="#" id="edit-toggle">[modifier]</a>
 </h2>`;
 
-  html += `<div style="text-align:right; margin-top:-6px;">${telecomIcons}</div>`;
+html += `<div style="position:absolute; right:24px; margin-top:-40px;">${telecomIcons}</div>`;
 
     
 html += `
