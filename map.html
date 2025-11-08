@@ -401,9 +401,7 @@ const map = L.map('map', {
   minZoom: 5,                  
   maxZoom: 21,                 
   maxBounds: boundsFrance,     
-  maxBoundsViscosity: 1.0,
-  keepBuffer: 6,
-  preferCanvas: true
+  maxBoundsViscosity: 1.0      
 }).setView(defaultCenter, defaultZoom);
 
     let currentBaseLayerName = "🛰️+🗺️ Satellite + Lignes"; 
@@ -602,10 +600,7 @@ const orthoIGN = L.tileLayer(
     maxZoom: 21,      
     maxNativeZoom: 19, 
     tileSize: 256,
-    crossOrigin: 'anonymous',
-    updateWhenIdle: true,
-    updateWhenZooming: false,
-    reuseTiles: true,
+    crossOrigin: 'anonymous'
   }
 );
 
@@ -656,10 +651,7 @@ const ormRails = L.tileLayer(
     maxNativeZoom: 19,
     tileSize: 256,
     opacity: 0.75,
-    crossOrigin: "anonymous",
-    updateWhenIdle: true,
-    updateWhenZooming: false,
-    reuseTiles: true,
+    crossOrigin: "anonymous"
   }
 );
 
@@ -681,7 +673,10 @@ const mixteRails = L.layerGroup([
   ormRails
 ]);
     
-mixteRails.addTo(map);
+orthoIGN.addTo(map);
+setTimeout(() => {
+  ormRails.addTo(map);
+}, 350);
 
     
 map.on("zoomend", () => {
@@ -703,12 +698,11 @@ map.on("zoomend", () => {
 });
 
 const baseLayers = {
-  "🛰️+🗺️ Satellite + Lignes": mixteRails,
   "🛰️ Satellite IGN": orthoIGN,
   "🛰️ Satellite Open": esriSat,
   "🗺️ Plan IGN": planIGN,
-  "🌍 Plan Open": osm
-  
+  "🌍 Plan Open": osm,
+  "🛰️+🗺️ Satellite + Lignes": mixteRails
 };
 
 const layerControl = L.control.layers(baseLayers, {}).addTo(map);
