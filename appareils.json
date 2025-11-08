@@ -3986,8 +3986,8 @@
     "SAT": "",
     "accès": "",
     "appareil": "IMPF",
-    "latitude": 50.7082125,
-    "longitude": 2.6760658,
+    "latitude": 50.7082,
+    "longitude": 2.67608,
     "description": ""
   },
   {
@@ -3996,8 +3996,8 @@
     "SAT": "",
     "accès": "",
     "appareil": "IMPR",
-    "latitude": 50.70822,
-    "longitude": 2.67597,
+    "latitude": 50.7082,
+    "longitude": 2.67601,
     "description": ""
   },
   {
@@ -4006,8 +4006,8 @@
     "SAT": "",
     "accès": "",
     "appareil": "IP1",
-    "latitude": 50.7082082,
-    "longitude": 2.6758807,
+    "latitude": 50.7082,
+    "longitude": 2.67595,
     "description": ""
   },
   {
@@ -4016,8 +4016,8 @@
     "SAT": "",
     "accès": "",
     "appareil": "IP2",
-    "latitude": 50.70822,
-    "longitude": 2.67597,
+    "latitude": 50.7082,
+    "longitude": 2.67601,
     "description": ""
   },
   {
@@ -4067,7 +4067,7 @@
     "accès": "",
     "appareil": "TSA",
     "latitude": 50.7082099,
-    "longitude": 2.6758002,
+    "longitude": 2.67589,
     "description": ""
   },
   {
