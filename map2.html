@@ -49,36 +49,36 @@
 .telecom-mini {
   display:inline-block;
   padding:4px 14px;
-  font-size:11px;
+  font-size:12px;
   font-weight:600;
   border-radius:14px;
   white-space:nowrap;
 
-  /* VERRE POLI plus visible */
-  background:rgba(255,255,255,0.32);               /* translucide mais lisible */
-  border:1px solid rgba(180,180,180,0.45);         /* bordure douce mais visible */
-  color:#0f5bd7;
+  /* VERRE DÉPOLI gris perlé */
+  background:rgba(240,240,240,0.45);            /* moins blanc, plus gris */
+  border:1px solid rgba(170,170,170,0.40);      /* bordure douce visible */
+  color:#1a63e0;
 
-  backdrop-filter: blur(15px) saturate(160%);
-  -webkit-backdrop-filter: blur(15px) saturate(160%);
+  backdrop-filter: blur(18px) saturate(170%);   /* vrai effet verre */
+  -webkit-backdrop-filter: blur(18px) saturate(170%);
 
-  /* profondeur */
+  /* profondeur / relief */
   box-shadow:
-    0 3px 6px rgba(0,0,0,0.10),
-    0 8px 16px rgba(0,0,0,0.06),
-    inset 0 0 1px rgba(255,255,255,0.55);
+    0 3px 8px rgba(0,0,0,0.10),
+    0 8px 20px rgba(0,0,0,0.06),
+    inset 0 0 2px rgba(255,255,255,0.55);
 
   transition:0.22s ease;
 }
 
-/* HOVER : verre plus clair + bord accentué + ombre nette */
+/* HOVER : plus clair, bord plus contrasté, verre plus marqué */
 .telecom-mini:hover {
-  background:rgba(255,255,255,0.50);               /* plus “verre” */
+  background:rgba(255,255,255,0.60);
   border-color:rgba(150,150,150,0.55);
   box-shadow:
-    0 4px 8px rgba(0,0,0,0.14),
-    0 12px 20px rgba(0,0,0,0.10),
-    inset 0 0 1px rgba(255,255,255,0.65);
+    0 4px 10px rgba(0,0,0,0.14),
+    0 12px 24px rgba(0,0,0,0.10),
+    inset 0 0 2px rgba(255,255,255,0.70);
 }
     
 
