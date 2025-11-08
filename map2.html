@@ -33,6 +33,19 @@
    
   <style id="eale-intro-styles">
 
+
+    .telecom-mini {
+  display:inline-block;
+  padding:2px 6px;
+  font-size:11px;
+  font-weight:600;
+  border-radius:10px;
+  background:rgba(26,115,232,0.10);
+  color:#1a73e8;
+  border:1px solid #1a73e8;
+  margin-left:4px;
+}
+
 /* ====== Container global ====== */
 .nono-banner-container {
   position: fixed;
@@ -1218,6 +1231,16 @@ const targetLat = usePoste ? _latPoste : lieu.latitude;
 const targetLon = usePoste ? _lonPoste : lieu.longitude;
 const urlMyMapsPoste = myMapsViewer(targetLat, targetLon, 20);
 
+
+let telecomIcons = "";
+if (lieu.description_telecommande) {
+  telecomIcons = lieu.description_telecommande
+    .split("/")
+    .map(t => `<span class="telecom-mini">${t.trim()}</span>`)
+    .join("");
+}
+
+  
 let html = `<h2>
   📍 <span id="editable-nom">${lieu.nom}</span> 
   <span id="editable-type">${lieu.type}</span>
@@ -1226,24 +1249,6 @@ let html = `<h2>
   <a href="#" id="edit-toggle">[modifier]</a>
 </h2>`;
 
-  // ===== Pills "Fibre / ACS25" =====
-let pillTelecom = "";
-if (lieu.description_telecommande) {
-  const parts = lieu.description_telecommande
-    .split("/")
-    .map(s => s.trim())
-    .filter(s => s.length > 0);
-
-  pillTelecom = `
-    <div class="inline-links pills-2" style="margin-top:6px; margin-bottom:4px;">
-      ${parts.map(p => `<a class="pill-link">${p}</a>`).join("")}
-    </div>
-  `;
-}
-
-html += pillTelecom;
-
-  
     
 html += `
 <div class="rep-block poste-only">
