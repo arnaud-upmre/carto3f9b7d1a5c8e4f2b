@@ -641,7 +641,7 @@ const ormRails = L.tileLayer(
   "https://tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png",
   {
     attribution: "© OpenRailwayMap / OSM",
-    maxZoom: 21,
+    maxZoom: 20,
     maxNativeZoom: 19,
     tileSize: 256,
     opacity: 0.75,
@@ -649,6 +649,18 @@ const ormRails = L.tileLayer(
   }
 );
 
+const ormSpeed = L.tileLayer(
+  "https://tiles.openrailwaymap.org/maxspeed/{z}/{x}/{y}.png",
+  {
+    attribution: "© OpenRailwayMap / OSM",
+    maxZoom: 21,
+    maxNativeZoom: 19,
+    tileSize: 256,
+    opacity: 1,
+    zIndex: 9999, 
+    crossOrigin: "anonymous"
+  }
+);
 
 const mixteRails = L.layerGroup([
   orthoIGN,
@@ -656,6 +668,27 @@ const mixteRails = L.layerGroup([
 ]);
     
 mixteRails.addTo(map);
+
+    
+map.on("zoomend", () => {
+  const z = map.getZoom();
+
+  if (z >= 21) {
+    if (!map.hasLayer(ormSpeed)) {
+      map.addLayer(ormSpeed);
+    }
+    if (map.hasLayer(ormRails)) {
+      map.removeLayer(ormRails);
+    }
+  } else {
+    if (map.hasLayer(ormSpeed)) {
+      map.removeLayer(ormSpeed);
+    }
+    if (!map.hasLayer(ormRails)) {
+      map.addLayer(ormRails);
+    }
+  }
+});
 
 const baseLayers = {
   "🛰️ Satellite IGN": orthoIGN,
