@@ -681,13 +681,7 @@ const mixteRails = L.layerGroup([
   ormRails
 ]);
     
-setTimeout(() => {
-  orthoIGN.addTo(map);
-}, 120);
-
-setTimeout(() => {
-  ormRails.addTo(map);
-}, 350);
+mixteRails.addTo(map);
 
     
 map.on("zoomend", () => {
