@@ -33,11 +33,21 @@
    
   <style id="eale-intro-styles">
 
-    @media (max-width: 600px) {
+    
+@media (max-width: 600px) {
   .telecom-zone {
     position: static !important;
-    margin-top: 6px;
+    margin-top: 2px;         /* plus proche du titre */
+    margin-bottom: 2px;
+    gap: 5px;                /* pills plus serrées */
+    transform: translateY(-3px); /* remonte légèrement */
     justify-content: flex-start;
+  }
+
+  .telecom-mini {
+    font-size: 11px !important;       /* plus petit */
+    padding: 3px 8px !important;      /* plus fin */
+    border-radius: 10px !important;
   }
 }
 
