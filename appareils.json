@@ -4026,9 +4026,10 @@
     "SAT": "",
     "accès": "",
     "appareil": "SM1",
-    "latitude": 50.7082091,
-    "longitude": 2.6757358,
-    "description": ""
+    "latitude": 50.7082,
+    "longitude": 2.67576,
+    "description": "",
+    "imajnet":"https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.70822738458969,2.6755064809479254;uid=16beb0c5-421e-44bd-94f4-8cce07755ba9_1183;"
   },
   {
     "nom": "Strazeele",
