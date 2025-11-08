@@ -4104,7 +4104,8 @@
     "appareil": "I50",
     "latitude": 50.70834,
     "longitude": 2.67281,
-    "description": ""
+    "description": "",
+    "imajnet":"https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.70829919946153,2.673006363024515;uid=9bf2ecd0-051c-4043-b787-6ca1552e0a02_555;"
   },
   {
     "nom": "Strazeele",
@@ -4114,7 +4115,8 @@
     "appareil": "I19",
     "latitude": 50.7086,
     "longitude": 2.68252,
-    "description": ""
+    "description": "",
+    "imajnet":"https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.708605806017076,2.682324053812143;uid=16beb0c5-421e-44bd-94f4-8cce07755ba9_1027;"
   },
   {
     "nom": "Thiennes",
