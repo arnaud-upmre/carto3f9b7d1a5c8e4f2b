@@ -37,11 +37,10 @@
 @media (max-width: 600px) {
   .telecom-zone {
     position: relative !important;
-    margin-top: 0px;
-    margin-bottom: 0px;
-    gap: 4px;
-    transform: translateY(-10px); 
-    justify-content: flex-start;
+    top: auto !important;
+    right: auto !important;
+    margin-top: -14px !important; /* colle les pills au titre */
+    transform: none !important;  /* enlève la glissade inutile */
   }
 
   .telecom-mini {
@@ -50,7 +49,6 @@
     border-radius: 10px !important;
   }
 }
-
 #result {
   position: relative !important;
 }
