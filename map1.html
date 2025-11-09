@@ -648,7 +648,70 @@ const satelliteIGN_labels = L.layerGroup([orthoIGN, ignLabels]);
       {}
     ).addTo(map);
 
-    L.control.zoom({ position: 'topright' }).addTo(map);
+    const ZoomLocate = L.Control.extend({
+  options: { position: 'topright' },
+
+  onAdd: function() {
+    const container = L.DomUtil.create("div", "leaflet-bar leaflet-control");
+
+    // Zoom +
+    const zoomIn = L.DomUtil.create("a", "leaflet-control-zoom-in", container);
+    zoomIn.href = "#";
+    zoomIn.innerHTML = "+";
+    zoomIn.onclick = e => { e.preventDefault(); map.zoomIn(); };
+
+    // Zoom –
+    const zoomOut = L.DomUtil.create("a", "leaflet-control-zoom-out", container);
+    zoomOut.href = "#";
+    zoomOut.innerHTML = "−";
+    zoomOut.onclick = e => { e.preventDefault(); map.zoomOut(); };
+
+    // ✅ Bouton LOCALISATION (COMME L’ANCIENNE MAP)
+    let userMarker = null;
+    let watchId = null;
+
+    const locateBtn = L.DomUtil.create("a", "leaflet-control-zoom-in", container);
+    locateBtn.href = "#";
+    locateBtn.innerHTML = `<img src="ico/arrow.png" style="width:18px;height:18px;">`;
+
+    locateBtn.onclick = e => {
+      e.preventDefault();
+
+      if (watchId !== null) {
+        navigator.geolocation.clearWatch(watchId);
+        watchId = null;
+        if (userMarker) {
+          map.removeLayer(userMarker);
+          userMarker = null;
+        }
+        return;
+      }
+
+      if (!navigator.geolocation) return alert("Géolocalisation non supportée.");
+
+      watchId = navigator.geolocation.watchPosition(pos => {
+        const { latitude, longitude } = pos.coords;
+
+        if (!userMarker) {
+          userMarker = L.circleMarker([latitude, longitude], {
+            radius: 8,
+            color: "#3b82f6",
+            fillColor: "#3b82f6",
+            fillOpacity: 0.6
+          }).addTo(map);
+        } else {
+          userMarker.setLatLng([latitude, longitude]);
+        }
+
+        map.setView([latitude, longitude], 16);
+      });
+    };
+
+    return container;
+  }
+});
+
+map.addControl(new ZoomLocate());
 
     planIGN.on("tileerror", e => console.warn("IGN PLAN tile error", e));
     orthoIGN.on("tileerror", e => console.warn("IGN ORTHO tile error", e));
@@ -1210,51 +1273,6 @@ L.DomEvent.disableClickPropagation(recenterBtn);
 L.DomEvent.disableScrollPropagation(recenterBtn);
 
 
-let userMarker = null;
-let watchId = null;
-
-const locateBtn = L.DomUtil.create("a", "leaflet-control-zoom-in", container);
-locateBtn.href = "#";
-locateBtn.title = "Me localiser";
-locateBtn.innerHTML = `<img src="ico/arrow.png" style="width:18px;height:18px;">`;
-
-locateBtn.onclick = e => {
-  e.preventDefault();
-
-  if (watchId !== null) {
-    navigator.geolocation.clearWatch(watchId);
-    watchId = null;
-    if (userMarker) {
-      map.removeLayer(userMarker);
-      userMarker = null;
-    }
-    return;
-  }
-
-  if (!navigator.geolocation) return alert("Géolocalisation non supportée.");
-
-  watchId = navigator.geolocation.watchPosition(pos => {
-    const { latitude, longitude } = pos.coords;
-
-    if (!userMarker) {
-      userMarker = L.circleMarker([latitude, longitude], {
-        radius: 8,
-        color: "#3b82f6",
-        fillColor: "#3b82f6",
-        fillOpacity: 0.6
-      }).addTo(map);
-    } else {
-      userMarker.setLatLng([latitude, longitude]);
-    }
-
-    map.setView([latitude, longitude], 16);
-  });
-};
-
-  
-
-L.DomEvent.disableClickPropagation(locateBtn);
-L.DomEvent.disableScrollPropagation(locateBtn);
 
 
   return container;
