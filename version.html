@@ -222,16 +222,12 @@
   </header>
 
   <p><strong>v1.10.13 — Correction « À proximité »</strong></p>
-
   <ul>
-    <li>
-      🛠️ <strong>Incohérence d’affichage Android / iOS corrigée</strong><br>
-      Une optimisation effectuée début octobre avait mutualisé une partie du code entre
-      <em>À proximité</em> et la recherche, créant un effet domino : corriger l’un dégradait l’autre.
-      Après plusieurs heures d’analyse, <em>À proximité</em> dispose désormais de sa <strong>logique dédiée</strong>.
-      L’affichage des <strong>postes</strong>, <strong>accès</strong> et <strong>appareils</strong> est maintenant correct et complet sur Android.  
-      Même l’IA n’a pas réussi à dénouer ce bug avant moi.
-    <li>
+<li>
+  🛠️ J’ai repéré un bug d’affichage entre iOS et Android dans « À proximité ». Après plusieurs jours à tester différentes pistes, 
+  j’ai fini par réécrire la fonction entièrement. Elle est maintenant indépendante (elle n’est plus fusionnée avec la recherche depuis l’optimisation d’octobre) 
+  et l’affichage est enfin correct : Android montre tous les postes, accès et appareils à proximité… iOS aussi.
+</li>
       
       ✨ <strong>Nettoyage CSS</strong><br>
       L’ancien code CSS a été balayé, aspiré, remis d’équerre.
