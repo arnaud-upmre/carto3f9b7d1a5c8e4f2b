@@ -1005,13 +1005,14 @@ function formatPortail(val) {
 }
     
 function normalize(str) {
-  return str
+  return (str ?? "")               // <= béton armé
+    .toString()
     .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")    
-    .replace(/[^a-z0-9\s]/gi, "") 
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/[^a-z0-9\s]/gi, "")
     .toLowerCase()
     .trim()
-    .replace(/\s+/g, " ");  
+    .replace(/\s+/g, " ");
 }
 
     function normalizeNomPoste(str) {
@@ -1717,7 +1718,7 @@ html += formatInformations(app.description);
     postePrincipal = lieux.find(l =>
       normalize(l.nom) === normalize(app.nom) &&
       normalize(l.type) === normalize(app.type) &&
-      normalize(l.accès) === normalize(app.appareil)
+      normalize(l.accès || "") === normalize(app.appareil || "")
     );
   }
 
