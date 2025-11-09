@@ -19,9 +19,6 @@
 
 <style>
 
-
-  
-
   html, body {
   height: 100%;
   margin: 0;
@@ -109,7 +106,7 @@
   background: rgba(255,255,255,0.50); 
 }
 .fab-options button.active img {
-  opacity: 1; 
+  opacity: 1;  /* remet l’icône normale */
 }
   
 .toast {
@@ -209,16 +206,14 @@
   top: 0; left: 0;
   width: 100%; height: 100%;
   background: rgba(0,0,0,0.6);
-  backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);     
   -webkit-backdrop-filter: blur(6px);
-  display: none;        
+  display: none;
   z-index: 9999;
-
-  align-items: center;   
+  display: flex;             
+  align-items: center;
   justify-content: center;
 }
-
-  
 #streetview-box {
   width: 90%;
   max-width: 900px;
@@ -374,6 +369,9 @@
   <img src="ico/pn.png" alt="Passages à niveau">
 </button>
 
+<button class="btn-toggle" id="btn-lignes" title="Afficher les lignes ferroviaires">
+  <img src="ico/ligne.png" alt="Lignes ferroviaires">
+</button>
   </div>
 </div>
 
@@ -397,23 +395,16 @@ const boundsFrance = [
 
 const map = L.map('map', {
   zoomControl: false,
-  attributionControl: true,
+  attributionControl: false,
   minZoom: 5,                  
   maxZoom: 21,                 
   maxBounds: boundsFrance,     
   maxBoundsViscosity: 1.0      
 }).setView(defaultCenter, defaultZoom);
 
-    let currentBaseLayerName = "🛰️+🗺️ Satellite + Lignes"; 
-
-map.attributionControl.setPrefix('');
-map.attributionControl.addAttribution("Nono Maps – v1.11.1")
-map.attributionControl.addAttribution("© IGN");
-map.attributionControl.addAttribution("© OpenStreetMap contributors");
-map.attributionControl.addAttribution("© OpenRailwayMap / OSM");
-map.attributionControl.addAttribution("© Esri");
     
-let editMode = false;     
+let editMode = false;   
+  
 
 const editBanner = document.createElement("div");
 editBanner.style = `
@@ -587,6 +578,7 @@ const zoom = parseInt(params.get("z")) || 19;
     maxZoom: 21,       
     maxNativeZoom: 19, 
     tileSize: 256,
+    crossOrigin: 'anonymous'
   }
 );
 
@@ -599,23 +591,7 @@ const orthoIGN = L.tileLayer(
     maxZoom: 21,      
     maxNativeZoom: 19, 
     tileSize: 256,
-  }
-);
-
-const ignLabels = L.tileLayer(
-  "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
-  + "&LAYER=GEOGRAPHICALNAMES.NAMES"
-  + "&STYLE=normal"
-  + "&FORMAT=image/png"
-  + "&TILEMATRIXSET=PM"
-  + "&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
-  {
-    attribution: "© IGN – Géoplateforme",
-    maxZoom: 21,
-    maxNativeZoom: 19,
-    tileSize: 256,
-    transparent: true,
-    zIndex: 500
+    crossOrigin: 'anonymous'
   }
 );
 
@@ -638,158 +614,40 @@ const esriSat = L.tileLayer(
   }
 );
 
-    
-
-const ormRails = L.tileLayer(
-  "https://tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png",
-  {
-    attribution: "© OpenRailwayMap / OSM",
-    maxZoom: 20,
-    maxNativeZoom: 19,
-    tileSize: 256,
-    opacity: 0.75,
-    crossOrigin: "anonymous"
-  }
-);
-
-const ormSpeed = L.tileLayer(
-  "https://tiles.openrailwaymap.org/maxspeed/{z}/{x}/{y}.png",
-  {
-    attribution: "© OpenRailwayMap / OSM",
-    maxZoom: 21,
-    maxNativeZoom: 19,
-    tileSize: 256,
-    opacity: 1,
-    zIndex: 9999, 
-    crossOrigin: "anonymous"
-  }
-);
-
-const mixteRails = L.layerGroup([
+const mixte = L.layerGroup([
   orthoIGN,
-  ormRails
+  L.tileLayer(
+    "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
+    + "&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&STYLE=normal&FORMAT=image/png"
+    + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
+    {
+      attribution: "© IGN – Géoplateforme",
+      maxZoom: 19,
+      tileSize: 256,
+      crossOrigin: 'anonymous',
+      opacity: 0.4  
+    }
+  )
 ]);
-    
-mixteRails.addTo(map);
 
-    
-map.on("zoomend", () => {
-  const z = map.getZoom();
-
-  if (currentBaseLayerName !== "🛰️+🗺️ Satellite + Lignes") {
-    map.removeLayer(ormRails);
-    map.removeLayer(ormSpeed);
-    return;
-  }
-
-  if (z >= 21) {
-    map.addLayer(ormSpeed);
-    map.removeLayer(ormRails);
-  } else {
-    map.removeLayer(ormSpeed);
-    map.addLayer(ormRails);
-  }
-});
-
-const baseLayers = {
-  "🛰️ Satellite IGN": orthoIGN,
-  "🛰️ Satellite Open": esriSat,
-  "🗺️ Plan IGN": planIGN,
-  "🌍 Plan Open": osm,
-  "🛰️+🗺️ Satellite + Lignes": mixteRails
-};
-
-const layerControl = L.control.layers(baseLayers, {}).addTo(map);
-
-map.on("baselayerchange", function(e) {
-
-   currentBaseLayerName = e.name;
+orthoIGN.addTo(map);
 
 
-  if (e.name === "🛰️ Satellite IGN") {
-    map.addLayer(ignLabels);
-  } else {
-    map.removeLayer(ignLabels);
-  }
+    L.control.layers(
+      { 
+        "🛰️ Satellite IGN": orthoIGN,
+        "🛰️ Satellite Open": esriSat,
+        "🗺️ Plan IGN (défaut)": planIGN,
+        "🌍 Plan Open": osm,
+        "🛰️+🗺️ Mixte": mixte
+      },
+      {}
+    ).addTo(map);
 
+    L.control.zoom({ position: 'topright' }).addTo(map);
 
-  map.removeLayer(ormRails);
-  map.removeLayer(ormSpeed);
-
-
-  if (e.name === "🛰️+🗺️ Satellite + Lignes") {
-    map.addLayer(ormRails);
-  }
-});
-
-
-
-const ZLControl = L.Control.extend({
-  onAdd: function () {
-    const container = L.DomUtil.create("div", "leaflet-control-zoom leaflet-bar");
-
-  
-    const zoomIn = L.DomUtil.create("a", "leaflet-control-zoom-in", container);
-    zoomIn.href = "#";
-    zoomIn.title = "Zoom avant";
-    zoomIn.innerHTML = "+";
-    zoomIn.onclick = e => { e.preventDefault(); map.zoomIn(); };
-
-  
-    const zoomOut = L.DomUtil.create("a", "leaflet-control-zoom-out", container);
-    zoomOut.href = "#";
-    zoomOut.title = "Zoom arrière";
-    zoomOut.innerHTML = "-";
-    zoomOut.onclick = e => { e.preventDefault(); map.zoomOut(); };
-
-
-    const locateBtn = L.DomUtil.create("a", "leaflet-control-zoom-in", container);
-    locateBtn.href = "#";
-    locateBtn.title = "Me localiser";
-    locateBtn.innerHTML = `<img src="ico/arrow.png" style="width:18px;height:18px;">`;
-
-    let userMarker = null;
-    let watchId = null;
-
-    locateBtn.onclick = e => {
-      e.preventDefault();
-
-      if (watchId !== null) {
-        navigator.geolocation.clearWatch(watchId);
-        watchId = null;
-        if (userMarker) {
-          map.removeLayer(userMarker);
-          userMarker = null;
-        }
-        return;
-      }
-
-      if (!navigator.geolocation) return alert("Géolocalisation non supportée.");
-
-      watchId = navigator.geolocation.watchPosition(pos => {
-        const { latitude, longitude } = pos.coords;
-
-        if (!userMarker) {
-          userMarker = L.circleMarker([latitude, longitude], {
-            radius: 8,
-            color: "#3b82f6",
-            fillColor: "#3b82f6",
-            fillOpacity: 0.6
-          }).addTo(map);
-        } else {
-          userMarker.setLatLng([latitude, longitude]);
-        }
-
-        map.setView([latitude, longitude], 16);
-      });
-    };
-
-    return container;
-  }
-});
-
-new ZLControl({ position: "topright" }).addTo(map);
-
+    planIGN.on("tileerror", e => console.warn("IGN PLAN tile error", e));
+    orthoIGN.on("tileerror", e => console.warn("IGN ORTHO tile error", e));
 
 
 const postesLayer = L.markerClusterGroup({
@@ -818,8 +676,6 @@ const accesLayer = L.markerClusterGroup({
   showCoverageOnHover: false,
   zoomToBoundsOnClick: true
 });
-
-
 
 accesLayer.on('clusterclick', function (e) {
   const childMarkers = e.layer.getAllChildMarkers();
@@ -929,11 +785,6 @@ let content = `
 ✍🏻 <strong>Information :</strong> ${ renderInformation(item.description_acces) }
 </div>
 
-${item.portail ? `
-<div style="margin-bottom:6px;">
-  🔑 <strong>Portail / Alarme :</strong> ${item.portail}
-</div>` : ""}
-
   <a href="index.html?id=${encodeURIComponent(
     (`${item.nom || ''} ${item.type || ''} ${item.SAT || ''}${accesVal ? ' – accès ' + accesVal : ''}`)
       .replace(/\s+/g, " ")
@@ -1021,46 +872,17 @@ fetch("appareils.json")
 
       let appareilIcon;
       const ref = (item.appareil || "").toUpperCase();
-      
+
 if (ref.startsWith("DU")) {
-  appareilIcon = L.divIcon({
-    html:`<img src="ico/stop.png" class="icon-halo-appareil">`,
-    className:"",
-    iconAnchor:[12,28],
-    popupAnchor:[0,-18]
-  });
+  appareilIcon = L.divIcon({ html:`<img src="ico/stop.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,38], popupAnchor:[0,-20] });
 } else if (ref.startsWith("I") || ref.startsWith("SI") || ref.startsWith("D")) {
-  appareilIcon = L.divIcon({
-    html:`<img src="ico/int.png" class="icon-halo-appareil">`,
-    className:"",
-    iconAnchor:[12,28],
-    popupAnchor:[0,-18]
-  });
+  appareilIcon = L.divIcon({ html:`<img src="ico/int.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,38], popupAnchor:[0,-20] });
 } else if (ref.startsWith("TT") || ref.startsWith("TSA") || ref.startsWith("TC") || ref.startsWith("TRA")) {
-  appareilIcon = L.divIcon({
-    html:`<img src="ico/TT.png" class="icon-halo-appareil">`,
-    className:"",
-    iconAnchor:[12,28],
-    popupAnchor:[0,-18]
-  });
-} else if (
-  /^[0-9]/.test(ref) ||
-  ref.startsWith("S") || ref.startsWith("ST") || ref.startsWith("F") ||
-  ref.startsWith("P") || ref.startsWith("FB") || ref.startsWith("B")
-) {
-  appareilIcon = L.divIcon({
-    html:`<img src="ico/sect.png" class="icon-halo-appareil">`,
-    className:"",
-    iconAnchor:[12,28],
-    popupAnchor:[0,-18]
-  });
+  appareilIcon = L.divIcon({ html:`<img src="ico/TT.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,38], popupAnchor:[0,-20] });
+} else if (/^[0-9]/.test(ref) || ref.startsWith("S") || ref.startsWith("ST") || ref.startsWith("F") || ref.startsWith("P") || ref.startsWith("FB") || ref.startsWith("B")) {
+  appareilIcon = L.divIcon({ html:`<img src="ico/sect.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,38], popupAnchor:[0,-20] });
 } else if (ref.startsWith("ALIM")) {
-  appareilIcon = L.divIcon({
-    html:`<img src="ico/alim.png" class="icon-halo-appareil">`,
-    className:"",
-    iconAnchor:[12,28],
-    popupAnchor:[0,-18]
-  });
+  appareilIcon = L.divIcon({ html:`<img src="ico/alim.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,38], popupAnchor:[0,-20] });
 } else {
   appareilIcon = iconAppareil;
 }
@@ -1080,7 +902,7 @@ if (ref.startsWith("DU")) {
     : ""}
 </div>
 
- ${item.description ? `<div style="margin-bottom:14px;">✍🏻 <strong>Information :</strong> ${renderInformation(item.description)}</div>` : ""}
+  ${item.description ? `<div style="margin-bottom:14px;">✍🏻 <strong>Information :</strong> ${item.description}</div>` : ""}
 
   <a href="index.html?id=${encodeURIComponent(
     [item.appareil, item.nom, item.type, item.SAT].filter(Boolean).join(" ").trim()
@@ -1251,6 +1073,105 @@ fetch("https://ressources.data.sncf.com/api/records/1.0/search/"
     });
 }
 
+
+
+    
+// === LIGNES FERROVIAIRES ===
+document.addEventListener("DOMContentLoaded", () => {
+  const btnLignes = document.getElementById("btn-lignes");
+  if (!btnLignes) return console.error("❌ Bouton Lignes introuvable");
+
+  let lignesLayer = L.markerClusterGroup({
+    disableClusteringAtZoom: 16,
+    spiderfyOnMaxZoom: false,
+  });
+  let lignesLoaded = false;
+
+  btnLignes.addEventListener("click", () => {
+    if (!lignesLoaded) {
+      btnLignes.classList.add("loading");
+
+      fetch("https://ressources.data.sncf.com/api/records/1.0/search/"
+        + "?dataset=lignes-par-type"
+        + "&geofilter.bbox=49.4,1.4,51.2,4.5"
+        + "&rows=3000")
+        .then(r => r.json())
+        .then(data => {
+          data.records.forEach(record => {
+            const f = record.fields || {};
+            if (!f.geo_shape) return;
+
+            // Couleur flashy + trait plus épais
+            const couleur =
+              (f.type_ligne || "").toLowerCase().includes("raccordement") ? "#ff9800" :
+              (f.type_ligne || "").toLowerCase().includes("desserte")     ? "#00e676" :
+              (f.type_ligne || "").toLowerCase().includes("embranchement") ? "#f50057" :
+              "#00bcd4"; // cyan vif par défaut
+
+            const poly = L.geoJSON(f.geo_shape, {
+              style: { color: couleur, weight: 6, opacity: 0.9 }
+            });
+
+            poly.on("click", (e) => {
+              const lat = e.latlng.lat.toFixed(5);
+              const lng = e.latlng.lng.toFixed(5);
+              const code = f.code_ligne ?? "?";
+              const lib  = f.lib_ligne ?? "—";
+              const pkd  = f.pkd ?? "—";
+              const pkf  = f.pkf ?? "—";
+              const type = f.type_ligne ?? "—";
+
+              const html = `
+                <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
+                            font-size:14px;color:#111;line-height:1.5;min-width:230px;text-align:left;">
+                  <div style="font-weight:700;font-size:16px;margin-bottom:8px;">
+                    🚧 Ligne n°${code}
+                  </div>
+                  <div style="margin-bottom:6px;">${lib}</div>
+                  <div style="margin-bottom:6px;">📏 PKD <strong>${pkd}</strong> — PKF <strong>${pkf}</strong></div>
+                  <div style="margin-bottom:14px;">🏷️ Type : <strong>${type}</strong></div>
+
+<div style="display:flex;justify-content:center;width:100%;margin-top:14px;">
+  <a href="https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${lat},${lng};"
+     target="_blank"
+     style="display:inline-flex;align-items:center;justify-content:center;
+            gap:6px;padding:10px 16px;border-radius:8px;
+            background:#10b981;color:white;text-decoration:none;
+            font-size:14px;font-weight:500;text-align:center;
+            box-sizing:border-box;min-width:160px;">
+    🚄 Voir sur Imajnet
+  </a>
+</div>
+
+                </div>`;
+              L.popup({ maxWidth: 280 })
+                .setLatLng(e.latlng)
+                .setContent(html)
+                .openOn(map);
+            });
+
+            lignesLayer.addLayer(poly);
+          });
+
+          map.addLayer(lignesLayer);
+          lignesLoaded = true;
+          btnLignes.classList.remove("loading");
+          btnLignes.classList.add("active");
+          showToast("✅ Lignes ferroviaires affichées");
+        })
+        .catch(err => {
+          console.error("Erreur chargement lignes :", err);
+          btnLignes.classList.remove("loading");
+          showToast("⚠️ Erreur de chargement");
+        });
+    } else {
+      toggleLayer(lignesLayer, btnLignes, "Lignes ferroviaires");
+    }
+  });
+});
+
+
+    
     
 const leftControls = L.control({ position: "topleft" });
 leftControls.onAdd = function() {
@@ -1284,6 +1205,45 @@ recenterBtn.onclick = () => {
 L.DomEvent.disableClickPropagation(recenterBtn);
 L.DomEvent.disableScrollPropagation(recenterBtn);
 
+let userMarker;
+let geoWatchId = null;
+const locateBtn = L.DomUtil.create("div", "btn-toggle", topGroup);
+locateBtn.innerHTML = "📍";
+
+locateBtn.onclick = () => {
+  if (!navigator.geolocation) return alert("Géolocalisation non supportée.");
+
+  if (geoWatchId !== null) {
+    navigator.geolocation.clearWatch(geoWatchId);
+    geoWatchId = null;
+    if (userMarker) {
+      map.removeLayer(userMarker);
+      userMarker = null;
+    }
+    locateBtn.classList.remove("active");
+    return;
+  }
+
+  geoWatchId = navigator.geolocation.watchPosition(pos => {
+    const lat = pos.coords.latitude, lng = pos.coords.longitude;
+    if (userMarker) {
+      userMarker.setLatLng([lat, lng]);
+    } else {
+      userMarker = L.circleMarker([lat, lng], {
+        radius: 8,
+        color: "#3b82f6",
+        fillColor: "#3b82f6",
+        fillOpacity: 0.6
+      }).addTo(map);
+    }
+    map.setView([lat, lng], 15);
+  });
+
+  locateBtn.classList.add("active");
+};
+
+L.DomEvent.disableClickPropagation(locateBtn);
+L.DomEvent.disableScrollPropagation(locateBtn);
 
 
   return container;
@@ -1300,6 +1260,8 @@ leftControls.addTo(map);
     document.getElementById("streetview-overlay").style.display = "none";
     document.getElementById("streetview-frame").src = ""; 
   };
+document.getElementById("streetview-overlay").style.display = "none";
+document.getElementById("streetview-frame").src = "";
 
 
 console.info("[Nono Maps] boot", {
@@ -1316,25 +1278,13 @@ function renderInformation(value) {
     return `<span style="color:#777;font-style:italic;">Non renseigné</span>`;
   }
 
-  let text = String(value);
-
-  // Remplace les <br> textuels par un tag <br> réel
-  text = text
-    .replace(/&lt;br\s*\/?&gt;/gi, "<br>")  // si déjà échappé
-    .replace(/<br\s*\/?>/gi, "<br>");      // autorise <br>
-
-  // Sécurise le reste du HTML
-  text = text.replace(/[&<>"]/g, m => ({ 
-    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'
-  }[m]));
-
-  // Ré-injecte nos <br> propres
-  text = text.replace(/&lt;br&gt;/g, "<br>");
-
-  return text;
+  return escHtml(String(value));
 }
 
 let activeEditPopup = null; 
+
+function escHtml(s){return String(s).replace(/[&<>"]/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[m]));}
+
 
 map.on('click', (e) => {
   if (!editMode) return;
