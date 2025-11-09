@@ -1452,7 +1452,16 @@ Promise.all([
     app.alias = generateAlias(app.appareil, app.nom, app.SAT, app.type);
   });
 
-const postesTagged = postes.map(p => ({ ...p, category: "poste" }));
+  
+const postesTagged = postes.map(p => ({
+  ...p,
+  category:
+    p.poste_latitude && p.poste_latitude.toString().trim() !== ""
+      ? "acces"
+      : "poste"
+}));
+
+  
 const appsTagged   = apps.map(a => ({ ...a, category: "appareil" }));
 allItems = [...postesTagged, ...appsTagged];
 
@@ -2467,7 +2476,7 @@ function formatInformations(val) {
 <div id="about-footer">
   <div class="footer-links">
     <a href="arnaud.html" class="pill-link">🔧 À propos</a>
-   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1</a>
+   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V2</a>
   </div>
 </div>
 <script>
