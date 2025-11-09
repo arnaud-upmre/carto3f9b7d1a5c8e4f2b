@@ -666,7 +666,7 @@ satelliteIGN_labels.onRemove = function(map) {
 };
     
 
-    satelliteIGN_lignes.addTo(map);
+   satelliteIGN_labels.addTo(map);
 
 const satelliteIGN_simple = L.layerGroup();
 satelliteIGN_simple.onAdd = function(map){
@@ -680,7 +680,7 @@ L.control.layers(
   { 
     "🛰️ Satellite IGN": satelliteIGN_simple,
     "🛰️ Satellite IGN + labels": satelliteIGN_labels,
-    "🛰️ Satellite IGN + Lignes (défaut)": satelliteIGN_lignes,
+    "🛰️ Satellite IGN + Lignes": satelliteIGN_lignes,
     "🛰️ Satellite Open": esriSat,
     "🗺️ Plan IGN ": planIGN,
     "🌍 Plan Open": osm,
