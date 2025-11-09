@@ -909,6 +909,7 @@ const compteurAppareilURL = "https://script.google.com/macros/s/AKfycbwJIlvcfNYR
 
 let lieux = [], appareils = [];
     let currentItem = null;
+    let proximiteData = [];
 
 function myMapsViewer(lat, lon, z = 20) {
   return `map.html?lat=${lat}&lon=${lon}&z=${z}`;
@@ -1448,6 +1449,8 @@ Promise.all([
   lieux = postes;
   appareils = apps;
 
+   proximiteData = construireProximite(postes, apps);
+
   appareils.forEach(app => {
     app.alias = generateAlias(app.appareil, app.nom, app.SAT, app.type);
   });
@@ -1869,6 +1872,58 @@ function renderProximitePage() {
   }
 }
 
+    function construireProximite(postes, appareils) {
+  const arr = [];
+
+  // ✅ Fiches génériques
+  postes.forEach(p => {
+    if (p.special === true) {
+      arr.push({
+        ...p,
+        category: "generic",
+        lat: Number(p.poste_latitude || p.latitude),
+        lon: Number(p.poste_longitude || p.longitude)
+      });
+    }
+  });
+
+  // ✅ Accès 🚙
+  postes.forEach(p => {
+    if (!p.special && p.latitude && p.longitude) {
+      arr.push({
+        ...p,
+        category: "acces",
+        lat: Number(p.latitude),
+        lon: Number(p.longitude)
+      });
+    }
+  });
+
+  // ✅ Poste 📍
+  postes.forEach(p => {
+    if (!p.special && p.poste_latitude && p.poste_longitude) {
+      arr.push({
+        ...p,
+        category: "poste",
+        lat: Number(p.poste_latitude),
+        lon: Number(p.poste_longitude)
+      });
+    }
+  });
+
+  // ✅ Appareils 💡
+  appareils.forEach(a => {
+    arr.push({
+      ...a,
+      category: "appareil",
+      lat: Number(a.latitude),
+      lon: Number(a.longitude)
+    });
+  });
+
+  return arr;
+}
+
 function showNearby(position) {
   const lat = position.coords.latitude;
   const lon = position.coords.longitude;
@@ -1878,9 +1933,7 @@ function showNearby(position) {
     return;
   }
 
-  proximiteSorted = allItems
-    .map(it => ({ ...it, distance: getDistance(lat, lon, it.latitude, it.longitude) }))
-    .sort((a, b) => a.distance - b.distance);
+
 
   proximiteIndex = 0;
 
