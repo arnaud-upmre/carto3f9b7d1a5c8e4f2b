@@ -642,14 +642,14 @@ const satelliteIGN_labels = L.layerGroup([orthoIGN, ignLabels]);
     satelliteIGN_labels.addTo(map);
 
  
-    // === LIGNES OPENRAILWAYMAP (superposition bleu ORM) ===
 const ormLines = L.tileLayer(
-  "https://{s}.tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png",
+  "https://{s}.tiles.openrailwaymap.org/rails/{z}/{x}/{y}.png",
   {
     maxZoom: 20,
     maxNativeZoom: 19,
-    opacity: 0.9,
-    attribution: "© OpenRailwayMap / OSM"
+    opacity: 1,
+    attribution: "© OpenRailwayMap / OSM",
+    transparent: true
   }
 );
     
