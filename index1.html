@@ -1452,13 +1452,8 @@ Promise.all([
     app.alias = generateAlias(app.appareil, app.nom, app.SAT, app.type);
   });
 
-const postesTagged = postes.map(p => ({
-  ...p,
-  category: p.accès && p.accès.trim() !== "" ? "acces" : "poste"
-}));
-
+const postesTagged = postes.map(p => ({ ...p, category: "poste" }));
 const appsTagged   = apps.map(a => ({ ...a, category: "appareil" }));
-
 allItems = [...postesTagged, ...appsTagged];
 
   fuseMix = new Fuse(allItems, {
