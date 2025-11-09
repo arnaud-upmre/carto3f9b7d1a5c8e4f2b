@@ -1242,6 +1242,9 @@ function showLieu(lieu) {
     currentItem = lieu;
 
 if (lieu.special === true) {
+
+  incrementCounter();
+  
   const result = document.getElementById("result");
   document.getElementById("suggestions").innerHTML = "";
   result.style.display = "block";
