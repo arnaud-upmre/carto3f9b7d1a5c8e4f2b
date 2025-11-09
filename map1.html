@@ -403,7 +403,7 @@ const map = L.map('map', {
 }).setView(defaultCenter, defaultZoom);
 
 map.attributionControl.setPrefix("");
-map.attributionControl.addAttribution("Nono Maps – v1");
+map.attributionControl.addAttribution("Nono Maps – v1.1");
 map.attributionControl.addAttribution("© IGN");
 map.attributionControl.addAttribution("© OpenStreetMap contributors");
 map.attributionControl.addAttribution("© OpenRailwayMap / OSM");
@@ -620,14 +620,13 @@ const esriSat = L.tileLayer(
   }
 );
 
-// === Labels OSM transparents (overlay) ===
 const osmLabels = L.tileLayer(
-  "https://tiles.stadiamaps.com/tiles/alidade_smooth_labels/{z}/{x}/{y}@2x.png",
+  "https://tile.opentopomap.org/{z}/{x}/{y}.png",
   {
-    attribution: "© Stadia Maps, © OpenMapTiles, © OpenStreetMap contributors",
-    maxZoom: 21,
-    opacity: 1,
-    pane: "overlayPane"     
+    attribution: "© OpenStreetMap contributors",
+    maxZoom: 17,
+    opacity: 0.8,
+    pane: "overlayPane"
   }
 );
 
