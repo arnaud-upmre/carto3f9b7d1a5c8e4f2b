@@ -33,17 +33,12 @@
    
   <style id="eale-intro-styles">
 
-/* =========================
-   Variables & Color Scheme
-   ========================= */
 :root { --eale-intro-bg:#fff; --eale-intro-fg:#222; }
 @media (prefers-color-scheme: dark){
   :root { --eale-intro-bg:#0b0b0b; --eale-intro-fg:#eee; }
 }
 
-/* =========
-   Base UI
-   ========= */
+
 html, body {
   height: 100%;
   margin: 0;
@@ -62,15 +57,12 @@ body {
 }
 main { flex: 1; display: flex; flex-direction: column; align-items: center; }
 
-/* Dark mode base */
+
 @media (prefers-color-scheme: dark) {
   body { background-color: #121212; color: #e5e5e5; }
   a, a:visited { color:#90caf9; }
 }
 
-/* =========
-   Headings
-   ========= */
 h1 {
   font-size: 20px;
   margin: 0 0 0.8rem 0;
@@ -84,9 +76,7 @@ h1 {
   h1 { margin-bottom: .4rem; }
 }
 
-/* =========
-   Train bar
-   ========= */
+
 #train-container {
   width: 100%;
   max-width: 600px;
@@ -103,9 +93,7 @@ h1 {
   95% { left: 0; }
 }
 
-/* ==================
-   Search & Results
-   ================== */
+
 input[type="text"]{
   width: 100%;
   max-width: 600px;
@@ -145,7 +133,6 @@ li.best { background-color:#e6f0ff; font-weight:600; }
   li.best { background-color:#1b2836; }
 }
 
-/* Result card */
 #result {
   position: relative !important;
   display: none;
@@ -167,12 +154,9 @@ li.best { background-color:#e6f0ff; font-weight:600; }
   input[type="text"]{ background-color:#1e1e1e; color:#e5e5e5; border:1px solid #555; }
 }
 
-/* Separators */
+
 .separator { border:none; border-top:1px solid #eee; margin:.8rem 0; }
 
-/* ==========
-   Buttons
-   ========== */
 .btn-primary{
   margin: 8px 0;
   padding: 10px 16px;
@@ -196,9 +180,6 @@ li.best { background-color:#e6f0ff; font-weight:600; }
 #btn-localiser { margin-top: 4rem; }
 #btn-carte { margin-top: 4rem; display: inline-block; }
 
-/* =================
-   Inline link pills
-   ================= */
 .inline-links { display:flex; flex-wrap:wrap; gap:6px; font-size:14px; padding:0 1rem 0 0; }
 .inline-links a{
   padding: 6px 10px;
@@ -224,9 +205,7 @@ li.best { background-color:#e6f0ff; font-weight:600; }
   .inline-links a:hover{ background-color:#90caf9; color:#121212; }
 }
 
-/* =================
-   Telecom badges
-   ================= */
+    
 .telecom-zone{
   position:absolute;
   top:18px;
@@ -274,9 +253,6 @@ li.best { background-color:#e6f0ff; font-weight:600; }
   .telecom-mini:hover{ background:rgba(255,255,255,0.18); border-color:rgba(255,255,255,0.35); }
 }
 
-/* =====================
-   Rep blocks & content
-   ===================== */
 .rep-block { display:block; margin:1.5rem 0 0.5rem 0; text-align:center; }
 .rep-block.poste-only p { transform: translateX(-14px); }
 .rep-appareil .info-block { text-align:left !important; font-weight:normal; margin-left:4px; margin-top:28px !important; }
@@ -288,9 +264,12 @@ li.best { background-color:#e6f0ff; font-weight:600; }
 
 .placeholder { color:#888; font-style:italic; }
 
-/* ======================
-   Edit mode (inline UI)
-   ====================== */
+.rep-appareil .inline-links,
+.rep-block .inline-links {
+  justify-content: flex-start !important;
+  text-align: left !important;
+}
+
 #edit-toggle,
 #edit-toggle-appareil{
   font-size: 13px;
@@ -331,7 +310,7 @@ li.best { background-color:#e6f0ff; font-weight:600; }
   }
 }
 
-/* Editable halo/wiggle */
+
 .editable-halo{
   display:inline-block;
   padding:2px 4px;
@@ -348,9 +327,6 @@ li.best { background-color:#e6f0ff; font-weight:600; }
 .editable-wiggle{ animation: wiggle .3s infinite; }
 @keyframes wiggle{ 0%,100%{ transform:rotate(-2deg); } 50%{ transform:rotate(2deg); } }
 
-/* ====================
-   Notification banner
-   ==================== */
 #notification{
   position: fixed;
   bottom: 20px;
@@ -377,9 +353,6 @@ li.best { background-color:#e6f0ff; font-weight:600; }
   #notification.info{ background:#1a237e; color:#90caf9; border:1px solid #90caf9; }
 }
 
-/* =====================
-   Top slide-in banners
-   ===================== */
 .nono-banner-container{
   position: fixed;
   top: -100px;
@@ -426,9 +399,6 @@ li.best { background-color:#e6f0ff; font-weight:600; }
   .nono-banner + .nono-banner{ border-top:1px solid rgba(255,255,255,0.08); }
 }
 
-/* ==================
-   Street View modal
-   ================== */
 #streetview-overlay{
   position: fixed;
   top:0; left:0;
@@ -464,9 +434,6 @@ li.best { background-color:#e6f0ff; font-weight:600; }
   z-index:2;
 }
 
-/* ===============
-   Intro overlay
-   =============== */
 .eale-intro-overlay{
   position:fixed; inset:0;
   display:flex; flex-direction:column; align-items:center; justify-content:center;
@@ -484,9 +451,6 @@ li.best { background-color:#e6f0ff; font-weight:600; }
 @keyframes eale-zoomIn{ from{ transform:scale(.6); opacity:0; } to{ transform:scale(1); opacity:1; } }
 .eale-intro-hide{ opacity:0; transition:opacity .35s ease; }
 
-/* ===============
-   Footer & links
-   =============== */
 .footer-links{
   display:flex; justify-content:center; gap:10px; flex-wrap:wrap;
 }
