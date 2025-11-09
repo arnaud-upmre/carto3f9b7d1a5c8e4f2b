@@ -398,8 +398,6 @@ const map = L.map('map', {
   maxBoundsViscosity: 1.0      
 }).setView(defaultCenter, defaultZoom);
 
-    satelliteIGN_lignes.addTo(map);
-
 map.attributionControl.setPrefix("");
 map.attributionControl.addAttribution("Nono Maps – v1.11.1");
 map.attributionControl.addAttribution("© IGN");
@@ -652,6 +650,8 @@ const satelliteIGN_lignes = L.layerGroup([orthoIGN, ormRails]);
   
 // === Satellite IGN + Labels IGN ===
 const satelliteIGN_labels = L.layerGroup([orthoIGN, ignLabels]);
+
+    satelliteIGN_lignes.addTo(map);
     
 
 L.control.layers(
