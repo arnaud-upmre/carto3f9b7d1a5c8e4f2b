@@ -620,26 +620,17 @@ const esriSat = L.tileLayer(
   }
 );
 
-const ignLabels = L.tileLayer(
-  "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
-  + "&LAYER=GEOGRAPHICALNAMES.NAMES"
-  + "&STYLE=normal"
-  + "&FORMAT=image/png"
-  + "&TILEMATRIXSET=PM"
-  + "&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
+    // === LABELS OSM France (plus légers, compatibles tous fonds) ===
+const osmLabels = L.tileLayer(
+  "https://tiles.stadiamaps.com/tiles/alidade_smooth_labels/{z}/{x}/{y}@2x.png",
   {
-    attribution: "© IGN – Géoplateforme",
+    attribution: "© Stadia Maps, © OpenMapTiles, © OpenStreetMap contributors",
     maxZoom: 21,
-    maxNativeZoom: 19,
-    tileSize: 256,
-    transparent: true,
-    zIndex: 500,
     opacity: 1
   }
 );
-
-const satelliteIGN_labels = L.layerGroup([orthoIGN, ignLabels]);
-    satelliteIGN_labels.addTo(map);
+const satelliteIGN_labels = L.layerGroup([orthoIGN, osmLabels]);
+ 
 
 // === LIGNES FERRÉES ORM (tuiles standard) ===
 const ormRails = L.tileLayer(
@@ -670,22 +661,20 @@ L.control.layers(
     ).addTo(map);
 
     
-// === Gestion spéciale pour Satellite (ign, labels, lignes) ===
+// === Gestion Satellite / Labels / Lignes ===
 map.on("baselayerchange", function(e) {
 
-  // ✅ Labels IGN pour : 
-  // - Satellite IGN
-  // - Satellite IGN + labels
-  if (e.name === "🛰️ Satellite IGN" || e.name === "🛰️ Satellite IGN + labels") {
-    map.addLayer(ignLabels);
+  // ✅ Labels pour Satellite IGN + labels
+  if (e.name === "🛰️ Satellite IGN + labels") {
+    map.addLayer(osmLabels);
   } else {
-    map.removeLayer(ignLabels);
+    map.removeLayer(osmLabels);
   }
 
-  // ✅ Retirer les rails ORM sur tous les fonds
+  // ✅ Rails ORM off partout
   map.removeLayer(ormRails);
 
-  // ✅ Activer rails ORM uniquement sur le fond mixte
+  // ✅ Rails ORM ON uniquement sur IGN + Lignes
   if (e.name === "🛰️ Satellite IGN + Lignes") {
     map.addLayer(ormRails);
   }
