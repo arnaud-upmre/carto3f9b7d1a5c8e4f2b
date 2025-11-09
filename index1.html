@@ -2714,7 +2714,7 @@ function getDistance(lat1, lon1, lat2, lon2) {
     let label = "";
     if (p.category === "appareil") label = `${p.appareil} (${p.nom} ${p.type || ""})`;
     else if (p.category === "generic") label = p.nom;
-    else label = `${p.nom} ${p.type || ""}`.trim();
+    else label = `${p.nom} ${p.type || ""}${p.accès ? " – accès " + p.accès : ""}`.trim();
 
     a.innerHTML = `${icon} ${label} – ${p.distance.toFixed(2).replace(".", ",")} km`;
 
