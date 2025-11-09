@@ -399,7 +399,7 @@ const map = L.map('map', {
 }).setView(defaultCenter, defaultZoom);
 
 map.attributionControl.setPrefix("");
-map.attributionControl.addAttribution("Nono Maps – v1.11.1");
+map.attributionControl.addAttribution("Nono Maps – v1.11");
 map.attributionControl.addAttribution("© IGN");
 map.attributionControl.addAttribution("© OpenStreetMap contributors");
 map.attributionControl.addAttribution("© OpenRailwayMap / OSM");
@@ -666,16 +666,17 @@ L.control.layers(
   {}
 ).addTo(map);
 
-    // Gestion des rails selon le fond choisi
+// Gestion propre des rails selon la vue choisie
 map.on("baselayerchange", function(e) {
 
-  // On retire les rails partout
-  map.removeLayer(ormRails);
-
-  // On ajoute seulement si le bon fond est sélectionné
+  // ✅ Si on choisit la vue LIGNES → on active ORM
   if (e.name === "🛰️ Satellite IGN + Lignes") {
-    map.addLayer(ormRails);
+    if (!map.hasLayer(ormRails)) map.addLayer(ormRails);
+    return;
   }
+
+  // ✅ Pour toutes les autres vues → on supprime juste ORM
+  if (map.hasLayer(ormRails)) map.removeLayer(ormRails);
 });
 
     const ZoomLocate = L.Control.extend({
