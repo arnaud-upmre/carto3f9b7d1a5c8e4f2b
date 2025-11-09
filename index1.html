@@ -1452,41 +1452,34 @@ Promise.all([
     app.alias = generateAlias(app.appareil, app.nom, app.SAT, app.type);
   });
 
-// Construire les 3 types : 🚙 accès / 📍 poste / 💡 appareils
-const postesAcces = postes.map(p => ({
-  category: "acces",
+// Fusionner poste + accès en UNE seule entrée
+const postesFusion = postes.map(p => ({
+  category: "poste",
   nom: p.nom,
   type: p.type,
   SAT: p.SAT,
   acces: p["accès"] || "",
-  lat: Number(p.latitude),
-  lon: Number(p.longitude)
+  hasAcces: Boolean(p.latitude && p.longitude),
+  hasPoste: Boolean(p.poste_latitude && p.poste_longitude),
+  lat: Number(p.poste_latitude || p.latitude),
+  lon: Number(p.poste_longitude || p.longitude)
 }));
 
-const postesPoste = postes
-  .filter(p => p.poste_latitude && p.poste_longitude)
-  .map(p => ({
-    category: "poste",
-    nom: p.nom,
-    type: p.type,
-    SAT: p.SAT,
-    lat: Number(p.poste_latitude),
-    lon: Number(p.poste_longitude)
-  }));
-
+// Appareils 💡
 const appareilsItems = apps.map(a => ({
   category: "appareil",
   nom: a.nom,
   type: a.type,
   SAT: a.SAT,
-  appareil: a.appareil,
+  appareil: a.appareil || "",
   lat: Number(a.latitude),
   lon: Number(a.longitude)
 }));
 
-// Fusion
-allItems = [...postesAcces, ...postesPoste, ...appareilsItems];
+// Fusion finale
+allItems = [...postesFusion, ...appareilsItems];
 
+  
   fuseMix = new Fuse(allItems, {
     keys: [
       { name: "nom", weight: 0.8 },
@@ -1649,11 +1642,14 @@ const labelFor = (item) =>
 
 results.forEach((item, i) => {
   const li = document.createElement("li");
-const icon = (item.category === "poste")
-  ? `🚙${item.poste_latitude && item.poste_longitude ? " 📍" : ""}`
-  : "💡";
-
-li.innerHTML = `${icon} ${labelFor(item)}`;
+if (item.category === "poste") {
+  let icons = "";
+  if (item.hasAcces) icons += "🚙";
+  if (item.hasPoste) icons += "📍";
+  li.innerHTML = `${icons} ${item.nom} ${item.type || ""}`.trim();
+} else {
+  li.innerHTML = `💡 ${labelAppareil(item)}`;
+}
 
   if (i === 0) li.classList.add("best");
 
@@ -2512,7 +2508,7 @@ function formatInformations(val) {
 <div id="about-footer">
   <div class="footer-links">
     <a href="arnaud.html" class="pill-link">🔧 À propos</a>
-   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.10.13</a>
+   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1</a>
   </div>
 </div>
 <script>
