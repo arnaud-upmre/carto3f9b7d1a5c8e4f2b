@@ -1452,30 +1452,10 @@ Promise.all([
     app.alias = generateAlias(app.appareil, app.nom, app.SAT, app.type);
   });
 
-// Fusion poste + accès en UNE seule entrée par poste (sans perdre les données originales)
-const postesFusion = postes.map(p => ({
-  ...p, // ✅ garde toutes les données de la fiche
+  const postesTagged = postes.map(p => ({ ...p, category: "poste" }));
+  const appsTagged   = apps.map(a => ({ ...a, category: "appareil" }));
+  allItems = [...postesTagged, ...appsTagged];
 
-  category: "poste",
-  hasAcces: Boolean(p.latitude && p.longitude),
-  hasPoste: Boolean(p.poste_latitude && p.poste_longitude),
-
-  // ✅ coordonnées utilisées pour la recherche & proximité
-  lat: Number(p.poste_latitude || p.latitude),
-  lon: Number(p.poste_longitude || p.longitude)
-}));
-
-// Appareils 💡
-const appareilsItems = apps.map(a => ({
-  ...a,   // ✅ garde toutes les infos de l’appareil
-  category: "appareil",
-  lat: Number(a.latitude),
-  lon: Number(a.longitude)
-}));
-
-// Fusion finale
-allItems = [...postesFusion, ...appareilsItems];
-  
   fuseMix = new Fuse(allItems, {
     keys: [
       { name: "nom", weight: 0.8 },
@@ -1638,14 +1618,11 @@ const labelFor = (item) =>
 
 results.forEach((item, i) => {
   const li = document.createElement("li");
-if (item.category === "poste") {
-  let icons = "";
-  if (item.hasAcces) icons += "🚙";
-  if (item.hasPoste) icons += "📍";
-  li.innerHTML = `${icons} ${item.nom} ${item.type || ""}`.trim();
-} else {
-  li.innerHTML = `💡 ${labelAppareil(item)}`;
-}
+const icon = (item.category === "poste")
+  ? `🚙${item.poste_latitude && item.poste_longitude ? " 📍" : ""}`
+  : "💡";
+
+li.innerHTML = `${icon} ${labelFor(item)}`;
 
   if (i === 0) li.classList.add("best");
 
@@ -1855,30 +1832,8 @@ function renderProximitePage() {
   const slice = proximiteSorted.slice(proximiteIndex, proximiteIndex + PROX_STEP);
 
   slice.forEach(p => {
-
-let icon = "";
-let label = "";
-
-// ✅ FICHE GÉNÉRIQUE (special=true)
-if (p.special === true) {
-  icon = "📍";
-  label = p.nom;   // aucun type / aucun accès / aucun SAT
-}
-// ✅ ACCÈS 🚙
-else if (p.category === "acces") {
-  icon = "🚙";
-  label = `${p.nom} ${p.type || ""} – accès ${p.acces || ""}`.trim();
-}
-// ✅ POSTE 📍
-else if (p.category === "poste") {
-  icon = "📍";
-  label = `${p.nom} ${p.type || ""}`.trim();
-}
-// ✅ APPAREIL 💡
-else if (p.category === "appareil") {
-  icon = "💡";
-  label = labelAppareil(p);   // ✅ on réutilise EXACTEMENT la même fonction que dans la recherche
-}
+    const icon = p.category === "poste" ? "🚙" : "💡";
+    const label = p.category === "poste" ? labelPoste(p) : labelAppareil(p);
 
     const li = document.createElement("li");
     li.style.margin = "15px 0";
@@ -1923,13 +1878,9 @@ function showNearby(position) {
     return;
   }
 
-proximiteSorted = allItems
-  .map(it => ({
-    ...it,
-    distance: getDistance(lat, lon, it.lat, it.lon)
-  }))
-  .sort((a, b) => a.distance - b.distance);
-
+  proximiteSorted = allItems
+    .map(it => ({ ...it, distance: getDistance(lat, lon, it.latitude, it.longitude) }))
+    .sort((a, b) => a.distance - b.distance);
 
   proximiteIndex = 0;
 
@@ -2504,7 +2455,7 @@ function formatInformations(val) {
 <div id="about-footer">
   <div class="footer-links">
     <a href="arnaud.html" class="pill-link">🔧 À propos</a>
-   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V2</a>
+   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.10.12</a>
   </div>
 </div>
 <script>
