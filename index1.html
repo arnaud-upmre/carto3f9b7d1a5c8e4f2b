@@ -1864,22 +1864,28 @@ function renderProximitePage() {
 
   slice.forEach(p => {
 
-    let icon = "";
+let icon = "";
 let label = "";
 
-if (p.category === "acces") {
-  icon = "🚙";
-  label = `${p.nom} ${p.type} – accès ${p.acces || ""}`;
-}
-
-if (p.category === "poste") {
+// ✅ FICHE GÉNÉRIQUE (special=true)
+if (p.special === true) {
   icon = "📍";
-  label = `${p.nom} ${p.type}`;
+  label = p.nom;   // aucun type / aucun accès / aucun SAT
 }
-
-if (p.category === "appareil") {
+// ✅ ACCÈS 🚙
+else if (p.category === "acces") {
+  icon = "🚙";
+  label = `${p.nom} ${p.type || ""} – accès ${p.acces || ""}`.trim();
+}
+// ✅ POSTE 📍
+else if (p.category === "poste") {
+  icon = "📍";
+  label = `${p.nom} ${p.type || ""}`.trim();
+}
+// ✅ APPAREIL 💡
+else if (p.category === "appareil") {
   icon = "💡";
-  label = `${p.appareil} (${p.nom} ${p.type})`;
+  label = `${p.appareil} (${p.nom}${p.type ? " " + p.type : ""})`;
 }
 
     const li = document.createElement("li");
