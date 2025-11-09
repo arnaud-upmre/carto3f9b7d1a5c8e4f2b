@@ -19,13 +19,6 @@
 
 <style>
 
-
-  .icon-halo-appareil {
-  width: 24px;
-  height: 24px;
-  filter: drop-shadow(0 0 3px white) drop-shadow(0 0 6px white);
-}
-
   html, body {
   height: 100%;
   margin: 0;
@@ -263,7 +256,11 @@
   height: 36px;
   filter: drop-shadow(0 0 2px white) drop-shadow(0 0 4px white);
 }
-
+.icon-halo-appareil {
+  width: 24px;  
+  height: 24px;
+  filter: drop-shadow(0 0 4px white) drop-shadow(0 0 8px white);
+}
 
 .marker-cluster {
   background: transparent !important; 
@@ -371,6 +368,10 @@
 <button class="btn-toggle" onclick="chargerPN(this)">
   <img src="ico/pn.png" alt="Passages à niveau">
 </button>
+
+<button class="btn-toggle" id="btn-lignes" title="Afficher les lignes ferroviaires">
+  <img src="ico/ligne.png" alt="Lignes ferroviaires">
+</button>
   </div>
 </div>
 
@@ -394,19 +395,13 @@ const boundsFrance = [
 
 const map = L.map('map', {
   zoomControl: false,
-  attributionControl: true,
+  attributionControl: false,
   minZoom: 5,                  
   maxZoom: 21,                 
   maxBounds: boundsFrance,     
   maxBoundsViscosity: 1.0      
 }).setView(defaultCenter, defaultZoom);
 
-map.attributionControl.setPrefix("");
-map.attributionControl.addAttribution("Nono Maps – v1.11.1");
-map.attributionControl.addAttribution("© IGN");
-map.attributionControl.addAttribution("© OpenStreetMap contributors");
-map.attributionControl.addAttribution("© OpenRailwayMap / OSM");
-map.attributionControl.addAttribution("© Esri");
     
 let editMode = false;   
   
@@ -619,160 +614,37 @@ const esriSat = L.tileLayer(
   }
 );
 
-const ignLabels = L.tileLayer(
-  "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
-  + "&LAYER=GEOGRAPHICALNAMES.NAMES"
-  + "&STYLE=normal"
-  + "&FORMAT=image/png"
-  + "&TILEMATRIXSET=PM"
-  + "&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
-  {
-    attribution: "© IGN – Géoplateforme",
-    maxZoom: 21,
-    maxNativeZoom: 19,
-    tileSize: 256,
-    transparent: true,
-    zIndex: 500,
-    opacity: 1
-  }
-);
-
-
-const ormRails = L.tileLayer(
-  "https://tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png",
-  {
-    attribution: "© OpenRailwayMap / OSM",
-    maxZoom: 21,
-    maxNativeZoom: 19,
-    tileSize: 256,
-    opacity: 0.75
-  }
-);
-
-
-const satelliteIGN_lignes = L.layerGroup();
-satelliteIGN_lignes.onAdd = function(map) {
-  map.addLayer(orthoIGN);
-};
-satelliteIGN_lignes.onRemove = function(map) {
-  map.removeLayer(orthoIGN);
-};
-
-const satelliteIGN_labels = L.layerGroup();
-satelliteIGN_labels.onAdd = function(map) {
-  map.addLayer(orthoIGN);
-  map.addLayer(ignLabels);
-};
-satelliteIGN_labels.onRemove = function(map) {
-  map.removeLayer(orthoIGN);
-  map.removeLayer(ignLabels);
-};
-    
-
-   satelliteIGN_labels.addTo(map);
-
-const satelliteIGN_simple = L.layerGroup();
-satelliteIGN_simple.onAdd = function(map){
-  map.addLayer(orthoIGN);
-};
-satelliteIGN_simple.onRemove = function(map){
-  map.removeLayer(orthoIGN);
-};
-
-L.control.layers(
-  { 
-    "🛰️ Satellite IGN": satelliteIGN_simple,
-    "🛰️ Satellite IGN + labels": satelliteIGN_labels,
-    "🛰️ Satellite IGN + Lignes": satelliteIGN_lignes,
-    "🛰️ Satellite Open": esriSat,
-    "🗺️ Plan IGN ": planIGN,
-    "🌍 Plan Open": osm,
-  },
-  {}
-).addTo(map);
-    
-
-map.on("baselayerchange", function(e) {
-
-  // Si on choisit le fond Satellite IGN + Lignes
-  if (e.layer === satelliteIGN_lignes) {
-    if (!map.hasLayer(ormRails)) {
-      map.addLayer(ormRails);
+const mixte = L.layerGroup([
+  orthoIGN,
+  L.tileLayer(
+    "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
+    + "&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&STYLE=normal&FORMAT=image/png"
+    + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
+    {
+      attribution: "© IGN – Géoplateforme",
+      maxZoom: 19,
+      tileSize: 256,
+      crossOrigin: 'anonymous',
+      opacity: 0.4  
     }
-    return;
-  }
+  )
+]);
 
-  // Autres fonds → retirer les rails
-  if (map.hasLayer(ormRails)) {
-    map.removeLayer(ormRails);
-  }
-
-});
-
-    const ZoomLocate = L.Control.extend({
-  options: { position: 'topright' },
-
-  onAdd: function() {
-    const container = L.DomUtil.create("div", "leaflet-bar leaflet-control");
-
-    // Zoom +
-    const zoomIn = L.DomUtil.create("a", "leaflet-control-zoom-in", container);
-    zoomIn.href = "#";
-    zoomIn.innerHTML = "+";
-    zoomIn.onclick = e => { e.preventDefault(); map.zoomIn(); };
-
-    // Zoom –
-    const zoomOut = L.DomUtil.create("a", "leaflet-control-zoom-out", container);
-    zoomOut.href = "#";
-    zoomOut.innerHTML = "−";
-    zoomOut.onclick = e => { e.preventDefault(); map.zoomOut(); };
+orthoIGN.addTo(map);
 
 
-    let userMarker = null;
-    let watchId = null;
+    L.control.layers(
+      { 
+        "🛰️ Satellite IGN": orthoIGN,
+        "🛰️ Satellite Open": esriSat,
+        "🗺️ Plan IGN (défaut)": planIGN,
+        "🌍 Plan Open": osm,
+        "🛰️+🗺️ Mixte": mixte
+      },
+      {}
+    ).addTo(map);
 
-    const locateBtn = L.DomUtil.create("a", "leaflet-control-zoom-in", container);
-    locateBtn.href = "#";
-    locateBtn.innerHTML = `<img src="ico/arrow.png" style="width:18px;height:18px;">`;
-
-    locateBtn.onclick = e => {
-      e.preventDefault();
-
-      if (watchId !== null) {
-        navigator.geolocation.clearWatch(watchId);
-        watchId = null;
-        if (userMarker) {
-          map.removeLayer(userMarker);
-          userMarker = null;
-        }
-        return;
-      }
-
-      if (!navigator.geolocation) return alert("Géolocalisation non supportée.");
-
-      watchId = navigator.geolocation.watchPosition(pos => {
-        const { latitude, longitude } = pos.coords;
-
-        if (!userMarker) {
-          userMarker = L.circleMarker([latitude, longitude], {
-            radius: 8,
-            color: "#3b82f6",
-            fillColor: "#3b82f6",
-            fillOpacity: 0.6
-          }).addTo(map);
-        } else {
-          userMarker.setLatLng([latitude, longitude]);
-        }
-
-        map.setView([latitude, longitude], 16);
-      });
-    };
-
-    return container;
-  }
-});
-
-map.addControl(new ZoomLocate());
+    L.control.zoom({ position: 'topright' }).addTo(map);
 
     planIGN.on("tileerror", e => console.warn("IGN PLAN tile error", e));
     orthoIGN.on("tileerror", e => console.warn("IGN ORTHO tile error", e));
@@ -867,6 +739,7 @@ const iconPoste = L.divIcon({
   popupAnchor: [0, -10]
 });
 
+const iconAppareil= L.divIcon({className:"icon-circle appareil",html:"⚡"});
 
 const iconAcces = L.divIcon({
   html: `<img src="ico/acces.png" class="icon-halo">`,
@@ -909,7 +782,7 @@ let content = `
              
 
 <div style="margin-bottom:10px;">
-✍🏻 <strong>Information :</strong> ${ renderInformation(item.description_acces) }
+✍🏻 <strong>Information :</strong> ${ renderInformation(item.description) }
 </div>
 
   <a href="index.html?id=${encodeURIComponent(
@@ -990,20 +863,6 @@ allMarkers.push(m);
     });
 _tryOpenFromURL();
   });
-
-
-
-function buildAppareilIcon(img) {
-  return L.divIcon({
-    html: `<img src="ico/${img}" class="icon-halo-appareil">`,
-    className: "",
-    iconSize: [24, 24],    // taille réelle : 24 px
-    iconAnchor: [12, 24],  // centre bas → plus de décalage
-    popupAnchor: [0, -20]
-  });
-}
-
-    
     
 fetch("appareils.json")
   .then(r => r.json())
@@ -1014,19 +873,18 @@ fetch("appareils.json")
       let appareilIcon;
       const ref = (item.appareil || "").toUpperCase();
 
-      
 if (ref.startsWith("DU")) {
-  appareilIcon = buildAppareilIcon("stop.png");
+  appareilIcon = L.divIcon({ html:`<img src="ico/stop.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,38], popupAnchor:[0,-20] });
 } else if (ref.startsWith("I") || ref.startsWith("SI") || ref.startsWith("D")) {
-  appareilIcon = buildAppareilIcon("int.png");
+  appareilIcon = L.divIcon({ html:`<img src="ico/int.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,38], popupAnchor:[0,-20] });
 } else if (ref.startsWith("TT") || ref.startsWith("TSA") || ref.startsWith("TC") || ref.startsWith("TRA")) {
-  appareilIcon = buildAppareilIcon("TT.png");
+  appareilIcon = L.divIcon({ html:`<img src="ico/TT.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,38], popupAnchor:[0,-20] });
 } else if (/^[0-9]/.test(ref) || ref.startsWith("S") || ref.startsWith("ST") || ref.startsWith("F") || ref.startsWith("P") || ref.startsWith("FB") || ref.startsWith("B")) {
-  appareilIcon = buildAppareilIcon("sect.png");
+  appareilIcon = L.divIcon({ html:`<img src="ico/sect.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,38], popupAnchor:[0,-20] });
 } else if (ref.startsWith("ALIM")) {
-  appareilIcon = buildAppareilIcon("alim.png");
+  appareilIcon = L.divIcon({ html:`<img src="ico/alim.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,38], popupAnchor:[0,-20] });
 } else {
-  appareilIcon = buildAppareilIcon("int.png");
+  appareilIcon = iconAppareil;
 }
 
       let content = `
@@ -1214,6 +1072,105 @@ fetch("https://ressources.data.sncf.com/api/records/1.0/search/"
       setTimeout(() => toast.classList.remove("show"), 2500);
     });
 }
+
+
+
+    
+// === LIGNES FERROVIAIRES ===
+document.addEventListener("DOMContentLoaded", () => {
+  const btnLignes = document.getElementById("btn-lignes");
+  if (!btnLignes) return console.error("❌ Bouton Lignes introuvable");
+
+  let lignesLayer = L.markerClusterGroup({
+    disableClusteringAtZoom: 16,
+    spiderfyOnMaxZoom: false,
+  });
+  let lignesLoaded = false;
+
+  btnLignes.addEventListener("click", () => {
+    if (!lignesLoaded) {
+      btnLignes.classList.add("loading");
+
+      fetch("https://ressources.data.sncf.com/api/records/1.0/search/"
+        + "?dataset=lignes-par-type"
+        + "&geofilter.bbox=49.4,1.4,51.2,4.5"
+        + "&rows=3000")
+        .then(r => r.json())
+        .then(data => {
+          data.records.forEach(record => {
+            const f = record.fields || {};
+            if (!f.geo_shape) return;
+
+            // Couleur flashy + trait plus épais
+            const couleur =
+              (f.type_ligne || "").toLowerCase().includes("raccordement") ? "#ff9800" :
+              (f.type_ligne || "").toLowerCase().includes("desserte")     ? "#00e676" :
+              (f.type_ligne || "").toLowerCase().includes("embranchement") ? "#f50057" :
+              "#00bcd4"; // cyan vif par défaut
+
+            const poly = L.geoJSON(f.geo_shape, {
+              style: { color: couleur, weight: 6, opacity: 0.9 }
+            });
+
+            poly.on("click", (e) => {
+              const lat = e.latlng.lat.toFixed(5);
+              const lng = e.latlng.lng.toFixed(5);
+              const code = f.code_ligne ?? "?";
+              const lib  = f.lib_ligne ?? "—";
+              const pkd  = f.pkd ?? "—";
+              const pkf  = f.pkf ?? "—";
+              const type = f.type_ligne ?? "—";
+
+              const html = `
+                <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
+                            font-size:14px;color:#111;line-height:1.5;min-width:230px;text-align:left;">
+                  <div style="font-weight:700;font-size:16px;margin-bottom:8px;">
+                    🚧 Ligne n°${code}
+                  </div>
+                  <div style="margin-bottom:6px;">${lib}</div>
+                  <div style="margin-bottom:6px;">📏 PKD <strong>${pkd}</strong> — PKF <strong>${pkf}</strong></div>
+                  <div style="margin-bottom:14px;">🏷️ Type : <strong>${type}</strong></div>
+
+<div style="display:flex;justify-content:center;width:100%;margin-top:14px;">
+  <a href="https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${lat},${lng};"
+     target="_blank"
+     style="display:inline-flex;align-items:center;justify-content:center;
+            gap:6px;padding:10px 16px;border-radius:8px;
+            background:#10b981;color:white;text-decoration:none;
+            font-size:14px;font-weight:500;text-align:center;
+            box-sizing:border-box;min-width:160px;">
+    🚄 Voir sur Imajnet
+  </a>
+</div>
+
+                </div>`;
+              L.popup({ maxWidth: 280 })
+                .setLatLng(e.latlng)
+                .setContent(html)
+                .openOn(map);
+            });
+
+            lignesLayer.addLayer(poly);
+          });
+
+          map.addLayer(lignesLayer);
+          lignesLoaded = true;
+          btnLignes.classList.remove("loading");
+          btnLignes.classList.add("active");
+          showToast("✅ Lignes ferroviaires affichées");
+        })
+        .catch(err => {
+          console.error("Erreur chargement lignes :", err);
+          btnLignes.classList.remove("loading");
+          showToast("⚠️ Erreur de chargement");
+        });
+    } else {
+      toggleLayer(lignesLayer, btnLignes, "Lignes ferroviaires");
+    }
+  });
+});
+
+
     
     
 const leftControls = L.control({ position: "topleft" });
@@ -1248,7 +1205,45 @@ recenterBtn.onclick = () => {
 L.DomEvent.disableClickPropagation(recenterBtn);
 L.DomEvent.disableScrollPropagation(recenterBtn);
 
+let userMarker;
+let geoWatchId = null;
+const locateBtn = L.DomUtil.create("div", "btn-toggle", topGroup);
+locateBtn.innerHTML = "📍";
 
+locateBtn.onclick = () => {
+  if (!navigator.geolocation) return alert("Géolocalisation non supportée.");
+
+  if (geoWatchId !== null) {
+    navigator.geolocation.clearWatch(geoWatchId);
+    geoWatchId = null;
+    if (userMarker) {
+      map.removeLayer(userMarker);
+      userMarker = null;
+    }
+    locateBtn.classList.remove("active");
+    return;
+  }
+
+  geoWatchId = navigator.geolocation.watchPosition(pos => {
+    const lat = pos.coords.latitude, lng = pos.coords.longitude;
+    if (userMarker) {
+      userMarker.setLatLng([lat, lng]);
+    } else {
+      userMarker = L.circleMarker([lat, lng], {
+        radius: 8,
+        color: "#3b82f6",
+        fillColor: "#3b82f6",
+        fillOpacity: 0.6
+      }).addTo(map);
+    }
+    map.setView([lat, lng], 15);
+  });
+
+  locateBtn.classList.add("active");
+};
+
+L.DomEvent.disableClickPropagation(locateBtn);
+L.DomEvent.disableScrollPropagation(locateBtn);
 
 
   return container;
