@@ -1885,7 +1885,7 @@ else if (p.category === "poste") {
 // ✅ APPAREIL 💡
 else if (p.category === "appareil") {
   icon = "💡";
-  label = `${p.appareil} (${p.nom}${p.type ? " " + p.type : ""})`;
+  label = labelAppareil(p);   // ✅ on réutilise EXACTEMENT la même fonction que dans la recherche
 }
 
     const li = document.createElement("li");
@@ -2512,7 +2512,7 @@ function formatInformations(val) {
 <div id="about-footer">
   <div class="footer-links">
     <a href="arnaud.html" class="pill-link">🔧 À propos</a>
-   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.10.12</a>
+   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.10.13</a>
   </div>
 </div>
 <script>
