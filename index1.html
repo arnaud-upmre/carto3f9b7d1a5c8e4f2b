@@ -2434,7 +2434,7 @@ function formatInformations(val) {
 <div id="about-footer">
   <div class="footer-links">
     <a href="arnaud.html" class="pill-link">🔧 À propos</a>
-   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1</a>
+   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.10.13</a>
   </div>
 </div>
 <script>
@@ -2721,9 +2721,10 @@ function getDistance(lat1, lon1, lat2, lon2) {
     else if (p.category === "generic") icon = "🗂️";
 
     let label = "";
-    if (p.category === "appareil") label = `${p.appareil} (${p.nom} ${p.type || ""})`;
+    if (p.category === "appareil") 
+    label = `${p.appareil} (${p.nom}${p.type ? " " + p.type : ""}${p.SAT ? " / " + p.SAT : ""}${p.accès ? " – accès " + p.accès : ""})`;
     else if (p.category === "generic") label = p.nom;
-    else label = `${p.nom} ${p.type || ""}${p.accès ? " – accès " + p.accès : ""}`.trim();
+    else label = `${p.nom} ${p.type || ""}${p.SAT ? " / " + p.SAT : ""}${p.accès ? " – accès " + p.accès : ""}`.trim();
 
     a.innerHTML = `${icon} ${label} – ${p.distance.toFixed(2).replace(".", ",")} km`;
 
