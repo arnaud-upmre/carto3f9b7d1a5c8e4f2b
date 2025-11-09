@@ -669,20 +669,23 @@ L.control.layers(
       {}
     ).addTo(map);
 
-    // === Gestion spéciale pour "Satellite IGN + Lignes" ===
+    
+// === Gestion spéciale pour Satellite (ign, labels, lignes) ===
 map.on("baselayerchange", function(e) {
 
-  // Labels IGN seulement si fond "Satellite IGN"
-  if (e.name === "🛰️ Satellite IGN") {
+  // ✅ Labels IGN pour : 
+  // - Satellite IGN
+  // - Satellite IGN + labels
+  if (e.name === "🛰️ Satellite IGN" || e.name === "🛰️ Satellite IGN + labels") {
     map.addLayer(ignLabels);
   } else {
     map.removeLayer(ignLabels);
   }
 
-  // On retire les rails sur tous les autres fonds
+  // ✅ Retirer les rails ORM sur tous les fonds
   map.removeLayer(ormRails);
 
-  // On affiche les rails seulement sur ce fond
+  // ✅ Activer rails ORM uniquement sur le fond mixte
   if (e.name === "🛰️ Satellite IGN + Lignes") {
     map.addLayer(ormRails);
   }
