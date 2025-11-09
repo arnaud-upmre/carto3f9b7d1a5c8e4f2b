@@ -1073,42 +1073,35 @@ fetch("https://ressources.data.sncf.com/api/records/1.0/search/"
     });
 }
 
-
 // === LIGNES FERROVIAIRES (OpenRailwayMap) ===
-document.addEventListener("DOMContentLoaded", () => {
-  const btnLignes = document.getElementById("btn-lignes");
-  if (!btnLignes) return console.error("❌ Bouton Lignes introuvable");
+const btnLignes = document.getElementById("btn-lignes");
 
-  // Layer ORM (rails)
-  const ormRails = L.tileLayer(
-    "https://tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png",
-    {
-      maxZoom: 20,
-      opacity: 0.9,
-      attribution: "© OpenRailwayMap / OpenStreetMap contributors"
-    }
-  );
+const ormRails = L.tileLayer(
+  "https://tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png",
+  {
+    maxZoom: 20,
+    opacity: 0.9,
+    attribution: "© OpenRailwayMap / OpenStreetMap contributors"
+  }
+);
 
-  let lignesActive = false;
+let lignesActive = false;
 
-  btnLignes.addEventListener("click", () => {
-    if (!lignesActive) {
-      map.addLayer(ormRails);
-      btnLignes.classList.add("active");
-      showToast("✅ Lignes ferroviaires (ORM) affichées");
-      lignesActive = true;
-    } else {
-      map.removeLayer(ormRails);
-      btnLignes.classList.remove("active");
-      showToast("❌ Lignes ferroviaires masquées");
-      lignesActive = false;
-    }
-  });
+btnLignes.addEventListener("click", () => {
+  if (!lignesActive) {
+    map.addLayer(ormRails);
+    btnLignes.classList.add("active");
+    showToast("✅ Lignes ferroviaires (ORM) affichées");
+    lignesActive = true;
+  } else {
+    map.removeLayer(ormRails);
+    btnLignes.classList.remove("active");
+    showToast("❌ Lignes ferroviaires masquées");
+    lignesActive = false;
+  }
 });
     
 
-
-    
     
 const leftControls = L.control({ position: "topleft" });
 leftControls.onAdd = function() {
