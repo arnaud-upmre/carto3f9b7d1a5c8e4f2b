@@ -19,6 +19,13 @@
 
 <style>
 
+
+  .icon-halo-appareil {
+  width: 24px;
+  height: 24px;
+  filter: drop-shadow(0 0 3px white) drop-shadow(0 0 6px white);
+}
+
   html, body {
   height: 100%;
   margin: 0;
@@ -395,7 +402,7 @@ const map = L.map('map', {
 }).setView(defaultCenter, defaultZoom);
 
 map.attributionControl.setPrefix("");
-map.attributionControl.addAttribution("Nono Maps – v1.11");
+map.attributionControl.addAttribution("Nono Maps – v1.11.1");
 map.attributionControl.addAttribution("© IGN");
 map.attributionControl.addAttribution("© OpenStreetMap contributors");
 map.attributionControl.addAttribution("© OpenRailwayMap / OSM");
@@ -988,11 +995,11 @@ _tryOpenFromURL();
 
 function buildAppareilIcon(img) {
   return L.divIcon({
-    html: `<img src="ico/${img}" class="icon-halo">`,
+    html: `<img src="ico/${img}" class="icon-halo-appareil">`,
     className: "",
-    iconSize: [36, 36],
-    iconAnchor: [18, 36],
-    popupAnchor: [0, -10]
+    iconSize: [24, 24],    // taille réelle : 24 px
+    iconAnchor: [12, 24],  // centre bas → plus de décalage
+    popupAnchor: [0, -20]
   });
 }
 
