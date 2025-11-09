@@ -650,11 +650,9 @@ const ormRails = L.tileLayer(
 const satelliteIGN_lignes = L.layerGroup();
 satelliteIGN_lignes.onAdd = function(map) {
   map.addLayer(orthoIGN);
-  map.addLayer(ormRails);
 };
 satelliteIGN_lignes.onRemove = function(map) {
   map.removeLayer(orthoIGN);
-  map.removeLayer(ormRails);
 };
 
 const satelliteIGN_labels = L.layerGroup();
@@ -693,14 +691,19 @@ L.control.layers(
 
 map.on("baselayerchange", function(e) {
 
-
-  if (e.name === "🛰️ Satellite IGN + Lignes") {
-    if (!map.hasLayer(ormRails)) map.addLayer(ormRails);
+  // Si on choisit le fond Satellite IGN + Lignes
+  if (e.layer === satelliteIGN_lignes) {
+    if (!map.hasLayer(ormRails)) {
+      map.addLayer(ormRails);
+    }
     return;
   }
 
+  // Autres fonds → retirer les rails
+  if (map.hasLayer(ormRails)) {
+    map.removeLayer(ormRails);
+  }
 
-  if (map.hasLayer(ormRails)) map.removeLayer(ormRails);
 });
 
     const ZoomLocate = L.Control.extend({
