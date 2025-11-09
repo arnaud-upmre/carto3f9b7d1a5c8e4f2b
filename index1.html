@@ -902,7 +902,7 @@
             appareils = [];
         let currentItem = null;
 
-        function myMapsViewer(lat, lon, z=20) {
+        function myMapsViewer(lat, lon, z=19) {
             return `map.html?lat=${lat}&lon=${lon}&z=${z}`;
         }
 
@@ -1298,7 +1298,7 @@
                 const blocs = [];
 
                 blocs.push(formatDescription(lieu.description));
-                blocs.push(formatPortailDisplay(lieu.portail, lieu.secure));
+                blocs.push(formatPortail(lieu.portail));
 
                 if (blocs.length > 0) {
                     html += `<hr class="separator" />` +
@@ -1739,9 +1739,14 @@
             result.style.display = "block";
 
             let html = `<h2>
-  ⚡️<span id="editable-appareil">${app.appareil}</span> (<span id="editable-nomposte">${[app.nom, app.type].filter(v => v && v.trim() !== '').map(s => s.trim()).join(' ')}${app.SAT ? '/' + app.SAT.trim() : ''}</span>)
-  <a href="#" id="edit-toggle-appareil">[modifier]</a>
-</h2>`
+    ⚡️ <span id="editable-appareil">${app.appareil}</span>
+(<span id="editable-nomposte">
+${
+            (app.nom || '').trim()}${app.type ? ' ' + app.type.trim() : ''}${app.SAT ? ' ' + app.SAT.trim() : ''}
+</span>)
+    <a href="#" id="edit-toggle-appareil">[modifier]</a>
+  </h2>`
+
 
             ;
 
@@ -2569,7 +2574,7 @@
     <div id="about-footer">
         <div class="footer-links">
             <a href="arnaud.html" class="pill-link">🔧 À propos</a>
-            <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.10.9</a>
+            <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.10.8</a>
         </div>
     </div>
     <script>
