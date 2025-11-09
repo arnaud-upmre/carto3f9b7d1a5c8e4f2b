@@ -70,15 +70,13 @@
   border-radius:14px;
   white-space:nowrap;
 
-  /* VERRE DÉPOLI gris perlé */
-  background:rgba(240,240,240,0.45);            /* moins blanc, plus gris */
-  border:1px solid rgba(170,170,170,0.40);      /* bordure douce visible */
+  background:rgba(240,240,240,0.45);          
+  border:1px solid rgba(170,170,170,0.40);      
   color:#1a63e0;
 
-  backdrop-filter: blur(18px) saturate(170%);   /* vrai effet verre */
+  backdrop-filter: blur(18px) saturate(170%);   
   -webkit-backdrop-filter: blur(18px) saturate(170%);
 
-  /* profondeur / relief */
   box-shadow:
     0 3px 8px rgba(0,0,0,0.10),
     0 8px 20px rgba(0,0,0,0.06),
@@ -87,7 +85,6 @@
   transition:0.22s ease;
 }
 
-/* HOVER : plus clair, bord plus contrasté, verre plus marqué */
 .telecom-mini:hover {
   background:rgba(255,255,255,0.60);
   border-color:rgba(150,150,150,0.55);
@@ -113,13 +110,9 @@
   }
 }
 
-
-    
-
-/* ====== Container global ====== */
 .nono-banner-container {
   position: fixed;
-  top: -100px; /* caché au départ */
+  top: -100px; 
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -131,7 +124,6 @@
    transition: top 1.5s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 1.2s ease;
 }
 
-/* ====== Bloc principal (fond translucide + flou) ====== */
 .nono-banner {
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
@@ -152,25 +144,21 @@
   transition: all 0.9s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
-/* ====== Style de chaque ligne de notification ====== */
 .nono-banner + .nono-banner {
   border-top: 1px solid rgba(0,0,0,0.05);
   margin-top: -8px;
 }
 
-/* ====== Apparition ====== */
 .nono-banner.show {
   opacity: 1;
   transform: translateY(0);
 }
 
-/* ====== Container visible ====== */
 .nono-banner-container.show {
   top: 30px;
   opacity: 1;
 }
 
-/* ====== Mode sombre ====== */
 @media (prefers-color-scheme: dark) {
   .nono-banner {
     background: rgba(28,28,28,0.85);
@@ -182,10 +170,6 @@
     border-top: 1px solid rgba(255,255,255,0.08);
   }
 }
-
-
-
-    
 
 .rep-block.info-block,
 .rep-block.rep-appareil.info-block,
@@ -852,7 +836,7 @@ main {
   
   
   </style>
-  <!-- Google tag (gtag.js) -->
+
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-EMSCVXG71V"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -909,6 +893,7 @@ const compteurAppareilURL = "https://script.google.com/macros/s/AKfycbwJIlvcfNYR
 
 let lieux = [], appareils = [];
     let currentItem = null;
+    let proximiteData = [];
 
 function myMapsViewer(lat, lon, z = 20) {
   return `map.html?lat=${lat}&lon=${lon}&z=${z}`;
@@ -976,12 +961,10 @@ function formatPortail(val) {
   const isSecure = secure && secure.trim() !== "";
   const hasPortail = val && val.trim() !== "";
 
-  // Cas : rien du tout
   if (!hasPortail && !isSecure) {
     return `<p><strong id="editable-portail">🔑 Portail / Alarme :</strong> <span class="placeholder">(Complétez cette info en modifiant la fiche)</span></p>`;
   }
 
-  // Cas : lien sécurisé
   if (isSecure) {
     let html = `<p><strong id="editable-portail">🔑 Portail / Alarme :</strong> 
       <a href="${secure}" target="_blank" rel="noopener">🔐 Afficher les codes d’accès</a>`;
@@ -992,12 +975,9 @@ function formatPortail(val) {
     return html;
   }
 
-  // Cas : juste du texte portail classique
   return `<p><strong id="editable-portail">🔑 Portail / Alarme :</strong> ${val}</p>`;
 }
 
-
-    
     function formatDescription(val) {
   return `<p><strong id="editable-description">ℹ️ Informations :</strong> 
     ${val ? `<span class="desc-value">${val}</span>` : '<span class="placeholder">(non renseigné)</span>'}
@@ -1005,7 +985,7 @@ function formatPortail(val) {
 }
     
 function normalize(str) {
-  return (str ?? "")               // <= béton armé
+  return (str ?? "")              
     .toString()
     .normalize("NFD")
     .replace(/[̀-ͯ]/g, "")
@@ -1448,6 +1428,8 @@ Promise.all([
   lieux = postes;
   appareils = apps;
 
+   proximiteData = construireProximite(postes, apps);
+
   appareils.forEach(app => {
     app.alias = generateAlias(app.appareil, app.nom, app.SAT, app.type);
   });
@@ -1770,26 +1752,7 @@ if (document.readyState === 'loading') {
 
 trainImg.addEventListener('click', pickRandomTrain);
 
-function getDistance(lat1, lon1, lat2, lon2) {
-  const R = 6371; 
-  const dLat = (lat2 - lat1) * Math.PI / 180;
-  const dLon = (lon2 - lon1) * Math.PI / 180;
-  const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-            Math.sin(dLon/2) * Math.sin(dLon/2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-  return R * c; 
-}
 
-const km = d => d.toFixed(2).replace(".", ","); 
-
-const labelPoste = p =>
-  (`${p.nom || ""}${p.type ? " " + p.type : ""}${p.SAT ? " " + p.SAT : ""}`.trim()) +
-  (p.accès ? ` – accès ${p.accès}` : "");
-
-const labelAppareil = p =>
-  `${p.appareil} (${p.nom}${p.type ? " " + p.type : ""}${p.SAT ? " / " + p.SAT : ""})`;
-    
 function isMobile() {
   if (navigator.userAgentData && "mobile" in navigator.userAgentData) {
     return navigator.userAgentData.mobile;
@@ -1824,74 +1787,66 @@ document.getElementById("btn-localiser").addEventListener("click", () => {
   }
 });
 
-function renderProximitePage() {
-  const container = document.getElementById("proximite");
-  const ul = container.querySelector("ul");
-  const btnVoirPlus = document.getElementById("voir-plus");
 
-  const slice = proximiteSorted.slice(proximiteIndex, proximiteIndex + PROX_STEP);
+    function construireProximite(postes, appareils) {
+  const arr = [];
 
-  slice.forEach(p => {
-    const icon = p.category === "poste" ? "🚙" : "💡";
-    const label = p.category === "poste" ? labelPoste(p) : labelAppareil(p);
-
-    const li = document.createElement("li");
-    li.style.margin = "15px 0";
-
-    const a = document.createElement("a");
-    a.href = "#";
-    a.style.textDecoration = "none";
-    a.style.color = "inherit";
-    a.style.cursor = "pointer";
-  a.innerHTML = `${icon} ${label} – ${km(p.distance)} km`;
-
-    a.addEventListener("click", ev => {
-      ev.preventDefault();
-      container.innerHTML = "";
-      btnVoirPlus.style.display = "none";
-      if (p.category === "poste") {
-        showLieu(p);
-      } else {
-        showAppareil(p);
-      }
-    });
-
-    li.appendChild(a);
-    ul.appendChild(li);
+  postes.forEach(p => {
+    if (p.special === true) {
+      arr.push({
+        ...p,
+        category: "generic",
+        lat: Number(p.poste_latitude || p.latitude),
+        lon: Number(p.poste_longitude || p.longitude)
+      });
+    }
   });
 
-  proximiteIndex += slice.length;
 
-  if (proximiteIndex < proximiteSorted.length) {
-    btnVoirPlus.style.display = "inline-block";
-  } else {
-    btnVoirPlus.style.display = "none";
+  postes.forEach(p => {
+    if (!p.special && p.latitude && p.longitude) {
+      arr.push({
+        ...p,
+        category: "acces",
+        lat: Number(p.latitude),
+        lon: Number(p.longitude)
+      });
+    }
+  });
+
+const postesUniques = new Map();
+
+postes.forEach(p => {
+  if (!p.special && p.poste_latitude && p.poste_longitude) {
+    const key = `${p.nom}_${p.type}_${p.poste_latitude}_${p.poste_longitude}`;
+
+    if (!postesUniques.has(key)) {
+      postesUniques.set(key, {
+        ...p,
+        category: "poste",
+        lat: Number(p.poste_latitude),
+        lon: Number(p.poste_longitude)
+      });
+    }
   }
+});
+
+
+arr.push(...postesUniques.values());
+
+  appareils.forEach(a => {
+    arr.push({
+      ...a,
+      category: "appareil",
+      lat: Number(a.latitude),
+      lon: Number(a.longitude)
+    });
+  });
+
+  return arr;
 }
 
-function showNearby(position) {
-  const lat = position.coords.latitude;
-  const lon = position.coords.longitude;
 
-  if (!allItems || allItems.length === 0) {
-    alert("Les données ne sont pas encore chargées.");
-    return;
-  }
-
-  proximiteSorted = allItems
-    .map(it => ({ ...it, distance: getDistance(lat, lon, it.latitude, it.longitude) }))
-    .sort((a, b) => a.distance - b.distance);
-
-  proximiteIndex = 0;
-
-  const container = document.getElementById("proximite");
-  container.innerHTML = `<h3>📍 À proximité :</h3><ul style="margin:0; padding-left:20px;"></ul>`;
-
-  const btnVoirPlus = document.getElementById("voir-plus");
-  btnVoirPlus.onclick = renderProximitePage;
-
-  renderProximitePage();
-}
 
 const compteurContributionURL = "https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec";
 
@@ -2095,7 +2050,6 @@ if (e.target.id === "editable-portail") {
   return;
 }
   
-
     const field = e.target.id.replace("editable-","");
     let currentVal = e.target.textContent.replace("– accès ","").trim();
     e.target.innerHTML = `<input type="text" id="input-${field}" value="${currentVal}" style="border:2px solid #1a73e8; padding:3px; border-radius:6px;" />`;
@@ -2378,7 +2332,6 @@ bloc.innerHTML = `
   editMode = false;
 }
 
-
     function quitEditModeAppareil(newAppareil, newNomPoste, newLien, newDescription) {
 
   originalAppareil.appareil = newAppareil;
@@ -2455,7 +2408,7 @@ function formatInformations(val) {
 <div id="about-footer">
   <div class="footer-links">
     <a href="arnaud.html" class="pill-link">🔧 À propos</a>
-   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.10.12</a>
+   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.10.13</a>
   </div>
 </div>
 <script>
@@ -2631,7 +2584,6 @@ document.getElementById("streetview-close").onclick = () => {
       }))
       .filter(n => n.date && n.duree && n.message);
 
-    // 🔧 Corrige format de date Google "Date(2025,9,15)"
     const convertDate = d => {
       if (typeof d === "string" && d.startsWith("Date(")) {
         const nums = d.match(/\d+/g);
@@ -2640,7 +2592,6 @@ document.getElementById("streetview-close").onclick = () => {
       return new Date(d);
     };
 
-    // 🔍 Filtre les notifs valides (encore dans la durée)
     const valid = rows.filter(row => {
       const start = convertDate(row.date);
       const end = new Date(start);
@@ -2653,7 +2604,6 @@ document.getElementById("streetview-close").onclick = () => {
     const container = document.getElementById("nono-banner-container");
     container.classList.add("show");
 
-    // 🔔 Affiche toutes les notifs ensemble
     for (const notif of valid) {
       const key = `notif_seen_${notif.message}`;
       if (localStorage.getItem(key)) continue;
@@ -2667,7 +2617,6 @@ document.getElementById("streetview-close").onclick = () => {
       localStorage.setItem(key, "1");
     }
 
-    // ⏱️ Laisse visible 6s puis retire
     await new Promise(r => setTimeout(r, 6000));
     container.classList.remove("show");
     setTimeout(() => container.innerHTML = "", 600);
@@ -2676,6 +2625,99 @@ document.getElementById("streetview-close").onclick = () => {
     console.warn("⚠️ Erreur récupération notifications :", err);
   }
 })();
+
+function getDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1 * Math.PI / 180) *
+      Math.cos(lat2 * Math.PI / 180) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
+  function showNearby(position) {
+  const lat = position.coords.latitude;
+  const lon = position.coords.longitude;
+
+  if (!proximiteData || proximiteData.length === 0) {
+    alert("Les données ne sont pas encore chargées.");
+    return;
+  }
+
+  proximiteSorted = proximiteData
+    .map(it => ({
+      ...it,
+      distance: Math.round(getDistance(lat, lon, Number(it.lat), Number(it.lon)) * 1000) / 1000
+    }))
+    .sort((a, b) => a.distance - b.distance);
+
+  proximiteIndex = 0;
+
+  const container = document.getElementById("proximite");
+  container.innerHTML = `<h3>📍 À proximité :</h3><ul style="margin:0; padding-left:20px;"></ul>`;
+
+  const btnVoirPlus = document.getElementById("voir-plus");
+  btnVoirPlus.onclick = renderProximitePage;
+
+  renderProximitePage();
+}
+
+  function renderProximitePage() {
+  const container = document.getElementById("proximite");
+  const ul = container.querySelector("ul");
+  const btnVoirPlus = document.getElementById("voir-plus");
+
+  const slice = proximiteSorted.slice(proximiteIndex, proximiteIndex + PROX_STEP);
+
+  slice.forEach(p => {
+    const li = document.createElement("li");
+    li.style.margin = "15px 0";
+
+    const a = document.createElement("a");
+    a.href = "#";
+    a.style.textDecoration = "none";
+    a.style.color = "inherit";
+    a.style.cursor = "pointer";
+
+    let icon = "";
+    if (p.category === "acces") icon = "🚙";
+    else if (p.category === "poste") icon = "📍";
+    else if (p.category === "appareil") icon = "💡";
+    else if (p.category === "generic") icon = "🗂️";
+
+    let label = "";
+    if (p.category === "appareil") 
+    label = `${p.appareil} (${p.nom}${p.type ? " " + p.type : ""}${p.SAT ? " / " + p.SAT : ""}${p.accès ? " – accès " + p.accès : ""})`;
+    else if (p.category === "generic") label = p.nom;
+    else label = `${p.nom} ${p.type || ""}${p.SAT ? " / " + p.SAT : ""}${p.accès ? " – accès " + p.accès : ""}`.trim();
+
+    a.innerHTML = `${icon} ${label} – ${p.distance.toFixed(2).replace(".", ",")} km`;
+
+    a.addEventListener("click", ev => {
+      ev.preventDefault();
+      container.innerHTML = "";
+      btnVoirPlus.style.display = "none";
+
+      if (p.category === "appareil") {
+        showAppareil(p);
+      } else {
+        showLieu(p);
+      }
+    });
+
+    li.appendChild(a);
+    ul.appendChild(li);
+  });
+
+  proximiteIndex += slice.length;
+  btnVoirPlus.style.display = proximiteIndex < proximiteSorted.length ? "inline-block" : "none";
+}
+  
 </script>
 
 </body>
