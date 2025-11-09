@@ -256,11 +256,7 @@
   height: 36px;
   filter: drop-shadow(0 0 2px white) drop-shadow(0 0 4px white);
 }
-.icon-halo-appareil {
-  width: 24px;  
-  height: 24px;
-  filter: drop-shadow(0 0 4px white) drop-shadow(0 0 8px white);
-}
+
 
 .marker-cluster {
   background: transparent !important; 
@@ -399,7 +395,7 @@ const map = L.map('map', {
 }).setView(defaultCenter, defaultZoom);
 
 map.attributionControl.setPrefix("");
-map.attributionControl.addAttribution("Nono Maps – v1.11.1");
+map.attributionControl.addAttribution("Nono Maps – v1.11");
 map.attributionControl.addAttribution("© IGN");
 map.attributionControl.addAttribution("© OpenStreetMap contributors");
 map.attributionControl.addAttribution("© OpenRailwayMap / OSM");
@@ -864,7 +860,6 @@ const iconPoste = L.divIcon({
   popupAnchor: [0, -10]
 });
 
-const iconAppareil= L.divIcon({className:"icon-circle appareil",html:"⚡"});
 
 const iconAcces = L.divIcon({
   html: `<img src="ico/acces.png" class="icon-halo">`,
@@ -991,13 +986,13 @@ _tryOpenFromURL();
 
 
 
-    function buildAppareilIcon(img) {
+function buildAppareilIcon(img) {
   return L.divIcon({
-    html: `<img src="ico/${img}" class="icon-halo-appareil">`,
+    html: `<img src="ico/${img}" class="icon-halo">`,
     className: "",
-    iconSize: [30, 30],       // taille réelle estimée du halo
-    iconAnchor: [15, 30],     // centre-bas de l’icône
-    popupAnchor: [0, -28]
+    iconSize: [36, 36],
+    iconAnchor: [18, 36],
+    popupAnchor: [0, -10]
   });
 }
 
