@@ -641,18 +641,31 @@ const ignLabels = L.tileLayer(
 const satelliteIGN_labels = L.layerGroup([orthoIGN, ignLabels]);
     satelliteIGN_labels.addTo(map);
 
+ 
+    // === LIGNES OPENRAILWAYMAP (superposition bleu ORM) ===
+const ormLines = L.tileLayer(
+  "https://{s}.tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png",
+  {
+    maxZoom: 20,
+    maxNativeZoom: 19,
+    opacity: 0.9,
+    attribution: "© OpenRailwayMap / OSM"
+  }
+);
     
 
-    L.control.layers(
-      { 
-        "🛰️ Satellite IGN": orthoIGN,
-        "🛰️ Satellite IGN + labels": satelliteIGN_labels,
-        "🛰️ Satellite Open": esriSat,
-        "🗺️ Plan IGN (défaut)": planIGN,
-        "🌍 Plan Open": osm,
-      },
-      {}
-    ).addTo(map);
+L.control.layers(
+  { 
+    "🛰️ Satellite IGN": orthoIGN,
+    "🛰️ Satellite IGN + labels": satelliteIGN_labels,
+    "🛰️ Satellite Open": esriSat,
+    "🗺️ Plan IGN (défaut)": planIGN,
+    "🌍 Plan Open": osm
+  },
+  {
+    "🚆 Lignes OpenRailwayMap": ormLines
+  }
+).addTo(map);
 
     const ZoomLocate = L.Control.extend({
   options: { position: 'topright' },
