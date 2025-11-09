@@ -633,6 +633,7 @@ const ignLabels = L.tileLayer(
 );
 
 const satelliteIGN_labels = L.layerGroup([orthoIGN, ignLabels]);
+    satelliteIGN_labels.addTo(map);
 
     
 const mixte = L.layerGroup([
