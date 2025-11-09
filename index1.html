@@ -1452,33 +1452,29 @@ Promise.all([
     app.alias = generateAlias(app.appareil, app.nom, app.SAT, app.type);
   });
 
-// Fusionner poste + accès en UNE seule entrée
+// Fusion poste + accès en UNE seule entrée par poste (sans perdre les données originales)
 const postesFusion = postes.map(p => ({
+  ...p, // ✅ garde toutes les données de la fiche
+
   category: "poste",
-  nom: p.nom,
-  type: p.type,
-  SAT: p.SAT,
-  acces: p["accès"] || "",
   hasAcces: Boolean(p.latitude && p.longitude),
   hasPoste: Boolean(p.poste_latitude && p.poste_longitude),
+
+  // ✅ coordonnées utilisées pour la recherche & proximité
   lat: Number(p.poste_latitude || p.latitude),
   lon: Number(p.poste_longitude || p.longitude)
 }));
 
 // Appareils 💡
 const appareilsItems = apps.map(a => ({
+  ...a,   // ✅ garde toutes les infos de l’appareil
   category: "appareil",
-  nom: a.nom,
-  type: a.type,
-  SAT: a.SAT,
-  appareil: a.appareil || "",
   lat: Number(a.latitude),
   lon: Number(a.longitude)
 }));
 
 // Fusion finale
 allItems = [...postesFusion, ...appareilsItems];
-
   
   fuseMix = new Fuse(allItems, {
     keys: [
@@ -2508,7 +2504,7 @@ function formatInformations(val) {
 <div id="about-footer">
   <div class="footer-links">
     <a href="arnaud.html" class="pill-link">🔧 À propos</a>
-   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1</a>
+   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V2</a>
   </div>
 </div>
 <script>
