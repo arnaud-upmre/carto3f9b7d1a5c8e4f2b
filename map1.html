@@ -403,7 +403,7 @@ const map = L.map('map', {
 }).setView(defaultCenter, defaultZoom);
 
 map.attributionControl.setPrefix("");
-map.attributionControl.addAttribution("Nono Maps – v1.11.1");
+map.attributionControl.addAttribution("Nono Maps – v1");
 map.attributionControl.addAttribution("© IGN");
 map.attributionControl.addAttribution("© OpenStreetMap contributors");
 map.attributionControl.addAttribution("© OpenRailwayMap / OSM");
@@ -620,26 +620,18 @@ const esriSat = L.tileLayer(
   }
 );
 
-const ignLabels = L.tileLayer(
-  "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
-  + "&LAYER=GEOGRAPHICALNAMES.NAMES"
-  + "&STYLE=normal"
-  + "&FORMAT=image/png"
-  + "&TILEMATRIXSET=PM"
-  + "&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
+// === Labels OSM transparents (overlay) ===
+const osmLabels = L.tileLayer(
+  "https://tiles.stadiamaps.com/tiles/alidade_smooth_labels/{z}/{x}/{y}@2x.png",
   {
-    attribution: "© IGN – Géoplateforme",
+    attribution: "© Stadia Maps, © OpenMapTiles, © OpenStreetMap contributors",
     maxZoom: 21,
-    maxNativeZoom: 19,
-    tileSize: 256,
-    transparent: true,
-    zIndex: 500,
-    opacity: 1
+    opacity: 1,
+    pane: "overlayPane"     
   }
 );
 
-const satelliteIGN_labels = L.layerGroup([orthoIGN, ignLabels]);
-    satelliteIGN_labels.addTo(map);
+const satelliteIGN_labels = L.layerGroup([orthoIGN, osmLabels]);
 
     
 
@@ -653,6 +645,16 @@ const satelliteIGN_labels = L.layerGroup([orthoIGN, ignLabels]);
       },
       {}
     ).addTo(map);
+
+    map.on("baselayerchange", function(e) {
+  // Désactiver les labels partout
+  map.removeLayer(osmLabels);
+
+  // Activer uniquement si le fond "IGN + labels" est choisi
+  if (e.name === "🛰️ Satellite IGN + labels") {
+    map.addLayer(osmLabels);
+  }
+});
 
     const ZoomLocate = L.Control.extend({
   options: { position: 'topright' },
