@@ -636,23 +636,6 @@ const satelliteIGN_labels = L.layerGroup([orthoIGN, ignLabels]);
     satelliteIGN_labels.addTo(map);
 
     
-const mixte = L.layerGroup([
-  orthoIGN,
-  L.tileLayer(
-    "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
-    + "&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&STYLE=normal&FORMAT=image/png"
-    + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
-    {
-      attribution: "© IGN – Géoplateforme",
-      maxZoom: 19,
-      tileSize: 256,
-      crossOrigin: 'anonymous',
-      opacity: 0.4  
-    }
-  )
-]);
-
-
 
     L.control.layers(
       { 
