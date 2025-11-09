@@ -614,6 +614,22 @@ const esriSat = L.tileLayer(
   }
 );
 
+    const ignLabels = L.tileLayer(
+  "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
+  + "&LAYER=GEOGRAPHICALGRIDSYSTEMS.MAPS&STYLE=normal&FORMAT=image/png"
+  + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
+  {
+    maxZoom: 21,
+    maxNativeZoom: 19,
+    opacity: 0.55,       // transparence douce
+    tileSize: 256,
+    crossOrigin: 'anonymous'
+  }
+);
+
+const satelliteIGN_labels = L.layerGroup([orthoIGN, ignLabels]);
+
+    
 const mixte = L.layerGroup([
   orthoIGN,
   L.tileLayer(
@@ -636,6 +652,7 @@ orthoIGN.addTo(map);
     L.control.layers(
       { 
         "🛰️ Satellite IGN": orthoIGN,
+        "🛰️ Satellite IGN + labels": satelliteIGN_labels,
         "🛰️ Satellite Open": esriSat,
         "🗺️ Plan IGN (défaut)": planIGN,
         "🌍 Plan Open": osm,
