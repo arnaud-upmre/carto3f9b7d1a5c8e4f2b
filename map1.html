@@ -398,6 +398,8 @@ const map = L.map('map', {
   maxBoundsViscosity: 1.0      
 }).setView(defaultCenter, defaultZoom);
 
+    satelliteIGN_lignes.addTo(map);
+
 map.attributionControl.setPrefix("");
 map.attributionControl.addAttribution("Nono Maps – v1.11.1");
 map.attributionControl.addAttribution("© IGN");
