@@ -1836,17 +1836,26 @@ document.getElementById("btn-localiser").addEventListener("click", () => {
     }
   });
 
-  // ✅ Poste 📍
-  postes.forEach(p => {
-    if (!p.special && p.poste_latitude && p.poste_longitude) {
-      arr.push({
+// ✅ Poste 📍 dédupliqué
+const postesUniques = new Map();
+
+postes.forEach(p => {
+  if (!p.special && p.poste_latitude && p.poste_longitude) {
+    const key = `${p.nom}_${p.type}_${p.poste_latitude}_${p.poste_longitude}`;
+
+    if (!postesUniques.has(key)) {
+      postesUniques.set(key, {
         ...p,
         category: "poste",
         lat: Number(p.poste_latitude),
         lon: Number(p.poste_longitude)
       });
     }
-  });
+  }
+});
+
+// Ajout au résultat
+arr.push(...postesUniques.values());
 
   // ✅ Appareils 💡
   appareils.forEach(a => {
