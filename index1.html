@@ -1452,18 +1452,40 @@ Promise.all([
     app.alias = generateAlias(app.appareil, app.nom, app.SAT, app.type);
   });
 
-  
-const postesTagged = postes.map(p => ({
-  ...p,
-  category:
-    p.poste_latitude && p.poste_latitude.toString().trim() !== ""
-      ? "acces"
-      : "poste"
+// Construire les 3 types : 🚙 accès / 📍 poste / 💡 appareils
+const postesAcces = postes.map(p => ({
+  category: "acces",
+  nom: p.nom,
+  type: p.type,
+  SAT: p.SAT,
+  acces: p["accès"] || "",
+  lat: Number(p.latitude),
+  lon: Number(p.longitude)
 }));
 
-  
-const appsTagged   = apps.map(a => ({ ...a, category: "appareil" }));
-allItems = [...postesTagged, ...appsTagged];
+const postesPoste = postes
+  .filter(p => p.poste_latitude && p.poste_longitude)
+  .map(p => ({
+    category: "poste",
+    nom: p.nom,
+    type: p.type,
+    SAT: p.SAT,
+    lat: Number(p.poste_latitude),
+    lon: Number(p.poste_longitude)
+  }));
+
+const appareilsItems = apps.map(a => ({
+  category: "appareil",
+  nom: a.nom,
+  type: a.type,
+  SAT: a.SAT,
+  appareil: a.appareil,
+  lat: Number(a.latitude),
+  lon: Number(a.longitude)
+}));
+
+// Fusion
+allItems = [...postesAcces, ...postesPoste, ...appareilsItems];
 
   fuseMix = new Fuse(allItems, {
     keys: [
@@ -1841,12 +1863,24 @@ function renderProximitePage() {
   const slice = proximiteSorted.slice(proximiteIndex, proximiteIndex + PROX_STEP);
 
   slice.forEach(p => {
-const icon =
-  p.category === "acces"    ? "🚙" :
-  p.category === "appareil" ? "💡" :
-  p.category === "poste"    ? "📍" :
-  "❓";
-    const label = p.category === "poste" ? labelPoste(p) : labelAppareil(p);
+
+    let icon = "";
+let label = "";
+
+if (p.category === "acces") {
+  icon = "🚙";
+  label = `${p.nom} ${p.type} – accès ${p.acces || ""}`;
+}
+
+if (p.category === "poste") {
+  icon = "📍";
+  label = `${p.nom} ${p.type}`;
+}
+
+if (p.category === "appareil") {
+  icon = "💡";
+  label = `${p.appareil} (${p.nom} ${p.type})`;
+}
 
     const li = document.createElement("li");
     li.style.margin = "15px 0";
@@ -1894,14 +1928,10 @@ function showNearby(position) {
 proximiteSorted = allItems
   .map(it => ({
     ...it,
-    distance: getDistance(
-      lat,
-      lon,
-      parseFloat(it.latitude),
-      parseFloat(it.longitude)
-    )
+    distance: getDistance(lat, lon, it.lat, it.lon)
   }))
   .sort((a, b) => a.distance - b.distance);
+
 
   proximiteIndex = 0;
 
@@ -2476,7 +2506,7 @@ function formatInformations(val) {
 <div id="about-footer">
   <div class="footer-links">
     <a href="arnaud.html" class="pill-link">🔧 À propos</a>
-   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V2</a>
+   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.10.12</a>
   </div>
 </div>
 <script>
