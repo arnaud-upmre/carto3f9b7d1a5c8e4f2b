@@ -1773,26 +1773,7 @@ if (document.readyState === 'loading') {
 
 trainImg.addEventListener('click', pickRandomTrain);
 
-function getDistance(lat1, lon1, lat2, lon2) {
-  const R = 6371; 
-  const dLat = (lat2 - lat1) * Math.PI / 180;
-  const dLon = (lon2 - lon1) * Math.PI / 180;
-  const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-            Math.sin(dLon/2) * Math.sin(dLon/2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-  return R * c; 
-}
 
-const km = d => d.toFixed(2).replace(".", ","); 
-
-const labelPoste = p =>
-  (`${p.nom || ""}${p.type ? " " + p.type : ""}${p.SAT ? " " + p.SAT : ""}`.trim()) +
-  (p.accès ? ` – accès ${p.accès}` : "");
-
-const labelAppareil = p =>
-  `${p.appareil} (${p.nom}${p.type ? " " + p.type : ""}${p.SAT ? " / " + p.SAT : ""})`;
-    
 function isMobile() {
   if (navigator.userAgentData && "mobile" in navigator.userAgentData) {
     return navigator.userAgentData.mobile;
@@ -1827,50 +1808,6 @@ document.getElementById("btn-localiser").addEventListener("click", () => {
   }
 });
 
-function renderProximitePage() {
-  const container = document.getElementById("proximite");
-  const ul = container.querySelector("ul");
-  const btnVoirPlus = document.getElementById("voir-plus");
-
-  const slice = proximiteSorted.slice(proximiteIndex, proximiteIndex + PROX_STEP);
-
-  slice.forEach(p => {
-    const icon = p.category === "poste" ? "🚙" : "💡";
-    const label = p.category === "poste" ? labelPoste(p) : labelAppareil(p);
-
-    const li = document.createElement("li");
-    li.style.margin = "15px 0";
-
-    const a = document.createElement("a");
-    a.href = "#";
-    a.style.textDecoration = "none";
-    a.style.color = "inherit";
-    a.style.cursor = "pointer";
-  a.innerHTML = `${icon} ${label} – ${km(p.distance)} km`;
-
-    a.addEventListener("click", ev => {
-      ev.preventDefault();
-      container.innerHTML = "";
-      btnVoirPlus.style.display = "none";
-      if (p.category === "poste") {
-        showLieu(p);
-      } else {
-        showAppareil(p);
-      }
-    });
-
-    li.appendChild(a);
-    ul.appendChild(li);
-  });
-
-  proximiteIndex += slice.length;
-
-  if (proximiteIndex < proximiteSorted.length) {
-    btnVoirPlus.style.display = "inline-block";
-  } else {
-    btnVoirPlus.style.display = "none";
-  }
-}
 
     function construireProximite(postes, appareils) {
   const arr = [];
@@ -1924,27 +1861,7 @@ function renderProximitePage() {
   return arr;
 }
 
-function showNearby(position) {
-  const lat = position.coords.latitude;
-  const lon = position.coords.longitude;
 
-  if (!allItems || allItems.length === 0) {
-    alert("Les données ne sont pas encore chargées.");
-    return;
-  }
-
-
-
-  proximiteIndex = 0;
-
-  const container = document.getElementById("proximite");
-  container.innerHTML = `<h3>📍 À proximité :</h3><ul style="margin:0; padding-left:20px;"></ul>`;
-
-  const btnVoirPlus = document.getElementById("voir-plus");
-  btnVoirPlus.onclick = renderProximitePage;
-
-  renderProximitePage();
-}
 
 const compteurContributionURL = "https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec";
 
@@ -2729,6 +2646,86 @@ document.getElementById("streetview-close").onclick = () => {
     console.warn("⚠️ Erreur récupération notifications :", err);
   }
 })();
+
+
+
+  function showNearby(position) {
+  const lat = position.coords.latitude;
+  const lon = position.coords.longitude;
+
+  if (!proximiteData || proximiteData.length === 0) {
+    alert("Les données ne sont pas encore chargées.");
+    return;
+  }
+
+  proximiteSorted = proximiteData
+    .map(it => ({
+      ...it,
+      distance: Math.round(getDistance(lat, lon, Number(it.lat), Number(it.lon)) * 1000) / 1000
+    }))
+    .sort((a, b) => a.distance - b.distance);
+
+  proximiteIndex = 0;
+
+  const container = document.getElementById("proximite");
+  container.innerHTML = `<h3>📍 À proximité :</h3><ul style="margin:0; padding-left:20px;"></ul>`;
+
+  const btnVoirPlus = document.getElementById("voir-plus");
+  btnVoirPlus.onclick = renderProximitePage;
+
+  renderProximitePage();
+}
+
+  function renderProximitePage() {
+  const container = document.getElementById("proximite");
+  const ul = container.querySelector("ul");
+  const btnVoirPlus = document.getElementById("voir-plus");
+
+  const slice = proximiteSorted.slice(proximiteIndex, proximiteIndex + PROX_STEP);
+
+  slice.forEach(p => {
+    const li = document.createElement("li");
+    li.style.margin = "15px 0";
+
+    const a = document.createElement("a");
+    a.href = "#";
+    a.style.textDecoration = "none";
+    a.style.color = "inherit";
+    a.style.cursor = "pointer";
+
+    let icon = "";
+    if (p.category === "acces") icon = "🚙";
+    else if (p.category === "poste") icon = "📍";
+    else if (p.category === "appareil") icon = "💡";
+    else if (p.category === "generic") icon = "🗂️";
+
+    let label = "";
+    if (p.category === "appareil") label = `${p.appareil} (${p.nom} ${p.type || ""})`;
+    else if (p.category === "generic") label = p.nom;
+    else label = `${p.nom} ${p.type || ""}`.trim();
+
+    a.innerHTML = `${icon} ${label} – ${p.distance.toFixed(2).replace(".", ",")} km`;
+
+    a.addEventListener("click", ev => {
+      ev.preventDefault();
+      container.innerHTML = "";
+      btnVoirPlus.style.display = "none";
+
+      if (p.category === "appareil") {
+        showAppareil(p);
+      } else {
+        showLieu(p);
+      }
+    });
+
+    li.appendChild(a);
+    ul.appendChild(li);
+  });
+
+  proximiteIndex += slice.length;
+  btnVoirPlus.style.display = proximiteIndex < proximiteSorted.length ? "inline-block" : "none";
+}
+  
 </script>
 
 </body>
