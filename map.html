@@ -639,8 +639,10 @@ const ormRails = L.tileLayer(
   "https://tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png",
   {
     attribution: "© OpenRailwayMap / OSM",
-    maxZoom: 20,
-    opacity: 0.9
+    maxZoom: 21,
+    maxNativeZoom: 19,
+    tileSize: 256,
+    opacity: 0.75
   }
 );
 
