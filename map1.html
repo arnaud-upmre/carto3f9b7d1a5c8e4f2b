@@ -369,7 +369,7 @@
   <img src="ico/pn.png" alt="Passages à niveau">
 </button>
 
-<button class="btn-toggle" id="btn-lignes" title="Afficher les lignes ferroviaires">
+<button class="btn-toggle" onclick="chargerRailsORM(this)">
   <img src="ico/ligne.png" alt="Lignes ferroviaires">
 </button>
   </div>
@@ -641,18 +641,52 @@ const ignLabels = L.tileLayer(
 const satelliteIGN_labels = L.layerGroup([orthoIGN, ignLabels]);
     satelliteIGN_labels.addTo(map);
 
- 
-const ormLines = L.tileLayer(
-  "https://{s}.tiles.openrailwaymap.org/rails/{z}/{x}/{y}.png",
-  {
-    maxZoom: 20,
-    maxNativeZoom: 19,
-    opacity: 1,
-    attribution: "© OpenRailwayMap / OSM",
-    transparent: true
+
+    // === RAILS ORM VECTORIELS ===
+const railsORM = L.layerGroup();
+
+function chargerRailsORM(btn) {
+
+  if (railsORM.getLayers().length > 0) {
+    toggleLayer(railsORM, btn, "Lignes ferroviaires");
+    return;
   }
-);
-    
+
+  showToast("⏳ Chargement des lignes ferroviaires...");
+
+  const q = `
+    [out:json][timeout:25];
+    way["railway"~"rail|light_rail|tram"](49.4,1.4,51.2,4.5);
+    out geom;
+  `;
+
+  fetch("https://overpass-api.de/api/interpreter", {
+    method: "POST",
+    body: q
+  })
+  .then(r => r.json())
+  .then(json => {
+    json.elements.forEach(w => {
+      if (!w.geometry) return;
+
+      const path = w.geometry.map(p => [p.lat, p.lon]);
+
+      L.polyline(path, {
+        color: "#ff5500",
+        weight: 3,
+        opacity: 0.9
+      }).addTo(railsORM);
+    });
+
+    map.addLayer(railsORM);
+    btn.classList.add("active");
+    showToast("✅ Lignes ferroviaires affichées");
+  })
+  .catch(err => {
+    console.error(err);
+    showToast("⚠️ Erreur de chargement des rails ORM");
+  });
+}
 
 L.control.layers(
   { 
@@ -662,9 +696,7 @@ L.control.layers(
     "🗺️ Plan IGN (défaut)": planIGN,
     "🌍 Plan Open": osm
   },
-  {
-    "🚆 Lignes OpenRailwayMap": ormLines
-  }
+  null
 ).addTo(map);
 
     const ZoomLocate = L.Control.extend({
