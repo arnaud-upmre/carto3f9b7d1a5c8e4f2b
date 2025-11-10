@@ -217,12 +217,18 @@ li.best { background-color:#e6f0ff; font-weight:600; }
 
     
 .telecom-zone{
-  position:absolute;
-  top:18px;
-  right:18px;
+  position: relative !important;   
+  top: auto !important;
+  right: auto !important;
+
+  margin-top: -10px;     
+  margin-bottom: 10px;
+
   display:flex;
   gap:8px;
+  justify-content: flex-start;    
 }
+    
 .telecom-mini{
   display:inline-block;
   padding:4px 14px;
@@ -243,16 +249,11 @@ li.best { background-color:#e6f0ff; font-weight:600; }
   border-color:rgba(150,150,150,0.55);
   box-shadow: 0 4px 10px rgba(0,0,0,0.14), 0 12px 24px rgba(0,0,0,0.10), inset 0 0 2px rgba(255,255,255,0.70);
 }
+    
 @media (max-width:600px){
-  .telecom-zone{
-    position: relative !important;
-    top:auto !important;
-    right:auto !important;
-    margin-top:-15px !important;
-    transform:none !important;
-  }
   .telecom-mini{ font-size:11px !important; padding:3px 8px !important; border-radius:10px !important; }
 }
+    
 @media (prefers-color-scheme: dark){
   .telecom-mini{
     background:rgba(255,255,255,0.10);
@@ -2088,7 +2089,7 @@ function formatInformations(val) {
 <div id="about-footer">
   <div class="footer-links">
     <a href="arnaud.html" class="pill-link">🔧 À propos</a>
-   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.10.13_cleanCSS</a>
+   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.10.13</a>
   </div>
 </div>
 <script>
