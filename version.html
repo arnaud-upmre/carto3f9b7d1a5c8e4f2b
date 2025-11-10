@@ -191,7 +191,7 @@
       .btn-home { padding: 8px 12px; }
     }
   </style>
-  <!-- Google tag (gtag.js) -->
+
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-EMSCVXG71V"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -221,12 +221,14 @@
     <span class="date">09/11/2025 22:31</span>
   </header>
 
-  <p><strong>v1.10.13 — Correction « À proximité »</strong></p>
+  <p><strong>🛠️ Correction « À proximité »</strong></p>
   <ul>
 <li>
-  🛠️ J’ai repéré un bug d’affichage entre iOS et Android dans « À proximité ». Après plusieurs jours à tester différentes pistes, 
-  j’ai fini par réécrire la fonction entièrement. Elle est maintenant indépendante (elle n’est plus fusionnée avec la recherche depuis l’optimisation d’octobre) 
-  et l’affichage est enfin correct : Android montre tous les postes, accès et appareils à proximité… iOS aussi.
+  Sur Android, les postes et appareils étaient involontairement ignorés à cause d’un calcul de distance erroné. 
+  Réecriture complète de la fonction. Elle est désormais totalement indépendante 
+  (elle partageait auparavant son affichage avec les résultats de recherche).<br>
+  ✅ Tout s’affiche correctement sur mobile, iOS comme Android.  
+  (Quelques sueurs, beaucoup d’essais… et même l’IA n’a pas réussi à trouver l’origine du bug de départ.)
 </li>
       
       ✨ <strong>Nettoyage CSS</strong><br>
@@ -245,11 +247,11 @@
   <p><strong>v1.10.12 — Améliorations et corrections ciblées</strong> ✨</p>
 
   <ul>
-    <li>
-      🆕📡 <strong>Fonctionnalité demandée par les agents :</strong><br>
-      Les <em>pills télécommande</em> sont désormais prises en charge.<br>
-      Dès qu’une télécommande est renseignée dans la base de données, elle apparaît automatiquement dans la fiche.
-    </li>
+<li>
+  🆕📡 <strong>Fonctionnalité demandée par les agents :</strong><br>
+  Les <em>pills télécommande</em> sont désormais prises en charge.<br>
+  Vous pouvez à tout moment ajuster/ corriger le type en modifiant la fiche, dans l’onglet <em>Information</em>.
+</li>
 
     <li>
       🗂️✨ <strong>Refonte interne de la base de données</strong>  
