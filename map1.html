@@ -15,10 +15,20 @@
 <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
 
 <style>
-
-  .leaflet-control-attribution {
-  max-width: calc(100% - 20px) !important;
-  white-space: normal !important;
+  
+#custom-attribution {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.85);
+  padding: 4px 8px;
+  font-size: 12px;
+  color: #333;
+  text-align: center;
+  white-space: nowrap;
+  backdrop-filter: blur(4px);
+  z-index: 9999;
 }
   
   html, body {
@@ -429,7 +439,7 @@ const boundsFrance = [
 
 const map = L.map('map', {
   zoomControl: false,
-  attributionControl: true,
+  attributionControl: false,
   minZoom: 5,                  
   maxZoom: 21,                 
   maxBounds: boundsFrance,     
@@ -1447,5 +1457,8 @@ document.getElementById("btn-speed").addEventListener("click", function () {
 });
     
 </script>
+  <div id="custom-attribution">
+  Nono Maps v1.11 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors
+</div>
 </body>
 </html>
