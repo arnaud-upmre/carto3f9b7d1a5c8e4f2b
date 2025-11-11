@@ -640,14 +640,13 @@ const mixte = L.layerGroup([
   )
 ]);
     
-orthoIGN.on("load", () => {
-  setTimeout(() => {
-    orm.addTo(map);
-    document.getElementById("btn-orm").classList.add("active");
-  }, 1000); 
-});
 
-orthoIGN.addTo(map);
+    orthoIGN.addTo(map);
+
+setTimeout(() => {
+  orm.addTo(map);
+  document.getElementById("btn-orm").classList.add("active");
+}, 1000);
 
 
 L.control.layers(
@@ -658,9 +657,6 @@ L.control.layers(
         "🌍 Plan Open": osm,
         "🛰️+🗺️ Mixte": mixte
       },
-      {
-        "🚆 OpenRailwayMap (lignes)": orm
-      }
 ).addTo(map);
 
 
