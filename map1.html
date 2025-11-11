@@ -401,6 +401,9 @@ const map = L.map('map', {
   maxBoundsViscosity: 1.0      
 }).setView(defaultCenter, defaultZoom);
 
+    const ormPane = map.createPane("orm");
+ormPane.style.zIndex = 350;
+
     
 let editMode = false;   
   
@@ -613,9 +616,10 @@ const esriSat = L.tileLayer(
   }
 );
 
-    const orm = L.tileLayer(
+const orm = L.tileLayer(
   "https://{s}.tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png",
   {
+    pane: "orm",
     maxZoom: 21,
     maxNativeZoom: 19,
     tileSize: 256,
