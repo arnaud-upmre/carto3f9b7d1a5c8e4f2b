@@ -804,13 +804,13 @@ const iconAcces = L.divIcon({
   popupAnchor: [0, -10]
 });
 
-    function renderTelecomPills(v) {
+function renderTelecomPills(v) {
   if (!v) return "";
   return String(v)
-    .split(",")
-    .map(x => x.trim())
+    .split("/")                  
+    .map(t => t.trim())
     .filter(Boolean)
-    .map(x => `<span class="telecom-mini">${escHtml(x)}</span>`)
+    .map(t => `<span class="telecom-mini">${escHtml(t)}</span>`)
     .join("");
 }
  
@@ -891,7 +891,7 @@ let content = `
   ${item.SAT ? " " + item.SAT : ""}
 </div>
 
-<div style="margin-bottom:10px;">
+<div class="telecom-zone" style="margin-bottom:10px;">
   ${renderTelecomPills(item.description_telecommande)}
 </div>
 
