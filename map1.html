@@ -3,22 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <title>Nono Maps</title>
+  
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  
-  
 <link rel="icon" href="favicon/favicon.ico" type="image/x-icon" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
-
 <link rel="preload" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" as="script" crossorigin="anonymous">
 <link rel="preload" href="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js" as="script">
-
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
 
 <style>
-
+  
   html, body {
   height: 100%;
   margin: 0;
@@ -29,7 +26,6 @@
   width:100%;
   height:100%;
 }
-
 
 .fab-container {
   position: fixed;
@@ -88,25 +84,22 @@
   justify-content: center;
 }
 
-
 .fab-options button img {
   width: 36px;
   height: 36px;
   transition: opacity .2s, filter .2s;
 }
 
-
 .fab-options button:not(.active) img {
   opacity: 0.5;
   filter: none;
 }
 
-
 .fab-options button.active {
   background: rgba(255,255,255,0.50); 
 }
 .fab-options button.active img {
-  opacity: 1;  /* remet l’icône normale */
+  opacity: 1;  
 }
   
 .toast {
@@ -127,7 +120,6 @@
 .toast.show {
   opacity: 1;
 }
-
 
 .leaflet-popup-content-wrapper {
   background: linear-gradient(
@@ -152,6 +144,7 @@
   -webkit-backdrop-filter: blur(5px);
   border: 1px solid rgba(255, 255, 255, 0.45);
 }
+  
 .leaflet-popup-content {
   max-width: 240px !important; 
   min-width: 240px; 
@@ -296,7 +289,6 @@
   margin-bottom: 10px; 
 }
 
-
 .btn-toggle{
   background: rgba(0,0,0,.7);
   border: 1px solid rgba(255,255,255,.12);
@@ -354,8 +346,6 @@
   white-space:nowrap;
 }
 
-
-
 .leaflet-popup-content .popup-pills {
   display: block !important;   
   width: 100%;
@@ -372,6 +362,7 @@
 </style>
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-EMSCVXG71V"></script>
+  
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -388,28 +379,32 @@
   <button class="fab" id="fabBtn">☰</button>
 
   <div class="fab-options" id="fabOptions">
-    <button class="btn-toggle active" onclick="toggleLayer(accesLayer, this, 'Accès routiers')">
-      <img src="ico/acces.png" alt="Accès routiers">
-    </button>
-    <button class="btn-toggle active" onclick="toggleLayer(postesLayer, this, 'Postes')">
-      <img src="ico/poste.png" alt="Postes">
-    </button>
-    <button class="btn-toggle active" onclick="toggleLayer(appareilsLayer, this, 'Appareils')">
-      <img src="ico/int.png" alt="Appareils">
-    </button>
-<button class="btn-toggle" onclick="chargerPN(this)">
+  <button class="btn-toggle active" onclick="toggleLayer(accesLayer, this, 'Accès routiers')">
+  <img src="ico/acces.png" alt="Accès routiers">
+  </button>
+  
+  <button class="btn-toggle active" onclick="toggleLayer(postesLayer, this, 'Postes')">
+  <img src="ico/poste.png" alt="Postes">
+  </button>
+   
+  <button class="btn-toggle active" onclick="toggleLayer(appareilsLayer, this, 'Appareils')">
+  <img src="ico/int.png" alt="Appareils">
+  </button>
+    
+  <button class="btn-toggle" onclick="chargerPN(this)">
   <img src="ico/pn.png" alt="Passages à niveau">
-</button>
+  </button>
 
-<button class="btn-toggle" id="btn-orm" title="OpenRailwayMap">
+  <button class="btn-toggle" id="btn-orm" title="OpenRailwayMap">
   <img src="ico/ligne.png" alt="ORM">
-</button>
-    <button class="btn-toggle" id="btn-speed" title="Vitesses ferroviaires">
+  </button>
+    
+  <button class="btn-toggle" id="btn-speed" title="Vitesses ferroviaires">
   <img src="ico/160.png" alt="Vitesses">
-</button>
+  </button>
 
   </div>
-</div>
+  </div>
 
 <div class="toast" id="toast"></div>
 
@@ -422,7 +417,6 @@
   <script>
 const defaultCenter = [50.3, 2.6];
 const defaultZoom = 9;      
-
 
 const boundsFrance = [
   [41.0, -5.5],  
@@ -440,11 +434,9 @@ const map = L.map('map', {
 
     const ormPane = map.createPane("orm");
 ormPane.style.zIndex = 350;
-
-    
+ 
 let editMode = false;   
   
-
 const editBanner = document.createElement("div");
 editBanner.style = `
   position: fixed;
@@ -491,7 +483,6 @@ document.addEventListener("keydown", function(e) {
     editIcon.style.display = editMode ? "block" : "none";
   }
 
-
   if (e.key === "Escape" && editMode) {
     editMode = false;
     editBanner.textContent = "❌ Mode information désactivé";
@@ -501,7 +492,7 @@ document.addEventListener("keydown", function(e) {
   }
 });
     
-    const allMarkers = [];
+const allMarkers = [];
 
 let _datasetsLoaded = 0;
 function _tryOpenFromURL() {
@@ -600,13 +591,10 @@ if (id.startsWith("DU")) {
   }
 }
 
-
-
 const params = new URLSearchParams(window.location.search);
 const lat = parseFloat(params.get("lat"));
 const lon = parseFloat(params.get("lon"));
 const zoom = parseInt(params.get("z")) || 19;
-
 
   const planIGN = L.tileLayer(
   "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
@@ -695,7 +683,7 @@ const mixte = L.layerGroup([
 ]);
     
 
-    orthoIGN.addTo(map);
+orthoIGN.addTo(map);
 
 setTimeout(() => {
   orm.addTo(map);
@@ -837,7 +825,8 @@ fetch("postes.json")
     data.forEach(item => {
 
      if (item.latitude && item.longitude) {
-  const accesVal = (item["accès"] ?? item.acces ?? "").toString().trim();
+
+const accesVal = (item["accès"] ?? item.acces ?? "").toString().trim();
 
 const cid = [item.nom, item.type, item.SAT, accesVal]
   .filter(Boolean)
@@ -860,7 +849,6 @@ let content = `
   <img src="ico/street.png" alt="Street View" style="width:26px; height:26px;">
 </span>
              
-
 <div style="margin-bottom:10px;">
 ✍🏻 <strong>Information :</strong> ${ renderInformation(item.description_acces) }
 </div>
@@ -909,7 +897,6 @@ let content = `
 <div class="popup-pills telecom-zone">
   ${renderTelecomPills(item.description_telecommande)}
 </div>
-
 
   <div style="margin-bottom:10px;">
 ✍🏻 <strong>Information :</strong> ${ renderInformation(item.description) }
@@ -1098,7 +1085,6 @@ const pnClasses = {
   46: "PN privé isolé pour piétons avec portillons"
 };
     
-
 appareilsLayer.on('clusterclick', function (e) {
   const markers = e.layer.getAllChildMarkers();
   if (markers.length <= 1) return;
@@ -1120,12 +1106,10 @@ appareilsLayer.on('clusterclick', function (e) {
   map.fitBounds(e.layer.getBounds());
 });
 
-
 let pnLoaded = false; 
 
 function chargerPN(btn) {
   console.log("🔄 Déclenchement du chargement PN (lazy load)");
-
 
   if (pnLoaded) {
     toggleLayer(pnLayer, btn, "Passages à niveau");
@@ -1146,7 +1130,6 @@ fetch("https://ressources.data.sncf.com/api/records/1.0/search/"
       let records = data.records || [];
 
       console.info(`✅ ${records.length} PN filtrés (Hauts-de-France + 10 km au sud)`);
-  
   
       records.forEach(pn => {
         const f = pn.fields;
@@ -1217,9 +1200,6 @@ fetch("https://ressources.data.sncf.com/api/records/1.0/search/"
     });
 }
 
-
-    
-    
 const leftControls = L.control({ position: "topleft" });
 leftControls.onAdd = function() {
   const container = L.DomUtil.create("div");
@@ -1233,7 +1213,6 @@ backBtn.onclick = () => {
 L.DomEvent.disableClickPropagation(backBtn);
 L.DomEvent.disableScrollPropagation(backBtn);
   
-
 const recenterBtn = L.DomUtil.create("div", "btn-toggle", topGroup);
 recenterBtn.innerHTML = "🎯";
 
@@ -1242,9 +1221,8 @@ recenterBtn.onclick = () => {
     recenterBtn.classList.add("active"); 
  map.setView(defaultCenter, defaultZoom);
 
-
     setTimeout(() => {
-      recenterBtn.classList.remove("active");
+    recenterBtn.classList.remove("active");
     }, 800); 
   }
 };
@@ -1292,7 +1270,6 @@ locateBtn.onclick = () => {
 L.DomEvent.disableClickPropagation(locateBtn);
 L.DomEvent.disableScrollPropagation(locateBtn);
 
-
   return container;
 };
 leftControls.addTo(map);
@@ -1308,15 +1285,12 @@ leftControls.addTo(map);
     document.getElementById("streetview-frame").src = ""; 
   };
 
-
 console.info("[Nono Maps] boot", {
   leaflet: L.version,
   clusters: { postes: !!postesLayer, appareils: !!appareilsLayer, acces: !!accesLayer }
 });
 
-
 if (isNaN(lat) || isNaN(lon)) { console.warn("URL lat/lon invalides", {lat, lon}); }
-
 
 function renderInformation(value) {
   if (!value) {
@@ -1329,7 +1303,6 @@ function renderInformation(value) {
 let activeEditPopup = null; 
 
 function escHtml(s){return String(s).replace(/[&<>"]/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[m]));}
-
 
 map.on('click', (e) => {
   if (!editMode) return;
@@ -1372,7 +1345,6 @@ ${coordsText}</pre>
     .setLatLng(e.latlng)
     .setContent(popupContent)
     .openOn(map);
-
 
   setTimeout(() => {
     const flash = (txt) => {
@@ -1423,7 +1395,6 @@ function showToast(message) {
   }, 5000);
 }
 
-
 document.getElementById("btn-orm").addEventListener("click", function () {
   const btn = this;
 
@@ -1434,7 +1405,6 @@ document.getElementById("btn-orm").addEventListener("click", function () {
     showToast("❌ ORM masqué");
     return;
   }
-
 
   if (map.hasLayer(speedLayer)) {
     map.removeLayer(speedLayer);
@@ -1449,7 +1419,6 @@ document.getElementById("btn-orm").addEventListener("click", function () {
     map.addLayer(orthoIGN);
   }
 });
-
 
 document.getElementById("btn-speed").addEventListener("click", function () {
   const btnSpeed = this;
