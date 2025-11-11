@@ -867,13 +867,6 @@ let content = `
   </div>
 
 
-<div style="margin-bottom:10px;">
-  🚄 PK <strong>${item.pk || "(non renseigné)"}</strong>
-  sur la ligne n°<strong>${item.numero_ligne || "(non renseigné)"}</strong>
-  ${item.lignes ? " – " + item.lignes : ""}
-</div>
-
-
   <div style="margin-bottom:10px;">
 ✍🏻 <strong>Information :</strong> ${ renderInformation(item.description) }
   </div>
@@ -1390,7 +1383,7 @@ function showToast(message) {
 document.getElementById("btn-orm").addEventListener("click", function () {
   const btn = this;
 
-  // Si ORM est déjà actif → on le masque → aucune couche
+
   if (map.hasLayer(orm)) {
     map.removeLayer(orm);
     btn.classList.remove("active");
@@ -1398,19 +1391,16 @@ document.getElementById("btn-orm").addEventListener("click", function () {
     return;
   }
 
-  // Sinon → LIGNES devient la couche active
-  // 1. désactiver vitesses
+
   if (map.hasLayer(speedLayer)) {
     map.removeLayer(speedLayer);
     document.getElementById("btn-speed").classList.remove("active");
   }
 
-  // 2. activer ORM
   map.addLayer(orm);
   btn.classList.add("active");
   showToast("✅ ORM affiché");
 
-  // 3. remettre ortho si nécessaire
   if (!map.hasLayer(orthoIGN)) {
     map.addLayer(orthoIGN);
   }
@@ -1421,7 +1411,6 @@ document.getElementById("btn-speed").addEventListener("click", function () {
   const btnSpeed = this;
   const btnORM = document.getElementById("btn-orm");
 
-  // Si vitesses est déjà actif → on le désactive → aucune couche
   if (map.hasLayer(speedLayer)) {
     map.removeLayer(speedLayer);
     btnSpeed.classList.remove("active");
@@ -1429,14 +1418,11 @@ document.getElementById("btn-speed").addEventListener("click", function () {
     return;
   }
 
-  // Sinon → VITESSES devient la couche active
-  // 1. désactiver ORM
   if (map.hasLayer(orm)) {
     map.removeLayer(orm);
     btnORM.classList.remove("active");
   }
 
-  // 2. activer vitesses
   map.addLayer(speedLayer);
   btnSpeed.classList.add("active");
   showToast(" ⚠️ Vitesse affichée à titre indicatif. Se référer aux documents réglementaires internes pour les vitesses de ligne applicables.");
