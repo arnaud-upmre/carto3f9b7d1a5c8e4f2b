@@ -209,8 +209,7 @@
   backdrop-filter: blur(6px);     
   -webkit-backdrop-filter: blur(6px);
   display: none;
-  z-index: 9999;
-  display: flex;             
+  z-index: 9999;            
   align-items: center;
   justify-content: center;
 }
@@ -1172,7 +1171,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-
+const leftControls = L.control({ position: "topleft" });
     
 leftControls.onAdd = function() {
   const container = L.DomUtil.create("div");
