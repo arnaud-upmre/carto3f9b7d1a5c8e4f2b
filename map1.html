@@ -1073,20 +1073,12 @@ fetch("https://ressources.data.sncf.com/api/records/1.0/search/"
 }
 
 
-// Polygone Hauts-de-France
 const hdfPolygon = [
-  [51.088, 2.513],
-  [50.95, 1.79],
-  [50.73, 1.60],
-  [50.42, 2.00],
-  [49.95, 2.10],
-  [49.80, 3.10],
-  [49.95, 4.25],
-  [50.40, 4.35],
-  [50.75, 3.65],
-  [51.00, 3.20],
-  [51.05, 2.90],
-  [51.088, 2.513]
+  [51.30, 1.40], // Nord Ouest
+  [51.30, 4.30], // Nord Est
+  [49.80, 4.30], // Sud Est
+  [49.80, 1.40], // Sud Ouest
+  [51.30, 1.40]
 ];
 
 function pointInPoly(lat, lon, poly) {
@@ -1145,13 +1137,13 @@ fetch(overpassURL, {
 })
   .then(r => r.json())
   .then(json => {
+    console.log("Ways:", json.elements.length);
 
     json.elements
       .filter(el => el.type === "way" && el.geometry)
       .forEach(way => {
       let coords = way.geometry.map(p => [p.lat, p.lon]);
 
-coords = coords.filter(pt => pointInPoly(pt[0], pt[1], hdfPolygon));
 
 if (coords.length < 2) return;
         let color = getColor(way.tags || {});
