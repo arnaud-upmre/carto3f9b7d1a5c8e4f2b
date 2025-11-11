@@ -1110,50 +1110,52 @@ document.addEventListener("DOMContentLoaded", () => {
       btnLignes.classList.add("loading");
       showToast("⏳ Chargement des voies ferroviaires OSM...");
 
-      fetch(overpassURL, {
-        method: "POST",
-        body: query,
-        headers: { "Content-Type": "application/x-www-form-urlencoded" }
-      })
-        .then(r => r.json())
-        .then(json => {
-          json.elements
-            .filter(el => el.type === "way" && el.geometry)
-            .forEach(way => {
-              const coords = way.geometry.map(p => [p.lat, p.lon]);
+fetch(overpassURL, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+  },
+  body: "data=" + encodeURIComponent(query)
+})
+  .then(r => r.json())
+  .then(json => {
 
-              let color = getColor(way.tags || {});
-              
-              const poly = L.polyline(coords, {
-                color: color,
-                weight: 4,
-                opacity: 0.9
-              });
+    json.elements
+      .filter(el => el.type === "way" && el.geometry)
+      .forEach(way => {
+        const coords = way.geometry.map(p => [p.lat, p.lon]);
+        let color = getColor(way.tags || {});
 
-              poly.bindPopup(`
-                <div style="font-family:-apple-system,Roboto; font-size:14px;">
-                  <strong>Voie OSM</strong><br>
-                  🚄 ${way.tags.name || "(sans nom)"}<br>
-                  🏷️ Usage : ${way.tags.usage || "?"}<br>
-                  🛠️ Service : ${way.tags.service || "?"}<br>
-                </div>
-              `);
-
-              voiesLayer.addLayer(poly);
-            });
-
-          map.addLayer(voiesLayer);
-          voiesLoaded = true;
-
-          btnLignes.classList.remove("loading");
-          btnLignes.classList.add("active");
-          showToast("✅ Voies ferroviaires affichées");
-        })
-        .catch(err => {
-          console.error("Erreur Overpass :", err);
-          btnLignes.classList.remove("loading");
-          showToast("⚠️ Erreur de chargement Overpass");
+        const poly = L.polyline(coords, {
+          color: color,
+          weight: 4,
+          opacity: 0.9
         });
+
+        poly.bindPopup(`
+          <div style="font-family:-apple-system,Roboto; font-size:14px;">
+            <strong>Voie OSM</strong><br>
+            🚄 ${way.tags.name || "(sans nom)"}<br>
+            🏷️ Usage : ${way.tags.usage || "?"}<br>
+            🛠️ Service : ${way.tags.service || "?"}<br>
+          </div>
+        `);
+
+        voiesLayer.addLayer(poly);
+      });
+
+    map.addLayer(voiesLayer);
+    voiesLoaded = true;
+
+    btnLignes.classList.remove("loading");
+    btnLignes.classList.add("active");
+    showToast("✅ Voies ferroviaires affichées");
+  })
+  .catch(err => {
+    console.error("Erreur Overpass :", err);
+    btnLignes.classList.remove("loading");
+    showToast("⚠️ Erreur de chargement Overpass");
+  });
 
     } else {
       if (map.hasLayer(voiesLayer)) {
