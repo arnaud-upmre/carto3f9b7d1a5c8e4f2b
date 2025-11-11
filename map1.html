@@ -909,23 +909,32 @@ fetch("appareils.json")
 
       let appareilIcon;
       const ref = (item.appareil || "").toUpperCase();
-
 if (ref.startsWith("DU")) {
   appareilIcon = L.divIcon({
-    html:`<img src="ico/stop.png" class="icon-halo-appareil">`,
+    html: `
+      <div style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;">
+        <img src="ico/stop.png" class="icon-halo-appareil" style="width:24px;height:24px;">
+      </div>
+    `,
     className:"",
     iconSize:[36,36],
-    iconAnchor:[18,28],
+    iconAnchor:[18,18],
     popupAnchor:[0,-20]
   });
+
 } else if (ref.startsWith("I") || ref.startsWith("SI") || ref.startsWith("D")) {
   appareilIcon = L.divIcon({
-    html:`<img src="ico/int.png" class="icon-halo-appareil">`,
+    html: `
+      <div style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;">
+        <img src="ico/int.png" class="icon-halo-appareil" style="width:24px;height:24px;">
+      </div>
+    `,
     className:"",
     iconSize:[36,36],
     iconAnchor:[18,28],
     popupAnchor:[0,-20]
   });
+
 } else if (
   ref.startsWith("TT") ||
   ref.startsWith("TSA") ||
@@ -933,12 +942,17 @@ if (ref.startsWith("DU")) {
   ref.startsWith("TRA")
 ) {
   appareilIcon = L.divIcon({
-    html:`<img src="ico/TT.png" class="icon-halo-appareil">`,
+    html: `
+      <div style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;">
+        <img src="ico/TT.png" class="icon-halo-appareil" style="width:24px;height:24px;">
+      </div>
+    `,
     className:"",
     iconSize:[36,36],
     iconAnchor:[18,28],
     popupAnchor:[0,-20]
   });
+
 } else if (
   /^[0-9]/.test(ref) ||
   ref.startsWith("S") ||
@@ -949,20 +963,30 @@ if (ref.startsWith("DU")) {
   ref.startsWith("B")
 ) {
   appareilIcon = L.divIcon({
-    html:`<img src="ico/sect.png" class="icon-halo-appareil">`,
+    html: `
+      <div style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;">
+        <img src="ico/sect.png" class="icon-halo-appareil" style="width:24px;height:24px;">
+      </div>
+    `,
     className:"",
     iconSize:[36,36],
     iconAnchor:[18,28],
     popupAnchor:[0,-20]
   });
+
 } else if (ref.startsWith("ALIM")) {
   appareilIcon = L.divIcon({
-    html:`<img src="ico/alim.png" class="icon-halo-appareil">`,
+    html: `
+      <div style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;">
+        <img src="ico/alim.png" class="icon-halo-appareil" style="width:24px;height:24px;">
+      </div>
+    `,
     className:"",
     iconSize:[36,36],
     iconAnchor:[18,28],
     popupAnchor:[0,-20]
   });
+
 } else {
   appareilIcon = iconAppareil;
 }
