@@ -336,8 +336,12 @@
 
 .appareil { background:#facc15; }
 
+  .leaflet-control-layers-overlays label:first-child {
+  display: none !important;
+}
+
 </style>
-  <!-- Google tag (gtag.js) -->
+  
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-EMSCVXG71V"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -657,7 +661,9 @@ L.control.layers(
         "🌍 Plan Open": osm,
         "🛰️+🗺️ Mixte": mixte
       },
-      {}
+      {
+        "🚆 OpenRailwayMap (lignes)": orm
+      }
 ).addTo(map);
 
 const layersBox = document.querySelector(".leaflet-control-layers");
