@@ -657,12 +657,9 @@ L.control.layers(
         "🌍 Plan Open": osm,
         "🛰️+🗺️ Mixte": mixte
       },
-      {
-        "🚆 OpenRailwayMap (lignes)": orm
-      }
+      {}
 ).addTo(map);
 
-    // Ajout du slider d’opacité ORM uniquement quand le panneau est ouvert
 const layersBox = document.querySelector(".leaflet-control-layers");
 let opacityAdded = false;
 
