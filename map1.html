@@ -368,8 +368,8 @@
   <img src="ico/pn.png" alt="Passages à niveau">
 </button>
 
-<button class="btn-toggle" id="btn-lignes" title="Afficher les lignes ferroviaires">
-  <img src="ico/ligne.png" alt="Lignes ferroviaires">
+<button class="btn-toggle" id="btn-orm" title="OpenRailwayMap">
+  <img src="ico/ligne.png" alt="ORM">
 </button>
   </div>
 </div>
@@ -1094,103 +1094,6 @@ fetch("https://ressources.data.sncf.com/api/records/1.0/search/"
 }
 
 
-
-    
-// === LIGNES FERROVIAIRES ===
-document.addEventListener("DOMContentLoaded", () => {
-  const btnLignes = document.getElementById("btn-lignes");
-  if (!btnLignes) return console.error("❌ Bouton Lignes introuvable");
-
-  let lignesLayer = L.markerClusterGroup({
-    disableClusteringAtZoom: 16,
-    spiderfyOnMaxZoom: false,
-  });
-  let lignesLoaded = false;
-
-  btnLignes.addEventListener("click", () => {
-    if (!lignesLoaded) {
-      btnLignes.classList.add("loading");
-
-      fetch("https://ressources.data.sncf.com/api/records/1.0/search/"
-        + "?dataset=lignes-par-type"
-        + "&geofilter.bbox=49.4,1.4,51.2,4.5"
-        + "&rows=3000")
-        .then(r => r.json())
-        .then(data => {
-          data.records.forEach(record => {
-            const f = record.fields || {};
-            if (!f.geo_shape) return;
-
-            // Couleur flashy + trait plus épais
-            const couleur =
-              (f.type_ligne || "").toLowerCase().includes("raccordement") ? "#ff9800" :
-              (f.type_ligne || "").toLowerCase().includes("desserte")     ? "#00e676" :
-              (f.type_ligne || "").toLowerCase().includes("embranchement") ? "#f50057" :
-              "#00bcd4"; // cyan vif par défaut
-
-            const poly = L.geoJSON(f.geo_shape, {
-              style: { color: couleur, weight: 6, opacity: 0.9 }
-            });
-
-            poly.on("click", (e) => {
-              const lat = e.latlng.lat.toFixed(5);
-              const lng = e.latlng.lng.toFixed(5);
-              const code = f.code_ligne ?? "?";
-              const lib  = f.lib_ligne ?? "—";
-              const pkd  = f.pkd ?? "—";
-              const pkf  = f.pkf ?? "—";
-              const type = f.type_ligne ?? "—";
-
-              const html = `
-                <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
-                            font-size:14px;color:#111;line-height:1.5;min-width:230px;text-align:left;">
-                  <div style="font-weight:700;font-size:16px;margin-bottom:8px;">
-                    🚧 Ligne n°${code}
-                  </div>
-                  <div style="margin-bottom:6px;">${lib}</div>
-                  <div style="margin-bottom:6px;">📏 PKD <strong>${pkd}</strong> — PKF <strong>${pkf}</strong></div>
-                  <div style="margin-bottom:14px;">🏷️ Type : <strong>${type}</strong></div>
-
-<div style="display:flex;justify-content:center;width:100%;margin-top:14px;">
-  <a href="https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${lat},${lng};"
-     target="_blank"
-     style="display:inline-flex;align-items:center;justify-content:center;
-            gap:6px;padding:10px 16px;border-radius:8px;
-            background:#10b981;color:white;text-decoration:none;
-            font-size:14px;font-weight:500;text-align:center;
-            box-sizing:border-box;min-width:160px;">
-    🚄 Voir sur Imajnet
-  </a>
-</div>
-
-                </div>`;
-              L.popup({ maxWidth: 280 })
-                .setLatLng(e.latlng)
-                .setContent(html)
-                .openOn(map);
-            });
-
-            lignesLayer.addLayer(poly);
-          });
-
-          map.addLayer(lignesLayer);
-          lignesLoaded = true;
-          btnLignes.classList.remove("loading");
-          btnLignes.classList.add("active");
-          showToast("✅ Lignes ferroviaires affichées");
-        })
-        .catch(err => {
-          console.error("Erreur chargement lignes :", err);
-          btnLignes.classList.remove("loading");
-          showToast("⚠️ Erreur de chargement");
-        });
-    } else {
-      toggleLayer(lignesLayer, btnLignes, "Lignes ferroviaires");
-    }
-  });
-});
-
-
     
     
 const leftControls = L.control({ position: "topleft" });
@@ -1395,6 +1298,26 @@ function showToast(message) {
     toast.classList.remove("show");
   }, 2000);
 }
+
+    // === TOGGLE ORM DANS LE FAB ===
+document.getElementById("btn-orm").addEventListener("click", function () {
+  const btn = this;
+
+  if (map.hasLayer(orm)) {
+    map.removeLayer(orm);
+    btn.classList.remove("active");
+    showToast("❌ ORM masqué");
+  } else {
+    map.addLayer(orm);
+    btn.classList.add("active");
+    showToast("✅ ORM affiché");
+
+    // Assure IGN Satellite sous ORM
+    if (!map.hasLayer(orthoIGN)) {
+      map.addLayer(orthoIGN);
+    }
+  }
+});
 </script>
 
 </body>
