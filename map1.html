@@ -657,13 +657,6 @@ L.control.layers(
 ).addTo(map);
 
 
-// === AUTO FOND SATELLITE IGN QUAND ORM S'ACTIVE ===
-orm.on("add", () => {
-  if (!map.hasLayer(orthoIGN)) {
-    map.addLayer(orthoIGN);
-  }
-});
-
     L.control.zoom({ position: 'topright' }).addTo(map);
 
     planIGN.on("tileerror", e => console.warn("IGN PLAN tile error", e));
