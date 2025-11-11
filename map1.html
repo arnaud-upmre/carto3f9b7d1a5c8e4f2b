@@ -1,6 +1,3 @@
-MAP avec décalage de 1sec : 
-
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -652,6 +649,7 @@ orthoIGN.on("load", () => {
 
 orthoIGN.addTo(map);
 
+
 L.control.layers(
       { 
         "🛰️ Satellite IGN": orthoIGN,
@@ -660,6 +658,9 @@ L.control.layers(
         "🌍 Plan Open": osm,
         "🛰️+🗺️ Mixte": mixte
       },
+      {
+        "🚆 OpenRailwayMap (lignes)": orm
+      }
 ).addTo(map);
 
 
