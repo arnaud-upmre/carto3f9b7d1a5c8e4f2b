@@ -629,6 +629,17 @@ const mixte = L.layerGroup([
   )
 ]);
 
+    // --- LIGNES FERROVIAIRES ORM (rendu standard) ---
+const ormTiles = L.tileLayer(
+  "https://tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png",
+  {
+    opacity: 1,
+    maxZoom: 20,
+    maxNativeZoom: 19,
+    attribution: "© OpenRailwayMap"
+  }
+);
+
 orthoIGN.addTo(map);
 
 
@@ -638,7 +649,8 @@ orthoIGN.addTo(map);
         "🛰️ Satellite Open": esriSat,
         "🗺️ Plan IGN (défaut)": planIGN,
         "🌍 Plan Open": osm,
-        "🛰️+🗺️ Mixte": mixte
+        "🛰️+🗺️ Mixte": mixte,
+        "🚆 Lignes ferroviaires ORM": ormTiles
       },
       {}
     ).addTo(map);
