@@ -649,20 +649,37 @@ orthoIGN.on("load", () => {
 
 orthoIGN.addTo(map);
 
-
-L.control.layers(
-      { 
-        "🛰️ Satellite IGN": orthoIGN,
-        "🛰️ Satellite Open": esriSat,
-        "🗺️ Plan IGN (défaut)": planIGN,
-        "🌍 Plan Open": osm,
-        "🛰️+🗺️ Mixte": mixte
-      },
-      {
-        "🚆 OpenRailwayMap (lignes)": orm
-      }
+const layersControl = L.control.layers(
+  { 
+    "🛰️ Satellite IGN": orthoIGN,
+    "🛰️ Satellite Open": esriSat,
+    "🗺️ Plan IGN (défaut)": planIGN,
+    "🌍 Plan Open": osm,
+    "🛰️+🗺️ Mixte": mixte
+  },
+  {}
 ).addTo(map);
 
+// Injection du slider d’opacité ORM
+const container = layersControl.getContainer();
+const opacityDiv = document.createElement("div");
+
+opacityDiv.style.padding = "8px 12px";
+opacityDiv.style.borderTop = "1px solid #ddd";
+opacityDiv.style.marginTop = "8px";
+opacityDiv.innerHTML = `
+  <label style="font-size:13px; font-weight:600; display:block; margin-bottom:6px;">
+    🚆 Opacité des lignes
+  </label>
+  <input id="orm-opacity" type="range" min="0" max="100" value="100" style="width:100%;">
+`;
+
+container.appendChild(opacityDiv);
+
+// Gestion de l’opacité
+document.getElementById("orm-opacity").addEventListener("input", (e) => {
+  orm.setOpacity(e.target.value / 100);
+});
 
     L.control.zoom({ position: 'topright' }).addTo(map);
 
