@@ -371,6 +371,10 @@
 <button class="btn-toggle" id="btn-orm" title="OpenRailwayMap">
   <img src="ico/ligne.png" alt="ORM">
 </button>
+    <button class="btn-toggle" id="btn-speed" title="Vitesses ferroviaires">
+  <img src="ico/160.png" alt="Vitesses">
+</button>
+
   </div>
 </div>
 
@@ -620,6 +624,19 @@ const orm = L.tileLayer(
   "https://{s}.tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png",
   {
     pane: "orm",
+    maxZoom: 21,
+    maxNativeZoom: 19,
+    tileSize: 256,
+    opacity: 1,
+    attribution: "© OpenRailwayMap & OpenStreetMap contributors"
+  }
+);
+
+
+const speedLayer = L.tileLayer(
+  "https://{s}.tiles.openrailwaymap.org/maxspeed/{z}/{x}/{y}.png",
+  {
+    pane: "orm",        
     maxZoom: 21,
     maxNativeZoom: 19,
     tileSize: 256,
@@ -1303,22 +1320,58 @@ function showToast(message) {
 document.getElementById("btn-orm").addEventListener("click", function () {
   const btn = this;
 
+  // Si ORM est déjà actif → on le masque → aucune couche
   if (map.hasLayer(orm)) {
     map.removeLayer(orm);
     btn.classList.remove("active");
     showToast("❌ ORM masqué");
-  } else {
-    map.addLayer(orm);
-    btn.classList.add("active");
-    showToast("✅ ORM affiché");
+    return;
+  }
 
+  // Sinon → LIGNES devient la couche active
+  // 1. désactiver vitesses
+  if (map.hasLayer(speedLayer)) {
+    map.removeLayer(speedLayer);
+    document.getElementById("btn-speed").classList.remove("active");
+  }
 
-    if (!map.hasLayer(orthoIGN)) {
-      map.addLayer(orthoIGN);
-    }
+  // 2. activer ORM
+  map.addLayer(orm);
+  btn.classList.add("active");
+  showToast("✅ ORM affiché");
+
+  // 3. remettre ortho si nécessaire
+  if (!map.hasLayer(orthoIGN)) {
+    map.addLayer(orthoIGN);
   }
 });
-</script>
 
+
+document.getElementById("btn-speed").addEventListener("click", function () {
+  const btnSpeed = this;
+  const btnORM = document.getElementById("btn-orm");
+
+  // Si vitesses est déjà actif → on le désactive → aucune couche
+  if (map.hasLayer(speedLayer)) {
+    map.removeLayer(speedLayer);
+    btnSpeed.classList.remove("active");
+    showToast("❌ Vitesses masquées");
+    return;
+  }
+
+  // Sinon → VITESSES devient la couche active
+  // 1. désactiver ORM
+  if (map.hasLayer(orm)) {
+    map.removeLayer(orm);
+    btnORM.classList.remove("active");
+  }
+
+  // 2. activer vitesses
+  map.addLayer(speedLayer);
+  btnSpeed.classList.add("active");
+  showToast("✅ Vitesses affichées");
+});
+    
+</script>
 </body>
 </html>
