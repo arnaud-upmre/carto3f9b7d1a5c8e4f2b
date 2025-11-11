@@ -649,37 +649,55 @@ orthoIGN.on("load", () => {
 
 orthoIGN.addTo(map);
 
-const layersControl = L.control.layers(
-  { 
-    "🛰️ Satellite IGN": orthoIGN,
-    "🛰️ Satellite Open": esriSat,
-    "🗺️ Plan IGN (défaut)": planIGN,
-    "🌍 Plan Open": osm,
-    "🛰️+🗺️ Mixte": mixte
-  },
-  {}
+L.control.layers(
+      { 
+        "🛰️ Satellite IGN": orthoIGN,
+        "🛰️ Satellite Open": esriSat,
+        "🗺️ Plan IGN (défaut)": planIGN,
+        "🌍 Plan Open": osm,
+        "🛰️+🗺️ Mixte": mixte
+      },
+      {
+        "🚆 OpenRailwayMap (lignes)": orm
+      }
 ).addTo(map);
 
-// Injection du slider d’opacité ORM
-const container = layersControl.getContainer();
-const opacityDiv = document.createElement("div");
+    // Ajout du slider d’opacité ORM uniquement quand le panneau est ouvert
+const layersBox = document.querySelector(".leaflet-control-layers");
+let opacityAdded = false;
 
-opacityDiv.style.padding = "8px 12px";
-opacityDiv.style.borderTop = "1px solid #ddd";
-opacityDiv.style.marginTop = "8px";
-opacityDiv.innerHTML = `
-  <label style="font-size:13px; font-weight:600; display:block; margin-bottom:6px;">
-    🚆 Opacité des lignes
-  </label>
-  <input id="orm-opacity" type="range" min="0" max="100" value="100" style="width:100%;">
-`;
+const observer = new MutationObserver(() => {
+  const isOpen = layersBox.classList.contains("leaflet-control-layers-expanded");
 
-container.appendChild(opacityDiv);
+  if (isOpen && !opacityAdded) {
+    opacityAdded = true;
 
-// Gestion de l’opacité
-document.getElementById("orm-opacity").addEventListener("input", (e) => {
-  orm.setOpacity(e.target.value / 100);
+    const form = layersBox.querySelector(".leaflet-control-layers-overlays");
+
+    const div = document.createElement("div");
+    div.style.padding = "6px 10px";
+    div.style.marginTop = "8px";
+    div.style.borderTop = "1px solid #ddd";
+    div.innerHTML = `
+      <label style="font-size:13px; font-weight:600; display:block; margin-bottom:4px;">
+        🚆 Opacité des lignes
+      </label>
+      <input id="orm-slide" type="range" min="0" max="100" value="100" style="width:100%;">
+    `;
+
+    form.appendChild(div);
+
+    document.getElementById("orm-slide").addEventListener("input", e => {
+      orm.setOpacity(e.target.value / 100);
+    });
+  }
+
+  if (!isOpen) {
+    opacityAdded = false;
+  }
 });
+
+observer.observe(layersBox, { attributes: true });
 
     L.control.zoom({ position: 'topright' }).addTo(map);
 
