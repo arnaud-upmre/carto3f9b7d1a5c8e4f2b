@@ -624,18 +624,6 @@ const esriSat = L.tileLayer(
   }
 );
 
-    // ORM MaxSpeed (vitesses)
-const ormMaxSpeed = L.tileLayer(
-  "https://{s}.tiles.openrailwaymap.org/maxspeed/{z}/{x}/{y}.png",
-  {
-    maxZoom: 21,
-    maxNativeZoom: 20,
-    tileSize: 256,
-    opacity: 1,
-    attribution: "© OpenRailwayMap & OpenStreetMap contributors"
-  }
-);
-
 const mixte = L.layerGroup([
   orthoIGN,
   L.tileLayer(
@@ -1311,49 +1299,25 @@ function showToast(message) {
   }, 2000);
 }
 
-// === TOGGLE ORM (Lignes + Vitesses) DANS LE FAB ===
+    // === TOGGLE ORM DANS LE FAB ===
 document.getElementById("btn-orm").addEventListener("click", function () {
   const btn = this;
 
-  const anyORM = map.hasLayer(orm) || map.hasLayer(ormMaxSpeed);
-
-  if (anyORM) {
+  if (map.hasLayer(orm)) {
     map.removeLayer(orm);
-    map.removeLayer(ormMaxSpeed);
     btn.classList.remove("active");
     showToast("❌ ORM masqué");
-    return;
-  }
-
-  // Activation ORM
-  btn.classList.add("active");
-  showToast("✅ ORM affiché");
-
-  // On démarre toujours par l'affichage des LIGNES
-  map.addLayer(orm);
-
-  // Assure IGN Satellite sous ORM
-  if (!map.hasLayer(orthoIGN)) {
-    map.addLayer(orthoIGN);
-  }
-});
-
-    // === BASCULE AUTOMATIQUE ORM : Lignes (<=20) / MaxSpeed (==21) ===
-map.on("zoomend", () => {
-  const z = map.getZoom();
-
-  // Si ORM n'est PAS activé → on ne fait rien
-  if (!map.hasLayer(orm) && !map.hasLayer(ormMaxSpeed)) return;
-
-  if (z >= 21) {
-    if (!map.hasLayer(ormMaxSpeed)) map.addLayer(ormMaxSpeed);
-    if (map.hasLayer(orm)) map.removeLayer(orm);
   } else {
-    if (!map.hasLayer(orm)) map.addLayer(orm);
-    if (map.hasLayer(ormMaxSpeed)) map.removeLayer(ormMaxSpeed);
+    map.addLayer(orm);
+    btn.classList.add("active");
+    showToast("✅ ORM affiché");
+
+    // Assure IGN Satellite sous ORM
+    if (!map.hasLayer(orthoIGN)) {
+      map.addLayer(orthoIGN);
+    }
   }
 });
-    
 </script>
 
 </body>
