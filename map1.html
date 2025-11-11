@@ -640,9 +640,14 @@ const mixte = L.layerGroup([
   )
 ]);
     
+orthoIGN.on("load", () => {
+  setTimeout(() => {
+    orm.addTo(map);
+    document.getElementById("btn-orm").classList.add("active");
+  }, 500); 
+});
+
 orthoIGN.addTo(map);
-orm.addTo(map);  
-document.getElementById("btn-orm").classList.add("active");
 
 
 L.control.layers(
