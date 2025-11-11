@@ -649,11 +649,20 @@ L.control.layers(
         "🛰️ Satellite Open": esriSat,
         "🗺️ Plan IGN (défaut)": planIGN,
         "🌍 Plan Open": osm,
-        "🛰️+🗺️ Mixte": mixte,
-        "🚆 OpenRailwayMap (lignes)": orm
+        "🛰️+🗺️ Mixte": mixte
       },
-      {}
+      {
+        "🚆 OpenRailwayMap (lignes)": orm
+      }
 ).addTo(map);
+
+
+// === AUTO FOND SATELLITE IGN QUAND ORM S'ACTIVE ===
+orm.on("add", () => {
+  if (!map.hasLayer(orthoIGN)) {
+    map.addLayer(orthoIGN);
+  }
+});
 
     L.control.zoom({ position: 'topright' }).addTo(map);
 
