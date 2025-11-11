@@ -3,22 +3,43 @@
 <head>
   <meta charset="UTF-8" />
   <title>Nono Maps</title>
+  
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  
-  
 <link rel="icon" href="favicon/favicon.ico" type="image/x-icon" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
-
 <link rel="preload" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" as="script" crossorigin="anonymous">
 <link rel="preload" href="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js" as="script">
-
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
 
 <style>
+  
+#legal-footer {
+  position: fixed;
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+  font-size: 10px; 
+  color: rgba(255,255,255,0.75);
+  background: rgba(0,0,0,0.35);
+  padding: 3px 8px;
+  border-radius: 6px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 9999;
+  pointer-events: none;
+  user-select: none;
 
+  white-space: nowrap !important;       
+  overflow: hidden !important;       
+  text-overflow: ellipsis !important;   
+
+  max-width: 95vw; 
+}
+  
   html, body {
   height: 100%;
   margin: 0;
@@ -29,7 +50,6 @@
   width:100%;
   height:100%;
 }
-
 
 .fab-container {
   position: fixed;
@@ -88,25 +108,22 @@
   justify-content: center;
 }
 
-
 .fab-options button img {
   width: 36px;
   height: 36px;
   transition: opacity .2s, filter .2s;
 }
 
-
 .fab-options button:not(.active) img {
   opacity: 0.5;
   filter: none;
 }
 
-
 .fab-options button.active {
   background: rgba(255,255,255,0.50); 
 }
 .fab-options button.active img {
-  opacity: 1;  /* remet l’icône normale */
+  opacity: 1;  
 }
   
 .toast {
@@ -127,7 +144,6 @@
 .toast.show {
   opacity: 1;
 }
-
 
 .leaflet-popup-content-wrapper {
   background: linear-gradient(
@@ -152,6 +168,7 @@
   -webkit-backdrop-filter: blur(5px);
   border: 1px solid rgba(255, 255, 255, 0.45);
 }
+  
 .leaflet-popup-content {
   max-width: 240px !important; 
   min-width: 240px; 
@@ -274,13 +291,16 @@
   justify-content: center;
   font-family: -apple-system, BlinkMacSystemFont,"Segoe UI",Roboto,Inter,sans-serif;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 16px;
   color: #ffffff;
-  text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 0 6px rgba(0,0,0,0.6); 
-  background: rgba(255, 255, 255, 0.15);   
+  text-shadow: 
+  0 0 4px rgba(0,0,0,1),
+  0 0 8px rgba(0,0,0,0.9),
+  0 0 12px rgba(0,0,0,0.8);
+  background: rgba(255, 255, 255, 0.35);   
   backdrop-filter: blur(10px);             
   -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255,255,255,0.25);
+  border: 2px solid rgba(255,255,255,0.25);
   box-shadow: 0 6px 18px rgba(0,0,0,0.2);
   transition: transform 0.25s ease, background 0.3s ease;
 }
@@ -292,7 +312,6 @@
 .control-group {
   margin-bottom: 10px; 
 }
-
 
 .btn-toggle{
   background: rgba(0,0,0,.7);
@@ -336,9 +355,37 @@
 
 .appareil { background:#facc15; }
 
+  .telecom-mini {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:2px 6px;
+  background:#eef2ff;
+  color:#4f46e5;
+  border-radius:6px;
+  font-size:11px;
+  font-weight:600;
+  border:1px solid rgba(79,70,229,0.25);
+  margin:1px 3px 2px 0;
+  white-space:nowrap;
+}
+
+.leaflet-popup-content .popup-pills {
+  display: block !important;   
+  width: 100%;
+  margin-top: 2px !important;
+  margin-bottom: 4px !important;
+}
+
+.leaflet-popup-content .popup-header {
+  display: flex !important;
+  align-items: center;
+  margin-bottom: 0 !important;
+}  
 </style>
-  <!-- Google tag (gtag.js) -->
+
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-EMSCVXG71V"></script>
+  
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -355,24 +402,32 @@
   <button class="fab" id="fabBtn">☰</button>
 
   <div class="fab-options" id="fabOptions">
-    <button class="btn-toggle active" onclick="toggleLayer(accesLayer, this, 'Accès routiers')">
-      <img src="ico/acces.png" alt="Accès routiers">
-    </button>
-    <button class="btn-toggle active" onclick="toggleLayer(postesLayer, this, 'Postes')">
-      <img src="ico/poste.png" alt="Postes">
-    </button>
-    <button class="btn-toggle active" onclick="toggleLayer(appareilsLayer, this, 'Appareils')">
-      <img src="ico/int.png" alt="Appareils">
-    </button>
-<button class="btn-toggle" onclick="chargerPN(this)">
+  <button class="btn-toggle active" onclick="toggleLayer(accesLayer, this, 'Accès routiers')">
+  <img src="ico/acces.png" alt="Accès routiers">
+  </button>
+  
+  <button class="btn-toggle active" onclick="toggleLayer(postesLayer, this, 'Postes')">
+  <img src="ico/poste.png" alt="Postes">
+  </button>
+   
+  <button class="btn-toggle active" onclick="toggleLayer(appareilsLayer, this, 'Appareils')">
+  <img src="ico/int.png" alt="Appareils">
+  </button>
+    
+  <button class="btn-toggle" onclick="chargerPN(this)">
   <img src="ico/pn.png" alt="Passages à niveau">
-</button>
+  </button>
 
-<button class="btn-toggle" id="btn-lignes" title="Afficher les lignes ferroviaires">
-  <img src="ico/ligne.png" alt="Lignes ferroviaires">
-</button>
+  <button class="btn-toggle" id="btn-orm" title="OpenRailwayMap">
+  <img src="ico/ligne.png" alt="ORM">
+  </button>
+    
+  <button class="btn-toggle" id="btn-speed" title="Vitesses ferroviaires">
+  <img src="ico/160.png" alt="Vitesses">
+  </button>
+
   </div>
-</div>
+  </div>
 
 <div class="toast" id="toast"></div>
 
@@ -386,7 +441,6 @@
 const defaultCenter = [50.3, 2.6];
 const defaultZoom = 9;      
 
-
 const boundsFrance = [
   [41.0, -5.5],  
   [51.5, 9.5]    
@@ -399,12 +453,13 @@ const map = L.map('map', {
   maxZoom: 21,                 
   maxBounds: boundsFrance,     
   maxBoundsViscosity: 1.0      
-}).setView(defaultCenter, defaultZoom);
+  }).setView(defaultCenter, defaultZoom);
 
-    
+    const ormPane = map.createPane("orm");
+ormPane.style.zIndex = 350;
+ 
 let editMode = false;   
   
-
 const editBanner = document.createElement("div");
 editBanner.style = `
   position: fixed;
@@ -451,7 +506,6 @@ document.addEventListener("keydown", function(e) {
     editIcon.style.display = editMode ? "block" : "none";
   }
 
-
   if (e.key === "Escape" && editMode) {
     editMode = false;
     editBanner.textContent = "❌ Mode information désactivé";
@@ -461,7 +515,7 @@ document.addEventListener("keydown", function(e) {
   }
 });
     
-    const allMarkers = [];
+const allMarkers = [];
 
 let _datasetsLoaded = 0;
 function _tryOpenFromURL() {
@@ -560,13 +614,10 @@ if (id.startsWith("DU")) {
   }
 }
 
-
-
 const params = new URLSearchParams(window.location.search);
 const lat = parseFloat(params.get("lat"));
 const lon = parseFloat(params.get("lon"));
 const zoom = parseInt(params.get("z")) || 19;
-
 
   const planIGN = L.tileLayer(
   "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
@@ -613,6 +664,31 @@ const esriSat = L.tileLayer(
   }
 );
 
+const orm = L.tileLayer(
+  "https://{s}.tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png",
+  {
+    pane: "orm",
+    maxZoom: 21,
+    maxNativeZoom: 19,
+    tileSize: 256,
+    opacity: 1,
+    attribution: "© OpenRailwayMap & OpenStreetMap contributors"
+  }
+);
+
+
+const speedLayer = L.tileLayer(
+  "https://{s}.tiles.openrailwaymap.org/maxspeed/{z}/{x}/{y}.png",
+  {
+    pane: "orm",        
+    maxZoom: 21,
+    maxNativeZoom: 19,
+    tileSize: 256,
+    opacity: 1,
+    attribution: "© OpenRailwayMap & OpenStreetMap contributors"
+  }
+);
+
 const mixte = L.layerGroup([
   orthoIGN,
   L.tileLayer(
@@ -628,11 +704,17 @@ const mixte = L.layerGroup([
     }
   )
 ]);
+    
 
 orthoIGN.addTo(map);
 
+setTimeout(() => {
+  orm.addTo(map);
+  document.getElementById("btn-orm").classList.add("active");
+}, 1000);
 
-    L.control.layers(
+
+L.control.layers(
       { 
         "🛰️ Satellite IGN": orthoIGN,
         "🛰️ Satellite Open": esriSat,
@@ -640,8 +722,8 @@ orthoIGN.addTo(map);
         "🌍 Plan Open": osm,
         "🛰️+🗺️ Mixte": mixte
       },
-      {}
-    ).addTo(map);
+).addTo(map);
+
 
     L.control.zoom({ position: 'topright' }).addTo(map);
 
@@ -747,6 +829,16 @@ const iconAcces = L.divIcon({
   iconAnchor: [18, 28], 
   popupAnchor: [0, -10]
 });
+
+function renderTelecomPills(v) {
+  if (!v) return "";
+  return String(v)
+    .split("/")                  
+    .map(t => t.trim())
+    .filter(Boolean)
+    .map(t => `<span class="telecom-mini">${escHtml(t)}</span>`)
+    .join("");
+}
  
 fetch("postes.json")
   .then(r => r.json())
@@ -756,7 +848,8 @@ fetch("postes.json")
     data.forEach(item => {
 
      if (item.latitude && item.longitude) {
-  const accesVal = (item["accès"] ?? item.acces ?? "").toString().trim();
+
+const accesVal = (item["accès"] ?? item.acces ?? "").toString().trim();
 
 const cid = [item.nom, item.type, item.SAT, accesVal]
   .filter(Boolean)
@@ -779,7 +872,6 @@ let content = `
   <img src="ico/street.png" alt="Street View" style="width:26px; height:26px;">
 </span>
              
-
 <div style="margin-bottom:10px;">
 ✍🏻 <strong>Information :</strong> ${ renderInformation(item.description_acces) }
 </div>
@@ -819,19 +911,15 @@ let content = `
             font-size:14px; color:#111; line-height:1.4;">
 
 
-  <div style="font-weight:600; font-size:16px; margin-bottom:14px;">
-    📍 ${item.nom || "Sans nom"} 
-    ${item.type ? " " + item.type : ""} 
-    ${item.SAT ? " " + item.SAT : ""}
-  </div>
-
-
-<div style="margin-bottom:10px;">
-  🚄 PK <strong>${item.pk || "(non renseigné)"}</strong>
-  sur la ligne n°<strong>${item.numero_ligne || "(non renseigné)"}</strong>
-  ${item.lignes ? " – " + item.lignes : ""}
+<div class="popup-header" style="font-weight:600; font-size:16px;">
+  📍 ${item.nom || "Sans nom"} 
+  ${item.type ? " " + item.type : ""} 
+  ${item.SAT ? " " + item.SAT : ""}
 </div>
 
+<div class="popup-pills telecom-zone">
+  ${renderTelecomPills(item.description_telecommande)}
+</div>
 
   <div style="margin-bottom:10px;">
 ✍🏻 <strong>Information :</strong> ${ renderInformation(item.description) }
@@ -871,17 +959,84 @@ fetch("appareils.json")
 
       let appareilIcon;
       const ref = (item.appareil || "").toUpperCase();
-
 if (ref.startsWith("DU")) {
-  appareilIcon = L.divIcon({ html:`<img src="ico/stop.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,38], popupAnchor:[0,-20] });
+  appareilIcon = L.divIcon({
+    html: `
+      <div style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;">
+        <img src="ico/stop.png" class="icon-halo-appareil" style="width:24px;height:24px;">
+      </div>
+    `,
+    className:"",
+    iconSize:[36,36],
+    iconAnchor:[18,18],
+    popupAnchor:[0,-20]
+  });
+
 } else if (ref.startsWith("I") || ref.startsWith("SI") || ref.startsWith("D")) {
-  appareilIcon = L.divIcon({ html:`<img src="ico/int.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,38], popupAnchor:[0,-20] });
-} else if (ref.startsWith("TT") || ref.startsWith("TSA") || ref.startsWith("TC") || ref.startsWith("TRA")) {
-  appareilIcon = L.divIcon({ html:`<img src="ico/TT.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,38], popupAnchor:[0,-20] });
-} else if (/^[0-9]/.test(ref) || ref.startsWith("S") || ref.startsWith("ST") || ref.startsWith("F") || ref.startsWith("P") || ref.startsWith("FB") || ref.startsWith("B")) {
-  appareilIcon = L.divIcon({ html:`<img src="ico/sect.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,38], popupAnchor:[0,-20] });
+  appareilIcon = L.divIcon({
+    html: `
+      <div style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;">
+        <img src="ico/int.png" class="icon-halo-appareil" style="width:24px;height:24px;">
+      </div>
+    `,
+    className:"",
+    iconSize:[36,36],
+    iconAnchor:[18,12],
+    popupAnchor:[0,-20]
+  });
+
+} else if (
+  ref.startsWith("TT") ||
+  ref.startsWith("TSA") ||
+  ref.startsWith("TC") ||
+  ref.startsWith("TRA")
+) {
+  appareilIcon = L.divIcon({
+    html: `
+      <div style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;">
+        <img src="ico/TT.png" class="icon-halo-appareil" style="width:24px;height:24px;">
+      </div>
+    `,
+    className:"",
+    iconSize:[36,36],
+    iconAnchor:[18,12],
+    popupAnchor:[0,-20]
+  });
+
+} else if (
+  /^[0-9]/.test(ref) ||
+  ref.startsWith("S") ||
+  ref.startsWith("ST") ||
+  ref.startsWith("F") ||
+  ref.startsWith("P") ||
+  ref.startsWith("FB") ||
+  ref.startsWith("B")
+) {
+  appareilIcon = L.divIcon({
+    html: `
+      <div style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;">
+        <img src="ico/sect.png" class="icon-halo-appareil" style="width:24px;height:24px;">
+      </div>
+    `,
+    className:"",
+    iconSize:[36,36],
+    iconAnchor:[18,12],
+    popupAnchor:[0,-20]
+  });
+
 } else if (ref.startsWith("ALIM")) {
-  appareilIcon = L.divIcon({ html:`<img src="ico/alim.png" class="icon-halo-appareil">`, className:"", iconAnchor:[16,38], popupAnchor:[0,-20] });
+  appareilIcon = L.divIcon({
+    html: `
+      <div style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;">
+        <img src="ico/alim.png" class="icon-halo-appareil" style="width:24px;height:24px;">
+      </div>
+    `,
+    className:"",
+    iconSize:[36,36],
+    iconAnchor:[18,12],
+    popupAnchor:[0,-20]
+  });
+
 } else {
   appareilIcon = iconAppareil;
 }
@@ -953,7 +1108,6 @@ const pnClasses = {
   46: "PN privé isolé pour piétons avec portillons"
 };
     
-
 appareilsLayer.on('clusterclick', function (e) {
   const markers = e.layer.getAllChildMarkers();
   if (markers.length <= 1) return;
@@ -975,12 +1129,10 @@ appareilsLayer.on('clusterclick', function (e) {
   map.fitBounds(e.layer.getBounds());
 });
 
-
 let pnLoaded = false; 
 
 function chargerPN(btn) {
   console.log("🔄 Déclenchement du chargement PN (lazy load)");
-
 
   if (pnLoaded) {
     toggleLayer(pnLayer, btn, "Passages à niveau");
@@ -1001,7 +1153,6 @@ fetch("https://ressources.data.sncf.com/api/records/1.0/search/"
       let records = data.records || [];
 
       console.info(`✅ ${records.length} PN filtrés (Hauts-de-France + 10 km au sud)`);
-  
   
       records.forEach(pn => {
         const f = pn.fields;
@@ -1072,106 +1223,6 @@ fetch("https://ressources.data.sncf.com/api/records/1.0/search/"
     });
 }
 
-
-
-    
-// === LIGNES FERROVIAIRES ===
-document.addEventListener("DOMContentLoaded", () => {
-  const btnLignes = document.getElementById("btn-lignes");
-  if (!btnLignes) return console.error("❌ Bouton Lignes introuvable");
-
-  let lignesLayer = L.markerClusterGroup({
-    disableClusteringAtZoom: 16,
-    spiderfyOnMaxZoom: false,
-  });
-  let lignesLoaded = false;
-
-  btnLignes.addEventListener("click", () => {
-    if (!lignesLoaded) {
-      btnLignes.classList.add("loading");
-
-      fetch("https://ressources.data.sncf.com/api/records/1.0/search/"
-        + "?dataset=lignes-par-type"
-        + "&geofilter.bbox=49.4,1.4,51.2,4.5"
-        + "&rows=3000")
-        .then(r => r.json())
-        .then(data => {
-          data.records.forEach(record => {
-            const f = record.fields || {};
-            if (!f.geo_shape) return;
-
-            // Couleur flashy + trait plus épais
-            const couleur =
-              (f.type_ligne || "").toLowerCase().includes("raccordement") ? "#ff9800" :
-              (f.type_ligne || "").toLowerCase().includes("desserte")     ? "#00e676" :
-              (f.type_ligne || "").toLowerCase().includes("embranchement") ? "#f50057" :
-              "#00bcd4"; // cyan vif par défaut
-
-            const poly = L.geoJSON(f.geo_shape, {
-              style: { color: couleur, weight: 6, opacity: 0.9 }
-            });
-
-            poly.on("click", (e) => {
-              const lat = e.latlng.lat.toFixed(5);
-              const lng = e.latlng.lng.toFixed(5);
-              const code = f.code_ligne ?? "?";
-              const lib  = f.lib_ligne ?? "—";
-              const pkd  = f.pkd ?? "—";
-              const pkf  = f.pkf ?? "—";
-              const type = f.type_ligne ?? "—";
-
-              const html = `
-                <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
-                            font-size:14px;color:#111;line-height:1.5;min-width:230px;text-align:left;">
-                  <div style="font-weight:700;font-size:16px;margin-bottom:8px;">
-                    🚧 Ligne n°${code}
-                  </div>
-                  <div style="margin-bottom:6px;">${lib}</div>
-                  <div style="margin-bottom:6px;">📏 PKD <strong>${pkd}</strong> — PKF <strong>${pkf}</strong></div>
-                  <div style="margin-bottom:14px;">🏷️ Type : <strong>${type}</strong></div>
-
-<div style="display:flex;justify-content:center;width:100%;margin-top:14px;">
-  <a href="https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${lat},${lng};"
-     target="_blank"
-     style="display:inline-flex;align-items:center;justify-content:center;
-            gap:6px;padding:10px 16px;border-radius:8px;
-            background:#10b981;color:white;text-decoration:none;
-            font-size:14px;font-weight:500;text-align:center;
-            box-sizing:border-box;min-width:160px;">
-    🚄 Voir sur Imajnet
-  </a>
-</div>
-
-                </div>`;
-              L.popup({ maxWidth: 280 })
-                .setLatLng(e.latlng)
-                .setContent(html)
-                .openOn(map);
-            });
-
-            lignesLayer.addLayer(poly);
-          });
-
-          map.addLayer(lignesLayer);
-          lignesLoaded = true;
-          btnLignes.classList.remove("loading");
-          btnLignes.classList.add("active");
-          showToast("✅ Lignes ferroviaires affichées");
-        })
-        .catch(err => {
-          console.error("Erreur chargement lignes :", err);
-          btnLignes.classList.remove("loading");
-          showToast("⚠️ Erreur de chargement");
-        });
-    } else {
-      toggleLayer(lignesLayer, btnLignes, "Lignes ferroviaires");
-    }
-  });
-});
-
-
-    
-    
 const leftControls = L.control({ position: "topleft" });
 leftControls.onAdd = function() {
   const container = L.DomUtil.create("div");
@@ -1185,7 +1236,6 @@ backBtn.onclick = () => {
 L.DomEvent.disableClickPropagation(backBtn);
 L.DomEvent.disableScrollPropagation(backBtn);
   
-
 const recenterBtn = L.DomUtil.create("div", "btn-toggle", topGroup);
 recenterBtn.innerHTML = "🎯";
 
@@ -1194,9 +1244,8 @@ recenterBtn.onclick = () => {
     recenterBtn.classList.add("active"); 
  map.setView(defaultCenter, defaultZoom);
 
-
     setTimeout(() => {
-      recenterBtn.classList.remove("active");
+    recenterBtn.classList.remove("active");
     }, 800); 
   }
 };
@@ -1244,7 +1293,6 @@ locateBtn.onclick = () => {
 L.DomEvent.disableClickPropagation(locateBtn);
 L.DomEvent.disableScrollPropagation(locateBtn);
 
-
   return container;
 };
 leftControls.addTo(map);
@@ -1260,15 +1308,12 @@ leftControls.addTo(map);
     document.getElementById("streetview-frame").src = ""; 
   };
 
-
 console.info("[Nono Maps] boot", {
   leaflet: L.version,
   clusters: { postes: !!postesLayer, appareils: !!appareilsLayer, acces: !!accesLayer }
 });
 
-
 if (isNaN(lat) || isNaN(lon)) { console.warn("URL lat/lon invalides", {lat, lon}); }
-
 
 function renderInformation(value) {
   if (!value) {
@@ -1281,7 +1326,6 @@ function renderInformation(value) {
 let activeEditPopup = null; 
 
 function escHtml(s){return String(s).replace(/[&<>"]/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[m]));}
-
 
 map.on('click', (e) => {
   if (!editMode) return;
@@ -1324,7 +1368,6 @@ ${coordsText}</pre>
     .setLatLng(e.latlng)
     .setContent(popupContent)
     .openOn(map);
-
 
   setTimeout(() => {
     const flash = (txt) => {
@@ -1372,9 +1415,58 @@ function showToast(message) {
   toast.classList.add("show");
   setTimeout(() => {
     toast.classList.remove("show");
-  }, 2000);
+  }, 5000);
 }
-</script>
 
+document.getElementById("btn-orm").addEventListener("click", function () {
+  const btn = this;
+
+
+  if (map.hasLayer(orm)) {
+    map.removeLayer(orm);
+    btn.classList.remove("active");
+    showToast("❌ ORM masqué");
+    return;
+  }
+
+  if (map.hasLayer(speedLayer)) {
+    map.removeLayer(speedLayer);
+    document.getElementById("btn-speed").classList.remove("active");
+  }
+
+  map.addLayer(orm);
+  btn.classList.add("active");
+  showToast("✅ ORM affiché");
+
+  if (!map.hasLayer(orthoIGN)) {
+    map.addLayer(orthoIGN);
+  }
+});
+
+document.getElementById("btn-speed").addEventListener("click", function () {
+  const btnSpeed = this;
+  const btnORM = document.getElementById("btn-orm");
+
+  if (map.hasLayer(speedLayer)) {
+    map.removeLayer(speedLayer);
+    btnSpeed.classList.remove("active");
+    showToast("❌ Vitesses masquées");
+    return;
+  }
+
+  if (map.hasLayer(orm)) {
+    map.removeLayer(orm);
+    btnORM.classList.remove("active");
+  }
+
+  map.addLayer(speedLayer);
+  btnSpeed.classList.add("active");
+  showToast(" ⚠️ Vitesse affichée à titre indicatif. Se référer aux documents réglementaires internes pour les vitesses de ligne applicables.");
+});
+    
+</script>
+<div id="legal-footer">
+  Nono Maps v1.11 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+</div>
 </body>
 </html>
