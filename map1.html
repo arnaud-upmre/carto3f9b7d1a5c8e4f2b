@@ -1084,18 +1084,18 @@ document.addEventListener("DOMContentLoaded", () => {
   let voiesLayer = L.layerGroup();
   let voiesLoaded = false;
 
-  const bbox = "49.4,1.4,51.2,4.5";
-  const overpassURL = "https://overpass-api.de/api/interpreter";
+const bbox = "49.40,1.40,51.20,4.50";
 
-  const query = `
-  [out:json][timeout:25];
-  (
-    way["railway"="rail"]( ${bbox} );
-    way["railway"="light_rail"]( ${bbox} );
-    way["railway"="tram"]( ${bbox} );
-  );
-  out geom;
-  `;
+const query = `
+[out:json][timeout:25];
+way["railway"="rail"](${bbox});
+way["railway"="light_rail"](${bbox});
+way["railway"="tram"](${bbox});
+out geom;
+`;
+
+const overpassURL = "https://overpass-api.de/api/interpreter";
+
 
   function getColor(tags) {
     if (tags.usage === "main") return "#ff6600";      
