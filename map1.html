@@ -866,6 +866,7 @@ function renderTelecomPills(v) {
 fetch("postes.json")
   .then(r => r.json())
   .then(data => {
+    window._postesCache = data;
     const seenPostes = new Set();
 
     data.forEach(item => {
@@ -1082,7 +1083,13 @@ if (ref.startsWith("DU")) {
 </div>
 
 <div class="popup-pills telecom-zone">
-  ${renderTelecomPills(item.description_telecommande)}
+  ${(() => {
+    if (!window._postesCache) return "";
+    const match = window._postesCache.find(p =>
+      p.SAT === item.SAT || p.nom === item.nom
+    );
+    return match ? renderTelecomPills(match.description_telecommande) : "";
+  })()}
 </div>
 
   ${item.description ? `<div style="margin-bottom:14px;">✍🏻 <strong>Information :</strong> ${item.description}</div>` : ""}
