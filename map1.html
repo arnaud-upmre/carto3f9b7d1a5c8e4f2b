@@ -1083,16 +1083,6 @@ if (ref.startsWith("DU")) {
     : ""}
 </div>
 
-<div class="popup-pills telecom-zone">
-  ${(() => {
-    if (!window._postesCache) return "";
-    const match = window._postesCache.find(p =>
-      p.SAT === item.SAT || p.nom === item.nom
-    );
-    return match ? renderTelecomPills(match.description_telecommande) : "";
-  })()}
-</div>
-
   ${item.description ? `<div style="margin-bottom:14px;">✍🏻 <strong>Information :</strong> ${item.description}</div>` : ""}
 
   <a href="https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${item.latitude},${item.longitude};"
