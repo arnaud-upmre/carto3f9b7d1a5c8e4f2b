@@ -830,6 +830,29 @@ const iconAcces = L.divIcon({
   popupAnchor: [0, -10]
 });
 
+    function formatPortailDisplay(val, secure) {
+  const isSecure = secure && secure.trim() !== "";
+  const hasPortail = val && val.trim() !== "";
+
+  // Rien du tout
+  if (!hasPortail && !isSecure) {
+    return `<p><strong>🔑 Portail / Alarme :</strong> 
+      <span style="color:#777;font-style:italic;">(Complétez cette info en modifiant la fiche)</span></p>`;
+  }
+
+  // Secure renseigné → lien vers les codes d’accès
+  if (isSecure) {
+    let html = `<p><strong>🔑 Portail / Alarme :</strong> 
+      <a href="${secure}" target="_blank" rel="noopener">🔐 Afficher les codes d’accès</a>`;
+    if (hasPortail) html += ` – ${val}`;
+    html += `</p>`;
+    return html;
+  }
+
+  // Sinon → simple texte
+  return `<p><strong>🔑 Portail / Alarme :</strong> ${val}</p>`;
+}
+
 function renderTelecomPills(v) {
   if (!v) return "";
   return String(v)
@@ -875,6 +898,8 @@ let content = `
 <div style="margin-bottom:10px;">
 ✍🏻 <strong>Information :</strong> ${ renderInformation(item.description_acces) }
 </div>
+
+${formatPortailDisplay(item.portail, item.secure)}
 
   <a href="index.html?id=${encodeURIComponent(
     (`${item.nom || ''} ${item.type || ''} ${item.SAT || ''}${accesVal ? ' – accès ' + accesVal : ''}`)
