@@ -1071,18 +1071,19 @@ if (ref.startsWith("DU")) {
 <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
             font-size:14px; color:#111; line-height:1.4;">
 
-<div style="font-size:15px; margin-bottom:10px;">
-  ⚡ <span style="font-weight:600;">${item.appareil || "Sans référence"}</span>
+<div class="popup-header" style="font-size:15px; font-weight:600; margin-bottom:0;">
+  ⚡ <span>${item.appareil || "Sans référence"}</span>
   ${item.nom || item.type || item.SAT 
     ? " (" + 
         [item.nom, item.type, item.SAT]
-          .filter(Boolean)               
-          .join(" ")                     
-          .trim() + ")"                  
+          .filter(Boolean)
+          .join(" ")
+          .trim() + ")"
     : ""}
 </div>
 
-<div class="popup-pills telecom-zone">
+<div class="popup-pills telecom-zone" style="margin-top:2px;">
+
   ${(() => {
     if (!window._postesCache) return "";
     const match = window._postesCache.find(p =>
