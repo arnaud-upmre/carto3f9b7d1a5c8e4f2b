@@ -16,7 +16,7 @@
 
 <style>
   
-#legal-footer {
+  #legal-footer {
   position: fixed;
   bottom: 6px;
   left: 50%;
@@ -355,7 +355,7 @@
 
 .appareil { background:#facc15; }
 
-  .telecom-mini {
+.telecom-mini {
   display:inline-flex;
   align-items:center;
   justify-content:center;
@@ -381,7 +381,8 @@
   display: flex !important;
   align-items: center;
   margin-bottom: 0 !important;
-}  
+}
+  
 </style>
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-EMSCVXG71V"></script>
@@ -830,6 +831,29 @@ const iconAcces = L.divIcon({
   popupAnchor: [0, -10]
 });
 
+    function formatPortailDisplay(val, secure) {
+  const isSecure = secure && secure.trim() !== "";
+  const hasPortail = val && val.trim() !== "";
+
+  // Rien du tout
+  if (!hasPortail && !isSecure) {
+    return `<p><strong>🔑 Portail / Alarme :</strong> 
+      <span style="color:#777;font-style:italic;">(non renseigné)</span></p>`;
+  }
+
+  // Secure renseigné → lien vers les codes d’accès
+  if (isSecure) {
+    let html = `<p><strong>🔑 Portail / Alarme :</strong> 
+      <a href="${secure}" target="_blank" rel="noopener">🔐 Afficher les codes d’accès</a>`;
+    if (hasPortail) html += ` – ${val}`;
+    html += `</p>`;
+    return html;
+  }
+
+  // Sinon → simple texte
+  return `<p><strong>🔑 Portail / Alarme :</strong> ${val}</p>`;
+}
+
 function renderTelecomPills(v) {
   if (!v) return "";
   return String(v)
@@ -843,6 +867,7 @@ function renderTelecomPills(v) {
 fetch("postes.json")
   .then(r => r.json())
   .then(data => {
+    window._postesCache = data;
     const seenPostes = new Set();
 
     data.forEach(item => {
@@ -875,6 +900,8 @@ let content = `
 <div style="margin-bottom:10px;">
 ✍🏻 <strong>Information :</strong> ${ renderInformation(item.description_acces) }
 </div>
+
+${formatPortailDisplay(item.portail, item.secure)}
 
   <a href="index.html?id=${encodeURIComponent(
     (`${item.nom || ''} ${item.type || ''} ${item.SAT || ''}${accesVal ? ' – accès ' + accesVal : ''}`)
@@ -1046,7 +1073,7 @@ if (ref.startsWith("DU")) {
             font-size:14px; color:#111; line-height:1.4;">
 
 <div style="font-size:15px; margin-bottom:10px;">
-  ⚡ <span style="font-weight:600;">${item.appareil || "Sans référence"}</span>
+  <span style="font-weight:600;">${item.appareil || "Sans référence"}</span>
   ${item.nom || item.type || item.SAT 
     ? " (" + 
         [item.nom, item.type, item.SAT]
@@ -1058,13 +1085,22 @@ if (ref.startsWith("DU")) {
 
   ${item.description ? `<div style="margin-bottom:14px;">✍🏻 <strong>Information :</strong> ${item.description}</div>` : ""}
 
+  <a href="https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${item.latitude},${item.longitude};"
+     target="_blank"
+     style="display:flex;align-items:center;justify-content:center;gap:6px;
+            background:#10b981;color:#fff;padding:7px 12px;border-radius:8px;
+            text-decoration:none;width:100%;font-size:14px;font-weight:500;
+            margin:0 !important;">
+    🛣️ Voir sur Imajnet
+  </a>
+
   <a href="index.html?id=${encodeURIComponent(
     [item.appareil, item.nom, item.type, item.SAT].filter(Boolean).join(" ").trim()
   )}"
      style="display:flex;align-items:center;justify-content:center;gap:6px;
-            background:#007aff;color:#fff;padding:10px 14px;border-radius:8px;
-            text-decoration:none;width:100%;font-size:15px;font-weight:500;
-            margin-top:10px;">
+            background:#007aff;color:#fff;padding:7px 12px;border-radius:8px;
+            text-decoration:none;width:100%;font-size:14px;font-weight:500;
+            margin:0 !important;">
     ➕ Voir plus
   </a>
 </div>
@@ -1466,7 +1502,7 @@ document.getElementById("btn-speed").addEventListener("click", function () {
     
 </script>
 <div id="legal-footer">
-  Nono Maps v1.11 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.11.1 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
