@@ -565,9 +565,10 @@ li.best { background-color:#e6f0ff; font-weight:600; }
   📍 À proximité
 </button>
 
-<a id="btn-carte" class="btn-primary" href="map.html" style="display:none;">
+<a id="btn-carte" class="btn-primary" href="map.html?z=19" style="display:none;">
   🗺️ Afficher la carte
 </a>
+  
 <div id="proximite" style="margin-top:1rem; font-size:14px;"></div>
 <div id="proximite-actions" style="text-align:center; margin:10px 0;">
   <button id="voir-plus" class="btn-primary" style="display:none;">➕ Voir plus</button>
@@ -582,7 +583,7 @@ let lieux = [], appareils = [];
     let currentItem = null;
     let proximiteData = [];
 
-function myMapsViewer(lat, lon, z = 19) {
+function myMapsViewer(lat, lon, z = Z20) {
   return `map.html?lat=${lat}&lon=${lon}&z=${z}`;
 }
     
