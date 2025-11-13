@@ -583,7 +583,7 @@ let lieux = [], appareils = [];
     let currentItem = null;
     let proximiteData = [];
 
-function myMapsViewer(lat, lon, z = Z20) {
+function myMapsViewer(lat, lon, z = 20) {
   return `map.html?lat=${lat}&lon=${lon}&z=${z}`;
 }
     
@@ -1456,6 +1456,7 @@ if (isMobile()) {
 
   const btnCarte = document.getElementById("btn-carte");
   const btnLocaliser = document.getElementById("btn-localiser");
+  btnCarte.href = "map.html?z=19";
   btnCarte.after(btnLocaliser);
 
 } else {
