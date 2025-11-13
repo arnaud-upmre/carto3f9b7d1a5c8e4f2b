@@ -5107,8 +5107,9 @@
     "lignes": "PARIS-NORD à LILLE",
     "numero_ligne": 272000,
     "pk": "80,500",
-    "poste_latitude": "49.51148",
-    "poste_longitude": "2.43501"
+    "poste_latitude": "49.51155",
+    "poste_longitude": "2.43506",
+    "imajnet":"https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.51167809795008,2.435199602072412;uid=10c6c0d1-94f0-4aa7-9cf8-e1b7d28e75e3_1820;"
   },
   {
     "nom": "La Faloise",
