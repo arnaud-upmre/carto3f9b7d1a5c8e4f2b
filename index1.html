@@ -1442,9 +1442,19 @@ function isMobile() {
   return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 }
 
-if (!isMobile()) {
-  document.getElementById("btn-localiser").style.display = "none";
+if (isMobile()) {
+
   document.getElementById("btn-carte").style.display = "inline-block";
+  document.getElementById("btn-localiser").style.display = "inline-block";
+
+  const btnCarte = document.getElementById("btn-carte");
+  const btnLocaliser = document.getElementById("btn-localiser");
+  btnCarte.after(btnLocaliser);
+
+} else {
+
+  document.getElementById("btn-carte").style.display = "inline-block";
+  document.getElementById("btn-localiser").style.display = "none";
 }
 
 document.getElementById("btn-localiser").addEventListener("click", () => {
@@ -2089,7 +2099,7 @@ function formatInformations(val) {
 <div id="about-footer">
   <div class="footer-links">
     <a href="arnaud.html" class="pill-link">🔧 À propos</a>
-   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.10.13</a>
+   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.11.2</a>
   </div>
 </div>
 <script>
