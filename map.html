@@ -619,6 +619,7 @@ const params = new URLSearchParams(window.location.search);
 const lat = parseFloat(params.get("lat"));
 const lon = parseFloat(params.get("lon"));
 const zoom = parseInt(params.get("z")) || 19;
+const fromIndex = params.has("id") || (params.has("lat") && params.has("lon"));
 
   const planIGN = L.tileLayer(
   "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
@@ -928,6 +929,10 @@ const m = L.marker([item.latitude, item.longitude], {
   isAcces: true   
 }).bindPopup(content).addTo(accesLayer);
 
+m.on("popupopen", () => {
+  if (!fromIndex) incrementCounter();
+});
+
   allMarkers.push(m);
 }
 
@@ -983,6 +988,10 @@ const m = L.marker([item.poste_latitude, item.poste_longitude], {
   icon: iconPoste,
   customId: cid
 }).bindPopup(content).addTo(postesLayer);
+
+m.on("popupopen", () => {
+  if (!fromIndex) incrementCounter();
+});
 
 allMarkers.push(m);
         }
@@ -1128,6 +1137,10 @@ if (ref.startsWith("DU")) {
         icon: appareilIcon,
         customId: cid
       }).bindPopup(content);
+
+m.on("popupopen", () => {
+  if (!fromIndex) incrementCounterAppareil();
+});
 
       appareilsLayer.addLayer(m);
       allMarkers.push(m);
@@ -1365,6 +1378,17 @@ console.info("[Nono Maps] boot", {
 
 if (isNaN(lat) || isNaN(lon)) { console.warn("URL lat/lon invalides", {lat, lon}); }
 
+
+function incrementCounter() {
+  fetch("https://script.google.com/macros/s/AKfycbzUFaek89LYosR0FSw9gyxn2IZXlFlWXA_dIFIDwox-szE3DgH-l8IVbGfaoIgGK04h/exec?increment=true")
+    .catch(()=>{});
+}
+
+function incrementCounterAppareil() {
+  fetch("https://script.google.com/macros/s/AKfycbwJIlvcfNYREJn1oPiVAhQqHACXXar8ZbRl6aChwYw4TFSAaMTFEHTT5X2T7BKLJ3gsJw/exec?increment=true")
+    .catch(()=>{});
+}
+
 function renderInformation(value) {
   if (!value) {
     return `<span style="color:#777;font-style:italic;">Non renseigné</span>`;
@@ -1516,7 +1540,7 @@ document.getElementById("btn-speed").addEventListener("click", function () {
     
 </script>
 <div id="legal-footer">
-  Nono Maps v1.11.2 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.11.3 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
