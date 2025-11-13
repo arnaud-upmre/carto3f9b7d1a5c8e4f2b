@@ -918,7 +918,9 @@ function showLieu(lieu) {
 
 if (lieu.special === true) {
 
+if (!new URLSearchParams(window.location.search).has("from")) {
   incrementCounter();
+}
   
   const result = document.getElementById("result");
   document.getElementById("suggestions").innerHTML = "";
@@ -1358,7 +1360,9 @@ if (rawQuery.length >= 3) {
     
 
 function showAppareil(app) {
+if (!new URLSearchParams(window.location.search).has("from")) {
   incrementCounterAppareil();
+}
   const result = document.getElementById("result");
   const suggestionsEl = document.getElementById("suggestions");
 
