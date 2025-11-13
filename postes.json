@@ -5144,7 +5144,8 @@
     "numero_ligne": 272000,
     "pk": "111,160",
     "poste_latitude": "49.75519",
-    "poste_longitude": "2.36455"
+    "poste_longitude": "2.36455",
+    "imajnet":"https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.75507227185618,2.364367356017467;uid=a745d81d-8b44-4538-9110-7e60018831ee_2196;"
   },
   {
     "nom": "Longueau",
