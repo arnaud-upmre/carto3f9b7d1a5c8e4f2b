@@ -835,13 +835,12 @@ const iconAcces = L.divIcon({
   const isSecure = secure && secure.trim() !== "";
   const hasPortail = val && val.trim() !== "";
 
-  // Rien du tout
+
   if (!hasPortail && !isSecure) {
     return `<p><strong>🔑 Portail / Alarme :</strong> 
       <span style="color:#777;font-style:italic;">(non renseigné)</span></p>`;
   }
 
-  // Secure renseigné → lien vers les codes d’accès
   if (isSecure) {
     let html = `<p><strong>🔑 Portail / Alarme :</strong> 
       <a href="${secure}" target="_blank" rel="noopener">🔐 Afficher les codes d’accès</a>`;
@@ -850,7 +849,6 @@ const iconAcces = L.divIcon({
     return html;
   }
 
-  // Sinon → simple texte
   return `<p><strong>🔑 Portail / Alarme :</strong> ${val}</p>`;
 }
 
@@ -862,6 +860,13 @@ function renderTelecomPills(v) {
     .filter(Boolean)
     .map(t => `<span class="telecom-mini">${escHtml(t)}</span>`)
     .join("");
+}
+
+    function getImajnetURL(item, lat, lon) {
+  if (item.imajnet && item.imajnet.trim() !== "") {
+    return item.imajnet.trim();
+  }
+  return `https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${lat},${lon};`;
 }
  
 fetch("postes.json")
@@ -902,6 +907,14 @@ let content = `
 </div>
 
 ${formatPortailDisplay(item.portail, item.secure)}
+
+<a href="${getImajnetURL(item, item.poste_latitude, item.poste_longitude)}"
+   target="_blank"
+   style="display:flex;align-items:center;justify-content:center;gap:6px;
+          background:#10b981;color:#fff;padding:7px 12px;border-radius:8px;
+          text-decoration:none;width:100%;font-size:14px;font-weight:500;margin-top:8px;">
+  🛣️ Voir sur Imajnet
+</a>
 
   <a href="index.html?id=${encodeURIComponent(
     (`${item.nom || ''} ${item.type || ''} ${item.SAT || ''}${accesVal ? ' – accès ' + accesVal : ''}`)
@@ -1085,14 +1098,14 @@ if (ref.startsWith("DU")) {
 
   ${item.description ? `<div style="margin-bottom:14px;">✍🏻 <strong>Information :</strong> ${item.description}</div>` : ""}
 
-  <a href="https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${item.latitude},${item.longitude};"
-     target="_blank"
-     style="display:flex;align-items:center;justify-content:center;gap:6px;
-            background:#10b981;color:#fff;padding:7px 12px;border-radius:8px;
-            text-decoration:none;width:100%;font-size:14px;font-weight:500;
-            margin:0 !important;">
-    🛣️ Voir sur Imajnet
-  </a>
+<a href="${getImajnetURL(item, item.latitude, item.longitude)}"
+   target="_blank"
+   style="display:flex;align-items:center;justify-content:center;gap:6px;
+          background:#10b981;color:#fff;padding:7px 12px;border-radius:8px;
+          text-decoration:none;width:100%;font-size:14px;font-weight:500;
+          margin:0 !important;">
+  🛣️ Voir sur Imajnet
+</a>
 
   <a href="index.html?id=${encodeURIComponent(
     [item.appareil, item.nom, item.type, item.SAT].filter(Boolean).join(" ").trim()
@@ -1502,7 +1515,7 @@ document.getElementById("btn-speed").addEventListener("click", function () {
     
 </script>
 <div id="legal-footer">
-  Nono Maps v1.11.1 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.11.2 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
