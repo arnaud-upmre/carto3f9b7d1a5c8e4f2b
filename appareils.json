@@ -5558,5 +5558,16 @@
     "longitude": 2.362686,
     "description": "TT avec grillage",
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.75216143047826,2.362696019422481;uid=a745d81d-8b44-4538-9110-7e60018831ee_2309;"
+  },
+  {
+    "nom": "Ailly sur Noye",
+    "type": "SSP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "IL1",
+    "latitude": 49.75571,
+    "longitude": 2.36479,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.75560783542727,2.3646752727472236;uid=a745d81d-8b44-4538-9110-7e60018831ee_2175;"
   }
 ]
