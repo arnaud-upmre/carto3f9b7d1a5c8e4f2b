@@ -5602,5 +5602,38 @@
     "longitude": 2.36479,
     "description": "",
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.75560783542727,2.3646752727472236;uid=a745d81d-8b44-4538-9110-7e60018831ee_2175;"
+  },
+  {
+    "nom": "Saint Just",
+    "type": "SSP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TSA",
+    "latitude": 49.51151,
+    "longitude": 2.43503,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.51167809795008,2.435199602072412;uid=10c6c0d1-94f0-4aa7-9cf8-e1b7d28e75e3_1820;"
+  },
+  {
+    "nom": "Saint Just",
+    "type": "SSP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "S/TSA",
+    "latitude": 49.51151,
+    "longitude": 2.43503,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.51167809795008,2.435199602072412;uid=10c6c0d1-94f0-4aa7-9cf8-e1b7d28e75e3_1820;"
+  },
+  {
+    "nom": "Saint Just",
+    "type": "SSP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "IL2",
+    "latitude": 49.51151,
+    "longitude": 2.43501,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.51167809795008,2.435199602072412;uid=10c6c0d1-94f0-4aa7-9cf8-e1b7d28e75e3_1820;"
   }
 ]
