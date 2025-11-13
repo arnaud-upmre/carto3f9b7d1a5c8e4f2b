@@ -1453,16 +1453,16 @@ if (isMobile()) {
   const btnCarte = document.getElementById("btn-carte");
   const btnLocaliser = document.getElementById("btn-localiser");
 
-  btnCarte.style.display = "inline-block";
-  btnLocaliser.style.display = "inline-block";
+  btnCarte.style.display = "block";
+  btnLocaliser.style.display = "block";
 
-  btnCarte.href = "map.html?z=19";
+  btnCarte.style.marginTop = "1rem";
+  btnLocaliser.style.marginTop = "0.6rem";
 
   const actions = document.getElementById("proximite-actions");
 
-  actions.appendChild(btnCarte);     
-  actions.appendChild(btnLocaliser); 
-
+  actions.appendChild(btnCarte);
+  actions.appendChild(btnLocaliser);
 } else {
   document.getElementById("btn-carte").style.display = "inline-block";
   document.getElementById("btn-localiser").style.display = "none";
