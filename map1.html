@@ -908,13 +908,6 @@ let content = `
 
 ${formatPortailDisplay(item.portail, item.secure)}
 
-<a href="${getImajnetURL(item, item.poste_latitude, item.poste_longitude)}"
-   target="_blank"
-   style="display:flex;align-items:center;justify-content:center;gap:6px;
-          background:#10b981;color:#fff;padding:7px 12px;border-radius:8px;
-          text-decoration:none;width:100%;font-size:14px;font-weight:500;margin-top:8px;">
-  🛣️ Voir sur Imajnet
-</a>
 
   <a href="index.html?id=${encodeURIComponent(
     (`${item.nom || ''} ${item.type || ''} ${item.SAT || ''}${accesVal ? ' – accès ' + accesVal : ''}`)
@@ -964,6 +957,14 @@ let content = `
   <div style="margin-bottom:10px;">
 ✍🏻 <strong>Information :</strong> ${ renderInformation(item.description) }
   </div>
+
+  <a href="${getImajnetURL(item, item.poste_latitude, item.poste_longitude)}"
+   target="_blank"
+   style="display:flex;align-items:center;justify-content:center;gap:6px;
+          background:#10b981;color:#fff;padding:7px 12px;border-radius:8px;
+          text-decoration:none;width:100%;font-size:14px;font-weight:500;margin-top:8px;">
+  🛣️ Voir sur Imajnet
+</a>
  
   <a href="index.html?id=${encodeURIComponent(
     (`${item.nom || ''} ${item.type || ''} ${item.SAT || ''}`)
