@@ -1450,17 +1450,20 @@ function isMobile() {
 }
 
 if (isMobile()) {
-
-  document.getElementById("btn-carte").style.display = "inline-block";
-  document.getElementById("btn-localiser").style.display = "inline-block";
-
   const btnCarte = document.getElementById("btn-carte");
   const btnLocaliser = document.getElementById("btn-localiser");
+
+  btnCarte.style.display = "inline-block";
+  btnLocaliser.style.display = "inline-block";
+
   btnCarte.href = "map.html?z=19";
-  btnCarte.after(btnLocaliser);
+
+  const actions = document.getElementById("proximite-actions");
+
+  actions.appendChild(btnCarte);     
+  actions.appendChild(btnLocaliser); 
 
 } else {
-
   document.getElementById("btn-carte").style.display = "inline-block";
   document.getElementById("btn-localiser").style.display = "none";
 }
