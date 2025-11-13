@@ -5513,6 +5513,39 @@
     "latitude": 49.75491,
     "longitude": 2.36433,
     "description": "",
-    "imajnet": ""
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.75481629859239,2.364220620455542;uid=a745d81d-8b44-4538-9110-7e60018831ee_2206;"
+  },
+  {
+    "nom": "Ailly sur Noye",
+    "type": "SSP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT4",
+    "latitude": 49.75491,
+    "longitude": 2.36433,
+    "description": "TT avec grillage",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.75481629859239,2.364220620455542;uid=a745d81d-8b44-4538-9110-7e60018831ee_2206;"
+  },
+  {
+    "nom": "Ailly sur Noye",
+    "type": "SSP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT2",
+    "latitude": 49.75491,
+    "longitude": 2.36433,
+    "description": "TT avec grillage",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.75481629859239,2.364220620455542;uid=a745d81d-8b44-4538-9110-7e60018831ee_2206;"
+  },
+  {
+    "nom": "Ailly sur Noye",
+    "type": "SSP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT3",
+    "latitude": 49.752355,
+    "longitude": 2.362686,
+    "description": "TT avec grillage",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.75216143047826,2.362696019422481;uid=a745d81d-8b44-4538-9110-7e60018831ee_2309;"
   }
 ]
