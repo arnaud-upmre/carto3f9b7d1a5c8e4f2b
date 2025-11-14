@@ -918,8 +918,8 @@ function showLieu(lieu) {
 
 if (lieu.special === true) {
 
-if (!new URLSearchParams(window.location.search).has("from")) {
-  incrementCounter();
+if (!window.BLOCK_COUNTER) {
+    incrementCounter();
 }
   
   const result = document.getElementById("result");
@@ -1152,6 +1152,7 @@ Promise.all([
   });
 
   const params = new URLSearchParams(window.location.search);
+  window.BLOCK_COUNTER = params.get("from") === "map";
 const idParam = decodeURIComponent(params.get("id") || "");
 
 if (idParam) {
@@ -1360,9 +1361,11 @@ if (rawQuery.length >= 3) {
     
 
 function showAppareil(app) {
-if (!new URLSearchParams(window.location.search).has("from")) {
-  incrementCounterAppareil();
+  
+if (!window.BLOCK_COUNTER) {
+    incrementCounterAppareil();
 }
+  
   const result = document.getElementById("result");
   const suggestionsEl = document.getElementById("suggestions");
 
