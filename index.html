@@ -914,14 +914,11 @@ function incrementCounterAppareil() {
 }
 
 function showLieu(lieu) {
-  if (window.BLOCK_COUNTER) return;
-    currentItem = lieu;
+  const shouldCount = !window.BLOCK_COUNTER;
+  currentItem = lieu;
 
 if (lieu.special === true) {
 
-if (!window.BLOCK_COUNTER) {
-    incrementCounter();
-}
   
   const result = document.getElementById("result");
   document.getElementById("suggestions").innerHTML = "";
@@ -976,8 +973,7 @@ html += `
   
   const result = document.getElementById("result");
   document.getElementById("suggestions").innerHTML = "";
-  result.style.display = "block";
-  incrementCounter();
+if (shouldCount) incrementCounter();
 
 const _latPoste = (lieu.poste_latitude ?? "").toString();
 const _lonPoste = (lieu.poste_longitude ?? "").toString();
@@ -1362,11 +1358,8 @@ if (rawQuery.length >= 3) {
     
 
 function showAppareil(app) {
-  if (window.BLOCK_COUNTER) return;
-  
-if (!window.BLOCK_COUNTER) {
-    incrementCounterAppareil();
-}
+  const shouldCount = !window.BLOCK_COUNTER;
+  if (shouldCount) incrementCounterAppareil();
   
   const result = document.getElementById("result");
   const suggestionsEl = document.getElementById("suggestions");
@@ -1419,12 +1412,19 @@ html += formatInformations(app.description);
     );
   }
 
-  if (postePrincipal) {
+if (postePrincipal) {
     const sauvegarde = html;
-    showLieu(postePrincipal); 
+
+    const oldBlock = window.BLOCK_COUNTER;
+    window.BLOCK_COUNTER = true;   
+
+    showLieu(postePrincipal);
+
+    window.BLOCK_COUNTER = oldBlock; 
+
     const fichePoste = document.getElementById("result").innerHTML;
     html = sauvegarde + "<hr class='separator' />" + fichePoste;
-  }
+}
 
   result.innerHTML = html;
   currentItem = app;
