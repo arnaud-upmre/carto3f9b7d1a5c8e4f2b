@@ -914,6 +914,7 @@ function incrementCounterAppareil() {
 }
 
 function showLieu(lieu) {
+  if (window.BLOCK_COUNTER) return;
     currentItem = lieu;
 
 if (lieu.special === true) {
@@ -1361,6 +1362,7 @@ if (rawQuery.length >= 3) {
     
 
 function showAppareil(app) {
+  if (window.BLOCK_COUNTER) return;
   
 if (!window.BLOCK_COUNTER) {
     incrementCounterAppareil();
