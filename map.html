@@ -454,7 +454,7 @@ const map = L.map('map', {
   maxZoom: 21,                 
   maxBounds: boundsFrance,     
   maxBoundsViscosity: 1.0      
-  }).setView(defaultCenter, (window.innerWidth < 768 ? defaultZoom - 1 : defaultZoom));
+  }).setView(defaultCenter, defaultZoom);
 
     const ormPane = map.createPane("orm");
 ormPane.style.zIndex = 350;
@@ -620,8 +620,6 @@ const lat = parseFloat(params.get("lat"));
 const lon = parseFloat(params.get("lon"));
 const zoom = parseInt(params.get("z")) || 19;
 
-    let autoPopup = true;
-    
   const planIGN = L.tileLayer(
   "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
   + "&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&STYLE=normal&FORMAT=image/png"
@@ -911,13 +909,11 @@ let content = `
 ${formatPortailDisplay(item.portail, item.secure)}
 
 
-<a href="index.html?id=${encodeURIComponent(
-  (`${item.nom || ''} ${item.type || ''} ${item.SAT || ''}${accesVal ? ' – accès ' + accesVal : ''}`)
-    .replace(/\s+/g, " ")
-    .trim()
-)}&from=map"
-
-  
+  <a href="index.html?id=${encodeURIComponent(
+    (`${item.nom || ''} ${item.type || ''} ${item.SAT || ''}${accesVal ? ' – accès ' + accesVal : ''}`)
+      .replace(/\s+/g, " ")
+      .trim()
+  )}"
      style="display:flex;align-items:center;justify-content:center;gap:6px;
             background:#007aff;color:#fff;padding:10px 14px;border-radius:8px;
             text-decoration:none;width:100%;font-size:15px;font-weight:500;">
@@ -931,11 +927,6 @@ const m = L.marker([item.latitude, item.longitude], {
   customId: cid,
   isAcces: true   
 }).bindPopup(content).addTo(accesLayer);
-
-m.on("popupopen", () => {
-  if (autoPopup) { autoPopup = false; return; }
-  incrementCounter();
-});
 
   allMarkers.push(m);
 }
@@ -975,12 +966,11 @@ let content = `
   🛣️ Voir sur Imajnet
 </a>
  
-<a href="index.html?id=${encodeURIComponent(
-  (`${item.nom || ''} ${item.type || ''} ${item.SAT || ''}`)
-    .replace(/\s+/g, " ")
-    .trim()
-)}&from=map"
-
+  <a href="index.html?id=${encodeURIComponent(
+    (`${item.nom || ''} ${item.type || ''} ${item.SAT || ''}`)
+      .replace(/\s+/g, " ")
+      .trim()
+  )}"
      style="display:flex;align-items:center;justify-content:center;gap:6px;
             background:#007aff;color:#fff;padding:10px 14px;border-radius:8px;
             text-decoration:none;width:100%;font-size:15px;font-weight:500;">
@@ -993,11 +983,6 @@ const m = L.marker([item.poste_latitude, item.poste_longitude], {
   icon: iconPoste,
   customId: cid
 }).bindPopup(content).addTo(postesLayer);
-
-m.on("popupopen", () => {
-  if (autoPopup) { autoPopup = false; return; }
-  incrementCounter();
-});
 
 allMarkers.push(m);
         }
@@ -1123,9 +1108,9 @@ if (ref.startsWith("DU")) {
   🛣️ Voir sur Imajnet
 </a>
 
-<a href="index.html?id=${encodeURIComponent(
-  [item.appareil, item.nom, item.type, item.SAT].filter(Boolean).join(" ").trim()
-)}&from=map"
+  <a href="index.html?id=${encodeURIComponent(
+    [item.appareil, item.nom, item.type, item.SAT].filter(Boolean).join(" ").trim()
+  )}"
      style="display:flex;align-items:center;justify-content:center;gap:6px;
             background:#007aff;color:#fff;padding:7px 12px;border-radius:8px;
             text-decoration:none;width:100%;font-size:14px;font-weight:500;
@@ -1143,11 +1128,6 @@ if (ref.startsWith("DU")) {
         icon: appareilIcon,
         customId: cid
       }).bindPopup(content);
-
-m.on("popupopen", () => {
-  if (autoPopup) { autoPopup = false; return; }
-  incrementCounterAppareil();
-});
 
       appareilsLayer.addLayer(m);
       allMarkers.push(m);
@@ -1385,17 +1365,6 @@ console.info("[Nono Maps] boot", {
 
 if (isNaN(lat) || isNaN(lon)) { console.warn("URL lat/lon invalides", {lat, lon}); }
 
-
-function incrementCounter() {
-  fetch("https://script.google.com/macros/s/AKfycbzUFaek89LYosR0FSw9gyxn2IZXlFlWXA_dIFIDwox-szE3DgH-l8IVbGfaoIgGK04h/exec?increment=true")
-    .catch(()=>{});
-}
-
-function incrementCounterAppareil() {
-  fetch("https://script.google.com/macros/s/AKfycbwJIlvcfNYREJn1oPiVAhQqHACXXar8ZbRl6aChwYw4TFSAaMTFEHTT5X2T7BKLJ3gsJw/exec?increment=true")
-    .catch(()=>{});
-}
-
 function renderInformation(value) {
   if (!value) {
     return `<span style="color:#777;font-style:italic;">Non renseigné</span>`;
@@ -1547,7 +1516,7 @@ document.getElementById("btn-speed").addEventListener("click", function () {
     
 </script>
 <div id="legal-footer">
-  Nono Maps v1.11.3 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.11.2 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
