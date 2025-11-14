@@ -1149,7 +1149,12 @@ Promise.all([
   });
 
   const params = new URLSearchParams(window.location.search);
-  window.BLOCK_COUNTER = params.get("from") === "map";
+const fromMap = params.get("from") === "map";
+window.BLOCK_COUNTER = fromMap;
+
+if (fromMap) {
+  setTimeout(() => { window.BLOCK_COUNTER = false; }, 100);
+}
 const idParam = decodeURIComponent(params.get("id") || "");
 
 if (idParam) {
