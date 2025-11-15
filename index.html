@@ -33,6 +33,19 @@
    
   <style id="eale-intro-styles">
 
+    #proximite-actions button,
+#proximite-actions a {
+  display: inline-block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+    @media (max-width: 600px) {
+  #btn-localiser {
+    margin-top: 1rem !important; 
+  }
+}
+
 :root { --eale-intro-bg:#fff; --eale-intro-fg:#222; }
 @media (prefers-color-scheme: dark){
   :root { --eale-intro-bg:#0b0b0b; --eale-intro-fg:#eee; }
@@ -562,6 +575,7 @@ li.best { background-color:#e6f0ff; font-weight:600; }
 <a id="btn-carte" class="btn-primary" href="map.html" style="display:none;">
   🗺️ Afficher la carte
 </a>
+  
 <div id="proximite" style="margin-top:1rem; font-size:14px;"></div>
 <div id="proximite-actions" style="text-align:center; margin:10px 0;">
   <button id="voir-plus" class="btn-primary" style="display:none;">➕ Voir plus</button>
@@ -1442,9 +1456,23 @@ function isMobile() {
   return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 }
 
-if (!isMobile()) {
-  document.getElementById("btn-localiser").style.display = "none";
+if (isMobile()) {
+  const btnCarte = document.getElementById("btn-carte");
+  const btnLocaliser = document.getElementById("btn-localiser");
+
+  btnCarte.style.display = "block";
+  btnLocaliser.style.display = "block";
+
+  btnCarte.style.marginTop = "1rem";
+  btnLocaliser.style.marginTop = "0.6rem";
+
+  const actions = document.getElementById("proximite-actions");
+
+  actions.appendChild(btnCarte);
+  actions.appendChild(btnLocaliser);
+} else {
   document.getElementById("btn-carte").style.display = "inline-block";
+  document.getElementById("btn-localiser").style.display = "none";
 }
 
 document.getElementById("btn-localiser").addEventListener("click", () => {
@@ -2089,7 +2117,7 @@ function formatInformations(val) {
 <div id="about-footer">
   <div class="footer-links">
     <a href="arnaud.html" class="pill-link">🔧 À propos</a>
-   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.11.2</a>
+   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.12</a>
   </div>
 </div>
 <script>
