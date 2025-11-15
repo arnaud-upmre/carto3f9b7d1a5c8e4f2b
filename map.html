@@ -456,6 +456,10 @@ const map = L.map('map', {
   maxBoundsViscosity: 1.0      
   }).setView(defaultCenter, defaultZoom);
 
+
+const compteurURL = "https://script.google.com/macros/s/AKfycbzJ8paIvGmt4Rmdx2tMxxeLRWzvLhh2xxQn7ajtwfgCZ3CFf07YvDQw91zaD-w4v_uk/exec";
+const compteurAppareilURL = "https://script.google.com/macros/s/AKfycbzJ8paIvGmt4Rmdx2tMxxeLRWzvLhh2xxQn7ajtwfgCZ3CFf07YvDQw91zaD-w4v_uk/exec";
+
     const ormPane = map.createPane("orm");
 ormPane.style.zIndex = 350;
  
@@ -926,8 +930,9 @@ const m = L.marker([item.latitude, item.longitude], {
   icon: iconAcces,
   customId: cid,
   isAcces: true   
-}).bindPopup(content).addTo(accesLayer);
-       m.on("click", () => incrementCounter());
+}).on("click", () => incrementCounter())
+  .bindPopup(content)
+  .addTo(accesLayer);
 
   allMarkers.push(m);
 }
@@ -983,8 +988,9 @@ let content = `
 const m = L.marker([item.poste_latitude, item.poste_longitude], {
   icon: iconPoste,
   customId: cid
-}).bindPopup(content).addTo(postesLayer);
-          m.on("click", () => incrementCounter());
+}).on("click", () => incrementCounter())
+  .bindPopup(content)
+  .addTo(postesLayer);
 
 allMarkers.push(m);
         }
@@ -1126,13 +1132,14 @@ if (ref.startsWith("DU")) {
         .filter(Boolean)
         .join(" ");
 
-      const m = L.marker([item.latitude, item.longitude], {
-        icon: appareilIcon,
-        customId: cid
-      }).bindPopup(content);
+const m = L.marker([item.latitude, item.longitude], {
+  icon: appareilIcon,
+  customId: cid
+}).on("click", () => incrementCounterAppareil())
+  .bindPopup(content);
 
-      appareilsLayer.addLayer(m);
-      m.on("click", () => incrementCounterAppareil());
+appareilsLayer.addLayer(m);
+      
       allMarkers.push(m);
       });
     _tryOpenFromURL();
@@ -1517,17 +1524,18 @@ document.getElementById("btn-speed").addEventListener("click", function () {
   showToast(" ⚠️ Vitesse affichée à titre indicatif. Se référer aux documents réglementaires internes pour les vitesses de ligne applicables.");
 });
 
-    // --- Counters ---
+
 function incrementCounter() {
-  gtag("event", "fiche_affichee", { value: 1 });
+  fetch(compteurURL + "?increment=true").catch(() => {});
 }
 
 function incrementCounterAppareil() {
-  gtag("event", "appareil_affiche", { value: 1 });
+  fetch(compteurAppareilURL + "?increment=true").catch(() => {});
 }
-  </script>
+    
+</script>
 <div id="legal-footer">
-  Nono Maps v1.12 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.11.2 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
