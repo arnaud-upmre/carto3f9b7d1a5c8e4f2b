@@ -581,6 +581,21 @@ li.best { background-color:#e6f0ff; font-weight:600; }
   <button id="voir-plus" class="btn-primary" style="display:none;">➕ Voir plus</button>
 </div>
   <script>
+
+
+window.addEventListener("unhandledrejection", (event) => {
+  console.error("[DEBUG] Unhandled Promise:", event.reason);
+});
+
+window.addEventListener("error", (event) => {
+  if (event.target && event.target.src) {
+    console.error("[DEBUG] Ressource KO:", event.target.src);
+  } else {
+    console.error("[DEBUG] Erreur:", event);
+  }
+}, true);
+
+    
 const jsonUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/postes.json";
 const appareilsUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/appareils.json";
 const compteurURL = "https://script.google.com/macros/s/AKfycbzUFaek89LYosR0FSw9gyxn2IZXlFlWXA_dIFIDwox-szE3DgH-l8IVbGfaoIgGK04h/exec";
