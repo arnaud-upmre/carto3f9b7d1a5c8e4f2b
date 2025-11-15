@@ -517,6 +517,7 @@ document.addEventListener("keydown", function(e) {
 });
     
 const allMarkers = [];
+    let ouvertureParClic = false;
 
 let _datasetsLoaded = 0;
 function _tryOpenFromURL() {
@@ -929,9 +930,8 @@ const m = L.marker([item.latitude, item.longitude], {
 
 m.bindPopup(content);
 
-m.on("click", (e) => {
-  if (!e.originalEvent) return;   
-  incrementCounter();
+m.on("click", () => {
+  ouvertureParClic = true;
 });
 
   allMarkers.push(m);
@@ -992,9 +992,8 @@ const m = L.marker([item.poste_latitude, item.poste_longitude], {
 
 m.bindPopup(content);
 
-m.on("click", (e) => {
-  if (!e.originalEvent) return;   
-  incrementCounter();
+m.on("click", () => {
+  ouvertureParClic = true;
 });
 
 allMarkers.push(m);
@@ -1144,9 +1143,8 @@ const m = L.marker([item.latitude, item.longitude], {
 
 m.bindPopup(content);
 
-m.on("click", (e) => {
-  if (!e.originalEvent) return;   
-  incrementCounterAppareil();
+m.on("click", () => {
+  ouvertureParClic = true;
 });
 
 appareilsLayer.addLayer(m);
@@ -1545,10 +1543,27 @@ document.getElementById("btn-speed").addEventListener("click", function () {
   btnSpeed.classList.add("active");
   showToast(" ⚠️ Vitesse affichée à titre indicatif. Se référer aux documents réglementaires internes pour les vitesses de ligne applicables.");
 });
+
+map.on("popupopen", (e) => {
+  if (!ouvertureParClic) return;
+
+  const marker = e.popup._source;
+  if (!marker) return;
+
+  if (marker.options.isAcces || marker.options.icon === iconPoste) {
+    incrementCounter();
+  } 
+
+  else {
+    incrementCounterAppareil();
+  }
+  ouvertureParClic = false;
+});
     
 </script>
+  
 <div id="legal-footer">
-  Nono Maps v1.11.2_Essai3 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.11.2_Essai | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
