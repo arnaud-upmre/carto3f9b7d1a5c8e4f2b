@@ -927,6 +927,7 @@ const m = L.marker([item.latitude, item.longitude], {
   customId: cid,
   isAcces: true   
 }).bindPopup(content).addTo(accesLayer);
+       m.on("click", () => incrementCounter());
 
   allMarkers.push(m);
 }
@@ -983,6 +984,7 @@ const m = L.marker([item.poste_latitude, item.poste_longitude], {
   icon: iconPoste,
   customId: cid
 }).bindPopup(content).addTo(postesLayer);
+          m.on("click", () => incrementCounter());
 
 allMarkers.push(m);
         }
@@ -1130,6 +1132,7 @@ if (ref.startsWith("DU")) {
       }).bindPopup(content);
 
       appareilsLayer.addLayer(m);
+      m.on("click", () => incrementCounterAppareil());
       allMarkers.push(m);
       });
     _tryOpenFromURL();
@@ -1514,30 +1517,17 @@ document.getElementById("btn-speed").addEventListener("click", function () {
   showToast(" ⚠️ Vitesse affichée à titre indicatif. Se référer aux documents réglementaires internes pour les vitesses de ligne applicables.");
 });
 
-    function incrementCounter() {
+    // --- Counters ---
+function incrementCounter() {
   gtag("event", "fiche_affichee", { value: 1 });
 }
 
 function incrementCounterAppareil() {
   gtag("event", "appareil_affiche", { value: 1 });
 }
-
-    map.on("popupopen", function (e) {
-  const marker = e.popup._source;
-  if (!marker) return;
-
-  if (marker.options.isAcces ||
-      marker.options.customId?.toUpperCase().includes("POSTE")) {
-    incrementCounter();
-    return;
-  }
-
-  incrementCounterAppareil();
-});
-    
-</script>
+  </script>
 <div id="legal-footer">
-  Nono Maps v1.11.2 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.12 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
