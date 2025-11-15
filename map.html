@@ -1377,6 +1377,16 @@ leftControls.addTo(map);
     document.getElementById("streetview-frame").src = ""; 
   };
 
+    function incrementCounter() {
+  fetch("https://script.google.com/macros/s/AKfycbzUFaek89LYosR0FSw9gyxn2IZXlFlWXA_dIFIDwox-szE3DgH-l8IVbGfaoIgGK04h/exec?increment=true")
+  .catch(() => {});
+}
+
+function incrementCounterAppareil() {
+  fetch("https://script.google.com/macros/s/AKfycbwJIlvcfNYREJn1oPiVAhQqHACXXar8ZbRl6aChwYw4TFSAaMTFEHTT5X2T7BKLJ3gsJw/exec?increment=true")
+  .catch(() => {});
+}
+
 console.info("[Nono Maps] boot", {
   leaflet: L.version,
   clusters: { postes: !!postesLayer, appareils: !!appareilsLayer, acces: !!accesLayer }
@@ -1535,7 +1545,7 @@ document.getElementById("btn-speed").addEventListener("click", function () {
     
 </script>
 <div id="legal-footer">
-  Nono Maps v1.11.2_Essai1 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.11.2_Essai2 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
