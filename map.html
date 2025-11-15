@@ -605,18 +605,23 @@ if (id.startsWith("DU")) {
 
     setTimeout(() => {
       document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
-        link.addEventListener("click", (ev) => {
-          ev.preventDefault();
-          const idx = +ev.currentTarget.dataset.idx;
-          const target = matches[idx];
-          const content = target.getPopup() ? target.getPopup().getContent() : "";
-          L.popup({ maxWidth: 240 })
-            .setLatLng(target.getLatLng())
-            .setContent(content)
-            .openOn(map);
-          map.panTo(target.getLatLng());
-        });
-      });
+link.addEventListener("click", (ev) => {
+  ev.preventDefault();
+  const idx = +ev.currentTarget.dataset.idx;
+  const target = matches[idx];
+
+  if (postesLayer.hasLayer(target)) incrementCounter();
+  else if (appareilsLayer.hasLayer(target)) incrementCounterAppareil();
+
+  const content = target.getPopup() ? target.getPopup().getContent() : "";
+  L.popup({ maxWidth: 240 })
+    .setLatLng(target.getLatLng())
+    .setContent(content)
+    .openOn(map);
+
+  map.panTo(target.getLatLng());
+});
+         });
     }, 0);
   } else {
 
@@ -804,21 +809,23 @@ accesLayer.on('clusterclick', function (e) {
       .openOn(map);
 
 setTimeout(() => {
-  document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
-    link.addEventListener("click", (ev) => {
-      ev.preventDefault();
-      const idx = +ev.currentTarget.dataset.idx;
-      const target = childMarkers[idx];
+document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
+  link.addEventListener("click", (ev) => {
+    ev.preventDefault();
+    const idx = +ev.currentTarget.dataset.idx;
+    const target = childMarkers[idx];
 
-      const content = target.getPopup() ? target.getPopup().getContent() : "";
-      L.popup({ maxWidth: 240 })
-        .setLatLng(target.getLatLng())
-        .setContent(content)
-        .openOn(map);
+    if (accesLayer.hasLayer(target)) incrementCounter();
 
-      map.panTo(target.getLatLng());
-    });
+    const content = target.getPopup() ? target.getPopup().getContent() : "";
+    L.popup({ maxWidth: 240 })
+      .setLatLng(target.getLatLng())
+      .setContent(content)
+      .openOn(map);
+
+    map.panTo(target.getLatLng());
   });
+});
 }, 0);
 
   } else {
