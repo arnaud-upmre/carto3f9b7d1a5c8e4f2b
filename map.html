@@ -929,8 +929,9 @@ const m = L.marker([item.latitude, item.longitude], {
 
 m.bindPopup(content);
 
-m.on("click", () => {
-  incrementCounter(); 
+m.on("click", (e) => {
+  if (!e.originalEvent) return;   
+  incrementCounter();
 });
 
   allMarkers.push(m);
@@ -991,8 +992,9 @@ const m = L.marker([item.poste_latitude, item.poste_longitude], {
 
 m.bindPopup(content);
 
-m.on("click", () => {
-  incrementCounter(); 
+m.on("click", (e) => {
+  if (!e.originalEvent) return;   
+  incrementCounter();
 });
 
 allMarkers.push(m);
@@ -1142,8 +1144,9 @@ const m = L.marker([item.latitude, item.longitude], {
 
 m.bindPopup(content);
 
-m.on("click", () => {
-  incrementCounterAppareil(); 
+m.on("click", (e) => {
+  if (!e.originalEvent) return;   
+  incrementCounterAppareil();
 });
 
 appareilsLayer.addLayer(m);
@@ -1545,7 +1548,7 @@ document.getElementById("btn-speed").addEventListener("click", function () {
     
 </script>
 <div id="legal-footer">
-  Nono Maps v1.11.2_Essai2 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.11.2_Essai3 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
