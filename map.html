@@ -439,6 +439,23 @@
   </div>
 </div>
   <script>
+
+
+window.addEventListener("unhandledrejection", (event) => {
+  console.error("[DEBUG] Unhandled Promise:", event.reason);
+});
+
+
+window.addEventListener("error", (event) => {
+  if (event.target && event.target.src) {
+    console.error("[DEBUG] Ressource KO:", event.target.src);
+  } else {
+    console.error("[DEBUG] Erreur:", event);
+  }
+}, true);
+
+
+    
 const defaultCenter = [50.3, 2.6];
 const defaultZoom = 9;      
 
