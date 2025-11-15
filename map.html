@@ -1182,6 +1182,7 @@ const pnClasses = {
 };
     
 appareilsLayer.on('clusterclick', function (e) {
+  if (!ouvertureParClic) return;
   const markers = e.layer.getAllChildMarkers();
   if (markers.length <= 1) return;
 
@@ -1566,7 +1567,7 @@ map.on("popupopen", (e) => {
 </script>
   
 <div id="legal-footer">
-  Nono Maps v1.11.2_Essai1 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.11.2_Essai2 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
