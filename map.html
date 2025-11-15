@@ -921,12 +921,17 @@ ${formatPortailDisplay(item.portail, item.secure)}
   </a>
 </div>
 `;
-
 const m = L.marker([item.latitude, item.longitude], {
   icon: iconAcces,
   customId: cid,
-  isAcces: true   
-}).bindPopup(content).addTo(accesLayer);
+  isAcces: true
+}).addTo(accesLayer);
+
+m.bindPopup(content);
+
+m.on("click", () => {
+  incrementCounter(); 
+});
 
   allMarkers.push(m);
 }
@@ -982,7 +987,13 @@ let content = `
 const m = L.marker([item.poste_latitude, item.poste_longitude], {
   icon: iconPoste,
   customId: cid
-}).bindPopup(content).addTo(postesLayer);
+}).addTo(postesLayer);
+
+m.bindPopup(content);
+
+m.on("click", () => {
+  incrementCounter(); 
+});
 
 allMarkers.push(m);
         }
@@ -1124,10 +1135,18 @@ if (ref.startsWith("DU")) {
         .filter(Boolean)
         .join(" ");
 
-      const m = L.marker([item.latitude, item.longitude], {
-        icon: appareilIcon,
-        customId: cid
-      }).bindPopup(content);
+const m = L.marker([item.latitude, item.longitude], {
+  icon: appareilIcon,
+  customId: cid
+});
+
+m.bindPopup(content);
+
+m.on("click", () => {
+  incrementCounterAppareil(); 
+});
+
+appareilsLayer.addLayer(m);
 
       appareilsLayer.addLayer(m);
       allMarkers.push(m);
