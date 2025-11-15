@@ -517,7 +517,6 @@ document.addEventListener("keydown", function(e) {
 });
     
 const allMarkers = [];
-    let ouvertureParClic = false;
 
 let _datasetsLoaded = 0;
 function _tryOpenFromURL() {
@@ -922,18 +921,12 @@ ${formatPortailDisplay(item.portail, item.secure)}
   </a>
 </div>
 `;
+
 const m = L.marker([item.latitude, item.longitude], {
   icon: iconAcces,
   customId: cid,
-  isAcces: true
-}).addTo(accesLayer);
-
-m.bindPopup(content);
-
-m.on("click", (e) => {
-  if (!e.originalEvent) return;  
-  ouvertureParClic = true;
-});
+  isAcces: true   
+}).bindPopup(content).addTo(accesLayer);
 
   allMarkers.push(m);
 }
@@ -989,15 +982,8 @@ let content = `
 const m = L.marker([item.poste_latitude, item.poste_longitude], {
   icon: iconPoste,
   customId: cid
-}).addTo(postesLayer);
+}).bindPopup(content).addTo(postesLayer);
 
-m.bindPopup(content);
-
-m.on("click", (e) => {
-  if (!e.originalEvent) return;  
-  ouvertureParClic = true;
-});
-          
 allMarkers.push(m);
         }
       }
@@ -1138,19 +1124,10 @@ if (ref.startsWith("DU")) {
         .filter(Boolean)
         .join(" ");
 
-const m = L.marker([item.latitude, item.longitude], {
-  icon: appareilIcon,
-  customId: cid
-});
-
-m.bindPopup(content);
-
-m.on("click", (e) => {
-  if (!e.originalEvent) return;  
-  ouvertureParClic = true;
-});
-
-appareilsLayer.addLayer(m);
+      const m = L.marker([item.latitude, item.longitude], {
+        icon: appareilIcon,
+        customId: cid
+      }).bindPopup(content);
 
       appareilsLayer.addLayer(m);
       allMarkers.push(m);
@@ -1182,7 +1159,6 @@ const pnClasses = {
 };
     
 appareilsLayer.on('clusterclick', function (e) {
-  if (!ouvertureParClic) return;
   const markers = e.layer.getAllChildMarkers();
   if (markers.length <= 1) return;
 
@@ -1382,16 +1358,6 @@ leftControls.addTo(map);
     document.getElementById("streetview-frame").src = ""; 
   };
 
-    function incrementCounter() {
-  fetch("https://script.google.com/macros/s/AKfycbzUFaek89LYosR0FSw9gyxn2IZXlFlWXA_dIFIDwox-szE3DgH-l8IVbGfaoIgGK04h/exec?increment=true")
-  .catch(() => {});
-}
-
-function incrementCounterAppareil() {
-  fetch("https://script.google.com/macros/s/AKfycbwJIlvcfNYREJn1oPiVAhQqHACXXar8ZbRl6aChwYw4TFSAaMTFEHTT5X2T7BKLJ3gsJw/exec?increment=true")
-  .catch(() => {});
-}
-
 console.info("[Nono Maps] boot", {
   leaflet: L.version,
   clusters: { postes: !!postesLayer, appareils: !!appareilsLayer, acces: !!accesLayer }
@@ -1548,26 +1514,30 @@ document.getElementById("btn-speed").addEventListener("click", function () {
   showToast(" ⚠️ Vitesse affichée à titre indicatif. Se référer aux documents réglementaires internes pour les vitesses de ligne applicables.");
 });
 
-map.on("popupopen", (e) => {
-  if (!ouvertureParClic) return;
+    function incrementCounter() {
+  gtag("event", "fiche_affichee", { value: 1 });
+}
 
+function incrementCounterAppareil() {
+  gtag("event", "appareil_affiche", { value: 1 });
+}
+
+    map.on("popupopen", function (e) {
   const marker = e.popup._source;
   if (!marker) return;
 
-  if (marker.options.isAcces || marker.options.icon === iconPoste) {
+  if (marker.options.isAcces ||
+      marker.options.customId?.toUpperCase().includes("POSTE")) {
     incrementCounter();
-  } 
-
-  else {
-    incrementCounterAppareil();
+    return;
   }
-  ouvertureParClic = false;
+
+  incrementCounterAppareil();
 });
     
 </script>
-  
 <div id="legal-footer">
-  Nono Maps v1.11.2_Essai2 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.11.2 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
