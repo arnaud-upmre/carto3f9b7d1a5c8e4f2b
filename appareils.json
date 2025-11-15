@@ -1308,7 +1308,7 @@
     "SAT": "",
     "accès": "",
     "appareil": "I5624",
-    "latitude": 50.519889,
+    "latitude": 50.51987,
     "longitude": 1.635743,
     "description": ""
   },
@@ -1318,7 +1318,7 @@
     "SAT": "",
     "accès": "",
     "appareil": "I5626",
-    "latitude": 50.5199052,
+    "latitude": 50.51989,
     "longitude": 1.6356773,
     "description": ""
   },
@@ -1378,8 +1378,8 @@
     "SAT": "",
     "accès": "",
     "appareil": "IMP",
-    "latitude": 50.5199286,
-    "longitude": 1.6355947,
+    "latitude": 50.51992,
+    "longitude": 1.63563,
     "description": "➡️ RAP"
   },
   {
@@ -1397,9 +1397,19 @@
     "type": "SSP",
     "SAT": "",
     "accès": "",
-    "appareil": "TRA + SRB3",
-    "latitude": 50.5199687,
-    "longitude": 1.6354553,
+    "appareil": "SRB3",
+    "latitude": 50.51995,
+    "longitude": 1.6355,
+    "description": ""
+  },
+  {
+    "nom": "Etaples",
+    "type": "SSP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TRA (SRB3)",
+    "latitude": 50.51998,
+    "longitude": 1.63538,
     "description": ""
   },
   {
@@ -1408,8 +1418,8 @@
     "SAT": "",
     "accès": "",
     "appareil": "TT5824 Dannes Camier Etaples V2",
-    "latitude": 50.5199009,
-    "longitude": 1.6357497,
+    "latitude": 50.51987,
+    "longitude": 1.635743,
     "description": ""
   },
   {
@@ -1418,8 +1428,8 @@
     "SAT": "",
     "accès": "",
     "appareil": "TT5625 Etaples Rang du Fliers V1",
-    "latitude": 50.5199517,
-    "longitude": 1.6355183,
+    "latitude": 50.51993,
+    "longitude": 1.63557,
     "description": ""
   },
   {
@@ -1428,8 +1438,8 @@
     "SAT": "",
     "accès": "",
     "appareil": "TT5826 Etaples Rang du Fliers V2",
-    "latitude": 50.5199185,
-    "longitude": 1.6356855,
+    "latitude": 50.51989,
+    "longitude": 1.6356773,
     "description": ""
   },
   {
