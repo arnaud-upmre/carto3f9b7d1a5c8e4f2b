@@ -930,7 +930,8 @@ const m = L.marker([item.latitude, item.longitude], {
 
 m.bindPopup(content);
 
-m.on("click", () => {
+m.on("click", (e) => {
+  if (!e.originalEvent) return;  
   ouvertureParClic = true;
 });
 
@@ -992,10 +993,11 @@ const m = L.marker([item.poste_latitude, item.poste_longitude], {
 
 m.bindPopup(content);
 
-m.on("click", () => {
+m.on("click", (e) => {
+  if (!e.originalEvent) return;  
   ouvertureParClic = true;
 });
-
+          
 allMarkers.push(m);
         }
       }
@@ -1143,7 +1145,8 @@ const m = L.marker([item.latitude, item.longitude], {
 
 m.bindPopup(content);
 
-m.on("click", () => {
+m.on("click", (e) => {
+  if (!e.originalEvent) return;  
   ouvertureParClic = true;
 });
 
@@ -1563,7 +1566,7 @@ map.on("popupopen", (e) => {
 </script>
   
 <div id="legal-footer">
-  Nono Maps v1.11.2_Essai | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.11.2_Essai1 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
