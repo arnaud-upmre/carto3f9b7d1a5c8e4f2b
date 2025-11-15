@@ -456,10 +456,6 @@ const map = L.map('map', {
   maxBoundsViscosity: 1.0      
   }).setView(defaultCenter, defaultZoom);
 
-
-const compteurURL = "https://script.google.com/macros/s/AKfycbzJ8paIvGmt4Rmdx2tMxxeLRWzvLhh2xxQn7ajtwfgCZ3CFf07YvDQw91zaD-w4v_uk/exec";
-const compteurAppareilURL = "https://script.google.com/macros/s/AKfycbzJ8paIvGmt4Rmdx2tMxxeLRWzvLhh2xxQn7ajtwfgCZ3CFf07YvDQw91zaD-w4v_uk/exec";
-
     const ormPane = map.createPane("orm");
 ormPane.style.zIndex = 350;
  
@@ -930,9 +926,7 @@ const m = L.marker([item.latitude, item.longitude], {
   icon: iconAcces,
   customId: cid,
   isAcces: true   
-}).on("click", () => incrementCounter())
-  .bindPopup(content)
-  .addTo(accesLayer);
+}).bindPopup(content).addTo(accesLayer);
 
   allMarkers.push(m);
 }
@@ -988,9 +982,7 @@ let content = `
 const m = L.marker([item.poste_latitude, item.poste_longitude], {
   icon: iconPoste,
   customId: cid
-}).on("click", () => incrementCounter())
-  .bindPopup(content)
-  .addTo(postesLayer);
+}).bindPopup(content).addTo(postesLayer);
 
 allMarkers.push(m);
         }
@@ -1132,14 +1124,12 @@ if (ref.startsWith("DU")) {
         .filter(Boolean)
         .join(" ");
 
-const m = L.marker([item.latitude, item.longitude], {
-  icon: appareilIcon,
-  customId: cid
-}).on("click", () => incrementCounterAppareil())
-  .bindPopup(content);
+      const m = L.marker([item.latitude, item.longitude], {
+        icon: appareilIcon,
+        customId: cid
+      }).bindPopup(content);
 
-appareilsLayer.addLayer(m);
-      
+      appareilsLayer.addLayer(m);
       allMarkers.push(m);
       });
     _tryOpenFromURL();
@@ -1523,15 +1513,6 @@ document.getElementById("btn-speed").addEventListener("click", function () {
   btnSpeed.classList.add("active");
   showToast(" ⚠️ Vitesse affichée à titre indicatif. Se référer aux documents réglementaires internes pour les vitesses de ligne applicables.");
 });
-
-
-function incrementCounter() {
-  fetch(compteurURL + "?increment=true").catch(() => {});
-}
-
-function incrementCounterAppareil() {
-  fetch(compteurAppareilURL + "?increment=true").catch(() => {});
-}
     
 </script>
 <div id="legal-footer">
