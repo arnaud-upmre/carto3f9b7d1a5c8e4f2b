@@ -1513,50 +1513,10 @@ document.getElementById("btn-speed").addEventListener("click", function () {
   btnSpeed.classList.add("active");
   showToast(" ⚠️ Vitesse affichée à titre indicatif. Se référer aux documents réglementaires internes pour les vitesses de ligne applicables.");
 });
-
-
-const compteurURL =
-  "https://script.google.com/macros/s/AKfycbzUFaek89LYosR0FSw9gyxn2IZXlFlWXA_dIFIDwox-szE3DgH-l8IVbGfaoIgGK04h/exec";
-    
-const compteurAppareilURL =
-  "https://script.google.com/macros/s/AKfycbwJIlvcfNYREJn1oPiVAhQqHACXXar8ZbRl6aChwYw4TFSAaMTFEHTT5X2T7BKLJ3gsJw/exec";
-
-function incrementCounter() {
-  fetch(compteurURL + "?increment=true", { mode: "no-cors" })
-    .catch(err => console.warn("Erreur compteur postes/accès :", err));
-}
-
-function incrementCounterAppareil() {
-  fetch(compteurAppareilURL + "?increment=true", { mode: "no-cors" })
-    .catch(err => console.warn("Erreur compteur appareils :", err));
-}
-
-map.on("popupopen", function (e) {
-  const marker = e.popup._source;
-  if (!marker) return;
-
-
-  if (postesLayer.hasLayer(marker)) {
-    incrementCounter();
-    return;
-  }
-
-
-  if (accesLayer.hasLayer(marker)) {
-    incrementCounter();
-    return;
-  }
-
-
-  if (appareilsLayer.hasLayer(marker)) {
-    incrementCounterAppareil();
-    return;
-  }
-});
     
 </script>
 <div id="legal-footer">
-  Nono Maps v1.12 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.11.2 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
