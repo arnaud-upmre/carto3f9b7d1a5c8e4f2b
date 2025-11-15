@@ -1447,9 +1447,19 @@
     "type": "SSP",
     "SAT": "SAT1",
     "accès": "",
-    "appareil": "TRA + SRB2",
+    "appareil": "TRA",
     "latitude": 50.5072073,
     "longitude": 1.6444281,
+    "description": ""
+  },
+  {
+    "nom": "Etaples",
+    "type": "SSP",
+    "SAT": "SAT1",
+    "accès": "",
+    "appareil": "SRB2 (TRA)",
+    "latitude": 50.50717,
+    "longitude": 1.64444,
     "description": ""
   },
   {
