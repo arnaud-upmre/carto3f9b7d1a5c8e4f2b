@@ -1006,8 +1006,9 @@ allMarkers.push(m);
       }
 
     });
-_tryOpenFromURL();
-  });
+    _tryOpenFromURL();
+  })
+  .catch(() => {});
     
 fetch("appareils.json")
   .then(r => r.json())
@@ -1150,7 +1151,8 @@ if (ref.startsWith("DU")) {
       allMarkers.push(m);
       });
     _tryOpenFromURL();
-  });
+  })
+  .catch(() => {});
 
 const pnClasses = {
   10: "PN public pour voitures sans barrières (protection assurée par un agent)",
@@ -1539,11 +1541,13 @@ const compteurAppareilURL =
   "https://script.google.com/macros/s/AKfycbwJIlvcfNYREJn1oPiVAhQqHACXXar8ZbRl6aChwYw4TFSAaMTFEHTT5X2T7BKLJ3gsJw/exec";
 
 function incrementCounter() {
-  fetch(compteurURL + "?increment=true", { mode: "no-cors" });
+  fetch(compteurURL + "?increment=true", { mode: "no-cors" })
+    .catch(() => {});
 }
 
 function incrementCounterAppareil() {
-  fetch(compteurAppareilURL + "?increment=true", { mode: "no-cors" });
+  fetch(compteurAppareilURL + "?increment=true", { mode: "no-cors" })
+    .catch(() => {});
 }
 
 map.on("popupopen", function (e) {
