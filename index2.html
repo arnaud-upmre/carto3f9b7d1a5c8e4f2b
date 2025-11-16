@@ -33,49 +33,108 @@
    
   <style id="eale-intro-styles">
 
-    /* ===== FAB MENU ===== */
+/* --- FAB CONTAINER --- */
 #fab-menu {
   position: fixed;
-  bottom: 20px;
-  right: 20px;
-  z-index: 999999999;
+  bottom: 22px;
+  right: 22px;
+  z-index: 999999999 !important;
 }
 
+/* --- MAIN BUTTON --- */
 #fab-main {
-  width: 58px;
-  height: 58px;
+  width: 65px;
+  height: 65px;
   border-radius: 50%;
   background: #1a73e8;
-  color: white;
   border: none;
-  font-size: 30px;
-  font-weight: bold;
   cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.25);
+  transition: transform .25s ease, background .25s ease;
+  position: relative;
 }
 
-#fab-items {
-  display: none;
+/* --- ANIMATION --- */
+#fab-main .bar {
   position: absolute;
-  bottom: 70px;
+  width: 26px;
+  height: 3.2px;
+  background: white;
+  border-radius: 2px;
+  transition: transform .32s ease, opacity .25s ease;
+}
+
+#fab-main .top {
+  transform: translateY(-8px);
+}
+
+#fab-main .middle {}
+
+#fab-main .bottom {
+  transform: translateY(8px);
+}
+
+#fab-main.open {
+  background: #d93025; /* rouge Google pour l'animation croix */
+}
+
+#fab-main.open .top {
+  transform: rotate(45deg);
+}
+
+#fab-main.open .middle {
+  opacity: 0;
+}
+
+#fab-main.open .bottom {
+  transform: rotate(-45deg);
+}
+
+/* --- MENU FLOATING BOX --- */
+#fab-items {
+  position: absolute;
+  bottom: 80px;
   right: 0;
-  background: rgba(255,255,255,0.95);
-  border-radius: 12px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
-  padding: 10px;
+  background: #ffffffcc;
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+
+  padding: 14px 18px;
+  border-radius: 18px;
+  box-shadow: 0 8px 26px rgba(0,0,0,0.18);
+
+  display: none;
+  flex-direction: column;
+  gap: 12px;
+
+  animation: fadeIn .25s ease;
 }
 
 #fab-items a {
-  display: block;
-  padding: 8px 12px;
+  font-size: 16px;
   text-decoration: none;
   color: #1a73e8;
-  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 #fab-items a:hover {
-  background: #e6f0ff;
+  opacity: 0.8;
 }
 
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+    
     #proximite-actions button,
 #proximite-actions a {
   display: inline-block;
@@ -2462,9 +2521,12 @@ function getDistance(lat1, lon1, lat2, lon2) {
 }
   
 </script>
-<!-- FAB MENU -->
 <div id="fab-menu">
-  <button id="fab-main">☰</button>
+  <button id="fab-main">
+    <span class="bar top"></span>
+    <span class="bar middle"></span>
+    <span class="bar bottom"></span>
+  </button>
 
   <div id="fab-items">
     <a href="arnaud.html">🔧 À propos</a>
