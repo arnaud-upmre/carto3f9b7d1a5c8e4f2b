@@ -33,87 +33,89 @@
    
   <style id="eale-intro-styles">
 
-/* --- ZONE FAB --- */
-#fab-menu {
+/* ---- ORB PRINCIPAL ---- */
+#orb-menu {
   position: fixed;
-  bottom: 22px;
-  right: 22px;
-  z-index: 999999999;
+  bottom: 24px;
+  right: 24px;
+  z-index: 999999;
 }
 
-/* --- BOUTON PRINCIPAL ULTRA MODERNE --- */
-#fab-main {
+/* Le bouton orb */
+#orb-btn {
   width: 52px;
   height: 52px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.35);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  border: none;
 
-  border: 1px solid rgba(255,255,255,0.45);
-  box-shadow: 0 4px 18px rgba(0,0,0,0.20);
+  background: rgba(255,255,255,0.18);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  box-shadow:
+    0 4px 18px rgba(0,0,0,0.25),
+    inset 0 0 1px rgba(255,255,255,0.6);
+
   cursor: pointer;
-
   transition: 0.25s ease;
   position: relative;
+  animation: orbFloat 4s ease-in-out infinite;
 }
 
-/* Burger fin, moderne */
-#fab-main span {
+/* halo autour de l’orb */
+#orb-btn::after {
+  content: "";
   position: absolute;
-  width: 22px;
-  height: 2.6px;
-  background: #1a73e8;
-  border-radius: 4px;
-  transition: 0.25s ease;
+  inset: -8px;
+  border-radius: 50%;
+  background: radial-gradient(
+    rgba(255,255,255,0.35),
+    rgba(255,255,255,0)
+  );
+  filter: blur(8px);
+  opacity: 0.6;
 }
 
-#fab-main span:nth-child(1) { transform: translateY(-7px); }
-#fab-main span:nth-child(2) { transform: translateY(0px); }
-#fab-main span:nth-child(3) { transform: translateY(7px); }
+/* légère animation flottante */
+@keyframes orbFloat {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+  100% { transform: translateY(0px); }
+}
 
-/* Animation en croix */
-#fab-main.open span:nth-child(1) { transform: rotate(45deg); }
-#fab-main.open span:nth-child(2) { opacity: 0; }
-#fab-main.open span:nth-child(3) { transform: rotate(-45deg); }
-
-/* --- MENU EN PILLS FLOTTANTES --- */
-#fab-items {
-  display: none;
+/* ---- BULLES MENU ---- */
+.orb-item {
   position: absolute;
-  right: 0;
-  bottom: 64px;
-
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-#fab-items a {
-  background: rgba(255,255,255,0.35);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-
-  padding: 6px 14px;
-  border-radius: 12px;
+  right: 60px;
+  padding: 7px 16px;
   font-size: 14px;
-  color: #1a73e8;
-  text-decoration: none;
 
-  border: 1px solid rgba(255,255,255,0.45);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  background: rgba(255,255,255,0.22);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 
-  transition: 0.2s ease;
+  border-radius: 24px;
+  border: 1px solid rgba(255,255,255,0.4);
+
+  box-shadow: 0 4px 18px rgba(0,0,0,0.15);
+
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(20px) translateY(0px);
+  transition: all 0.35s cubic-bezier(.25,.1,.25,1);
+
+  pointer-events: none;
 }
 
-#fab-items a:hover {
-  background: rgba(255,255,255,0.55);
-}
+#orb-about  { bottom: 95px; }
+#orb-version { bottom: 145px; }
 
+/* Quand activé */
+.orb-item.show {
+  opacity: 1;
+  transform: translateX(0px) translateY(0px);
+  pointer-events: auto;
+}
     
     
     #proximite-actions button,
@@ -2509,24 +2511,37 @@ function getDistance(lat1, lon1, lat2, lon2) {
     <span></span>
   </button>
 
-  <div id="fab-items">
-    <a href="arnaud.html">🔧 À propos</a>
-    <a href="version.html">📌 Version</a>
-  </div>
+<div id="orb-menu">
+  <button id="orb-btn"></button>
+  <div class="orb-item" id="orb-about">🔧 À propos</div>
+  <div class="orb-item" id="orb-version">📌 Version</div>
 </div>
 
-  <script>
-document.getElementById("fab-main").onclick = () => {
-  const menu = document.getElementById("fab-items");
-  menu.style.display = (menu.style.display === "block") ? "none" : "block";
-};
+<script>
+const orbBtn = document.getElementById("orb-btn");
+const items = document.querySelectorAll(".orb-item");
 
+let open = false;
+
+orbBtn.addEventListener("click", () => {
+  open = !open;
+  items.forEach(i => i.classList.toggle("show", open));
+});
+
+document.getElementById("orb-about").onclick = () =>
+  window.location.href = "arnaud.html";
+
+document.getElementById("orb-version").onclick = () =>
+  window.location.href = "version.html";
+
+/* fermeture si clic ailleurs */
 document.addEventListener("click", (e) => {
-  const fab = document.getElementById("fab-menu");
-  if (!fab.contains(e.target)) {
-    document.getElementById("fab-items").style.display = "none";
+  if (!document.getElementById("orb-menu").contains(e.target)) {
+    open = false;
+    items.forEach(i => i.classList.remove("show"));
   }
 });
 </script>
+  
 </body>
 </html>
