@@ -33,82 +33,49 @@
    
   <style id="eale-intro-styles">
 
-#orb-menu {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  z-index: 999999;
-}
 
-/* ORB — légèrement bleu pour être VISIBLE sur blanc */
-#orb-btn {
-  width: 54px;
-  height: 54px;
-  border-radius: 50%;
+    .about-footer {
+  width: 100%;
+  text-align: center;
+  padding: 12px 0;
+  font-size: 13px;
+  margin-top: 40px;
+
+  /* Plus de cadre, plus de fond */
+  background: none;
   border: none;
-
-  background: rgba(230,240,255,0.45);       /* BLEU très clair */
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-
-  box-shadow:
-    0 4px 22px rgba(0,0,0,0.18),
-    inset 0 0 2px rgba(255,255,255,0.8);
-
-  cursor: pointer;
-  position: relative;
 }
 
-/* icône minimaliste bleue (3 barres) */
-#orb-btn::before,
-#orb-btn::after,
-#orb-btn span {
-  content: "";
-  position: absolute;
-  width: 22px;
-  height: 2.4px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #1a73e8;   /* bleu Google */
-  border-radius: 4px;
-}
+.about-footer .footer-link {
+  display: inline-block;
+  margin: 0 8px;
+  padding: 6px 10px;
 
-#orb-btn::before { top: 19px; }
-#orb-btn span     { top: 26px; }
-#orb-btn::after  { top: 33px; }
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
 
-/* --- BULLES MENU — verre + BLEU très léger --- */
-.orb-item {
-  position: absolute;
-  right: 72px;
-  padding: 6px 14px;
-  font-size: 14px;
   color: #1a73e8;
-
-  background: rgba(240,245,255,0.65);
-  backdrop-filter: blur(16px);
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.6);
-
-  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
-
-  white-space: nowrap;
-  opacity: 0;
-  transform: translateX(10px);
-  transition: all 0.25s ease;
-  pointer-events: none;
+  border: 1px solid #1a73e8;
+  border-radius: 10px;
 }
 
-#orb-about   { bottom: 95px; }
-#orb-version { bottom: 140px; }
-
-.orb-item.show {
-  opacity: 1;
-  transform: translateX(0px);
-  pointer-events: auto;
+.about-footer .footer-link:hover {
+  background: #1a73e8;
+  color: #fff;
 }
-    
-    
+
+@media (prefers-color-scheme: dark) {
+  .about-footer .footer-link {
+    color: #90caf9;
+    border-color: #90caf9;
+  }
+  .about-footer .footer-link:hover {
+    background: #90caf9;
+    color: #121212;
+  }
+}
+
     #proximite-actions button,
 #proximite-actions a {
   display: inline-block;
@@ -573,7 +540,7 @@ li.best { background-color:#e6f0ff; font-weight:600; }
   font-size:15px;
 }
 .missing-box a{ color:#1a73e8; font-weight:600; }
-
+    
 #rss-phones {
     justify-content: flex-start !important;
 }
@@ -2186,7 +2153,10 @@ function formatInformations(val) {
 <div id="install-container" style="text-align:center; margin:10px 0;">
   <a id="installLink" href="#" style="display:none;">📲 Installer l’app</a>
 </div>
-
+<footer class="about-footer">
+  <a href="arnaud.html" class="footer-link">🔧 À propos</a>
+  <a href="version.html" class="footer-link version">📌 Nono Maps V1.12</a>
+</footer>
 <script>
 (function(){
   
@@ -2495,45 +2465,6 @@ function getDistance(lat1, lon1, lat2, lon2) {
 }
   
 </script>
-<div id="fab-menu">
-  <button id="fab-main">
-    <span></span>
-    <span></span>
-    <span></span>
-  </button>
 
-<div id="orb-menu">
-  <button id="orb-btn"></button>
-
-  <div class="orb-item" id="orb-about">🔧 À propos</div>
-  <div class="orb-item" id="orb-version">📌 Version</div>
-</div>
-
-<script>
-const orbBtn = document.getElementById("orb-btn");
-const items = document.querySelectorAll(".orb-item");
-
-let open = false;
-
-orbBtn.addEventListener("click", () => {
-  open = !open;
-  items.forEach(i => i.classList.toggle("show", open));
-});
-
-document.getElementById("orb-about").onclick = () =>
-  window.location.href = "arnaud.html";
-
-document.getElementById("orb-version").onclick = () =>
-  window.location.href = "version.html";
-
-/* fermeture si clic ailleurs */
-document.addEventListener("click", (e) => {
-  if (!document.getElementById("orb-menu").contains(e.target)) {
-    open = false;
-    items.forEach(i => i.classList.remove("show"));
-  }
-});
-</script>
-  
 </body>
 </html>
