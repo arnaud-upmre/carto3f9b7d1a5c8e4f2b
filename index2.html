@@ -2472,22 +2472,21 @@ function getDistance(lat1, lon1, lat2, lon2) {
     keyboard: false
   }).setView([50.7237, 2.5390], 13);   // Hazebrouck centre
 
-  const tilesClair = L.tileLayer(
-    "https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}.png",
-    { maxZoom: 20 }
-  );
+const tilesClair = L.tileLayer(
+  "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
+  { maxZoom: 19 }
+);
 
-  const tilesSombre = L.tileLayer(
-    "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}.png",
-    { maxZoom: 20 }
-  );
+const tilesSombre = L.tileLayer(
+  "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png",
+  { maxZoom: 19 }
+);
 
-  if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-    tilesSombre.addTo(fondMap);
-  } else {
-    tilesClair.addTo(fondMap);
-  }
-
+if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+  tilesSombre.addTo(fondMap);
+} else {
+  tilesClair.addTo(fondMap);
+}
   // Empêche le fond de se déplacer trop loin
   const boundsHDF = L.latLngBounds(
     [49.8, 1.3],   // Sud-Ouest
