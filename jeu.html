@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nono Maps – Mini‑Jeu GeoGuessr</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    body {
+      margin: 0;
+      background: #111;
+      color: #fff;
+      font-family: system-ui, sans-serif;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    #streetview {
+      height: 55vh;
+      width: 100%;
+      border-bottom: 3px solid #222;
+    }
+
+    #map {
+      height: 45vh;
+      width: 100%;
+    }
+
+    #scoreBox {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.55);
+      padding: 10px 20px;
+      border-radius: 12px;
+      font-size: 18px;
+      backdrop-filter: blur(8px);
+    }
+
+    #nextBtn {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #0a84ff;
+      color: white;
+      border: none;
+      padding: 12px 22px;
+      font-size: 18px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    #nextBtn:hover { background: #006bd6; }
+  </style>
+</head>
+<body>
+
+<div id="scoreBox">Clique sur la carte pour deviner l'emplacement</div>
+<div id="streetview"></div>
+<div id="map"></div>
+<button id="nextBtn" style="display:none;">Round suivant</button>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+// ------- CONFIG -------
+let data = [
+  { nom:"Test 1", lat:50.7501, lon:2.5332 },
+  { nom:"Test 2", lat:50.7232, lon:2.6221 }
+];
+// Remplacer plus tard par fetch("postes.json").then(...)
+
+let trueLat = 0;
+let trueLon = 0;
+let map;
+let guessMarker;
+let trueMarker;
+let roundActive = true;
+
+// ------- INIT STREET VIEW -------
+function loadStreetView(lat, lon) {
+  const streetDiv = document.getElementById("streetview");
+  streetDiv.innerHTML = `<iframe width="100%" height="100%" style="border:0" allowfullscreen loading="lazy"
+    src="https://www.google.com/maps?q=&layer=c&cbll=${lat},${lon}&cbp=11,0,0,0,0&output=svembed"></iframe>`;
+}
+
+// ------- INIT LEAFLET MAP -------
+function initMap() {
+  map = L.map('map').setView([50.7, 2.6], 10);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19
+  }).addTo(map);
+
+  map.on('click', onMapClick);
+}
+
+// ------- DISTANCE HAVERSINE -------
+function haversine(lat1, lon1, lat2, lon2) {
+  const R = 6371e3;
+  const toRad = x => x * Math.PI/180;
+  const dLat = toRad(lat2-lat1);
+  const dLon = toRad(lon2-lon1);
+  const a = Math.sin(dLat/2)**2 + Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLon/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+// ------- SCORE -------
+function scoreFromDistance(d) {
+  if (d < 50) return 5000;
+  if (d < 100) return 4000;
+  if (d < 500) return 2000;
+  if (d < 2000) return 500;
+  return 0;
+}
+
+// ------- HANDLE CLICK -------
+function onMapClick(e) {
+  if (!roundActive) return;
+  roundActive = false;
+
+  const guess = e.latlng;
+  const dist = haversine(guess.lat, guess.lng, trueLat, trueLon);
+  const pts = scoreFromDistance(dist);
+
+  if (guessMarker) map.removeLayer(guessMarker);
+  if (trueMarker) map.removeLayer(trueMarker);
+
+  guessMarker = L.marker([guess.lat, guess.lng], {title:"Votre choix"}).addTo(map);
+  trueMarker  = L.marker([trueLat, trueLon], {title:"Position réelle"}).addTo(map);
+
+  L.polyline([[guess.lat, guess.lng],[trueLat,trueLon]],{color:'red'}).addTo(map);
+
+  document.getElementById("scoreBox").textContent =
+    `Distance : ${Math.round(dist)} m — Score : ${pts} pts`;
+
+  document.getElementById("nextBtn").style.display = "block";
+}
+
+// ------- NEW ROUND -------
+function newRound() {
+  document.getElementById("nextBtn").style.display = "none";
+  document.getElementById("scoreBox").textContent = "Clique sur la carte pour deviner l'emplacement";
+  roundActive = true;
+
+  const choice = data[Math.floor(Math.random()*data.length)];
+  trueLat = choice.lat;
+  trueLon = choice.lon;
+
+  loadStreetView(trueLat, trueLon);
+  map.setView([50.7, 2.6], 10);
+}
+
+// ------- START -------
+initMap();
+newRound();
+
+document.getElementById("nextBtn").onclick = newRound;
+</script>
+</body>
+</html>
