@@ -33,6 +33,45 @@
    
   <style id="eale-intro-styles">
 
+    
+  .about-footer {
+  width: 100%;
+  text-align: center;
+  padding: 12px 0;
+  font-size: 13px;
+  margin-top: 40px;
+  background: none;
+  border: none;
+}
+
+  .about-footer .footer-link {
+  display: inline-block;
+  margin: 0 6px;
+  padding: 4px 8px;
+  font-size: 11.5px;
+  font-weight: 500;
+  text-decoration: none;
+  color: #1a73e8;
+  border: 1px solid #1a73e8;
+  border-radius: 8px;
+}
+
+.about-footer .footer-link:hover {
+  background: #1a73e8;
+  color: #fff;
+}
+
+@media (prefers-color-scheme: dark) {
+  .about-footer .footer-link {
+    color: #90caf9;
+    border-color: #90caf9;
+  }
+  .about-footer .footer-link:hover {
+    background: #90caf9;
+    color: #121212;
+  }
+}
+
     #proximite-actions button,
 #proximite-actions a {
   display: inline-block;
@@ -497,25 +536,7 @@ li.best { background-color:#e6f0ff; font-weight:600; }
   font-size:15px;
 }
 .missing-box a{ color:#1a73e8; font-weight:600; }
-
-#about-footer{
-  width:100%;
-  text-align:center;
-  padding:15px 0;
-  font-size:13px;
-  background:#121212;
-  border-top:1px solid #333;
-  margin-top:40px;
-}
-@media (prefers-color-scheme: light){
-  #about-footer{ background:#fff; color:#333; border-top:1px solid #ddd; }
-}
-@media (prefers-color-scheme: dark){
-  #about-footer{ background:#121212; color:#aaa; border-top:1px solid #333; }
-  .missing-box{ background-color:#16202c; border:1px solid #243447; }
-  .missing-box a{ color:#90caf9; }
-}
-
+    
 #rss-phones {
     justify-content: flex-start !important;
 }
@@ -2128,13 +2149,10 @@ function formatInformations(val) {
 <div id="install-container" style="text-align:center; margin:10px 0;">
   <a id="installLink" href="#" style="display:none;">📲 Installer l’app</a>
 </div>
-
-<div id="about-footer">
-  <div class="footer-links">
-    <a href="arnaud.html" class="pill-link">🔧 À propos</a>
-   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.12</a>
-  </div>
-</div>
+<footer class="about-footer">
+  <a href="arnaud.html" class="footer-link">🔧 À propos</a>
+  <a href="version.html" class="footer-link version">📌 Nono Maps V1.12</a>
+</footer>
 <script>
 (function(){
   
