@@ -33,6 +33,31 @@
    
   <style id="eale-intro-styles">
 
+    /* --- Fond clair (par défaut) --- */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url("https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/fond/1.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.35;    /* <<--- augmente ici */
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* --- Fond sombre (dark mode) --- */
+@media (prefers-color-scheme: dark) {
+  body::before {
+    background-image: url("https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/fond/2.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.40;  /* <<--- et ici */
+  }
+}
+
 
     .about-footer {
   width: 100%;
