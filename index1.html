@@ -34,27 +34,28 @@
   <style id="eale-intro-styles">
 
 
-    /* Champ de recherche technique */
-input[type="text"] {
-  background: rgba(255,255,255,0.6);
-  border: 1px solid rgba(26,115,232,0.35);
-  backdrop-filter: blur(8px);
-  border-radius: 12px;
+    /* --- Fond clair (par défaut) --- */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url("fond/1.png");
+  background-size: cover;          /* couvre tout l’écran */
+  background-position: center;     /* bien centré */
+  background-repeat: no-repeat;
+  opacity: 0.08;                   /* léger, discret */
+  pointer-events: none;
+  z-index: -1;
 }
 
-input[type="text"]:focus {
-  border-color:#1a73e8;
-  box-shadow: 0 0 0 3px rgba(26,115,232,0.25);
-}
-
-    @media (prefers-color-scheme: dark){
-  input[type="text"] {
-    background: rgba(20,20,20,0.55);
-    border: 1px solid rgba(144,202,249,0.25);
-  }
-
-  input[type="text"]:focus {
-    box-shadow: 0 0 0 3px rgba(144,202,249,0.25);
+/* --- Fond sombre (dark mode) --- */
+@media (prefers-color-scheme: dark) {
+  body::before {
+    background-image: url("fond/2.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.12;                 /* un peu plus visible en sombre */
   }
 }
 
