@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Nono Maps – Mini-Jeu GeoGuessr</title>
+  <title>Nono Maps – Mini-Jeu GeoGuessr (Mapillary)</title>
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
@@ -22,6 +22,11 @@
       height: 55vh;
       width: 100%;
       border-bottom: 3px solid #222;
+      background:#000;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#aaa;
     }
 
     #map {
@@ -53,28 +58,25 @@
       font-size: 18px;
       border-radius: 10px;
       cursor: pointer;
-      display: none;
+      display:none;
     }
 
     #nextBtn:hover { background: #006bd6; }
   </style>
-
-  <script async defer src="https://maps.googleapis.com/maps/api/js?callback=initStreetViewAPI"></script>
 </head>
 <body>
 
 <div id="scoreBox">Clique sur la carte pour deviner l'emplacement</div>
-<div id="streetview"></div>
+<div id="streetview">Chargement Mapillary…</div>
 <div id="map"></div>
 <button id="nextBtn">Round suivant</button>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/@mapillary/mjs/dist/mapillary.js"></script>
 <script>
-let gmapAPIReady = false;
-function initStreetViewAPI() {
-  gmapAPIReady = true;
-}
-
+// --------------------------
+//  Chargement postes.json
+// --------------------------
 let data = [];
 fetch("postes.json")
   .then(r => r.json())
@@ -83,6 +85,9 @@ fetch("postes.json")
     newRound();
   });
 
+// --------------------------
+//  Variables globales
+// --------------------------
 let trueLat = 0;
 let trueLon = 0;
 let map;
@@ -90,7 +95,11 @@ let guessMarker;
 let trueMarker;
 let poly;
 let roundActive = true;
+let viewer;
 
+// --------------------------
+//  INIT CARTE
+// --------------------------
 function initMap() {
   map = L.map('map').setView([50.7, 2.6], 8);
 
@@ -102,35 +111,39 @@ function initMap() {
 }
 initMap();
 
-function loadStreetView(lat, lon) {
+// --------------------------
+//  CHARGER IMAGE MAPILLARY
+// --------------------------
+async function loadMapillary(lat, lon) {
   const div = document.getElementById("streetview");
+  div.innerHTML = "Chargement Mapillary…";
 
-  if (!gmapAPIReady) {
-    div.innerHTML = "<div style='padding:20px;text-align:center;'>Chargement…</div>";
-    setTimeout(() => loadStreetView(lat, lon), 300);
+  const url = `https://graph.mapillary.com/images?fields=id&access_token=MLY|1795850130056096|4d1828732fdedb70b9cd27663e41fb35&closeto=${lon},${lat}`;
+
+  const res = await fetch(url);
+  const js = await res.json();
+
+  if (!js.data || js.data.length === 0) {
+    div.innerHTML = "Aucune image, nouveau point…";
+    setTimeout(newRound, 600);
     return;
   }
 
-  const sv = new google.maps.StreetViewService();
+  const imageId = js.data[0].id;
 
-  sv.getPanorama({ location: { lat, lng: lon }, radius: 100 }, (data, status) => {
-    if (status === "OK") {
-      new google.maps.StreetViewPanorama(div, {
-        pano: data.location.pano,
-        pov: { heading: 0, pitch: 0 },
-        zoom: 0,
-        disableDefaultUI: true,
-        showRoadLabels: false,
-        linksControl: true,
-        clickToGo: true
-      });
-    } else {
-      div.innerHTML = "<div style='display:flex;align-items:center;justify-content:center;height:100%;color:#bbb;'>Aucune image, nouveau point…</div>";
-      setTimeout(() => newRound(), 600);
-    }
+  div.innerHTML = "";
+  viewer = new mapillary.Viewer({
+    container: "streetview",
+    imageId: imageId,
+    accessToken: "MLY|1795850130056096|4d1828732fdedb70b9cd27663e41fb35",
+    component: { cover: false, attribution: false },
+    ui: false
   });
 }
 
+// --------------------------
+//  HAVERSINE
+// --------------------------
 function haversine(lat1, lon1, lat2, lon2) {
   const R = 6371e3;
   const toRad = x => x * Math.PI/180;
@@ -148,6 +161,9 @@ function scoreFromDistance(d) {
   return 0;
 }
 
+// --------------------------
+//  CLICK CARTE
+// --------------------------
 function onMapClick(e) {
   if (!roundActive) return;
   roundActive = false;
@@ -170,6 +186,9 @@ function onMapClick(e) {
   document.getElementById("nextBtn").style.display = "block";
 }
 
+// --------------------------
+//  NOUVEAU ROUND
+// --------------------------
 function newRound() {
   document.getElementById("nextBtn").style.display = "none";
   document.getElementById("scoreBox").textContent = "Clique sur la carte pour deviner l'emplacement";
@@ -179,7 +198,7 @@ function newRound() {
   trueLat = choice.lat;
   trueLon = choice.lon;
 
-  loadStreetView(trueLat, trueLon);
+  loadMapillary(trueLat, trueLon);
   map.setView([50.7, 2.6], 8);
 }
 
