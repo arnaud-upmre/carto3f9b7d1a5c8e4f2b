@@ -66,10 +66,18 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 // ------- CONFIG -------
-let data = [
-  { nom:"Test 1", lat:50.7501, lon:2.5332 },
-  { nom:"Test 2", lat:50.7232, lon:2.6221 }
-];
+// Chargement dynamique du vrai postes.json
+let data = [];
+fetch("postes.json")
+  .then(r => r.json())
+  .then(json => {
+    data = json.map(p => ({
+      nom: p.nom,
+      lat: p.latitude,
+      lon: p.longitude
+    }));
+    newRound();
+  });
 // Remplacer plus tard par fetch("postes.json").then(...)
 
 let trueLat = 0;
@@ -155,7 +163,7 @@ function newRound() {
 
 // ------- START -------
 initMap();
-newRound();
+// newRound sera lancé après chargement JSON
 
 document.getElementById("nextBtn").onclick = newRound;
 </script>
