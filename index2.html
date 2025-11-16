@@ -33,7 +33,7 @@
    
   <style id="eale-intro-styles">
 
-    /* --- Fond clair (par défaut) --- */
+
 body::before {
   content: "";
   position: fixed;
@@ -42,47 +42,42 @@ body::before {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  opacity: 0.35;    /* <<--- augmente ici */
+  opacity: 0.35;   
   pointer-events: none;
   z-index: -1;
 }
 
-/* --- Fond sombre (dark mode) --- */
 @media (prefers-color-scheme: dark) {
   body::before {
     background-image: url("https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/fond/2.png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    opacity: 0.40;  /* <<--- et ici */
+    opacity: 0.40; 
   }
 }
 
 
-    .about-footer {
+  .about-footer {
   width: 100%;
   text-align: center;
   padding: 12px 0;
   font-size: 13px;
   margin-top: 40px;
-
-  /* Plus de cadre, plus de fond */
   background: none;
   border: none;
 }
 
-.about-footer .footer-link {
+  .about-footer .footer-link {
   display: inline-block;
-  margin: 0 8px;
-  padding: 6px 10px;
-
-  text-decoration: none;
-  font-size: 13px;
+  margin: 0 6px;
+  padding: 4px 8px;
+  font-size: 11.5px;
   font-weight: 500;
-
+  text-decoration: none;
   color: #1a73e8;
   border: 1px solid #1a73e8;
-  border-radius: 10px;
+  border-radius: 8px;
 }
 
 .about-footer .footer-link:hover {
