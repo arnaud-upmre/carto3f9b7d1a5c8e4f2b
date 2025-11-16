@@ -33,107 +33,88 @@
    
   <style id="eale-intro-styles">
 
-/* --- FAB CONTAINER --- */
+/* --- ZONE FAB --- */
 #fab-menu {
   position: fixed;
   bottom: 22px;
   right: 22px;
-  z-index: 999999999 !important;
+  z-index: 999999999;
 }
 
-/* --- MAIN BUTTON --- */
+/* --- BOUTON PRINCIPAL ULTRA MODERNE --- */
 #fab-main {
-  width: 65px;
-  height: 65px;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
-  background: #1a73e8;
-  border: none;
-  cursor: pointer;
+  background: rgba(255,255,255,0.35);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  border: 1px solid rgba(255,255,255,0.45);
+  box-shadow: 0 4px 18px rgba(0,0,0,0.20);
 
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.25);
-  transition: transform .25s ease, background .25s ease;
+  transition: 0.25s ease;
   position: relative;
 }
 
-/* --- ANIMATION --- */
-#fab-main .bar {
+/* Burger fin, moderne */
+#fab-main span {
   position: absolute;
-  width: 26px;
-  height: 3.2px;
-  background: white;
-  border-radius: 2px;
-  transition: transform .32s ease, opacity .25s ease;
+  width: 22px;
+  height: 2.6px;
+  background: #1a73e8;
+  border-radius: 4px;
+  transition: 0.25s ease;
 }
 
-#fab-main .top {
-  transform: translateY(-8px);
-}
+#fab-main span:nth-child(1) { transform: translateY(-7px); }
+#fab-main span:nth-child(2) { transform: translateY(0px); }
+#fab-main span:nth-child(3) { transform: translateY(7px); }
 
-#fab-main .middle {}
+/* Animation en croix */
+#fab-main.open span:nth-child(1) { transform: rotate(45deg); }
+#fab-main.open span:nth-child(2) { opacity: 0; }
+#fab-main.open span:nth-child(3) { transform: rotate(-45deg); }
 
-#fab-main .bottom {
-  transform: translateY(8px);
-}
-
-#fab-main.open {
-  background: #d93025; /* rouge Google pour l'animation croix */
-}
-
-#fab-main.open .top {
-  transform: rotate(45deg);
-}
-
-#fab-main.open .middle {
-  opacity: 0;
-}
-
-#fab-main.open .bottom {
-  transform: rotate(-45deg);
-}
-
-/* --- MENU FLOATING BOX --- */
+/* --- MENU EN PILLS FLOTTANTES --- */
 #fab-items {
-  position: absolute;
-  bottom: 80px;
-  right: 0;
-  background: #ffffffcc;
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
-
-  padding: 14px 18px;
-  border-radius: 18px;
-  box-shadow: 0 8px 26px rgba(0,0,0,0.18);
-
   display: none;
-  flex-direction: column;
-  gap: 12px;
+  position: absolute;
+  right: 0;
+  bottom: 64px;
 
-  animation: fadeIn .25s ease;
-}
-
-#fab-items a {
-  font-size: 16px;
-  text-decoration: none;
-  color: #1a73e8;
-  font-weight: 600;
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 6px;
 }
 
+#fab-items a {
+  background: rgba(255,255,255,0.35);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  padding: 6px 14px;
+  border-radius: 12px;
+  font-size: 14px;
+  color: #1a73e8;
+  text-decoration: none;
+
+  border: 1px solid rgba(255,255,255,0.45);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+
+  transition: 0.2s ease;
+}
+
 #fab-items a:hover {
-  opacity: 0.8;
+  background: rgba(255,255,255,0.55);
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
+    
     
     #proximite-actions button,
 #proximite-actions a {
@@ -2523,9 +2504,9 @@ function getDistance(lat1, lon1, lat2, lon2) {
 </script>
 <div id="fab-menu">
   <button id="fab-main">
-    <span class="bar top"></span>
-    <span class="bar middle"></span>
-    <span class="bar bottom"></span>
+    <span></span>
+    <span></span>
+    <span></span>
   </button>
 
   <div id="fab-items">
