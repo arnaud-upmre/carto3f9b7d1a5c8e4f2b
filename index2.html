@@ -20,8 +20,6 @@
 <link rel="apple-touch-icon" sizes="192x192" href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/favicon/icon-192.png">
 <link rel="apple-touch-icon" sizes="512x512" href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/favicon/icon-512.png">
 <link rel="manifest" href="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/manifest.json">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0b0c0e">
@@ -35,20 +33,67 @@
    
   <style id="eale-intro-styles">
 
-
-    /* ======== CARTE EN FOND ========= */
-#bgmap {
+    /* --- FAB MENU --- */
+#fab-menu {
   position: fixed;
-  inset: 0;
-  z-index: -1;
-  opacity: 0.35;               /* transparence carte */
-  pointer-events: auto;        /* ← POUR LA NAVIGATION */
+  bottom: 20px;
+  right: 20px;
+  z-index: 99999;
 }
 
-/* Empêche la carte d’empêcher la saisie */
-main, #train-container, input, #result, #suggestions {
-  position: relative;
-  z-index: 10;
+/* Bouton principal */
+#fab-main {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  background: white;
+  color: #333;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background .2s;
+}
+#fab-main:hover { background:#f0f0f0; }
+
+@media (prefers-color-scheme: dark){
+  #fab-main{ background:#1e1e1e; color:#ddd; }
+  #fab-main:hover{ background:#333; }
+}
+
+/* Menu déroulant */
+#fab-items {
+  display: none;
+  position: absolute;
+  bottom: 58px;
+  right: 0;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 14px;
+  padding: 10px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.25);
+}
+
+#fab-items a {
+  display: block;
+  padding: 8px 14px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #1a73e8;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+#fab-items a:hover { background: #e6f0ff; }
+
+@media (prefers-color-scheme: dark){
+  #fab-items{ background:rgba(30,30,30,0.92); }
+  #fab-items a{ color:#90caf9; }
+  #fab-items a:hover{ background:#1e2b36; }
 }
 
     #proximite-actions button,
@@ -516,23 +561,6 @@ li.best { background-color:#e6f0ff; font-weight:600; }
 }
 .missing-box a{ color:#1a73e8; font-weight:600; }
 
-#about-footer{
-  width:100%;
-  text-align:center;
-  padding:15px 0;
-  font-size:13px;
-  background:#121212;
-  border-top:1px solid #333;
-  margin-top:40px;
-}
-@media (prefers-color-scheme: light){
-  #about-footer{ background:#fff; color:#333; border-top:1px solid #ddd; }
-}
-@media (prefers-color-scheme: dark){
-  #about-footer{ background:#121212; color:#aaa; border-top:1px solid #333; }
-  .missing-box{ background-color:#16202c; border:1px solid #243447; }
-  .missing-box a{ color:#90caf9; }
-}
 
 #rss-phones {
     justify-content: flex-start !important;
@@ -558,9 +586,7 @@ li.best { background-color:#e6f0ff; font-weight:600; }
   gtag('config', 'G-EMSCVXG71V');
 </script>
 </head>
-<body>
-  <div id="bgmap"></div>
-  <main>
+<body> <main>
   <div id="train-container">
  <img id="train"
      src="images/train1.gif"
@@ -2149,12 +2175,6 @@ function formatInformations(val) {
   <a id="installLink" href="#" style="display:none;">📲 Installer l’app</a>
 </div>
 
-<div id="about-footer">
-  <div class="footer-links">
-    <a href="arnaud.html" class="pill-link">🔧 À propos</a>
-   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.12</a>
-  </div>
-</div>
 <script>
 (function(){
   
@@ -2461,38 +2481,16 @@ function getDistance(lat1, lon1, lat2, lon2) {
   proximiteIndex += slice.length;
   btnVoirPlus.style.display = proximiteIndex < proximiteSorted.length ? "inline-block" : "none";
 }
-
-// ======== Carte en fond ========
-const bg = L.map('bgmap', {
-  zoomControl: false,
-  attributionControl: false,
-  dragging: true,
-  scrollWheelZoom: true,
-  doubleClickZoom: true,
-  touchZoom: true,
-  boxZoom: false,
-  keyboard: false,
-  minZoom: 7,
-  maxZoom: 18
-});
-
-// Centre HAUTS-DE-FRANCE
-bg.setView([50.5, 2.7], 9);
-
-// ---- Fond Stadia Smooth ----
-L.tileLayer("https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}.png", {
-  maxZoom: 20,
-  opacity: 1
-}).addTo(bg);
-
-
-// ----- Limite navigation aux Hauts-de-France -----
-const hdfBounds = L.latLngBounds(
-  [49.7, 1.4],   // Sud-Ouest
-  [51.2, 4.4]    // Nord-Est
-);
-bg.setMaxBounds(hdfBounds.pad(0.3));
+  
 </script>
+<!-- Menu flottant en bas à droite -->
+<div id="fab-menu">
+  <button id="fab-main">≡</button>
 
+  <div id="fab-items">
+    <a href="arnaud.html">🔧 À propos</a>
+    <a href="version.html">📌 Version</a>
+  </div>
+</div>
 </body>
 </html>
