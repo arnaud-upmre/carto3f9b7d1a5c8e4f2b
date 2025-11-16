@@ -33,6 +33,31 @@
    
   <style id="eale-intro-styles">
 
+
+    /* Champ de recherche technique */
+input[type="text"] {
+  background: rgba(255,255,255,0.6);
+  border: 1px solid rgba(26,115,232,0.35);
+  backdrop-filter: blur(8px);
+  border-radius: 12px;
+}
+
+input[type="text"]:focus {
+  border-color:#1a73e8;
+  box-shadow: 0 0 0 3px rgba(26,115,232,0.25);
+}
+
+    @media (prefers-color-scheme: dark){
+  input[type="text"] {
+    background: rgba(20,20,20,0.55);
+    border: 1px solid rgba(144,202,249,0.25);
+  }
+
+  input[type="text"]:focus {
+    box-shadow: 0 0 0 3px rgba(144,202,249,0.25);
+  }
+}
+
     #proximite-actions button,
 #proximite-actions a {
   display: inline-block;
@@ -581,6 +606,21 @@ li.best { background-color:#e6f0ff; font-weight:600; }
   <button id="voir-plus" class="btn-primary" style="display:none;">➕ Voir plus</button>
 </div>
   <script>
+
+
+window.addEventListener("unhandledrejection", (event) => {
+  console.error("[DEBUG] Unhandled Promise:", event.reason);
+});
+
+window.addEventListener("error", (event) => {
+  if (event.target && event.target.src) {
+    console.error("[DEBUG] Ressource KO:", event.target.src);
+  } else {
+    console.error("[DEBUG] Erreur:", event);
+  }
+}, true);
+
+    
 const jsonUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/postes.json";
 const appareilsUrl = "https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/appareils.json";
 const compteurURL = "https://script.google.com/macros/s/AKfycbzUFaek89LYosR0FSw9gyxn2IZXlFlWXA_dIFIDwox-szE3DgH-l8IVbGfaoIgGK04h/exec";
@@ -2117,7 +2157,7 @@ function formatInformations(val) {
 <div id="about-footer">
   <div class="footer-links">
     <a href="arnaud.html" class="pill-link">🔧 À propos</a>
-   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.11.3</a>
+   <a href="version.html" class="pill-link version-pill">📌 Nono Maps V1.12</a>
   </div>
 </div>
 <script>
