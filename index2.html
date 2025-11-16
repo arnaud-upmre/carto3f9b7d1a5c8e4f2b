@@ -33,7 +33,6 @@
    
   <style id="eale-intro-styles">
 
-/* ---- ORB PRINCIPAL ---- */
 #orb-menu {
   position: fixed;
   bottom: 24px;
@@ -41,79 +40,71 @@
   z-index: 999999;
 }
 
-/* Le bouton orb */
+/* ORB — légèrement bleu pour être VISIBLE sur blanc */
 #orb-btn {
-  width: 52px;
-  height: 52px;
+  width: 54px;
+  height: 54px;
   border-radius: 50%;
   border: none;
 
-  background: rgba(255,255,255,0.18);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  background: rgba(230,240,255,0.45);       /* BLEU très clair */
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 
   box-shadow:
-    0 4px 18px rgba(0,0,0,0.25),
-    inset 0 0 1px rgba(255,255,255,0.6);
+    0 4px 22px rgba(0,0,0,0.18),
+    inset 0 0 2px rgba(255,255,255,0.8);
 
   cursor: pointer;
-  transition: 0.25s ease;
   position: relative;
-  animation: orbFloat 4s ease-in-out infinite;
 }
 
-/* halo autour de l’orb */
-#orb-btn::after {
+/* icône minimaliste bleue (3 barres) */
+#orb-btn::before,
+#orb-btn::after,
+#orb-btn span {
   content: "";
   position: absolute;
-  inset: -8px;
-  border-radius: 50%;
-  background: radial-gradient(
-    rgba(255,255,255,0.35),
-    rgba(255,255,255,0)
-  );
-  filter: blur(8px);
-  opacity: 0.6;
+  width: 22px;
+  height: 2.4px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1a73e8;   /* bleu Google */
+  border-radius: 4px;
 }
 
-/* légère animation flottante */
-@keyframes orbFloat {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-6px); }
-  100% { transform: translateY(0px); }
-}
+#orb-btn::before { top: 19px; }
+#orb-btn span     { top: 26px; }
+#orb-btn::after  { top: 33px; }
 
-/* ---- BULLES MENU ---- */
+/* --- BULLES MENU — verre + BLEU très léger --- */
 .orb-item {
   position: absolute;
-  right: 60px;
-  padding: 7px 16px;
+  right: 72px;
+  padding: 6px 14px;
   font-size: 14px;
+  color: #1a73e8;
 
-  background: rgba(255,255,255,0.22);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgba(240,245,255,0.65);
+  backdrop-filter: blur(16px);
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.6);
 
-  border-radius: 24px;
-  border: 1px solid rgba(255,255,255,0.4);
-
-  box-shadow: 0 4px 18px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
 
   white-space: nowrap;
   opacity: 0;
-  transform: translateX(20px) translateY(0px);
-  transition: all 0.35s cubic-bezier(.25,.1,.25,1);
-
+  transform: translateX(10px);
+  transition: all 0.25s ease;
   pointer-events: none;
 }
 
-#orb-about  { bottom: 95px; }
-#orb-version { bottom: 145px; }
+#orb-about   { bottom: 95px; }
+#orb-version { bottom: 140px; }
 
-/* Quand activé */
 .orb-item.show {
   opacity: 1;
-  transform: translateX(0px) translateY(0px);
+  transform: translateX(0px);
   pointer-events: auto;
 }
     
@@ -2513,6 +2504,7 @@ function getDistance(lat1, lon1, lat2, lon2) {
 
 <div id="orb-menu">
   <button id="orb-btn"></button>
+
   <div class="orb-item" id="orb-about">🔧 À propos</div>
   <div class="orb-item" id="orb-version">📌 Version</div>
 </div>
