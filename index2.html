@@ -33,24 +33,28 @@
    
   <style id="eale-intro-styles">
 
-    /* ===== FAB BUTTON ===== */
+/* === FIX GLOBAL POUR LE FAB === */
 #fab-menu {
-  position: fixed;
-  bottom: 18px;
-  right: 18px;
-  z-index: 999999;
+  position: fixed !important;
+  bottom: 20px !important;
+  right: 20px !important;
+  z-index: 999999 !important;
 }
 
 #fab-main {
-  width: 54px;
-  height: 54px;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
   border: none;
-  font-size: 26px;
-  cursor: pointer;
   background: #1a73e8;
-  color: white;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+  color: #fff;
+  font-size: 26px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #fab-items {
@@ -2480,21 +2484,20 @@ function getDistance(lat1, lon1, lat2, lon2) {
 <div id="fab-menu">
   <button id="fab-main">☰</button>
 
-  <div id="fab-items">
+  <div id="fab-items" style="display:none;">
     <a href="arnaud.html">🔧 À propos</a>
     <a href="version.html">📌 Version</a>
   </div>
 </div>
 
-  <script>
+<script>
 document.getElementById("fab-main").onclick = () => {
   const menu = document.getElementById("fab-items");
   menu.style.display = (menu.style.display === "block") ? "none" : "block";
 };
 
 document.addEventListener("click", (e) => {
-  const fab = document.getElementById("fab-menu");
-  if (!fab.contains(e.target)) {
+  if (!document.getElementById("fab-menu").contains(e.target)) {
     document.getElementById("fab-items").style.display = "none";
   }
 });
