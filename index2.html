@@ -33,67 +33,50 @@
    
   <style id="eale-intro-styles">
 
-/* === FIX GLOBAL POUR LE FAB === */
 #fab-menu {
-  position: fixed !important;
-  bottom: 20px !important;
-  right: 20px !important;
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
   z-index: 999999 !important;
 }
 
 #fab-main {
-  width: 56px;
-  height: 56px;
+  width: 58px;
+  height: 58px;
   border-radius: 50%;
-  border: none;
   background: #1a73e8;
-  color: #fff;
+  color: white;
+  border: none;
   font-size: 26px;
-  font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
 }
 
 #fab-items {
-  display: none;
   position: absolute;
-  bottom: 64px;
+  bottom: 70px;
   right: 0;
-  background: rgba(255,255,255,0.95);
-  backdrop-filter: blur(10px);
-  border-radius: 14px;
-  padding: 10px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  display: none;
+  padding: 8px 0;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
 }
 
 #fab-items a {
   display: block;
-  padding: 8px 10px;
-  font-size: 14px;
+  padding: 10px 16px;
   color: #1a73e8;
   text-decoration: none;
-  border-radius: 8px;
+  font-size: 15px;
 }
 
 #fab-items a:hover {
-  background: #1a73e8;
-  color: #fff;
-}
-
-@media (prefers-color-scheme: dark) {
-  #fab-items {
-    background: rgba(30,30,30,0.95);
-  }
-  #fab-items a {
-    color: #90caf9;
-  }
-  #fab-items a:hover {
-    background: #90caf9;
-    color: #121212;
-  }
+  background: #e8f0fe;
 }
 
     #proximite-actions button,
@@ -2483,8 +2466,7 @@ function getDistance(lat1, lon1, lat2, lon2) {
 
 <div id="fab-menu">
   <button id="fab-main">☰</button>
-
-  <div id="fab-items" style="display:none;">
+  <div id="fab-items">
     <a href="arnaud.html">🔧 À propos</a>
     <a href="version.html">📌 Version</a>
   </div>
@@ -2492,8 +2474,8 @@ function getDistance(lat1, lon1, lat2, lon2) {
 
 <script>
 document.getElementById("fab-main").onclick = () => {
-  const menu = document.getElementById("fab-items");
-  menu.style.display = (menu.style.display === "block") ? "none" : "block";
+  const m = document.getElementById("fab-items");
+  m.style.display = m.style.display === "block" ? "none" : "block";
 };
 
 document.addEventListener("click", (e) => {
