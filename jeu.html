@@ -3,8 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Nono Maps – Mini‑Jeu GeoGuessr</title>
+  <title>Nono Maps – Mini-Jeu GeoGuessr</title>
+
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
   <style>
     body {
       margin: 0;
@@ -51,52 +53,46 @@
       font-size: 18px;
       border-radius: 10px;
       cursor: pointer;
+      display: none;
     }
 
     #nextBtn:hover { background: #006bd6; }
   </style>
+
+  <script async defer src="https://maps.googleapis.com/maps/api/js?callback=initStreetViewAPI"></script>
 </head>
 <body>
 
 <div id="scoreBox">Clique sur la carte pour deviner l'emplacement</div>
 <div id="streetview"></div>
 <div id="map"></div>
-<button id="nextBtn" style="display:none;">Round suivant</button>
+<button id="nextBtn">Round suivant</button>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-// ------- CONFIG -------
-// Chargement dynamique du vrai postes.json
+let gmapAPIReady = false;
+function initStreetViewAPI() {
+  gmapAPIReady = true;
+}
+
 let data = [];
 fetch("postes.json")
   .then(r => r.json())
   .then(json => {
-    data = json.map(p => ({
-      nom: p.nom,
-      lat: p.latitude,
-      lon: p.longitude
-    }));
+    data = json.map(p => ({ nom: p.nom, lat: p.latitude, lon: p.longitude }));
     newRound();
   });
-// Remplacer plus tard par fetch("postes.json").then(...)
 
 let trueLat = 0;
 let trueLon = 0;
 let map;
 let guessMarker;
 let trueMarker;
+let poly;
 let roundActive = true;
 
-// ------- INIT STREET VIEW -------
-function loadStreetView(lat, lon) {
-  const streetDiv = document.getElementById("streetview");
-  streetDiv.innerHTML = `<iframe width="100%" height="100%" style="border:0" allowfullscreen loading="lazy"
-    src="https://www.google.com/maps?q=&layer=c&cbll=${lat},${lon}&cbp=11,0,0,0,0&output=svembed"></iframe>`;
-}
-
-// ------- INIT LEAFLET MAP -------
 function initMap() {
-  map = L.map('map').setView([50.7, 2.6], 10);
+  map = L.map('map').setView([50.7, 2.6], 8);
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19
@@ -104,8 +100,37 @@ function initMap() {
 
   map.on('click', onMapClick);
 }
+initMap();
 
-// ------- DISTANCE HAVERSINE -------
+function loadStreetView(lat, lon) {
+  const div = document.getElementById("streetview");
+
+  if (!gmapAPIReady) {
+    div.innerHTML = "<div style='padding:20px;text-align:center;'>Chargement…</div>";
+    setTimeout(() => loadStreetView(lat, lon), 300);
+    return;
+  }
+
+  const sv = new google.maps.StreetViewService();
+
+  sv.getPanorama({ location: { lat, lng: lon }, radius: 100 }, (data, status) => {
+    if (status === "OK") {
+      new google.maps.StreetViewPanorama(div, {
+        pano: data.location.pano,
+        pov: { heading: 0, pitch: 0 },
+        zoom: 0,
+        disableDefaultUI: true,
+        showRoadLabels: false,
+        linksControl: true,
+        clickToGo: true
+      });
+    } else {
+      div.innerHTML = "<div style='display:flex;align-items:center;justify-content:center;height:100%;color:#bbb;'>Aucune image, nouveau point…</div>";
+      setTimeout(() => newRound(), 600);
+    }
+  });
+}
+
 function haversine(lat1, lon1, lat2, lon2) {
   const R = 6371e3;
   const toRad = x => x * Math.PI/180;
@@ -115,7 +140,6 @@ function haversine(lat1, lon1, lat2, lon2) {
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 }
 
-// ------- SCORE -------
 function scoreFromDistance(d) {
   if (d < 50) return 5000;
   if (d < 100) return 4000;
@@ -124,7 +148,6 @@ function scoreFromDistance(d) {
   return 0;
 }
 
-// ------- HANDLE CLICK -------
 function onMapClick(e) {
   if (!roundActive) return;
   roundActive = false;
@@ -135,11 +158,11 @@ function onMapClick(e) {
 
   if (guessMarker) map.removeLayer(guessMarker);
   if (trueMarker) map.removeLayer(trueMarker);
+  if (poly) map.removeLayer(poly);
 
-  guessMarker = L.marker([guess.lat, guess.lng], {title:"Votre choix"}).addTo(map);
-  trueMarker  = L.marker([trueLat, trueLon], {title:"Position réelle"}).addTo(map);
-
-  L.polyline([[guess.lat, guess.lng],[trueLat,trueLon]],{color:'red'}).addTo(map);
+  guessMarker = L.marker([guess.lat, guess.lng]).addTo(map);
+  trueMarker  = L.marker([trueLat, trueLon]).addTo(map);
+  poly = L.polyline([[guess.lat, guess.lng],[trueLat,trueLon]],{color:'red'}).addTo(map);
 
   document.getElementById("scoreBox").textContent =
     `Distance : ${Math.round(dist)} m — Score : ${pts} pts`;
@@ -147,7 +170,6 @@ function onMapClick(e) {
   document.getElementById("nextBtn").style.display = "block";
 }
 
-// ------- NEW ROUND -------
 function newRound() {
   document.getElementById("nextBtn").style.display = "none";
   document.getElementById("scoreBox").textContent = "Clique sur la carte pour deviner l'emplacement";
@@ -158,12 +180,8 @@ function newRound() {
   trueLon = choice.lon;
 
   loadStreetView(trueLat, trueLon);
-  map.setView([50.7, 2.6], 10);
+  map.setView([50.7, 2.6], 8);
 }
-
-// ------- START -------
-initMap();
-// newRound sera lancé après chargement JSON
 
 document.getElementById("nextBtn").onclick = newRound;
 </script>
