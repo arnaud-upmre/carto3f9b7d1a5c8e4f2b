@@ -30,34 +30,23 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<style>
+  #fond-carte {
+    position: fixed;
+    inset: 0;
+    z-index: -1;       /* derrière TOUT ton contenu */
+  }
+  #fond-carte .leaflet-container {
+    width: 100%;
+    height: 100%;
+    background: none !important;
+  }
+</style>
    
   <style id="eale-intro-styles">
-
-    /* --- Fond de carte dynamique ultra léger (Stadia Maps) --- */
-body {
-  background-color: #fff;
-  background-image: url("https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}.png");
-  background-size: 512px;           /* taille tuile visible */
-  background-repeat: repeat;
-  opacity: 1;
-}
-
-/* Mode sombre : fond de carte dark */
-@media (prefers-color-scheme: dark) {
-  body {
-    background-color: #121212;
-    background-image: url("https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}.png");
-  }
-}
-
-    @keyframes mapScroll {
-  0% { background-position: 0 0; }
-  100% { background-position: 10000px 2000px; }
-}
-
-body {
-  animation: mapScroll 180s linear infinite;
-}
 
     #proximite-actions button,
 #proximite-actions a {
@@ -566,7 +555,9 @@ li.best { background-color:#e6f0ff; font-weight:600; }
   gtag('config', 'G-EMSCVXG71V');
 </script>
 </head>
-<body> <main>
+<body> 
+  <div id="fond-carte"></div>
+  <main>
   <div id="train-container">
  <img id="train"
      src="images/train1.gif"
@@ -2468,6 +2459,43 @@ function getDistance(lat1, lon1, lat2, lon2) {
   btnVoirPlus.style.display = proximiteIndex < proximiteSorted.length ? "inline-block" : "none";
 }
   
+</script>
+
+  <script>
+  // Carte dynamique en fond
+  const fondMap = L.map('fond-carte', {
+    zoomControl: false,
+    attributionControl: false,
+    dragging: true,
+    scrollWheelZoom: true,
+    tap: false,
+    keyboard: false
+  }).setView([50.7237, 2.5390], 13);   // Hazebrouck centre
+
+  const tilesClair = L.tileLayer(
+    "https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}.png",
+    { maxZoom: 20 }
+  );
+
+  const tilesSombre = L.tileLayer(
+    "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}.png",
+    { maxZoom: 20 }
+  );
+
+  if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+    tilesSombre.addTo(fondMap);
+  } else {
+    tilesClair.addTo(fondMap);
+  }
+
+  // Empêche le fond de se déplacer trop loin
+  const boundsHDF = L.latLngBounds(
+    [49.8, 1.3],   // Sud-Ouest
+    [51.2, 4.3]    // Nord-Est
+  );
+
+  fondMap.setMaxBounds(boundsHDF);
+  fondMap.setMinZoom(10);
 </script>
 
 </body>
