@@ -33,50 +33,37 @@
    
   <style id="eale-intro-styles">
 
+/* ===== RÉPARATION FINALE FAB ===== */
 #fab-menu {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  z-index: 999999 !important;
+  position: fixed !important;
+  bottom: 20px !important;
+  right: 20px !important;
+  z-index: 999999999 !important;
+  display: block !important;
+  pointer-events: auto !important;
 }
 
 #fab-main {
-  width: 58px;
-  height: 58px;
-  border-radius: 50%;
-  background: #1a73e8;
-  color: white;
-  border: none;
-  font-size: 26px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
-}
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 
-#fab-items {
-  position: absolute;
-  bottom: 70px;
-  right: 0;
-  background: white;
-  border-radius: 12px;
-  border: 1px solid #ddd;
-  display: none;
-  padding: 8px 0;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-}
+  width: 58px !important;
+  height: 58px !important;
 
-#fab-items a {
-  display: block;
-  padding: 10px 16px;
-  color: #1a73e8;
-  text-decoration: none;
-  font-size: 15px;
-}
+  background: #1a73e8 !important;
+  color: white !important;
 
-#fab-items a:hover {
-  background: #e8f0fe;
+  border-radius: 50% !important;
+  border: none !important;
+
+  font-size: 30px !important;
+  font-weight: bold !important;
+
+  cursor: pointer !important;
+
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
     #proximite-actions button,
@@ -2484,25 +2471,6 @@ document.addEventListener("click", (e) => {
   }
 });
 </script>
-<div id="FAB-FORCE"
-     style="
-       position:fixed;
-       bottom:120px;
-       right:20px;
-       width:80px;
-       height:80px;
-       background:#1a73e8;
-       color:white;
-       font-size:40px;
-       font-weight:bold;
-       border-radius:50%;
-       display:flex;
-       align-items:center;
-       justify-content:center;
-       z-index:999999999999999;
-     ">
-  ☰
-</div>
-</div>
+
 </body>
 </html>
