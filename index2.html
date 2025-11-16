@@ -33,37 +33,47 @@
    
   <style id="eale-intro-styles">
 
-/* ===== RÉPARATION FINALE FAB ===== */
+    /* ===== FAB MENU ===== */
 #fab-menu {
-  position: fixed !important;
-  bottom: 20px !important;
-  right: 20px !important;
-  z-index: 999999999 !important;
-  display: block !important;
-  pointer-events: auto !important;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 999999999;
 }
 
 #fab-main {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: #1a73e8;
+  color: white;
+  border: none;
+  font-size: 30px;
+  font-weight: bold;
+  cursor: pointer;
+}
 
-  width: 58px !important;
-  height: 58px !important;
+#fab-items {
+  display: none;
+  position: absolute;
+  bottom: 70px;
+  right: 0;
+  background: rgba(255,255,255,0.95);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  padding: 10px;
+}
 
-  background: #1a73e8 !important;
-  color: white !important;
+#fab-items a {
+  display: block;
+  padding: 8px 12px;
+  text-decoration: none;
+  color: #1a73e8;
+  font-size: 14px;
+}
 
-  border-radius: 50% !important;
-  border: none !important;
-
-  font-size: 30px !important;
-  font-weight: bold !important;
-
-  cursor: pointer !important;
-
-  opacity: 1 !important;
-  visibility: visible !important;
+#fab-items a:hover {
+  background: #e6f0ff;
 }
 
     #proximite-actions button,
@@ -2450,27 +2460,30 @@ function getDistance(lat1, lon1, lat2, lon2) {
   proximiteIndex += slice.length;
   btnVoirPlus.style.display = proximiteIndex < proximiteSorted.length ? "inline-block" : "none";
 }
-
+  
+</script>
+<!-- FAB MENU -->
 <div id="fab-menu">
   <button id="fab-main">☰</button>
+
   <div id="fab-items">
     <a href="arnaud.html">🔧 À propos</a>
     <a href="version.html">📌 Version</a>
   </div>
 </div>
 
-<script>
+  <script>
 document.getElementById("fab-main").onclick = () => {
-  const m = document.getElementById("fab-items");
-  m.style.display = m.style.display === "block" ? "none" : "block";
+  const menu = document.getElementById("fab-items");
+  menu.style.display = (menu.style.display === "block") ? "none" : "block";
 };
 
 document.addEventListener("click", (e) => {
-  if (!document.getElementById("fab-menu").contains(e.target)) {
+  const fab = document.getElementById("fab-menu");
+  if (!fab.contains(e.target)) {
     document.getElementById("fab-items").style.display = "none";
   }
 });
 </script>
-
 </body>
 </html>
