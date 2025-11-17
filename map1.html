@@ -1695,8 +1695,8 @@ document.getElementById("ctx-add-email").onclick = () => {
 
   const subject = encodeURIComponent("➕ Ajout d'un appareil");
 
-  const body = encodeURIComponent(
-Bonjour Arnaud,
+const body = encodeURIComponent(
+`Bonjour Arnaud,
 
 Voici la position de l’appareil (à préciser)
 au poste de (à préciser) :
@@ -1710,9 +1710,8 @@ Longitude : ${ctxLng}
 📍 Lien Google Maps :
 https://www.google.com/maps?q=${ctxLat},${ctxLng}
 
-Bonne journée,
-
-  );
+Bonne journée,`
+);
 
   window.location.href = `mailto:arnaud.debaecker@sncf.fr?subject=${subject}&body=${body}`;
 };
