@@ -1696,10 +1696,12 @@ document.getElementById("ctx-add-email").onclick = () => {
   const subject = encodeURIComponent("➕ Ajout d'un appareil");
 
   const body = encodeURIComponent(
-`Bonjour Arnaud,
+Bonjour Arnaud,
 
-Voici la position de l’appareil (à préciser) au poste de (à préciser) :
-(Precisez tous les appareils sur le meme support)
+Voici la position de l’appareil (à préciser)
+au poste de (à préciser) :
+
+Existe-t-il d’autres appareils sur le même support ? (si oui, précisez)
 
 Coordonnées GPS :
 Latitude : ${ctxLat}
@@ -1708,7 +1710,8 @@ Longitude : ${ctxLng}
 📍 Lien Google Maps :
 https://www.google.com/maps?q=${ctxLat},${ctxLng}
 
-Bonne journée,`
+Bonne journée,
+
   );
 
   window.location.href = `mailto:arnaud.debaecker@sncf.fr?subject=${subject}&body=${body}`;
@@ -1720,7 +1723,7 @@ document.getElementById("ctx-add-poste").onclick = () => {
 
 </script>
 <div id="legal-footer">
-  Nono Maps v1.13-essai | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.13-essai1 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
