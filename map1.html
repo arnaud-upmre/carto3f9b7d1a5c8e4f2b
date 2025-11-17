@@ -1573,6 +1573,8 @@ function hidePing() {
 }
 
 function openContextMenu(latlng, containerPoint) {
+   hidePing();
+  
   ctxLat = latlng.lat;
   ctxLng = latlng.lng;
 
