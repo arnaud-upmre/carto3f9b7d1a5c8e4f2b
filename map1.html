@@ -468,22 +468,6 @@
   0%   { transform: translate(-50%,-50%) scale(1); opacity: 1; }
   100% { transform: translate(-50%,-50%) scale(2.3); opacity: 0; }
 }
-
-  .nav-pill {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 26px;
-  height: 26px;
-  border-radius: 6px;
-  background: rgba(255,255,255,0.10);
-  border: 1px solid rgba(255,255,255,0.25);
-  font-size: 13px;
-  font-weight: 600;
-  color: white;
-  margin-right: 10px;
-  backdrop-filter: blur(4px);
-}
   
 </style>
 
@@ -508,18 +492,11 @@
   <div class="context-item" id="ctx-itin">
     🚗 Itinéraire vers ici
   </div>
-
-<div class="sub-item" id="ctx-gmaps">
-  <span class="nav-pill">G</span> Google Maps
-</div>
-
-<div class="sub-item" id="ctx-waze">
-  <span class="nav-pill">W</span> Waze
-</div>
-
-<div class="sub-item" id="ctx-apple">
-  <span class="nav-pill">A</span> Apple Plans
-</div>
+  <div id="context-submenu">
+<div class="sub-item" id="ctx-gmaps">🚙 Google Maps</div>
+<div class="sub-item" id="ctx-waze"> 🚙 Waze</div>
+<div class="sub-item" id="ctx-apple">🚙 Apple Plans</div>
+  </div>
   
   <div class="context-separator"></div>
 
