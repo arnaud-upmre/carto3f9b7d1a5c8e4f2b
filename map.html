@@ -576,7 +576,7 @@ const map = L.map('map', {
   maxZoom: 21,                 
   maxBounds: boundsFrance,     
   maxBoundsViscosity: 1.0      
-  }).setView(defaultCenter, defaultZoom);
+  }).setView(defaultCenter, (window.innerWidth < 768 ? defaultZoom - 1 : defaultZoom));
 
     const ormPane = map.createPane("orm");
 ormPane.style.zIndex = 350;
