@@ -765,13 +765,13 @@ const esriSat = L.tileLayer(
 );
 
     const labelsOnly = L.tileLayer(
-  "https://tiles.stadiamaps.com/tiles/alidade_smooth_labels/{z}/{x}/{y}.png",
+  "https://basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}.png",
   {
     pane: "labelsPane",
     maxZoom: 20,
     tileSize: 256,
     opacity: 1,
-    attribution: "© Stadia Maps © OpenMapTiles © OpenStreetMap contributors"
+    attribution: "© Carto © OpenStreetMap contributors"
   }
 );
 
