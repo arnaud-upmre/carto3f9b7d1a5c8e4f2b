@@ -496,8 +496,15 @@
   <div class="context-item" id="ctx-imajnet">🛣️ Imajnet</div>
 
   <div class="context-separator"></div>
+  
+<div class="context-item" id="ctx-add-appareil">📍 Ajouter un appareil ici</div>
 
-  <div class="context-item" id="ctx-add-appareil">📍 Ajouter un appareil ici</div>
+<div id="ctx-submenu-add" style="display:none; flex-direction:column; background:rgba(0,0,0,0.35); padding:6px 0; border-radius:10px;">
+  <div class="sub-item" id="ctx-add-form">📝 Via le formulaire</div>
+  <div class="sub-item" id="ctx-add-email">📧 Par email</div>
+</div>
+
+  
   <div class="context-item" id="ctx-add-poste">📍 Ajouter un SAT ici</div>
 </div>
 
@@ -576,7 +583,7 @@ const map = L.map('map', {
   maxZoom: 21,                 
   maxBounds: boundsFrance,     
   maxBoundsViscosity: 1.0      
-  }).setView(defaultCenter, defaultZoom);
+  }).setView(defaultCenter, (window.innerWidth < 768 ? defaultZoom - 1 : defaultZoom));
 
     const ormPane = map.createPane("orm");
 ormPane.style.zIndex = 350;
@@ -1674,7 +1681,37 @@ document.getElementById("ctx-imajnet").onclick = () => {
 };
 
 document.getElementById("ctx-add-appareil").onclick = () => {
+  const sub = document.getElementById("ctx-submenu-add");
+  sub.style.display = (sub.style.display === "flex") ? "none" : "flex";
+};
+
+    
+document.getElementById("ctx-add-form").onclick = () => {
   window.location.href = `ajout_appareil.html?lat=${ctxLat}&lng=${ctxLng}`;
+};
+
+// ➕ Ajouter via EMAIL
+document.getElementById("ctx-add-email").onclick = () => {
+
+  const subject = encodeURIComponent("➕ Ajout d'un appareil");
+
+  const body = encodeURIComponent(
+`Bonjour Arnaud,
+
+Voici la position de l’appareil (à préciser) au poste de (à préciser) :
+(Precisez tous les appareils sur le meme support)
+
+Coordonnées GPS :
+Latitude : ${ctxLat}
+Longitude : ${ctxLng}
+
+📍 Lien Google Maps :
+https://www.google.com/maps?q=${ctxLat},${ctxLng}
+
+Bonne journée,`
+  );
+
+  window.location.href = `mailto:arnaud.debaecker@sncf.fr?subject=${subject}&body=${body}`;
 };
 
 document.getElementById("ctx-add-poste").onclick = () => {
@@ -1683,7 +1720,7 @@ document.getElementById("ctx-add-poste").onclick = () => {
 
 </script>
 <div id="legal-footer">
-  Nono Maps v1.13 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.13-essai | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
