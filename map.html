@@ -382,6 +382,85 @@
   align-items: center;
   margin-bottom: 0 !important;
 }
+
+
+#context-menu {
+  position: absolute;
+  min-width: 240px;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 14px;
+  padding: 10px 0;
+  display: none;
+  flex-direction: column;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.45);
+  z-index: 999999;
+}
+
+.context-item {
+  padding: 10px 14px;
+  color: white;
+  font-size: 14px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.context-item:hover {
+  background: rgba(255,255,255,0.12);
+}
+
+.context-separator {
+  height: 1px;
+  background: rgba(255,255,255,0.15);
+  margin: 6px 0;
+}
+
+#context-submenu {
+  display: none;
+  flex-direction: column;
+  background: rgba(0,0,0,0.40);
+  padding: 6px 0;
+}
+
+.sub-item {
+  padding: 10px 18px;
+  color: white;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.sub-item:hover {
+  background: rgba(255,255,255,0.15);
+  transform: translateX(3px);
+}
+
+
+
+.ping-marker {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 0 10px white, 0 0 20px rgba(255,255,255,0.6);
+  transform: translate(-50%, -50%);
+  animation: pingPulse 1.5s infinite;
+  pointer-events: none;
+  z-index: 999998;
+}
+
+@keyframes pingPulse {
+  0%   { transform: translate(-50%,-50%) scale(1); opacity: 1; }
+  100% { transform: translate(-50%,-50%) scale(2.3); opacity: 0; }
+}
   
 </style>
 
@@ -398,6 +477,32 @@
 <body>
   
   <div id="map"></div>
+
+<div id="context-menu">
+  <div class="context-item" id="ctx-coord"></div>
+
+  <div class="context-item" id="ctx-itin">
+    🚗 Itinéraire vers ici
+  </div>
+  <div id="context-submenu">
+<div class="sub-item" id="ctx-gmaps">🚙 Google Maps</div>
+<div class="sub-item" id="ctx-waze"> 🚙 Waze</div>
+<div class="sub-item" id="ctx-apple">🚙 Apple Plans</div>
+  </div>
+  
+  <div class="context-separator"></div>
+
+  <div class="context-item" id="ctx-street">🌍 Street View</div>
+  <div class="context-item" id="ctx-imajnet">🛣️ Imajnet</div>
+
+  <div class="context-separator"></div>
+
+  <div class="context-item" id="ctx-add-appareil">📍 Ajouter un appareil ici</div>
+  <div class="context-item" id="ctx-add-poste">📍 Ajouter un SAT ici</div>
+</div>
+
+<!-- MARKER PING -->
+<div id="ping-marker" class="ping-marker" style="display:none;"></div>
 
 <div class="fab-container">
   <button class="fab" id="fabBtn">☰</button>
@@ -476,62 +581,6 @@ const map = L.map('map', {
     const ormPane = map.createPane("orm");
 ormPane.style.zIndex = 350;
  
-let editMode = false;   
-  
-const editBanner = document.createElement("div");
-editBanner.style = `
-  position: fixed;
-  bottom: 10px; left: 50%;
-  transform: translateX(-50%);
-  background: rgba(0,0,0,0.8);
-  color: white;
-  font-family: system-ui, sans-serif;
-  font-size: 13px;
-  padding: 6px 12px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-  z-index: 9999;
-  display: none;
-`;
-document.body.appendChild(editBanner);
-
-const editIcon = document.createElement("div");
-editIcon.textContent = "✏️";
-editIcon.style = `
-  position: fixed;
-  bottom: 40px; left: 12px;
-  font-size: 18px;
-  background: rgba(0,0,0,0.75);
-  color: white;
-  padding: 6px 8px;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-  z-index: 9999;
-  display: none;
-  font-family: system-ui, sans-serif;
-`;
-document.body.appendChild(editIcon);
-
-document.addEventListener("keydown", function(e) {
-  if (e.key.toLowerCase() === "i") {
-    editMode = !editMode;
-
-    editBanner.textContent = editMode ? "ℹ️ Mode information activé" : "❌ Mode information désactivé";
-    editBanner.style.display = "block";
-    setTimeout(() => { editBanner.style.display = "none"; }, 2000);
-
-    editIcon.textContent = "ℹ️";
-    editIcon.style.display = editMode ? "block" : "none";
-  }
-
-  if (e.key === "Escape" && editMode) {
-    editMode = false;
-    editBanner.textContent = "❌ Mode information désactivé";
-    editBanner.style.display = "block";
-    setTimeout(() => { editBanner.style.display = "none"; }, 2000);
-    editIcon.style.display = "none";
-  }
-});
     
 const allMarkers = [];
 
@@ -1399,72 +1448,9 @@ function renderInformation(value) {
   return escHtml(String(value));
 }
 
-let activeEditPopup = null; 
 
 function escHtml(s){return String(s).replace(/[&<>"]/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[m]));}
 
-map.on('click', (e) => {
-  if (!editMode) return;
-
-  const lat = Number(e.latlng.lat.toFixed(5));
-  const lng = Number(e.latlng.lng.toFixed(5));
-  const coordsText = `${lat}, ${lng}`;
-
-  const popupContent = `
-  <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
-              font-size:14px;min-width:240px;">
-
-    <div style="font-weight:600; font-size:16px; margin-bottom:12px;"> ℹ️ Information : </div>
-
-    <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
-      <pre style="margin:0; background:#f3f4f6; padding:6px 10px; border-radius:6px; font-size:13px; flex:1;">
-${coordsText}</pre>
-      <button id="btn-copy"
-        style="padding:6px 10px; border:none; border-radius:6px; background:#f59e0b; color:white; cursor:pointer;">
-        📋 Copier
-      </button>
-    </div>
-
-    <div style="display:flex; flex-direction:column; gap:8px;">
-      <button id="btn-gmaps" 
-        style="padding:8px 12px; border:none; border-radius:6px; background:#3b82f6; color:white; cursor:pointer;">
-        🔎 Google Maps
-      </button>
-
-      <button id="btn-imajnet" 
-        style="padding:8px 12px; border:none; border-radius:6px; background:#10b981; color:white; cursor:pointer;">
-        🛣️ Imajnet
-      </button>
-    </div>
-  </div>`;
-
-  if (activeEditPopup) map.closePopup(activeEditPopup);
-
-  activeEditPopup = L.popup({ autoClose: false, closeOnClick: false })
-    .setLatLng(e.latlng)
-    .setContent(popupContent)
-    .openOn(map);
-
-  setTimeout(() => {
-    const flash = (txt) => {
-      editBanner.textContent = txt;
-      editBanner.style.display = "block";
-      setTimeout(() => { editBanner.style.display = "none"; }, 1200);
-    };
-
-    document.getElementById('btn-copy')?.addEventListener('click', () => {
-      navigator.clipboard.writeText(coordsText).then(() => flash("✅ Coordonnées copiées"));
-    });
-
-    document.getElementById('btn-gmaps')?.addEventListener('click', () => {
-      window.open(`https://www.google.com/maps?q=${lat},${lng}`, '_blank');
-    });
-
-    document.getElementById('btn-imajnet')?.addEventListener('click', () => {
-      window.open(`https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${lat},${lng};`, '_blank');
-    });
-  }, 50); 
-});
 
 const fabBtn = document.getElementById("fabBtn");
 const fabOptions = document.getElementById("fabOptions");
@@ -1566,13 +1552,129 @@ map.on("popupopen", function (e) {
   else if (appareilsLayer.hasLayer(marker)) incrementCounterAppareil();
 });
 
-</script>
 
-    
-    
+const ctxMenu = document.getElementById("context-menu");
+const ctxSubmenu = document.getElementById("context-submenu");
+const pingMarker = document.getElementById("ping-marker");
+
+let ctxLat = null;
+let ctxLng = null;
+
+
+function showPing(latlng) {
+  const pt = map.latLngToContainerPoint(latlng);
+  pingMarker.style.left = pt.x + "px";
+  pingMarker.style.top = pt.y + "px";
+  pingMarker.style.display = "block";
+}
+
+function hidePing() {
+  pingMarker.style.display = "none";
+}
+
+function openContextMenu(latlng, containerPoint) {
+   hidePing();
+  
+  ctxLat = latlng.lat;
+  ctxLng = latlng.lng;
+
+ 
+  document.getElementById("ctx-coord").innerHTML =
+    `📍 ${ctxLat.toFixed(5)}, ${ctxLng.toFixed(5)}`;
+
+  showPing(latlng);
+
+  ctxMenu.style.display = "flex";
+
+
+  const menuWidth = ctxMenu.offsetWidth;
+  const menuHeight = ctxMenu.offsetHeight;
+
+  let left = containerPoint.x + 15;
+  let top = containerPoint.y + 10;
+
+  if (left + menuWidth > window.innerWidth - 10) {
+    left = containerPoint.x - menuWidth - 15;
+  }
+
+  if (top + menuHeight > window.innerHeight - 10) {
+    top = containerPoint.y - menuHeight - 10;
+  }
+
+  ctxMenu.style.left = left + "px";
+  ctxMenu.style.top = top + "px";
+
+  ctxSubmenu.style.display = "none";
+}
+
+
+function closeContextMenu() {
+  ctxMenu.style.display = "none";
+  ctxSubmenu.style.display = "none";
+  hidePing();
+}
+
+
+map.on("contextmenu", function(e) {
+  e.originalEvent.preventDefault();
+  openContextMenu(e.latlng, map.latLngToContainerPoint(e.latlng));
+});
+
+
+let touchTimer = null;
+
+map.on("touchstart", function(e) {
+  if (!e.latlng) return;
+  touchTimer = setTimeout(() => {
+    openContextMenu(e.latlng, map.latLngToContainerPoint(e.latlng));
+  }, 500);
+});
+
+map.on("touchend", () => clearTimeout(touchTimer));
+
+document.addEventListener("click", function(e) {
+  if (!ctxMenu.contains(e.target)) closeContextMenu();
+});
+
+document.getElementById("ctx-itin").onclick = () => {
+  ctxSubmenu.style.display =
+    ctxSubmenu.style.display === "flex" ? "none" : "flex";
+};
+
+document.getElementById("ctx-gmaps").onclick = () => {
+  window.open(`https://www.google.com/maps/dir/?api=1&destination=${ctxLat},${ctxLng}`);
+};
+
+document.getElementById("ctx-waze").onclick = () => {
+  window.open(`https://waze.com/ul?ll=${ctxLat},${ctxLng}&navigate=yes`);
+};
+
+if (!/iPhone|iPad|Macintosh/.test(navigator.userAgent)) {
+  document.getElementById("ctx-apple").style.display = "none";
+}
+document.getElementById("ctx-apple").onclick = () => {
+  window.open(`http://maps.apple.com/?daddr=${ctxLat},${ctxLng}`);
+};
+
+document.getElementById("ctx-street").onclick = () => {
+  openStreetView(ctxLat, ctxLng);
+};
+
+document.getElementById("ctx-imajnet").onclick = () => {
+  window.open(`https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${ctxLat},${ctxLng};`);
+};
+
+document.getElementById("ctx-add-appareil").onclick = () => {
+  window.location.href = `ajout_appareil.html?lat=${ctxLat}&lng=${ctxLng}`;
+};
+
+document.getElementById("ctx-add-poste").onclick = () => {
+  window.location.href = `ajout_poste.html?lat=${ctxLat}&lng=${ctxLng}`;
+};
+
 </script>
 <div id="legal-footer">
-  Nono Maps v1.12 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.13 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
