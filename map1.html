@@ -602,6 +602,10 @@ const map = L.map('map', {
   maxBoundsViscosity: 1.0      
   }).setView(defaultCenter, (window.innerWidth < 768 ? defaultZoom - 1 : defaultZoom));
 
+    const labelsPane = map.createPane("labelsPane");
+labelsPane.style.zIndex = 420;
+labelsPane.style.pointerEvents = "none";
+
     const ormPane = map.createPane("orm");
 ormPane.style.zIndex = 350;
  
@@ -760,6 +764,17 @@ const esriSat = L.tileLayer(
   }
 );
 
+    const labelsOnly = L.tileLayer(
+  "https://tiles.stadiamaps.com/tiles/alidade_smooth_labels/{z}/{x}/{y}.png",
+  {
+    pane: "labelsPane",
+    maxZoom: 20,
+    tileSize: 256,
+    opacity: 1,
+    attribution: "© Stadia Maps © OpenMapTiles © OpenStreetMap contributors"
+  }
+);
+
 const orm = L.tileLayer(
   "https://{s}.tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png",
   {
@@ -776,13 +791,10 @@ const orm = L.tileLayer(
   }
 );
 
-    // --- Gestion intelligente du chargement ORM ---
-let ormUserEnabled = true;   // L’utilisateur a activé ORM (bouton)
-let ormIsPaused = false;     // ORM est temporairement coupé pendant zoom
-let ormTimer = null;         // Timer du réaffichage
-let lastZoomTime = 0;        // Pour mesurer la vitesse du zoom
-
-    // --- Gestion intelligente du SpeedLayer ---
+let ormUserEnabled = true;  
+let ormIsPaused = false;    
+let ormTimer = null;    
+let lastZoomTime = 0;   
 let speedUserEnabled = false;
 let speedIsPaused = false;
 let speedTimer = null;
@@ -833,6 +845,14 @@ L.control.layers(
         "🛰️+🗺️ Mixte": mixte
       },
 ).addTo(map);
+
+    map.on("baselayerchange", function (e) {
+  if (e.name.includes("Satellite IGN")) {
+    if (!map.hasLayer(labelsOnly)) map.addLayer(labelsOnly);
+  } else {
+    if (map.hasLayer(labelsOnly)) map.removeLayer(labelsOnly);
+  }
+});
 
 
     L.control.zoom({ position: 'topright' }).addTo(map);
@@ -1521,7 +1541,6 @@ function showToast(message) {
 document.getElementById("btn-orm").addEventListener("click", function () {
   const btn = this;
 
-  // Si ORM est visible → l’utilisateur le coupe
   if (map.hasLayer(orm)) {
     ormUserEnabled = false;
     map.removeLayer(orm);
@@ -1530,21 +1549,17 @@ document.getElementById("btn-orm").addEventListener("click", function () {
     return;
   }
 
-  // Si ORM était coupé automatiquement → l’utilisateur l’active à nouveau
   ormUserEnabled = true;
 
-  // Désactive speedLayer s’il est actif
   if (map.hasLayer(speedLayer)) {
     map.removeLayer(speedLayer);
     document.getElementById("btn-speed").classList.remove("active");
   }
 
-  // Réactive ORM
   map.addLayer(orm);
   btn.classList.add("active");
   showToast("✅ ORM affiché");
 
-  // Active la couche satellite automatiquement si nécessaire
   if (!map.hasLayer(orthoIGN)) {
     map.addLayer(orthoIGN);
   }
@@ -1554,7 +1569,6 @@ document.getElementById("btn-speed").addEventListener("click", function () {
   const btnSpeed = this;
   const btnORM = document.getElementById("btn-orm");
 
-  // Désactivation utilisateur
   if (map.hasLayer(speedLayer)) {
     speedUserEnabled = false;
     map.removeLayer(speedLayer);
@@ -1563,17 +1577,14 @@ document.getElementById("btn-speed").addEventListener("click", function () {
     return;
   }
 
-  // Activation utilisateur
   speedUserEnabled = true;
 
-  // Si ORM actif → on le coupe
   if (map.hasLayer(orm)) {
     ormUserEnabled = false;
     map.removeLayer(orm);
     btnORM.classList.remove("active");
   }
 
-  // Activer SpeedLayer
   map.addLayer(speedLayer);
   btnSpeed.classList.add("active");
   showToast(" ⚠️ Vitesse affichée à titre indicatif. Se référer aux documents réglementaires internes pour les vitesses de ligne applicables.");
@@ -1645,21 +1656,14 @@ function openContextMenu(latlng, containerPoint) {
   let left = containerPoint.x + 15;
   let top = containerPoint.y + 15;
 
-  // Bord droit → passer à gauche
   if (left + menuWidth > window.innerWidth - 10) {
     left = containerPoint.x - menuWidth - 15;
   }
 
-  // Si trop à gauche → bloquer
   if (left < 10) left = 10;
-
-  // Position verticale intelligente
-  // Trop en haut → descendre
   if (top < 10) {
     top = 10;
   }
-
-  // Trop en bas → remonter
   if (top + menuHeight > window.innerHeight - 10) {
     top = window.innerHeight - menuHeight - 10;
   }
@@ -1741,7 +1745,7 @@ document.getElementById("ctx-add-form").onclick = () => {
   window.location.href = `ajout_appareil.html?lat=${ctxLat}&lng=${ctxLng}`;
 };
 
-// ➕ Ajouter via EMAIL
+
 document.getElementById("ctx-add-email").onclick = () => {
 
   const subject = encodeURIComponent("➕ Ajout d'un appareil");
@@ -1772,12 +1776,12 @@ document.getElementById("ctx-add-poste").onclick = () => {
   sub.style.display = (sub.style.display === "flex") ? "none" : "flex";
 };
 
-    // ➕ SAT via formulaire
+
 document.getElementById("ctx-sat-form").onclick = () => {
   window.location.href = `ajout_poste.html?lat=${ctxLat}&lng=${ctxLng}`;
 };
 
-// ➕ SAT via EMAIL
+
 document.getElementById("ctx-sat-email").onclick = () => {
 
   const subject = encodeURIComponent("➕ Ajout d'un SAT");
@@ -1801,18 +1805,18 @@ Bonne journée,`
   window.location.href = `mailto:arnaud.debaecker@sncf.fr?subject=${subject}&body=${body}`;
 };
 
-    // --- Niveau 3 : Système intelligent de gestion des tuiles ORM ---
+
 
 function pauseORM() {
-  if (!ormUserEnabled) return;     // L’utilisateur l’a coupé volontairement
-  if (ormIsPaused) return;         // Déjà coupé
+  if (!ormUserEnabled) return;    
+  if (ormIsPaused) return;     
 
   ormIsPaused = true;
   if (map.hasLayer(orm)) map.removeLayer(orm);
 }
 
 function resumeORM() {
-  if (!ormUserEnabled) return;     // L’utilisateur ne veut pas ORM
+  if (!ormUserEnabled) return;   
   ormIsPaused = false;
   if (!map.hasLayer(orm)) map.addLayer(orm);
 }
@@ -1835,7 +1839,7 @@ function resumeSpeed() {
 map.on("zoomstart", () => {
   lastZoomTime = performance.now();
   pauseORM();
-  pauseSpeed();   // ← AJOUT
+  pauseSpeed();   
   if (ormTimer) clearTimeout(ormTimer);
 });
 
@@ -1863,7 +1867,7 @@ map.on("zoomend", () => {
 
 map.on("movestart", () => {
   pauseORM();
-  pauseSpeed();   // ← AJOUT
+  pauseSpeed(); 
   if (ormTimer) clearTimeout(ormTimer);
 });
   
@@ -1882,7 +1886,7 @@ map.on("moveend", () => {
 
 </script>
 <div id="legal-footer">
-  Nono Maps v1.13-essai8 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.13 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
