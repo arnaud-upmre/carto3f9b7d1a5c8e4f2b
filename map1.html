@@ -782,6 +782,11 @@ let ormIsPaused = false;     // ORM est temporairement coupé pendant zoom
 let ormTimer = null;         // Timer du réaffichage
 let lastZoomTime = 0;        // Pour mesurer la vitesse du zoom
 
+    // --- Gestion intelligente du SpeedLayer ---
+let speedUserEnabled = false;
+let speedIsPaused = false;
+let speedTimer = null;
+
 const speedLayer = L.tileLayer(
   "https://{s}.tiles.openrailwaymap.org/maxspeed/{z}/{x}/{y}.png",
   {
@@ -1549,23 +1554,30 @@ document.getElementById("btn-speed").addEventListener("click", function () {
   const btnSpeed = this;
   const btnORM = document.getElementById("btn-orm");
 
+  // Désactivation utilisateur
   if (map.hasLayer(speedLayer)) {
+    speedUserEnabled = false;
     map.removeLayer(speedLayer);
     btnSpeed.classList.remove("active");
     showToast("❌ Vitesses masquées");
     return;
   }
 
+  // Activation utilisateur
+  speedUserEnabled = true;
+
+  // Si ORM actif → on le coupe
   if (map.hasLayer(orm)) {
+    ormUserEnabled = false;
     map.removeLayer(orm);
     btnORM.classList.remove("active");
   }
 
+  // Activer SpeedLayer
   map.addLayer(speedLayer);
   btnSpeed.classList.add("active");
-  showToast(" ⚠️ Vitesse affichée à titre indicatif. Se référer aux documents réglementaires internes pour les vitesses de ligne applicables.");
+  showToast(" ⚠️ Vitesse affichée à titre indicatif...");
 });
-
 
 const compteurURL =
   "https://script.google.com/macros/s/AKfycbzUFaek89LYosR0FSw9gyxn2IZXlFlWXA_dIFIDwox-szE3DgH-l8IVbGfaoIgGK04h/exec";
@@ -1805,10 +1817,25 @@ function resumeORM() {
   if (!map.hasLayer(orm)) map.addLayer(orm);
 }
 
+    function pauseSpeed() {
+  if (!speedUserEnabled) return;
+  if (speedIsPaused) return;
+
+  speedIsPaused = true;
+  if (map.hasLayer(speedLayer)) map.removeLayer(speedLayer);
+}
+
+function resumeSpeed() {
+  if (!speedUserEnabled) return;
+
+  speedIsPaused = false;
+  if (!map.hasLayer(speedLayer)) map.addLayer(speedLayer);
+}
+
 map.on("zoomstart", () => {
   lastZoomTime = performance.now();
   pauseORM();
-
+  pauseSpeed();   // ← AJOUT
   if (ormTimer) clearTimeout(ormTimer);
 });
 
@@ -1816,36 +1843,46 @@ map.on("zoomend", () => {
   const now = performance.now();
   const zoomSpeed = now - lastZoomTime;
 
-  // Calcul du délai adaptatif (200ms → 900ms)
   let delay = 200;
-  if (zoomSpeed < 120) delay = 900;       // Zoom hyper rapide → gros délai
-  else if (zoomSpeed < 200) delay = 600;  // Zoom rapide
-  else if (zoomSpeed < 350) delay = 400;  // Zoom normal
-  else delay = 250;                       // Zoom lent
+  if (zoomSpeed < 120) delay = 900;
+  else if (zoomSpeed < 200) delay = 600;
+  else if (zoomSpeed < 350) delay = 400;
+  else delay = 250;
 
   if (ormTimer) clearTimeout(ormTimer);
   ormTimer = setTimeout(() => {
     resumeORM();
   }, delay);
-});
 
-// Si on bouge la carte → on coupe aussi ORM
+  if (speedTimer) clearTimeout(speedTimer);
+  speedTimer = setTimeout(() => {
+    resumeSpeed();
+  }, delay);
+});
+    
+
 map.on("movestart", () => {
   pauseORM();
+  pauseSpeed();   // ← AJOUT
   if (ormTimer) clearTimeout(ormTimer);
 });
+  
 
-// Quand le mouvement est fini → ORM revient, léger délai
 map.on("moveend", () => {
   if (ormTimer) clearTimeout(ormTimer);
   ormTimer = setTimeout(() => {
     resumeORM();
   }, 350);
+
+  if (speedTimer) clearTimeout(speedTimer);
+  speedTimer = setTimeout(() => {
+    resumeSpeed();
+  }, 350);
 });
 
 </script>
 <div id="legal-footer">
-  Nono Maps v1.13-essai7 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.13-essai8 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
