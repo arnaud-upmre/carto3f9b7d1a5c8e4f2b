@@ -1673,6 +1673,12 @@ document.addEventListener("click", function(e) {
   if (!ctxMenu.contains(e.target)) closeContextMenu();
 });
 
+map.on("movestart", closeContextMenu);
+map.on("zoomstart", closeContextMenu);
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") closeContextMenu();
+});
+
 document.getElementById("ctx-itin").onclick = () => {
   ctxSubmenu.style.display =
     ctxSubmenu.style.display === "flex" ? "none" : "flex";
@@ -1773,7 +1779,7 @@ Bonne journée,`
 
 </script>
 <div id="legal-footer">
-  Nono Maps v1.13-essai5 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.13-essai6 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
