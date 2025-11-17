@@ -457,6 +457,18 @@
   z-index: 999998;
 }
 
+.ping-marker::after {
+  content: "";
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: red;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 4px red;
+}
+
 @keyframes pingPulse {
   0%   { transform: translate(-50%,-50%) scale(1); opacity: 1; }
   100% { transform: translate(-50%,-50%) scale(2.3); opacity: 0; }
@@ -1757,7 +1769,7 @@ Bonne journée,`
 
 </script>
 <div id="legal-footer">
-  Nono Maps v1.13-essai2 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.13-essai3 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
