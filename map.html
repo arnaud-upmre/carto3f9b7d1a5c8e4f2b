@@ -602,6 +602,10 @@ const map = L.map('map', {
   maxBoundsViscosity: 1.0      
   }).setView(defaultCenter, (window.innerWidth < 768 ? defaultZoom - 1 : defaultZoom));
 
+    const labelsPane = map.createPane("labelsPane");
+labelsPane.style.zIndex = 420;
+labelsPane.style.pointerEvents = "none";
+
     const ormPane = map.createPane("orm");
 ormPane.style.zIndex = 350;
  
@@ -760,6 +764,17 @@ const esriSat = L.tileLayer(
   }
 );
 
+    const labelsOnly = L.tileLayer(
+  "https://basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png",
+  {
+    pane: "labelsPane",
+    maxZoom: 20,
+    tileSize: 256,
+    opacity: 1,
+    attribution: "© Carto © OpenStreetMap contributors"
+  }
+);
+
 const orm = L.tileLayer(
   "https://{s}.tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png",
   {
@@ -814,7 +829,8 @@ const mixte = L.layerGroup([
     
 
 orthoIGN.addTo(map);
-
+labelsOnly.addTo(map);
+    
 setTimeout(() => {
   orm.addTo(map);
   document.getElementById("btn-orm").classList.add("active");
@@ -825,11 +841,19 @@ L.control.layers(
       { 
         "🛰️ Satellite IGN": orthoIGN,
         "🛰️ Satellite Open": esriSat,
-        "🗺️ Plan IGN (défaut)": planIGN,
+        "🗺️ Plan IGN ": planIGN,
         "🌍 Plan Open": osm,
         "🛰️+🗺️ Mixte": mixte
       },
 ).addTo(map);
+
+    map.on("baselayerchange", function (e) {
+  if (e.name.includes("Satellite IGN")) {
+    if (!map.hasLayer(labelsOnly)) map.addLayer(labelsOnly);
+  } else {
+    if (map.hasLayer(labelsOnly)) map.removeLayer(labelsOnly);
+  }
+});
 
 
     L.control.zoom({ position: 'topright' }).addTo(map);
