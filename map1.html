@@ -384,10 +384,6 @@
 }
 
 
-/* ==========================
-   MENU CONTEXTUEL (GLASS)
-   ========================== */
-
 #context-menu {
   position: absolute;
   min-width: 240px;
@@ -423,7 +419,6 @@
   margin: 6px 0;
 }
 
-/* Sous-menu itinéraire */
 #context-submenu {
   display: none;
   flex-direction: column;
@@ -447,9 +442,7 @@
   transform: translateX(3px);
 }
 
-/* ==========================
-   MARKER "PING"
-   ========================== */
+
 
 .ping-marker {
   position: absolute;
@@ -485,7 +478,6 @@
   
   <div id="map"></div>
 
-  <!-- MENU CONTEXTUEL GLASS -->
 <div id="context-menu">
   <div class="context-item" id="ctx-coord"></div>
 
@@ -505,8 +497,8 @@
 
   <div class="context-separator"></div>
 
-  <div class="context-item" id="ctx-add-appareil">➕ Ajouter un appareil ici</div>
-  <div class="context-item" id="ctx-add-poste">➕ Ajouter un SAT ici</div>
+  <div class="context-item" id="ctx-add-appareil">📍 Ajouter un appareil ici</div>
+  <div class="context-item" id="ctx-add-poste">📍 Ajouter un SAT ici</div>
 </div>
 
 <!-- MARKER PING -->
@@ -1560,9 +1552,6 @@ map.on("popupopen", function (e) {
   else if (appareilsLayer.hasLayer(marker)) incrementCounterAppareil();
 });
 
-    /* ==============================================================
-   MENU CONTEXTUEL – CLICK DROIT + APPUI LONG
-   ============================================================== */
 
 const ctxMenu = document.getElementById("context-menu");
 const ctxSubmenu = document.getElementById("context-submenu");
@@ -1571,7 +1560,7 @@ const pingMarker = document.getElementById("ping-marker");
 let ctxLat = null;
 let ctxLng = null;
 
-/* --- Fonction pour afficher le marker ping --- */
+
 function showPing(latlng) {
   const pt = map.latLngToContainerPoint(latlng);
   pingMarker.style.left = pt.x + "px";
@@ -1579,17 +1568,15 @@ function showPing(latlng) {
   pingMarker.style.display = "block";
 }
 
-/* --- Fonction pour cacher le marker --- */
 function hidePing() {
   pingMarker.style.display = "none";
 }
 
-/* --- Ouvrir le menu contextuel --- */
 function openContextMenu(latlng, containerPoint) {
   ctxLat = latlng.lat;
   ctxLng = latlng.lng;
 
-  // Texte coordonnées
+ 
   document.getElementById("ctx-coord").innerHTML =
     `📍 ${ctxLat.toFixed(5)}, ${ctxLng.toFixed(5)}`;
 
@@ -1597,7 +1584,7 @@ function openContextMenu(latlng, containerPoint) {
 
   ctxMenu.style.display = "flex";
 
-  // Position AUTO (si trop à droite → passe à gauche)
+
   const menuWidth = ctxMenu.offsetWidth;
   const menuHeight = ctxMenu.offsetHeight;
 
@@ -1618,20 +1605,20 @@ function openContextMenu(latlng, containerPoint) {
   ctxSubmenu.style.display = "none";
 }
 
-/* --- Fermer le menu --- */
+
 function closeContextMenu() {
   ctxMenu.style.display = "none";
   ctxSubmenu.style.display = "none";
   hidePing();
 }
 
-/* --- CLICK DROIT (desktop) --- */
+
 map.on("contextmenu", function(e) {
   e.originalEvent.preventDefault();
   openContextMenu(e.latlng, map.latLngToContainerPoint(e.latlng));
 });
 
-/* --- APPUI LONG (mobile) --- */
+
 let touchTimer = null;
 
 map.on("touchstart", function(e) {
@@ -1643,21 +1630,15 @@ map.on("touchstart", function(e) {
 
 map.on("touchend", () => clearTimeout(touchTimer));
 
-/* --- Fermer au clic hors du menu --- */
 document.addEventListener("click", function(e) {
   if (!ctxMenu.contains(e.target)) closeContextMenu();
 });
-
-/* ==============================================================
-   ACTIONS DU MENU
-   ============================================================== */
 
 document.getElementById("ctx-itin").onclick = () => {
   ctxSubmenu.style.display =
     ctxSubmenu.style.display === "flex" ? "none" : "flex";
 };
 
-// Liens d’itinéraires
 document.getElementById("ctx-gmaps").onclick = () => {
   window.open(`https://www.google.com/maps/dir/?api=1&destination=${ctxLat},${ctxLng}`);
 };
@@ -1666,7 +1647,6 @@ document.getElementById("ctx-waze").onclick = () => {
   window.open(`https://waze.com/ul?ll=${ctxLat},${ctxLng}&navigate=yes`);
 };
 
-// Apple Plans → affiché uniquement sur iOS
 if (!/iPhone|iPad|Macintosh/.test(navigator.userAgent)) {
   document.getElementById("ctx-apple").style.display = "none";
 }
@@ -1674,29 +1654,25 @@ document.getElementById("ctx-apple").onclick = () => {
   window.open(`http://maps.apple.com/?daddr=${ctxLat},${ctxLng}`);
 };
 
-// Street View
 document.getElementById("ctx-street").onclick = () => {
   openStreetView(ctxLat, ctxLng);
 };
 
-// Imajnet
 document.getElementById("ctx-imajnet").onclick = () => {
   window.open(`https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${ctxLat},${ctxLng};`);
 };
 
-// Ajouter appareil
 document.getElementById("ctx-add-appareil").onclick = () => {
   window.location.href = `ajout_appareil.html?lat=${ctxLat}&lng=${ctxLng}`;
 };
 
-// Ajouter poste / SAT
 document.getElementById("ctx-add-poste").onclick = () => {
   window.location.href = `ajout_poste.html?lat=${ctxLat}&lng=${ctxLng}`;
 };
 
 </script>
 <div id="legal-footer">
-  Nono Maps v1.12 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.13 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
