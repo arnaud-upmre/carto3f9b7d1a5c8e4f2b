@@ -432,13 +432,19 @@
 }
 
 .sub-item {
-  padding: 8px 14px 8px 32px;
+  padding: 10px 18px;
   color: white;
-  font-size: 13px;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
 }
 
 .sub-item:hover {
-  background: rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.15);
+  transform: translateX(3px);
 }
 
 /* ==========================
@@ -488,9 +494,9 @@
   </div>
 
   <div id="context-submenu">
-    <div class="sub-item" id="ctx-gmaps">Google Maps</div>
-    <div class="sub-item" id="ctx-waze">Waze</div>
-    <div class="sub-item" id="ctx-apple">Apple Plans</div>
+<div class="sub-item" id="ctx-gmaps">🟦🟥🟩🟨 Google Maps</div>
+<div class="sub-item" id="ctx-waze"> 🚗 Waze</div>
+<div class="sub-item" id="ctx-apple">🗺️ Apple Plans</div>
   </div>
 
   <div class="context-separator"></div>
