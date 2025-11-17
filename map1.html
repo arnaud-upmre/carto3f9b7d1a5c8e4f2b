@@ -1591,21 +1591,29 @@ function openContextMenu(latlng, containerPoint) {
   const menuHeight = ctxMenu.offsetHeight;
 
   let left = containerPoint.x + 15;
-  let top = containerPoint.y + 10;
+  let top = containerPoint.y + 15;
 
+  // Bord droit → passer à gauche
   if (left + menuWidth > window.innerWidth - 10) {
     left = containerPoint.x - menuWidth - 15;
   }
 
+  // Si trop à gauche → bloquer
+  if (left < 10) left = 10;
+
+  // Position verticale intelligente
+  // Trop en haut → descendre
+  if (top < 10) {
+    top = 10;
+  }
+
+  // Trop en bas → remonter
   if (top + menuHeight > window.innerHeight - 10) {
-    top = containerPoint.y - menuHeight - 10;
+    top = window.innerHeight - menuHeight - 10;
   }
 
   ctxMenu.style.left = left + "px";
   ctxMenu.style.top = top + "px";
-
-  ctxSubmenu.style.display = "none";
-}
 
 
 function closeContextMenu() {
