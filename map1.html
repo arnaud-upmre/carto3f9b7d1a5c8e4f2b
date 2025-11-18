@@ -2027,18 +2027,26 @@ function updateMeasurePanel() {
 
     total += d;
 
-    text += `${A} → ${B} : ${d.toFixed(1)} m\n`;
+text += `${A} → ${B} : ${formatDistance(d)}\n`;
   }
 
   text += "---------------------\n";
-  text += `Total : ${total.toFixed(1)} m`;
+text += `Total : ${formatDistance(total)}`;
 
   panel.textContent = text;
   panel.style.display = "block";
 }
+
+    function formatDistance(m) {
+  if (m < 1000) {
+    return m.toFixed(1) + " m";
+  } else {
+    return (m / 1000).toFixed(2) + " km";
+  }
+}
 </script>
 <div id="legal-footer">
-  Nono Maps v1.13_Essai2 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.13_Essai3 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
