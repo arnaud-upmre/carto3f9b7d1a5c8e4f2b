@@ -5688,5 +5688,128 @@
     "longitude": 2.43498,
     "description": "",
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.51167809795008,2.435199602072412;uid=10c6c0d1-94f0-4aa7-9cf8-e1b7d28e75e3_1820;"
+  },
+  {
+    "nom": "PE4 Pondereux",
+    "type": "A",
+    "SAT": "",
+    "accès": "",
+    "appareil": "DA2",
+    "latitude": 50.99317,
+    "longitude": 2.27597,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.99323843560965,2.2755357077436393;uid=967c6f1b-8f1a-4c4a-9e45-8aaa4fe4d7a1_337;"
+  },
+  {
+    "nom": "PE4 Pondereux",
+    "type": "A",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT DA2",
+    "latitude": 50.99317,
+    "longitude": 2.27597,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.99323843560965,2.2755357077436393;uid=967c6f1b-8f1a-4c4a-9e45-8aaa4fe4d7a1_337;"
+  },
+  {
+    "nom": "PE4 Pondereux",
+    "type": "A",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TC DA2",
+    "latitude": 50.99317,
+    "longitude": 2.27597,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.99323843560965,2.2755357077436393;uid=967c6f1b-8f1a-4c4a-9e45-8aaa4fe4d7a1_337;"
+  },
+  {
+    "nom": "Puyt Houck",
+    "type": "SSPA",
+    "SAT": "",
+    "accès": "",
+    "appareil": "IL2",
+    "latitude": 50.99321,
+    "longitude": 2.27596,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.993284351700595,2.276248299940909;uid=8792e331-f738-4482-8578-c4f1a3588111_453;"
+  },
+  {
+    "nom": "Puyt Houck",
+    "type": "SSPA",
+    "SAT": "",
+    "accès": "",
+    "appareil": "SIA2",
+    "latitude": 50.99321,
+    "longitude": 2.27602,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.993284351700595,2.276248299940909;uid=8792e331-f738-4482-8578-c4f1a3588111_453;"
+  }, 
+  {
+    "nom": "Puyt Houck",
+    "type": "SSPA",
+    "SAT": "",
+    "accès": "",
+    "appareil": "IL1",
+    "latitude": 50.99321,
+    "longitude": 2.27609,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.993284351700595,2.276248299940909;uid=8792e331-f738-4482-8578-c4f1a3588111_453;"
+  }, 
+  {
+    "nom": "Puyt Houck",
+    "type": "SSPA",
+    "SAT": "",
+    "accès": "",
+    "appareil": "IL3",
+    "latitude": 50.99321,
+    "longitude": 2.27609,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.993284351700595,2.276248299940909;uid=8792e331-f738-4482-8578-c4f1a3588111_453;"
+  }, 
+  {
+    "nom": "Puyt Houck",
+    "type": "SSPA",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT1 (IL3)",
+    "latitude": 50.99321,
+    "longitude": 2.27609,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.993284351700595,2.276248299940909;uid=8792e331-f738-4482-8578-c4f1a3588111_453;"
+  }, 
+  {
+    "nom": "Puyt Houck",
+    "type": "SSPA",
+    "SAT": "",
+    "accès": "",
+    "appareil": "FS2",
+    "latitude": 50.99323,
+    "longitude": 2.27606,
+    "description": "Sectionneur manuel",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.993284351700595,2.276248299940909;uid=8792e331-f738-4482-8578-c4f1a3588111_453;"
+  }, 
+  {
+    "nom": "Puyt Houck",
+    "type": "SSPA",
+    "SAT": "",
+    "accès": "",
+    "appareil": "F13",
+    "latitude": 50.99323,
+    "longitude": 2.27606,
+    "description": "Sectionneur manuel",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.993284351700595,2.276248299940909;uid=8792e331-f738-4482-8578-c4f1a3588111_453;"
+  }, 
+  {
+    "nom": "Puyt Houck",
+    "type": "SSPA",
+    "SAT": "",
+    "accès": "",
+    "appareil": "F24",
+    "latitude": 50.99323,
+    "longitude": 2.27600,
+    "description": "Sectionneur manuel",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.993284351700595,2.276248299940909;uid=8792e331-f738-4482-8578-c4f1a3588111_453;"
   }
 ]
+
+
