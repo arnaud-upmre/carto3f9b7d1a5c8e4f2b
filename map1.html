@@ -1701,6 +1701,8 @@ function closeContextMenu() {
 
 
 map.on("contextmenu", function(e) {
+  if (mesureActive) return; 
+
   e.originalEvent.preventDefault();
   openContextMenu(e.latlng, map.latLngToContainerPoint(e.latlng));
 });
@@ -1710,6 +1712,16 @@ let touchTimer = null;
 
 map.on("touchstart", function(e) {
   if (!e.latlng) return;
+
+  if (mesureActive) {
+    touchTimer = setTimeout(() => {
+      resetMesure();    
+      mesureActive = false;
+      showToast("📏 Mode mesure désactivé");
+    }, 600);       
+    return;        
+  }
+
   touchTimer = setTimeout(() => {
     openContextMenu(e.latlng, map.latLngToContainerPoint(e.latlng));
   }, 500);
@@ -2039,7 +2051,7 @@ panel.style.display = "block";
     
 </script>
 <div id="legal-footer">
-  Nono Maps v1.13_Essai1 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.13_Essai2 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
