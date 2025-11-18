@@ -531,19 +531,23 @@
 ">
   <div id="measure-text"></div>
 
-  <button id="measure-clear" style="
-    margin-top: 10px;
-    width: 100%;
-    background: rgba(255,255,255,0.15);
-    border: 1px solid rgba(255,255,255,0.25);
-    padding: 6px 10px;
-    border-radius: 6px;
-    color: white;
-    font-size: 14px;
-    cursor: pointer;
-  ">
-    🗑️ Effacer les mesures
-  </button>
+<button id="measure-clear" style="
+  margin-top: 8px;
+  width: 100%;
+  padding: 5px 8px;
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 6px;
+  color: white;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+">
+  🗑️ Effacer
+</button>
 </div>
 
 <div id="context-menu">
@@ -1927,7 +1931,10 @@ let mesureActive = false;
 let mesurePoints = [];
 let mesureLines = [];
 
-const panel = document.getElementById("measure-panel");
+    const panel = document.getElementById("measure-panel");
+    const clearBtn = document.getElementById("measure-clear");
+    clearBtn.onclick = () => resetMesure();
+    L.DomEvent.disableClickPropagation(clearBtn);
 
 function resetMesure() {
   mesurePoints.forEach(p => map.removeLayer(p));
@@ -2046,7 +2053,7 @@ panel.style.display = "block";
 }
 </script>
 <div id="legal-footer">
-  Nono Maps v1.13_Essai4 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.13_Essai5 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
