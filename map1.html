@@ -15,6 +15,27 @@
 <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
 
 <style>
+
+  /* --- MODE RÈGLE / TRAÇAGE (Style B SIG) --- */
+.measure-point {
+  width: 10px;
+  height: 10px;
+  background: white;
+  border: 2px solid black;
+  border-radius: 50%;
+}
+
+.measure-label {
+  position: absolute;
+  background: rgba(0,0,0,0.75);
+  color: white;
+  padding: 3px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+  pointer-events: none;
+  white-space: nowrap;
+  transform: translate(-50%, -12px);
+}
   
   #legal-footer {
   position: fixed;
@@ -523,6 +544,8 @@
   <div class="sub-item" id="ctx-sat-form">📝 Via le formulaire</div>
   <div class="sub-item" id="ctx-sat-email">📧 Par email</div>
 </div>
+    <div class="context-separator"></div>
+  <div class="context-item" id="ctx-regle">📏 Règle / Traçage</div>
 </div>
 
 <!-- MARKER PING -->
@@ -601,10 +624,6 @@ const map = L.map('map', {
   maxBounds: boundsFrance,     
   maxBoundsViscosity: 1.0      
   }).setView(defaultCenter, (window.innerWidth < 768 ? defaultZoom - 1 : defaultZoom));
-
-    const labelsPane = map.createPane("labelsPane");
-labelsPane.style.zIndex = 420;
-labelsPane.style.pointerEvents = "none";
 
     const ormPane = map.createPane("orm");
 ormPane.style.zIndex = 350;
@@ -764,17 +783,6 @@ const esriSat = L.tileLayer(
   }
 );
 
-    const labelsOnly = L.tileLayer(
-  "https://basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png",
-  {
-    pane: "labelsPane",
-    maxZoom: 20,
-    tileSize: 256,
-    opacity: 1,
-    attribution: "© Carto © OpenStreetMap contributors"
-  }
-);
-
 const orm = L.tileLayer(
   "https://{s}.tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png",
   {
@@ -829,8 +837,7 @@ const mixte = L.layerGroup([
     
 
 orthoIGN.addTo(map);
-labelsOnly.addTo(map);
-    
+
 setTimeout(() => {
   orm.addTo(map);
   document.getElementById("btn-orm").classList.add("active");
@@ -846,14 +853,6 @@ L.control.layers(
         "🛰️+🗺️ Mixte": mixte
       },
 ).addTo(map);
-
-    map.on("baselayerchange", function (e) {
-  if (e.name.includes("Satellite IGN")) {
-    if (!map.hasLayer(labelsOnly)) map.addLayer(labelsOnly);
-  } else {
-    if (map.hasLayer(labelsOnly)) map.removeLayer(labelsOnly);
-  }
-});
 
 
     L.control.zoom({ position: 'topright' }).addTo(map);
@@ -1885,9 +1884,115 @@ map.on("moveend", () => {
   }, 350);
 });
 
+
+    /* -------------------------------------------------
+   MODE RÈGLE / TRAÇAGE
+--------------------------------------------------- */
+
+let mesureActive = false;
+let mesurePoints = [];
+let mesureLines = [];
+let mesureLabels = [];
+
+function resetMesure() {
+  mesurePoints.forEach(p => map.removeLayer(p));
+  mesureLines.forEach(l => map.removeLayer(l));
+  mesureLabels.forEach(l => l.remove());
+
+  mesurePoints = [];
+  mesureLines = [];
+  mesureLabels = [];
+
+  mesureActive = false;
+  showToast("🧽 Mesure effacée");
+}
+
+// ESC ➜ reset
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") resetMesure();
+});
+
+// Activation via menu
+document.getElementById("ctx-regle").onclick = () => {
+  closeContextMenu();
+  resetMesure();
+  mesureActive = true;
+  showToast("📏 Mode mesure activé — cliquez pour ajouter des points");
+};
+
+// Clic sur la carte en mode mesure
+map.on("click", (e) => {
+  if (!mesureActive) return;
+
+  const latlng = e.latlng;
+
+  // Ajouter un point
+  const point = L.marker(latlng, {
+    interactive: false,
+    icon: L.divIcon({
+      className: "",
+      html: '<div class="measure-point"></div>',
+      iconSize: [10, 10]
+    })
+  }).addTo(map);
+
+  mesurePoints.push(point);
+
+  // Si au moins 2 points → tracer ligne + distance
+  if (mesurePoints.length >= 2) {
+    const p1 = mesurePoints[mesurePoints.length - 2].getLatLng();
+    const p2 = latlng;
+
+    // Ligne rouge
+    const line = L.polyline([p1, p2], {
+      color: "red",
+      weight: 3
+    }).addTo(map);
+
+    mesureLines.push(line);
+
+    // Distance
+    const d = map.distance(p1, p2);
+
+    const label = document.createElement("div");
+    label.className = "measure-label";
+    label.textContent = `${d.toFixed(1)} m`;
+
+    document.body.appendChild(label);
+    mesureLabels.push(label);
+
+    const mid = L.latLng(
+      (p1.lat + p2.lat) / 2,
+      (p1.lng + p2.lng) / 2
+    );
+
+    const pos = map.latLngToContainerPoint(mid);
+    label.style.left = `${pos.x}px`;
+    label.style.top = `${pos.y}px`;
+  }
+});
+
+// repositionner labels si l'utilisateur bouge la carte
+map.on("move", () => {
+  mesureLabels.forEach((label, i) => {
+    const line = mesureLines[i];
+    if (!line) return;
+
+    const latlngs = line.getLatLngs();
+    const mid = L.latLng(
+      (latlngs[0].lat + latlngs[1].lat) / 2,
+      (latlngs[0].lng + latlngs[1].lng) / 2
+    );
+
+    const pos = map.latLngToContainerPoint(mid);
+    label.style.left = `${pos.x}px`;
+    label.style.top = `${pos.y}px`;
+  });
+});
+
 </script>
 <div id="legal-footer">
-  Nono Maps v1.13 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.13_Essai | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
