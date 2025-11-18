@@ -511,7 +511,7 @@
   
   <div id="map"></div>
 
-  <div id="measure-panel" style="
+<div id="measure-panel" style="
   position: fixed;
   bottom: 80px;
   left: 50%;
@@ -528,7 +528,23 @@
   z-index: 999999;
   max-width: 90%;
   white-space: pre-line;
-"></div>
+">
+  <div id="measure-text"></div>
+
+  <button id="measure-clear" style="
+    margin-top: 10px;
+    width: 100%;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    padding: 6px 10px;
+    border-radius: 6px;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+  ">
+    🗑️ Effacer les mesures
+  </button>
+</div>
 
 <div id="context-menu">
   <div class="context-item" id="ctx-coord"></div>
@@ -541,6 +557,9 @@
 <div class="sub-item" id="ctx-waze"> 🚙 Waze</div>
 <div class="sub-item" id="ctx-apple">🚙 Apple Plans</div>
   </div>
+      <div class="context-separator"></div>
+  <div class="context-item" id="ctx-regle">📏 Règle / Traçage</div>
+</div>
   
   <div class="context-separator"></div>
 
@@ -563,9 +582,7 @@
   <div class="sub-item" id="ctx-sat-form">📝 Via le formulaire</div>
   <div class="sub-item" id="ctx-sat-email">📧 Par email</div>
 </div>
-    <div class="context-separator"></div>
-  <div class="context-item" id="ctx-regle">📏 Règle / Traçage</div>
-</div>
+
 
 <!-- MARKER PING -->
 <div id="ping-marker" class="ping-marker" style="display:none;"></div>
