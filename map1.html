@@ -1937,7 +1937,7 @@ function resetMesure() {
   mesureLines = [];
 
   panel.style.display = "none";
-  panel.textContent = "";
+document.getElementById("measure-text").textContent = "";
   mesureActive = false;
 
   showToast("🧽 Mesure effacée");
@@ -2033,8 +2033,8 @@ text += `${A} → ${B} : ${formatDistance(d)}\n`;
   text += "---------------------\n";
 text += `Total : ${formatDistance(total)}`;
 
-  panel.textContent = text;
-  panel.style.display = "block";
+document.getElementById("measure-text").textContent = text;
+panel.style.display = "block";
 }
 
     function formatDistance(m) {
@@ -2046,7 +2046,7 @@ text += `Total : ${formatDistance(total)}`;
 }
 </script>
 <div id="legal-footer">
-  Nono Maps v1.13_Essai3 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.13_Essai4 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
