@@ -529,32 +529,6 @@
   white-space: pre-line;
 ">
   <div id="measure-text"></div>
-
-<button id="measure-clear" style="
-  margin-top: 14px;
-  width: 100%;
-  height: 32px;
-
-  background: rgba(255,255,255,0.18);
-  backdrop-filter: blur(4px);
-  border: 1px solid rgba(255,255,255,0.25);
-  border-radius: 8px;
-
-  color: white;
-  font-size: 14px;
-  font-weight: 500;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  cursor: pointer;
-
-  padding: 0;
-  line-height: 32px;  
-">
-  Effacer
-</button>
 </div>
 
 <div id="context-menu">
@@ -1930,18 +1904,12 @@ map.on("moveend", () => {
   }, 350);
 });
 
-/* -------------------------------------------------
-   MODE RÈGLE / TRAÇAGE — VERSION PRO AVEC TABLEAU
---------------------------------------------------- */
 
 let mesureActive = false;
 let mesurePoints = [];
 let mesureLines = [];
 
     const panel = document.getElementById("measure-panel");
-    const clearBtn = document.getElementById("measure-clear");
-    clearBtn.onclick = () => resetMesure();
-    L.DomEvent.disableClickPropagation(clearBtn);
 
 function resetMesure() {
   mesurePoints.forEach(p => map.removeLayer(p));
@@ -1968,16 +1936,24 @@ document.getElementById("ctx-regle").onclick = () => {
   showToast("📏 Mode mesure activé — cliquez pour poser des points");
 };
 
-map.on("click", (e) => {
+map.on("click", function (e) {
   if (!mesureActive) return;
 
+  const now = Date.now();
+
+  // --- DOUBLE TAP = RESET ---
+  if (now - lastTapTime < 300) {
+    resetMesure();
+    return;
+  }
+  lastTapTime = now;
+
+  // --- SIMPLE TAP = AJOUT DU POINT ---
   const latlng = e.latlng;
 
-  // Générer lettre A, B, C...
   const idx = mesurePoints.length; 
-  const letter = String.fromCharCode(65 + idx); // 65 = A
+  const letter = String.fromCharCode(65 + idx);
 
-  // POINT + ÉTIQUETTE
   const point = L.marker(latlng, {
     interactive: false,
     icon: L.divIcon({
@@ -2008,7 +1984,6 @@ map.on("click", (e) => {
 
   mesurePoints.push(point);
 
-  // Trace ligne si >= 2 points
   if (mesurePoints.length >= 2) {
     const p1 = mesurePoints[mesurePoints.length - 2].getLatLng();
     const p2 = latlng;
@@ -2058,9 +2033,11 @@ panel.style.display = "block";
     return (m / 1000).toFixed(2) + " km";
   }
 }
+
+    
 </script>
 <div id="legal-footer">
-  Nono Maps v1.13_Essai14 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.13_Essai | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
