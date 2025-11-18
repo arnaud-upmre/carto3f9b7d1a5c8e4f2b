@@ -2036,7 +2036,7 @@ text += `${A} → ${B} : ${formatDistance(d)}\n`;
   text += "---------------------\n";
 text += `Total : ${formatDistance(total)}`;
 
-document.getElementById("measure-text").textContent = text;
+document.getElementById("measure-text").textContent = text.trim();
 panel.style.display = "block";
 }
 
