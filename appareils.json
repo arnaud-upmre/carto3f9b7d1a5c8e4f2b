@@ -5809,6 +5809,39 @@
     "longitude": 2.27599,
     "description": "Sectionneur manuel",
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.993284351700595,2.276248299940909;uid=8792e331-f738-4482-8578-c4f1a3588111_453;"
+  }, 
+  {
+    "nom": "Grande Synthe IA2",
+    "type": "A",
+    "SAT": "",
+    "accès": "",
+    "appareil": "IA2",
+    "latitude": 51.00215,
+    "longitude": 2.31164,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=51.0020828854331,2.3113125356637125;uid=200f8f46-7527-41d1-98b5-5f612aa9001f_2188;"
+  }, 
+  {
+    "nom": "Grande Synthe IA2",
+    "type": "A",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT IA2",
+    "latitude": 51.00215,
+    "longitude": 2.31164,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=51.0020828854331,2.3113125356637125;uid=200f8f46-7527-41d1-98b5-5f612aa9001f_2188;"
+  }, 
+  {
+    "nom": "Grande Synthe IA2",
+    "type": "A",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TC IA2",
+    "latitude": 51.00215,
+    "longitude": 2.31164,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=51.0020828854331,2.3113125356637125;uid=200f8f46-7527-41d1-98b5-5f612aa9001f_2188;"
   }
 ]
 
