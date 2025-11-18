@@ -1970,14 +1970,12 @@ map.on("click", function (e) {
 
   const now = Date.now();
 
-  // --- DOUBLE TAP = RESET ---
   if (now - lastTapTime < 300) {
     resetMesure();
     return;
   }
   lastTapTime = now;
 
-  // --- SIMPLE TAP = AJOUT DU POINT ---
   const latlng = e.latlng;
 
   const idx = mesurePoints.length; 
@@ -2035,8 +2033,8 @@ function updateMeasurePanel() {
   let total = 0;
 
   for (let i = 1; i < mesurePoints.length; i++) {
-    const A = String.fromCharCode(64 + i);      // A, B, C...
-    const B = String.fromCharCode(65 + i);      // B, C, D...
+    const A = String.fromCharCode(64 + i);      
+    const B = String.fromCharCode(65 + i);     
 
     const d = map.distance(
       mesurePoints[i - 1].getLatLng(),
@@ -2070,21 +2068,19 @@ function afficherTousAppareils() {
         return;
     }
 
-    // 1) Désactiver le clustering
+
     appareilsLayer.freeze();
 
-    // 2) Laisser Leaflet rafraîchir l’affichage
+
     setTimeout(() => {
 
         appareilsLayer.eachLayer(cluster => {
 
-            // On ne cible QUE les clusters
+    
             if (!(cluster instanceof L.MarkerCluster)) return;
 
             const enfants = cluster.getAllChildMarkers();
             if (enfants.length < 2) return;
-
-            // Vérifier si tous les appareils sont EXACTEMENT au même point
             const first = enfants[0].getLatLng();
             const same = enfants.every(m => m.getLatLng().equals(first));
 
