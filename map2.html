@@ -1,4 +1,3 @@
-//ancien map : conforme
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -14,8 +13,30 @@
 <link rel="preload" href="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js" as="script">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster.freezable/dist/leaflet.markercluster.freezable.js"></script>
 
 <style>
+
+  /* --- MODE RÈGLE / TRAÇAGE (Style B SIG) --- */
+.measure-point {
+  width: 10px;
+  height: 10px;
+  background: white;
+  border: 2px solid black;
+  border-radius: 50%;
+}
+
+.measure-label {
+  position: absolute;
+  background: rgba(0,0,0,0.75);
+  color: white;
+  padding: 3px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+  pointer-events: none;
+  white-space: nowrap;
+  transform: translate(-50%, -12px);
+}
   
   #legal-footer {
   position: fixed;
@@ -383,6 +404,97 @@
   align-items: center;
   margin-bottom: 0 !important;
 }
+
+
+#context-menu {
+  position: absolute;
+  min-width: 240px;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 14px;
+  padding: 10px 0;
+  display: none;
+  flex-direction: column;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.45);
+  z-index: 999999;
+}
+
+.context-item {
+  padding: 10px 14px;
+  color: white;
+  font-size: 14px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.context-item:hover {
+  background: rgba(255,255,255,0.12);
+}
+
+.context-separator {
+  height: 1px;
+  background: rgba(255,255,255,0.15);
+  margin: 6px 0;
+}
+
+#context-submenu {
+  display: none;
+  flex-direction: column;
+  background: rgba(0,0,0,0.40);
+  padding: 6px 0;
+}
+
+.sub-item {
+  padding: 10px 18px;
+  color: white;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.sub-item:hover {
+  background: rgba(255,255,255,0.15);
+  transform: translateX(3px);
+}
+
+
+
+.ping-marker {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 0 10px white, 0 0 20px rgba(255,255,255,0.6);
+  transform: translate(-50%, -50%);
+  animation: pingPulse 1.5s infinite;
+  pointer-events: none;
+  z-index: 999998;
+}
+
+.ping-marker::after {
+  content: "";
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: red;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 4px red;
+}
+
+@keyframes pingPulse {
+  0%   { transform: translate(-50%,-50%) scale(1); opacity: 1; }
+  100% { transform: translate(-50%,-50%) scale(2.3); opacity: 0; }
+}
   
 </style>
 
@@ -399,6 +511,75 @@
 <body>
   
   <div id="map"></div>
+
+<div id="measure-panel" style="
+  position: fixed;
+  bottom: 27px;
+  left: 20px;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color: white;
+  padding: 10px 16px 12px 16px; 
+  border-radius: 10px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Roboto;
+  font-size: 14px;
+  display: none;
+  z-index: 999999;
+  max-width: 260px;
+  white-space: pre-line;
+">
+  <div id="measure-text"></div>
+</div>
+
+<div id="context-menu">
+  <div class="context-item" id="ctx-coord"></div>
+
+  <div class="context-item" id="ctx-itin">
+    🚗 Itinéraire vers ici
+  </div>
+  <div id="context-submenu">
+<div class="sub-item" id="ctx-gmaps">🚙 Google Maps</div>
+<div class="sub-item" id="ctx-waze"> 🚙 Waze</div>
+<div class="sub-item" id="ctx-apple">🚙 Apple Plans</div>
+  </div>
+      <div class="context-separator"></div>
+  <div class="context-item" id="ctx-regle">📏 Règle / Traçage</div>
+  
+  <div class="context-separator"></div>
+
+  <div class="context-item" id="ctx-street">🌍 Street View</div>
+  <div class="context-item" id="ctx-imajnet">🛣️ Imajnet</div>
+
+  <div class="context-separator"></div>
+
+  <div class="context-item" id="ctx-afficher-appareils">
+  🔎 Afficher tous les appareils
+</div>
+
+<div class="context-separator"></div>
+  
+<div class="context-item" id="ctx-add-appareil">📍 Ajouter un appareil ici</div>
+
+<div id="ctx-submenu-add" style="display:none; flex-direction:column; background:rgba(0,0,0,0.35); padding:6px 0; border-radius:10px;">
+  <div class="sub-item" id="ctx-add-form">📝 Via le formulaire</div>
+  <div class="sub-item" id="ctx-add-email">📬 Par email</div>
+
+
+<div class="context-separator"></div>
+</div>
+
+  
+<div class="context-item" id="ctx-add-poste">📍 Ajouter un SAT ici</div>
+
+<div id="ctx-submenu-sat" style="display:none; flex-direction:column; background:rgba(0,0,0,0.35); padding:6px 0; border-radius:10px;">
+  <div class="sub-item" id="ctx-sat-form">📝 Via le formulaire</div>
+  <div class="sub-item" id="ctx-sat-email">📧 Par email</div>
+</div>
+</div>
+
+<!-- MARKER PING -->
+<div id="ping-marker" class="ping-marker" style="display:none;"></div>
 
 <div class="fab-container">
   <button class="fab" id="fabBtn">☰</button>
@@ -472,67 +653,11 @@ const map = L.map('map', {
   maxZoom: 21,                 
   maxBounds: boundsFrance,     
   maxBoundsViscosity: 1.0      
-  }).setView(defaultCenter, defaultZoom);
+  }).setView(defaultCenter, (window.innerWidth < 768 ? defaultZoom - 1 : defaultZoom));
 
     const ormPane = map.createPane("orm");
 ormPane.style.zIndex = 350;
  
-let editMode = false;   
-  
-const editBanner = document.createElement("div");
-editBanner.style = `
-  position: fixed;
-  bottom: 10px; left: 50%;
-  transform: translateX(-50%);
-  background: rgba(0,0,0,0.8);
-  color: white;
-  font-family: system-ui, sans-serif;
-  font-size: 13px;
-  padding: 6px 12px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-  z-index: 9999;
-  display: none;
-`;
-document.body.appendChild(editBanner);
-
-const editIcon = document.createElement("div");
-editIcon.textContent = "✏️";
-editIcon.style = `
-  position: fixed;
-  bottom: 40px; left: 12px;
-  font-size: 18px;
-  background: rgba(0,0,0,0.75);
-  color: white;
-  padding: 6px 8px;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-  z-index: 9999;
-  display: none;
-  font-family: system-ui, sans-serif;
-`;
-document.body.appendChild(editIcon);
-
-document.addEventListener("keydown", function(e) {
-  if (e.key.toLowerCase() === "i") {
-    editMode = !editMode;
-
-    editBanner.textContent = editMode ? "ℹ️ Mode information activé" : "❌ Mode information désactivé";
-    editBanner.style.display = "block";
-    setTimeout(() => { editBanner.style.display = "none"; }, 2000);
-
-    editIcon.textContent = "ℹ️";
-    editIcon.style.display = editMode ? "block" : "none";
-  }
-
-  if (e.key === "Escape" && editMode) {
-    editMode = false;
-    editBanner.textContent = "❌ Mode information désactivé";
-    editBanner.style.display = "block";
-    setTimeout(() => { editBanner.style.display = "none"; }, 2000);
-    editIcon.style.display = "none";
-  }
-});
     
 const allMarkers = [];
 
@@ -695,11 +820,22 @@ const orm = L.tileLayer(
     maxZoom: 21,
     maxNativeZoom: 19,
     tileSize: 256,
-    opacity: 1,
-    attribution: "© OpenRailwayMap & OpenStreetMap contributors"
+    opacity: 0.7,
+    attribution: "© OpenRailwayMap & OpenStreetMap contributors",
+
+    updateWhenIdle: true,        
+    updateWhenZooming: false,   
+    keepBuffer: 2       
   }
 );
 
+let ormUserEnabled = true;  
+let ormIsPaused = false;    
+let ormTimer = null;    
+let lastZoomTime = 0;   
+let speedUserEnabled = false;
+let speedIsPaused = false;
+let speedTimer = null;
 
 const speedLayer = L.tileLayer(
   "https://{s}.tiles.openrailwaymap.org/maxspeed/{z}/{x}/{y}.png",
@@ -1385,6 +1521,12 @@ leftControls.addTo(map);
     document.getElementById("streetview-frame").src = ""; 
   };
 
+    document.getElementById("ctx-afficher-appareils").onclick = () => {
+  closeContextMenu();
+  afficherTousAppareils();
+  showToast("📡 Tous les appareils affichés et éclatés");
+};
+
 console.info("[Nono Maps] boot", {
   leaflet: L.version,
   clusters: { postes: !!postesLayer, appareils: !!appareilsLayer, acces: !!accesLayer }
@@ -1400,72 +1542,9 @@ function renderInformation(value) {
   return escHtml(String(value));
 }
 
-let activeEditPopup = null; 
 
 function escHtml(s){return String(s).replace(/[&<>"]/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[m]));}
 
-map.on('click', (e) => {
-  if (!editMode) return;
-
-  const lat = Number(e.latlng.lat.toFixed(5));
-  const lng = Number(e.latlng.lng.toFixed(5));
-  const coordsText = `${lat}, ${lng}`;
-
-  const popupContent = `
-  <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
-              font-size:14px;min-width:240px;">
-
-    <div style="font-weight:600; font-size:16px; margin-bottom:12px;"> ℹ️ Information : </div>
-
-    <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
-      <pre style="margin:0; background:#f3f4f6; padding:6px 10px; border-radius:6px; font-size:13px; flex:1;">
-${coordsText}</pre>
-      <button id="btn-copy"
-        style="padding:6px 10px; border:none; border-radius:6px; background:#f59e0b; color:white; cursor:pointer;">
-        📋 Copier
-      </button>
-    </div>
-
-    <div style="display:flex; flex-direction:column; gap:8px;">
-      <button id="btn-gmaps" 
-        style="padding:8px 12px; border:none; border-radius:6px; background:#3b82f6; color:white; cursor:pointer;">
-        🔎 Google Maps
-      </button>
-
-      <button id="btn-imajnet" 
-        style="padding:8px 12px; border:none; border-radius:6px; background:#10b981; color:white; cursor:pointer;">
-        🛣️ Imajnet
-      </button>
-    </div>
-  </div>`;
-
-  if (activeEditPopup) map.closePopup(activeEditPopup);
-
-  activeEditPopup = L.popup({ autoClose: false, closeOnClick: false })
-    .setLatLng(e.latlng)
-    .setContent(popupContent)
-    .openOn(map);
-
-  setTimeout(() => {
-    const flash = (txt) => {
-      editBanner.textContent = txt;
-      editBanner.style.display = "block";
-      setTimeout(() => { editBanner.style.display = "none"; }, 1200);
-    };
-
-    document.getElementById('btn-copy')?.addEventListener('click', () => {
-      navigator.clipboard.writeText(coordsText).then(() => flash("✅ Coordonnées copiées"));
-    });
-
-    document.getElementById('btn-gmaps')?.addEventListener('click', () => {
-      window.open(`https://www.google.com/maps?q=${lat},${lng}`, '_blank');
-    });
-
-    document.getElementById('btn-imajnet')?.addEventListener('click', () => {
-      window.open(`https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${lat},${lng};`, '_blank');
-    });
-  }, 50); 
-});
 
 const fabBtn = document.getElementById("fabBtn");
 const fabOptions = document.getElementById("fabOptions");
@@ -1498,13 +1577,15 @@ function showToast(message) {
 document.getElementById("btn-orm").addEventListener("click", function () {
   const btn = this;
 
-
   if (map.hasLayer(orm)) {
+    ormUserEnabled = false;
     map.removeLayer(orm);
     btn.classList.remove("active");
     showToast("❌ ORM masqué");
     return;
   }
+
+  ormUserEnabled = true;
 
   if (map.hasLayer(speedLayer)) {
     map.removeLayer(speedLayer);
@@ -1525,13 +1606,17 @@ document.getElementById("btn-speed").addEventListener("click", function () {
   const btnORM = document.getElementById("btn-orm");
 
   if (map.hasLayer(speedLayer)) {
+    speedUserEnabled = false;
     map.removeLayer(speedLayer);
     btnSpeed.classList.remove("active");
     showToast("❌ Vitesses masquées");
     return;
   }
 
+  speedUserEnabled = true;
+
   if (map.hasLayer(orm)) {
+    ormUserEnabled = false;
     map.removeLayer(orm);
     btnORM.classList.remove("active");
   }
@@ -1540,7 +1625,6 @@ document.getElementById("btn-speed").addEventListener("click", function () {
   btnSpeed.classList.add("active");
   showToast(" ⚠️ Vitesse affichée à titre indicatif. Se référer aux documents réglementaires internes pour les vitesses de ligne applicables.");
 });
-
 
 const compteurURL =
   "https://script.google.com/macros/s/AKfycbzUFaek89LYosR0FSw9gyxn2IZXlFlWXA_dIFIDwox-szE3DgH-l8IVbGfaoIgGK04h/exec";
@@ -1567,13 +1651,455 @@ map.on("popupopen", function (e) {
   else if (appareilsLayer.hasLayer(marker)) incrementCounterAppareil();
 });
 
-</script>
+
+const ctxMenu = document.getElementById("context-menu");
+const ctxSubmenu = document.getElementById("context-submenu");
+const pingMarker = document.getElementById("ping-marker");
+
+let ctxLat = null;
+let ctxLng = null;
+
+
+function showPing(latlng) {
+  const pt = map.latLngToContainerPoint(latlng);
+  pingMarker.style.left = pt.x + "px";
+  pingMarker.style.top = pt.y + "px";
+  pingMarker.style.display = "block";
+}
+
+function hidePing() {
+  pingMarker.style.display = "none";
+}
+
+function openContextMenu(latlng, containerPoint) {
+   hidePing();
+  
+  ctxLat = latlng.lat;
+  ctxLng = latlng.lng;
+
+ 
+  document.getElementById("ctx-coord").innerHTML =
+    `📍 ${ctxLat.toFixed(5)}, ${ctxLng.toFixed(5)}`;
+
+  showPing(latlng);
+
+  ctxMenu.style.display = "flex";
+
+
+  const menuWidth = ctxMenu.offsetWidth;
+  const menuHeight = ctxMenu.offsetHeight;
+
+  let left = containerPoint.x + 15;
+  let top = containerPoint.y + 15;
+
+  if (left + menuWidth > window.innerWidth - 10) {
+    left = containerPoint.x - menuWidth - 15;
+  }
+
+  if (left < 10) left = 10;
+  if (top < 10) {
+    top = 10;
+  }
+  if (top + menuHeight > window.innerHeight - 10) {
+    top = window.innerHeight - menuHeight - 10;
+  }
+
+  ctxMenu.style.left = left + "px";
+  ctxMenu.style.top = top + "px";
+  }
+
+
+function closeContextMenu() {
+  ctxMenu.style.display = "none";
+  ctxSubmenu.style.display = "none";
+  hidePing();
+}
+
+
+map.on("contextmenu", function(e) {
+  if (mesureActive) return; 
+
+  e.originalEvent.preventDefault();
+  openContextMenu(e.latlng, map.latLngToContainerPoint(e.latlng));
+});
+
+
+let touchTimer = null;
+
+map.on("touchstart", function(e) {
+  if (!e.latlng) return;
+
+  if (mesureActive) {
+    touchTimer = setTimeout(() => {
+      resetMesure();    
+      mesureActive = false;
+      showToast("📏 Mode mesure désactivé");
+    }, 600);       
+    return;        
+  }
+
+  touchTimer = setTimeout(() => {
+    openContextMenu(e.latlng, map.latLngToContainerPoint(e.latlng));
+  }, 500);
+});
+
+map.on("touchend", () => clearTimeout(touchTimer));
+
+document.addEventListener("click", function(e) {
+  if (!ctxMenu.contains(e.target)) closeContextMenu();
+});
+
+map.on("movestart", closeContextMenu);
+map.on("zoomstart", closeContextMenu);
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") closeContextMenu();
+});
+
+document.getElementById("ctx-itin").onclick = () => {
+  ctxSubmenu.style.display =
+    ctxSubmenu.style.display === "flex" ? "none" : "flex";
+};
+
+document.getElementById("ctx-gmaps").onclick = () => {
+  window.open(`https://www.google.com/maps/dir/?api=1&destination=${ctxLat},${ctxLng}`);
+};
+
+document.getElementById("ctx-waze").onclick = () => {
+  window.open(`https://waze.com/ul?ll=${ctxLat},${ctxLng}&navigate=yes`);
+};
+
+if (!/iPhone|iPad|Macintosh/.test(navigator.userAgent)) {
+  document.getElementById("ctx-apple").style.display = "none";
+}
+document.getElementById("ctx-apple").onclick = () => {
+  window.open(`http://maps.apple.com/?daddr=${ctxLat},${ctxLng}`);
+};
+
+document.getElementById("ctx-street").onclick = () => {
+  openStreetView(ctxLat, ctxLng);
+};
+
+document.getElementById("ctx-imajnet").onclick = () => {
+  window.open(`https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${ctxLat},${ctxLng};`);
+};
+
+document.getElementById("ctx-add-appareil").onclick = () => {
+  const sub = document.getElementById("ctx-submenu-add");
+  sub.style.display = (sub.style.display === "flex") ? "none" : "flex";
+};
 
     
+document.getElementById("ctx-add-form").onclick = () => {
+  window.location.href = `ajout_appareil.html?lat=${ctxLat}&lng=${ctxLng}`;
+};
+
+
+document.getElementById("ctx-add-email").onclick = () => {
+
+  const subject = encodeURIComponent("➕ Ajout d'un appareil");
+
+const body = encodeURIComponent(
+`Bonjour Arnaud,
+
+Voici la position de l’appareil (à préciser)
+au poste de (à préciser) :
+
+Existe-t-il d’autres appareils sur le même support ? (si oui, précisez)
+
+Coordonnées GPS :
+Latitude : ${ctxLat}
+Longitude : ${ctxLng}
+
+📍 Lien Google Maps :
+https://www.google.com/maps?q=${ctxLat},${ctxLng}
+
+Bonne journée,`
+);
+
+  window.location.href = `mailto:arnaud.debaecker@sncf.fr?subject=${subject}&body=${body}`;
+};
+
+document.getElementById("ctx-add-poste").onclick = () => {
+  const sub = document.getElementById("ctx-submenu-sat");
+  sub.style.display = (sub.style.display === "flex") ? "none" : "flex";
+};
+
+
+document.getElementById("ctx-sat-form").onclick = () => {
+  window.location.href = `ajout_poste.html?lat=${ctxLat}&lng=${ctxLng}`;
+};
+
+
+document.getElementById("ctx-sat-email").onclick = () => {
+
+  const subject = encodeURIComponent("➕ Ajout d'un SAT");
+
+  const body = encodeURIComponent(
+`Bonjour Arnaud,
+
+Voici la position du SAT : (à préciser)
+au poste de (à préciser) :
+
+Coordonnées GPS :
+Latitude : ${ctxLat}
+Longitude : ${ctxLng}
+
+📍 Lien Google Maps :
+https://www.google.com/maps?q=${ctxLat},${ctxLng}
+
+Bonne journée,`
+  );
+
+  window.location.href = `mailto:arnaud.debaecker@sncf.fr?subject=${subject}&body=${body}`;
+};
+
+
+
+function pauseORM() {
+  if (!ormUserEnabled) return;    
+  if (ormIsPaused) return;     
+
+  ormIsPaused = true;
+  if (map.hasLayer(orm)) map.removeLayer(orm);
+}
+
+function resumeORM() {
+  if (!ormUserEnabled) return;   
+  ormIsPaused = false;
+  if (!map.hasLayer(orm)) map.addLayer(orm);
+}
+
+    function pauseSpeed() {
+  if (!speedUserEnabled) return;
+  if (speedIsPaused) return;
+
+  speedIsPaused = true;
+  if (map.hasLayer(speedLayer)) map.removeLayer(speedLayer);
+}
+
+function resumeSpeed() {
+  if (!speedUserEnabled) return;
+
+  speedIsPaused = false;
+  if (!map.hasLayer(speedLayer)) map.addLayer(speedLayer);
+}
+
+map.on("zoomstart", () => {
+  lastZoomTime = performance.now();
+  pauseORM();
+  pauseSpeed();   
+  if (ormTimer) clearTimeout(ormTimer);
+});
+
+map.on("zoomend", () => {
+  const now = performance.now();
+  const zoomSpeed = now - lastZoomTime;
+
+  let delay = 200;
+  if (zoomSpeed < 120) delay = 900;
+  else if (zoomSpeed < 200) delay = 600;
+  else if (zoomSpeed < 350) delay = 400;
+  else delay = 250;
+
+  if (ormTimer) clearTimeout(ormTimer);
+  ormTimer = setTimeout(() => {
+    resumeORM();
+  }, delay);
+
+  if (speedTimer) clearTimeout(speedTimer);
+  speedTimer = setTimeout(() => {
+    resumeSpeed();
+  }, delay);
+});
+    
+
+map.on("movestart", () => {
+  pauseORM();
+  pauseSpeed(); 
+  if (ormTimer) clearTimeout(ormTimer);
+});
+  
+
+map.on("moveend", () => {
+  if (ormTimer) clearTimeout(ormTimer);
+  ormTimer = setTimeout(() => {
+    resumeORM();
+  }, 350);
+
+  if (speedTimer) clearTimeout(speedTimer);
+  speedTimer = setTimeout(() => {
+    resumeSpeed();
+  }, 350);
+});
+
+
+let mesureActive = false;
+let mesurePoints = [];
+let mesureLines = [];
+
+    const panel = document.getElementById("measure-panel");
+
+function resetMesure() {
+  mesurePoints.forEach(p => map.removeLayer(p));
+  mesureLines.forEach(l => map.removeLayer(l));
+
+  mesurePoints = [];
+  mesureLines = [];
+
+  panel.style.display = "none";
+document.getElementById("measure-text").textContent = "";
+  mesureActive = false;
+
+  showToast("🧽 Mesure effacée");
+}
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") resetMesure();
+});
+
+document.getElementById("ctx-regle").onclick = () => {
+  closeContextMenu();
+  resetMesure();
+  mesureActive = true;
+  showToast("📏 Mode mesure activé — cliquez pour poser des points");
+};
+    
+let lastTapTime = 0;
+    
+map.on("click", function (e) {
+  if (!mesureActive) return;
+
+  const now = Date.now();
+
+  // --- DOUBLE TAP = RESET ---
+  if (now - lastTapTime < 300) {
+    resetMesure();
+    return;
+  }
+  lastTapTime = now;
+
+  // --- SIMPLE TAP = AJOUT DU POINT ---
+  const latlng = e.latlng;
+
+  const idx = mesurePoints.length; 
+  const letter = String.fromCharCode(65 + idx);
+
+  const point = L.marker(latlng, {
+    interactive: false,
+    icon: L.divIcon({
+      className: "",
+      html: `
+        <div style="position: relative; transform: translate(-6px, -6px);">
+          <div style="
+            width:12px;height:12px;
+            background:white;border:2px solid black;border-radius:50%;
+          "></div>
+          <div style="
+            position:absolute;
+            top:-16px; left:50%;
+            transform: translateX(-50%);
+            background:rgba(0,0,0,0.7);
+            color:white;
+            padding:1px 4px;
+            border-radius:4px;
+            font-size:11px;
+            font-weight:600;
+            white-space:nowrap;
+          ">${letter}</div>
+        </div>
+      `,
+      iconSize: [12, 12]
+    })
+  }).addTo(map);
+
+  mesurePoints.push(point);
+
+  if (mesurePoints.length >= 2) {
+    const p1 = mesurePoints[mesurePoints.length - 2].getLatLng();
+    const p2 = latlng;
+
+    const line = L.polyline([p1, p2], {
+      color: "red",
+      weight: 3
+    }).addTo(map);
+
+    mesureLines.push(line);
+  }
+
+  updateMeasurePanel();
+});
+
+function updateMeasurePanel() {
+  if (mesurePoints.length < 2) return;
+
+  let text = "";
+  let total = 0;
+
+  for (let i = 1; i < mesurePoints.length; i++) {
+    const A = String.fromCharCode(64 + i);      // A, B, C...
+    const B = String.fromCharCode(65 + i);      // B, C, D...
+
+    const d = map.distance(
+      mesurePoints[i - 1].getLatLng(),
+      mesurePoints[i].getLatLng()
+    );
+
+    total += d;
+
+text += `${A} → ${B} : ${formatDistance(d)}\n`;
+  }
+
+  text += "---------------------\n";
+text += `Total : ${formatDistance(total)}`;
+
+document.getElementById("measure-text").textContent = text.trimEnd();
+panel.style.display = "block";
+}
+
+    function formatDistance(m) {
+  if (m < 1000) {
+    return m.toFixed(1) + " m";
+  } else {
+    return (m / 1000).toFixed(2) + " km";
+  }
+}
+
+function afficherTousAppareils() {
+
+    if (typeof appareilsLayer.freeze !== "function") {
+        console.warn("⚠️ plugin freezable NON chargé");
+        return;
+    }
+
+    // 1) Désactiver le clustering
+    appareilsLayer.freeze();
+
+    // 2) Laisser Leaflet rafraîchir l’affichage
+    setTimeout(() => {
+
+        appareilsLayer.eachLayer(cluster => {
+
+            // On ne cible QUE les clusters
+            if (!(cluster instanceof L.MarkerCluster)) return;
+
+            const enfants = cluster.getAllChildMarkers();
+            if (enfants.length < 2) return;
+
+            // Vérifier si tous les appareils sont EXACTEMENT au même point
+            const first = enfants[0].getLatLng();
+            const same = enfants.every(m => m.getLatLng().equals(first));
+
+            if (same) {
+                cluster.spiderfy();
+            }
+        });
+
+    }, 300);
+}
     
 </script>
 <div id="legal-footer">
-  Nono Maps v1.12 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.13_Essai2 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
