@@ -534,20 +534,22 @@
 <button id="measure-clear" style="
   margin-top: 10px;
   width: 100%;
-  padding: 6px 10px;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.22);
+  height: 34px;                     /* <-- Hauteur FIXE */
+  padding: 0;                       /* <-- On enlève les marges internes */
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.18);
   border-radius: 8px;
   color: white;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
+
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: center;              /* <-- Centre VERTICALEMENT */
+  justify-content: center;          /* <-- Centre HORIZONTALEMENT */
+
   gap: 6px;
   cursor: pointer;
-  height: 28px;             
-  line-height: 1;        
+  line-height: 1;                   /* <-- Évite les décalages */
 ">
   🗑️ Effacer
 </button>
@@ -2056,7 +2058,7 @@ panel.style.display = "block";
 }
 </script>
 <div id="legal-footer">
-  Nono Maps v1.13_Essai6 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.13_Essai7 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
