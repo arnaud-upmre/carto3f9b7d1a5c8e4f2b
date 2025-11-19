@@ -713,7 +713,7 @@ if (id.startsWith("DU")) {
   iconFile = "TT.png";
 
 } else if (
-  /^T([1-9]|10)$/.test(id) ||      // T1 → T10 = sectionneurs
+  /^T([1-9]|10)\b/.test(id) ||      // ← FIX !!!
   /^[0-9]/.test(id) ||
   id.startsWith("S") ||
   id.startsWith("ST") ||
