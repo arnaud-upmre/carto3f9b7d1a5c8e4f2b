@@ -6117,6 +6117,116 @@
     "longitude": 2.19349,
     "description": "Herse LC",
     "imajnet": ""
+  }, 
+  {
+    "nom": "Ruminghem",
+    "type": "SST",
+    "SAT": "",
+    "accès": "",
+    "appareil": "T8",
+    "latitude": 50.84461, 
+    "longitude": 2.19345,
+    "description": "Herse LC",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Ruminghem",
+    "type": "SST",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT F8",
+    "latitude": 50.84461, 
+    "longitude": 2.19345,
+    "description": "Herse LC",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Ruminghem",
+    "type": "SST",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT C8",
+    "latitude": 50.84461, 
+    "longitude": 2.19345,
+    "description": "Herse LC",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Ruminghem",
+    "type": "SST",
+    "SAT": "",
+    "accès": "",
+    "appareil": "P4",
+    "latitude": 50.84459, 
+    "longitude": 2.19347,
+    "description": "Herse LC",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Ruminghem",
+    "type": "SST",
+    "SAT": "",
+    "accès": "",
+    "appareil": "SM4",
+    "latitude": 50.84459, 
+    "longitude": 2.19347,
+    "description": "Herse LC",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Ruminghem",
+    "type": "SST",
+    "SAT": "",
+    "accès": "",
+    "appareil": "T7",
+    "latitude": 50.84464,
+    "longitude": 2.19340,
+    "description": "Herse LC",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Ruminghem",
+    "type": "SST",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT C7",
+    "latitude": 50.84464,
+    "longitude": 2.19340,
+    "description": "Herse LC",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Ruminghem",
+    "type": "SST",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT F7",
+    "latitude": 50.84464,
+    "longitude": 2.19340,
+    "description": "Herse LC",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Ruminghem",
+    "type": "SST",
+    "SAT": "",
+    "accès": "",
+    "appareil": "SM3",
+    "latitude": 50.84467,
+    "longitude": 2.19337,
+    "description": "Herse LC",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Ruminghem",
+    "type": "SST",
+    "SAT": "",
+    "accès": "",
+    "appareil": "P3",
+    "latitude": 50.84470,
+    "longitude": 2.19333,
+    "description": "Herse LC",
+    "imajnet": ""
   }
 ]
 
