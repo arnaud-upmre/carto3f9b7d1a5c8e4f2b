@@ -634,9 +634,12 @@ if (steps[currentStep].id === "accessDetailsStep") {
   });
 });
   
+
 function validateStep(i) {
   const step = steps[i];
+  const inputs = step.querySelectorAll("input[required], textarea[required]");
 
+  // --- Étape contenant POSTE + SAT ---
   if (step.querySelector("#poste") && step.querySelector("#sat")) {
 
     const poste = $("poste").value.trim();
@@ -662,7 +665,8 @@ function validateStep(i) {
 
     return valid;
   }
-  
+
+  // --- Validation par défaut ---
   let valid = true;
 
   inputs.forEach(input => {
@@ -672,20 +676,20 @@ function validateStep(i) {
 
       if (input.id === "sat") {
         $("satHelp").classList.add("show");
-        $("satHelp").textContent = "⚠️ Indiquez le SAT ou « Poste principal ».";
       }
     } else {
       input.classList.remove("error");
 
       if (input.id === "sat") {
         $("satHelp").classList.remove("show");
-        $("satHelp").textContent = "⚠️ SAT requis (ex : SAT1, SAT2) ou précisez « Poste principal ».";
       }
     }
   });
 
   return valid;
 }
+
+  
 document.addEventListener("input", (e)=>{
   if(e.target.matches("input.error, textarea.error")){
     if(e.target.value.trim() !== ""){
