@@ -1211,8 +1211,8 @@ document.getElementById("startForm").addEventListener("click", () => {
   showStep(0); 
 });
 
-  // ===============================
-// 📌 AUTO-RÉCUPÉRATION COORDONNÉES venant de la MAP
+// ===============================
+// 📌 AUTO-RÉCUPÉRATION COORDONNÉES venant de la MAP + SAUT AUTOMATIQUE
 // ===============================
 document.addEventListener("DOMContentLoaded", () => {
   const params = new URLSearchParams(window.location.search);
@@ -1220,32 +1220,47 @@ document.addEventListener("DOMContentLoaded", () => {
   const urlLat = params.get("lat");
   const urlLng = params.get("lng");
 
-  // Si pas de coordonnées, ne rien faire
+  // Si pas de coordonnées => comportement normal
   if (!urlLat || !urlLng) return;
 
-  // On pré-remplit les valeurs sur l’écran "Localisation appareil"
+  // -----------------------------
+  // 1️⃣ Pré-remplissage des coordonnées
+  // -----------------------------
   $("latDevice").value = urlLat;
   $("lonDevice").value = urlLng;
   $("coordsDeviceDisplay").textContent = `Coordonnées relevées : ${urlLat}, ${urlLng}`;
   $("coordsDeviceDisplay").style.display = "block";
-
-  // ⚠️ Très important : on marque la localisation comme "confirmée"
   DEVICE_CONFIRMED = true;
 
-  // Si la carte n'est pas encore initialisée, elle s'affichera à la bonne position
+  // Carte affichera directement le bon point
   lastFix = { lat: parseFloat(urlLat), lon: parseFloat(urlLng), ts: Date.now() };
 
-  // ===============================
-  // 🔗 Auto-génération du lien Google Maps si l’utilisateur choisit “Lien”
-  // ===============================
-  function updateGmapsLink() {
-    if ($("presentValue").value === "non") {  // mode "Lien Google Maps"
-      $("lien").value = `https://www.google.com/maps?q=${urlLat},${urlLng}`;
-    }
-  }
+  // -----------------------------
+  // 2️⃣ Forcer le mode "Lien Google Maps"
+  // -----------------------------
+  $("presentValue").value = "non";
+  $("pill-non").classList.add("active");
+  $("pill-oui").classList.remove("active");
 
-  // Quand l’utilisateur clique sur le pill “Lien Google Maps”
-  $("pill-non").addEventListener("click", updateGmapsLink);
+  toggle($("mapDeviceWrap"), 0);
+  toggle($("lienField"), 1);
+
+  $("lien").value = `https://www.google.com/maps?q=${urlLat},${urlLng}`;
+
+  // Quand l’utilisateur clique sur "Lien", régénérer le lien proprement
+  $("pill-non").addEventListener("click", () => {
+    $("lien").value = `https://www.google.com/maps?q=${urlLat},${urlLng}`;
+  });
+
+  // -----------------------------
+  // 3️⃣ Saut automatique de l’étape "Comment localiser l’appareil ?"
+  // Étape 4 = choix GPS / Lien
+  // Étape 5 = saisie directe du lien (là où on veut aller)
+  // -----------------------------
+  setTimeout(() => {
+    currentStep = 5;
+    showStep(currentStep);
+  }, 200);
 });
 </script>
 </body>
