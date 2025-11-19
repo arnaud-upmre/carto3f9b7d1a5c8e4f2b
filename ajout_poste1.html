@@ -305,6 +305,10 @@ input.error{border:2px solid #c62828!important;background:#ffecec}
 let currentStep=0;
 let comeBackAt = null; 
 
+const HAZE = [50.72384, 2.54924];
+const steps=document.querySelectorAll(".step");  
+const progress=document.getElementById("progress");
+
   // --- MODE DEPUIS LA CARTE (lat & lng dans l'URL) ---
 const urlParams = new URLSearchParams(window.location.search);
 const urlLat = urlParams.get("lat");
@@ -317,24 +321,19 @@ if (urlLat && urlLng) {
   FROM_MAP = true;
   AUTO_LINK = `https://www.google.com/maps?q=${urlLat},${urlLng}`;
 
-  // Pré-remplir lien
   document.getElementById("lien").value = AUTO_LINK;
   document.getElementById("presentValue").value = "non";
 
-  // Masquer la question "comment localiser"
   const stepLocalisation = steps[2]; 
   stepLocalisation.classList.add("skip");
   stepLocalisation.style.display = "none";
 
-  // Masquer la carte GPS
   const stepLocationDetails = steps[3];
   stepLocationDetails.classList.add("skip");
   stepLocationDetails.style.display = "none";
 }
 
-const HAZE = [50.72384, 2.54924];
-const steps=document.querySelectorAll(".step");  
-const progress=document.getElementById("progress");
+  
   function recapIndex(){ return [...steps].findIndex(s => s.querySelector('#recap')); }
 function stepIndexOf(el){ return el ? [...steps].findIndex(s => s.contains(el)) : -1; }
 
