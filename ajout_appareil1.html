@@ -303,12 +303,8 @@ Remplir uniquement si l’appareil dépend d’un SAT
 
 
 <div class="step">
-  <p style="line-height:1.5">
-    🎉 Super, presque terminé !<br>
-    Vérifiez ci-dessous les informations saisies.<br>
-    Un détail à modifier ? Touchez la ligne correspondante.<br>
-    Sinon, envoyez votre contribution ✅
-  </p>
+<p id="recapIntro" style="line-height:1.5"></p>
+  
   <div id="recap" style="margin:12px 0; font-size:15px; line-height:1.5"></div>
   <div class="btn-row">
     <button type="button" class="btn secondary prev">⬅️ Retour</button>
@@ -439,9 +435,25 @@ if (i === 8) {
   }
 }
   
-  if(i===10){
+if(i===10){
     const recap = $("recap");
     recap.innerHTML = "";
+
+    // Adapter le texte d’introduction du récap selon le mode
+    if (FROM_MAP) {
+        $("recapIntro").innerHTML = `
+            🎉 Super, presque terminé !<br>
+            ✔ La localisation a déjà été fournie depuis la carte.<br>
+            Vous pouvez envoyer directement ✅
+        `;
+    } else {
+        $("recapIntro").innerHTML = `
+            🎉 Super, presque terminé !<br>
+            Vérifiez ci-dessous les informations saisies.<br>
+            Un détail à modifier ? Touchez la ligne correspondante.<br>
+            Sinon, envoyez votre contribution ✅
+        `;
+    }
 
     // Si on vient de la carte : pas de récap
 if (FROM_MAP) {
