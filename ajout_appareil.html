@@ -303,12 +303,8 @@ Remplir uniquement si l’appareil dépend d’un SAT
 
 
 <div class="step">
-  <p style="line-height:1.5">
-    🎉 Super, presque terminé !<br>
-    Vérifiez ci-dessous les informations saisies.<br>
-    Un détail à modifier ? Touchez la ligne correspondante.<br>
-    Sinon, envoyez votre contribution ✅
-  </p>
+<p id="recapIntro" style="line-height:1.5"></p>
+  
   <div id="recap" style="margin:12px 0; font-size:15px; line-height:1.5"></div>
   <div class="btn-row">
     <button type="button" class="btn secondary prev">⬅️ Retour</button>
@@ -344,6 +340,12 @@ let currentStep=0;
 const steps=document.querySelectorAll(".step:not(#introStep):not(#confirmationStep)");
 const progress=document.getElementById("progress");
 function showStep(i){
+
+  // Si l'étape est marquée "skip", on avance jusqu'à une étape visible
+  while (steps[i] && steps[i].classList.contains("skip")) {
+    i++;
+  }
+  
   steps.forEach((s,idx)=>s.classList.toggle("active",idx===i));
   let pct = Math.round(((i+1) / steps.length) * 100);
 progress.textContent = `${pct}%`;
@@ -433,20 +435,54 @@ if (i === 8) {
   }
 }
   
-  if(i===10){
+if(i===10){
     const recap = $("recap");
     recap.innerHTML = "";
 
-    const data = [
-      { step: 0, label: "👤 Demandeur", value: $("demandeur").value },
-      { step: 1, label: "📌 Poste", value: $("poste").value + ( $("type").value ? " ("+$("type").value+")" : "" ) },
-      { step: 2, label: "📌 SAT", value: $("sat").value },
-      { step: 3, label: "💡 Appareil", value: $("appareil").value },
-      { step: 5, label: "📍 Localisation appareil", value: $("presentValue").value==="oui" ? ($("latDevice").value+","+$("lonDevice").value) : $("lien").value },
-      { step: 8, label: "📍 Localisation accès", value: $("accessValue").value==="oui" ? 
-         ($("accessMethod").value==="gps" ? $("coordsAccessDisplay").textContent.replace("Coordonnées relevées (accès) : ","") : $("lienAccess").value) : "" },
-      { step: 9, label: "📝 Notes", value: $("infos").value }
-    ];
+    // Adapter le texte d’introduction du récap selon le mode
+    if (FROM_MAP) {
+        $("recapIntro").innerHTML = `
+            🎉 Super, presque terminé !<br>
+      
+        `;
+    } else {
+        $("recapIntro").innerHTML = `
+            🎉 Super, presque terminé !<br>
+            Vérifiez ci-dessous les informations saisies.<br>
+            Un détail à modifier ? Touchez la ligne correspondante.<br>
+            Sinon, envoyez votre contribution ✅
+        `;
+    }
+
+    // Si on vient de la carte : pas de récap
+if (FROM_MAP) {
+    $("recap").innerHTML = `
+      <p style="background:var(--card);padding:12px;border-radius:8px;border:1px solid var(--border);">
+        ✔️ Localisation déjà fournie depuis la carte.<br>
+        ✔️ Vous pouvez envoyer directement.
+      </p>
+    `;
+    return; // On skip toute la suite du récap
+}
+
+    
+    function findStepIndex(fieldId) {
+      return Array.from(steps).findIndex(s => s.querySelector("#" + fieldId));
+    }
+
+const data = [
+  { step: findStepIndex("demandeur"), label: "👤 Demandeur", value: $("demandeur").value },
+  { step: findStepIndex("poste"), label: "📌 Poste", value: $("poste").value + ( $("type").value ? " ("+$("type").value+")" : "" ) },
+  { step: findStepIndex("sat"), label: "📌 SAT", value: $("sat").value },
+  { step: findStepIndex("appareil"), label: "💡 Appareil", value: $("appareil").value },
+  { step: findStepIndex("lien"), label: "📍 Localisation appareil", value: $("presentValue").value==="oui" ? ($("latDevice").value+","+$("lonDevice").value) : $("lien").value },
+  { step: findStepIndex("lienAccess"), label: "📍 Localisation accès", value: $("accessValue").value==="oui" ?
+      ($("accessMethod").value==="gps"
+        ? $("coordsAccessDisplay").textContent.replace("Coordonnées relevées (accès) : ", "")
+        : $("lienAccess").value)
+      : "" },
+  { step: findStepIndex("infos"), label: "📝 Notes", value: $("infos").value }
+];
 
  data.forEach(item=>{
   if(item.value && item.value.trim()!==""){
@@ -513,7 +549,29 @@ if(item.value.includes(",") && !item.value.startsWith("http")){
 }
 document.querySelectorAll(".next").forEach(btn=>{
   btn.addEventListener("click", e=>{
-    e.preventDefault();
+  e.preventDefault();
+
+// 🔒 Vérifier le champ APPAREIL obligatoire AVANT de sauter l'étape
+if (currentStep === 3) {
+    const val = $("appareil").value.trim();
+    if (!val) {
+        $("appareil").classList.add("error");
+        return; // On bloque ici
+    }
+}
+
+// --- MODE VENANT DE LA MAP ---
+// Après l'étape 3 (nom de l'appareil), on saute les étapes 4 et 5
+if (FROM_MAP && currentStep === 3) {
+
+      $("presentValue").value = "non";
+      $("lien").value = AUTO_LINK;
+
+      // On saute à l'étape 6 (accès ?)
+      currentStep = 6;
+      showStep(currentStep);
+      return;
+    }
     if (validateStep(currentStep)) {
 
 if (returnToRecap) {
@@ -616,6 +674,13 @@ function validateStep(i){
     input.classList.add("error");
     return false;
   }
+// Champ appareil obligatoire (méthode fiable)
+if (step.querySelector("#appareil")) {
+    if (!$("appareil").value.trim()) {
+        $("appareil").classList.add("error");
+        return false;
+    }
+}
   return true;
 }
 
@@ -1088,26 +1153,61 @@ if (params.has("poste")) {
 });
 
 function resetForm(){
+  // On remet les champs du formulaire à zéro
   $("formAppareil").reset();
   currentStep = 0;
+  returnToRecap = false;
 
- const conf = document.getElementById("confirmationStep");
-conf.classList.remove("active");
 
-conf.style.display = ""; 
+  steps[4].classList.remove("skip"); // étape "Comment localiser l’appareil ?"
+  steps[5].classList.remove("skip"); // étape carte/lien
+
+  steps[4].style.display = "";
+  steps[5].style.display = "";
+
+
+  FROM_MAP = false;
+  AUTO_LINK = "";
+
+
+  $("presentValue").value = "";
+  $("lien").value = "";
+  $("latDevice").value = "";
+  $("lonDevice").value = "";
+  $("coordsDeviceDisplay").style.display = "none";
+  $("mapDeviceWrap").classList.remove("error");
+  $("geoDeviceMsg").style.display = "none";
+
+
+  $("accessValue").value = "";
+  $("accessMethod").value = "";
+  $("coordsAccessDisplay").style.display = "none";
+  $("mapAccessWrap").classList.remove("error");
+  $("geoAccessMsg").style.display = "none";
+  $("lienAccess").value = "";
+
+
+  document.querySelectorAll(".pill").forEach(p => p.classList.remove("active", "error"));
+
+
+  const conf = document.getElementById("confirmationStep");
+  conf.classList.remove("active");
+  conf.style.display = "";
+
 
   document.getElementById("introStep").style.display = "none";
   document.getElementById("progress").style.display = "block";
   document.getElementById("progressbar").style.display = "block";
 
+
   showStep(currentStep);
 
+
   const savedDemandeur = localStorage.getItem("demandeur");
-  if(savedDemandeur){
+  if (savedDemandeur) {
     $("demandeur").value = savedDemandeur;
   }
 }
-
 $("formAppareil").onsubmit = e => {
   e.preventDefault();
 
@@ -1210,6 +1310,39 @@ document.getElementById("startForm").addEventListener("click", () => {
   document.getElementById("progressbar").style.display = "block";
   showStep(0); 
 });
+
+
+
+const urlParams = new URLSearchParams(window.location.search);
+const urlLat = urlParams.get("lat");
+const urlLng = urlParams.get("lng");
+
+  let MAP_MODE_ACTIVE = false; // indique si on vient de la carte
+
+window.FROM_MAP = false;
+window.AUTO_LINK = "";
+
+if (urlLat && urlLng) {
+  
+  FROM_MAP = true;
+
+
+  AUTO_LINK = `https://www.google.com/maps?q=${urlLat},${urlLng}`;
+$("lien").value = AUTO_LINK;
+
+
+  $("presentValue").value = "non";
+
+
+steps[4].classList.add("skip");
+steps[5].classList.add("skip");
+
+
+steps[4].style.display = "none";
+steps[5].style.display = "none";
+}
+
+  
 </script>
 </body>
 </html>
