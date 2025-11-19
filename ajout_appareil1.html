@@ -344,32 +344,6 @@ let currentStep=0;
 const steps=document.querySelectorAll(".step:not(#introStep):not(#confirmationStep)");
 const progress=document.getElementById("progress");
 function showStep(i){
-
-    // AUTO-SAUT si URL contient lat/lng et qu’on arrive à l’étape 4
-  const params = new URLSearchParams(window.location.search);
-  const urlLat = params.get("lat");
-  const urlLng = params.get("lng");
-
-  if (i === 4 && urlLat && urlLng) {
-    // Forcer mode lien
-    $("presentValue").value = "non";
-    $("pill-non").classList.add("active");
-    $("pill-oui").classList.remove("active");
-
-    toggle($("mapDeviceWrap"), 0);
-    toggle($("lienField"), 1);
-
-    $("lien").value = `https://www.google.com/maps?q=${urlLat},${urlLng}`;
-
-    // Saut automatique à l’étape d’après
-    setTimeout(() => {
-      currentStep = 5;
-      showStep(currentStep);
-    }, 50);
-
-    return; // empêcher affichage normal de l'étape 4
-  }
-  
   steps.forEach((s,idx)=>s.classList.toggle("active",idx===i));
   let pct = Math.round(((i+1) / steps.length) * 100);
 progress.textContent = `${pct}%`;
@@ -540,6 +514,18 @@ if(item.value.includes(",") && !item.value.startsWith("http")){
 document.querySelectorAll(".next").forEach(btn=>{
   btn.addEventListener("click", e=>{
     e.preventDefault();
+        // --- MODE VENANT DE LA MAP ---
+    // Après l'étape 3 (nom de l'appareil), on saute les étapes 4 et 5
+    if (FROM_MAP && currentStep === 3) {
+
+      $("presentValue").value = "non";
+      $("lien").value = AUTO_LINK;
+
+      // On saute à l'étape 6 (accès ?)
+      currentStep = 6;
+      showStep(currentStep);
+      return;
+    }
     if (validateStep(currentStep)) {
 
 if (returnToRecap) {
@@ -1237,64 +1223,30 @@ document.getElementById("startForm").addEventListener("click", () => {
   showStep(0); 
 });
 
-// ===============================
-// 📌 AUTO-RÉCUPÉRATION COORDONNÉES venant de la MAP + SAUT AUTOMATIQUE
-// ===============================
-document.addEventListener("DOMContentLoaded", () => {
-  const params = new URLSearchParams(window.location.search);
 
-  const urlLat = params.get("lat");
-  const urlLng = params.get("lng");
+  /** MODE AUTO LOCALISATION SI URL CONTIENT LAT/LNG **/
+const urlParams = new URLSearchParams(window.location.search);
+const urlLat = urlParams.get("lat");
+const urlLng = urlParams.get("lng");
 
-  // Si pas de coordonnées => comportement normal
-  if (!urlLat || !urlLng) return;
+window.FROM_MAP = false;
+window.AUTO_LINK = "";
 
-  // -----------------------------
-  // 1️⃣ Pré-remplissage des coordonnées
-  // -----------------------------
-  $("latDevice").value = urlLat;
-  $("lonDevice").value = urlLng;
-  $("coordsDeviceDisplay").textContent = `Coordonnées relevées : ${urlLat}, ${urlLng}`;
-  $("coordsDeviceDisplay").style.display = "block";
-  DEVICE_CONFIRMED = true;
+if (urlLat && urlLng) {
+  FROM_MAP = true;
 
-  // Carte affichera directement le bon point
-  lastFix = { lat: parseFloat(urlLat), lon: parseFloat(urlLng), ts: Date.now() };
+  // On pré-remplit le lien automatiquement
+  AUTO_LINK = `https://www.google.com/maps?q=${urlLat},${urlLng}`;
 
-  // -----------------------------
-  // 2️⃣ Forcer le mode "Lien Google Maps"
-  // -----------------------------
+  // On désactive le choix GPS/lien
   $("presentValue").value = "non";
-  $("pill-non").classList.add("active");
-  $("pill-oui").classList.remove("active");
 
-  toggle($("mapDeviceWrap"), 0);
-  toggle($("lienField"), 1);
+  // On masque les 2 étapes de localisation
+  steps[4].style.display = "none"; // Étape "Comment localiser ?"
+  steps[5].style.display = "none"; // Étape carte / lien
+}
 
-  $("lien").value = `https://www.google.com/maps?q=${urlLat},${urlLng}`;
-
-  // Quand l’utilisateur clique sur "Lien", régénérer le lien proprement
-  $("pill-non").addEventListener("click", () => {
-    $("lien").value = `https://www.google.com/maps?q=${urlLat},${urlLng}`;
-  });
-
-  // -----------------------------
-  // 3️⃣ Saut automatique de l’étape "Comment localiser l’appareil ?"
-  // Étape 4 = choix GPS / Lien
-  // Étape 5 = saisie directe du lien (là où on veut aller)
-  // -----------------------------
-setTimeout(() => {
-    // On ne force PAS l'étape fixe
-    // On avance juste d’une étape normale après “Comment localiser l’appareil ?”
-    currentStep = 4;   // L’étape "Comment localiser l’appareil ?"
-    showStep(currentStep);
-
-    // Puis on simule un clic sur “Suivant”
-    setTimeout(() => {
-        document.querySelectorAll(".next")[4].click();
-    }, 150);
-}, 200);
-});
+  
 </script>
 </body>
 </html>
