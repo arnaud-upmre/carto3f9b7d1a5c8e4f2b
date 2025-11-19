@@ -1293,7 +1293,10 @@ for (const [key, val] of formData.entries()) {
   fetch("https://script.google.com/macros/s/AKfycbz8lUhVMKOrRSdeNBeA0p4ZsQCNOesB0Y4DL27KAoHkHWS78hOqrW-t-9bC_azgN-mY/exec", {method:"POST", body:formData})
     .then(r=>r.text())
     .then(()=>{
-      fetch(COUNTER_URL+"?increment=true").catch(()=>{});
+     setTimeout(() => {
+  fetch(COUNTER_URL + "?increment=true")
+    .catch(err => console.warn("Compteur bloqué (normal sur CORS)", err));
+}, 50);
       steps.forEach(s=>s.classList.remove("active"));
       document.getElementById("confirmationStep").classList.add("active");
       document.getElementById("confirmationStep").style.display = "block";
