@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"/>
+  <title>➕ Ajouter un poste et son accès</title>
+
+  
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+
+  <style>
+
+    .field-hint{font-size:13px;color:#c62828;margin-top:6px;display:none}
+.field-hint.show{display:block}
+input.error{border:2px solid #c62828!important;background:#ffecec}
+    
+    *,*::before,*::after{box-sizing:border-box}
+    html{-webkit-text-size-adjust:100%}
+    body{
+      margin:0; padding:16px;
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;
+      background:var(--bg); color:var(--fg);
+    }
+    :root{
+      --bg:#f7f7f8; --fg:#202124; --card:#fff; --border:#d0d7de;
+      --accent:#0b6cff; --accent-ink:#fff; --muted:#666;
+    }
+    @media(prefers-color-scheme:dark){
+      :root{
+        --bg:#0b0b0b; --fg:#eceff1; --card:#141414; --border:#2a2a2a;
+        --accent:#5aa3ff; --accent-ink:#081018; --muted:#999;
+      }
+    }
+    h2{text-align:center;margin:0 0 12px}
+    .card{
+      max-width:640px;margin:auto;
+      background:var(--card);
+      padding:16px;border-radius:14px;
+      box-shadow:0 2px 6px rgba(0,0,0,.15);
+    }
+    label{display:block;margin:12px 0 6px;font-weight:600}
+    input,textarea{
+      width:100%;padding:12px;font-size:16px;
+      border:1px solid var(--border);border-radius:10px;
+      background:var(--card);color:var(--fg);
+      min-height:44px;
+    }
+    textarea{min-height:96px;resize:none}
+    .pill-group{display:flex;gap:10px;margin:12px 0}
+    .pill{
+      flex:1;text-align:center;padding:12px;
+      border:1px solid var(--border);border-radius:999px;cursor:pointer;
+    }
+    .pill.active{background:var(--accent);color:var(--accent-ink)}
+    .pill.error {
+  border: 2px solid #c62828 !important;
+  background: #ffecec;
+}
+    
+@media (prefers-color-scheme: dark) {
+  .pill.error {
+    border: 2px solid #ff6b6b !important;  
+    background: rgba(198, 40, 40, 0.25);   
+    color: #fff;                        
+  }
+}
+    
+    .map-wrap{margin:12px 0;border:1px solid var(--border);border-radius:10px;overflow:hidden}
+    #mapDevice,#mapAccess{height:300px;width:100%}
+    .map-toolbar{display:flex;gap:8px;padding:6px;background:var(--card)}
+    .map-toolbar button{
+      flex:1;padding:8px;border-radius:8px;
+      border:1px solid var(--border);cursor:pointer;
+    }
+    .btn-row{display:flex;gap:12px;margin-top:18px}
+    .btn{
+      flex:1;padding:12px;font-size:16px;border:none;border-radius:10px;cursor:pointer;
+    }
+    .btn.primary{background:var(--accent);color:var(--accent-ink)}
+    .btn.secondary{background:#ccc}
+    @media(prefers-color-scheme:dark){
+      .btn.secondary{background:#2a2f36;color:#eee}
+    }
+    .step{display:none;animation:fade .3s ease}
+    .step.active{display:block}
+    @keyframes fade{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:translateX(0)}}
+    #progress{margin-bottom:12px;text-align:center;color:var(--muted)}
+#progressbar {
+  width: 100%;
+  height: 6px;
+  background: var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+#progressbar-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--accent);
+  transition: width 0.3s ease;
+}
+    
+    input.error,textarea.error{border:2px solid red!important;background:#ffecec}
+
+.map-wrap.error { border: 2px solid #c62828 !important; }
+
+
+#confirmationStep.active ~ #cancel-row {
+  display: none;
+}
+    
+  </style>
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EMSCVXG71V"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-EMSCVXG71V');
+</script>
+</head>
+<body>
+  <h2>➕ Ajouter un poste et l'accès</h2>
+  <div class="card">
+<div id="progressbar"><div id="progressbar-fill"></div></div>
+<div id="progress">0%</div>
+    <form id="formAppareil" novalidate>
+
+<!-- Étape d’introduction (ne compte pas dans le total) -->
+<div class="step active" id="introStep">
+  <p style="text-align:center;color:var(--muted);margin-bottom:20px;line-height:1.5">
+    ⏱️ Quelques secondes suffisent pour ajouter un poste</p>
+  <div class="btn-row">
+    <button type="button" class="btn primary" id="startForm">🚀 Commencer</button>
+  </div>
+</div>
+
+ 
+      <div class="step">
+        <label>👤 Demandeur :</label>
+        <input id="demandeur" required>
+        <div class="btn-row">
+          <button type="button" class="btn primary next">Suivant ➡️</button>
+        </div>
+      </div>
+
+
+<div class="step">
+  <div style="display:flex; gap:12px;">
+    <div style="flex:2">
+      <label>📌 Poste :</label>
+      <input id="poste" required placeholder="Ex : Hazebrouck">
+    </div>
+    <div style="flex:1">
+      <label>📌 Type :</label>
+      <input id="type" placeholder="Ex : SP, SSP, PRCI…">
+    </div>
+  </div>
+
+<label>📌 SAT :</label>
+<input id="sat" required placeholder="Ex : SAT1, SAT2 ou Poste principal">
+<div id="satHelp" class="field-hint">
+  ⚠️ SAT requis (ex : SAT1, SAT2) ou précisez « Poste principal ».
+</div>
+
+  <div class="btn-row">
+    <button type="button" class="btn secondary prev">⬅️ Retour</button>
+    <button type="button" class="btn primary next">Suivant ➡️</button>
+  </div>
+</div>
+
+
+<div class="step">
+  <label>📍 Comment localiser le poste (guérite, SAT, armoire…)?</label>
+  <p style="font-size:14px;color:var(--muted);margin:6px 0 12px">
+    ℹ️ L’accès sera défini à l’étape suivante.
+  </p>
+  <div class="pill-group">
+    <div class="pill" id="pill-oui" data-value="oui">📡 Avec ma position GPS</div>
+    <div class="pill" id="pill-non" data-value="non">🔗 Lien Google Maps</div>
+  </div>
+  
+        <input type="hidden" id="presentValue">
+        <div class="btn-row">
+          <button type="button" class="btn secondary prev">⬅️ Retour</button>
+          <button type="button" class="btn primary next">Suivant ➡️</button>
+        </div>
+      </div>
+
+     
+      <div class="step">
+        <div id="mapDeviceWrap" class="map-wrap" style="display:none">
+          <div>Déplacez le curseur pour ajuster le poste.</div>
+          <div id="mapDevice"></div>
+          <div class="map-toolbar">
+            <button type="button" id="btnRecenterDevice">📍 Localiser</button>
+            <button type="button" id="btnToggleDevice">🗺️ Plan</button>
+          </div>
+        </div>
+        <div id="coordsDeviceDisplay" style="display:none;color:var(--muted);margin:8px 0"></div>
+        <input type="hidden" id="latDevice"><input type="hidden" id="lonDevice">
+        <div id="lienField" style="display:none">
+          <label>🔗 Lien Google Maps :</label>
+          <input id="lien" type="url" placeholder="https://maps.app.goo.gl/…">
+          <div id="lienHelp" class="field-hint">⚠️ Lien requis pour continuer</div>
+        </div>
+        <div class="btn-row">
+          <button type="button" class="btn secondary prev">⬅️ Retour</button>
+          <button type="button" class="btn primary next">Suivant ➡️</button>
+        </div>
+      </div>
+
+
+
+<div class="step" id="accessMethodStep">
+  <label>🆔 Identifier l’accès :</label>
+  <div class="pill-group">
+    <div class="pill" id="pill-access-gps" data-value="gps">📡 Avec ma position GPS</div>
+    <div class="pill" id="pill-access-lien" data-value="lien">🔗 Lien Google Maps</div>
+  </div>
+
+  <input type="hidden" id="accessMethod">
+
+  <div class="btn-row">
+    <button type="button" class="btn secondary prev">⬅️ Retour</button>
+    <button type="button" class="btn primary next">Suivant ➡️</button>
+  </div>
+</div>
+      
+
+<div class="step" id="accessDetailsStep">
+
+  <div id="mapAccessWrap" class="map-wrap" style="display:none">
+    <div>Déplacez le curseur pour ajuster l’accès.</div>
+    <div id="mapAccess"></div>
+    <div class="map-toolbar">
+      <button type="button" id="btnRecenterAccess">📍 Localiser</button>
+      <button type="button" id="btnToggleAccess">🗺️ Plan</button>
+    </div>
+  </div>
+  <div id="coordsAccessDisplay" style="display:none;color:var(--muted);margin:8px 0"></div>
+
+
+  <div id="lienAccessField" style="display:none">
+    <label>🔗 Lien Google Maps accès :</label>
+    <input id="lienAccess" type="url" placeholder="https://maps.app.goo.gl/…">
+    <div id="lienAccessHelp" class="field-hint">⚠️ Lien requis pour continuer</div>
+  </div>
+
+  <div class="btn-row">
+    <button type="button" class="btn secondary prev">⬅️ Retour</button>
+    <button type="button" class="btn primary next">Suivant ➡️</button>
+  </div>
+</div>
+      
+   
+      <div class="step">
+        <label>📝 Notes complémentaires :</label>
+        <textarea id="infos" placeholder="Accès, portail…"></textarea>
+        <div class="btn-row">
+          <button type="button" class="btn secondary prev">⬅️ Retour</button>
+          <button type="button" class="btn primary next">Suivant ➡️</button>
+        </div>
+      </div>
+
+  
+<div class="step">
+<p id="recapIntro" style="line-height:1.5"></p>
+  
+  <div id="recap" style="margin:12px 0; font-size:15px; line-height:1.5"></div>
+  <div class="btn-row">
+    <button type="button" class="btn secondary prev">⬅️ Retour</button>
+    <button type="submit" class="btn primary">📩 Envoyer</button>
+  </div>
+</div>
+
+      
+<div class="step" id="confirmationStep">
+  <h3 style="text-align:center;margin:16px 0">
+    ✅ Merci ! Votre demande a bien été envoyée.
+  </h3>
+  <div class="btn-row">
+    <button type="button" class="btn secondary" onclick="window.location.href='index.html'">
+      🏠 Retour à l’accueil
+    </button>
+    <button type="button" class="btn primary" onclick="resetForm()">
+      ➕ Ajouter un autre poste
+    </button>
+  </div>
+</div>
+
+<div id="cancel-row" class="btn-row" style="margin-top:12px">
+  <button type="button" class="btn secondary" onclick="window.location.href='index.html'">
+    ❌ Annuler et revenir à l’accueil
+  </button>
+</div>
+</form>
+  </div>
+
+<script>
+let currentStep=0;
+let comeBackAt = null; 
+
+  // --- MODE DEPUIS LA CARTE (lat & lng dans l'URL) ---
+const urlParams = new URLSearchParams(window.location.search);
+const urlLat = urlParams.get("lat");
+const urlLng = urlParams.get("lng");
+
+window.FROM_MAP = false;
+window.AUTO_LINK = "";
+
+if (urlLat && urlLng) {
+  FROM_MAP = true;
+  AUTO_LINK = `https://www.google.com/maps?q=${urlLat},${urlLng}`;
+
+  // Pré-remplir lien
+  document.getElementById("lien").value = AUTO_LINK;
+  document.getElementById("presentValue").value = "non";
+
+  // Masquer la question "comment localiser"
+  const stepLocalisation = steps[2]; 
+  stepLocalisation.classList.add("skip");
+  stepLocalisation.style.display = "none";
+
+  // Masquer la carte GPS
+  const stepLocationDetails = steps[3];
+  stepLocationDetails.classList.add("skip");
+  stepLocationDetails.style.display = "none";
+}
+
+const HAZE = [50.72384, 2.54924];
+const steps=document.querySelectorAll(".step");  
+const progress=document.getElementById("progress");
+  function recapIndex(){ return [...steps].findIndex(s => s.querySelector('#recap')); }
+function stepIndexOf(el){ return el ? [...steps].findIndex(s => s.contains(el)) : -1; }
+
+
+  function showStep(i) {
+  steps.forEach((s, idx) => s.classList.toggle("active", idx === i));
+
+  const realSteps = [...steps].filter(s => s.id !== "introStep" && s.id !== "confirmationStep");
+  const realIndex = realSteps.indexOf(steps[i]);
+
+  if (realIndex >= 0) {
+    let pct = Math.round(((realIndex + 1) / realSteps.length) * 100);
+    progress.textContent = `${pct}%`;
+    document.getElementById("progressbar-fill").style.width =
+      ((realIndex + 1) / realSteps.length * 100) + "%";
+  }
+
+
+  if (steps[i].querySelector("#mapDeviceWrap")) {
+    if (!mapDevice) {
+      startLocDevice();
+    }
+    setTimeout(() => mapDevice && mapDevice.invalidateSize(), 300);
+
+    if (navigator.geolocation && $("presentValue").value === "oui") {
+      navigator.geolocation.getCurrentPosition(
+        p => {
+          DEVICE_CONFIRMED = true;
+          $("mapDeviceWrap").classList.remove("error");
+          applyFix(p.coords.latitude, p.coords.longitude);
+        },
+        err => { if (err.code === 1) onGeoDenied("device"); },
+        { enableHighAccuracy: true, timeout: 7000, maximumAge: 0 }
+      );
+    }
+  }
+
+
+  if (steps[i].querySelector("#mapAccessWrap")) {
+    const m = $("accessMethod").value;
+    toggle($("mapAccessWrap"), m === "gps");
+    toggle($("lienAccessField"), m === "lien");
+
+    if (m === "gps") {
+      if (!mapAccess) {
+        startLocAccess();
+      }
+
+      requestAnimationFrame(() => {
+        if (mapAccess) {
+       
+          mapAccess.eachLayer(l => mapAccess.removeLayer(l));
+          orthoIGN.addTo(mapAccess);
+          if (markerAccess) markerAccess.addTo(mapAccess);
+
+          mapAccess.invalidateSize();
+          setTimeout(() => mapAccess.invalidateSize(), 500);
+        }
+      });
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          p => {
+            ACCESS_CONFIRMED = true;
+            $("mapAccessWrap").classList.remove("error");
+            applyFix(p.coords.latitude, p.coords.longitude);
+          },
+          err => { if (err.code === 1) onGeoDenied("access"); },
+          { enableHighAccuracy: true, timeout: 7000, maximumAge: 0 }
+        );
+      }
+    }
+  }
+
+
+  if (steps[i].querySelector('#recap')) {
+    const recap = $("recap");
+    recap.innerHTML = "";
+
+    if (FROM_MAP) {
+  recapIntro.innerHTML = `
+    🎉 Super, presque terminé !<br>
+    ✔ La localisation du poste/SAT a déjà été fournie depuis la carte.<br>
+    Vous pouvez envoyer directement ✅
+  `;
+} else {
+  recapIntro.innerHTML = `
+    🎉 Super, presque terminé !<br>
+    Vérifiez les informations ci-dessous.<br>
+    Touchez une ligne pour corriger.<br>
+    Sinon, envoyez votre contribution ✅
+  `;
+}
+
+    const data = [
+      { step: 1, label: "👤 Demandeur", value: $("demandeur").value },
+      { step: 2, label: "📌 Poste", value: $("poste").value + ( $("type").value ? " ("+$("type").value+")" : "" ) },
+      { step: 2, label: "📌 SAT", value: $("sat").value },
+      { step: 3, label: "📍 Localisation poste", value: $("presentValue").value==="oui" ? ($("latDevice").value+","+$("lonDevice").value) : $("lien").value },
+      { step: 5, label: "📍 Localisation accès", value: ($("accessMethod").value==="gps"
+         ? $("coordsAccessDisplay").textContent.replace("Coordonnées relevées (accès) : ","")
+         : $("lienAccess").value) },
+      { step: 7, label: "📝 Notes", value: $("infos").value }
+    ];
+
+    data.forEach(item => {
+      if (item.value && item.value.trim() !== "") {
+        const div = document.createElement("div");
+
+        if (item.value.includes(",") && !item.value.startsWith("http")) {
+          const [lat, lon] = item.value.split(",");
+          const span = document.createElement("span");
+          span.textContent = `${item.label} (par GPS)`;
+          div.appendChild(span);
+
+          const link = document.createElement("a");
+          link.href = `https://www.google.com/maps/@${lat.trim()},${lon.trim()},20z/data=!3m1!1e3`;
+          link.target = "_blank";
+          link.rel = "noopener";
+          link.textContent = " 🔎 Voir sur Google Maps";
+          link.style.marginLeft = "8px";
+          link.style.color = "#0b6cff";
+          link.style.textDecoration = "underline";
+          link.addEventListener("click", e => e.stopPropagation());
+          div.appendChild(link);
+
+        } else if (item.value.startsWith("http")) {
+          let url = item.value.trim();
+          if (!/^https?:\/\//i.test(url)) url = "https://" + url;
+
+          const span = document.createElement("span");
+          span.textContent = `${item.label} (par lien)`;
+          div.appendChild(span);
+
+          const link = document.createElement("a");
+          link.href = url;
+          link.target = "_blank";
+          link.rel = "noopener";
+          link.textContent = " 🔎 Voir sur Google Maps";
+          link.style.marginLeft = "8px";
+          link.style.color = "#0b6cff";
+          link.style.textDecoration = "underline";
+          link.addEventListener("click", e => e.stopPropagation());
+          div.appendChild(link);
+
+        } else {
+          div.textContent = `${item.label} : ${item.value}`;
+        }
+
+        div.style.cursor = "pointer";
+        div.style.margin = "6px 0";
+        div.style.padding = "6px";
+        div.style.border = "1px solid var(--border)";
+        div.style.borderRadius = "6px";
+
+        div.onclick = () => {
+          comeBackAt = item.step;
+          currentStep = item.step;
+
+          if (item.label.startsWith("📍 Localisation poste")) {
+            if ($("presentValue").value) {
+              currentStep = 4; 
+              comeBackAt = 4;
+            } else {
+              currentStep = 3; 
+              comeBackAt = 4;  
+            }
+          }
+
+          if (item.label.startsWith("📍 Localisation accès")) {
+            if ($("accessMethod").value) {
+              currentStep = 6; 
+              comeBackAt = 6;
+            } else {
+              currentStep = 5; 
+              comeBackAt = 6;  
+            }
+          }
+
+          showStep(currentStep);
+        };
+
+        recap.appendChild(div);
+      }
+    });
+  }
+}
+
+document.querySelectorAll(".next").forEach(btn=>{
+  btn.addEventListener("click", e=>{
+    e.preventDefault();
+
+    // Si on vient de la carte → on saute directement la localisation poste
+if (FROM_MAP && currentStep === 2) {
+  // Étape 2 = après demandeur + poste/type/SAT
+  // On saute localisation (3) + GPS/lien (4)
+  currentStep = 4; // On passe directement à l'étape accès
+  showStep(currentStep);
+  return;
+}
+
+if (comeBackAt !== null && currentStep === comeBackAt) {
+  comeBackAt = null;
+  currentStep = recapIndex();
+  showStep(currentStep);
+  return;
+}
+
+    if (!validateStep(currentStep)) return;
+
+if (steps[currentStep].querySelector("#pill-oui") && !$("presentValue").value) {
+  document.querySelectorAll("#pill-oui, #pill-non").forEach(p => p.classList.add("error"));
+  return;
+}
+
+if (steps[currentStep].querySelector("#mapDeviceWrap")) {
+  if ($("presentValue").value === "non") {
+    const ok = isValidUrl($("lien").value);
+    markError($("lien"), $("lienHelp"), !ok);
+    if (!ok) return;
+  } else if ($("presentValue").value === "oui") {
+    if (!DEVICE_CONFIRMED || !$("latDevice").value || !$("lonDevice").value) {
+      $("mapDeviceWrap").classList.add("error");
+      return;
+    } else {
+      $("mapDeviceWrap").classList.remove("error");
+    }
+  }
+}
+
+if (steps[currentStep].id === "accessMethodStep") {
+  if (!$("accessMethod").value) {
+    document.querySelectorAll("#pill-access-gps, #pill-access-lien").forEach(p => p.classList.add("error"));
+    return; 
+  }
+}
+
+if (steps[currentStep].id === "accessDetailsStep") {
+  const m = $("accessMethod").value;
+
+  if (m === "lien") {
+   
+    const ok = isValidUrl($("lienAccess").value);
+    markError($("lienAccess"), $("lienAccessHelp"), !ok);
+
+    if (!ok) {
+      $("lienAccess").classList.add("error");
+      $("lienAccessHelp").classList.add("show");
+      return;
+    }
+  } else if (m === "gps") {
+
+    const ok = ACCESS_CONFIRMED && $("coordsAccessDisplay").textContent.includes(",");
+    if (!ok) {
+      $("mapAccessWrap").classList.add("error");
+      return; 
+    } else {
+      $("mapAccessWrap").classList.remove("error");
+    }
+  }
+}
+
+    currentStep++;
+    showStep(currentStep);
+  });
+});
+ document.querySelectorAll(".prev").forEach(btn=>{
+  btn.addEventListener("click", e=>{
+    e.preventDefault();
+
+    if (comeBackAt !== null && currentStep === comeBackAt) {
+      comeBackAt = null;
+      currentStep = recapIndex();
+      showStep(currentStep);
+      return;
+    }
+
+    if (currentStep > 0) {
+      currentStep--;
+      showStep(currentStep);
+    }
+  });
+});
+  
+function validateStep(i) {
+  const step = steps[i];
+  const inputs = step.querySelectorAll("input[required], textarea[required]");
+  let valid = true;
+
+  inputs.forEach(input => {
+    if (!input.value.trim()) {
+      input.classList.add("error");
+      valid = false;
+
+      if (input.id === "sat") {
+        $("satHelp").classList.add("show");
+        $("satHelp").textContent = "⚠️ Indiquez le SAT ou « Poste principal ».";
+      }
+    } else {
+      input.classList.remove("error");
+
+      if (input.id === "sat") {
+        $("satHelp").classList.remove("show");
+        $("satHelp").textContent = "⚠️ SAT requis (ex : SAT1, SAT2) ou précisez « Poste principal ».";
+      }
+    }
+  });
+
+  return valid;
+}
+document.addEventListener("input", (e)=>{
+  if(e.target.matches("input.error, textarea.error")){
+    if(e.target.value.trim() !== ""){
+      e.target.classList.remove("error");
+    }
+  }
+});
+
+function $(id){return document.getElementById(id);}
+function toggle(el,show){el.style.display=show?"block":"none";}
+  function showHint(el, show){ 
+  el.classList.toggle("show", !!show); 
+}
+function markError(input, helpEl, on){
+  input.classList.toggle("error", !!on);
+  showHint(helpEl, !!on);
+}
+$("pill-oui").onclick = () => {
+  $("presentValue").value = "oui";
+  $("pill-oui").classList.add("active");
+  $("pill-non").classList.remove("active");
+  toggle($("mapDeviceWrap"), 1);
+  toggle($("lienField"), 0);
+
+  setTimeout(() => mapDevice && mapDevice.invalidateSize(), 300);
+  markError($("lien"), $("lienHelp"), false);
+  document.querySelectorAll("#pill-oui, #pill-non").forEach(p => p.classList.remove("error"));
+
+  DEVICE_CONFIRMED = false;
+  $("latDevice").value = "";
+  $("lonDevice").value = "";
+  $("coordsDeviceDisplay").style.display = "none";
+  $("mapDeviceWrap").classList.remove("error");
+
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      p => {
+        DEVICE_CONFIRMED = true;
+        $("mapDeviceWrap").classList.remove("error");
+        applyFix(p.coords.latitude, p.coords.longitude);
+      },
+      err => { if (err.code === 1) onGeoDenied("device"); },
+      { enableHighAccuracy: false, timeout: 4000, maximumAge: 10000 }
+    );
+  }
+};
+  
+$("pill-non").onclick = () => {
+  $("presentValue").value = "non";
+  $("pill-non").classList.add("active");
+  $("pill-oui").classList.remove("active");
+
+  toggle($("mapDeviceWrap"), 0);
+  toggle($("lienField"), 1);
+
+  $("coordsDeviceDisplay").style.display = "none";
+  $("latDevice").value = "";
+  $("lonDevice").value = "";
+  DEVICE_CONFIRMED = false;
+  $("mapDeviceWrap").classList.remove("error");
+
+  document.querySelectorAll("#pill-oui, #pill-non").forEach(p => p.classList.remove("error"));
+
+
+  setTimeout(() => { 
+    $("lien").focus({ preventScroll:true }); 
+    $("lien").select(); 
+  }, 0);
+};
+
+
+$("pill-access-gps").onclick = () => {
+  $("accessMethod").value = "gps";
+  $("pill-access-gps").classList.add("active");
+  $("pill-access-lien").classList.remove("active");
+
+  document.querySelectorAll("#pill-access-gps, #pill-access-lien").forEach(p => p.classList.remove("error"));
+
+  toggle($("mapAccessWrap"), 1);
+  toggle($("lienAccessField"), 0);
+
+  requestAnimationFrame(() => {
+    if (mapAccess) {
+      mapAccess.invalidateSize();
+      setTimeout(() => mapAccess.invalidateSize(), 500);
+    }
+  });
+
+  markError($("lienAccess"), $("lienAccessHelp"), false);
+
+  ACCESS_CONFIRMED = false;
+  $("coordsAccessDisplay").style.display = "none";
+  $("mapAccessWrap").classList.remove("error");
+
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      p => {
+        ACCESS_CONFIRMED = true;
+        $("mapAccessWrap").classList.remove("error");
+        applyFix(p.coords.latitude, p.coords.longitude);
+      },
+      err => { if (err.code === 1) onGeoDenied("access"); },
+      { enableHighAccuracy: false, timeout: 4000, maximumAge: 10000 }
+    );
+  }
+};
+
+$("pill-access-lien").onclick = () => {
+  $("accessMethod").value = "lien";
+  $("pill-access-lien").classList.add("active");
+  $("pill-access-gps").classList.remove("active");
+
+  document.querySelectorAll("#pill-access-gps, #pill-access-lien").forEach(p => p.classList.remove("error"));
+
+  toggle($("mapAccessWrap"), 0);
+  toggle($("lienAccessField"), 1);
+
+  $("coordsAccessDisplay").style.display = "none";
+  ACCESS_CONFIRMED = false;
+  $("mapAccessWrap").classList.remove("error");
+
+  setTimeout(() => { 
+    $("lienAccess").focus({ preventScroll:true }); 
+    $("lienAccess").select(); 
+  }, 0);
+};
+
+  $("lien").addEventListener("input", ()=>{
+  const ok = isValidUrl($("lien").value);
+  markError($("lien"), $("lienHelp"), !ok && $("presentValue").value === "non");
+});
+
+$("lienAccess").addEventListener("input", ()=>{
+  const ok = isValidUrl($("lienAccess").value);
+  markError($("lienAccess"), $("lienAccessHelp"), !ok && $("accessMethod").value === "lien");
+});
+
+
+const COUNTER_URL = "https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec";
+
+let mapDevice,mapAccess,markerDevice,markerAccess;
+
+
+const planIGN = L.tileLayer(
+  "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
+  + "&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&STYLE=normal&FORMAT=image/png"
+  + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
+  {
+    attribution: "© IGN – Géoplateforme",
+    maxZoom: 21,
+    maxNativeZoom: 19,
+    tileSize: 256,
+    crossOrigin: "anonymous"
+  }
+);
+
+const orthoIGN = L.tileLayer(
+  "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
+  + "&LAYER=ORTHOIMAGERY.ORTHOPHOTOS&STYLE=normal&FORMAT=image/jpeg"
+  + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
+  {
+    attribution: "© IGN – Géoplateforme",
+    maxZoom: 21,
+    maxNativeZoom: 19,
+    tileSize: 256,
+    crossOrigin: "anonymous"
+  }
+);
+  
+  let DEVICE_CONFIRMED = false;  
+let ACCESS_CONFIRMED = false;  
+let lastFix=null; let GEO_BLOCKED=false;
+const GEO_OPTS={enableHighAccuracy:true,timeout:7000,maximumAge:15000};
+
+function sanitizeCoord(v){return (v||"").toString().replace(",",".");}
+function isValidLatLon(lat,lon){
+  const la=parseFloat(lat),lo=parseFloat(lon);
+  return !isNaN(la)&&!isNaN(lo)&&la>=-90&&la<=90&&lo>=-180&&lo<=180;
+}
+function isValidUrl(str){return /^https?:\/\/.+/i.test((str||"").trim());}
+
+function setMapTo(map,marker,lat,lon,kind){
+  if(!map||!marker)return;
+  map.setView([lat,lon], map.getZoom()); 
+  marker.setLatLng([lat,lon]);
+  const la=Number(lat).toFixed(6), lo=Number(lon).toFixed(6);
+
+ if (kind === "device") {
+  if (DEVICE_CONFIRMED) {
+    $("latDevice").value = la;
+    $("lonDevice").value = lo;
+    if ($("presentValue").value === "oui") {
+      $("coordsDeviceDisplay").textContent = `Coordonnées relevées : ${la}, ${lo}`;
+      $("coordsDeviceDisplay").style.display = "block";
+    }
+  } else {
+    $("coordsDeviceDisplay").style.display = "none";
+  }
+} else if (kind === "access") {
+  if (ACCESS_CONFIRMED && $("accessMethod").value === "gps") {
+    $("coordsAccessDisplay").textContent = `Coordonnées relevées (accès) : ${la}, ${lo}`;
+    $("coordsAccessDisplay").style.display = "block";
+  } else {
+    $("coordsAccessDisplay").style.display = "none";
+  }
+}
+}
+function applyFix(lat,lon){
+  lastFix={lat,lon,ts:Date.now()};
+  if(mapDevice&&markerDevice)setMapTo(mapDevice,markerDevice,lat,lon,"device");
+  if(mapAccess&&markerAccess)setMapTo(mapAccess,markerAccess,lat,lon,"access");
+}
+function onGeoDenied(target){
+  GEO_BLOCKED = true;
+
+  if (target === "device") {
+
+    $("presentValue").value = "non";
+    toggle($("mapDeviceWrap"), 0);
+    toggle($("lienField"), 1);
+
+    $("coordsDeviceDisplay").style.display = "none";
+    $("latDevice").value = "";
+    $("lonDevice").value = "";
+    DEVICE_CONFIRMED = false;
+    $("mapDeviceWrap").classList.remove("error");
+  }
+
+  if (target === "access") {
+
+    $("accessMethod").value = "lien";
+    toggle($("mapAccessWrap"), 0);
+    toggle($("lienAccessField"), 1);
+
+    $("coordsAccessDisplay").style.display = "none";
+    ACCESS_CONFIRMED = false;
+    $("mapAccessWrap").classList.remove("error");
+  }
+}
+function ensureMap(mapId,btnToggle,btnRecenter,lat,lon){
+  let map=L.map(mapId).setView([lat,lon],18);
+  setTimeout(()=>map.invalidateSize(),300);
+
+
+orthoIGN.addTo(map); 
+$(btnToggle).textContent = "🗺️ Plan"; 
+let isPlan = false;
+  
+  $(btnToggle).onclick = () => {
+    if (isPlan) {
+      map.removeLayer(planIGN);
+      orthoIGN.addTo(map);
+      $(btnToggle).textContent = "🗺️ Plan";
+    } else {
+      map.removeLayer(orthoIGN);
+      planIGN.addTo(map);
+      $(btnToggle).textContent = "🛰️ Satellite";
+    }
+    isPlan = !isPlan;
+    map.invalidateSize();
+  };
+  
+let marker=L.marker([lat,lon],{draggable:true}).addTo(map);
+
+
+marker.on("drag", e => {
+  const p = e.target.getLatLng();
+  if (mapId === "mapDevice") {
+    DEVICE_CONFIRMED = true; 
+    $("latDevice").value = p.lat.toFixed(6);
+    $("lonDevice").value = p.lng.toFixed(6);
+    if ($("presentValue").value === "oui") {
+      $("coordsDeviceDisplay").textContent = `Coordonnées relevées : ${p.lat.toFixed(6)}, ${p.lng.toFixed(6)}`;
+      $("coordsDeviceDisplay").style.display = "block";
+    }
+  } else {
+    if ($("accessMethod").value === "gps") {
+      ACCESS_CONFIRMED = true; 
+      $("coordsAccessDisplay").textContent = `Coordonnées relevées (accès) : ${p.lat.toFixed(6)}, ${p.lng.toFixed(6)}`;
+      $("coordsAccessDisplay").style.display = "block";
+    }
+  }
+});
+
+let p = marker.getLatLng();
+if (mapId === "mapDevice") {
+  if (DEVICE_CONFIRMED) {
+    $("latDevice").value = p.lat.toFixed(6);
+    $("lonDevice").value = p.lng.toFixed(6);
+    if ($("presentValue").value === "oui") {
+      $("coordsDeviceDisplay").textContent = `Coordonnées relevées : ${p.lat.toFixed(6)}, ${p.lng.toFixed(6)}`;
+      $("coordsDeviceDisplay").style.display = "block";
+    }
+  }
+} else { 
+  if (ACCESS_CONFIRMED && $("accessMethod").value === "gps") {
+    $("coordsAccessDisplay").textContent = `Coordonnées relevées (accès) : ${p.lat.toFixed(6)}, ${p.lng.toFixed(6)}`;
+    $("coordsAccessDisplay").style.display = "block";
+  } else {
+    $("coordsAccessDisplay").style.display = "none";
+  }
+}
+
+$(btnRecenter).onclick = () => {
+  if (GEO_BLOCKED) { onGeoDenied(mapId === "mapDevice" ? "device" : "access"); return; }
+
+  const kind = (mapId === "mapDevice") ? "device" : "access";
+
+
+  const confirmFromFix = (fix) => {
+    if (!fix) return false;
+    if (kind === "device") {
+      DEVICE_CONFIRMED = true;
+      $("mapDeviceWrap").classList.remove("error");
+      setMapTo(map, marker, fix.lat, fix.lon, "device");
+    } else {
+      ACCESS_CONFIRMED = true;
+      $("mapAccessWrap").classList.remove("error");
+      setMapTo(map, marker, fix.lat, fix.lon, "access");
+    }
+    return true;
+  };
+
+  if (confirmFromFix(lastFix)) return;
+
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      p => {
+        applyFix(p.coords.latitude, p.coords.longitude);
+        confirmFromFix({ lat: p.coords.latitude, lon: p.coords.longitude });
+      },
+      err => { if (err.code === 1) onGeoDenied(kind); },
+      GEO_OPTS
+    );
+  }
+};
+
+  
+  if(mapId==="mapDevice"){mapDevice=map;markerDevice=marker;}
+  else{mapAccess=map;markerAccess=marker;}
+}
+function startLocDevice(){
+  if(!mapDevice)ensureMap("mapDevice","btnToggleDevice","btnRecenterDevice",HAZE[0],HAZE[1]);
+  if(lastFix)setMapTo(mapDevice,markerDevice,lastFix.lat,lastFix.lon,"device");
+}
+function startLocAccess(){
+  if(!mapAccess)ensureMap("mapAccess","btnToggleAccess","btnRecenterAccess",HAZE[0],HAZE[1]);
+  if(lastFix)setMapTo(mapAccess,markerAccess,lastFix.lat,lastFix.lon,"access");
+}
+
+document.addEventListener("DOMContentLoaded",()=>{
+
+  const params = new URLSearchParams(window.location.search);
+  
+
+if (params.has("poste")) {
+  const TYPES = ["A","L","L-A","LGV","P","PRCI","S","SP","ST","SST","SS","SSP","SSPA","SSP-A"];
+  const TYPES_SORTED = [...TYPES].sort((a, b) => b.length - a.length);
+  const esc = s => s.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
+  const TYPES_RE = new RegExp("(?:\\s)+(" + TYPES_SORTED.map(esc).join("|") + ")\\s*$", "i");
+
+  let raw = (params.get("poste") || "")
+    .replace(/^📍\s*/, "")     
+    .replace(/\u00A0/g, " ")  
+    .replace(/\s+/g, " ")      
+    .trim();
+
+  let foundType = "";
+  let foundSat  = "";
+
+  const satM = raw.match(/\bSAT[\s-]*\d+\b/i);
+  if (satM) {
+    foundSat = satM[0].replace(/\s+/g, "").toUpperCase();
+    raw = raw.slice(0, satM.index).trim();
+  }
+
+  if (!satM) {
+    raw = raw.split(/(?:—|–|,|;|\/|\(|\[|\baccès\b|\bacces\b|\baccess\b)/i)[0].trim();
+  }
+
+  const typeM = raw.match(TYPES_RE);
+  if (typeM) {
+    foundType = typeM[1].toUpperCase();
+    raw = raw.replace(TYPES_RE, "").trim();
+  }
+
+  $("poste").value = raw;
+  if (foundType) $("type").value = foundType;
+  if (foundSat)  $("sat").value  = foundSat;
+}
+
+
+  if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(
+      p=>applyFix(p.coords.latitude,p.coords.longitude),
+      err=>{if(err.code===1)GEO_BLOCKED=true;},
+      GEO_OPTS);
+  }
+
+  const savedDemandeur = localStorage.getItem("demandeur");
+  if(savedDemandeur){
+    $("demandeur").value = savedDemandeur;
+  }
+  $("demandeur").addEventListener("input", ()=>{
+    localStorage.setItem("demandeur", $("demandeur").value.trim());
+  });
+});
+function resetForm(){
+  $("formAppareil").reset();
+  currentStep = 1;
+
+  // Désactiver mode depuis la carte
+  FROM_MAP = false;
+  AUTO_LINK = "";
+
+  // Réafficher les étapes masquées
+  const stepLocalisation = steps[2];
+  const stepLocationDetails = steps[3];
+
+  stepLocalisation.classList.remove("skip");
+  stepLocalisation.style.display = "";
+
+  stepLocationDetails.classList.remove("skip");
+  stepLocationDetails.style.display = "";
+
+  const conf = document.getElementById("confirmationStep");
+  conf.classList.remove("active");
+  conf.style.display = ""; 
+
+  document.getElementById("introStep").style.display = "none";
+  document.getElementById("progress").style.display = "block";
+  document.getElementById("progressbar").style.display = "block";
+
+  showStep(currentStep);
+
+  const savedDemandeur = localStorage.getItem("demandeur");
+  if(savedDemandeur){
+    $("demandeur").value = savedDemandeur;
+  }
+}
+
+
+$("formAppareil").onsubmit = e => {
+  e.preventDefault();
+
+  let demandeur = $("demandeur").value.trim();
+  let poste = $("poste").value.trim();
+  let infos = $("infos").value.trim();
+
+  let coordAppareil = "", coordAcces = "";
+
+  if ($("presentValue").value === "oui") {
+    let la = sanitizeCoord($("latDevice").value),
+        lo = sanitizeCoord($("lonDevice").value);
+    if (!isValidLatLon(la, lo)) {
+      markError($("latDevice"), null, true); 
+      return;
+    }
+    coordAppareil = la + "," + lo;
+  } else if ($("presentValue").value === "non") {
+    if (!isValidUrl($("lien").value)) {
+      markError($("lien"), $("lienHelp"), true);
+      return;
+    }
+    coordAppareil = $("lien").value;
+  } else {
+
+    document.querySelectorAll("#pill-oui, #pill-non").forEach(p=>p.classList.add("error"));
+    return;
+  }
+
+
+if ($("accessMethod").value === "gps") {
+  let la = $("coordsAccessDisplay").textContent;
+  if (!la.includes(",")) {
+    document.querySelectorAll("#pill-access-gps").forEach(p=>p.classList.add("error"));
+    return;
+  }
+  coordAcces = la.replace("Coordonnées relevées (accès) : ", "").trim();
+} else if ($("accessMethod").value === "lien") {
+  let lienAcces = $("lienAccess").value.trim();
+  if (!isValidUrl(lienAcces)) {
+    $("lienAccess").classList.add("error");
+    $("lienAccessHelp").classList.add("show");
+    return; 
+  }
+  coordAcces = lienAcces;
+} else {
+  
+  document.querySelectorAll("#pill-access-gps, #pill-access-lien")
+    .forEach(p => p.classList.add("error"));
+  return;
+}
+
+  const formData = new URLSearchParams();
+  formData.append("demandeur", demandeur);
+  formData.append("poste", poste);
+  formData.append("type", $("type").value.trim());
+  formData.append("sat", $("sat").value.trim());
+  formData.append("localisation", coordAppareil);
+  formData.append("acces", coordAcces);
+  formData.append("notes", infos);
+
+  const submitBtn = document.querySelector('.btn.primary[type="submit"]');
+  const oldLabel = submitBtn.textContent;
+  submitBtn.disabled = true;
+  submitBtn.textContent = "⏳ Envoi en cours…";
+
+ fetch("https://script.google.com/macros/s/AKfycbyjwrrYYEicOSD8uaqxv8mdm5cyEyViAuq6-I74_4mBqrAZiiX0YuGl0APpbP5VfbjT/exec", {
+  method: "POST",
+  body: formData
+})
+  .then(r=>r.text())
+    .then(()=>{
+      fetch(COUNTER_URL+"?increment=true").catch(()=>{});
+      steps.forEach(s=>s.classList.remove("active"));
+      document.getElementById("confirmationStep").classList.add("active");
+      document.getElementById("confirmationStep").style.display = "block";
+      document.getElementById("progress").style.display = "none";
+      document.getElementById("progressbar").style.display = "none";
+    })
+    .catch(err=>{
+      console.error("Erreur d’envoi", err);
+      markError(submitBtn, null, true);
+    })
+    .finally(()=>{
+      submitBtn.disabled = false;
+      submitBtn.textContent = oldLabel;
+    });
+};
+
+document.querySelectorAll(".step").forEach(s => s.classList.remove("active"));
+document.getElementById("introStep").classList.add("active");
+
+progress.style.display = "none"; 
+document.getElementById("progressbar").style.display = "none";
+
+document.getElementById("startForm").addEventListener("click", () => {
+
+  document.getElementById("introStep").classList.remove("active");
+  document.getElementById("introStep").style.display = "none";
+
+
+  progress.style.display = "block";
+  document.getElementById("progressbar").style.display = "block";
+
+  currentStep = 1;
+  showStep(currentStep);
+});
+</script>
+</body>
+</html>
