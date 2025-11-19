@@ -324,13 +324,16 @@ if (urlLat && urlLng) {
   document.getElementById("lien").value = AUTO_LINK;
   document.getElementById("presentValue").value = "non";
 
-  const stepLocalisation = steps[2]; 
-  stepLocalisation.classList.add("skip");
-  stepLocalisation.style.display = "none";
+// Étapes à sauter quand on vient depuis la carte
+// 3 = "Comment localiser le poste"
+// 4 = "GPS ou lien poste"
+const stepLocalisation = steps[3];
+stepLocalisation.classList.add("skip");
+stepLocalisation.style.display = "none";
 
-  const stepLocationDetails = steps[3];
-  stepLocationDetails.classList.add("skip");
-  stepLocationDetails.style.display = "none";
+const stepLocationDetails = steps[4];
+stepLocationDetails.classList.add("skip");
+stepLocationDetails.style.display = "none";
 }
 
   
