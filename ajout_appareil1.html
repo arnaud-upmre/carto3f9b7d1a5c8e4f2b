@@ -634,6 +634,13 @@ function validateStep(i){
     input.classList.add("error");
     return false;
   }
+  // Validation spécifique : champ appareil obligatoire
+if (i === 3) { 
+    if (!$("appareil").value.trim()) {
+        $("appareil").classList.add("error");
+        return false;
+    }
+}
   return true;
 }
 
@@ -1244,6 +1251,7 @@ if (urlLat && urlLng) {
 
   // On pré-remplit le lien automatiquement
   AUTO_LINK = `https://www.google.com/maps?q=${urlLat},${urlLng}`;
+$("lien").value = AUTO_LINK;
 
   // On désactive le choix GPS/lien
   $("presentValue").value = "non";
