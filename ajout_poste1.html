@@ -636,16 +636,14 @@ if (steps[currentStep].id === "accessDetailsStep") {
   
 function validateStep(i) {
   const step = steps[i];
-  const inputs = step.querySelectorAll("input[required], textarea[required]");
 
-  if (i === 2) {
+  if (step.querySelector("#poste") && step.querySelector("#sat")) {
 
     const poste = $("poste").value.trim();
     const sat   = $("sat").value.trim();
 
     let valid = true;
 
-    // POSTE obligatoire
     if (!poste) {
       $("poste").classList.add("error");
       valid = false;
@@ -653,7 +651,6 @@ function validateStep(i) {
       $("poste").classList.remove("error");
     }
 
-    // SAT obligatoire
     if (!sat) {
       $("sat").classList.add("error");
       $("satHelp").classList.add("show");
@@ -665,7 +662,6 @@ function validateStep(i) {
 
     return valid;
   }
-
   
   let valid = true;
 
