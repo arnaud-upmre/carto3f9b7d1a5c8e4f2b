@@ -1150,14 +1150,30 @@ if (params.has("poste")) {
   $("demandeur").addEventListener("input", ()=>{
     localStorage.setItem("demandeur", $("demandeur").value.trim());
   });
+  // Sauvegarde automatique du poste
+$("poste").addEventListener("input", () => {
+  localStorage.setItem("lastPoste", $("poste").value.trim());
+});
+
+// Sauvegarde automatique du type
+$("type").addEventListener("input", () => {
+  localStorage.setItem("lastType", $("type").value.trim());
+});
 });
 
 function resetForm(){
   // On remet les champs du formulaire à zéro
   $("formAppareil").reset();
+
+  // Remettre automatiquement poste + type après un reset
+  const savedPoste = localStorage.getItem("lastPoste");
+  if (savedPoste) $("poste").value = savedPoste;
+
+  const savedType = localStorage.getItem("lastType");
+  if (savedType) $("type").value = savedType;
+
   currentStep = 0;
   returnToRecap = false;
-
 
   steps[4].classList.remove("skip"); // étape "Comment localiser l’appareil ?"
   steps[5].classList.remove("skip"); // étape carte/lien
@@ -1165,10 +1181,8 @@ function resetForm(){
   steps[4].style.display = "";
   steps[5].style.display = "";
 
-
   FROM_MAP = false;
   AUTO_LINK = "";
-
 
   $("presentValue").value = "";
   $("lien").value = "";
@@ -1178,7 +1192,6 @@ function resetForm(){
   $("mapDeviceWrap").classList.remove("error");
   $("geoDeviceMsg").style.display = "none";
 
-
   $("accessValue").value = "";
   $("accessMethod").value = "";
   $("coordsAccessDisplay").style.display = "none";
@@ -1186,28 +1199,26 @@ function resetForm(){
   $("geoAccessMsg").style.display = "none";
   $("lienAccess").value = "";
 
-
   document.querySelectorAll(".pill").forEach(p => p.classList.remove("active", "error"));
-
 
   const conf = document.getElementById("confirmationStep");
   conf.classList.remove("active");
   conf.style.display = "";
 
-
   document.getElementById("introStep").style.display = "none";
   document.getElementById("progress").style.display = "block";
   document.getElementById("progressbar").style.display = "block";
 
-
   showStep(currentStep);
-
 
   const savedDemandeur = localStorage.getItem("demandeur");
   if (savedDemandeur) {
     $("demandeur").value = savedDemandeur;
   }
 }
+
+
+  
 $("formAppareil").onsubmit = e => {
   e.preventDefault();
 
