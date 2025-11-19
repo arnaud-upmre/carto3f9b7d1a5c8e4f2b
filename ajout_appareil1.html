@@ -443,16 +443,24 @@ if (i === 8) {
     const recap = $("recap");
     recap.innerHTML = "";
 
-    const data = [
-      { step: 0, label: "👤 Demandeur", value: $("demandeur").value },
-      { step: 1, label: "📌 Poste", value: $("poste").value + ( $("type").value ? " ("+$("type").value+")" : "" ) },
-      { step: 2, label: "📌 SAT", value: $("sat").value },
-      { step: 3, label: "💡 Appareil", value: $("appareil").value },
-      { step: 5, label: "📍 Localisation appareil", value: $("presentValue").value==="oui" ? ($("latDevice").value+","+$("lonDevice").value) : $("lien").value },
-      { step: 8, label: "📍 Localisation accès", value: $("accessValue").value==="oui" ? 
-         ($("accessMethod").value==="gps" ? $("coordsAccessDisplay").textContent.replace("Coordonnées relevées (accès) : ","") : $("lienAccess").value) : "" },
-      { step: 9, label: "📝 Notes", value: $("infos").value }
-    ];
+    
+    function findStepIndex(fieldId) {
+      return Array.from(steps).findIndex(s => s.querySelector("#" + fieldId));
+    }
+
+const data = [
+  { step: findStepIndex("demandeur"), label: "👤 Demandeur", value: $("demandeur").value },
+  { step: findStepIndex("poste"), label: "📌 Poste", value: $("poste").value + ( $("type").value ? " ("+$("type").value+")" : "" ) },
+  { step: findStepIndex("sat"), label: "📌 SAT", value: $("sat").value },
+  { step: findStepIndex("appareil"), label: "💡 Appareil", value: $("appareil").value },
+  { step: findStepIndex("lien"), label: "📍 Localisation appareil", value: $("presentValue").value==="oui" ? ($("latDevice").value+","+$("lonDevice").value) : $("lien").value },
+  { step: findStepIndex("lienAccess"), label: "📍 Localisation accès", value: $("accessValue").value==="oui" ?
+      ($("accessMethod").value==="gps"
+        ? $("coordsAccessDisplay").textContent.replace("Coordonnées relevées (accès) : ", "")
+        : $("lienAccess").value)
+      : "" },
+  { step: findStepIndex("infos"), label: "📝 Notes", value: $("infos").value }
+];
 
  data.forEach(item=>{
   if(item.value && item.value.trim()!==""){
@@ -634,8 +642,8 @@ function validateStep(i){
     input.classList.add("error");
     return false;
   }
-  // Validation spécifique : champ appareil obligatoire
-if (i === 3) { 
+// Champ appareil obligatoire (méthode fiable)
+if (step.querySelector("#appareil")) {
     if (!$("appareil").value.trim()) {
         $("appareil").classList.add("error");
         return false;
