@@ -5853,6 +5853,17 @@
     "longitude": 2.19500,
     "description": "",
     "imajnet": ""
+  }, 
+  {
+    "nom": "Ruminghem",
+    "type": "SST",
+    "SAT": "",
+    "accès": "",
+    "appareil": "SM1",
+    "latitude": 50.84419,  
+    "longitude": 2.19482,
+    "description": "",
+    "imajnet": ""
   }
 ]
 
