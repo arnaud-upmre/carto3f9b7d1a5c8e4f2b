@@ -1155,6 +1155,7 @@ if (ref.startsWith("DU")) {
 
 } else if (
   /^[0-9]/.test(ref) ||
+  /^T([1-9]|10)$/.test(ref) ||
   ref.startsWith("S") ||
   ref.startsWith("ST") ||
   ref.startsWith("F") ||
