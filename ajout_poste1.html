@@ -431,16 +431,23 @@ function stepIndexOf(el){ return el ? [...steps].findIndex(s => s.contains(el)) 
   `;
 }
 
-    const data = [
-      { step: 1, label: "👤 Demandeur", value: $("demandeur").value },
-      { step: 2, label: "📌 Poste", value: $("poste").value + ( $("type").value ? " ("+$("type").value+")" : "" ) },
-      { step: 2, label: "📌 SAT", value: $("sat").value },
-      { step: 3, label: "📍 Localisation poste", value: $("presentValue").value==="oui" ? ($("latDevice").value+","+$("lonDevice").value) : $("lien").value },
-      { step: 5, label: "📍 Localisation accès", value: ($("accessMethod").value==="gps"
-         ? $("coordsAccessDisplay").textContent.replace("Coordonnées relevées (accès) : ","")
-         : $("lienAccess").value) },
-      { step: 7, label: "📝 Notes", value: $("infos").value }
-    ];
+let data = [
+  { step: 1, label: "👤 Demandeur", value: $("demandeur").value },
+  { step: 2, label: "📌 Poste", value: $("poste").value + ( $("type").value ? " ("+$("type").value+")" : "" ) },
+  { step: 2, label: "📌 SAT", value: $("sat").value },
+  // Localisation poste (uniquement si PAS depuis la carte)
+  ...(!FROM_MAP ? [{
+    step: 3,
+    label: "📍 Localisation poste",
+    value: $("presentValue").value==="oui"
+      ? ($("latDevice").value+","+$("lonDevice").value)
+      : $("lien").value
+  }] : []),
+  { step: 5, label: "📍 Localisation accès", value: ($("accessMethod").value==="gps"
+     ? $("coordsAccessDisplay").textContent.replace("Coordonnées relevées (accès) : ","")
+     : $("lienAccess").value) },
+  { step: 7, label: "📝 Notes", value: $("infos").value }
+];
 
     data.forEach(item => {
       if (item.value && item.value.trim() !== "") {
