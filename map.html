@@ -15,6 +15,27 @@
 <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
 
 <style>
+
+  /* --- MODE RÈGLE / TRAÇAGE (Style B SIG) --- */
+.measure-point {
+  width: 10px;
+  height: 10px;
+  background: white;
+  border: 2px solid black;
+  border-radius: 50%;
+}
+
+.measure-label {
+  position: absolute;
+  background: rgba(0,0,0,0.75);
+  color: white;
+  padding: 3px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+  pointer-events: none;
+  white-space: nowrap;
+  transform: translate(-50%, -12px);
+}
   
   #legal-footer {
   position: fixed;
@@ -490,6 +511,26 @@
   
   <div id="map"></div>
 
+<div id="measure-panel" style="
+  position: fixed;
+  bottom: 27px;
+  left: 20px;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color: white;
+  padding: 10px 16px 12px 16px; 
+  border-radius: 10px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Roboto;
+  font-size: 14px;
+  display: none;
+  z-index: 999999;
+  max-width: 260px;
+  white-space: pre-line;
+">
+  <div id="measure-text"></div>
+</div>
+
 <div id="context-menu">
   <div class="context-item" id="ctx-coord"></div>
 
@@ -501,6 +542,8 @@
 <div class="sub-item" id="ctx-waze"> 🚙 Waze</div>
 <div class="sub-item" id="ctx-apple">🚙 Apple Plans</div>
   </div>
+      <div class="context-separator"></div>
+  <div class="context-item" id="ctx-regle">📏 Règle / Traçage</div>
   
   <div class="context-separator"></div>
 
@@ -1139,9 +1182,7 @@ if (ref.startsWith("DU")) {
   ref.startsWith("TT") ||
   ref.startsWith("TSA") ||
   ref.startsWith("TC") ||
-  ref.startsWith("TRA")||
-  ref === "GT1" ||
-  ref === "GT2"
+  ref.startsWith("TRA")
 ) {
   appareilIcon = L.divIcon({
     html: `
@@ -1157,7 +1198,6 @@ if (ref.startsWith("DU")) {
 
 } else if (
   /^[0-9]/.test(ref) ||
-  /^T([1-9]|10)$/.test(ref) ||
   ref.startsWith("S") ||
   ref.startsWith("ST") ||
   ref.startsWith("F") ||
@@ -1661,6 +1701,8 @@ function closeContextMenu() {
 
 
 map.on("contextmenu", function(e) {
+  if (mesureActive) return; 
+
   e.originalEvent.preventDefault();
   openContextMenu(e.latlng, map.latLngToContainerPoint(e.latlng));
 });
@@ -1670,6 +1712,16 @@ let touchTimer = null;
 
 map.on("touchstart", function(e) {
   if (!e.latlng) return;
+
+  if (mesureActive) {
+    touchTimer = setTimeout(() => {
+      resetMesure();    
+      mesureActive = false;
+      showToast("📏 Mode mesure désactivé");
+    }, 600);       
+    return;        
+  }
+
   touchTimer = setTimeout(() => {
     openContextMenu(e.latlng, map.latLngToContainerPoint(e.latlng));
   }, 500);
@@ -1864,9 +1916,142 @@ map.on("moveend", () => {
   }, 350);
 });
 
+
+let mesureActive = false;
+let mesurePoints = [];
+let mesureLines = [];
+
+    const panel = document.getElementById("measure-panel");
+
+function resetMesure() {
+  mesurePoints.forEach(p => map.removeLayer(p));
+  mesureLines.forEach(l => map.removeLayer(l));
+
+  mesurePoints = [];
+  mesureLines = [];
+
+  panel.style.display = "none";
+document.getElementById("measure-text").textContent = "";
+  mesureActive = false;
+
+  showToast("🧽 Mesure effacée");
+}
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") resetMesure();
+});
+
+document.getElementById("ctx-regle").onclick = () => {
+  closeContextMenu();
+  resetMesure();
+  mesureActive = true;
+  showToast("📏 Mode mesure activé — cliquez pour poser des points");
+};
+    
+let lastTapTime = 0;
+    
+map.on("click", function (e) {
+  if (!mesureActive) return;
+
+  const now = Date.now();
+
+  // --- DOUBLE TAP = RESET ---
+  if (now - lastTapTime < 300) {
+    resetMesure();
+    return;
+  }
+  lastTapTime = now;
+
+  // --- SIMPLE TAP = AJOUT DU POINT ---
+  const latlng = e.latlng;
+
+  const idx = mesurePoints.length; 
+  const letter = String.fromCharCode(65 + idx);
+
+  const point = L.marker(latlng, {
+    interactive: false,
+    icon: L.divIcon({
+      className: "",
+      html: `
+        <div style="position: relative; transform: translate(-6px, -6px);">
+          <div style="
+            width:12px;height:12px;
+            background:white;border:2px solid black;border-radius:50%;
+          "></div>
+          <div style="
+            position:absolute;
+            top:-16px; left:50%;
+            transform: translateX(-50%);
+            background:rgba(0,0,0,0.7);
+            color:white;
+            padding:1px 4px;
+            border-radius:4px;
+            font-size:11px;
+            font-weight:600;
+            white-space:nowrap;
+          ">${letter}</div>
+        </div>
+      `,
+      iconSize: [12, 12]
+    })
+  }).addTo(map);
+
+  mesurePoints.push(point);
+
+  if (mesurePoints.length >= 2) {
+    const p1 = mesurePoints[mesurePoints.length - 2].getLatLng();
+    const p2 = latlng;
+
+    const line = L.polyline([p1, p2], {
+      color: "red",
+      weight: 3
+    }).addTo(map);
+
+    mesureLines.push(line);
+  }
+
+  updateMeasurePanel();
+});
+
+function updateMeasurePanel() {
+  if (mesurePoints.length < 2) return;
+
+  let text = "";
+  let total = 0;
+
+  for (let i = 1; i < mesurePoints.length; i++) {
+    const A = String.fromCharCode(64 + i);      // A, B, C...
+    const B = String.fromCharCode(65 + i);      // B, C, D...
+
+    const d = map.distance(
+      mesurePoints[i - 1].getLatLng(),
+      mesurePoints[i].getLatLng()
+    );
+
+    total += d;
+
+text += `${A} → ${B} : ${formatDistance(d)}\n`;
+  }
+
+  text += "---------------------\n";
+text += `Total : ${formatDistance(total)}`;
+
+document.getElementById("measure-text").textContent = text.trimEnd();
+panel.style.display = "block";
+}
+
+    function formatDistance(m) {
+  if (m < 1000) {
+    return m.toFixed(1) + " m";
+  } else {
+    return (m / 1000).toFixed(2) + " km";
+  }
+}
+
+    
 </script>
 <div id="legal-footer">
-  Nono Maps v1.13 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.13_2 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
