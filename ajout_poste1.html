@@ -619,10 +619,16 @@ while (currentStep < steps.length && steps[currentStep].style.display === "none"
       return;
     }
 
-    if (currentStep > 0) {
-      currentStep--;
-      showStep(currentStep);
-    }
+if (currentStep > 0) {
+  currentStep--;
+
+  // Sauter les steps masqués ("skip")
+  while (currentStep > 0 && steps[currentStep].style.display === "none") {
+    currentStep--;
+  }
+
+  showStep(currentStep);
+}
   });
 });
   
