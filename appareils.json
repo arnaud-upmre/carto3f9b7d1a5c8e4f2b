@@ -5875,6 +5875,182 @@
     "longitude": 2.19475,
     "description": "",
     "imajnet": ""
+  }, 
+  {
+    "nom": "Ruminghem",
+    "type": "SST",
+    "SAT": "",
+    "accès": "",
+    "appareil": "T4",
+    "latitude": 50.84420, 
+    "longitude": 2.19507,
+    "description": "",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Ruminghem",
+    "type": "SST",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT C4",
+    "latitude": 50.84420, 
+    "longitude": 2.19507,
+    "description": "",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Ruminghem",
+    "type": "SST",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT F4",
+    "latitude": 50.84420, 
+    "longitude": 2.19507,
+    "description": "",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Ruminghem",
+    "type": "SST",
+    "SAT": "",
+    "accès": "",
+    "appareil": "ST",
+    "latitude": 50.84421, 
+    "longitude": 2.19510,
+    "description": "",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Ruminghem",
+    "type": "SST",
+    "SAT": "",
+    "accès": "",
+    "appareil": "T3",
+    "latitude": 50.84421, 
+    "longitude": 2.19513,
+    "description": "",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Ruminghem",
+    "type": "SST",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT C3",
+    "latitude": 50.84421, 
+    "longitude": 2.19513,
+    "description": "",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Ruminghem",
+    "type": "SST",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT F3",
+    "latitude": 50.84421, 
+    "longitude": 2.19513,
+    "description": "",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Ruminghem",
+    "type": "SST",
+    "SAT": "",
+    "accès": "",
+    "appareil": "613 MR",
+    "latitude": 50.84421, 
+    "longitude": 2.19519,
+    "description": "",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Ruminghem",
+    "type": "SST",
+    "SAT": "",
+    "accès": "",
+    "appareil": "P1",
+    "latitude": 50.84421, 
+    "longitude": 2.19523,
+    "description": "",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Ruminghem",
+    "type": "SST",
+    "SAT": "",
+    "accès": "",
+    "appareil": "T1",
+    "latitude": 50.84422, 
+    "longitude": 2.19526,
+    "description": "",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Ruminghem",
+    "type": "SST",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT F1",
+    "latitude": 50.84422, 
+    "longitude": 2.19526,
+    "description": "",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Ruminghem",
+    "type": "SST",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT C1",
+    "latitude": 50.84422, 
+    "longitude": 2.19526,
+    "description": "",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Ruminghem",
+    "type": "SST",
+    "SAT": "",
+    "accès": "",
+    "appareil": "SP",
+    "latitude": 50.84422, 
+    "longitude": 2.19529,
+    "description": "",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Ruminghem",
+    "type": "SST",
+    "SAT": "",
+    "accès": "",
+    "appareil": "T2",
+    "latitude": 50.84422, 
+    "longitude": 2.19533,
+    "description": "",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Ruminghem",
+    "type": "SST",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT C2",
+    "latitude": 50.84422, 
+    "longitude": 2.19533,
+    "description": "",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Ruminghem",
+    "type": "SST",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT F2",
+    "latitude": 50.84422, 
+    "longitude": 2.19533,
+    "description": "",
+    "imajnet": ""
   }
 ]
 
