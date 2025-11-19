@@ -1142,26 +1142,61 @@ if (params.has("poste")) {
 });
 
 function resetForm(){
+  // On remet les champs du formulaire à zéro
   $("formAppareil").reset();
   currentStep = 0;
+  returnToRecap = false;
 
- const conf = document.getElementById("confirmationStep");
-conf.classList.remove("active");
+  // 🔄 1) On réactive les étapes de localisation appareil (au cas où elles étaient "skip")
+  steps[4].classList.remove("skip"); // étape "Comment localiser l’appareil ?"
+  steps[5].classList.remove("skip"); // étape carte/lien
 
-conf.style.display = ""; 
+  steps[4].style.display = "";
+  steps[5].style.display = "";
 
+  // 🔁 2) On sort du mode "FROM_MAP" (lat/lng dans l’URL)
+  FROM_MAP = false;
+  AUTO_LINK = "";
+
+  // On nettoie les champs liés à la localisation appareil
+  $("presentValue").value = "";
+  $("lien").value = "";
+  $("latDevice").value = "";
+  $("lonDevice").value = "";
+  $("coordsDeviceDisplay").style.display = "none";
+  $("mapDeviceWrap").classList.remove("error");
+  $("geoDeviceMsg").style.display = "none";
+
+  // On nettoie la partie accès
+  $("accessValue").value = "";
+  $("accessMethod").value = "";
+  $("coordsAccessDisplay").style.display = "none";
+  $("mapAccessWrap").classList.remove("error");
+  $("geoAccessMsg").style.display = "none";
+  $("lienAccess").value = "";
+
+  // On enlève les états visuels des pills
+  document.querySelectorAll(".pill").forEach(p => p.classList.remove("active", "error"));
+
+  // On quitte l’écran de confirmation
+  const conf = document.getElementById("confirmationStep");
+  conf.classList.remove("active");
+  conf.style.display = "";
+
+  // On réaffiche la progression
   document.getElementById("introStep").style.display = "none";
   document.getElementById("progress").style.display = "block";
   document.getElementById("progressbar").style.display = "block";
 
+  // On revient à la première étape réelle du formulaire
   showStep(currentStep);
 
+  // On remet le demandeur depuis le localStorage si présent
   const savedDemandeur = localStorage.getItem("demandeur");
-  if(savedDemandeur){
+  if (savedDemandeur) {
     $("demandeur").value = savedDemandeur;
   }
 }
-
 $("formAppareil").onsubmit = e => {
   e.preventDefault();
 
@@ -1270,6 +1305,8 @@ document.getElementById("startForm").addEventListener("click", () => {
 const urlParams = new URLSearchParams(window.location.search);
 const urlLat = urlParams.get("lat");
 const urlLng = urlParams.get("lng");
+
+  let MAP_MODE_ACTIVE = false; // indique si on vient de la carte
 
 window.FROM_MAP = false;
 window.AUTO_LINK = "";
