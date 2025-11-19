@@ -1257,10 +1257,17 @@ document.addEventListener("DOMContentLoaded", () => {
   // Étape 4 = choix GPS / Lien
   // Étape 5 = saisie directe du lien (là où on veut aller)
   // -----------------------------
-  setTimeout(() => {
-    currentStep = 5;
+setTimeout(() => {
+    // On ne force PAS l'étape fixe
+    // On avance juste d’une étape normale après “Comment localiser l’appareil ?”
+    currentStep = 4;   // L’étape "Comment localiser l’appareil ?"
     showStep(currentStep);
-  }, 200);
+
+    // Puis on simule un clic sur “Suivant”
+    setTimeout(() => {
+        document.querySelectorAll(".next")[4].click();
+    }, 150);
+}, 200);
 });
 </script>
 </body>
