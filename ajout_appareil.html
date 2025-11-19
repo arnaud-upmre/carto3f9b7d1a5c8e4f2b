@@ -317,7 +317,7 @@ Remplir uniquement si l’appareil dépend d’un SAT
   <h3 style="text-align:center;margin:16px 0">✅ Merci ! Votre demande a bien été envoyée.</h3>
   <div class="btn-row">
     <button type="button" class="btn secondary" onclick="window.location.href='index.html'">🏠 Retour à l’accueil</button>
-    <button type="button" class="btn primary" onclick="resetForm()">➕ Ajouter un autre appareil</button>
+    <button type="button" class="btn primary" onclick="prepareNewDevice()">➕ Ajouter un autre appareil</button>
   </div>
 </div>
 
@@ -484,6 +484,12 @@ const data = [
   { step: findStepIndex("infos"), label: "📝 Notes", value: $("infos").value }
 ];
 
+  // Si l'étape Poste a été auto-validée, on assure l'inclusion
+if (steps[1].dataset.autoValidated === "1") {
+    $("poste").value = localStorage.getItem("lastPoste") || $("poste").value;
+    $("type").value  = localStorage.getItem("lastType")  || $("type").value;
+}
+  
  data.forEach(item=>{
   if(item.value && item.value.trim()!==""){
     const div = document.createElement("div");
@@ -1161,6 +1167,14 @@ $("type").addEventListener("input", () => {
 });
 });
 
+  function prepareNewDevice() {
+  // Sauvegarder immédiatement POSTE et TYPE
+  localStorage.setItem("lastPoste", $("poste").value.trim());
+  localStorage.setItem("lastType", $("type").value.trim());
+
+  resetForm();
+}
+
 function resetForm(){
   // On remet les champs du formulaire à zéro
   $("formAppareil").reset();
@@ -1171,6 +1185,11 @@ function resetForm(){
 
   const savedType = localStorage.getItem("lastType");
   if (savedType) $("type").value = savedType;
+
+  // Marquer l'étape Poste comme validée automatiquement
+steps[1].dataset.autoValidated = "1";
+$("poste").classList.remove("error");
+$("type").classList.remove("error");
 
   currentStep = 2;
   returnToRecap = false;
@@ -1221,6 +1240,12 @@ function resetForm(){
   
 $("formAppareil").onsubmit = e => {
   e.preventDefault();
+
+  // Sécurise le poste si auto-validé
+if (steps[1].dataset.autoValidated === "1") {
+  $("poste").value = localStorage.getItem("lastPoste") || $("poste").value;
+  $("type").value = localStorage.getItem("lastType") || $("type").value;
+}
 
   let demandeur = $("demandeur").value.trim();
   let poste = $("poste").value.trim();
