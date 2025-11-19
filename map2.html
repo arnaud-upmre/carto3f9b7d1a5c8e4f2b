@@ -900,7 +900,7 @@ const appareilsLayer = L.markerClusterGroup({
   spiderfyOnEveryZoom: false,  
   showCoverageOnHover: false,
   zoomToBoundsOnClick: false,   
-  disableClusteringAtZoom: 22, 
+  disableClusteringAtZoom: 19, 
   maxClusterRadius: function (zoom) {
     return zoom > 18 ? 20 : 60;
   }
@@ -2061,39 +2061,36 @@ panel.style.display = "block";
     return (m / 1000).toFixed(2) + " km";
   }
 }
-
 function afficherTousAppareils() {
 
-    if (typeof appareilsLayer.freeze !== "function") {
-        console.warn("⚠️ plugin freezable NON chargé");
-        return;
-    }
+  // 1) Forcer une reconstruction des clusters (CRUCIAL !)
+  postesLayer.refreshClusters();
+  appareilsLayer.refreshClusters();
+  accesLayer.refreshClusters();
+  if (map.hasLayer(pnLayer)) pnLayer.refreshClusters();
 
-    // 1) Désactiver le clustering
-    appareilsLayer.freeze();
+  // 2) Un petit délai pour laisser Leaflet recalculer
+  setTimeout(() => {
 
-    // 2) Laisser Leaflet rafraîchir
-    setTimeout(() => {
-
-        appareilsLayer.eachLayer(layer => {
-
-            if (!layer.getAllChildMarkers) return;
-
-            const enfants = layer.getAllChildMarkers();
-            if (!enfants || enfants.length < 2) return;
-
-            const first = enfants[0].getLatLng();
-            const same = enfants.every(m => m.getLatLng().equals(first));
-
-            if (same) layer.spiderfy();
+    // 3) Maintenant on peut éclater tout ce qui existe réellement
+    map.eachLayer(layer => {
+      if (layer && typeof layer.eachLayer === "function") {
+        layer.eachLayer(sub => {
+          if (sub && typeof sub.getAllChildMarkers === "function") {
+            const enfants = sub.getAllChildMarkers();
+            if (enfants.length >= 2) {
+              sub.spiderfy();
+            }
+          }
         });
+      }
+    });
 
-    }, 250);
+  }, 150);
 }
-    
 </script>
 <div id="legal-footer">
-  Nono Maps v1.13_Essai3 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.13_Essai4 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
