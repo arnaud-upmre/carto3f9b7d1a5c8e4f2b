@@ -637,6 +637,35 @@ if (steps[currentStep].id === "accessDetailsStep") {
 function validateStep(i) {
   const step = steps[i];
   const inputs = step.querySelectorAll("input[required], textarea[required]");
+
+// Si on vient de la MAP et qu'on est à l'étape POSTE/SAT (index 2),
+// on force la validation obligatoire même si l'étape est sautée visuellement.
+if (FROM_MAP && i === 2) {
+  const poste = $("poste").value.trim();
+  const sat = $("sat").value.trim();
+
+  let valid = true;
+
+  if (!poste) {
+    $("poste").classList.add("error");
+    valid = false;
+  } else {
+    $("poste").classList.remove("error");
+  }
+
+  if (!sat) {
+    $("sat").classList.add("error");
+    $("satHelp").classList.add("show");
+    valid = false;
+  } else {
+    $("sat").classList.remove("error");
+    $("satHelp").classList.remove("show");
+  }
+
+  return valid;
+}
+
+  
   let valid = true;
 
   inputs.forEach(input => {
