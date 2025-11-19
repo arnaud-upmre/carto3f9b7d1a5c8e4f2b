@@ -692,15 +692,38 @@ if (marker.options.isAcces) {
 } else if (id.includes("POSTE")) {
   iconFile = "poste.png";
 } else {
-
 if (id.startsWith("DU")) {
   iconFile = "stop.png";
-} else if (id.startsWith("I") || id.startsWith("SI") || id.startsWith("D")) {
+
+} else if (
+  id.startsWith("I") ||
+  id.startsWith("SI") ||
+  id.startsWith("D")
+) {
   iconFile = "int.png";
-} else if (id.startsWith("TT") || id.startsWith("TSA") || id.startsWith("TC") || id.startsWith("TRA")) {
+
+} else if (
+  id.startsWith("TT") ||
+  id.startsWith("TSA") ||
+  id.startsWith("TC") ||
+  id.startsWith("TRA") ||
+  id === "GT1" ||
+  id === "GT2"
+) {
   iconFile = "TT.png";
-} else if (/^[0-9]/.test(id) || id.startsWith("S") || id.startsWith("ST") || id.startsWith("F") || id.startsWith("P") || id.startsWith("FB") || id.startsWith("B")) {
+
+} else if (
+  /^T([1-9]|10)$/.test(id) ||      // T1 → T10 = sectionneurs
+  /^[0-9]/.test(id) ||
+  id.startsWith("S") ||
+  id.startsWith("ST") ||
+  id.startsWith("F") ||
+  id.startsWith("P") ||
+  id.startsWith("FB") ||
+  id.startsWith("B")
+) {
   iconFile = "sect.png";
+
 } else if (id.startsWith("ALIM")) {
   iconFile = "alim.png";
 }
@@ -1182,7 +1205,9 @@ if (ref.startsWith("DU")) {
   ref.startsWith("TT") ||
   ref.startsWith("TSA") ||
   ref.startsWith("TC") ||
-  ref.startsWith("TRA")
+  ref.startsWith("TRA")||
+  ref === "GT1" ||
+  ref === "GT2"
 ) {
   appareilIcon = L.divIcon({
     html: `
@@ -1197,6 +1222,7 @@ if (ref.startsWith("DU")) {
   });
 
 } else if (
+  /^T([1-9]|10)$/.test(ref) || 
   /^[0-9]/.test(ref) ||
   ref.startsWith("S") ||
   ref.startsWith("ST") ||
