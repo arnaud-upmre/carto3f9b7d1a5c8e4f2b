@@ -5823,13 +5823,13 @@
   },
   {
     "nom": "Siège UP",
-    "latitude": 50.634832,
-    "longitude": 3.072474,
+    "latitude": 50.63507,
+    "longitude": 3.07186,
     "description": "",
     "contact": "",
     "portail": "Quai n°2 Porte 40 - Accès par Carmillon",
-    "poste_latitude": "50.63624475353958",
-    "poste_longitude": "3.071078467226517",
+    "poste_latitude": "50.63596",
+    "poste_longitude": "3.07074",
     "special": true
   }
 ]
