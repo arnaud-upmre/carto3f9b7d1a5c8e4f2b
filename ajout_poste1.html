@@ -600,6 +600,12 @@ if (steps[currentStep].id === "accessDetailsStep") {
 }
 
     currentStep++;
+
+    // Si l'étape suivante est masquée (skip), on la saute automatiquement
+while (currentStep < steps.length && steps[currentStep].style.display === "none") {
+  currentStep++;
+}
+    
     showStep(currentStep);
   });
 });
