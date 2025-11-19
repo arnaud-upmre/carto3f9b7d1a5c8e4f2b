@@ -6227,6 +6227,28 @@
     "longitude": 2.19333,
     "description": "Herse LC",
     "imajnet": ""
+  }, 
+  {
+    "nom": "Ruminghem",
+    "type": "SST",
+    "SAT": "",
+    "accès": "",
+    "appareil": "GT1",
+    "latitude": 50.84462, 
+    "longitude": 2.19546,
+    "description": "",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Ruminghem",
+    "type": "SST",
+    "SAT": "",
+    "accès": "",
+    "appareil": "GT2",
+    "latitude": 50.84462, 
+    "longitude": 2.19525,
+    "description": "",
+    "imajnet": ""
   }
 ]
 
