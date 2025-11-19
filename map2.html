@@ -2069,33 +2069,31 @@ function afficherTousAppareils() {
         return;
     }
 
-
+    // 1) Désactiver le clustering
     appareilsLayer.freeze();
 
-
+    // 2) Laisser Leaflet rafraîchir
     setTimeout(() => {
 
-        appareilsLayer.eachLayer(cluster => {
+        appareilsLayer.eachLayer(layer => {
 
-    
-            if (!(cluster instanceof L.MarkerCluster)) return;
+            if (!layer.getAllChildMarkers) return;
 
-            const enfants = cluster.getAllChildMarkers();
-            if (enfants.length < 2) return;
+            const enfants = layer.getAllChildMarkers();
+            if (!enfants || enfants.length < 2) return;
+
             const first = enfants[0].getLatLng();
             const same = enfants.every(m => m.getLatLng().equals(first));
 
-            if (same) {
-                cluster.spiderfy();
-            }
+            if (same) layer.spiderfy();
         });
 
-    }, 300);
+    }, 250);
 }
     
 </script>
 <div id="legal-footer">
-  Nono Maps v1.13_Essai2 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.13_Essai3 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
