@@ -439,7 +439,7 @@ if(i===10){
     const recap = $("recap");
     recap.innerHTML = "";
 
-    // Adapter le texte d’introduction du récap selon le mode
+
     if (FROM_MAP) {
         $("recapIntro").innerHTML = `
             🎉 Super, presque terminé !<br>
@@ -454,7 +454,7 @@ if(i===10){
         `;
     }
 
-    // Si on vient de la carte : pas de récap
+
 if (FROM_MAP) {
     $("recap").innerHTML = `
       <p style="background:var(--card);padding:12px;border-radius:8px;border:1px solid var(--border);">
@@ -462,7 +462,7 @@ if (FROM_MAP) {
         ✔️ Vous pouvez envoyer directement.
       </p>
     `;
-    return; // On skip toute la suite du récap
+    return; 
 }
 
     
@@ -484,7 +484,7 @@ const data = [
   { step: findStepIndex("infos"), label: "📝 Notes", value: $("infos").value }
 ];
 
-  // Si l'étape Poste a été auto-validée, on assure l'inclusion
+
 if (steps[1].dataset.autoValidated === "1") {
     $("poste").value = localStorage.getItem("lastPoste") || $("poste").value;
     $("type").value  = localStorage.getItem("lastType")  || $("type").value;
@@ -557,7 +557,7 @@ document.querySelectorAll(".next").forEach(btn=>{
   btn.addEventListener("click", e=>{
   e.preventDefault();
 
-// 🔒 Vérifier le champ APPAREIL obligatoire AVANT de sauter l'étape
+
 if (currentStep === 3) {
     const val = $("appareil").value.trim();
     if (!val) {
@@ -566,14 +566,12 @@ if (currentStep === 3) {
     }
 }
 
-// --- MODE VENANT DE LA MAP ---
-// Après l'étape 3 (nom de l'appareil), on saute les étapes 4 et 5
+
 if (FROM_MAP && currentStep === 3) {
 
       $("presentValue").value = "non";
       $("lien").value = AUTO_LINK;
 
-      // On saute à l'étape 6 (accès ?)
       currentStep = 6;
       showStep(currentStep);
       return;
@@ -1156,19 +1154,17 @@ if (params.has("poste")) {
   $("demandeur").addEventListener("input", ()=>{
     localStorage.setItem("demandeur", $("demandeur").value.trim());
   });
-  // Sauvegarde automatique du poste
+
 $("poste").addEventListener("input", () => {
   localStorage.setItem("lastPoste", $("poste").value.trim());
 });
 
-// Sauvegarde automatique du type
 $("type").addEventListener("input", () => {
   localStorage.setItem("lastType", $("type").value.trim());
 });
 });
 
   function prepareNewDevice() {
-  // Sauvegarder immédiatement POSTE et TYPE
   localStorage.setItem("lastPoste", $("poste").value.trim());
   localStorage.setItem("lastType", $("type").value.trim());
 
@@ -1176,17 +1172,15 @@ $("type").addEventListener("input", () => {
 }
 
 function resetForm(){
-  // On remet les champs du formulaire à zéro
   $("formAppareil").reset();
 
-  // Remettre automatiquement poste + type après un reset
   const savedPoste = localStorage.getItem("lastPoste");
   if (savedPoste) $("poste").value = savedPoste;
 
   const savedType = localStorage.getItem("lastType");
   if (savedType) $("type").value = savedType;
 
-  // Marquer l'étape Poste comme validée automatiquement
+
 steps[1].dataset.autoValidated = "1";
 $("poste").classList.remove("error");
 $("type").classList.remove("error");
@@ -1194,8 +1188,8 @@ $("type").classList.remove("error");
   currentStep = 2;
   returnToRecap = false;
 
-  steps[4].classList.remove("skip"); // étape "Comment localiser l’appareil ?"
-  steps[5].classList.remove("skip"); // étape carte/lien
+  steps[4].classList.remove("skip"); 
+  steps[5].classList.remove("skip"); 
 
   steps[4].style.display = "";
   steps[5].style.display = "";
@@ -1241,7 +1235,6 @@ $("type").classList.remove("error");
 $("formAppareil").onsubmit = e => {
   e.preventDefault();
 
-  // Sécurise le poste si auto-validé
 if (steps[1].dataset.autoValidated === "1") {
   $("poste").value = localStorage.getItem("lastPoste") || $("poste").value;
   $("type").value = localStorage.getItem("lastType") || $("type").value;
@@ -1356,7 +1349,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const urlLat = urlParams.get("lat");
 const urlLng = urlParams.get("lng");
 
-  let MAP_MODE_ACTIVE = false; // indique si on vient de la carte
+  let MAP_MODE_ACTIVE = false;
 
 window.FROM_MAP = false;
 window.AUTO_LINK = "";
