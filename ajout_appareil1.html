@@ -344,6 +344,32 @@ let currentStep=0;
 const steps=document.querySelectorAll(".step:not(#introStep):not(#confirmationStep)");
 const progress=document.getElementById("progress");
 function showStep(i){
+
+    // AUTO-SAUT si URL contient lat/lng et qu’on arrive à l’étape 4
+  const params = new URLSearchParams(window.location.search);
+  const urlLat = params.get("lat");
+  const urlLng = params.get("lng");
+
+  if (i === 4 && urlLat && urlLng) {
+    // Forcer mode lien
+    $("presentValue").value = "non";
+    $("pill-non").classList.add("active");
+    $("pill-oui").classList.remove("active");
+
+    toggle($("mapDeviceWrap"), 0);
+    toggle($("lienField"), 1);
+
+    $("lien").value = `https://www.google.com/maps?q=${urlLat},${urlLng}`;
+
+    // Saut automatique à l’étape d’après
+    setTimeout(() => {
+      currentStep = 5;
+      showStep(currentStep);
+    }, 50);
+
+    return; // empêcher affichage normal de l'étape 4
+  }
+  
   steps.forEach((s,idx)=>s.classList.toggle("active",idx===i));
   let pct = Math.round(((i+1) / steps.length) * 100);
 progress.textContent = `${pct}%`;
