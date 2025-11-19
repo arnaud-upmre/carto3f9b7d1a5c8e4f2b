@@ -5842,6 +5842,17 @@
     "longitude": 2.31164,
     "description": "",
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=51.0020828854331,2.3113125356637125;uid=200f8f46-7527-41d1-98b5-5f612aa9001f_2188;"
+  }, 
+  {
+    "nom": "Ruminghem",
+    "type": "SST",
+    "SAT": "",
+    "accès": "",
+    "appareil": "P2",
+    "latitude": 50.84420, 
+    "longitude": 2.19500,
+    "description": "",
+    "imajnet": ""
   }
 ]
 
