@@ -527,17 +527,18 @@ document.querySelectorAll(".next").forEach(btn=>{
     e.preventDefault();
     
 if (FROM_MAP && currentStep === 2) {
-    // On part de l’étape suivante
-    let next = currentStep + 1;
+  // Recherche du prochain step non masqué
+  let next = currentStep + 1;
+  while (next < steps.length && steps[next].style.display === "none") {
+    next++;
+  }
 
-    // On saute automatiquement toutes les étapes masquées (skip)
-    while (steps[next] && steps[next].classList.contains("skip")) {
-        next++;
-    }
-
+  // Si trouvé, on avance directement
+  if (next < steps.length) {
     currentStep = next;
     showStep(currentStep);
     return;
+  }
 }
 
 if (comeBackAt !== null && currentStep === comeBackAt) {
