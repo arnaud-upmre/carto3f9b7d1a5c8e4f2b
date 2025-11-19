@@ -526,11 +526,14 @@ document.querySelectorAll(".next").forEach(btn=>{
   btn.addEventListener("click", e=>{
     e.preventDefault();
 
-    // Si on vient de la carte → on saute directement la localisation poste
 if (FROM_MAP && currentStep === 2) {
   // Étape 2 = après demandeur + poste/type/SAT
-  // On saute localisation (3) + GPS/lien (4)
-  currentStep = 4; // On passe directement à l'étape accès
+  // On doit sauter toutes les étapes marquées "skip"
+  let next = 3;
+  while (steps[next] && steps[next].classList.contains("skip")) {
+    next++;
+  }
+  currentStep = next; 
   showStep(currentStep);
   return;
 }
