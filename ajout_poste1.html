@@ -525,17 +525,19 @@ function stepIndexOf(el){ return el ? [...steps].findIndex(s => s.contains(el)) 
 document.querySelectorAll(".next").forEach(btn=>{
   btn.addEventListener("click", e=>{
     e.preventDefault();
-
+    
 if (FROM_MAP && currentStep === 2) {
-  // Étape 2 = après demandeur + poste/type/SAT
-  // On doit sauter toutes les étapes marquées "skip"
-  let next = 3;
-  while (steps[next] && steps[next].classList.contains("skip")) {
-    next++;
-  }
-  currentStep = next; 
-  showStep(currentStep);
-  return;
+    // On part de l’étape suivante
+    let next = currentStep + 1;
+
+    // On saute automatiquement toutes les étapes masquées (skip)
+    while (steps[next] && steps[next].classList.contains("skip")) {
+        next++;
+    }
+
+    currentStep = next;
+    showStep(currentStep);
+    return;
 }
 
 if (comeBackAt !== null && currentStep === comeBackAt) {
