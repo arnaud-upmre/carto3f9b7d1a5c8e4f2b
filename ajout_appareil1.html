@@ -344,6 +344,12 @@ let currentStep=0;
 const steps=document.querySelectorAll(".step:not(#introStep):not(#confirmationStep)");
 const progress=document.getElementById("progress");
 function showStep(i){
+
+  // Si l'étape est marquée "skip", on avance jusqu'à une étape visible
+  while (steps[i] && steps[i].classList.contains("skip")) {
+    i++;
+  }
+  
   steps.forEach((s,idx)=>s.classList.toggle("active",idx===i));
   let pct = Math.round(((i+1) / steps.length) * 100);
 progress.textContent = `${pct}%`;
@@ -1233,6 +1239,7 @@ window.FROM_MAP = false;
 window.AUTO_LINK = "";
 
 if (urlLat && urlLng) {
+  
   FROM_MAP = true;
 
   // On pré-remplit le lien automatiquement
@@ -1241,9 +1248,13 @@ if (urlLat && urlLng) {
   // On désactive le choix GPS/lien
   $("presentValue").value = "non";
 
-  // On masque les 2 étapes de localisation
-  steps[4].style.display = "none"; // Étape "Comment localiser ?"
-  steps[5].style.display = "none"; // Étape carte / lien
+// On marque les étapes comme "skip"
+steps[4].classList.add("skip");
+steps[5].classList.add("skip");
+
+// On masque les 2 étapes de localisation
+steps[4].style.display = "none";
+steps[5].style.display = "none";
 }
 
   
