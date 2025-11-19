@@ -1172,7 +1172,7 @@ function resetForm(){
   const savedType = localStorage.getItem("lastType");
   if (savedType) $("type").value = savedType;
 
-  currentStep = 0;
+  currentStep = 2;
   returnToRecap = false;
 
   steps[4].classList.remove("skip"); // étape "Comment localiser l’appareil ?"
