@@ -443,6 +443,17 @@ if (i === 8) {
     const recap = $("recap");
     recap.innerHTML = "";
 
+    // Si on vient de la carte : pas de récap
+if (FROM_MAP) {
+    $("recap").innerHTML = `
+      <p style="background:var(--card);padding:12px;border-radius:8px;border:1px solid var(--border);">
+        ✔️ Localisation déjà fournie depuis la carte.<br>
+        ✔️ Vous pouvez envoyer directement.
+      </p>
+    `;
+    return; // On skip toute la suite du récap
+}
+
     
     function findStepIndex(fieldId) {
       return Array.from(steps).findIndex(s => s.querySelector("#" + fieldId));
@@ -527,10 +538,20 @@ if(item.value.includes(",") && !item.value.startsWith("http")){
 }
 document.querySelectorAll(".next").forEach(btn=>{
   btn.addEventListener("click", e=>{
-    e.preventDefault();
-        // --- MODE VENANT DE LA MAP ---
-    // Après l'étape 3 (nom de l'appareil), on saute les étapes 4 et 5
-    if (FROM_MAP && currentStep === 3) {
+  e.preventDefault();
+
+// 🔒 Vérifier le champ APPAREIL obligatoire AVANT de sauter l'étape
+if (currentStep === 3) {
+    const val = $("appareil").value.trim();
+    if (!val) {
+        $("appareil").classList.add("error");
+        return; // On bloque ici
+    }
+}
+
+// --- MODE VENANT DE LA MAP ---
+// Après l'étape 3 (nom de l'appareil), on saute les étapes 4 et 5
+if (FROM_MAP && currentStep === 3) {
 
       $("presentValue").value = "non";
       $("lien").value = AUTO_LINK;
