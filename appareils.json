@@ -6271,6 +6271,114 @@
     "longitude": 2.89650,
     "description": "AREVA - Type TE 9848 A <br> Année de fabrication 2009 <br> N°3247PG153 08 <br> Masse totale : 122000kg <br> Masses d'huile : 38500kg <br> Refroidissement ONAN <br> Rebobines en 2012",
     "imajnet": ""
+  }, 
+  {
+    "nom": "Flamengrie",
+    "type": "SST",
+    "appareil": "T5",
+    "latitude": 50.64568,
+    "longitude": 2.89851,
+    "description": "",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Flamengrie",
+    "type": "SST",
+    "appareil": "SPLT3",
+    "latitude": 50.64574,
+    "longitude": 2.89856,
+    "description": "",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Flamengrie",
+    "type": "SST",
+    "appareil": "TT5 C",
+    "latitude": 50.64574,
+    "longitude": 2.89856,
+    "description": "",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Flamengrie",
+    "type": "SST",
+    "appareil": "TT5 F",
+    "latitude": 50.64574,
+    "longitude": 2.89856,
+    "description": "",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Flamengrie",
+    "type": "SST",
+    "appareil": "TC D",
+    "latitude": 50.64574,
+    "longitude": 2.89856,
+    "description": "",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Flamengrie",
+    "type": "SST",
+    "appareil": "P1",
+    "latitude": 50.64574, 
+    "longitude": 2.89856,
+    "description": "",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Flamengrie",
+    "type": "SST",
+    "appareil": "573 MR",
+    "latitude": 50.64574, 
+    "longitude": 2.89856,
+    "description": "",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Flamengrie",
+    "type": "SST",
+    "appareil": "T1",
+    "latitude": 50.64574,
+    "longitude": 2.89856,
+    "description": "",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Flamengrie",
+    "type": "SST",
+    "appareil": "TT1 F",
+    "latitude": 50.64574,
+    "longitude": 2.89856,
+    "description": "",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Flamengrie",
+    "type": "SST",
+    "appareil": "TT1 C",
+    "latitude": 50.64574,
+    "longitude": 2.89856,
+    "description": "",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Flamengrie",
+    "type": "SST",
+    "appareil": "SP",
+    "latitude": 50.64578,
+    "longitude": 2.89840,
+    "description": "",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Flamengrie",
+    "type": "SST",
+    "appareil": "T2",
+    "latitude": 50.64579, 
+    "longitude": 2.89838,
+    "description": "",
+    "imajnet": ""
   }
 ]
 
