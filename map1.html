@@ -2073,30 +2073,24 @@ panel.style.display = "block";
   }
 }
 
-    // --- Forcer le centrage parfait du cluster au centroïde des points ---
-L.MarkerCluster.prototype._updatePosition = function () {
-  const children = this.getAllChildMarkers();
-  if (!children.length) return;
+    // =============================================================
+// SPIDERFY AUTOMATIQUE À ZOOM 21 POUR TOUS LES CLUSTERS
+// =============================================================
+map.on("zoomend", () => {
+  if (map.getZoom() !== 21) return;
 
-  let sumLat = 0, sumLng = 0;
-  for (const m of children) {
-    const ll = m.getLatLng();
-    sumLat += ll.lat;
-    sumLng += ll.lng;
-  }
+  const groups = [postesLayer, appareilsLayer, accesLayer];
 
-  const center = L.latLng(sumLat / children.length, sumLng / children.length);
-
-  // Position interne du cluster = centroïde exact
-  this._latlng = center;
-
-  // Met à jour l'icône déjà visible (important visuellement)
-  if (this._icon) {
-    const pt = this._map.latLngToLayerPoint(center);
-    L.DomUtil.setPosition(this._icon, pt);
-  }
-};
-
+  groups.forEach(group => {
+    // On cible le vrai groupe interne contenant les clusters visibles
+    group._featureGroup.eachLayer(c => {
+      if (c instanceof L.MarkerCluster && !c._spiderfied) {
+        c.spiderfy();   // 💥 ON ÉCLATE !
+      }
+    });
+  });
+});
+    
     
 </script>
 <div id="legal-footer">
