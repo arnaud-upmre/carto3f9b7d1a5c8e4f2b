@@ -658,6 +658,7 @@ const compteurURL = "https://script.google.com/macros/s/AKfycbzUFaek89LYosR0FSw9
 const compteurAppareilURL = "https://script.google.com/macros/s/AKfycbwJIlvcfNYREJn1oPiVAhQqHACXXar8ZbRl6aChwYw4TFSAaMTFEHTT5X2T7BKLJ3gsJw/exec";
 
 let lieux = [], appareils = [];
+    const appareilStore = {};
     let currentItem = null;
     let proximiteData = [];
 
@@ -819,7 +820,7 @@ if (!isSAT && !isAcces) {
   let html = `<p><strong>🧩 Appareils trouvés dans ce poste :</strong></p>`;
   for (const [sat, list] of Object.entries(groupedAll)) {
     html += `<p><strong>${sat} :</strong> `;
-    html += list.map(app => `<a href="#" onclick='showAppareil(${JSON.stringify(app)})'>${app.appareil}</a>`).join(", ");
+    html += list.map(app => (() => {   const id = crypto.randomUUID();   appareilStore[id] = app;   return `<a href="#" onclick="showAppareil(appareilStore['${id}'])">${app.appareil}</a>`; })()).join(", ");
     html += `</p>`;
   }
 
@@ -855,7 +856,11 @@ if (!isSAT && !isAcces) {
 
     html += `<p><strong>🧩 Appareils trouvés dans ce SAT :</strong></p>`;
     for (const [sat, list] of Object.entries(groupedSAT)) {
-      html += `<p>${list.map(app => `<a href="#" onclick='showAppareil(${JSON.stringify(app)})'>${app.appareil}</a>`).join(", ")}</p>`;
+     html += `<p>${list.map(app => (() => {
+  const id = crypto.randomUUID();
+  appareilStore[id] = app;
+  return `<a href="#" onclick="showAppareil(appareilStore['${id}'])">${app.appareil}</a>`;
+})()).join(", ")}</p>`;
     }
   }
 
@@ -874,7 +879,7 @@ if (!isSAT && !isAcces) {
   for (const [sat, list] of Object.entries(groupedAll)) {
     if (sat === currentLieu.SAT) continue; 
     html += `<p><strong>${sat} :</strong> `;
-    html += list.map(app => `<a href="#" onclick='showAppareil(${JSON.stringify(app)})'>${app.appareil}</a>`).join(", ");
+    html += list.map(app => (() => {   const id = crypto.randomUUID();   appareilStore[id] = app;   return `<a href="#" onclick="showAppareil(appareilStore['${id}'])">${app.appareil}</a>`; })()).join(", ");
     html += `</p>`;
   }
 
