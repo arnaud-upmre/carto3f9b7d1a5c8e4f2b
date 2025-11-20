@@ -6312,8 +6312,8 @@
     "nom": "Flamengrie",
     "type": "SST",
     "appareil": "TC D",
-    "latitude": 50.64574,
-    "longitude": 2.89856,
+    "latitude": 50.64576, 
+    "longitude": 2.89850,
     "description": "",
     "imajnet": ""
   }, 
@@ -6321,8 +6321,8 @@
     "nom": "Flamengrie",
     "type": "SST",
     "appareil": "P1",
-    "latitude": 50.64574, 
-    "longitude": 2.89856,
+    "latitude": 50.64576, 
+    "longitude": 2.89846,
     "description": "",
     "imajnet": ""
   }, 
@@ -6330,8 +6330,8 @@
     "nom": "Flamengrie",
     "type": "SST",
     "appareil": "573 MR",
-    "latitude": 50.64574, 
-    "longitude": 2.89856,
+    "latitude": 50.64576, 
+    "longitude": 2.89846,
     "description": "",
     "imajnet": ""
   }, 
@@ -6339,8 +6339,8 @@
     "nom": "Flamengrie",
     "type": "SST",
     "appareil": "T1",
-    "latitude": 50.64574,
-    "longitude": 2.89856,
+    "latitude": 50.64577, 
+    "longitude": 2.89844,
     "description": "",
     "imajnet": ""
   }, 
@@ -6348,8 +6348,8 @@
     "nom": "Flamengrie",
     "type": "SST",
     "appareil": "TT1 F",
-    "latitude": 50.64574,
-    "longitude": 2.89856,
+    "latitude": 50.64577, 
+    "longitude": 2.89844,
     "description": "",
     "imajnet": ""
   }, 
@@ -6357,8 +6357,8 @@
     "nom": "Flamengrie",
     "type": "SST",
     "appareil": "TT1 C",
-    "latitude": 50.64574,
-    "longitude": 2.89856,
+    "latitude": 50.64577, 
+    "longitude": 2.89844,
     "description": "",
     "imajnet": ""
   }, 
@@ -6366,7 +6366,7 @@
     "nom": "Flamengrie",
     "type": "SST",
     "appareil": "SP",
-    "latitude": 50.64578,
+    "latitude": 50.64578, 
     "longitude": 2.89840,
     "description": "",
     "imajnet": ""
@@ -6375,7 +6375,25 @@
     "nom": "Flamengrie",
     "type": "SST",
     "appareil": "T2",
-    "latitude": 50.64579, 
+    "latitude": 50.64579,
+    "longitude": 2.89838,
+    "description": "",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Flamengrie",
+    "type": "SST",
+    "appareil": "TT2 C",
+    "latitude": 50.64579,
+    "longitude": 2.89838,
+    "description": "",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Flamengrie",
+    "type": "SST",
+    "appareil": "TT2 F",
+    "latitude": 50.64579,
     "longitude": 2.89838,
     "description": "",
     "imajnet": ""
