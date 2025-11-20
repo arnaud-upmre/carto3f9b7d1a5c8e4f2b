@@ -6559,6 +6559,24 @@
     "longitude": 2.82296,
     "description": "",
     "imajnet": ""
+  }, 
+  {
+    "nom": "Bollaert",
+    "type": "SSP",
+    "appareil": "IL6",
+    "latitude": 50.42883, 
+    "longitude": 2.82290,
+    "description": "",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Bollaert",
+    "type": "SSP",
+    "appareil": "IL4",
+    "latitude": 50.42885, 
+    "longitude": 2.82284,
+    "description": "",
+    "imajnet": ""
   }
 ]
 
