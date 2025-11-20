@@ -2073,8 +2073,8 @@ panel.style.display = "block";
   }
 }
 
-    // =============================================================
-// SPIDERFY AUTOMATIQUE À ZOOM 21 POUR TOUS LES CLUSTERS
+// =============================================================
+// SPIDERFY DES CLUSTERS MEME COORDONNEES À Z21 (FORCÉ)
 // =============================================================
 map.on("zoomend", () => {
   if (map.getZoom() !== 21) return;
@@ -2084,14 +2084,27 @@ map.on("zoomend", () => {
 
     groups.forEach(group => {
       group._featureGroup.eachLayer(c => {
-        if (c instanceof L.MarkerCluster && !c._spiderfied) {
+
+        // Si c'est un vrai cluster → spiderfy normal
+        if (c.spiderfy && !c._spiderfied) {
           c.spiderfy();
+          return;
         }
+
+        // Sinon : cluster visuel → récupérer le vrai cluster interne
+        if (c._childClusters && c._childClusters.length > 0) {
+          c._childClusters.forEach(sub => {
+            if (sub.spiderfy && !sub._spiderfied) {
+              sub.spiderfy();
+            }
+          });
+        }
+
       });
     });
-  }, 60); // IMPORTANT : attendre la reconstruction des clusters
+
+  }, 60); // attendre la fin de construction des clusters
 });
-    
     
 </script>
 <div id="legal-footer">
