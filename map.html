@@ -2073,6 +2073,21 @@ panel.style.display = "block";
   }
 }
 
+
+map.on("zoomend", () => {
+  if (map.getZoom() !== 21) return;
+
+  const groups = [postesLayer, appareilsLayer, accesLayer];
+
+  groups.forEach(group => {
+    group.eachLayer(layer => {
+      if (layer.spiderfy && !layer._spiderfied) {
+        layer.spiderfy();
+      }
+    });
+  });
+});
+
     
 </script>
 <div id="legal-footer">
