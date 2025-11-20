@@ -2079,16 +2079,17 @@ panel.style.display = "block";
 map.on("zoomend", () => {
   if (map.getZoom() !== 21) return;
 
-  const groups = [postesLayer, appareilsLayer, accesLayer];
+  setTimeout(() => {
+    const groups = [postesLayer, appareilsLayer, accesLayer];
 
-  groups.forEach(group => {
-    // On cible le vrai groupe interne contenant les clusters visibles
-    group._featureGroup.eachLayer(c => {
-      if (c instanceof L.MarkerCluster && !c._spiderfied) {
-        c.spiderfy();   // 💥 ON ÉCLATE !
-      }
+    groups.forEach(group => {
+      group._featureGroup.eachLayer(c => {
+        if (c instanceof L.MarkerCluster && !c._spiderfied) {
+          c.spiderfy();
+        }
+      });
     });
-  });
+  }, 60); // IMPORTANT : attendre la reconstruction des clusters
 });
     
     
