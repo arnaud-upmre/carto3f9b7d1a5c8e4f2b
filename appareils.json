@@ -6577,6 +6577,42 @@
     "longitude": 2.82284,
     "description": "",
     "imajnet": ""
+  }, 
+  {
+    "nom": "Bollaert",
+    "type": "SSP",
+    "appareil": "TT Ssr Bollaert Lens V2",
+    "latitude": 50.42886, 
+    "longitude": 2.82280,
+    "description": "",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Bollaert",
+    "type": "SSP",
+    "appareil": "IL2",
+    "latitude": 50.42887, 
+    "longitude": 2.82276,
+    "description": "",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Bollaert",
+    "type": "SSP",
+    "appareil": "TRA",
+    "latitude": 50.42889, 
+    "longitude": 2.82269,
+    "description": "",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Bollaert",
+    "type": "SSP",
+    "appareil": "211-40C",
+    "latitude": 50.42889, 
+    "longitude": 2.82269,
+    "description": "",
+    "imajnet": ""
   }
 ]
 
