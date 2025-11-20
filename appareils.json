@@ -6397,6 +6397,96 @@
     "longitude": 2.89838,
     "description": "",
     "imajnet": ""
+  }, 
+  {
+    "nom": "Flamengrie",
+    "type": "SST",
+    "appareil": "SM2",
+    "latitude": 50.64581, 
+    "longitude": 2.89830,
+    "description": "",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Flamengrie",
+    "type": "SST",
+    "appareil": "P2",
+    "latitude": 50.64581, 
+    "longitude": 2.89830,
+    "description": "",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Flamengrie",
+    "type": "SST",
+    "appareil": "T4",
+    "latitude": 50.64582, 
+    "longitude": 2.89826,
+    "description": "",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Flamengrie",
+    "type": "SST",
+    "appareil": "TT4 C",
+    "latitude": 50.64582, 
+    "longitude": 2.89826,
+    "description": "",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Flamengrie",
+    "type": "SST",
+    "appareil": "TT4 F",
+    "latitude": 50.64582, 
+    "longitude": 2.89826,
+    "description": "",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Flamengrie",
+    "type": "SST",
+    "appareil": "ST",
+    "latitude": 50.64583, 
+    "longitude": 2.89822,
+    "description": "",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Flamengrie",
+    "type": "SST",
+    "appareil": "T3",
+    "latitude": 50.64583, 
+    "longitude": 2.89819,
+    "description": "",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Flamengrie",
+    "type": "SST",
+    "appareil": "TT3 C",
+    "latitude": 50.64583, 
+    "longitude": 2.89819,
+    "description": "",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Flamengrie",
+    "type": "SST",
+    "appareil": "TT3 F",
+    "latitude": 50.64583,
+    "longitude": 2.89819,
+    "description": "",
+    "imajnet": ""
+  }, 
+  {
+    "nom": "Flamengrie",
+    "type": "SST",
+    "appareil": "SM1",
+    "latitude": 50.64586, 
+    "longitude": 2.89807,
+    "description": "",
+    "imajnet": ""
   }
 ]
 
