@@ -2072,38 +2072,46 @@ panel.style.display = "block";
     return (m / 1000).toFixed(2) + " km";
   }
 }
-
 // =============================================================
-// SPIDERFY DES CLUSTERS MEME COORDONNEES À Z21 (FORCÉ)
+// SPIDERFY MAISON À Z21 POUR LES CLUSTERS MÊMES COORDONNÉES
 // =============================================================
 map.on("zoomend", () => {
   if (map.getZoom() !== 21) return;
 
   setTimeout(() => {
-    const groups = [postesLayer, appareilsLayer, accesLayer];
+    const groups = [appareilsLayer]; // uniquement appareils (comme tu veux)
 
     groups.forEach(group => {
       group._featureGroup.eachLayer(c => {
 
-        // Si c'est un vrai cluster → spiderfy normal
-        if (c.spiderfy && !c._spiderfied) {
-          c.spiderfy();
-          return;
-        }
+        const children = c.getAllChildMarkers ? c.getAllChildMarkers() : [];
+        if (children.length <= 1) return;
 
-        // Sinon : cluster visuel → récupérer le vrai cluster interne
-        if (c._childClusters && c._childClusters.length > 0) {
-          c._childClusters.forEach(sub => {
-            if (sub.spiderfy && !sub._spiderfied) {
-              sub.spiderfy();
-            }
-          });
-        }
+        // Tous les enfants ont les mêmes coordonnées ?
+        const base = children[0].getLatLng();
+        const same = children.every(m => m.getLatLng().equals(base));
+        if (!same) return;
+
+        // ---- SPIDERFY MAISON ----
+        const radius = 30;             // rayon en pixels
+        const angleStep = (2 * Math.PI) / children.length;
+
+        children.forEach((m, i) => {
+          const angle = i * angleStep;
+
+          const offsetX = Math.cos(angle) * radius;
+          const offsetY = Math.sin(angle) * radius;
+
+          const pt = map.latLngToLayerPoint(base).add([offsetX, offsetY]);
+
+          m._originalPos = base; // pour unspiderfy plus tard si besoin
+          m.setLatLng(map.layerPointToLatLng(pt));
+        });
 
       });
     });
 
-  }, 60); // attendre la fin de construction des clusters
+  }, 50);
 });
     
 </script>
