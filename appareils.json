@@ -6537,7 +6537,7 @@
     "nom": "Bollaert",
     "type": "SSP",
     "appareil": "IMP",
-    "latitude": 50.42881, 2.82296
+    "latitude": 50.42881,
     "longitude": 2.82296,
     "description": "",
     "imajnet": ""
@@ -6546,7 +6546,7 @@
     "nom": "Bollaert",
     "type": "SSP",
     "appareil": "TT1",
-    "latitude": 50.42881, 2.82296
+    "latitude": 50.42881, 
     "longitude": 2.82296,
     "description": "",
     "imajnet": ""
@@ -6555,7 +6555,7 @@
     "nom": "Bollaert",
     "type": "SSP",
     "appareil": "TT2",
-    "latitude": 50.42881, 2.82296
+    "latitude": 50.42881,
     "longitude": 2.82296,
     "description": "",
     "imajnet": ""
