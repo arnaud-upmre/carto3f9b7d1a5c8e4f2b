@@ -6340,7 +6340,7 @@
     "type": "SST",
     "appareil": "T1",
     "latitude": 50.64578, 
-    "longitude": 2.89844,
+    "longitude": 2.89843,
     "description": "",
     "imajnet": ""
   }, 
@@ -6349,7 +6349,7 @@
     "type": "SST",
     "appareil": "TT1 F",
     "latitude": 50.64578, 
-    "longitude": 2.89844,
+    "longitude": 2.89843,
     "description": "",
     "imajnet": ""
   }, 
@@ -6357,8 +6357,8 @@
     "nom": "Flamengrie",
     "type": "SST",
     "appareil": "TT1 C",
-    "latitude": 50.64578, 
-    "longitude": 2.89844,
+    "latitude": 50.64578,
+    "longitude": 2.89843,
     "description": "",
     "imajnet": ""
   }, 
