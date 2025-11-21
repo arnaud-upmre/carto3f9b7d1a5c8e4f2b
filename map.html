@@ -1274,6 +1274,23 @@ if (ref.startsWith("DU")) {
     : ""}
 </div>
 
+${item.hors_patrimoine ? `
+  <div style="width:100%; display:flex; justify-content:center; margin:8px 0 12px 0;">
+    <div style="
+      background:#fee2e2;
+      color:#b91c1c;
+      border:1px solid #b91c1c;
+      padding:6px 10px;
+      border-radius:8px;
+      font-weight:600;
+      text-align:center;
+      white-space:nowrap;
+    ">
+      ⚠️ Hors patrimoine UP MRE
+    </div>
+  </div>
+` : ""}
+
   ${item.description ? `<div style="margin-bottom:14px;">✍🏻 <strong>Information :</strong> ${item.description}</div>` : ""}
 
 <a href="${getImajnetURL(item, item.latitude, item.longitude)}"
@@ -2075,7 +2092,7 @@ panel.style.display = "block";
     
 </script>
 <div id="legal-footer">
-  Nono Maps v1.13.4 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.13.5 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
