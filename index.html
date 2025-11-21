@@ -798,6 +798,12 @@ function formatRSS(table, showPhones = true) {
 }
     
 function generateAppareilListHTML(currentLieu) {
+
+  
+  if (currentLieu.hors_patrimoine === true) {
+    return "";
+  }
+  
   const matchingApps = appareils.filter(app => 
     app.nom  === currentLieu.nom  &&
     app.type === currentLieu.type
@@ -1081,8 +1087,9 @@ let html = `<h2>
 html += `<div class="telecom-zone">${telecomIcons}</div>`;
 
     
-html += `
-<div class="rep-block poste-only">
+if (lieu.hors_patrimoine !== true) {
+  html += `
+  <div class="rep-block poste-only">
   <p id="editable-rep-poste"><span class="emoji">⚡️</span> Repérer le poste (sat/guérite)</p>
   <div class="inline-links pills-2">
     ${
@@ -1101,8 +1108,9 @@ html += `
         : `<span class="placeholder">(non renseigné – fournir un lien Maps)</span>`
     }
   </div>
-</div>`;
-
+</div>
+  `;
+}
 html += `
 <div class="rep-block">
   <p id="editable-rep-acces"><span class="emoji">🛣️</span> Repérer l’accès :</p>
@@ -1173,6 +1181,11 @@ blocs.push(formatPortailDisplay(lieu.portail, lieu.secure));
     html += `<hr class="separator" />` +
             blocs.map((b,i)=> i===0 ? b : `<hr class="separator" />${b}`).join("");
   }
+
+if (lieu.hors_patrimoine === true) {
+    result.innerHTML = html;
+    return;
+}
 
   const appareilsHTML = generateAppareilListHTML(lieu);
   if (appareilsHTML) {
@@ -1371,12 +1384,27 @@ const labelFor = (item) =>
     : `${item.appareil} (${item.nom}${item.type ? ' ' + item.type : ''}${item.SAT ? ' / ' + item.SAT : ''})`;
 
 results.forEach((item, i) => {
+
+if (item.hors_patrimoine === true && item.category === "poste" && item.accès) {
+    return; 
+}
+  
   const li = document.createElement("li");
-const icon = (item.category === "poste")
-  ? `🚙${item.poste_latitude && item.poste_longitude ? " 📍" : ""}`
-  : "💡";
+  
+let icon;
+
+if (item.category === "poste") {
+    icon = `🚙${item.poste_latitude && item.poste_longitude ? " 📍" : ""}`;
+} else {
+
+    icon = item.hors_patrimoine === true ? "🚙💡" : "💡";
+}
 
 li.innerHTML = `${icon} ${labelFor(item)}`;
+
+if (item.hors_patrimoine === true) {
+  li.innerHTML += ` – <span style="color:#c62828;font-weight:600;">Hors patrimoine UP MRE</span>`;
+}
 
   if (i === 0) li.classList.add("best");
 
@@ -1436,6 +1464,9 @@ if (rawQuery.length >= 3) {
 
 function showAppareil(app) {
   incrementCounterAppareil();
+
+    window.appareilHorsPatrimoine = app.hors_patrimoine === true;
+  
   const result = document.getElementById("result");
   const suggestionsEl = document.getElementById("suggestions");
 
@@ -1446,6 +1477,25 @@ let html = `<h2>
   ⚡️<span id="editable-appareil">${app.appareil}</span> (<span id="editable-nomposte">${[app.nom, app.type].filter(v => v && v.trim() !== '').map(s => s.trim()).join(' ')}${app.SAT ? '/' + app.SAT.trim() : ''}</span>)
   <a href="#" id="edit-toggle-appareil">[modifier]</a>
 </h2>`;
+
+  if (app.hors_patrimoine === true) {
+  html += `
+    <div style="
+      margin-top:10px;
+      margin-bottom:15px;
+      padding:8px 12px;
+      background:#ffe5e5;
+      color:#b30000;
+      border:1px solid #b30000;
+      border-radius:12px;
+      font-weight:600;
+      font-size:15px;
+      text-align:center;
+    ">
+      ⚠️ Hors patrimoine UP MRE
+    </div>
+  `;
+}
 
   html += `
  <div class="rep-block rep-appareil">
@@ -1466,23 +1516,23 @@ html += formatInformations(app.description);
   if (app.SAT) {
     postePrincipal = lieux.find(l =>
       normalize(l.nom) === normalize(app.nom) &&
-      normalize(l.type) === normalize(app.type) &&
+      normalize(l.type || "") === normalize(app.type || "") &&
       normalize(l.SAT) === normalize(app.SAT)
     );
   }
 
-  if (!postePrincipal && app.appareil) {
-    postePrincipal = lieux.find(l =>
-      normalize(l.nom) === normalize(app.nom) &&
-      normalize(l.type) === normalize(app.type) &&
-      normalize(l.accès || "") === normalize(app.appareil || "")
-    );
-  }
+if (!postePrincipal && app.accès) {
+  postePrincipal = lieux.find(l =>
+    normalize(l.nom) === normalize(app.nom) &&
+    normalize(l.type || "") === normalize(app.type || "") &&
+    normalize(l.accès || "") === normalize(app.accès || "")
+  );
+}
 
   if (!postePrincipal) {
-    postePrincipal = lieux.find(l =>
+      postePrincipal = lieux.find(l =>
       normalize(l.nom) === normalize(app.nom) &&
-      normalize(l.type) === normalize(app.type) &&
+      normalize(l.type || "") === normalize(app.type || "") &&
       !l.SAT && !l.accès
     );
   }
@@ -2192,7 +2242,7 @@ function formatInformations(val) {
 </div>
 <footer class="about-footer">
   <a href="arnaud.html" class="footer-link">🔧 À propos</a>
-  <a href="version.html" class="footer-link version">📌 Nono Maps V1.13.4</a>
+  <a href="version.html" class="footer-link version">📌 Nono Maps V1.13.4_BETA8</a>
 </footer>
 <script>
 (function(){
