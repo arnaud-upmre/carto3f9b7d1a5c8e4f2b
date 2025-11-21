@@ -6623,8 +6623,27 @@
     "longitude": 2.82269,
     "description": "",
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.42892294832188,2.8224768451791884;uid=93f0f16d-34a1-4f49-b2c7-75d4c668f304_2756;"
+  },
+  {
+    "nom": "Amiens",
+    "type": "SSPA",
+    "SAT": "SAT",
+    "accès": "",
+    "appareil": "130.12",
+    "latitude": 49.88948,
+    "longitude": 2.31658,
+    "description": "Accès à pied au bout du quai de la voie 1"
+  },
+  {
+    "nom": "Amiens",
+    "type": "SSPA",
+    "SAT": "SAT",
+    "accès": "",
+    "appareil": "130.12",
+    "latitude": 49.889682,
+    "longitude": 2.315180,
+    "description": "⚠️ Risque ferroviaire travail avec annonce - Accès par le bout du quai Dr la voie 1"
   }
 ]
-
 
 
