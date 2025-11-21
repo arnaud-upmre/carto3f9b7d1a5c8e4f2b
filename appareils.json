@@ -3715,7 +3715,8 @@
     "appareil": "I7316",
     "latitude": 50.9315559,
     "longitude": 1.8435428,
-    "description": ""
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.931465981775595,1.843402559907044;uid=b18c00eb-fe61-4d49-9bd4-f9075f07f73d_196;"
   },
   {
     "nom": "Riviere",
