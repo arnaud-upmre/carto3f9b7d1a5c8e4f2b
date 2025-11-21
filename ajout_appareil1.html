@@ -1420,16 +1420,22 @@ const seen = new Set();
 postesPrincipaux = [];
 
 data.forEach(p => {
+  // 🛑 1. Exclure les fiches génériques
+  if (p.special === true) return;
+
+  // 🛑 2. Exclure les fiches hors patrimoine
+  if (p.hors_patrimoine === true) return;
+
   const nom = (p.nom || "").trim();
   const type = (p.type || "").trim();
-  const sat = (p.SAT || "").trim().toUpperCase(); // ex SAT1
+  const sat = (p.SAT || "").trim().toUpperCase();
 
   const key = `${nom}|${type}|${sat}`;
   if (seen.has(key)) return;
   seen.add(key);
 
   postesPrincipaux.push({
-nom: sat ? `${nom} ${type} (${sat})` : `${nom} ${type}`,
+    nom: sat ? `${nom} ${type} (${sat})` : `${nom} ${type}`,
     type: type,
     baseNom: nom,
     baseType: type,
