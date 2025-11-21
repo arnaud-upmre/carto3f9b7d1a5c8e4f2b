@@ -1468,6 +1468,25 @@ let html = `<h2>
   <a href="#" id="edit-toggle-appareil">[modifier]</a>
 </h2>`;
 
+  if (app.hors_patrimoine === true) {
+  html += `
+    <div style="
+      margin-top:10px;
+      margin-bottom:15px;
+      padding:8px 12px;
+      background:#ffe5e5;
+      color:#b30000;
+      border:1px solid #b30000;
+      border-radius:12px;
+      font-weight:600;
+      font-size:15px;
+      text-align:center;
+    ">
+      ⚠️ Hors patrimoine UP MRE
+    </div>
+  `;
+}
+
   html += `
  <div class="rep-block rep-appareil">
   <p id="editable-rep-appareil"><span class="emoji">💡</span> Repérer l’appareil :</p>
@@ -2213,7 +2232,7 @@ function formatInformations(val) {
 </div>
 <footer class="about-footer">
   <a href="arnaud.html" class="footer-link">🔧 À propos</a>
-  <a href="version.html" class="footer-link version">📌 Nono Maps V1.13.4_BETA3</a>
+  <a href="version.html" class="footer-link version">📌 Nono Maps V1.13.4_BETA4</a>
 </footer>
 <script>
 (function(){
