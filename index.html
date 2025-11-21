@@ -1072,7 +1072,7 @@ if (lieu.description_telecommande) {
   
 let html = `<h2>
   📍 <span id="editable-nom">${lieu.nom}</span> 
-  <span id="editable-type">${lieu.type}</span>
+  <span id="editable-type">${lieu.type ? lieu.type.trim() : ""}</span>
   ${lieu.SAT ? `<span id="editable-sat"> ${lieu.SAT}</span>` : ""}
   ${lieu.accès ? `<span id="editable-acces"> – accès ${lieu.accès}</span>` : ""}
   <a href="#" id="edit-toggle">[modifier]</a>
@@ -2192,7 +2192,7 @@ function formatInformations(val) {
 </div>
 <footer class="about-footer">
   <a href="arnaud.html" class="footer-link">🔧 À propos</a>
-  <a href="version.html" class="footer-link version">📌 Nono Maps V1.13.4</a>
+  <a href="version.html" class="footer-link version">📌 Nono Maps V1.13.4_BETA1</a>
 </footer>
 <script>
 (function(){
