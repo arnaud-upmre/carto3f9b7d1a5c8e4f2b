@@ -1202,10 +1202,9 @@ if (params.has("poste")) {
   document.getElementById("progressbar").style.display = "block";
 }
 
-  
-}
-  
-  if(navigator.geolocation){
+}); 
+
+if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
       p=>applyFix(p.coords.latitude,p.coords.longitude),
       err=>{if(err.code===1)GEO_BLOCKED=true;},
