@@ -3438,6 +3438,24 @@
     "poste_longitude": "1.62416"
   },
   {
+    "nom": "Pont de briques",
+    "type": "SST",
+    "SAT": "",
+    "accès": "",
+    "latitude": 50.68181,
+    "longitude": 1.62699,
+    "description": "",
+    "description_telecommande": "90kV / ACS25",
+    "rss": "A",
+    "contact": "",
+    "portail": "",
+    "lignes": "LONGUEAU à BOULOGNE-VILLE",
+    "numero_ligne": 311000,
+    "pk": "248,537",
+    "poste_latitude": "50.68523",
+    "poste_longitude": "1.62154"
+  },
+  {
     "nom": "PRCI 41",
     "type": "",
     "SAT": "",
