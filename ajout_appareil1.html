@@ -1460,16 +1460,17 @@ searchPoste.addEventListener("input", () => {
     const li = document.createElement("li");
     li.textContent = `${item.nom} (${item.type})`;
     
-    li.onclick = () => {
-      // remplir les champs <div class="step" id="stepPoste
-      document.getElementById("poste").value = item.nom;
-      document.getElementById("type").value = item.type;
+li.onclick = () => {
+  $("poste").value = item.baseNom;     // le vrai nom sans (SAT)
+  $("type").value = item.baseType;
 
-      searchPoste.value = `${item.nom} (${item.type})`;
-      suggestionsPoste.style.display = "none";
+  if (item.sat) $("sat").value = item.sat;  // on remplit le champ SAT si présent
 
-      nextPoste.disabled = false;
-    };
+  searchPoste.value = item.nom;
+  suggestionsPoste.style.display = "none";
+
+  nextPoste.disabled = false;
+};
 
     suggestionsPoste.appendChild(li);
   });
