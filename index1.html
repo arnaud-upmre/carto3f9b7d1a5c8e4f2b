@@ -1511,13 +1511,13 @@ html += formatInformations(app.description);
     );
   }
 
-  if (!postePrincipal && app.appareil) {
-    postePrincipal = lieux.find(l =>
-      normalize(l.nom) === normalize(app.nom) &&
-      normalize(l.type) === normalize(app.type) &&
-      normalize(l.accès || "") === normalize(app.appareil || "")
-    );
-  }
+if (!postePrincipal && app.accès) {
+  postePrincipal = lieux.find(l =>
+    normalize(l.nom) === normalize(app.nom) &&
+    normalize(l.type) === normalize(app.type) &&
+    normalize(l.accès || "") === normalize(app.accès || "")
+  );
+}
 
   if (!postePrincipal) {
       postePrincipal = lieux.find(l =>
@@ -2232,7 +2232,7 @@ function formatInformations(val) {
 </div>
 <footer class="about-footer">
   <a href="arnaud.html" class="footer-link">🔧 À propos</a>
-  <a href="version.html" class="footer-link version">📌 Nono Maps V1.13.4_BETA5</a>
+  <a href="version.html" class="footer-link version">📌 Nono Maps V1.13.4_BETA6</a>
 </footer>
 <script>
 (function(){
