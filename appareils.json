@@ -1913,7 +1913,8 @@
     "appareil": "IA5",
     "latitude": 50.6277926,
     "longitude": 3.0843552,
-    "description": ""
+    "description": "",
+    "imajnet":"https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.62787228307579,3.08420002884093;uid=1438c5fb-5e52-4c45-afdf-e90ce9d15092_29;"
   },
   {
     "nom": "Fives",
@@ -1941,9 +1942,10 @@
     "SAT": "SAT6",
     "accès": "",
     "appareil": "TT IA5",
-    "latitude": 50.6277968,
-    "longitude": 3.0843901,
-    "description": ""
+    "latitude": 50.62776, 
+    "longitude": 3.08436,
+    "description": "",
+    "imajnet":"https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.62787228307579,3.08420002884093;uid=1438c5fb-5e52-4c45-afdf-e90ce9d15092_29;"
   },
   {
     "nom": "Fives",
@@ -1951,9 +1953,10 @@
     "SAT": "SAT6",
     "accès": "",
     "appareil": "TC IA5",
-    "latitude": 50.6277968,
-    "longitude": 3.0843901,
-    "description": ""
+    "latitude": 50.6277926,
+    "longitude": 3.0843552,
+    "description": "",
+    "imajnet":"https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.62787228307579,3.08420002884093;uid=1438c5fb-5e52-4c45-afdf-e90ce9d15092_29;"
   },
   {
     "nom": "Fives",
