@@ -1502,7 +1502,7 @@ html += formatInformations(app.description);
     );
   }
 
-  if (postePrincipal) {
+  if (!app.hors_patrimoine && postePrincipal) {
     const sauvegarde = html;
     showLieu(postePrincipal); 
     const fichePoste = document.getElementById("result").innerHTML;
@@ -2207,7 +2207,7 @@ function formatInformations(val) {
 </div>
 <footer class="about-footer">
   <a href="arnaud.html" class="footer-link">🔧 À propos</a>
-  <a href="version.html" class="footer-link version">📌 Nono Maps V1.13.4_BETA1</a>
+  <a href="version.html" class="footer-link version">📌 Nono Maps V1.13.4_BETA2</a>
 </footer>
 <script>
 (function(){
