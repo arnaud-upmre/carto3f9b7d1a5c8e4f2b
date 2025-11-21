@@ -4152,8 +4152,6 @@
   },
   {
     "nom": "Avion",
-    "type": "",
-    "SAT": "",
     "accès": "208-16",
     "latitude": 50.40705,
     "longitude": 2.83331,
@@ -4164,8 +4162,7 @@
     "lignes": "",
     "numero_ligne": "",
     "pk": "",
-    "poste_latitude": "",
-    "poste_longitude": ""
+    "hors_patrimoine": true
   },
   {
     "nom": "Avion",
@@ -4181,8 +4178,7 @@
     "lignes": "",
     "numero_ligne": "",
     "pk": "",
-    "poste_latitude": "",
-    "poste_longitude": ""
+    "hors_patrimoine": true
   },
   {
     "nom": "Sin le noble",
