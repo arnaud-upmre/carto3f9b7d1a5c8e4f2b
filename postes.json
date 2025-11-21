@@ -5688,6 +5688,25 @@
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.778609297262,1.9886801445019662;"
    },
  {
+    "nom": "Poix",
+    "type": "SSP",
+    "SAT": "SAT",
+    "accès": "",
+    "latitude": "49.77550", , 
+    "longitude": "1.99480",
+    "description": "",
+    "description_telecommande": "ACS25",
+    "rss": "C",
+    "contact": "",
+    "portail": "",
+    "lignes": "Saint-Roch à Darnétal-Bifurcation",
+    "numero_ligne": 321000,
+    "pk": "30,022",
+    "poste_latitude": "49.77647",
+    "poste_longitude": "1.99261",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.77636189107446,1.9927077504992106;uid=bf2cfb96-1d34-4298-b311-b833d5836d69_2337;"
+   },
+ {
     "nom": "Saint Roch",
     "type": "SSP",
     "SAT": "",
