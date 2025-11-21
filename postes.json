@@ -145,6 +145,24 @@
     "poste_longitude": "1.8037726"
   },
   {
+    "nom": "Alleux",
+    "type": "SP",
+    "SAT": "SAT4",
+    "accès": "",
+    "latitude": 50.90838,
+    "longitude": 1.80514,
+    "description": "",
+    "description_telecommande": "PAS900",
+    "rss": "A",
+    "contact": "",
+    "portail": "Badge Eurotunnel obligatoire",
+    "lignes": "",
+    "numero_ligne": "",
+    "pk": "",
+    "poste_latitude": "50.91795", 
+    "poste_longitude": "1.79274"
+  },
+  {
     "nom": "Amiens (Équipe)",
     "type": "",
     "SAT": "",
