@@ -5515,6 +5515,25 @@
     "poste_longitude": "2.6627"
   },
   {
+    "nom": "Aveluy",
+    "type": "SP",
+    "SAT": "SAT",
+    "accès": "",
+    "latitude": 50.04619,
+    "longitude": 2.66314,
+    "description": "",
+    "description_telecommande": "ACS25",
+    "rss": "C",
+    "contact": "",
+    "portail": "",
+    "lignes": "PARIS-NORD à LILLE",
+    "numero_ligne": 272000,
+    "pk": "159,0800",
+    "poste_latitude": "50.04033",
+    "poste_longitude": "2.66022",
+    "imajnet":"https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.04022415146432,2.6602397545667458;uid=f22b67d0-1293-422a-ae09-7dd18dc7c080_1401;"
+  },
+  {
     "nom": "Arras",
     "type": "SSPA",
     "SAT": "",
