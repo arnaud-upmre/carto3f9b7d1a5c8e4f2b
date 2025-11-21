@@ -5831,6 +5831,17 @@
     "poste_latitude": "50.63596",
     "poste_longitude": "3.07074",
     "special": true
+  },
+  {
+    "nom": "Amiens",
+    "latitude": 49.88918,
+    "longitude": 2.31432,
+    "description": "",
+    "contact": "",
+    "portail": "Accès par Carmillon",
+    "poste_latitude": "49.88971", 
+    "poste_longitude": "2.31291",
+    "special": true
   }
 ]
 
