@@ -1371,10 +1371,21 @@ const labelFor = (item) =>
     : `${item.appareil} (${item.nom}${item.type ? ' ' + item.type : ''}${item.SAT ? ' / ' + item.SAT : ''})`;
 
 results.forEach((item, i) => {
+
+if (item.hors_patrimoine === true && item.category === "poste" && item.accès) {
+    return; 
+}
+  
   const li = document.createElement("li");
-const icon = (item.category === "poste")
-  ? `🚙${item.poste_latitude && item.poste_longitude ? " 📍" : ""}`
-  : "💡";
+  
+let icon;
+
+if (item.category === "poste") {
+    icon = `🚙${item.poste_latitude && item.poste_longitude ? " 📍" : ""}`;
+} else {
+    // Appareil
+    icon = item.hors_patrimoine === true ? "💡🚙" : "💡";
+}
 
 li.innerHTML = `${icon} ${labelFor(item)}`;
 
