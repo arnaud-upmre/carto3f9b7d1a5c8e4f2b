@@ -1081,7 +1081,7 @@ let html = `<h2>
 html += `<div class="telecom-zone">${telecomIcons}</div>`;
 
     
-if (!window.appareilHorsPatrimoine) {
+if (lieu.hors_patrimoine !== true) {
   html += `
   <div class="rep-block poste-only">
   <p id="editable-rep-poste"><span class="emoji">⚡️</span> Repérer le poste (sat/guérite)</p>
@@ -2232,7 +2232,7 @@ function formatInformations(val) {
 </div>
 <footer class="about-footer">
   <a href="arnaud.html" class="footer-link">🔧 À propos</a>
-  <a href="version.html" class="footer-link version">📌 Nono Maps V1.13.4_BETA4</a>
+  <a href="version.html" class="footer-link version">📌 Nono Maps V1.13.4_BETA5</a>
 </footer>
 <script>
 (function(){
