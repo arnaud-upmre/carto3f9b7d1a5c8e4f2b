@@ -9,8 +9,34 @@
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
 
   <style>
+
+    .suggestions-list {
+  list-style: none;
+  padding: 0;
+  margin: 6px 0 12px 0;
+  border-radius: 10px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  display: none;
+}
+
+.suggestions-list li {
+  padding: 12px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border);
+}
+
+.suggestions-list li:hover {
+  background: rgba(0, 102, 255, 0.08);
+}
+
+.suggestions-list li:last-child {
+  border-bottom: none;
+}
 
     .field-hint{font-size:13px;color:#c62828;margin-top:6px;display:none}
 .field-hint.show{display:block}
@@ -124,7 +150,6 @@ input.error{border:2px solid #c62828!important;background:#ffecec}
 }
     
   </style>
-  <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-EMSCVXG71V"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -159,28 +184,26 @@ input.error{border:2px solid #c62828!important;background:#ffecec}
       </div>
 
    
-      <div class="step">
-        <label>📌 Poste :</label>
-        <input id="poste" required placeholder="Ex : Hazebrouck">
-        <label>📌 Type (optionnel) :</label>
-<input id="type" placeholder="Ex : SP, SSP, PRCI....">
-        <div class="btn-row">
-          <button type="button" class="btn secondary prev">⬅️ Retour</button>
-          <button type="button" class="btn primary next">Suivant ➡️</button>
-        </div>
-      </div>
+<div class="step" id="stepPoste">
+  <label>📌 Sélectionner un poste :</label>
 
-      <div class="step">
-<label>📌 SAT associé :</label>
-<span style="font-weight:normal;color:var(--muted);font-size:14px">
-Remplir uniquement si l’appareil dépend d’un SAT
-</span>
-<input id="sat" placeholder="Exemple : SAT1, SAT2">
-        <div class="btn-row">
-          <button type="button" class="btn secondary prev">⬅️ Retour</button>
-          <button type="button" class="btn primary next">Suivant ➡️</button>
-        </div>
-      </div>
+  <input type="text" id="searchPoste" placeholder="Rechercher un poste…" autocomplete="off">
+
+  <ul id="suggestionsPoste" class="suggestions-list"></ul>
+
+  <input type="hidden" id="poste">
+  <input type="hidden" id="type">
+
+  <div class="btn-row">
+    <button type="button" class="btn secondary prev">⬅️ Retour</button>
+    <button type="button" id="nextPoste" class="btn primary next" disabled>Suivant ➡️</button>
+  </div>
+</div>
+ 
+
+<div class="step skip" style="display:none">
+  <input type="hidden" id="sat">
+</div>
 
       <div class="step">
         <label>💡 Nom de l’appareil :</label>
@@ -465,15 +488,20 @@ if (FROM_MAP) {
     return; 
 }
 
-    
     function findStepIndex(fieldId) {
       return Array.from(steps).findIndex(s => s.querySelector("#" + fieldId));
     }
 
 const data = [
   { step: findStepIndex("demandeur"), label: "👤 Demandeur", value: $("demandeur").value },
-  { step: findStepIndex("poste"), label: "📌 Poste", value: $("poste").value + ( $("type").value ? " ("+$("type").value+")" : "" ) },
-  { step: findStepIndex("sat"), label: "📌 SAT", value: $("sat").value },
+ {
+  step: findStepIndex("poste"),
+  label: "📌 Poste",
+  value: $("poste").value +
+         ( $("type").value ? " " + $("type").value : "" ) +
+         ( $("sat").value ? " (" + $("sat").value + ")" : "" )
+},
+
   { step: findStepIndex("appareil"), label: "💡 Appareil", value: $("appareil").value },
   { step: findStepIndex("lien"), label: "📍 Localisation appareil", value: $("presentValue").value==="oui" ? ($("latDevice").value+","+$("lonDevice").value) : $("lien").value },
   { step: findStepIndex("lienAccess"), label: "📍 Localisation accès", value: $("accessValue").value==="oui" ?
@@ -1139,8 +1167,32 @@ if (params.has("poste")) {
   if (foundType) $("type").value = foundType;
   if (foundSat)  $("sat").value  = foundSat;
 }
-  
-  if(navigator.geolocation){
+
+if (params.has("poste")) {
+  let display = $("poste").value;
+
+  if ($("type").value) display += " " + $("type").value;
+  if ($("sat").value)  display += " (" + $("sat").value + ")";
+
+  $("searchPoste").value = display;
+  $("nextPoste").disabled = false;
+
+  steps[1].dataset.autoValidated = "1";
+}
+
+if (params.has("poste")) {
+  currentStep = 2;
+  showStep(currentStep);
+
+  document.getElementById("introStep").style.display = "none";
+
+  progress.style.display = "block";
+  document.getElementById("progressbar").style.display = "block";
+}   
+
+}); 
+
+if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
       p=>applyFix(p.coords.latitude,p.coords.longitude),
       err=>{if(err.code===1)GEO_BLOCKED=true;},
@@ -1162,7 +1214,7 @@ $("poste").addEventListener("input", () => {
 $("type").addEventListener("input", () => {
   localStorage.setItem("lastType", $("type").value.trim());
 });
-});
+
 
   function prepareNewDevice() {
   localStorage.setItem("lastPoste", $("poste").value.trim());
@@ -1187,9 +1239,6 @@ $("type").classList.remove("error");
 
   currentStep = 2;
   returnToRecap = false;
-
-  steps[4].classList.remove("skip"); 
-  steps[5].classList.remove("skip"); 
 
   steps[4].style.display = "";
   steps[5].style.display = "";
@@ -1374,6 +1423,109 @@ steps[4].style.display = "none";
 steps[5].style.display = "none";
 }
 
+
+let postesPrincipaux = [];
+let fusePostes;
+
+
+fetch("https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/postes.json")
+  .then(r => r.json())
+  .then(data => {
+    
+const seen = new Set();
+postesPrincipaux = [];
+
+data.forEach(p => {
+
+  if (p.special === true) return;
+
+  if (p.hors_patrimoine === true) return;
+
+  const nom = (p.nom || "").trim();
+  const type = (p.type || "").trim();
+  const sat = (p.SAT || "").trim().toUpperCase();
+
+  const key = `${nom}|${type}|${sat}`;
+  if (seen.has(key)) return;
+  seen.add(key);
+
+  postesPrincipaux.push({
+    nom: sat ? `${nom} ${type} (${sat})` : `${nom} ${type}`,
+    type: type,
+    baseNom: nom,
+    baseType: type,
+    sat: sat
+  });
+});
+
+    fusePostes = new Fuse(postesPrincipaux, {
+      threshold: 0.3,
+      includeScore: true,
+      keys: ["nom", "type"]
+    });
+  });
+
+const searchPoste = document.getElementById("searchPoste");
+const suggestionsPoste = document.getElementById("suggestionsPoste");
+const nextPoste = document.getElementById("nextPoste");
+
+searchPoste.addEventListener("input", () => {
+  const q = searchPoste.value.trim();
+
+  suggestionsPoste.innerHTML = "";
+  suggestionsPoste.style.display = "none";
+  nextPoste.disabled = true;
+
+  if (!q) return;
+
+  const results = fusePostes.search(q).slice(0, 8);
+
+  if (results.length === 0) return;
+
+  suggestionsPoste.style.display = "block";
+
+  results.forEach(res => {
+    const item = res.item;
+    const li = document.createElement("li");
+    li.textContent = item.nom; 
+    
+li.onclick = () => {
+  $("poste").value = item.baseNom;   
+  $("type").value = item.baseType;
+
+  if (item.sat) $("sat").value = item.sat;  
+
+  searchPoste.value = item.nom;
+  suggestionsPoste.style.display = "none";
+
+  nextPoste.disabled = false;
+};
+
+    suggestionsPoste.appendChild(li);
+  });
+});
+
+
+document.addEventListener("click", (e) => {
+  if (!searchPoste.contains(e.target) && !suggestionsPoste.contains(e.target)) {
+    suggestionsPoste.style.display = "none";
+  }
+});
+  
+  document.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    e.preventDefault(); 
+
+
+    const step = document.querySelector(".step.active");
+
+    const nextBtn = step.querySelector(".next");
+
+    if (nextBtn) {
+      nextBtn.click();
+    }
+  }
+});
   
 </script>
 </body>
