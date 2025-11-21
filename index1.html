@@ -30,6 +30,7 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+
    
   <style id="eale-intro-styles">
 
@@ -1376,6 +1377,10 @@ const icon = (item.category === "poste")
   : "💡";
 
 li.innerHTML = `${icon} ${labelFor(item)}`;
+
+if (item.hors_patrimoine === true) {
+  li.innerHTML += ` – <span style="color:#c62828;font-weight:600;">⚠️ Hors patrimoine UP MRE</span>`;
+}
 
   if (i === 0) li.classList.add("best");
 
