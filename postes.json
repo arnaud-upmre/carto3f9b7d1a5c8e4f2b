@@ -5599,8 +5599,8 @@
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.76621384456837,3.2578616419937787;"
    },
  {
-    "nom": "Amiens",
-    "type": "CU",
+    "nom": "Amiens CU",
+    "type": "L",
     "SAT": "",
     "accès": "",
     "latitude": "49.888860",
@@ -5619,8 +5619,8 @@
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.887941509079496,2.3263614897602816;"
    },
  {
-    "nom": "Amiens",
-    "type": "CU",
+    "nom": "Amiens CU",
+    "type": "L",
     "SAT": "SATa",
     "accès": "",
     "latitude": "49.877483278210676",
@@ -5834,6 +5834,9 @@
   },
   {
     "nom": "Amiens",
+    "type": "SSPA",
+    "SAT": "",
+    "accès": "",
     "latitude": 49.88918,
     "longitude": 2.31432,
     "description": "",
@@ -5841,7 +5844,6 @@
     "portail": "Accès par Carmillon",
     "poste_latitude": "49.88971", 
     "poste_longitude": "2.31291",
-    "special": true
   }
 ]
 
