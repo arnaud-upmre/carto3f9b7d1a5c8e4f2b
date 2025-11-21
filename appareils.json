@@ -7,7 +7,8 @@
     "appareil": "6190JH",
     "latitude": 50.9158264,
     "longitude": 1.7970223,
-    "description": "⚠️ Hors patrimoine UP MRE"
+    "description": "",
+    "hors_patrimoine": true
   },
   {
     "nom": "Alleux",
@@ -398,8 +399,9 @@
     "appareil": "301-40",
     "latitude": 51.0058819,
     "longitude": 2.3808393,
-    "description": "⚠️ Hors patrimoine UP MRE",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=51.00577279695637,2.380838793053;uid=f9165a5e-3171-48ad-bef0-d7691faa8608_974;"
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=51.00577279695637,2.380838793053;uid=f9165a5e-3171-48ad-bef0-d7691faa8608_974;",
+    "hors_patrimoine": true
   },
   {
     "nom": "Coudekerque",
@@ -409,8 +411,9 @@
     "appareil": "301-41",
     "latitude": 51.0062885,
     "longitude": 2.3805026,
-    "description": "⚠️ Hors patrimoine UP MRE",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=51.00634536870912,2.3804990611431216;uid=8f9a27b8-410a-4400-b0f9-0b8aa5e93c0f_1614;"
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=51.00634536870912,2.3804990611431216;uid=8f9a27b8-410a-4400-b0f9-0b8aa5e93c0f_1614;",
+    "hors_patrimoine": true
   },
   {
     "nom": "Coudekerque",
@@ -2150,7 +2153,8 @@
     "appareil": "265-32A",
     "latitude": 50.7283472,
     "longitude": 2.5192149,
-    "description": "⚠️ Hors patrimoine UP MRE"
+    "description": "",
+    "hors_patrimoine": true
   },
   {
     "nom": "Haute Loge",
@@ -2160,7 +2164,8 @@
     "appareil": "265-42",
     "latitude": 50.728786,
     "longitude": 2.5170251,
-    "description": "⚠️ Hors patrimoine UP MRE"
+    "description": "",
+    "hors_patrimoine": true
   },
   {
     "nom": "Haute Loge",
@@ -2170,7 +2175,8 @@
     "appareil": "S36-128",
     "latitude": 50.728287,
     "longitude": 2.5196011,
-    "description": "⚠️ Hors patrimoine UP MRE"
+    "description": "",
+    "hors_patrimoine": true
   },
   {
     "nom": "Haute Loge",
@@ -2180,7 +2186,8 @@
     "appareil": "265-35",
     "latitude": 50.7284411,
     "longitude": 2.5180603,
-    "description": "⚠️ Hors patrimoine UP MRE"
+    "description": "",
+    "hors_patrimoine": true
   },
   {
     "nom": "Hauteville",
@@ -2200,7 +2207,8 @@
     "appareil": "S5734-5772",
     "latitude": 50.7044635,
     "longitude": 1.6044092,
-    "description": "⚠️ Hors patrimoine UP MRE"
+    "description": "",
+    "hors_patrimoine": true
   },
   {
     "nom": "Hauteville",
@@ -2460,7 +2468,7 @@
     "appareil": "263-16",
     "latitude": 50.7231776,
     "longitude": 2.5515832,
-    "description": "⚠️ Hors patrimoine UP MRE <br><br> 👤 À la demande du régulateur, appareil à manœuvrer pour les consignations C de Thiennes.",
+    "description": "👤 À la demande du régulateur, appareil à manœuvrer pour les consignations C de Thiennes.",
     "hors_patrimoine": true
   },
   {
@@ -3316,7 +3324,9 @@
     "appareil": "7109",
     "latitude": 50.8991274,
     "longitude": 1.8130195,
-    "description": "⚠️ Hors patrimoine UP MRE"
+    "description": "",
+    "hors_patrimoine": true
+    
   },
   {
     "nom": "Moulin",
@@ -3566,7 +3576,8 @@
     "appareil": "248-27B",
     "latitude": 50.684199,
     "longitude": 1.623762,
-    "description": "⚠️ Hors patrimoine UP MRE"
+    "description": "",
+    "hors_patrimoine": true
   },
   {
     "nom": "Pont de briques",
@@ -4877,7 +4888,8 @@
     "appareil": "229-27B",
     "latitude": 50.51932,
     "longitude": 2.64545,
-    "description": "⚠️ Hors patrimoine UP MRE <br> ➡️Commande SOULE"
+    "description": "➡️Commande SOULE",
+    "hors_patrimoine": true
   },
   {
     "nom": "PE5 Mardyck",
