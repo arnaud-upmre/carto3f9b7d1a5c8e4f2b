@@ -6632,7 +6632,8 @@
     "appareil": "130.12",
     "latitude": 49.88948,
     "longitude": 2.31658,
-    "description": "Accès à pied au bout du quai de la voie 1"
+    "description": "Accès à pied au bout du quai de la voie 1",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.88951854744169,2.316438819222649;uid=c35babcd-66ed-43ad-a389-181ad1b65afb_1751;"
   },
   {
     "nom": "Amiens",
@@ -6642,7 +6643,8 @@
     "appareil": "130.8A",
     "latitude": 49.889682,
     "longitude": 2.315180,
-    "description": "⚠️ Risque ferroviaire travail avec annonce - Accès par le bout du quai Dr la voie 1"
+    "description": "⚠️ Risque ferroviaire travail avec annonce - Accès par le bout du quai Dr la voie 1",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.889648587325496,2.315277873528098;uid=71f3344f-9ff6-47c6-a184-a34d27521007_270;"
   }
 ]
 
