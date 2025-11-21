@@ -5005,6 +5005,17 @@
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.778571683881935,1.9887460067970553;"
   },
   {
+    "nom": "Poix",
+    "type": "SSP",
+    "SAT": "SAT",
+    "accès": "",
+    "appareil": "I22",
+    "latitude": 49.77644, 
+    "longitude": 1.99264,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.77649588721273,1.9923761180824238;uid=9f86b405-8776-492e-8bbb-27a22dbaa813_1866;"
+  },
+  {
     "nom": "Harponlieu",
     "type": "L-A",
     "SAT": "",
