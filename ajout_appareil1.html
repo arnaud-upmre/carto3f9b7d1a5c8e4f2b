@@ -1421,12 +1421,26 @@ fetch("https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main
   .then(r => r.json())
   .then(data => {
     
-    // Garder uniquement les postes principaux
-    postesPrincipaux = data.filter(p => 
-      (!p.SAT || p.SAT.trim() === "") &&
-      (!p["accès"] || p["accès"].trim() === "") &&
-      p.special !== true
-    );
+const seen = new Set();
+postesPrincipaux = [];
+
+data.forEach(p => {
+  const nom = (p.nom || "").trim();
+  const type = (p.type || "").trim();
+  const sat = (p.SAT || "").trim().toUpperCase(); // ex SAT1
+
+  const key = `${nom}|${type}|${sat}`;
+  if (seen.has(key)) return;
+  seen.add(key);
+
+  postesPrincipaux.push({
+    nom: sat ? `${nom} (${sat})` : nom,
+    type: type,
+    baseNom: nom,
+    baseType: type,
+    sat: sat
+  });
+});
 
     // Configuration identique à index
     fusePostes = new Fuse(postesPrincipaux, {
