@@ -1189,10 +1189,20 @@ if (params.has("poste")) {
   steps[1].dataset.autoValidated = "1";
 }
 
-  // Sauter automatiquement l’étape "Poste" quand l’URL fournit déjà le poste
 if (params.has("poste")) {
-  currentStep = 2;   // Étape suivante = "Nom de l’appareil"
+  // Passer directement à "Nom de l’appareil"
+  currentStep = 2;
   showStep(currentStep);
+
+  // Masquer l’intro
+  document.getElementById("introStep").style.display = "none";
+
+  // Afficher la progression
+  progress.style.display = "block";
+  document.getElementById("progressbar").style.display = "block";
+}
+
+  
 }
   
   if(navigator.geolocation){
