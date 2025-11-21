@@ -1274,18 +1274,20 @@ if (ref.startsWith("DU")) {
     : ""}
 </div>
 
-            ${item.hors_patrimoine ? `
-  <div style="
-    background:#fee2e2;
-    color:#b91c1c;
-    border:1px solid #b91c1c;
-    padding:8px 10px;
-    border-radius:8px;
-    font-weight:600;
-    margin-bottom:10px;
-    text-align:center;
-  ">
-    ⚠️ Hors patrimoine UP MRE
+${item.hors_patrimoine ? `
+  <div style="width:100%; display:flex; justify-content:center; margin:8px 0 12px 0;">
+    <div style="
+      background:#fee2e2;
+      color:#b91c1c;
+      border:1px solid #b91c1c;
+      padding:6px 10px;
+      border-radius:8px;
+      font-weight:600;
+      text-align:center;
+      white-space:nowrap;
+    ">
+      ⚠️ Hors patrimoine UP MRE
+    </div>
   </div>
 ` : ""}
 
