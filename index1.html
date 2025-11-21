@@ -798,6 +798,13 @@ function formatRSS(table, showPhones = true) {
 }
     
 function generateAppareilListHTML(currentLieu) {
+
+  
+  // 🔥 Empêcher toute génération pour le hors patrimoine
+  if (currentLieu.hors_patrimoine === true) {
+    return "";
+  }
+  
   const matchingApps = appareils.filter(app => 
     app.nom  === currentLieu.nom  &&
     app.type === currentLieu.type
@@ -1175,6 +1182,12 @@ blocs.push(formatPortailDisplay(lieu.portail, lieu.secure));
     html += `<hr class="separator" />` +
             blocs.map((b,i)=> i===0 ? b : `<hr class="separator" />${b}`).join("");
   }
+
+  // 🔥 On supprime les blocs appareils si hors patrimoine
+if (lieu.hors_patrimoine === true) {
+    result.innerHTML = html;
+    return;
+}
 
   const appareilsHTML = generateAppareilListHTML(lieu);
   if (appareilsHTML) {
@@ -2232,7 +2245,7 @@ function formatInformations(val) {
 </div>
 <footer class="about-footer">
   <a href="arnaud.html" class="footer-link">🔧 À propos</a>
-  <a href="version.html" class="footer-link version">📌 Nono Maps V1.13.4_BETA7</a>
+  <a href="version.html" class="footer-link version">📌 Nono Maps V1.13.4_BETA8</a>
 </footer>
 <script>
 (function(){
