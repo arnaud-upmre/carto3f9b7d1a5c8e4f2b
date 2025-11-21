@@ -5893,6 +5893,20 @@
     "portail": "Accès par Carmillon",
     "poste_latitude": "49.889496", 
     "poste_longitude": "2.316408"
+  },
+  {
+    "nom": "Hazebrouck",
+    "accès": "263-16",
+    "latitude": 50.724571,
+    "longitude": 2.543193,
+    "description": "",
+    "rss": "A",
+    "contact": "",
+    "portail": "",
+    "lignes": "",
+    "numero_ligne": "",
+    "pk": "",
+    "hors_patrimoine": true
   }
 ]
 
