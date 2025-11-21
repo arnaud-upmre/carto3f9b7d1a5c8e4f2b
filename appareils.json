@@ -1911,8 +1911,8 @@
     "SAT": "SAT6",
     "accès": "",
     "appareil": "IA5",
-    "latitude": 50.6277926,
-    "longitude": 3.0843552,
+    "latitude": 50.62779, 
+    "longitude": 3.08433,
     "description": "",
     "imajnet":"https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.62787228307579,3.08420002884093;uid=1438c5fb-5e52-4c45-afdf-e90ce9d15092_29;"
   },
@@ -1953,8 +1953,8 @@
     "SAT": "SAT6",
     "accès": "",
     "appareil": "TC IA5",
-    "latitude": 50.6277926,
-    "longitude": 3.0843552,
+    "latitude": 50.62779, 
+    "longitude": 3.08433,
     "description": "",
     "imajnet":"https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.62787228307579,3.08420002884093;uid=1438c5fb-5e52-4c45-afdf-e90ce9d15092_29;"
   },
