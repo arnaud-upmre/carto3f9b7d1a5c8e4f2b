@@ -1172,6 +1172,28 @@ if (params.has("poste")) {
   if (foundType) $("type").value = foundType;
   if (foundSat)  $("sat").value  = foundSat;
 }
+
+  // Remplir aussi le champ de recherche pour l’affichage
+if (params.has("poste")) {
+  let display = $("poste").value;
+
+  if ($("type").value) display += " " + $("type").value;
+  if ($("sat").value)  display += " (" + $("sat").value + ")";
+
+  $("searchPoste").value = display;
+
+  // Activer automatiquement le bouton suivant
+  $("nextPoste").disabled = false;
+
+  // Marquer l’étape comme complétée automatiquement
+  steps[1].dataset.autoValidated = "1";
+}
+
+  // Sauter automatiquement l’étape "Poste" quand l’URL fournit déjà le poste
+if (params.has("poste")) {
+  currentStep = 2;   // Étape suivante = "Nom de l’appareil"
+  showStep(currentStep);
+}
   
   if(navigator.geolocation){
     navigator.geolocation.getCurrentPosition(
