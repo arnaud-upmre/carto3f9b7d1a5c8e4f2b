@@ -3440,7 +3440,7 @@
   {
     "nom": "Pont de briques",
     "type": "SST",
-    "SAT": "",
+    "SAT": "SAT1",
     "accès": "",
     "latitude": 50.68181,
     "longitude": 1.62699,
