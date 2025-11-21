@@ -2454,13 +2454,14 @@
   },
   {
     "nom": "Hazebrouck",
-    "type": "SSPA",
+    "type": "",
     "SAT": "",
     "accès": "",
     "appareil": "263-16",
     "latitude": 50.7231776,
     "longitude": 2.5515832,
-    "description": "⚠️ Hors patrimoine UP MRE <br><br> 👤 À la demande du régulateur, appareil à manœuvrer pour les consignations C de Thiennes."
+    "description": "⚠️ Hors patrimoine UP MRE <br><br> 👤 À la demande du régulateur, appareil à manœuvrer pour les consignations C de Thiennes.",
+    "hors_patrimoine": true
   },
   {
     "nom": "Hellu",
@@ -4304,7 +4305,8 @@
     "appareil": "208-16",
     "latitude": 50.40392,
     "longitude": 2.831717,
-    "description": "A manœuvrer pour les consignations C de Bailleul sir Berthoult"
+    "description": "A manœuvrer pour les consignations C de Bailleul sir Berthoult",
+    "hors_patrimoine": true
   },
   {
     "nom": "Avion",
@@ -4314,7 +4316,8 @@
     "appareil": "209-3",
     "latitude": 50.40953,
     "longitude": 2.835755,
-    "description": "A manœuvrer pour les consignations C de Bailleul sir Berthoult"
+    "description": "A manœuvrer pour les consignations C de Bailleul sir Berthoult",
+    "hors_patrimoine": true
   },
   {
     "nom": "Billy",
