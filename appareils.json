@@ -6646,6 +6646,149 @@
     "longitude": 2.315180,
     "description": "⚠️ Risque ferroviaire travail avec annonce - Accès par le bout du quai Dr la voie 1",
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.889648587325496,2.315277873528098;uid=71f3344f-9ff6-47c6-a184-a34d27521007_270;"
+  },
+  {
+    "nom": "Amiens",
+    "type": "SSPA",
+    "SAT": "",
+    "accès": "",
+    "appareil": "IL1",
+    "latitude": 49.88971, 
+    "longitude": 2.31289,
+    "description": "",
+    "imajnet": ""
+  },
+  {
+    "nom": "Amiens",
+    "type": "SSPA",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT39",
+    "latitude": 49.88971, 
+    "longitude": 2.31289,
+    "description": "",
+    "imajnet": ""
+  },
+  {
+    "nom": "Amiens",
+    "type": "SSPA",
+    "SAT": "",
+    "accès": "",
+    "appareil": "B/IL1",
+    "latitude": 49.88971, 
+    "longitude": 2.31289,
+    "description": "",
+    "imajnet": ""
+  },
+  {
+    "nom": "Amiens",
+    "type": "SSPA",
+    "SAT": "",
+    "accès": "",
+    "appareil": "IL4",
+    "latitude": 49.88971, 
+    "longitude": 2.31284,
+    "description": "",
+    "imajnet": ""
+  },
+  {
+    "nom": "Amiens",
+    "type": "SSPA",
+    "SAT": "",
+    "accès": "",
+    "appareil": "B/IL4",
+    "latitude": 49.88971, 
+    "longitude": 2.31284,
+    "description": "",
+    "imajnet": ""
+  },
+  {
+    "nom": "Amiens",
+    "type": "SSPA",
+    "SAT": "",
+    "accès": "",
+    "appareil": "IA2",
+    "latitude": 49.88971, 
+    "longitude": 2.31277,
+    "description": "",
+    "imajnet": ""
+  },
+  {
+    "nom": "Amiens",
+    "type": "SSPA",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TC IA2",
+    "latitude": 49.88971, 
+    "longitude": 2.31277,
+    "description": "",
+    "imajnet": ""
+  },
+  {
+    "nom": "Amiens",
+    "type": "SSPA",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT IA2",
+    "latitude": 49.88971, 
+    "longitude": 2.31277,
+    "description": "",
+    "imajnet": ""
+  },
+  {
+    "nom": "Amiens",
+    "type": "SSPA",
+    "SAT": "",
+    "accès": "",
+    "appareil": "IL2",
+    "latitude": 49.88972, 
+    "longitude": 2.31270,
+    "description": "",
+    "imajnet": ""
+  },
+  {
+    "nom": "Amiens",
+    "type": "SSPA",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT 40",
+    "latitude": 49.88972, 
+    "longitude": 2.31270,
+    "description": "",
+    "imajnet": ""
+  },
+  {
+    "nom": "Amiens",
+    "type": "SSPA",
+    "SAT": "",
+    "accès": "",
+    "appareil": "B/IL2",
+    "latitude": 49.88972, 
+    "longitude": 2.31270,
+    "description": "",
+    "imajnet": ""
+  },
+  {
+    "nom": "Amiens",
+    "type": "SSPA",
+    "SAT": "",
+    "accès": "",
+    "appareil": "IL3",
+    "latitude": 49.88972, 
+    "longitude": 2.31264,
+    "description": "",
+    "imajnet": ""
+  },
+  {
+    "nom": "Amiens",
+    "type": "SSPA",
+    "SAT": "",
+    "accès": "",
+    "appareil": "B/IL3",
+    "latitude": 49.88972, 
+    "longitude": 2.31264,
+    "description": "",
+    "imajnet": ""
   }
 ]
 
