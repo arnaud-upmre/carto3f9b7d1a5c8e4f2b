@@ -1434,7 +1434,7 @@ data.forEach(p => {
   seen.add(key);
 
   postesPrincipaux.push({
-    nom: sat ? `${nom} (${sat})` : nom,
+nom: sat ? `${nom} ${type} (${sat})` : `${nom} ${type}`,
     type: type,
     baseNom: nom,
     baseType: type,
@@ -1472,7 +1472,7 @@ searchPoste.addEventListener("input", () => {
   results.forEach(res => {
     const item = res.item;
     const li = document.createElement("li");
-    li.textContent = `${item.nom} (${item.type})`;
+    li.textContent = item.nom; // il est déjà bien formaté
     
 li.onclick = () => {
   $("poste").value = item.baseNom;     // le vrai nom sans (SAT)
