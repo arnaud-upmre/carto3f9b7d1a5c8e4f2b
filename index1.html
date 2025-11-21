@@ -1384,7 +1384,7 @@ if (item.category === "poste") {
     icon = `🚙${item.poste_latitude && item.poste_longitude ? " 📍" : ""}`;
 } else {
     // Appareil
-    icon = item.hors_patrimoine === true ? "💡🚙" : "💡";
+    icon = item.hors_patrimoine === true ? "🚙💡" : "💡";
 }
 
 li.innerHTML = `${icon} ${labelFor(item)}`;
