@@ -2633,6 +2633,16 @@
     "description": ""
   },
   {
+    "nom": "Justice",
+    "type": "SSP",
+    "SAT": "SAT1",
+    "accès": "",
+    "appareil": "TT11",
+    "latitude": 50.6142756,
+    "longitude": 3.0675196,
+    "description": ""
+  },
+  {
     "nom": "La madeleine",
     "type": "L",
     "SAT": "",
