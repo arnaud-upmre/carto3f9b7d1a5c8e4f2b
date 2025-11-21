@@ -6819,6 +6819,28 @@
     "longitude": 2.31264,
     "description": "",
     "imajnet": ""
+  },
+  {
+    "nom": "Aveluy",
+    "type": "SP",
+    "SAT": "SAT",
+    "accès": "",
+    "appareil": "SM1",
+    "latitude": 50.04046,
+    "longitude": 2.66044,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.04036183467361,2.6602993219612032;uid=f22b67d0-1293-422a-ae09-7dd18dc7c080_1406;"
+  },
+  {
+    "nom": "Aveluy",
+    "type": "SP",
+    "SAT": "SAT",
+    "accès": "",
+    "appareil": "SM2",
+    "latitude": 50.04049,
+    "longitude": 2.66046,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.04036183467361,2.6602993219612032;uid=f22b67d0-1293-422a-ae09-7dd18dc7c080_1406;"
   }
 ]
 
