@@ -4930,8 +4930,8 @@
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.1670601768086,3.2596197892377825;uid=2f8e8991-dabe-4a1c-baa2-34d07b9a3111_601;"
   },
   {
-    "nom": "Amiens",
-    "type": "CU",
+    "nom": "Amiens CU",
+    "type": "L",
     "SAT": "SATa",
     "accès": "",
     "appareil": "I34",
@@ -4941,8 +4941,8 @@
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.87971746735254,2.3387811479920986;"
   },
   {
-    "nom": "Amiens",
-    "type": "CU",
+    "nom": "Amiens CU",
+    "type": "L",
     "SAT": "SATa",
     "accès": "",
     "appareil": "I35",
