@@ -5862,6 +5862,19 @@
     "portail": "Accès par Carmillon",
     "poste_latitude": "49.88971", 
     "poste_longitude": "2.31291"
+  },
+  {
+    "nom": "Amiens",
+    "type": "SSPA",
+    "SAT": "SAT",
+    "accès": "",
+    "latitude": 49.88918,
+    "longitude": 2.31432,
+    "description": "",
+    "contact": "",
+    "portail": "Accès par Carmillon",
+    "poste_latitude": "49.889496", 
+    "poste_longitude": "2.316408"
   }
 ]
 
