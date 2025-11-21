@@ -1081,8 +1081,9 @@ let html = `<h2>
 html += `<div class="telecom-zone">${telecomIcons}</div>`;
 
     
-html += `
-<div class="rep-block poste-only">
+if (!window.appareilHorsPatrimoine) {
+  html += `
+  <div class="rep-block poste-only">
   <p id="editable-rep-poste"><span class="emoji">⚡️</span> Repérer le poste (sat/guérite)</p>
   <div class="inline-links pills-2">
     ${
@@ -1101,8 +1102,9 @@ html += `
         : `<span class="placeholder">(non renseigné – fournir un lien Maps)</span>`
     }
   </div>
-</div>`;
-
+</div>
+  `};
+}
 html += `
 <div class="rep-block">
   <p id="editable-rep-acces"><span class="emoji">🛣️</span> Repérer l’accès :</p>
@@ -1451,6 +1453,10 @@ if (rawQuery.length >= 3) {
 
 function showAppareil(app) {
   incrementCounterAppareil();
+
+   // transmettre l'information
+    window.appareilHorsPatrimoine = app.hors_patrimoine === true;
+  
   const result = document.getElementById("result");
   const suggestionsEl = document.getElementById("suggestions");
 
@@ -1495,14 +1501,14 @@ html += formatInformations(app.description);
   }
 
   if (!postePrincipal) {
-    postePrincipal = lieux.find(l =>
+      postePrincipal = lieux.find(l =>
       normalize(l.nom) === normalize(app.nom) &&
       normalize(l.type) === normalize(app.type) &&
       !l.SAT && !l.accès
     );
   }
 
-  if (!app.hors_patrimoine && postePrincipal) {
+  if (postePrincipal) {
     const sauvegarde = html;
     showLieu(postePrincipal); 
     const fichePoste = document.getElementById("result").innerHTML;
@@ -2207,7 +2213,7 @@ function formatInformations(val) {
 </div>
 <footer class="about-footer">
   <a href="arnaud.html" class="footer-link">🔧 À propos</a>
-  <a href="version.html" class="footer-link version">📌 Nono Maps V1.13.4_BETA2</a>
+  <a href="version.html" class="footer-link version">📌 Nono Maps V1.13.4_BETA3</a>
 </footer>
 <script>
 (function(){
