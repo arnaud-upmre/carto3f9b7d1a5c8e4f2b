@@ -1062,20 +1062,6 @@ let content = `
 <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
             font-size:14px; color:#111; line-height:1.4; position:relative;">
 
-${item.hors_patrimoine ? `
-  <div style="
-    background:#fee2e2;
-    color:#b91c1c;
-    border:1px solid #b91c1c;
-    padding:8px 10px;
-    border-radius:8px;
-    font-weight:600;
-    margin-bottom:10px;
-    text-align:center;
-  ">
-    ⚠️ Hors patrimoine UP MRE
-  </div>
-` : ""}
 
 <div style="font-weight:600; font-size:16px; margin-bottom:14px; padding-right:32px;">
   🚙 ${item.nom || "Sans nom"}
@@ -1276,6 +1262,21 @@ if (ref.startsWith("DU")) {
       let content = `
 <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
             font-size:14px; color:#111; line-height:1.4;">
+
+            ${item.hors_patrimoine ? `
+  <div style="
+    background:#fee2e2;
+    color:#b91c1c;
+    border:1px solid #b91c1c;
+    padding:8px 10px;
+    border-radius:8px;
+    font-weight:600;
+    margin-bottom:10px;
+    text-align:center;
+  ">
+    ⚠️ Hors patrimoine UP MRE
+  </div>
+` : ""}
 
 <div style="font-size:15px; margin-bottom:10px;">
   <span style="font-weight:600;">${item.appareil || "Sans référence"}</span>
@@ -2089,7 +2090,7 @@ panel.style.display = "block";
     
 </script>
 <div id="legal-footer">
-  Nono Maps v1.13.4 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.13.5 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
