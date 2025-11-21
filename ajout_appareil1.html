@@ -499,7 +499,13 @@ if (FROM_MAP) {
 
 const data = [
   { step: findStepIndex("demandeur"), label: "👤 Demandeur", value: $("demandeur").value },
-  { step: findStepIndex("poste"), label: "📌 Poste", value: $("poste").value + ( $("type").value ? " ("+$("type").value+")" : "" ) },
+ {
+  step: findStepIndex("poste"),
+  label: "📌 Poste",
+  value: $("poste").value +
+         ( $("type").value ? " " + $("type").value : "" ) +
+         ( $("sat").value ? " (" + $("sat").value + ")" : "" )
+},
 
   { step: findStepIndex("appareil"), label: "💡 Appareil", value: $("appareil").value },
   { step: findStepIndex("lien"), label: "📍 Localisation appareil", value: $("presentValue").value==="oui" ? ($("latDevice").value+","+$("lonDevice").value) : $("lien").value },
