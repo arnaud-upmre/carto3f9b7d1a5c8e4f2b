@@ -1275,7 +1275,11 @@ steps[5].classList.remove("skip");
 
 setTimeout(() => {
   if (mapDevice) {
+
+    if (orthoIGN) orthoIGN.addTo(mapDevice);
+
     mapDevice.invalidateSize();
+
     if (markerDevice) {
       mapDevice.setView(markerDevice.getLatLng(), mapDevice.getZoom());
     }
