@@ -218,13 +218,27 @@ input.error{border:2px solid #c62828!important;background:#ffecec}
 
 
 <div class="step" id="accessMethodStep">
-  <label>🆔 Identifier l’accès :</label>
+  <label>🛣️ L’accès du SAT est-il différent de celui du poste ?</label>
+
+  <p style="font-size:14px;color:var(--muted);margin:6px 0 12px">
+    Si vous répondez “Non”, l’accès du poste sera utilisé automatiquement.
+  </p>
+
+  <div class="pill-group">
+    <div class="pill" id="pill-acces-oui" data-value="oui">✅ Oui</div>
+    <div class="pill" id="pill-acces-non" data-value="non">❌ Non</div>
+  </div>
+
+<input type="hidden" id="accessDifferent">
+
+<div id="accessGpsLien" style="display:none">
   <div class="pill-group">
     <div class="pill" id="pill-access-gps" data-value="gps">📡 Avec ma position GPS</div>
     <div class="pill" id="pill-access-lien" data-value="lien">🔗 Lien Google Maps</div>
   </div>
+</div>
 
-  <input type="hidden" id="accessMethod">
+<input type="hidden" id="accessMethod">
 
   <div class="btn-row">
     <button type="button" class="btn secondary prev">⬅️ Retour</button>
@@ -281,9 +295,11 @@ input.error{border:2px solid #c62828!important;background:#ffecec}
 
       
 <div class="step" id="confirmationStep">
-  <h3 style="text-align:center;margin:16px 0">
-    ✅ Merci ! Votre demande a bien été envoyée.
-  </h3>
+<h3 style="text-align:center;margin:16px 0">
+  🎉 Bravo !<br>
+  Vous venez d’ajouter <strong id="recapSAT"></strong><br>
+  au poste de <strong id="recapPoste"></strong>.
+</h3>
 <div class="btn-row" style="justify-content: center;">
   <button type="button" class="btn secondary" onclick="window.location.href='index.html'" style="max-width: 260px;">
     🏠 Retour à l’accueil
@@ -567,6 +583,20 @@ if (steps[currentStep].id === "accessMethodStep") {
     document.querySelectorAll("#pill-access-gps, #pill-access-lien").forEach(p => p.classList.add("error"));
     return; 
   }
+  }
+    
+  // Si l'accès n'est PAS différent → on saute l'étape accessDetailsStep
+if (
+  steps[currentStep].id === "accessMethodStep" &&
+  $("accessDifferent").value === "non"
+) {
+  // Trouver l'étape des notes (celle AVANT le recap)
+  const notesIndex = [...steps].findIndex(s => s.querySelector("#infos"));
+
+  currentStep = notesIndex;
+  showStep(currentStep);
+  return;
+
 }
 
 if (steps[currentStep].id === "accessDetailsStep") {
@@ -751,6 +781,35 @@ $("pill-non").onclick = () => {
   }, 0);
 };
 
+  $("pill-acces-oui").onclick = () => {
+  $("accessDifferent").value = "oui";
+  $("pill-acces-oui").classList.add("active");
+  $("pill-acces-non").classList.remove("active");
+
+  // Montre les deux pills GPS / Lien
+  $("accessGpsLien").style.display = "block";
+
+  // Reset méthode
+  $("accessMethod").value = "";
+  document.querySelectorAll("#pill-access-gps, #pill-access-lien")
+    .forEach(p => p.classList.remove("active","error"));
+};
+
+$("pill-acces-non").onclick = () => {
+  $("accessDifferent").value = "non";
+  $("pill-acces-non").classList.add("active");
+  $("pill-acces-oui").classList.remove("active");
+
+  // Cache les pills GPS / Lien
+  $("accessGpsLien").style.display = "none";
+
+  // Supprime la méthode d'accès
+  $("accessMethod").value = "";
+
+  // On vide les erreurs
+  document.querySelectorAll("#pill-access-gps, #pill-access-lien")
+    .forEach(p => p.classList.remove("active","error"));
+};
 
 $("pill-access-gps").onclick = () => {
   $("accessMethod").value = "gps";
@@ -1195,6 +1254,9 @@ if ($("accessMethod").value === "gps") {
     .then(()=>{
       fetch(COUNTER_URL+"?increment=true").catch(()=>{});
       steps.forEach(s=>s.classList.remove("active"));
+      document.getElementById("recapSAT").textContent = $("sat").value;
+document.getElementById("recapPoste").textContent =
+  $("poste").value + " (" + $("type").value + ")";
       document.getElementById("confirmationStep").classList.add("active");
       document.getElementById("confirmationStep").style.display = "block";
       document.getElementById("progress").style.display = "none";
@@ -1208,6 +1270,16 @@ if ($("accessMethod").value === "gps") {
       submitBtn.disabled = false;
       submitBtn.textContent = oldLabel;
     });
+};
+
+  
+$("btnAddDevice").onclick = () => {
+  const p = $("poste").value;
+  const t = $("type").value;
+  const s = $("sat").value;
+
+  window.location.href =
+    `ajout_appareil.html?poste=${encodeURIComponent(p)}&type=${encodeURIComponent(t)}&sat=${encodeURIComponent(s)}`;
 };
 
 document.querySelectorAll(".step").forEach(s => s.classList.remove("active"));
