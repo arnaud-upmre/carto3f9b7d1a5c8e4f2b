@@ -201,9 +201,7 @@ input.error{border:2px solid #c62828!important;background:#ffecec}
 </div>
  
 
-<div class="step skip" style="display:none">
-  <input type="hidden" id="sat">
-</div>
+<input type="hidden" id="sat">
 
       <div class="step">
         <label>💡 Nom de l’appareil :</label>
@@ -460,6 +458,13 @@ if (i === 8) {
   
 const isRecapStep = steps[i].querySelector("#recap");
 if (isRecapStep) {
+
+      console.log(
+      "DEBUG RECAP : poste=" + $("poste").value,
+      "type=" + $("type").value,
+      "sat=" + $("sat").value
+    );
+  
     const recap = $("recap");
     recap.innerHTML = "";
 
@@ -1253,8 +1258,6 @@ $("type").classList.remove("error");
   currentStep = 2;
   returnToRecap = false;
 
-  steps[4].style.display = "";
-  steps[5].style.display = "";
 
   FROM_MAP = false;
   AUTO_LINK = "";
