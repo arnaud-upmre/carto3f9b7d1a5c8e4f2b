@@ -1183,7 +1183,7 @@ if (params.has("poste")) {
   $("searchPoste").value = display;
   $("nextPoste").disabled = false;
 
-  steps[1].dataset.autoValidated = "1";
+
 }
 
 if (params.has("poste")) {
@@ -1242,7 +1242,15 @@ function resetForm(){
   const savedSat = localStorage.getItem("lastSat");
 if (savedSat) $("sat").value = savedSat;
 
-steps[1].dataset.autoValidated = "1";
+  // Si un poste est pré-rempli, on force l’input visible aussi
+if ($("poste").value || $("type").value || $("sat").value) {
+    let display = $("poste").value;
+    if ($("type").value) display += " " + $("type").value;
+    if ($("sat").value) display += " (" + $("sat").value + ")";
+    $("searchPoste").value = display;
+    $("nextPoste").disabled = false;
+}
+
 $("poste").classList.remove("error");
 $("type").classList.remove("error");
 
