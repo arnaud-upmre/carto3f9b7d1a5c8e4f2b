@@ -5,7 +5,7 @@
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"/>
-  <title>➕ Ajouter un poste et son accès</title>
+  <title>➕ Ajouter un satellite dans un poste</title>
 
   
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
@@ -132,7 +132,7 @@ input.error{border:2px solid #c62828!important;background:#ffecec}
 
 <div class="step active" id="introStep">
   <p style="text-align:center;color:var(--muted);margin-bottom:20px;line-height:1.5">
-    ⏱️ Quelques secondes suffisent pour ajouter un poste</p>
+    ⏱️ Quelques secondes suffisent pour ajouter un satellite</p>
  
   
   <div class="btn-row">
@@ -154,18 +154,18 @@ input.error{border:2px solid #c62828!important;background:#ffecec}
   <div style="display:flex; gap:12px;">
     <div style="flex:2">
       <label>📌 Poste :</label>
-      <input id="poste" required placeholder="Ex : Hazebrouck">
+      <input id="poste" required placeholder="Ex : Fives">
     </div>
     <div style="flex:1">
       <label>📌 Type :</label>
-      <input id="type" placeholder="Ex : SP, SSP, PRCI…">
+      <input id="type" required placeholder="Ex : SSPA, SP">
     </div>
   </div>
 
 <label>📌 SAT :</label>
-<input id="sat" required placeholder="Ex : SAT1, SAT2 ou Poste principal">
+<input id="sat" required placeholder="Ex : SAT1, SATA">
 <div id="satHelp" class="field-hint">
-  ⚠️ SAT requis (ex : SAT1, SAT2) ou précisez « Poste principal ».
+  ⚠️ SAT requis (ex : SAT1, SAT2).
 </div>
 
   <div class="btn-row">
@@ -176,9 +176,9 @@ input.error{border:2px solid #c62828!important;background:#ffecec}
 
 
 <div class="step">
-  <label>📍 Comment localiser le poste (guérite, SAT, armoire…)?</label>
+  <label>📍 Comment localiser le satelitte ?</label>
   <p style="font-size:14px;color:var(--muted);margin:6px 0 12px">
-    ℹ️ L’accès sera défini à l’étape suivante.
+    ℹ️ L’accès du SAT sera défini à l’étape suivante.
   </p>
   <div class="pill-group">
     <div class="pill" id="pill-oui" data-value="oui">📡 Avec ma position GPS</div>
@@ -218,7 +218,7 @@ input.error{border:2px solid #c62828!important;background:#ffecec}
 
 
 <div class="step" id="accessMethodStep">
-  <label>🆔 Identifier l’accès :</label>
+  <label>🛣️ Identifier l’accès routier du SAT :</label>
   <div class="pill-group">
     <div class="pill" id="pill-access-gps" data-value="gps">📡 Avec ma position GPS</div>
     <div class="pill" id="pill-access-lien" data-value="lien">🔗 Lien Google Maps</div>
@@ -284,7 +284,12 @@ input.error{border:2px solid #c62828!important;background:#ffecec}
   <h3 style="text-align:center;margin:16px 0">
     ✅ Merci ! Votre demande a bien été envoyée.
   </h3>
+
 <div class="btn-row" style="justify-content: center;">
+
+     <button type="button" class="btn primary" id="btnAddDeviceSat" style="max-width:260px;">
+      ➕ Ajouter un appareil dans ce SAT
+    </button>
   <button type="button" class="btn secondary" onclick="window.location.href='index.html'" style="max-width: 260px;">
     🏠 Retour à l’accueil
   </button>
@@ -527,6 +532,36 @@ let data = [
   }
 }
 
+  function normalizePoste(str) {
+  str = str.trim();
+  if (!str) return "";
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
+
+function normalizeType(str) {
+  return str.trim().toUpperCase();
+}
+
+function normalizeSat(str) {
+  str = str.trim().toUpperCase();
+
+  // Si juste un chiffre (ex: "1") → SAT1
+  if (/^\d+$/.test(str)) return "SAT" + str;
+
+  // Si juste une lettre (ex: "A") → SATA
+  if (/^[A-Z]$/.test(str)) return "SAT" + str;
+
+  // Si commence déjà par SAT → uniformise
+  if (str.startsWith("SAT")) return str;
+
+  // Si l'utilisateur tape "Sat 1" ou "sat-2"
+  const m = str.match(/(\d+|[A-Z])/);
+  if (m) return "SAT" + m[1];
+
+  // fallback : SAT + texte
+  return "SAT" + str;
+}
+
 document.querySelectorAll(".next").forEach(btn=>{
   btn.addEventListener("click", e=>{
     e.preventDefault();
@@ -631,6 +666,10 @@ if (currentStep > 0) {
 function validateStep(i) {
   const step = steps[i];
   const inputs = step.querySelectorAll("input[required], textarea[required]");
+
+  $("poste").value = normalizePoste($("poste").value);
+$("type").value  = normalizeType($("type").value);
+$("sat").value   = normalizeSat($("sat").value);
 
   if (step.querySelector("#poste") && step.querySelector("#sat")) {
 
@@ -1228,6 +1267,18 @@ document.getElementById("startForm").addEventListener("click", () => {
   currentStep = 1;
   showStep(currentStep);
 });
+
+  document.getElementById("btnAddDeviceSat").onclick = () => {
+
+  const poste = encodeURIComponent($("poste").value.trim());
+  const type  = encodeURIComponent($("type").value.trim());
+  const sat   = encodeURIComponent($("sat").value.trim());
+
+  const url = `ajout_appareil.html?poste=${poste}&type=${type}&sat=${sat}`;
+
+  window.location.href = url;
+};
+  
 </script>
 </body>
 </html>
