@@ -513,10 +513,6 @@ const data = [
 ];
 
 
-if (steps[1].dataset.autoValidated === "1") {
-    $("poste").value = localStorage.getItem("lastPoste") || $("poste").value;
-    $("type").value  = localStorage.getItem("lastType")  || $("type").value;
-}
   
  data.forEach(item=>{
   if(item.value && item.value.trim()!==""){
@@ -1284,10 +1280,6 @@ $("type").classList.remove("error");
 $("formAppareil").onsubmit = e => {
   e.preventDefault();
 
-if (steps[1].dataset.autoValidated === "1") {
-  $("poste").value = localStorage.getItem("lastPoste") || $("poste").value;
-  $("type").value = localStorage.getItem("lastType") || $("type").value;
-}
 
   let demandeur = $("demandeur").value.trim();
   let poste = $("poste").value.trim();
