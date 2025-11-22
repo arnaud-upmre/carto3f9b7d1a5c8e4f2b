@@ -1462,7 +1462,7 @@
     "lignes": "PARIS-NORD à LILLE",
     "numero_ligne": 272000,
     "pk": "199,255",
-    "poste_latitude": "50.29765, 
+    "poste_latitude": "50.29765", 
     "poste_longitude": "2.87565",
     "imajnet":"https://gecko.imajnet.net/#map=OSM;zoom=19;loc=50.29763712382922,2.8754944921510863;uid=43927e57-56e8-4f6f-a6ce-193fb00c2ee9_934;"
   },
