@@ -376,37 +376,38 @@ progress.textContent = `${pct}%`;
 
 if (i === 5) {
 
-  // Rendre visible le conteneur
+  // rendre visible
   toggle($("mapDeviceWrap"), 1);
 
-  // Si la carte n’existe pas encore → on la crée
+  // créer la carte si besoin
   if (!mapDevice) {
     startLocDevice();
   }
 
-  // 🟢 FIX principal : attendre que l’étape soit visible AVANT Leaflet
+  // attendre que l’étape soit visible avant Leaflet
   requestAnimationFrame(() => {
 
-    // Retirer toutes les couches (sinon tu empiles)
-    mapDevice.eachLayer(l => mapDevice.removeLayer(l));
+    // retirer uniquement les couches IGN — PAS le marker
+    mapDevice.eachLayer(l => {
+      if (l !== markerDevice) mapDevice.removeLayer(l);
+    });
 
-    // Remettre la couche Satellite par défaut
+    // ajouter la couche satellite
     orthoIGN.addTo(mapDevice);
 
-    // Recalcul de la taille
+    // recalcul taille
     mapDevice.invalidateSize();
 
-    // Recentrer sur marker si existant
+    // recentrer si le marker existe
     if (markerDevice) {
       mapDevice.setView(markerDevice.getLatLng(), 18);
     }
-
   });
 
-  // Auto recentrage si GPS activé
+  // recentrage GPS auto (comme ton code)
   setTimeout(() => $("btnRecenterDevice").click(), 500);
 
-  // Gestion GPS identique à ton code actuel (on laisse ton bloc)
+  // GPS si mode "oui"
   if (navigator.geolocation && $("presentValue").value === "oui") {
     const btn = $("btnRecenterDevice");
     const oldTxt = btn.textContent;
@@ -418,14 +419,13 @@ if (i === 5) {
         DEVICE_CONFIRMED = true;
         $("mapDeviceWrap").classList.remove("error");
         applyFix(p.coords.latitude, p.coords.longitude);
-
         setTimeout(() => {
           btn.textContent = oldTxt;
           btn.disabled = false;
         }, 2000);
       },
       err => {
-        if (err.code === 1) onGeoDenied("device"); 
+        if (err.code === 1) onGeoDenied("device");
         btn.textContent = oldTxt;
         btn.disabled = false;
       },
