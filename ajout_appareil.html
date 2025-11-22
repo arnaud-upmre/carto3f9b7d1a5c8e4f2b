@@ -1169,6 +1169,11 @@ if (params.has("poste")) {
   if (foundSat)  $("sat").value  = foundSat;
 }
 
+
+if (params.has("sat")) {
+  $("sat").value = params.get("sat").trim().toUpperCase();
+}
+
 if (params.has("poste")) {
   let display = $("poste").value;
 
@@ -1220,6 +1225,7 @@ $("type").addEventListener("input", () => {
   function prepareNewDevice() {
   localStorage.setItem("lastPoste", $("poste").value.trim());
   localStorage.setItem("lastType", $("type").value.trim());
+      localStorage.setItem("lastSat", $("sat").value.trim());
 
   resetForm();
 }
@@ -1233,6 +1239,8 @@ function resetForm(){
   const savedType = localStorage.getItem("lastType");
   if (savedType) $("type").value = savedType;
 
+  const savedSat = localStorage.getItem("lastSat");
+if (savedSat) $("sat").value = savedSat;
 
 steps[1].dataset.autoValidated = "1";
 $("poste").classList.remove("error");
