@@ -6967,6 +6967,24 @@
     "longitude": 2.66275,
     "description": "",
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.04560816133237,2.66260134805654;uid=797af9e5-90d6-484b-80ce-f355078692d0_2263;"
+  },
+  {
+    "nom": "Fampoux",
+    "type": "SP",
+    "appareil": "I16",
+    "latitude": 50.29821, 
+    "longitude": 2.87730,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.298255609270086,2.877322686489495;uid=34a7ba10-435f-411f-9bb5-6fb6cc73a45c_1811;"
+  },
+  {
+    "nom": "Fampoux",
+    "type": "SP",
+    "appareil": "I21",
+    "latitude": 50.29511, 
+    "longitude": 2.86816,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.29517689176147,2.868127136598572;uid=3695de9f-cf4a-43d7-b869-1b6c04e932af_1091;"
   }
 ]
 
