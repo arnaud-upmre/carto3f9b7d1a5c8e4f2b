@@ -514,7 +514,7 @@ const data = [
 ];
 
 
-if (steps[1].dataset.autoValidated === "1" && !params.has("poste")) {
+if (steps[1].dataset.autoValidated === "1" && !window.params.has("poste")) {
     $("poste").value = localStorage.getItem("lastPoste") || $("poste").value;
     $("type").value  = localStorage.getItem("lastType")  || $("type").value;
 }
@@ -1396,6 +1396,7 @@ document.getElementById("startForm").addEventListener("click", () => {
 
 
 const urlParams = new URLSearchParams(window.location.search);
+  window.params = urlParams;
 const urlLat = urlParams.get("lat");
 const urlLng = urlParams.get("lng");
 
