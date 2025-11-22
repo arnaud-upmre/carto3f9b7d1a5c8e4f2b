@@ -6970,7 +6970,7 @@
   },
   {
     "nom": "Fampoux",
-    "type": "SP",
+    "type": "S",
     "appareil": "I16",
     "latitude": 50.29821, 
     "longitude": 2.87730,
@@ -6979,7 +6979,7 @@
   },
   {
     "nom": "Fampoux",
-    "type": "SP",
+    "type": "S",
     "appareil": "I21",
     "latitude": 50.29511, 
     "longitude": 2.86816,
