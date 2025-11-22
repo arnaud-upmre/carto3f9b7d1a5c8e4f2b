@@ -773,10 +773,12 @@ if (currentStep > 0) {
 function normalizeSat(str) {
   str = str.trim().toUpperCase();
 
+  if (!str) return "";   // ⬅️ FIX : NE RIEN FAIRE SI VIDE
+
   if (/^\d+$/.test(str)) return "SAT" + str;   // "1" → SAT1
   if (/^[A-Z]$/.test(str)) return "SAT" + str; // "A" → SATA
-  if (str.startsWith("SAT")) return str;       // SAT2 → SAT2
-
+  if (str.startsWith("SAT")) return str;       // "SAT2"
+  
   const m = str.match(/(\d+|[A-Z])/);
   if (m) return "SAT" + m[1];
 
@@ -785,7 +787,9 @@ function normalizeSat(str) {
 
 // auto-normalisation à chaque saisie
 $("sat").addEventListener("input", () => {
+ if ($("sat").value.trim() !== "") {
   $("sat").value = normalizeSat($("sat").value);
+}
 });
 
 function validateStep(i) {
