@@ -6841,6 +6841,50 @@
     "longitude": 2.66046,
     "description": "",
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.04036183467361,2.6602993219612032;uid=f22b67d0-1293-422a-ae09-7dd18dc7c080_1406;"
+  },
+  {
+    "nom": "Aveluy",
+    "type": "SP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT22",
+    "latitude": 50.04582, 
+    "longitude": 2.66271,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.04560816133237,2.66260134805654;uid=797af9e5-90d6-484b-80ce-f355078692d0_2263;"
+  },
+  {
+    "nom": "Aveluy",
+    "type": "SP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT25",
+    "latitude": 50.04582, 
+    "longitude": 2.66271,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.04560816133237,2.66260134805654;uid=797af9e5-90d6-484b-80ce-f355078692d0_2263;"
+  },
+  {
+    "nom": "Aveluy",
+    "type": "SP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT15",
+    "latitude": 50.04578, 
+    "longitude": 2.66269,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.04560816133237,2.66260134805654;uid=797af9e5-90d6-484b-80ce-f355078692d0_2263;"
+  },
+  {
+    "nom": "Aveluy",
+    "type": "SP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT12",
+    "latitude": 50.04578, 
+    "longitude": 2.66269,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.04560816133237,2.66260134805654;uid=797af9e5-90d6-484b-80ce-f355078692d0_2263;"
   }
 ]
 
