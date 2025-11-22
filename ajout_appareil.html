@@ -201,7 +201,9 @@ input.error{border:2px solid #c62828!important;background:#ffecec}
 </div>
  
 
-<input type="hidden" id="sat">
+<div class="step skip" style="display:none">
+  <input type="hidden" id="sat">
+</div>
 
       <div class="step">
         <label>💡 Nom de l’appareil :</label>
@@ -456,15 +458,7 @@ if (i === 8) {
   }
 }
   
-const isRecapStep = steps[i].querySelector("#recap");
-if (isRecapStep) {
-
-      console.log(
-      "DEBUG RECAP : poste=" + $("poste").value,
-      "type=" + $("type").value,
-      "sat=" + $("sat").value
-    );
-  
+if(i===10){
     const recap = $("recap");
     recap.innerHTML = "";
 
@@ -519,6 +513,10 @@ const data = [
 ];
 
 
+if (steps[1].dataset.autoValidated === "1") {
+    $("poste").value = localStorage.getItem("lastPoste") || $("poste").value;
+    $("type").value  = localStorage.getItem("lastType")  || $("type").value;
+}
   
  data.forEach(item=>{
   if(item.value && item.value.trim()!==""){
@@ -1170,11 +1168,6 @@ if (params.has("poste")) {
   if (foundSat)  $("sat").value  = foundSat;
 }
 
-
-if (params.has("sat")) {
-  $("sat").value = params.get("sat").trim().toUpperCase();
-}
-
 if (params.has("poste")) {
   let display = $("poste").value;
 
@@ -1184,7 +1177,7 @@ if (params.has("poste")) {
   $("searchPoste").value = display;
   $("nextPoste").disabled = false;
 
-
+  steps[1].dataset.autoValidated = "1";
 }
 
 if (params.has("poste")) {
@@ -1226,7 +1219,6 @@ $("type").addEventListener("input", () => {
   function prepareNewDevice() {
   localStorage.setItem("lastPoste", $("poste").value.trim());
   localStorage.setItem("lastType", $("type").value.trim());
-      localStorage.setItem("lastSat", $("sat").value.trim());
 
   resetForm();
 }
@@ -1240,24 +1232,16 @@ function resetForm(){
   const savedType = localStorage.getItem("lastType");
   if (savedType) $("type").value = savedType;
 
-  const savedSat = localStorage.getItem("lastSat");
-if (savedSat) $("sat").value = savedSat;
 
-  // Si un poste est pré-rempli, on force l’input visible aussi
-if ($("poste").value || $("type").value || $("sat").value) {
-    let display = $("poste").value;
-    if ($("type").value) display += " " + $("type").value;
-    if ($("sat").value) display += " (" + $("sat").value + ")";
-    $("searchPoste").value = display;
-    $("nextPoste").disabled = false;
-}
-
+steps[1].dataset.autoValidated = "1";
 $("poste").classList.remove("error");
 $("type").classList.remove("error");
 
   currentStep = 2;
   returnToRecap = false;
 
+  steps[4].style.display = "";
+  steps[5].style.display = "";
 
   FROM_MAP = false;
   AUTO_LINK = "";
@@ -1294,10 +1278,16 @@ $("type").classList.remove("error");
     $("demandeur").value = savedDemandeur;
   }
 }
+
+
   
 $("formAppareil").onsubmit = e => {
   e.preventDefault();
 
+if (steps[1].dataset.autoValidated === "1") {
+  $("poste").value = localStorage.getItem("lastPoste") || $("poste").value;
+  $("type").value = localStorage.getItem("lastType") || $("type").value;
+}
 
   let demandeur = $("demandeur").value.trim();
   let poste = $("poste").value.trim();
@@ -1405,7 +1395,6 @@ document.getElementById("startForm").addEventListener("click", () => {
 
 
 const urlParams = new URLSearchParams(window.location.search);
-  window.params = urlParams;
 const urlLat = urlParams.get("lat");
 const urlLng = urlParams.get("lng");
 
