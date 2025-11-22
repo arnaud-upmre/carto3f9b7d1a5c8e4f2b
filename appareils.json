@@ -6845,8 +6845,6 @@
   {
     "nom": "Aveluy",
     "type": "SP",
-    "SAT": "",
-    "accès": "",
     "appareil": "TT22",
     "latitude": 50.04582, 
     "longitude": 2.66271,
@@ -6856,8 +6854,6 @@
   {
     "nom": "Aveluy",
     "type": "SP",
-    "SAT": "",
-    "accès": "",
     "appareil": "TT25",
     "latitude": 50.04582, 
     "longitude": 2.66271,
@@ -6867,8 +6863,6 @@
   {
     "nom": "Aveluy",
     "type": "SP",
-    "SAT": "",
-    "accès": "",
     "appareil": "TT15",
     "latitude": 50.04578, 
     "longitude": 2.66269,
@@ -6878,11 +6872,99 @@
   {
     "nom": "Aveluy",
     "type": "SP",
-    "SAT": "",
-    "accès": "",
     "appareil": "TT12",
     "latitude": 50.04578, 
     "longitude": 2.66269,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.04560816133237,2.66260134805654;uid=797af9e5-90d6-484b-80ce-f355078692d0_2263;"
+  },
+  {
+    "nom": "Aveluy",
+    "type": "SP",
+    "appareil": "IMP Longueau",
+    "latitude": 50.04572, 
+    "longitude": 2.66275,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.04560816133237,2.66260134805654;uid=797af9e5-90d6-484b-80ce-f355078692d0_2263;"
+  },
+  {
+    "nom": "Aveluy",
+    "type": "SP",
+    "appareil": "B/IMP Lamotte",
+    "latitude": 50.04572, 
+    "longitude": 2.66275,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.04560816133237,2.66260134805654;uid=797af9e5-90d6-484b-80ce-f355078692d0_2263;"
+  },
+  {
+    "nom": "Aveluy",
+    "type": "SP",
+    "appareil": "IP1",
+    "latitude": 50.04576, 
+    "longitude": 2.66277,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.04560816133237,2.66260134805654;uid=797af9e5-90d6-484b-80ce-f355078692d0_2263;"
+  },
+  {
+    "nom": "Aveluy",
+    "type": "SP",
+    "appareil": "B/IP1",
+    "latitude": 50.04576, 
+    "longitude": 2.66277,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.04560816133237,2.66260134805654;uid=797af9e5-90d6-484b-80ce-f355078692d0_2263;"
+  },
+  {
+    "nom": "Aveluy",
+    "type": "SP",
+    "appareil": "IMP Achiet",
+    "latitude": 50.04579, 
+    "longitude": 2.66279,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.04560816133237,2.66260134805654;uid=797af9e5-90d6-484b-80ce-f355078692d0_2263;"
+  },
+  {
+    "nom": "Aveluy",
+    "type": "SP",
+    "appareil": "B/IMP Achiet",
+    "latitude": 50.04579, 
+    "longitude": 2.66279,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.04560816133237,2.66260134805654;uid=797af9e5-90d6-484b-80ce-f355078692d0_2263;"
+  },
+  {
+    "nom": "Aveluy",
+    "type": "SP",
+    "appareil": "IP2",
+    "latitude": 50.04583, 
+    "longitude": 2.66281,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.04560816133237,2.66260134805654;uid=797af9e5-90d6-484b-80ce-f355078692d0_2263;"
+  },
+  {
+    "nom": "Aveluy",
+    "type": "SP",
+    "appareil": "B/IP2",
+    "latitude": 50.04583, 
+    "longitude": 2.66281,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.04560816133237,2.66260134805654;uid=797af9e5-90d6-484b-80ce-f355078692d0_2263;"
+  },
+  {
+    "nom": "Aveluy",
+    "type": "SP",
+    "appareil": "TSA",
+    "latitude": 50.04585, 
+    "longitude": 2.66275,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.04560816133237,2.66260134805654;uid=797af9e5-90d6-484b-80ce-f355078692d0_2263;"
+  },
+  {
+    "nom": "Aveluy",
+    "type": "SP",
+    "appareil": "S/TSA",
+    "latitude": 50.04585, 
+    "longitude": 2.66275,
     "description": "",
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.04560816133237,2.66260134805654;uid=797af9e5-90d6-484b-80ce-f355078692d0_2263;"
   }
