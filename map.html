@@ -545,7 +545,7 @@
   <div class="context-item" id="ctx-regle">📏 Règle / Traçage</div>
   
   <div class="context-separator"></div>
-
+ <div class="context-item" id="ctx-gmaps-marker">📌 Google Maps (marker)</div>
   <div class="context-item" id="ctx-street">🌍 Street View</div>
   <div class="context-item" id="ctx-imajnet">🛣️ Imajnet</div>
 
@@ -558,13 +558,6 @@
   <div class="sub-item" id="ctx-add-email">📬 Par email</div>
 </div>
 
-  
-<div class="context-item" id="ctx-add-poste">📍 Ajouter un SAT ici</div>
-
-<div id="ctx-submenu-sat" style="display:none; flex-direction:column; background:rgba(0,0,0,0.35); padding:6px 0; border-radius:10px;">
-  <div class="sub-item" id="ctx-sat-form">📝 Via le formulaire</div>
-  <div class="sub-item" id="ctx-sat-email">📧 Par email</div>
-</div>
 </div>
 
 
@@ -1809,6 +1802,10 @@ document.getElementById("ctx-imajnet").onclick = () => {
   window.open(`https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${ctxLat},${ctxLng};`);
 };
 
+document.getElementById("ctx-gmaps-marker").onclick = () => {
+  window.open(`https://www.google.com/maps?q=${ctxLat},${ctxLng}`);
+};
+
 document.getElementById("ctx-add-appareil").onclick = () => {
   const sub = document.getElementById("ctx-submenu-add");
   sub.style.display = (sub.style.display === "flex") ? "none" : "flex";
@@ -1844,41 +1841,6 @@ Bonne journée,`
 
   window.location.href = `mailto:arnaud.debaecker@sncf.fr?subject=${subject}&body=${body}`;
 };
-
-document.getElementById("ctx-add-poste").onclick = () => {
-  const sub = document.getElementById("ctx-submenu-sat");
-  sub.style.display = (sub.style.display === "flex") ? "none" : "flex";
-};
-
-
-document.getElementById("ctx-sat-form").onclick = () => {
-  window.location.href = `ajout_poste.html?lat=${ctxLat}&lng=${ctxLng}`;
-};
-
-
-document.getElementById("ctx-sat-email").onclick = () => {
-
-  const subject = encodeURIComponent("➕ Ajout d'un SAT");
-
-  const body = encodeURIComponent(
-`Bonjour Arnaud,
-
-Voici la position du SAT : (à préciser)
-au poste de (à préciser) :
-
-Coordonnées GPS :
-Latitude : ${ctxLat}
-Longitude : ${ctxLng}
-
-📍 Lien Google Maps :
-https://www.google.com/maps?q=${ctxLat},${ctxLng}
-
-Bonne journée,`
-  );
-
-  window.location.href = `mailto:arnaud.debaecker@sncf.fr?subject=${subject}&body=${body}`;
-};
-
 
 
 function pauseORM() {
