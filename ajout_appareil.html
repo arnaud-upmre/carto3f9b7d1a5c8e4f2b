@@ -1272,6 +1272,17 @@ steps[5].classList.remove("skip");
 
   showStep(currentStep);
 
+
+setTimeout(() => {
+  if (mapDevice) {
+    mapDevice.invalidateSize();
+    if (markerDevice) {
+      mapDevice.setView(markerDevice.getLatLng(), mapDevice.getZoom());
+    }
+  }
+}, 400);
+
+  
   const savedDemandeur = localStorage.getItem("demandeur");
   if (savedDemandeur) {
     $("demandeur").value = savedDemandeur;
