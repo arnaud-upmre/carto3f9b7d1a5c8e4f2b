@@ -514,10 +514,6 @@ const data = [
 ];
 
 
-if (steps[1].dataset.autoValidated === "1" && !window.params.has("poste")) {
-    $("poste").value = localStorage.getItem("lastPoste") || $("poste").value;
-    $("type").value  = localStorage.getItem("lastType")  || $("type").value;
-}
   
  data.forEach(item=>{
   if(item.value && item.value.trim()!==""){
