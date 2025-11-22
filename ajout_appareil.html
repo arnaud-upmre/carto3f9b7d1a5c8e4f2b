@@ -1287,16 +1287,10 @@ $("type").classList.remove("error");
     $("demandeur").value = savedDemandeur;
   }
 }
-
-
   
 $("formAppareil").onsubmit = e => {
   e.preventDefault();
 
-if (steps[1].dataset.autoValidated === "1") {
-  $("poste").value = localStorage.getItem("lastPoste") || $("poste").value;
-  $("type").value = localStorage.getItem("lastType") || $("type").value;
-}
 
   let demandeur = $("demandeur").value.trim();
   let poste = $("poste").value.trim();
