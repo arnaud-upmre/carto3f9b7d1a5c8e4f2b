@@ -197,6 +197,9 @@ input.error{border:2px solid #c62828!important;background:#ffecec}
 <div class="step" id="stepSatName">
   <label>📡 Nom du SAT :</label>
   <input id="sat" required placeholder="Ex : 1, 2, A…">
+  <div style="font-size:13px;color:var(--muted);margin-top:6px;">
+  Exemples : <strong>SAT1</strong>, <strong>SATA</strong>…
+</div>
   <div id="satHelp" class="field-hint">⚠️ Nom du SAT requis.</div>
 
   <div class="btn-row">
@@ -1230,7 +1233,6 @@ if (params.has("poste")) {
 
   $("poste").value = raw;
   if (foundType) $("type").value = foundType;
-  if (foundSat)  $("sat").value  = foundSat;
 }
 
 
