@@ -374,45 +374,64 @@ function showStep(i){
 progress.textContent = `${pct}%`;
   document.getElementById("progressbar-fill").style.width = ((i+1)/steps.length*100) + "%";
 
-  if(i===5){ 
-  if(!mapDevice){
-    startLocDevice(); 
+if (i === 5) {
+
+  // Rendre visible le conteneur
+  toggle($("mapDeviceWrap"), 1);
+
+  // Si la carte n’existe pas encore → on la crée
+  if (!mapDevice) {
+    startLocDevice();
   }
 
-     if (orthoIGN && !mapDevice.hasLayer(orthoIGN)) {
+  // 🟢 FIX principal : attendre que l’étape soit visible AVANT Leaflet
+  requestAnimationFrame(() => {
+
+    // Retirer toutes les couches (sinon tu empiles)
+    mapDevice.eachLayer(l => mapDevice.removeLayer(l));
+
+    // Remettre la couche Satellite par défaut
     orthoIGN.addTo(mapDevice);
-  }
 
-  setTimeout(() => mapDevice && mapDevice.invalidateSize(), 300);
+    // Recalcul de la taille
+    mapDevice.invalidateSize();
 
-setTimeout(() => $("btnRecenterDevice").click(), 500);
+    // Recentrer sur marker si existant
+    if (markerDevice) {
+      mapDevice.setView(markerDevice.getLatLng(), 18);
+    }
 
+  });
 
-if (navigator.geolocation && $("presentValue").value === "oui") {
-  const btn = $("btnRecenterDevice");
-  const oldTxt = btn.textContent;
-  btn.textContent = "🛰️ Attente GPS…";
-  btn.disabled = true;
+  // Auto recentrage si GPS activé
+  setTimeout(() => $("btnRecenterDevice").click(), 500);
 
-  navigator.geolocation.getCurrentPosition(
-    p => {
-      DEVICE_CONFIRMED = true;
-      $("mapDeviceWrap").classList.remove("error");
-      applyFix(p.coords.latitude, p.coords.longitude);
+  // Gestion GPS identique à ton code actuel (on laisse ton bloc)
+  if (navigator.geolocation && $("presentValue").value === "oui") {
+    const btn = $("btnRecenterDevice");
+    const oldTxt = btn.textContent;
+    btn.textContent = "🛰️ Attente GPS…";
+    btn.disabled = true;
 
-      setTimeout(() => {
+    navigator.geolocation.getCurrentPosition(
+      p => {
+        DEVICE_CONFIRMED = true;
+        $("mapDeviceWrap").classList.remove("error");
+        applyFix(p.coords.latitude, p.coords.longitude);
+
+        setTimeout(() => {
+          btn.textContent = oldTxt;
+          btn.disabled = false;
+        }, 2000);
+      },
+      err => {
+        if (err.code === 1) onGeoDenied("device"); 
         btn.textContent = oldTxt;
         btn.disabled = false;
-      }, 2000);
-    },
-    err => { 
-      if (err.code === 1) onGeoDenied("device"); 
-      btn.textContent = oldTxt;
-      btn.disabled = false;
-    },
-    { enableHighAccuracy: true, timeout: 7000, maximumAge: 0 }
-  );
-}
+      },
+      { enableHighAccuracy: true, timeout: 7000, maximumAge: 0 }
+    );
+  }
 }
   
 
@@ -1277,20 +1296,6 @@ steps[5].classList.remove("skip");
 
   showStep(currentStep);
 
-
-setTimeout(() => {
-  if (mapDevice) {
-
-    if (orthoIGN) orthoIGN.addTo(mapDevice);
-
-    mapDevice.invalidateSize();
-
-    if (markerDevice) {
-      mapDevice.setView(markerDevice.getLatLng(), mapDevice.getZoom());
-    }
-  }
-}, 400);
-
   
   const savedDemandeur = localStorage.getItem("demandeur");
   if (savedDemandeur) {
@@ -1298,6 +1303,11 @@ setTimeout(() => {
   }
 }
 
+  requestAnimationFrame(() => {
+  if (mapDevice) {
+    mapDevice.invalidateSize();
+  }
+});
 
   
 $("formAppareil").onsubmit = e => {
