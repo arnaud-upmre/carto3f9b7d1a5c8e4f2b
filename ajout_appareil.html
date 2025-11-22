@@ -513,7 +513,7 @@ const data = [
 ];
 
 
-if (steps[1].dataset.autoValidated === "1") {
+if (steps[1].dataset.autoValidated === "1" && !params.has("poste")) {
     $("poste").value = localStorage.getItem("lastPoste") || $("poste").value;
     $("type").value  = localStorage.getItem("lastType")  || $("type").value;
 }
