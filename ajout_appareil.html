@@ -378,6 +378,11 @@ progress.textContent = `${pct}%`;
   if(!mapDevice){
     startLocDevice(); 
   }
+
+     if (orthoIGN && !mapDevice.hasLayer(orthoIGN)) {
+    orthoIGN.addTo(mapDevice);
+  }
+
   setTimeout(() => mapDevice && mapDevice.invalidateSize(), 300);
 
 setTimeout(() => $("btnRecenterDevice").click(), 500);
