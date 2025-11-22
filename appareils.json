@@ -6971,6 +6971,7 @@
   {
     "nom": "Fampoux",
     "type": "S",
+    "SAT": "SAT I16",
     "appareil": "I16",
     "latitude": 50.29821, 
     "longitude": 2.87730,
@@ -6980,6 +6981,7 @@
   {
     "nom": "Fampoux",
     "type": "S",
+    "SAT": "SAT I21",
     "appareil": "I21",
     "latitude": 50.29511, 
     "longitude": 2.86816,
@@ -6987,5 +6989,3 @@
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.29517689176147,2.868127136598572;uid=3695de9f-cf4a-43d7-b869-1b6c04e932af_1091;"
   }
 ]
-
-
