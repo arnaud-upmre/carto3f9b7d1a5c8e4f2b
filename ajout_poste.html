@@ -10,6 +10,7 @@
   
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2/dist/fuse.min.js"></script>
 
   <style>
 
@@ -150,23 +151,27 @@ input.error{border:2px solid #c62828!important;background:#ffecec}
       </div>
 
 
-<div class="step">
-  <div style="display:flex; gap:12px;">
-    <div style="flex:2">
-      <label>📌 Poste :</label>
-      <input id="poste" required placeholder="Ex : Fives">
-    </div>
-    <div style="flex:1">
-      <label>📌 Type :</label>
-      <input id="type" required placeholder="Ex : SSPA, SP">
-    </div>
-  </div>
+<!-- ÉTAPE : Sélection du poste -->
+<div class="step" id="stepPosteSat">
+  <label>📌 Sélectionner un poste :</label>
 
-<label>📌 SAT :</label>
-<input id="sat" required placeholder="Ex : SAT1, SATA">
-<div id="satHelp" class="field-hint">
-  ⚠️ SAT requis (ex : SAT1, SAT2).
+  <input type="text" id="searchPoste" placeholder="Rechercher un poste…" autocomplete="off">
+  <ul id="suggestionsPoste" class="suggestions-list"></ul>
+
+  <input type="hidden" id="poste">
+  <input type="hidden" id="type">
+
+  <div class="btn-row">
+    <button type="button" class="btn secondary prev">⬅️ Retour</button>
+    <button type="button" id="nextPoste" class="btn primary next" disabled>Suivant ➡️</button>
+  </div>
 </div>
+
+<!-- ÉTAPE : Nom du SAT -->
+<div class="step" id="stepSatName">
+  <label>📡 Nom du SAT :</label>
+  <input id="sat" required placeholder="Ex : 1, 2, A…">
+  <div id="satHelp" class="field-hint">⚠️ Nom du SAT requis.</div>
 
   <div class="btn-row">
     <button type="button" class="btn secondary prev">⬅️ Retour</button>
@@ -309,6 +314,96 @@ let currentStep=0;
 let comeBackAt = null; 
 
 const HAZE = [50.72384, 2.54924];
+
+  /* --------------------------------------------------------
+   🔍 Autocomplétion Fuse.js — Sélection d’un poste uniquement
+--------------------------------------------------------- */
+
+let postesPrincipaux = [];
+let fusePostes;
+
+fetch("https://raw.githubusercontent.com/arnaud-upmre/carto3f9b7d1a5c8e4f2b/main/postes.json")
+  .then(r => r.json())
+  .then(data => {
+
+    const seen = new Set();
+    postesPrincipaux = [];
+
+    data.forEach(p => {
+      // ❌ exclure : génériques, hors patrimoine, SAT, accès
+      if (p.special === true) return;
+      if (p.hors_patrimoine === true) return;
+      if (p.SAT && p.SAT.trim() !== "") return;
+      if (p.acces && p.acces.trim() !== "") return;
+
+      const nom = (p.nom || "").trim();
+      const type = (p.type || "").trim();
+
+      const key = `${nom}|${type}`;
+      if (seen.has(key)) return;
+      seen.add(key);
+
+      postesPrincipaux.push({
+        display: `${nom} ${type}`,
+        baseNom: nom,
+        baseType: type
+      });
+    });
+
+    fusePostes = new Fuse(postesPrincipaux, {
+      threshold: 0.3,
+      includeScore: true,
+      keys: ["display", "baseNom"]
+    });
+  });
+
+/* --------------------------------------------------------
+   🧩 Branchements de l'autocomplétion
+--------------------------------------------------------- */
+
+const searchPoste = $("searchPoste");
+const suggestionsPoste = $("suggestionsPoste");
+const nextPoste = $("nextPoste");
+
+searchPoste.addEventListener("input", () => {
+  const q = searchPoste.value.trim();
+
+  suggestionsPoste.innerHTML = "";
+  suggestionsPoste.style.display = "none";
+  nextPoste.disabled = true;
+
+  if (!q) return;
+
+  const results = fusePostes.search(q).slice(0, 8);
+  if (results.length === 0) return;
+
+  suggestionsPoste.style.display = "block";
+
+  results.forEach(res => {
+    const item = res.item;
+    const li = document.createElement("li");
+    li.textContent = item.display;
+
+    li.onclick = () => {
+      $("poste").value = item.baseNom;
+      $("type").value = item.baseType;
+
+      searchPoste.value = item.display;
+      suggestionsPoste.style.display = "none";
+      nextPoste.disabled = false;
+    };
+
+    suggestionsPoste.appendChild(li);
+  });
+});
+
+document.addEventListener("click", (e) => {
+  if (!searchPoste.contains(e.target) &&
+      !suggestionsPoste.contains(e.target)) {
+    suggestionsPoste.style.display = "none";
+  }
+});
+  
 const steps=document.querySelectorAll(".step");  
 const progress=document.getElementById("progress");
 
@@ -542,25 +637,6 @@ function normalizeType(str) {
   return str.trim().toUpperCase();
 }
 
-function normalizeSat(str) {
-  str = str.trim().toUpperCase();
-
-  // Si juste un chiffre (ex: "1") → SAT1
-  if (/^\d+$/.test(str)) return "SAT" + str;
-
-  // Si juste une lettre (ex: "A") → SATA
-  if (/^[A-Z]$/.test(str)) return "SAT" + str;
-
-  // Si commence déjà par SAT → uniformise
-  if (str.startsWith("SAT")) return str;
-
-  // Si l'utilisateur tape "Sat 1" ou "sat-2"
-  const m = str.match(/(\d+|[A-Z])/);
-  if (m) return "SAT" + m[1];
-
-  // fallback : SAT + texte
-  return "SAT" + str;
-}
 
 document.querySelectorAll(".next").forEach(btn=>{
   btn.addEventListener("click", e=>{
@@ -661,7 +737,27 @@ if (currentStep > 0) {
 }
   });
 });
-  
+
+  /* --------------------------------------------------------
+   ✨ Normalisation du SAT (1 → SAT1, a → SATA)
+--------------------------------------------------------- */
+function normalizeSat(str) {
+  str = str.trim().toUpperCase();
+
+  if (/^\d+$/.test(str)) return "SAT" + str;   // "1" → SAT1
+  if (/^[A-Z]$/.test(str)) return "SAT" + str; // "A" → SATA
+  if (str.startsWith("SAT")) return str;       // SAT2 → SAT2
+
+  const m = str.match(/(\d+|[A-Z])/);
+  if (m) return "SAT" + m[1];
+
+  return "SAT" + str;
+}
+
+// auto-normalisation à chaque saisie
+$("sat").addEventListener("input", () => {
+  $("sat").value = normalizeSat($("sat").value);
+});
 
 function validateStep(i) {
   const step = steps[i];
