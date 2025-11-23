@@ -379,8 +379,15 @@ progress.textContent = `${pct}%`;
 
 if (i === 5) {
 
-  // rendre visible
-  toggle($("mapDeviceWrap"), 1);
+
+  // Affiche ou cache la carte selon le choix
+  toggle($("mapDeviceWrap"), $("presentValue").value === "oui");
+  toggle($("lienField"), $("presentValue").value === "non");
+
+  // Si user a choisi "Lien Maps" -> ne pas initialiser ni charger la carte
+  if ($("presentValue").value !== "oui") {
+    return; 
+  }
 
   // créer la carte si besoin
   if (!mapDevice) {
@@ -440,7 +447,17 @@ if (i === 5) {
 
 if (i === 8) { 
 
-  toggle($("mapAccessWrap"), 1);
+
+  // Affiche ou cache la carte/lien selon le choix
+  toggle($("mapAccessWrap"), $("accessMethod").value === "gps");
+  toggle($("lienAccessField"), $("accessMethod").value === "lien");
+
+  // Si user a choisi "Lien Maps" → NE PAS initialiser la carte
+  if ($("accessMethod").value !== "gps") {
+    return;
+  }
+
+  // Initialisation carte si GPS
   if (!mapAccess) {
     startLocAccess();
   }
@@ -826,7 +843,8 @@ $("pill-acces-oui").onclick=()=>{
   $("accessValue").value="oui";
   $("pill-acces-oui").classList.add("active");
   $("pill-acces-non").classList.remove("active");
-  toggle($("mapAccessWrap"),1);
+toggle($("mapAccessWrap"), $("accessMethod").value === "gps");
+toggle($("lienAccessField"), $("accessMethod").value === "lien");
 
 requestAnimationFrame(() => {
   if (mapAccess) {
