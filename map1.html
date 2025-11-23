@@ -114,13 +114,16 @@
       align-items: center;
       gap: 6px;
     }
+    .device-pill a {
+      text-decoration: none;
+      color: inherit;
+    }
 
     .hp {
       background: #fee2e2;
       border-color: #fca5a5;
       color: #b91c1c;
     }
-
   </style>
 </head>
 <body>
@@ -142,7 +145,31 @@ const appareilsURL = "appareils.json";
 let postes = [];
 let appareils = [];
 
-/* Chargement JSON */
+/* --------- SAT SORTING --------- */
+function sortSatKeys(keys) {
+  return keys.sort((a, b) => {
+    if (a === "_principal") return -1;
+    if (b === "_principal") return 1;
+
+    const extract = s => {
+      const m = s.match(/^sat(\d*)$/i);
+      return m ? { base: "sat", num: m[1] ? parseInt(m[1]) : 0 } 
+               : { base: s.toLowerCase(), num: null };
+    };
+
+    const A = extract(a);
+    const B = extract(b);
+
+    if (A.base !== B.base) return A.base.localeCompare(B.base);
+    if (A.num === null && B.num !== null) return -1;
+    if (B.num === null && A.num !== null) return 1;
+    if (A.num === null && B.num === null) return a.localeCompare(b);
+
+    return A.num - B.num;
+  });
+}
+
+/* --------- LOAD JSON --------- */
 Promise.all([fetch(postesURL), fetch(appareilsURL)])
   .then(async ([pRes, aRes]) => {
     postes = await pRes.json();
@@ -150,105 +177,97 @@ Promise.all([fetch(postesURL), fetch(appareilsURL)])
     build();
   });
 
-/* Onglets */
+/* ---------- TABS ---------- */
 document.getElementById("tabPatrimoine").onclick = () => {
-  document.getElementById("tabPatrimoine").classList.add("active");
-  document.getElementById("tabHP").classList.remove("active");
-  document.getElementById("boardPatrimoine").style.display = "grid";
-  document.getElementById("boardHP").style.display = "none";
+  tab("Patrimoine");
 };
-
 document.getElementById("tabHP").onclick = () => {
-  document.getElementById("tabHP").classList.add("active");
-  document.getElementById("tabPatrimoine").classList.remove("active");
-  document.getElementById("boardHP").style.display = "grid";
-  document.getElementById("boardPatrimoine").style.display = "none";
+  tab("HP");
 };
 
+function tab(which) {
+  document.getElementById("tabPatrimoine").classList.toggle("active", which==="Patrimoine");
+  document.getElementById("tabHP").classList.toggle("active", which==="HP");
+  document.getElementById("boardPatrimoine").style.display = which==="Patrimoine" ? "grid" : "none";
+  document.getElementById("boardHP").style.display = which==="HP" ? "grid" : "none";
+}
+
+/* ---------- BUILD DATA ---------- */
 function build() {
 
-  /* Index postes → hors patrimoine */
+  /* Poste → HP ? */
   const mapPoste = new Map();
   postes.forEach(p => {
     mapPoste.set(p.nom, p.hors_patrimoine === true);
   });
 
-  /* Exclure appareils special:true */
+  /* Exclure special:true */
   const validAppareils = appareils.filter(a => !a.special);
 
-  /* Regroupement par poste */
+  /* Regroupement */
   const postesMap = new Map();
 
   validAppareils.forEach(a => {
-    const posteName = a.nom || "Inconnu";
+    const nom = a.nom || "Inconnu";
 
-    if (!postesMap.has(posteName)) {
-      postesMap.set(posteName, {
-        nom: posteName,
+    if (!postesMap.has(nom)) {
+      postesMap.set(nom, {
+        nom,
         type: a.type || "",
-        horsPatrimoine: mapPoste.get(posteName) || false,
+        horsPatrimoine: mapPoste.get(nom) || false,
         sats: {}
       });
     }
 
-    const poste = postesMap.get(posteName);
-    const satKey = a.SAT && a.SAT.trim() !== "" ? a.SAT.trim() : "_principal";
+    const poste = postesMap.get(nom);
+    const sat = a.SAT && a.SAT.trim() !== "" ? a.SAT.trim() : "_principal";
 
-    if (!poste.sats[satKey]) poste.sats[satKey] = [];
-    poste.sats[satKey].push(a);
+    if (!poste.sats[sat]) poste.sats[sat] = [];
+    poste.sats[sat].push(a);
   });
 
-  /* ----------- ONGLET PATRIMOINE ----------- */
-
+  /* --- ONGLET PATRIMOINE --- */
   const boardP = document.getElementById("boardPatrimoine");
   boardP.innerHTML = "";
 
   postesMap.forEach(poste => {
 
-    if (poste.horsPatrimoine) return; // Exclure poste HP
+    if (poste.horsPatrimoine) return;
 
-    // Filtrer les appareils hors patrimoine → EXCLUSION TOTALE
-    const cleaned = {};
-    for (const sat in poste.sats) {
-      cleaned[sat] = poste.sats[sat].filter(a => !a.hors_patrimoine);
+    const satsClean = {};
+    for (const key in poste.sats) {
+      const filtered = poste.sats[key].filter(a => !a.hors_patrimoine);
+      satsClean[key] = filtered;
     }
 
-    // Vérifier si tout est vide après nettoyage
-    const hasAny = Object.values(cleaned).some(arr => arr.length > 0);
-    if (!hasAny) return;
+    const has = Object.values(satsClean).some(g => g.length > 0);
+    if (!has) return;
 
-    boardP.appendChild(renderPoste(poste.nom, poste.type, cleaned));
+    boardP.appendChild(renderPoste(poste.nom, poste.type, satsClean));
   });
 
-  /* ----------- ONGLET HORS PATRIMOINE ----------- */
-
+  /* --- ONGLET HP --- */
   const boardH = document.getElementById("boardHP");
   boardH.innerHTML = "";
 
   postesMap.forEach(poste => {
+    const satsHP = {};
+    let hasHP = false;
 
-    const isPosteHP = poste.horsPatrimoine;
-
-    // On récupère UNIQUEMENT les appareils HP
-    const onlyHP = {};
-    let hasAnyHP = false;
-
-    for (const sat in poste.sats) {
-      onlyHP[sat] = poste.sats[sat].filter(a => a.hors_patrimoine === true);
-      if (onlyHP[sat].length > 0) hasAnyHP = true;
+    for (const key in poste.sats) {
+      satsHP[key] = poste.sats[key].filter(a => a.hors_patrimoine);
+      if (satsHP[key].length > 0) hasHP = true;
     }
 
-    // Conditions :
-    // - Poste HP : toujours affiché
-    // - Poste normal mais avec appareils HP : affiché
-    if (!isPosteHP && !hasAnyHP) return;
+    if (!poste.horsPatrimoine && !hasHP) return;
 
-    boardH.appendChild(renderPoste(poste.nom, poste.type, onlyHP, true));
+    boardH.appendChild(renderPoste(poste.nom, poste.type, satsHP, true));
   });
+
 }
 
-/* Rendu poste */
-function renderPoste(nom, type, sats, isHP = false) {
+/* ---------- RENDER POSTE ---------- */
+function renderPoste(nom, type, sats, isHP=false) {
 
   const card = document.createElement("div");
   card.className = "poste-card";
@@ -260,11 +279,12 @@ function renderPoste(nom, type, sats, isHP = false) {
     </div>
   `;
 
-  const satKeys = Object.keys(sats).sort();
+  const satKeys = sortSatKeys(Object.keys(sats));
 
   satKeys.forEach(sat => {
 
     const group = sats[sat];
+
     const div = document.createElement("div");
     div.className = "sat-group";
 
@@ -283,14 +303,15 @@ function renderPoste(nom, type, sats, isHP = false) {
     group.forEach(a => {
       const pill = document.createElement("div");
       pill.className = "device-pill";
-
       if (a.hors_patrimoine) pill.classList.add("hp");
 
-      pill.textContent = a.appareil;
+      const params = `${a.appareil} ${a.nom} ${a.type || ""} ${a.SAT || ""}`.trim();
+      const url = `index.html?id=${encodeURIComponent(params)}`;
+
+      pill.innerHTML = `<a href="${url}">${a.appareil}</a>`;
       list.appendChild(pill);
     });
 
-    /* Si aucun appareil → message */
     if (list.children.length === 0) {
       const msg = document.createElement("div");
       msg.style.fontSize = "12px";
