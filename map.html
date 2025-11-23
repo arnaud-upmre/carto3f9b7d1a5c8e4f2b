@@ -1831,19 +1831,35 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") closeContextMenu();
 });
 
-    // Ouvre / ferme le sous-menu Partager
+
 document.getElementById("ctx-share").onclick = () => {
   const sub = document.getElementById("ctx-submenu-share");
   sub.style.display = (sub.style.display === "flex") ? "none" : "flex";
 };
 
-    document.getElementById("ctx-share-copy").onclick = () => {
-  const url = `${location.origin}${location.pathname}?lat=${ctxLat}&lon=${ctxLng}&z=19&marker=true`;
+    
 
-  navigator.clipboard.writeText(url).then(() => {
-    showToast("🔗 Lien copié !");
-  });
+document.getElementById("ctx-share-copy").onclick = async () => {
+  const longUrl = `${location.origin}${location.pathname}?lat=${ctxLat}&lon=${ctxLng}&z=19&marker=true`;
+
+  try {
+    // Appel API is.gd (format simple = renvoie juste le lien)
+    const response = await fetch(
+      `https://is.gd/create.php?format=simple&url=${encodeURIComponent(longUrl)}`
+    );
+
+    const shortUrl = await response.text();
+
+    await navigator.clipboard.writeText(shortUrl);
+
+    showToast("🔗 Lien court copié !");
+  } catch (err) {
+    showToast("⚠️ Erreur : impossible de créer le lien court");
+  }
 };
+
+
+    
 
     document.getElementById("ctx-share-sms").onclick = () => {
   const url = `${location.origin}${location.pathname}?lat=${ctxLat}&lon=${ctxLng}&z=19&marker=true`;
