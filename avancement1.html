@@ -1,357 +1,415 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
-<title>Mon tableau blanc – Nono Maps</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mon Tableau Blanc – Nono Maps</title>
 
 <style>
+/* --------------------------------------------------
+   🟦 STYLES GÉNÉRAUX + DARK MODE
+-------------------------------------------------- */
 :root {
   --bg: #f5f6fa;
   --card: #ffffff;
   --text: #111;
+  --pill-poste: #2563eb;
+  --pill-sat: #facc15;
+  --pill-hp: #dc2626;
   --border: #dcdcdc;
-  --tag-bg: #eef2ff;
-  --tag-color: #3949ab;
-  --hp: #ff4d4f;
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #1e1e1e;
-    --card: #2a2a2a;
-    --text: #f2f2f2;
-    --border: #444;
-    --tag-bg: #3949ab33;
-    --tag-color: #aeb7ff;
-    --hp: #ff6b6b;
+    --bg: #0f0f0f;
+    --card: #1a1a1a;
+    --text: #f8f8f8;
+    --border: #333;
   }
 }
-
 body {
   margin: 0;
-  font-family: Inter, sans-serif;
+  padding: 0;
   background: var(--bg);
+  font-family: system-ui, sans-serif;
   color: var(--text);
 }
 
+/* --------------------------------------------------
+   🟦 EN-TÊTE + ONGLET + FILTRES
+-------------------------------------------------- */
 header {
-  padding: 18px 20px;
+  padding: 15px 20px;
   background: var(--card);
-  border-bottom: 1px solid var(--border);
   position: sticky;
   top: 0;
-  z-index: 30;
+  z-index: 20;
+  border-bottom: 1px solid var(--border);
 }
-
-h1 { margin: 0; font-size: 22px; }
 
 .tabs {
-  margin-top: 12px;
   display: flex;
   gap: 10px;
+  margin-top: 10px;
 }
-
 .tab {
-  padding: 8px 16px;
+  padding: 8px 14px;
   background: var(--border);
   border-radius: 12px;
   cursor: pointer;
-  user-select: none;
 }
-
 .tab.active {
-  background: var(--tag-bg);
-  color: var(--tag-color);
-  font-weight: 600;
-}
-
-.search-zone {
-  margin-top: 10px;
+  background: var(--pill-poste);
+  color: white;
 }
 
 #searchBox {
   width: 100%;
-  padding: 10px 14px;
-  font-size: 16px;
-  border-radius: 10px;
+  padding: 10px;
   border: 1px solid var(--border);
-  background: var(--card);
-  color: var(--text);
+  border-radius: 10px;
+  margin-top: 15px;
 }
 
 .filters {
-  margin-top: 12px;
   display: flex;
-  flex-wrap: wrap;
   gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 10px;
 }
-
 .filter-btn {
   padding: 6px 12px;
-  border-radius: 10px;
   background: var(--border);
+  border-radius: 10px;
   cursor: pointer;
 }
+.filter-btn.active {
+  background: var(--pill-poste);
+  color: #fff;
+}
 
-.grid {
+/* --------------------------------------------------
+   🟦 GRILLE DES CARTES
+-------------------------------------------------- */
+#cardsContainer {
   padding: 20px;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
-  gap: 20px;
+  gap: 18px;
+}
+@media(min-width: 700px) {
+  #cardsContainer { grid-template-columns: repeat(2,1fr); }
+}
+@media(min-width: 1100px) {
+  #cardsContainer { grid-template-columns: repeat(3,1fr); }
+}
+@media(min-width: 1500px) {
+  #cardsContainer { grid-template-columns: repeat(4,1fr); }
 }
 
 .card {
   background: var(--card);
+  border-radius: 18px;
+  padding: 18px;
   border: 1px solid var(--border);
-  padding: 16px;
-  border-radius: 16px;
+  transition: transform .2s, box-shadow .2s;
+}
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.15);
 }
 
-.card h2 {
-  margin: 0;
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-title {
   font-size: 20px;
-  margin-bottom: 6px;
+  font-weight: 700;
 }
 
-.type-pill {
-  display: inline-block;
-  background: var(--tag-bg);
-  color: var(--tag-color);
-  padding: 3px 10px;
-  font-size: 13px;
-  border-radius: 10px;
-  margin-left: 6px;
+.badge-type {
+  background: var(--pill-poste);
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
 }
 
 .section {
-  padding: 12px;
   border: 1px dashed var(--border);
   border-radius: 12px;
+  padding: 12px;
   margin-top: 12px;
 }
 
-.section h3 {
-  margin: 0;
-  font-size: 15px;
-  margin-bottom: 6px;
+.section-title {
+  font-size: 17px;
   font-weight: 600;
-}
-
-.app-list {
-  margin-top: 6px;
+  margin-bottom: 10px;
   display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
+  align-items: center;
+  gap: 8px;
 }
 
-.app-pill {
-  padding: 4px 8px;
+.pill-poste   { background: var(--pill-poste); color:white; padding:4px 10px; border-radius:12px; font-size:12px; }
+.pill-sat     { background: var(--pill-sat); color:black; padding:4px 10px; border-radius:12px; font-size:12px; }
+.pill-app     { background:#d1d5db; color:black; padding:6px 12px; border-radius:12px; display:inline-block; margin:4px; transition:.15s; }
+.pill-app:hover { transform: scale(1.08); }
+
+.pill-hp      { background: var(--pill-hp); color:white !important; }
+
+.toggle-btn {
+  cursor: pointer;
   font-size: 13px;
-  background: var(--tag-bg);
-  color: var(--tag-color);
-  border-radius: 8px;
+  opacity: .7;
+  margin-top: 4px;
 }
 
-.app-pill.hp {
-  background: var(--hp);
-  color: white;
+/* Animation survol appareils */
+.pill-app { transition: transform .2s, background .2s; }
+.pill-app:hover {
+  transform: translateY(-2px) scale(1.05);
+  background: #e2e3e4;
 }
-
-.counter {
-  margin-top: 16px;
-  font-size: 15px;
-  opacity: 0.8;
-}
-
 </style>
 </head>
+
 <body>
 
 <header>
-  <h1>Mon tableau blanc</h1>
+  <h2>Mon tableau blanc – Nono Maps</h2>
 
   <div class="tabs">
     <div class="tab active" data-tab="patrimoine">Patrimoine</div>
-    <div class="tab" data-tab="horspatrimoine">Hors Patrimoine</div>
+    <div class="tab" data-tab="hp">Hors Patrimoine</div>
   </div>
 
-  <div class="search-zone">
-    <input id="searchBox" type="text" placeholder="Rechercher un poste..." />
+  <input id="searchBox" placeholder="Rechercher un poste...">
+
+  <div class="filters">
+    <div class="filter-btn" data-filter="az">A → Z</div>
+    <div class="filter-btn" data-filter="za">Z → A</div>
+    <div class="filter-btn" data-filter="plus">+ appareils</div>
+    <div class="filter-btn" data-filter="moins">– appareils</div>
+    <div class="filter-btn" data-filter="ligne">Numéro ligne</div>
+    <div class="filter-btn" data-filter="gps">GPS</div>
   </div>
 
-  <div class="counter" id="globalCounter"></div>
+  <div id="globalCounters" style="margin-top:10px; font-size:14px; opacity:.8;"></div>
 </header>
 
-<div class="grid" id="grid"></div>
+
+<div id="cardsContainer"></div>
 
 <script>
-// =============================
-//   LOADING JSON
-// =============================
-const URL_BASE = "https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/";
+/* --------------------------------------------------
+   🟧 CHARGEMENT DES JSON
+-------------------------------------------------- */
+const URL_POSTES = "https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/postes.json";
+const URL_APP = "https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/appareils.json";
 
 let postes = [];
 let appareils = [];
-
-Promise.all([
-  fetch(URL_BASE + "postes.json").then(r => r.json()),
-  fetch(URL_BASE + "appareils.json").then(r => r.json())
-]).then(([p, a]) => {
-  postes = p;
-  appareils = a;
-  render();
-});
-
-// =============================
-//   CURRENT TAB
-// =============================
 let currentTab = "patrimoine";
+let currentFilter = null;
+let searchTerm = "";
 
-document.querySelectorAll(".tab").forEach(t => {
-  t.addEventListener("click", () => {
-    document.querySelectorAll(".tab").forEach(tb => tb.classList.remove("active"));
-    t.classList.add("active");
-    currentTab = t.dataset.tab;
-    render();
-  });
-});
+/* Distance GPS simple */
+function dist(a,b) {
+  const dx = a.poste_latitude - b.poste_latitude;
+  const dy = a.poste_longitude - b.poste_longitude;
+  return Math.sqrt(dx*dx+dy*dy);
+}
 
-document.getElementById("searchBox").addEventListener("input", render);
+/* Regroupe par nom */
+function groupByPoste(list) {
+  const m = {};
+  for (const p of list) {
+    if (!m[p.nom]) m[p.nom] = [];
+    m[p.nom].push(p);
+  }
+  return m;
+}
 
-// =============================
-//   RENDER FUNCTION
-// =============================
-function render() {
-  const grid = document.getElementById("grid");
-  grid.innerHTML = "";
-
-  const search = document.getElementById("searchBox").value.trim().toLowerCase();
-
-  const postesClean = postes.filter(p =>
-    !p.special &&
-    (currentTab === "patrimoine"
-      ? !p.hors_patrimoine
-      : p.hors_patrimoine)
+/* Appareils d’un poste+SAT */
+function getApps(nom, type, SAT) {
+  return appareils.filter(a =>
+    a.nom === nom &&
+    a.type === type &&
+    (SAT ? a.SAT === SAT : (!a.SAT || a.SAT === "")) &&
+    (!a.hors_patrimoine || currentTab === "hp")
   );
+}
 
-  // group by NOM
-  const groups = {};
-  for (const p of postesClean) {
-    if (!groups[p.nom]) groups[p.nom] = [];
-    groups[p.nom].push(p);
-  }
+/* --------------------------------------------------
+   🟧 CONSTRUCTION DES CARTES
+-------------------------------------------------- */
+function buildCards() {
+  const cont = document.getElementById("cardsContainer");
+  cont.innerHTML = "";
 
-  let appareilsFiltered = appareils.filter(app => {
+  const filteredPostes = postes.filter(p => {
     if (currentTab === "patrimoine") {
-      // appareils rattachés à un poste patrimoine
-      const posteMatch = postes.find(
-        pt => pt.nom === app.nom && !pt.hors_patrimoine
-      );
-      return !!posteMatch;
-    } else {
-      // onglet hors patrimoine = tous appareils HP
-      return app.hors_patrimoine === true;
+      if (p.special) return false;
+      if (p.hors_patrimoine) return false;
+      return true;
     }
+    if (currentTab === "hp") {
+      return p.hors_patrimoine === true;
+    }
+    return true;
   });
 
-  let totalPostes = Object.keys(groups).length;
-  let totalSAT = 0;
-  for (const name in groups) {
-    totalSAT += groups[name].filter(p => p.SAT && p.SAT !== "").length;
+  const grouped = groupByPoste(filteredPostes);
+
+  /* Tri selon filtre */
+  let names = Object.keys(grouped);
+
+  if (currentFilter === "az") names.sort();
+  if (currentFilter === "za") names.sort().reverse();
+  if (currentFilter === "plus") {
+    names.sort((a,b)=> countApps(grouped[b]) - countApps(grouped[a]));
+  }
+  if (currentFilter === "moins") {
+    names.sort((a,b)=> countApps(grouped[a]) - countApps(grouped[b]));
+  }
+  if (currentFilter === "gps") {
+    names.sort((a,b)=> dist(grouped[a][0], grouped[b][0]) - dist(grouped[b][0], grouped[a][0]));
   }
 
-  let totalApps = appareilsFiltered.length;
+  if (searchTerm.length > 0)
+    names.sort((a,b)=> (a.toLowerCase().includes(searchTerm) ? -1 : 1));
 
-  document.getElementById("globalCounter").textContent =
-    `Postes : ${totalPostes} · SAT : ${totalSAT} · Appareils : ${totalApps}`;
+  /* Affichage */
+  for (const nom of names) {
+    const blocPoste = grouped[nom];
 
-  // Transform groups to cards
-  let cards = Object.keys(groups).map(nom => {
-    const postesDuNom = groups[nom].sort((a,b)=> (a.SAT||"") < (b.SAT||"") ? -1 : 1);
-
-    return {
-      nom,
-      postes: postesDuNom
-    };
-  });
-
-  // Recherche : poste en tête
-  if (search) {
-    cards.sort((a,b)=>{
-      const am = a.nom.toLowerCase().includes(search);
-      const bm = b.nom.toLowerCase().includes(search);
-      if (am && !bm) return -1;
-      if (!am && bm) return 1;
-      return a.nom.localeCompare(b.nom);
-    });
-  }
-
-  // construction des cartes
-  for (const c of cards) {
     const card = document.createElement("div");
     card.className = "card";
 
-    // TYPE : on prend le type du poste principal
-    const postePrincipal = c.postes.find(p => !p.SAT || p.SAT==="");
+    const p0 = blocPoste.find(x => !x.SAT || x.SAT==="");
 
-    let typeAff = "";
-    if (postePrincipal) {
-      typeAff = `<span class="type-pill">${postePrincipal.type}</span>`;
+    const isHP = (currentTab==="hp");
+
+    let title = nom;
+    if (isHP) title += ` (${nom})`;
+
+    card.innerHTML = `
+      <div class="card-header">
+        <div class="card-title">${title}</div>
+        <div>
+          ${p0 && !isHP ? `<span class="badge-type">${p0.type}</span>` : ""}
+        </div>
+      </div>
+    `;
+
+    /* Poste principal */
+    if (p0) {
+      const apps = getApps(nom, p0.type, "");
+      card.innerHTML += sectionHTML("Poste principal", apps, false);
     }
 
-    card.innerHTML = `<h2>${c.nom} ${typeAff}</h2>`;
+    /* SAT */
+    for (const sat of blocPoste.filter(x=> x.SAT && x.SAT!=="" )) {
+      const appsSAT = getApps(nom, sat.type, sat.SAT);
+      card.innerHTML += sectionHTML(sat.SAT.toUpperCase(), appsSAT, true);
+    }
 
-    // Poste principal :
-    buildSection(card, c.nom, "", appareilsFiltered);
+    cont.appendChild(card);
+  }
 
-    // SAT :
-    for (const pst of c.postes) {
-      if (pst.SAT && pst.SAT !== "") {
-        buildSection(card, c.nom, pst.SAT, appareilsFiltered);
+  updateCounters(filteredPostes, currentTab);
+}
+
+/* --------------------------------------------------
+   🟧 SECTION HTML
+-------------------------------------------------- */
+function sectionHTML(title, apps, isSAT) {
+  return `
+  <div class="section">
+    <div class="section-title">
+      <span class="${isSAT ? "pill-sat" : "pill-poste"}">${title}</span>
+    </div>
+    <div>
+      ${apps.length===0 ? "<em>Aucun appareil trouvé</em>" :
+        apps.map(a=> `
+          <span class="pill-app ${a.hors_patrimoine ? "pill-hp" : ""}">
+            ${a.appareil}
+          </span>`).join("")
       }
-    }
-
-    grid.appendChild(card);
-  }
+    </div>
+  </div>
+  `;
 }
 
-// =============================
-//   BUILD SECTION (Poste/SAT)
-// =============================
-function buildSection(card, nom, sat, appareilsList) {
-  const section = document.createElement("div");
-  section.className = "section";
-
-  const title = sat === "" ? "Poste principal" : sat.toUpperCase();
-  section.innerHTML = `<h3>${title}</h3>`;
-
-  const apps = appareilsList.filter(a =>
-    a.nom === nom &&
-    (a.SAT || "") === sat
-  );
-
-  if (apps.length === 0) {
-    const p = document.createElement("div");
-    p.textContent = "Aucun appareil trouvé.";
-    p.style.opacity = "0.6";
-    section.appendChild(p);
-  } else {
-    const list = document.createElement("div");
-    list.className = "app-list";
-
-    for (const app of apps) {
-      const pill = document.createElement("div");
-      pill.className = "app-pill";
-      if (app.hors_patrimoine) pill.classList.add("hp");
-      pill.textContent = app.appareil || app.type || "?";
-      list.appendChild(pill);
-    }
-
-    section.appendChild(list);
+/* --------------------------------------------------
+   🟧 COMPTEURS GLOBALS
+-------------------------------------------------- */
+function countApps(list) {
+  let n=0;
+  for (const p of list) {
+    const apps = appareils.filter(a=>
+      a.nom===p.nom &&
+      a.type===p.type &&
+      ((!a.SAT && !p.SAT) || a.SAT===p.SAT) &&
+      (!a.hors_patrimoine || currentTab==="hp")
+    );
+    n += apps.length;
   }
-
-  card.appendChild(section);
+  return n;
 }
+
+function updateCounters(list) {
+  const posts = list.length;
+  const sats = list.filter(x=> x.SAT && x.SAT!=="").length;
+
+  const appsCount = appareils.filter(a=>{
+    if (currentTab==="patrimoine") return !a.hors_patrimoine;
+    return a.hors_patrimoine===true;
+  }).length;
+
+  document.getElementById("globalCounters").innerHTML =
+    `Postes : ${posts} · SAT : ${sats} · Appareils : ${appsCount}`;
+}
+
+/* --------------------------------------------------
+   🟧 INTERACTIONS
+-------------------------------------------------- */
+document.querySelectorAll(".tab").forEach(t=>{
+  t.onclick=()=>{
+    document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+    t.classList.add("active");
+    currentTab = t.dataset.tab;
+    buildCards();
+  };
+});
+
+document.querySelectorAll(".filter-btn").forEach(f=>{
+  f.onclick=()=>{
+    document.querySelectorAll(".filter-btn").forEach(x=>x.classList.remove("active"));
+    f.classList.add("active");
+    currentFilter = f.dataset.filter;
+    buildCards();
+  };
+});
+
+document.getElementById("searchBox").oninput = e=>{
+  searchTerm = e.target.value.toLowerCase().trim();
+  buildCards();
+};
+
+/* --------------------------------------------------
+   🟧 DÉMARRAGE
+-------------------------------------------------- */
+Promise.all([
+  fetch(URL_POSTES).then(r=>r.json()),
+  fetch(URL_APP).then(r=>r.json())
+]).then(([p, a])=>{
+  postes = p;
+  appareils = a;
+  buildCards();
+});
 </script>
 
 </body>
