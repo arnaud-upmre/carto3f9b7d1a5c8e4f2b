@@ -16,6 +16,10 @@
 
 <style>
 
+.popup-share .leaflet-popup-content {
+  text-align: center !important;
+}
+
 .measure-point {
   width: 10px;
   height: 10px;
@@ -784,7 +788,9 @@ if (showMarker && !isNaN(lat) && !isNaN(lon)) {
     })
   }).addTo(map);
 
-  shared.bindPopup("📍 Position partagée").openPopup();
+shared.bindPopup("📍 Position partagée", {
+  className: "popup-share"
+}).openPopup();
 }
 }
 
