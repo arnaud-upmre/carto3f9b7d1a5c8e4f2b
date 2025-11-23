@@ -3,427 +3,292 @@
 <head>
   <meta charset="UTF-8" />
   <title>Arborescence postes / SAT / appareils</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <style>
-    *, *::before, *::after {
-      box-sizing: border-box;
-    }
     body {
       margin: 0;
-      padding: 24px;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      padding: 20px;
+      font-family: Inter, system-ui, sans-serif;
       background: #f3f4f6;
       color: #111827;
     }
 
-    h1 {
-      margin: 0 0 16px;
-      font-size: 24px;
+    h1 { margin-bottom: 10px; }
+
+    /* Onglets */
+    .tabs {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .tab {
+      padding: 8px 14px;
+      background: #e5e7eb;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .tab.active {
+      background: #3b82f6;
+      color: white;
     }
 
-    .subtitle {
-      margin-bottom: 24px;
-      font-size: 14px;
-      color: #6b7280;
+    /* Grille Postes */
+    .board {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
     }
 
-    .legend {
+    .poste-card {
+      background: white;
+      border-radius: 14px;
+      border: 1px solid #e5e7eb;
+      padding: 14px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .poste-title {
+      font-size: 17px;
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .type-badge {
+      background: #dbeafe;
+      border: 1px solid #bfdbfe;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #1e40af;
+    }
+
+    /* SAT + Poste principal */
+    .sat-group {
+      background: #f9fafb;
+      border: 1px dashed #d1d5db;
+      padding: 10px;
+      border-radius: 10px;
+      margin-top: 8px;
+    }
+    .sat-title {
+      font-weight: 600;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .sat-badge {
+      background: #fef9c3;
+      border: 1px solid #facc15;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+    }
+
+    .principal-badge {
+      background: #e5e7eb;
+      border: 1px solid #d1d5db;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    /* Pills appareils */
+    .device-list {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px 16px;
-      margin-bottom: 20px;
-      font-size: 13px;
-      color: #374151;
+      gap: 6px;
     }
-
-    .legend-item {
+    .device-pill {
+      background: white;
+      border: 1px solid #d1d5db;
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 12px;
       display: inline-flex;
       align-items: center;
       gap: 6px;
     }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2px 8px;
-      border-radius: 999px;
-      font-size: 11px;
-      font-weight: 600;
-      border: 1px solid transparent;
-      white-space: nowrap;
-    }
-
-    .badge-poste {
-      background: #dbeafe;
-      border-color: #bfdbfe;
-      color: #1d4ed8;
-    }
-
-    .badge-sat {
-      background: #fef9c3;
-      border-color: #facc15;
-      color: #92400e;
-    }
-
-    .badge-hp {
+    .hp {
       background: #fee2e2;
       border-color: #fca5a5;
       color: #b91c1c;
     }
-
-    .badge-normal {
-      background: #dcfce7;
-      border-color: #bbf7d0;
-      color: #15803d;
-    }
-
-    .badge-no-sat {
-      background: #e5e7eb;
-      border-color: #d1d5db;
-      color: #374151;
-    }
-
-    .board {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 16px;
-      align-items: flex-start;
-    }
-
-    .poste-card {
-      background: #ffffff;
-      border-radius: 16px;
-      border: 1px solid #e5e7eb;
-      padding: 14px 14px 10px;
-      box-shadow:
-        0 1px 2px rgba(15, 23, 42, 0.05),
-        0 4px 12px rgba(15, 23, 42, 0.04);
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      min-height: 120px;
-    }
-
-    .poste-header {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 8px;
-      margin-bottom: 4px;
-    }
-
-    .poste-title {
-      font-size: 16px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .poste-type {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      padding: 2px 6px;
-      border-radius: 999px;
-      background: #eff6ff;
-      color: #1d4ed8;
-      border: 1px solid #bfdbfe;
-    }
-
-    .poste-count {
-      font-size: 11px;
-      color: #6b7280;
-    }
-
-    .sat-group {
-      border-radius: 12px;
-      padding: 8px 8px 6px;
-      background: #f9fafb;
-      border: 1px dashed #e5e7eb;
-      margin-top: 4px;
-    }
-
-    .sat-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      margin-bottom: 6px;
-    }
-
-    .sat-title {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 12px;
-      font-weight: 600;
-      color: #4b5563;
-    }
-
-    .device-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 4px;
-    }
-
-    .device-pill {
-      font-size: 11px;
-      padding: 4px 7px;
-      border-radius: 999px;
-      border: 1px solid #d1d5db;
-      background: #ffffff;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      max-width: 100%;
-    }
-
-    .device-pill.hp {
-      border-color: #fca5a5;
-      background: #fef2f2;
-      color: #b91c1c;
-    }
-
-    .device-pill .code {
-      font-weight: 600;
-      white-space: nowrap;
-    }
-
-    .device-pill .desc {
-      font-weight: 400;
-      color: #6b7280;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      max-width: 150px;
-    }
-
-    .sat-label {
-      font-size: 11px;
-      opacity: 0.8;
-    }
-
-    .no-data {
-      margin-top: 20px;
-      font-size: 14px;
-      color: #9ca3af;
-    }
-
-    @media (max-width: 600px) {
-      body {
-        padding: 16px;
-      }
-      .poste-card {
-        padding: 12px;
-      }
+    .from-poste-normal {
+      border-color: #fb923c;
+      background: #ffedd5;
+      color: #c2410c;
     }
   </style>
 </head>
 <body>
-  <h1>Arborescence postes / SAT / appareils</h1>
-  <p class="subtitle">
-    Visualisation à partir de <code>appareils.json</code> – postes regroupés, SAT et appareils associés,
-    fiches génériques exclues (<code>special: true</code>).
-  </p>
 
-  <div class="legend">
-    <span class="legend-item">
-      <span class="badge badge-poste">Poste</span> Poste (nom + type)
-    </span>
-    <span class="legend-item">
-      <span class="badge badge-sat">SAT</span> Regroupement SAT d'un poste
-    </span>
-    <span class="legend-item">
-      <span class="badge badge-normal">Appareil</span> Appareil “classique”
-    </span>
-    <span class="legend-item">
-      <span class="badge badge-hp">Hors patrimoine</span> Appareil avec <code>hors_patrimoine: true</code>
-    </span>
-    <span class="legend-item">
-      <span class="badge badge-no-sat">Sans SAT</span> Appareils rattachés directement au poste
-    </span>
-  </div>
+<h1>Arborescence postes / SAT / appareils</h1>
 
-  <div id="board" class="board"></div>
-  <p id="noData" class="no-data" style="display: none;">
-    Aucun appareil à afficher (vérifier le chemin du fichier ou les filtres).
-  </p>
+<div class="tabs">
+  <div id="tabPatrimoine" class="tab active">Patrimoine</div>
+  <div id="tabHP" class="tab">Hors patrimoine</div>
+</div>
 
-  <script>
-    // 🔧 Adapter le chemin si besoin (ex: "./data/appareils.json")
-    const APPAREILS_URL = "appareils.json";
+<div id="boardPatrimoine" class="board"></div>
+<div id="boardHP" class="board" style="display:none;"></div>
 
-    async function loadData() {
-      try {
-        const res = await fetch(APPAREILS_URL);
-        if (!res.ok) throw new Error("HTTP " + res.status);
-        const data = await res.json();
-        buildBoard(data);
-      } catch (e) {
-        console.error("Erreur chargement appareils.json :", e);
-        document.getElementById("noData").textContent =
-          "Erreur lors du chargement de appareils.json. Vérifier le chemin dans le script.";
-        document.getElementById("noData").style.display = "block";
-      }
+<script>
+const postesURL = "postes.json";
+const appareilsURL = "appareils.json";
+
+let postes = [];
+let appareils = [];
+
+/* Chargement des JSON */
+Promise.all([fetch(postesURL), fetch(appareilsURL)])
+  .then(async ([pRes, aRes]) => {
+    postes = await pRes.json();
+    appareils = await aRes.json();
+    build();
+  });
+
+/* Gestion onglets */
+document.getElementById("tabPatrimoine").onclick = () => {
+  document.getElementById("tabPatrimoine").classList.add("active");
+  document.getElementById("tabHP").classList.remove("active");
+  document.getElementById("boardPatrimoine").style.display = "grid";
+  document.getElementById("boardHP").style.display = "none";
+};
+
+document.getElementById("tabHP").onclick = () => {
+  document.getElementById("tabHP").classList.add("active");
+  document.getElementById("tabPatrimoine").classList.remove("active");
+  document.getElementById("boardHP").style.display = "grid";
+  document.getElementById("boardPatrimoine").style.display = "none";
+};
+
+function build() {
+
+  /* Index postes → hors_patrimoine */
+  const mapPoste = new Map();
+  postes.forEach(p => {
+    mapPoste.set(p.nom, p.hors_patrimoine === true);
+  });
+
+  /* Exclure appareils special:true */
+  const validAppareils = appareils.filter(a => !a.special);
+
+  /* Regroupement par poste */
+  const postesMap = new Map();
+
+  validAppareils.forEach(a => {
+    const posteName = a.nom || "Inconnu";
+
+    if (!postesMap.has(posteName)) {
+      postesMap.set(posteName, {
+        nom: posteName,
+        type: a.type || "",
+        horsPatrimoine: mapPoste.get(posteName) || false,
+        sats: {}
+      });
     }
 
-    function buildBoard(appareils) {
-      // 1) Filtrer : enlever les fiches génériques special:true
-      const filtered = appareils.filter(a => !a.special);
+    const poste = postesMap.get(posteName);
+    const satKey = a.SAT && a.SAT.trim() !== "" ? a.SAT.trim() : "_principal";
 
-      // 2) Regroupement par poste (nom + type)
-      // structure:
-      // {
-      //   key: { nom, type, sats: { 'SAT1': [...], '_no_sat': [...] } }
-      // }
-      const postesMap = new Map();
+    if (!poste.sats[satKey]) poste.sats[satKey] = [];
+    poste.sats[satKey].push(a);
+  });
 
-      for (const a of filtered) {
-        const nom = a.nom || "Sans nom";
-        const type = a.type || "";
-        const sat = (a.SAT || "").trim();
-        const posteKey = nom + "||" + type;
+  /* Construction Patrimoine */
+  const boardP = document.getElementById("boardPatrimoine");
+  boardP.innerHTML = "";
 
-        if (!postesMap.has(posteKey)) {
-          postesMap.set(posteKey, {
-            nom,
-            type,
-            sats: {}, // { satName: [appareils] }
-            count: 0
-          });
-        }
+  postesMap.forEach(poste => {
+    if (poste.horsPatrimoine) return;
+    boardP.appendChild(renderPoste(poste, mapPoste, false));
+  });
 
-        const poste = postesMap.get(posteKey);
-        const satKey = sat === "" ? "_no_sat" : sat;
+  /* Construction Hors Patrimoine */
+  const boardH = document.getElementById("boardHP");
+  boardH.innerHTML = "";
 
-        if (!poste.sats[satKey]) {
-          poste.sats[satKey] = [];
-        }
-
-        poste.sats[satKey].push(a);
-        poste.count++;
-      }
-
-      // 3) Construction du DOM
-      const board = document.getElementById("board");
-      board.innerHTML = "";
-
-      const postes = Array.from(postesMap.values())
-        .sort((a, b) => a.nom.localeCompare(b.nom));
-
-      if (postes.length === 0) {
-        document.getElementById("noData").style.display = "block";
-        return;
-      }
-
-      for (const poste of postes) {
-        const card = document.createElement("section");
-        card.className = "poste-card";
-
-        // Header
-        const header = document.createElement("div");
-        header.className = "poste-header";
-
-        const title = document.createElement("div");
-        title.className = "poste-title";
-        title.innerHTML = `
-          <span>${poste.nom}</span>
-          ${poste.type ? `<span class="poste-type">${poste.type}</span>` : ""}
-        `;
-
-        const count = document.createElement("div");
-        count.className = "poste-count";
-        count.textContent = poste.count + (poste.count > 1 ? " appareils" : " appareil");
-
-        header.appendChild(title);
-        header.appendChild(count);
-        card.appendChild(header);
-
-        // SAT groups (y compris sans SAT)
-        const satKeys = Object.keys(poste.sats).sort((a, b) => {
-          if (a === "_no_sat") return -1;
-          if (b === "_no_sat") return 1;
-          return a.localeCompare(b);
-        });
-
-        for (const satKey of satKeys) {
-          const devices = poste.sats[satKey];
-          const satDiv = document.createElement("div");
-          satDiv.className = "sat-group";
-
-          const satHeader = document.createElement("div");
-          satHeader.className = "sat-header";
-
-          const satTitle = document.createElement("div");
-          satTitle.className = "sat-title";
-
-          if (satKey === "_no_sat") {
-            satTitle.innerHTML = `
-              <span class="badge badge-no-sat">Sans SAT</span>
-              <span class="sat-label">${devices.length} appareil(s)</span>
-            `;
-          } else {
-            satTitle.innerHTML = `
-              <span class="badge badge-sat">${satKey}</span>
-              <span class="sat-label">${devices.length} appareil(s)</span>
-            `;
-          }
-
-          satHeader.appendChild(satTitle);
-          satDiv.appendChild(satHeader);
-
-          const deviceList = document.createElement("div");
-          deviceList.className = "device-list";
-
-          devices
-            .sort((a, b) => {
-              const ca = (a.appareil || "").toString();
-              const cb = (b.appareil || "").toString();
-              return ca.localeCompare(cb, "fr", { numeric: true });
-            })
-            .forEach(dev => {
-              const pill = document.createElement("div");
-              pill.className = "device-pill";
-              if (dev.hors_patrimoine === true) {
-                pill.classList.add("hp");
-              }
-
-              const codeSpan = document.createElement("span");
-              codeSpan.className = "code";
-              codeSpan.textContent = dev.appareil || "Sans code";
-
-              pill.appendChild(codeSpan);
-
-              if (dev.hors_patrimoine === true) {
-                const hpSpan = document.createElement("span");
-                hpSpan.textContent = "HP";
-                hpSpan.style.fontSize = "10px";
-                hpSpan.style.fontWeight = "700";
-                pill.appendChild(hpSpan);
-              }
-
-              if (dev.description) {
-                const descSpan = document.createElement("span");
-                descSpan.className = "desc";
-                descSpan.textContent = "· " + dev.description.replace(/<br\s*\/?>/gi, " / ");
-                pill.appendChild(descSpan);
-              }
-
-              deviceList.appendChild(pill);
-            });
-
-          satDiv.appendChild(deviceList);
-          card.appendChild(satDiv);
-        }
-
-        board.appendChild(card);
-      }
+  postesMap.forEach(poste => {
+    let hasHP = false;
+    for (const group of Object.values(poste.sats)) {
+      if (group.some(a => a.hors_patrimoine === true)) hasHP = true;
     }
 
-    loadData();
-  </script>
+    if (poste.horsPatrimoine || hasHP) {
+      boardH.appendChild(renderPoste(poste, mapPoste, true));
+    }
+  });
+}
+
+/* Rendu d’un poste */
+function renderPoste(poste, mapPoste, onlyHP = false) {
+  const card = document.createElement("div");
+  card.className = "poste-card";
+
+  card.innerHTML = `
+    <div class="poste-title">
+      <span>${poste.nom}</span>
+      ${poste.type ? `<span class="type-badge">${poste.type}</span>` : ""}
+    </div>
+  `;
+
+  const satKeys = Object.keys(poste.sats).sort();
+
+  satKeys.forEach(sat => {
+    const group = poste.sats[sat];
+
+    const div = document.createElement("div");
+    div.className = "sat-group";
+
+    const title = document.createElement("div");
+    title.className = "sat-title";
+
+    /* Poste principal */
+    if (sat === "_principal") {
+      title.innerHTML = `<span class="principal-badge">Poste principal</span>`;
+    } else {
+      title.innerHTML = `<span class="sat-badge">${sat}</span>`;
+    }
+
+    const list = document.createElement("div");
+    list.className = "device-list";
+
+    group.forEach(a => {
+      if (onlyHP && !a.hors_patrimoine && !poste.horsPatrimoine) return;
+
+      const pill = document.createElement("div");
+      pill.className = "device-pill";
+
+      if (a.hors_patrimoine) pill.classList.add("hp");
+      if (!poste.horsPatrimoine && a.hors_patrimoine) pill.classList.add("from-poste-normal");
+
+      pill.textContent = a.appareil;
+      list.appendChild(pill);
+    });
+
+    /* SAT sans appareils → afficher quand même */
+    if (list.children.length === 0) {
+      const msg = document.createElement("div");
+      msg.style.fontSize = "12px";
+      msg.style.color = "#6b7280";
+      msg.textContent = "Aucun appareil enregistré pour le moment.";
+      list.appendChild(msg);
+    }
+
+    div.appendChild(title);
+    div.appendChild(list);
+    card.appendChild(div);
+  });
+
+  return card;
+}
+</script>
+
 </body>
 </html>
