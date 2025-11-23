@@ -288,6 +288,9 @@ if (currentTab === "hp") {
   for (const nom of names) {
     const blocPoste = grouped[nom];
 
+        // Ajout : Ville = Nom
+    const ville = nom;
+
     const card = document.createElement("div");
     card.className = "card";
 
@@ -296,7 +299,16 @@ if (currentTab === "hp") {
     const isHP = (currentTab==="hp");
 
     let title = nom;
-    if (isHP) title = `${nom} (Ville)`;
+    if (isHP) {
+  const isPosteHP = blocPoste.some(x => x.hors_patrimoine === true);
+  if (isPosteHP) {
+    // Poste hors patrimoine → Nom (Ville)
+    title = `${nom} (Ville)`;
+  } else {
+    // Poste patrimoine qui contient au moins un appareil HP → Nom (TYPE)
+    title = `${nom}`;
+  }
+}
 
     card.innerHTML = `
       <div class="card-header">
@@ -314,7 +326,11 @@ if (currentTab === "hp") {
     }
 
     /* SAT */
-    for (const sat of blocPoste.filter(x=> x.SAT && x.SAT!=="" )) {
+for (const sat of blocPoste.filter(x => 
+  x.SAT && x.SAT !== "" &&
+  // On affiche uniquement si au moins 1 appareil HP est rattaché
+  getApps(x.nom, x.type, x.SAT).some(a => a.hors_patrimoine)
+)) {
       const appsSAT = getApps(nom, sat.type, sat.SAT);
       card.innerHTML += sectionHTML(sat.SAT.toUpperCase(), appsSAT, true);
     }
@@ -356,7 +372,7 @@ function countApps(list) {
       a.nom===p.nom &&
       a.type===p.type &&
       ((!a.SAT && !p.SAT) || a.SAT===p.SAT) &&
-      (!a.hors_patrimoine || currentTab==="hp")
+(currentTab === "hp" ? a.hors_patrimoine === true : !a.hors_patrimoine)
     );
     n += apps.length;
   }
