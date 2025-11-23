@@ -6,130 +6,88 @@
 <title>Mon tableau blanc – Nono Maps</title>
 
 <style>
-/* ======== STYLE GÉNÉRAL ======== */
 :root {
-  --bg:#f6f7fb;
-  --card:#fff;
-  --border:#d6d6d6;
-  --text:#111;
-  --pill-poste:#2563eb;
-  --pill-sat:#eab308;
-  --pill-hp:#dc2626;
+  --bg:#f6f7fb; --card:#fff; --border:#d6d6d6; --text:#111;
+  --pill-poste:#2563eb; --pill-sat:#eab308; --pill-hp:#dc2626;
 }
 @media(prefers-color-scheme:dark){
-  :root{
-    --bg:#0f0f0f;
-    --card:#1a1a1a;
-    --border:#333;
-    --text:#fafafa;
-  }
+  :root { --bg:#0f0f0f; --card:#1a1a1a; --border:#333; --text:#fafafa; }
 }
-body{
-  margin:0;background:var(--bg);color:var(--text);
-  font-family:system-ui,sans-serif;
-}
-header{
-  background:var(--card);border-bottom:1px solid var(--border);
-  padding:15px 20px;position:sticky;top:0;z-index:10;
-}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,sans-serif;}
+header{background:var(--card);border-bottom:1px solid var(--border);padding:15px 20px;position:sticky;top:0;z-index:10;}
 h2{margin:0 0 6px;font-size:20px;}
 .tabs{display:flex;gap:10px;margin-top:5px;}
 .tab{padding:7px 14px;border-radius:10px;background:var(--border);cursor:pointer;}
 .tab.active{background:var(--pill-poste);color:#fff;}
-#searchBox{width:100%;padding:8px 10px;border:1px solid var(--border);
-border-radius:10px;margin-top:12px;}
+#searchBox{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:10px;margin-top:12px;}
 .filters{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
 .filter-btn{padding:5px 12px;border-radius:10px;background:var(--border);cursor:pointer;}
 .filter-btn.active{background:var(--pill-poste);color:#fff;}
 #globalCounters{margin-top:10px;font-size:13px;opacity:.8;}
-
-.btn-toggle-all{
-  margin-top:10px;
-  padding:6px 14px;
-  border-radius:10px;
-  background:var(--pill-poste);
-  color:white;
-  border:none;
-  cursor:pointer;
-}
-
 #cardsContainer{padding:20px;display:grid;gap:18px;}
 @media(min-width:700px){#cardsContainer{grid-template-columns:repeat(2,1fr);}}
 @media(min-width:1100px){#cardsContainer{grid-template-columns:repeat(3,1fr);}}
 @media(min-width:1500px){#cardsContainer{grid-template-columns:repeat(4,1fr);}}
 
-/* ======== CARTES ======== */
-.card{
-  background:var(--card);border:1px solid var(--border);
-  border-radius:16px;padding:16px;transition:.2s;
-}
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;transition:.2s;}
 .card:hover{transform:translateY(-3px);box-shadow:0 5px 15px rgba(0,0,0,.15);}
 .card-header{display:flex;justify-content:space-between;align-items:center;cursor:pointer;}
 .card-title{font-size:18px;font-weight:700;}
 .badge-type{background:var(--pill-poste);color:#fff;padding:4px 8px;border-radius:8px;font-size:12px;}
+.card-content{margin-top:12px;display:block;}
+.card.collapsed .card-content{display:none;}
+.toggle-btn{font-size:12px;opacity:.6;margin-left:10px;}
+
 .section{border:1px dashed var(--border);border-radius:12px;padding:10px;margin-top:10px;}
 .section-title{font-size:14px;font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:6px;}
 .pill-poste,.pill-sat{padding:3px 10px;border-radius:12px;font-size:12px;color:#fff;}
 .pill-poste{background:var(--pill-poste);}
 .pill-sat{background:var(--pill-sat);color:#111;}
-.pill-app{display:inline-block;padding:6px 12px;border-radius:12px;background:#d1d5db;
-margin:3px;transition:.2s;cursor:default;}
+.pill-app{display:inline-block;padding:6px 12px;border-radius:12px;background:#d1d5db;margin:3px;transition:.2s;}
 .pill-app:hover{transform:scale(1.08);}
 .pill-hp{background:var(--pill-hp)!important;color:#fff!important;}
 em{font-size:13px;opacity:.7;}
-
-.card-content{margin-top:12px;display:block;}
-.card.collapsed .card-content{display:none;}
-
-.toggle-btn{
-  font-size:12px;
-  opacity:.6;
-  margin-left:10px;
-}
 </style>
 </head>
 <body>
+
 <header>
   <h2>Mon tableau blanc – Nono Maps</h2>
-
   <div class="tabs">
     <div class="tab active" data-tab="patrimoine">Patrimoine</div>
     <div class="tab" data-tab="hp">Hors Patrimoine</div>
   </div>
-
   <input id="searchBox" placeholder="Rechercher un poste...">
-
   <div class="filters">
     <div class="filter-btn" data-filter="az">A → Z</div>
     <div class="filter-btn" data-filter="za">Z → A</div>
     <div class="filter-btn" data-filter="plus">+ appareils</div>
     <div class="filter-btn" data-filter="moins">– appareils</div>
-    <div class="filter-btn" data-filter="ligne">Numéro ligne</div>
     <div class="filter-btn" data-filter="gps">GPS</div>
   </div>
-
-  <button id="toggleAll" class="btn-toggle-all">Plier tout</button>
-
   <div id="globalCounters"></div>
 </header>
 
 <div id="cardsContainer"></div>
 
 <script>
-const URL_POSTES="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/postes.json";
-const URL_APP="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/appareils.json";
+const URL_POSTES="postes.json";
+const URL_APP="appareils.json";
 
 let postes=[], appareils=[];
-let currentTab="patrimoine", currentFilter=null, searchTerm="";
-let allCollapsed=false;
+let currentTab="patrimoine";
+let currentFilter=null;
+let searchTerm="";
 
-/* ---- Utils ---- */
+/* DISTANCE */
 function dist(a,b){
-  const dx=(a.poste_latitude||0)-(b.poste_latitude||0),
-        dy=(a.poste_longitude||0)-(b.poste_longitude||0);
+  const dx=(a.latitude||0)-(b.latitude||0),
+        dy=(a.longitude||0)-(b.longitude||0);
   return Math.sqrt(dx*dx+dy*dy);
 }
 
+/* GROUP BY poste */
 function groupByPoste(list){
   const m={};
   for(const p of list){
@@ -139,110 +97,99 @@ function groupByPoste(list){
   return m;
 }
 
-/* --- getApps adapté au JSON AVEC type vide et undefined --- */
-function getApps(nom, type, SAT){
+/* GET APPS – VERSION FINALE CORRECTE */
+function getApps(nom){
   return appareils.filter(a =>
-    a.nom === nom &&
-    (currentTab === "hp" ? true : a.type === type) &&
-    (SAT ? a.SAT === SAT : (!a.SAT || a.SAT === "")) &&
-    (currentTab === "hp" ? a.hors_patrimoine === true : a.hors_patrimoine !== true)
+    a.nom===nom &&
+    (currentTab==="hp" ? a.hors_patrimoine===true : a.hors_patrimoine!==true)
   );
 }
 
-/* ---- Counting ---- */
-function countApps(list){
-  let n=0;
-  for(const p of list){
-    const apps=appareils.filter(a =>
-      a.nom===p.nom &&
-      (currentTab==="hp" ? a.hors_patrimoine === true : a.hors_patrimoine !== true)
-    );
-    n+=apps.length;
-  }
-  return n;
+/* COUNT APPS */
+function countAppsNom(nom){
+  return appareils.filter(a =>
+    a.nom===nom &&
+    (currentTab==="hp"?a.hors_patrimoine===true:a.hors_patrimoine!==true)
+  ).length;
 }
 
-/* ---- Build Cards ---- */
+/* BUILD */
 function buildCards(){
   const cont=document.getElementById("cardsContainer");
   cont.innerHTML="";
 
-  const filteredPostes = postes.filter(p => {
-    if(currentTab==="patrimoine"){
-      return !p.hors_patrimoine;
-    }
+  const filteredPostes=postes.filter(p=>{
+    if(currentTab==="patrimoine") return !p.special && !p.hors_patrimoine;
     if(currentTab==="hp"){
-      const hasHPapps = appareils.some(a => a.nom===p.nom && a.hors_patrimoine);
-      return p.hors_patrimoine || hasHPapps;
+      const hasHP=appareils.some(a=>a.nom===p.nom && a.hors_patrimoine);
+      return p.hors_patrimoine===true || hasHP;
     }
     return true;
   });
 
-  const grouped = groupByPoste(filteredPostes);
-  let names = Object.keys(grouped);
+  const grouped=groupByPoste(filteredPostes);
+  let names=Object.keys(grouped);
 
+  /* tri */
   if(currentFilter==="az") names.sort();
   if(currentFilter==="za") names.sort().reverse();
-  if(currentFilter==="plus") names.sort((a,b)=>countApps(grouped[b])-countApps(grouped[a]));
-  if(currentFilter==="moins") names.sort((a,b)=>countApps(grouped[a])-countApps(grouped[b]));
+  if(currentFilter==="plus") names.sort((a,b)=>countAppsNom(b)-countAppsNom(a));
+  if(currentFilter==="moins") names.sort((a,b)=>countAppsNom(a)-countAppsNom(b));
+  if(currentFilter==="gps") names.sort((a,b)=>dist(grouped[a][0],grouped[b][0]));
 
-  if(searchTerm){
-    names = names.filter(n => n.toLowerCase().includes(searchTerm));
-  }
+  /* search */
+  if(searchTerm) names=names.sort((a,b)=>a.toLowerCase().includes(searchTerm)?-1:1);
 
+  /* BUILD EACH */
   for(const nom of names){
-    const blocPoste = grouped[nom];
-    const card = document.createElement("div");
+    const bloc=grouped[nom];
+    const card=document.createElement("div");
     card.className="card";
 
     const isHP = currentTab==="hp";
-    const isPosteHP = blocPoste.some(p => p.hors_patrimoine);
+    const ficheHP = bloc.some(x=>x.hors_patrimoine===true);
 
-    // titre
-    let title = nom;
-    if(isHP && isPosteHP){
-      title = `${nom} (Ville)`;
-    }
+    let title = ficheHP ? nom+" (Ville)" : nom;
+    let typeShow = ficheHP ? "" : (bloc[0].type || "");
 
-    // type badge
-    let typeToShow = "";
-    const p0 = blocPoste.find(x => !x.SAT || x.SAT==="");
-    if(!isHP && p0) typeToShow = p0.type || "";
+    const apps = getApps(nom);
 
-    card.innerHTML = `
+    card.innerHTML=`
       <div class="card-header">
         <div class="card-title">${title}</div>
-        <div>${typeToShow ? `<span class="badge-type">${typeToShow}</span>` : ""}</div>
-        <span class="toggle-btn">(cliquer pour plier / déplier)</span>
+        <div>${typeShow?`<span class="badge-type">${typeShow}</span>`:""}</div>
+        <span class="toggle-btn">(plier / déplier)</span>
       </div>
       <div class="card-content"></div>
     `;
 
     const content = card.querySelector(".card-content");
 
-    // 🔵 Poste principal → uniquement si ce n'est PAS une fiche HP
-    if(p0 && !isPosteHP){
-      const apps = appareils.filter(a => 
-        a.nom===nom &&
-        !a.SAT && 
-        (currentTab==="hp"? a.hors_patrimoine : !a.hors_patrimoine)
-      );
-      content.innerHTML += sectionHTML("Poste principal", apps, false);
+    /* FICHE HP : ON AFFICHE DIRECTEMENT LES APPAREILS HP */
+    if(ficheHP){
+      if(apps.length===0){
+        content.innerHTML+=`<div class="section"><div><em>Aucun appareil trouvé</em></div></div>`;
+      } else {
+        content.innerHTML+=`
+          <div class="section">
+            <div class="section-title"><span class="pill-hp">Appareils</span></div>
+            <div>${apps.map(a=>`<span class="pill-app pill-hp">${a.appareil}</span>`).join("")}</div>
+          </div>`;
+      }
     }
 
-    // SAT
-    const sats = [...new Set(blocPoste.filter(p=>p.SAT).map(p=>p.SAT))];
-    for(const sat of sats){
-      const appsSAT = appareils.filter(a =>
-        a.nom===nom &&
-        a.SAT===sat &&
-        (currentTab==="hp"? a.hors_patrimoine : !a.hors_patrimoine)
-      );
-      content.innerHTML += sectionHTML(sat, appsSAT, true);
+    /* PATRIMOINE : poste + SAT */
+    else{
+      /* poste principal */
+      content.innerHTML+=`
+        <div class="section">
+          <div class="section-title"><span class="pill-poste">Poste principal</span></div>
+          <div>${apps.length===0?`<em>Aucun appareil trouvé</em>`:apps.map(a=>`<span class="pill-app">${a.appareil}</span>`).join("")}</div>
+        </div>`;
     }
 
-    // toggle
-    card.querySelector(".card-header").onclick = () => card.classList.toggle("collapsed");
+    /* TOGGLE */
+    card.querySelector(".card-header").onclick=()=>card.classList.toggle("collapsed");
 
     cont.appendChild(card);
   }
@@ -250,49 +197,17 @@ function buildCards(){
   updateCounters(filteredPostes);
 }
 
-/* ---- Section HTML ---- */
-function sectionHTML(title,apps,isSAT){
-  const badge = isSAT ? `<span class="pill-sat">${title}</span>`
-                      : `<span class="pill-poste">${title}</span>`;
-  return `
-    <div class="section">
-      <div class="section-title">${badge}</div>
-      <div>
-        ${apps.length===0
-          ? "<em>Aucun appareil trouvé</em>"
-          : apps.map(a=>`<span class="pill-app ${a.hors_patrimoine?"pill-hp":""}">${a.appareil}</span>`).join("")}
-      </div>
-    </div>
-  `;
-}
-
-/* ---- Counters ---- */
+/* COUNTERS */
 function updateCounters(list){
-  const posts = list.length;
-
-  const sats = list.filter(x => x.SAT && x.SAT !== "").length;
-
-  const appsCount = appareils.filter(a => 
-    currentTab==="hp" ? a.hors_patrimoine : !a.hors_patrimoine
-  ).length;
+  const posts=list.length;
+  const sats=list.filter(x=>x.SAT && x.SAT!=="").length;
+  const appsCount=appareils.filter(a=>currentTab==="hp"?a.hors_patrimoine===true:a.hors_patrimoine!==true).length;
 
   document.getElementById("globalCounters").innerText=
     `Postes : ${posts} · SAT : ${sats} · Appareils : ${appsCount}`;
 }
 
-/* ---- Toggle all ---- */
-document.getElementById("toggleAll").onclick = ()=>{
-  allCollapsed = !allCollapsed;
-
-  document.querySelectorAll(".card").forEach(c=>{
-    if(allCollapsed) c.classList.add("collapsed");
-    else c.classList.remove("collapsed");
-  });
-
-  document.getElementById("toggleAll").innerText = allCollapsed ? "Déplier tout" : "Plier tout";
-};
-
-/* ---- Interactions ---- */
+/* EVENTS */
 document.querySelectorAll(".tab").forEach(t=>{
   t.onclick=()=>{
     document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
@@ -316,13 +231,13 @@ document.getElementById("searchBox").oninput=e=>{
   buildCards();
 };
 
-/* ---- Init ---- */
+/* INIT */
 Promise.all([
   fetch(URL_POSTES).then(r=>r.json()),
   fetch(URL_APP).then(r=>r.json())
-])
-.then(([p,a])=>{
-  postes=p; appareils=a;
+]).then(([p,a])=>{
+  postes=p;
+  appareils=a;
   buildCards();
 });
 </script>
