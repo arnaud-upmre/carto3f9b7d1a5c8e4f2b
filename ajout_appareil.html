@@ -222,7 +222,7 @@ input.error{border:2px solid #c62828!important;background:#ffecec}
       <label>📍 Comment localiser l’appareil ?</label>
 <div class="pill-group">
   <div class="pill" id="pill-oui" data-value="oui">📡 Avec ma position GPS</div>
-  <div class="pill" id="pill-non" data-value="non">🔗 Lien Maps (Google ou NonoMaps)</div>
+  <div class="pill" id="pill-non" data-value="non">🔗 Lien Maps</div>
 </div>
         <input type="hidden" id="presentValue">
         <div class="btn-row">
@@ -244,7 +244,7 @@ input.error{border:2px solid #c62828!important;background:#ffecec}
         <div id="coordsDeviceDisplay" style="display:none;color:var(--muted);margin:8px 0"></div>
         <input type="hidden" id="latDevice"><input type="hidden" id="lonDevice">
         <div id="lienField" style="display:none">
-          <label>🔗 Lien Google Maps :</label>
+          <label>🔗 Lien Maps :</label>
           <input id="lien" type="url" placeholder="https://maps.app.goo.gl/…">
           <div id="lienHelp" class="field-hint">⚠️ Lien requis pour continuer</div>
         </div>
@@ -280,7 +280,7 @@ input.error{border:2px solid #c62828!important;background:#ffecec}
   <label> 🛣️ Identifier l’accès à l’appareil :</label>
   <div class="pill-group">
     <div class="pill" id="pill-access-gps" data-value="gps">📡 Avec ma position GPS</div>
-    <div class="pill" id="pill-access-lien" data-value="lien">🔗 Lien Google Maps (conseillé)</div>
+    <div class="pill" id="pill-access-lien" data-value="lien">🔗 Lien Maps</div>
   </div>
 
   <input type="hidden" id="accessMethod">
@@ -305,7 +305,7 @@ input.error{border:2px solid #c62828!important;background:#ffecec}
 
 
   <div id="lienAccessField" style="display:none">
-    <label>🔗 Lien Google Maps accès :</label>
+    <label>🔗 Lien Maps:</label>
     <input id="lienAccess" type="url" placeholder="https://maps.app.goo.gl/…">
     <div id="lienAccessHelp" class="field-hint">⚠️ Lien requis pour continuer</div>
     <div id="geoAccessMsg" style="display:none;color:#c62828;font-size:14px;margin:6px 0"></div>
@@ -996,7 +996,7 @@ function onGeoDenied(target){
     DEVICE_CONFIRMED = false;
     $("mapDeviceWrap").classList.remove("error");
 
-    $("geoDeviceMsg").textContent = "📌 Localisation refusée : collez un lien Google Maps pour continuer.";
+    $("geoDeviceMsg").textContent = "📌 Localisation refusée : collez un lien Maps pour continuer.";
     $("geoDeviceMsg").style.display = "block";
   }
 
@@ -1009,7 +1009,7 @@ function onGeoDenied(target){
     ACCESS_CONFIRMED = false;
     $("mapAccessWrap").classList.remove("error");
 
-    $("geoAccessMsg").textContent = "📌 Localisation refusée : collez un lien Google Maps pour continuer.";
+    $("geoAccessMsg").textContent = "📌 Localisation refusée : collez un lien Maps pour continuer.";
     $("geoAccessMsg").style.display = "block";
   }
 }
