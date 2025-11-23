@@ -2,36 +2,10 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>Tableau de travail d’avancement – v1.1</title>
+  <title>Tableau de travail d’avancement – v1.2</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <style>
-
-    .device-pill {
-  background: white;
-  border: 1px solid #d1d5db;
-  padding: 4px 8px;
-  border-radius: 999px;
-  font-size: 12px;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-  transition: all 0.15s ease-in-out;
-}
-
-.device-pill:hover {
-  transform: scale(1.03);
-  background: #e8f1ff;
-  border-color: #93c5fd;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-}
-
-.device-pill a {
-  text-decoration: none;
-  color: inherit;
-}
-    
     body {
       margin: 0;
       padding: 20px;
@@ -40,7 +14,31 @@
       color: #111827;
     }
 
-    h1 { margin-bottom: 10px; }
+    h1 { margin-bottom: 10px; font-size: 22px; }
+
+    .counters {
+      font-size: 15px;
+      margin-bottom: 15px;
+      font-weight: 600;
+      color: #374151;
+    }
+
+    /* Boutons plier / déplier */
+    .actions {
+      margin-bottom: 22px;
+      display: flex;
+      gap: 12px;
+    }
+    .btn {
+      padding: 8px 12px;
+      background: #3b82f6;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      border: none;
+    }
 
     /* Onglets */
     .tabs {
@@ -60,11 +58,11 @@
       color: white;
     }
 
-    /* Grille Postes */
+    /* Grille de postes */
     .board {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 18px;
     }
 
     .poste-card {
@@ -76,7 +74,7 @@
     }
 
     .poste-title {
-      font-size: 17px;
+      font-size: 18px;
       font-weight: 700;
       display: flex;
       justify-content: space-between;
@@ -93,18 +91,24 @@
       color: #1e40af;
     }
 
-    /* SAT + Poste principal */
+    /* SAT */
     .sat-group {
       background: #f9fafb;
       border: 1px dashed #d1d5db;
       padding: 10px;
       border-radius: 10px;
       margin-top: 8px;
+      transition: all .2s ease;
     }
+    .collapsed .device-list {
+      display: none;
+    }
+
     .sat-title {
       font-weight: 600;
-      font-size: 13px;
+      font-size: 14px;
       margin-bottom: 8px;
+      cursor: pointer;
     }
 
     .sat-badge {
@@ -124,25 +128,36 @@
       font-weight: 600;
     }
 
-    /* Pills appareils */
+    /* Appareils */
     .device-list {
       display: flex;
       flex-wrap: wrap;
       gap: 6px;
     }
+
     .device-pill {
       background: white;
       border: 1px solid #d1d5db;
-      padding: 4px 8px;
+      padding: 4px 10px;
       border-radius: 999px;
-      font-size: 12px;
+      font-size: 13px;
       display: inline-flex;
       align-items: center;
       gap: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease-in-out;
     }
+
+    .device-pill:hover {
+      transform: scale(1.06);
+      background: #e8f1ff;
+      border-color: #93c5fd;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    }
+
     .device-pill a {
-      text-decoration: none;
       color: inherit;
+      text-decoration: none;
     }
 
     .hp {
@@ -152,9 +167,17 @@
     }
   </style>
 </head>
+
 <body>
 
-<h1>Tableau de travail d’avancement – v1.1</h1>
+<h1>Tableau de travail d’avancement – v1.2</h1>
+
+<div id="counters" class="counters">Chargement…</div>
+
+<div class="actions">
+  <button class="btn" id="btnExpand">Tout déplier</button>
+  <button class="btn" id="btnCollapse">Tout plier</button>
+</div>
 
 <div class="tabs">
   <div id="tabPatrimoine" class="tab active">Patrimoine</div>
@@ -171,20 +194,19 @@ const appareilsURL = "appareils.json";
 let postes = [];
 let appareils = [];
 
-/* --------- SAT SORTING --------- */
+/* Tri des SAT */
 function sortSatKeys(keys) {
   return keys.sort((a, b) => {
     if (a === "_principal") return -1;
     if (b === "_principal") return 1;
 
-    const extract = s => {
+    const ex = s => {
       const m = s.match(/^sat(\d*)$/i);
-      return m ? { base: "sat", num: m[1] ? parseInt(m[1]) : 0 } 
+      return m ? { base: "sat", num: m[1] ? parseInt(m[1]) : 0 }
                : { base: s.toLowerCase(), num: null };
     };
 
-    const A = extract(a);
-    const B = extract(b);
+    const A = ex(a), B = ex(b);
 
     if (A.base !== B.base) return A.base.localeCompare(B.base);
     if (A.num === null && B.num !== null) return -1;
@@ -195,165 +217,123 @@ function sortSatKeys(keys) {
   });
 }
 
-/* --------- LOAD JSON --------- */
 Promise.all([fetch(postesURL), fetch(appareilsURL)])
-  .then(async ([pRes, aRes]) => {
-    postes = await pRes.json();
-    appareils = await aRes.json();
-    build();
-  });
+.then(async ([pRes, aRes]) => {
+  postes = await pRes.json();
+  appareils = await aRes.json();
+  build();
+});
 
-/* ---------- TABS ---------- */
-document.getElementById("tabPatrimoine").onclick = () => {
-  tab("Patrimoine");
-};
-document.getElementById("tabHP").onclick = () => {
-  tab("HP");
-};
+  function build() {
+  // Exclure les special:true
+  postes = postes.filter(p => !p.special);
+  appareils = appareils.filter(a => !a.special);
 
-function tab(which) {
-  document.getElementById("tabPatrimoine").classList.toggle("active", which==="Patrimoine");
-  document.getElementById("tabHP").classList.toggle("active", which==="HP");
-  document.getElementById("boardPatrimoine").style.display = which==="Patrimoine" ? "grid" : "none";
-  document.getElementById("boardHP").style.display = which==="HP" ? "grid" : "none";
-}
+  const mapHP = new Map();
+  postes.forEach(p => mapHP.set(p.nom, !!p.hors_patrimoine));
 
-/* ---------- BUILD DATA ---------- */
-function build() {
-
-  /* Poste → HP ? */
-  const mapPoste = new Map();
-  postes.forEach(p => {
-    mapPoste.set(p.nom, p.hors_patrimoine === true);
-  });
-
-  /* Exclure special:true */
-  const validAppareils = appareils.filter(a => !a.special);
-
-  /* Regroupement */
-  const postesMap = new Map();
-
-  validAppareils.forEach(a => {
-    const nom = a.nom || "Inconnu";
-
-    if (!postesMap.has(nom)) {
-      postesMap.set(nom, {
-        nom,
-        type: a.type || "",
-        horsPatrimoine: mapPoste.get(nom) || false,
-        sats: {}
-      });
-    }
-
-    const poste = postesMap.get(nom);
+  // Regrouper les appareils par poste
+  const mapPostes = new Map();
+  appareils.forEach(a => {
+    const nom = a.nom?.trim();
+    if (!nom) return;
     const sat = a.SAT && a.SAT.trim() !== "" ? a.SAT.trim() : "_principal";
-
-    if (!poste.sats[sat]) poste.sats[sat] = [];
-    poste.sats[sat].push(a);
+    if (!mapPostes.has(nom)) mapPostes.set(nom, { sats: {}, horsPatrimoine: mapHP.get(nom) || false, type: a.type || "" });
+    const p = mapPostes.get(nom);
+    if (!p.sats[sat]) p.sats[sat] = [];
+    p.sats[sat].push(a);
   });
 
-  /* --- ONGLET PATRIMOINE --- */
+  // Calcul des compteurs
+  const postesPatrimoine = postes.filter(p => !p.hors_patrimoine).length;
+  const postesHP = postes.filter(p => p.hors_patrimoine).length;
+
+  const satsPatrimoine = new Set();
+  const satsHP = new Set();
+  appareils.forEach(a => {
+    if (a.SAT && !a.hors_patrimoine) satsPatrimoine.add(a.nom + "_" + a.SAT);
+    if (a.SAT && a.hors_patrimoine) satsHP.add(a.nom + "_" + a.SAT);
+  });
+
+  const appPatrimoine = appareils.filter(a => !a.hors_patrimoine).length;
+  const appHP = appareils.filter(a => a.hors_patrimoine).length;
+
+  document.getElementById("counters").innerHTML = `
+  Patrimoine : 📍 ${postesPatrimoine} postes • 🛰️ ${satsPatrimoine.size} SAT • 🔌 ${appPatrimoine} appareils<br>
+  Hors patrimoine : 📍 ${postesHP} postes • 🛰️ ${satsHP.size} SAT • 🔌 ${appHP} appareils
+  `;
+
+  // Construire cartes
   const boardP = document.getElementById("boardPatrimoine");
-  boardP.innerHTML = "";
-
-  postesMap.forEach(poste => {
-
-    if (poste.horsPatrimoine) return;
-
-    const satsClean = {};
-    for (const key in poste.sats) {
-      const filtered = poste.sats[key].filter(a => !a.hors_patrimoine);
-      satsClean[key] = filtered;
-    }
-
-    const has = Object.values(satsClean).some(g => g.length > 0);
-    if (!has) return;
-
-    boardP.appendChild(renderPoste(poste.nom, poste.type, satsClean));
-  });
-
-  /* --- ONGLET HP --- */
   const boardH = document.getElementById("boardHP");
-  boardH.innerHTML = "";
+  boardP.innerHTML = boardH.innerHTML = "";
 
-  postesMap.forEach(poste => {
-    const satsHP = {};
-    let hasHP = false;
-
-    for (const key in poste.sats) {
-      satsHP[key] = poste.sats[key].filter(a => a.hors_patrimoine);
-      if (satsHP[key].length > 0) hasHP = true;
-    }
-
-    if (!poste.horsPatrimoine && !hasHP) return;
-
-    boardH.appendChild(renderPoste(poste.nom, poste.type, satsHP, true));
+  mapPostes.forEach((p, nom) => {
+    const card = renderPoste(nom, p.type, p.sats, p.horsPatrimoine);
+    if (p.horsPatrimoine) boardH.appendChild(card);
+    else boardP.appendChild(card);
   });
-
 }
 
-/* ---------- RENDER POSTE ---------- */
-function renderPoste(nom, type, sats, isHP=false) {
-
+// Rend une carte de poste
+function renderPoste(nom, type, sats, horsP = false) {
   const card = document.createElement("div");
   card.className = "poste-card";
 
-  card.innerHTML = `
-    <div class="poste-title">
-      <span>${nom}</span>
-      ${type ? `<span class="type-badge">${type}</span>` : ""}
-    </div>
-  `;
+  const head = document.createElement("div");
+  head.className = "poste-title";
+  head.innerHTML = `<span>${nom}</span>${type ? `<span class="type-badge">${type}</span>` : ""}`;
+  card.appendChild(head);
 
-  const satKeys = sortSatKeys(Object.keys(sats));
-
-  satKeys.forEach(sat => {
-
-    const group = sats[sat];
-
+  const keys = sortSatKeys(Object.keys(sats));
+  keys.forEach(sat => {
+    const group = sats[sat] || [];
     const div = document.createElement("div");
-    div.className = "sat-group";
+    div.className = "sat-group collapsed";
 
     const title = document.createElement("div");
     title.className = "sat-title";
-
-    if (sat === "_principal") {
-      title.innerHTML = `<span class="principal-badge">Poste principal</span>`;
-    } else {
-      title.innerHTML = `<span class="sat-badge">${sat}</span>`;
-    }
+    title.innerHTML = sat === "_principal" ? `<span class="principal-badge">Poste principal</span>` : `<span class="sat-badge">${sat}</span>`;
+    title.onclick = () => div.classList.toggle("collapsed");
+    div.appendChild(title);
 
     const list = document.createElement("div");
     list.className = "device-list";
-
-    group.forEach(a => {
-      const pill = document.createElement("div");
-      pill.className = "device-pill";
-      if (a.hors_patrimoine) pill.classList.add("hp");
-
-      const params = `${a.appareil} ${a.nom} ${a.type || ""} ${a.SAT || ""}`.trim();
-      const url = `index.html?id=${encodeURIComponent(params)}`;
-
-      pill.innerHTML = `<a href="${url}">${a.appareil}</a>`;
-      list.appendChild(pill);
-    });
-
-    if (list.children.length === 0) {
-      const msg = document.createElement("div");
-      msg.style.fontSize = "12px";
-      msg.style.color = "#6b7280";
-      msg.textContent = "Aucun appareil enregistré pour le moment.";
-      list.appendChild(msg);
+    if (group.length === 0) {
+      list.innerHTML = `<div style="font-size:12px;color:#6b7280">Aucun appareil enregistré pour le moment.</div>`;
+    } else {
+      group.forEach(a => {
+        const pill = document.createElement("div");
+        pill.className = "device-pill" + (a.hors_patrimoine ? " hp" : "");
+        const url = `index.html?id=${encodeURIComponent(a.appareil || a.nom || "")}`;
+        pill.innerHTML = `<a href="${url}">${a.appareil || a.nom}</a>`;
+        list.appendChild(pill);
+      });
     }
-
-    div.appendChild(title);
     div.appendChild(list);
     card.appendChild(div);
   });
-
   return card;
 }
-</script>
 
+// Tabs
+document.getElementById("tabPatrimoine").onclick = () => tab("Patrimoine");
+document.getElementById("tabHP").onclick = () => tab("HP");
+
+function tab(which) {
+  document.getElementById("tabPatrimoine").classList.toggle("active", which === "Patrimoine");
+  document.getElementById("tabHP").classList.toggle("active", which === "HP");
+  document.getElementById("boardPatrimoine").style.display = which === "Patrimoine" ? "grid" : "none";
+  document.getElementById("boardHP").style.display = which === "HP" ? "grid" : "none";
+}
+
+// Boutons plier / déplier
+document.getElementById("btnExpand").onclick = () => {
+  document.querySelectorAll(".sat-group").forEach(g => g.classList.remove("collapsed"));
+};
+document.getElementById("btnCollapse").onclick = () => {
+  document.querySelectorAll(".sat-group").forEach(g => g.classList.add("collapsed"));
+};
+</script>
 </body>
 </html>
