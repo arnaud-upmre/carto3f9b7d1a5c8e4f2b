@@ -20,13 +20,22 @@
   min-width: 220px !important;
   max-width: 220px !important;
   padding: 12px 16px !important;
-  position: relative !important;
 }
 
 .popup-share .leaflet-popup-content {
-  text-align: center !important;
-  margin: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important; 
+  gap: 6px !important; 
   padding: 0 !important;
+  margin: 0 !important;
+  width: 100% !important;
+}
+
+.popup-share .leaflet-popup-close-button {
+  position: absolute !important;
+  top: 8px !important;
+  right: 10px !important;
 }
 
 .popup-share .leaflet-popup-close-button {
