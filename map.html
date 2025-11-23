@@ -17,13 +17,13 @@
 <style>
 
   .popup-share .leaflet-popup-content-wrapper {
-  max-width: 140px !important;
-  min-width: 140px !important;
+  max-width: 160px !important;
+  min-width: 160px !important;
 }
 
 .popup-share .leaflet-popup-content {
-  max-width: 140px !important;
-  min-width: 140px !important;
+  max-width: 160px !important;
+  min-width: 160px !important;
   text-align: center !important;
 }
 
@@ -543,6 +543,20 @@
 
 <div id="context-menu">
   <div class="context-item" id="ctx-coord"></div>
+  <div class="context-item" id="ctx-share">
+  🔗 Partager la position
+</div>
+  <div id="ctx-submenu-share" style="
+  display:none;
+  flex-direction:column;
+  background:rgba(0,0,0,0.35);
+  padding:6px 0;
+  border-radius:10px;
+">
+  <div class="sub-item" id="ctx-share-copy">📋 Copier le lien</div>
+  <div class="sub-item" id="ctx-share-sms">💬 Par SMS</div>
+  <div class="sub-item" id="ctx-share-mail">✉️ Par mail</div>
+</div>
 
   <div class="context-item" id="ctx-itin">
     🚗 Itinéraire vers ici
@@ -1813,9 +1827,37 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") closeContextMenu();
 });
 
+    // Ouvre / ferme le sous-menu Partager
+document.getElementById("ctx-share").onclick = () => {
+  const sub = document.getElementById("ctx-submenu-share");
+  sub.style.display = (sub.style.display === "flex") ? "none" : "flex";
+};
+
+    document.getElementById("ctx-share-copy").onclick = () => {
+  const url = `${location.origin}${location.pathname}?lat=${ctxLat}&lon=${ctxLng}&z=19&marker=true`;
+
+  navigator.clipboard.writeText(url).then(() => {
+    showToast("🔗 Lien copié !");
+  });
+};
+
+    document.getElementById("ctx-share-sms").onclick = () => {
+  const url = `${location.origin}${location.pathname}?lat=${ctxLat}&lon=${ctxLng}&z=19&marker=true`;
+  window.location.href = `sms:?body=${encodeURIComponent(url)}`;
+};
+    
 document.getElementById("ctx-itin").onclick = () => {
   ctxSubmenu.style.display =
     ctxSubmenu.style.display === "flex" ? "none" : "flex";
+};
+
+    document.getElementById("ctx-share-mail").onclick = () => {
+  const url = `${location.origin}${location.pathname}?lat=${ctxLat}&lon=${ctxLng}&z=19&marker=true`;
+
+  const subject = "📍 Position à partager";
+  const body = `Voici la position :\n${url}`;
+
+  window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 };
 
 document.getElementById("ctx-gmaps").onclick = () => {
