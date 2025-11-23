@@ -1229,8 +1229,8 @@ Promise.all([
       { name: "accès", getFn: o => o.accès?.toString?.() || "", weight: 0.2 }
     ],
     includeScore: true,
-    threshold: 0.30,
-    distance: 50,
+    threshold: 0.25,
+    distance: 30,
     minMatchCharLength: 2,
     ignoreLocation: true
   });
