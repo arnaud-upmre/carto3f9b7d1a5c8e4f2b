@@ -643,6 +643,12 @@ ormPane.style.zIndex = 350;
     
 const allMarkers = [];
 
+    const params = new URLSearchParams(window.location.search);
+const lat = parseFloat(params.get("lat"));
+const lon = parseFloat(params.get("lon"));
+const zoom = parseInt(params.get("z")) || 19;
+const showMarker = params.get("marker") === "true";
+
 let _datasetsLoaded = 0;
 function _tryOpenFromURL() {
   _datasetsLoaded++;
@@ -765,13 +771,33 @@ link.addEventListener("click", (ev) => {
 } else {
   map.setView([lat, lon], zoom);
 }
+   }
+
+  if (showMarker && !isNaN(lat) && !isNaN(lon)) {
+    const shared = L.marker([lat, lon], {
+      icon: L.divIcon({
+        html: `<div style="
+          width:34px;height:34px;
+          border-radius:50%;
+          background:white;
+          border:2px solid #2563eb;
+          box-shadow:0 0 10px #2563eb;
+        "></div>`,
+        className: "",
+        iconSize: [34, 34],
+        iconAnchor: [17, 17]
+      })
+    }).addTo(map);
+
+    shared.bindPopup("📍 Position partagée").openPopup();
+
+    setTimeout(() => {
+      if (shared._bringToFront) shared._bringToFront();
+    }, 50);
   }
 }
 
-const params = new URLSearchParams(window.location.search);
-const lat = parseFloat(params.get("lat"));
-const lon = parseFloat(params.get("lon"));
-const zoom = parseInt(params.get("z")) || 19;
+
 
   const planIGN = L.tileLayer(
   "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
