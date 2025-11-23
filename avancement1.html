@@ -167,64 +167,52 @@ function buildCards(){
   const cont=document.getElementById("cardsContainer");
   cont.innerHTML="";
 
-  const filteredPostes=postes.filter(p=>{
+  const filteredPostes = postes.filter(p => {
     if(currentTab==="patrimoine"){
-      if(p.special || p.hors_patrimoine) return false;
-      return true;
+      return !p.hors_patrimoine;
     }
     if(currentTab==="hp"){
-      const hasHP=appareils.some(a => a.nom===p.nom && a.hors_patrimoine);
-      return p.hors_patrimoine===true || hasHP;
+      const hasHPapps = appareils.some(a => a.nom===p.nom && a.hors_patrimoine);
+      return p.hors_patrimoine || hasHPapps;
     }
     return true;
   });
 
-  const grouped=groupByPoste(filteredPostes);
-  let names=Object.keys(grouped);
+  const grouped = groupByPoste(filteredPostes);
+  let names = Object.keys(grouped);
 
   if(currentFilter==="az") names.sort();
   if(currentFilter==="za") names.sort().reverse();
   if(currentFilter==="plus") names.sort((a,b)=>countApps(grouped[b])-countApps(grouped[a]));
   if(currentFilter==="moins") names.sort((a,b)=>countApps(grouped[a])-countApps(grouped[b]));
-  if(currentFilter==="gps") names.sort((a,b)=>dist(grouped[a][0],grouped[b][0]) - dist(grouped[b][0],grouped[a][0]));
 
   if(searchTerm){
-    names = names.sort((a,b) =>
-      (a.toLowerCase().includes(searchTerm)?-1:1)
-    );
+    names = names.filter(n => n.toLowerCase().includes(searchTerm));
   }
 
   for(const nom of names){
     const blocPoste = grouped[nom];
-    const ville = nom;
     const card = document.createElement("div");
     card.className="card";
 
-    const p0 = blocPoste.find(x=>!x.SAT || x.SAT==="");
-    let title = nom;
-    let typeToShow = "";
-
     const isHP = currentTab==="hp";
-    const isPosteHP = blocPoste.some(x => x.hors_patrimoine === true);
+    const isPosteHP = blocPoste.some(p => p.hors_patrimoine);
 
-    /* typeFinal correct même si undefined */
-    let typeFinal = p0 ? p0.type : "";
-    if(typeFinal === undefined) typeFinal = "";
-
-    if(isHP){
-      if(isPosteHP){
-        title = `${nom} (Ville)`;
-      } else if (p0){
-        typeToShow = p0.type || "";
-      }
-    } else if(p0){
-      typeToShow = p0.type || "";
+    // titre
+    let title = nom;
+    if(isHP && isPosteHP){
+      title = `${nom} (Ville)`;
     }
+
+    // type badge
+    let typeToShow = "";
+    const p0 = blocPoste.find(x => !x.SAT || x.SAT==="");
+    if(!isHP && p0) typeToShow = p0.type || "";
 
     card.innerHTML = `
       <div class="card-header">
         <div class="card-title">${title}</div>
-        <div>${typeToShow?`<span class="badge-type">${typeToShow}</span>`:""}</div>
+        <div>${typeToShow ? `<span class="badge-type">${typeToShow}</span>` : ""}</div>
         <span class="toggle-btn">(cliquer pour plier / déplier)</span>
       </div>
       <div class="card-content"></div>
@@ -232,24 +220,29 @@ function buildCards(){
 
     const content = card.querySelector(".card-content");
 
-    /* Section Poste principal — SANS BLOQUER HP */
-    if(p0){
-      const apps = getApps(nom, typeFinal, "");
+    // 🔵 Poste principal → uniquement si ce n'est PAS une fiche HP
+    if(p0 && !isPosteHP){
+      const apps = appareils.filter(a => 
+        a.nom===nom &&
+        !a.SAT && 
+        (currentTab==="hp"? a.hors_patrimoine : !a.hors_patrimoine)
+      );
       content.innerHTML += sectionHTML("Poste principal", apps, false);
     }
 
-    /* SAT */
-    const satUniques = [...new Set(blocPoste.filter(x=>x.SAT).map(x=>x.SAT))];
-
-    for(const satName of satUniques){
-      const appsSAT = getApps(nom, typeFinal, satName);
-      if(currentTab==="hp" && !appsSAT.some(a=>a.hors_patrimoine)) continue;
-      content.innerHTML += sectionHTML(satName, appsSAT, true);
+    // SAT
+    const sats = [...new Set(blocPoste.filter(p=>p.SAT).map(p=>p.SAT))];
+    for(const sat of sats){
+      const appsSAT = appareils.filter(a =>
+        a.nom===nom &&
+        a.SAT===sat &&
+        (currentTab==="hp"? a.hors_patrimoine : !a.hors_patrimoine)
+      );
+      content.innerHTML += sectionHTML(sat, appsSAT, true);
     }
 
-    card.querySelector(".card-header").onclick = ()=> card.classList.toggle("collapsed");
-
-    if(allCollapsed) card.classList.add("collapsed");
+    // toggle
+    card.querySelector(".card-header").onclick = () => card.classList.toggle("collapsed");
 
     cont.appendChild(card);
   }
@@ -275,10 +268,12 @@ function sectionHTML(title,apps,isSAT){
 
 /* ---- Counters ---- */
 function updateCounters(list){
-  const posts=list.length;
-  const sats=list.filter(x=>x.SAT).length;
-  const appsCount=appareils.filter(a =>
-    currentTab==="hp"?a.hors_patrimoine===true:a.hors_patrimoine!==true
+  const posts = list.length;
+
+  const sats = list.filter(x => x.SAT && x.SAT !== "").length;
+
+  const appsCount = appareils.filter(a => 
+    currentTab==="hp" ? a.hors_patrimoine : !a.hors_patrimoine
   ).length;
 
   document.getElementById("globalCounters").innerText=
