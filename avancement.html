@@ -34,7 +34,7 @@ h1 { margin-bottom:10px; font-size:22px; }
 
 <body>
 
-<h1>Tableau d’avancement – v1</h1>
+<h1>Tableau d’avancement – v2</h1>
 <div class="counters" id="counters">Chargement…</div>
 
 <div class="actions">
@@ -107,19 +107,25 @@ function build(postes, apps){
 
   meta.forEach((m,key)=>{ if(!m.hp && !patMap.has(key)) patMap.set(key,{...m,sats:{}}); });
 
-  // AJOUT DES SAT VIDES POUR LES POSTES PATRIMOINE
+// AJOUT DE TOUS LES SAT À PARTIR DE postes.json
 postes.forEach(p => {
-  if (p.special) return; // on ignore les spéciaux
+  if (p.special) return; // ignorer les spéciaux
+  if (!p.SAT) return;    // ignorer si pas de champ SAT
 
   const key = `${p.nom}||${p.type}`;
   const entry = patMap.get(key);
-  if (!entry) return; // ce poste n’est pas patrimoine → ignore
 
-  // Si postes.json déclare des SAT → on les ajoute même s'ils sont vides
-  if (Array.isArray(p.SAT)) {
-    p.SAT.forEach(satName => {
-      if (!entry.sats[satName]) entry.sats[satName] = [];
-    });
+  // On veut ajouter les SAT au poste principal,
+  // pas à chaque entrée SAT elle-même.
+  // Donc on cherche l'entrée principale du poste.
+  const mainKey = [...patMap.keys()].find(k => k.startsWith(p.nom + "||"));
+
+  if (!mainKey) return;
+
+  const mainEntry = patMap.get(mainKey);
+
+  if (!mainEntry.sats[p.SAT]) {
+    mainEntry.sats[p.SAT] = [];
   }
 });
   
