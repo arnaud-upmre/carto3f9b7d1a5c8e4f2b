@@ -42,6 +42,17 @@ border-radius:10px;margin-top:12px;}
 .filter-btn{padding:5px 12px;border-radius:10px;background:var(--border);cursor:pointer;}
 .filter-btn.active{background:var(--pill-poste);color:#fff;}
 #globalCounters{margin-top:10px;font-size:13px;opacity:.8;}
+
+.btn-toggle-all{
+  margin-top:10px;
+  padding:6px 14px;
+  border-radius:10px;
+  background:var(--pill-poste);
+  color:white;
+  border:none;
+  cursor:pointer;
+}
+
 #cardsContainer{padding:20px;display:grid;gap:18px;}
 @media(min-width:700px){#cardsContainer{grid-template-columns:repeat(2,1fr);}}
 @media(min-width:1100px){#cardsContainer{grid-template-columns:repeat(3,1fr);}}
@@ -66,8 +77,10 @@ margin:3px;transition:.2s;cursor:default;}
 .pill-app:hover{transform:scale(1.08);}
 .pill-hp{background:var(--pill-hp)!important;color:#fff!important;}
 em{font-size:13px;opacity:.7;}
+
 .card-content{margin-top:12px;display:block;}
 .card.collapsed .card-content{display:none;}
+
 .toggle-btn{
   font-size:12px;
   opacity:.6;
@@ -78,11 +91,14 @@ em{font-size:13px;opacity:.7;}
 <body>
 <header>
   <h2>Mon tableau blanc – Nono Maps</h2>
+
   <div class="tabs">
     <div class="tab active" data-tab="patrimoine">Patrimoine</div>
     <div class="tab" data-tab="hp">Hors Patrimoine</div>
   </div>
+
   <input id="searchBox" placeholder="Rechercher un poste...">
+
   <div class="filters">
     <div class="filter-btn" data-filter="az">A → Z</div>
     <div class="filter-btn" data-filter="za">Z → A</div>
@@ -91,8 +107,12 @@ em{font-size:13px;opacity:.7;}
     <div class="filter-btn" data-filter="ligne">Numéro ligne</div>
     <div class="filter-btn" data-filter="gps">GPS</div>
   </div>
+
+  <button id="toggleAll" class="btn-toggle-all">Plier tout</button>
+
   <div id="globalCounters"></div>
 </header>
+
 <div id="cardsContainer"></div>
 
 <script>
@@ -101,6 +121,7 @@ const URL_APP="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/appareils.js
 
 let postes=[], appareils=[];
 let currentTab="patrimoine", currentFilter=null, searchTerm="";
+let allCollapsed=false;
 
 /* ---- Utils ---- */
 function dist(a,b){
@@ -118,7 +139,7 @@ function groupByPoste(list){
   return m;
 }
 
-/* IMPORTANT : getApps corrigé */
+/* --- getApps adapté au JSON AVEC type vide et undefined --- */
 function getApps(nom, type, SAT){
   return appareils.filter(a =>
     a.nom === nom &&
@@ -128,17 +149,13 @@ function getApps(nom, type, SAT){
   );
 }
 
+/* ---- Counting ---- */
 function countApps(list){
   let n=0;
   for(const p of list){
     const apps=appareils.filter(a =>
       a.nom===p.nom &&
-      (
-        currentTab==="hp"
-        ? a.hors_patrimoine===true
-        : a.hors_patrimoine!==true && a.type===p.type
-      ) &&
-      ((!a.SAT&&!p.SAT) || a.SAT===p.SAT)
+      (currentTab==="hp" ? a.hors_patrimoine === true : a.hors_patrimoine !== true)
     );
     n+=apps.length;
   }
@@ -172,7 +189,7 @@ function buildCards(){
   if(currentFilter==="gps") names.sort((a,b)=>dist(grouped[a][0],grouped[b][0]) - dist(grouped[b][0],grouped[a][0]));
 
   if(searchTerm){
-    names = names.sort((a,b)=>
+    names = names.sort((a,b) =>
       (a.toLowerCase().includes(searchTerm)?-1:1)
     );
   }
@@ -183,30 +200,25 @@ function buildCards(){
     const card = document.createElement("div");
     card.className="card";
 
-    const p0=blocPoste.find(x=>!x.SAT || x.SAT==="");
+    const p0 = blocPoste.find(x=>!x.SAT || x.SAT==="");
     let title = nom;
     let typeToShow = "";
 
     const isHP = currentTab==="hp";
-
-    /* Déterminer si poste HP */
     const isPosteHP = blocPoste.some(x => x.hors_patrimoine === true);
 
-    /* Déterminer typeFinal pour matching appareils */
+    /* typeFinal correct même si undefined */
     let typeFinal = p0 ? p0.type : "";
-    if(isHP){
-      const appMatch=appareils.find(a => a.nom===nom && a.hors_patrimoine);
-      if(appMatch) typeFinal=appMatch.type || "";
-    }
+    if(typeFinal === undefined) typeFinal = "";
 
     if(isHP){
       if(isPosteHP){
         title = `${nom} (Ville)`;
-      } else {
-        typeToShow = p0 ? p0.type : "";
+      } else if (p0){
+        typeToShow = p0.type || "";
       }
     } else if(p0){
-      typeToShow = p0.type;
+      typeToShow = p0.type || "";
     }
 
     card.innerHTML = `
@@ -220,13 +232,13 @@ function buildCards(){
 
     const content = card.querySelector(".card-content");
 
-    /* Poste principal */
-    if(p0 && !isPosteHP){
+    /* Section Poste principal — SANS BLOQUER HP */
+    if(p0){
       const apps = getApps(nom, typeFinal, "");
       content.innerHTML += sectionHTML("Poste principal", apps, false);
     }
 
-    /* SAT uniques */
+    /* SAT */
     const satUniques = [...new Set(blocPoste.filter(x=>x.SAT).map(x=>x.SAT))];
 
     for(const satName of satUniques){
@@ -235,8 +247,9 @@ function buildCards(){
       content.innerHTML += sectionHTML(satName, appsSAT, true);
     }
 
-    /* Toggle */
     card.querySelector(".card-header").onclick = ()=> card.classList.toggle("collapsed");
+
+    if(allCollapsed) card.classList.add("collapsed");
 
     cont.appendChild(card);
   }
@@ -271,6 +284,18 @@ function updateCounters(list){
   document.getElementById("globalCounters").innerText=
     `Postes : ${posts} · SAT : ${sats} · Appareils : ${appsCount}`;
 }
+
+/* ---- Toggle all ---- */
+document.getElementById("toggleAll").onclick = ()=>{
+  allCollapsed = !allCollapsed;
+
+  document.querySelectorAll(".card").forEach(c=>{
+    if(allCollapsed) c.classList.add("collapsed");
+    else c.classList.remove("collapsed");
+  });
+
+  document.getElementById("toggleAll").innerText = allCollapsed ? "Déplier tout" : "Plier tout";
+};
 
 /* ---- Interactions ---- */
 document.querySelectorAll(".tab").forEach(t=>{
