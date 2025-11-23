@@ -181,7 +181,7 @@ function renderPatPost(p){
   title.onclick=()=>card.classList.toggle("collapsed");
   card.appendChild(title);
 
-  let sats=Object.keys(p.sats);
+  let sats = Object.keys(p.sats).length > 0 ? Object.keys(p.sats) : ["_principal"];
   if(sats.length===0) sats=["_principal"];
   sats=sortSAT(sats);
 
