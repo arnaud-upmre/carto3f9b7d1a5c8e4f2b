@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>Tableau de travail d’avancement – v1.2</title>
+  <title>Tableau de travail d’avancement – v1.3</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <style>
@@ -23,11 +23,11 @@
       color: #374151;
     }
 
-    /* Boutons plier / déplier */
     .actions {
       margin-bottom: 22px;
       display: flex;
       gap: 12px;
+      flex-wrap: wrap;
     }
     .btn {
       padding: 8px 12px;
@@ -40,11 +40,11 @@
       border: none;
     }
 
-    /* Onglets */
     .tabs {
       display: flex;
       gap: 12px;
       margin-bottom: 20px;
+      flex-wrap: wrap;
     }
     .tab {
       padding: 8px 14px;
@@ -58,7 +58,6 @@
       color: white;
     }
 
-    /* Grille de postes */
     .board {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -71,7 +70,11 @@
       border: 1px solid #e5e7eb;
       padding: 14px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      transition: all .2s ease;
     }
+
+    .poste-card.collapsed .sat-group { display: none; }
+    .poste-card.collapsed .poste-title { margin-bottom: 0; }
 
     .poste-title {
       font-size: 18px;
@@ -79,6 +82,7 @@
       display: flex;
       justify-content: space-between;
       margin-bottom: 8px;
+      cursor: pointer;
     }
 
     .type-badge {
@@ -89,19 +93,15 @@
       font-size: 11px;
       font-weight: 600;
       color: #1e40af;
+      white-space: nowrap;
     }
 
-    /* SAT */
     .sat-group {
       background: #f9fafb;
       border: 1px dashed #d1d5db;
       padding: 10px;
       border-radius: 10px;
       margin-top: 8px;
-      transition: all .2s ease;
-    }
-    .collapsed .device-list {
-      display: none;
     }
 
     .sat-title {
@@ -109,6 +109,9 @@
       font-size: 14px;
       margin-bottom: 8px;
       cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
     .sat-badge {
@@ -128,7 +131,6 @@
       font-weight: 600;
     }
 
-    /* Appareils */
     .device-list {
       display: flex;
       flex-wrap: wrap;
@@ -156,8 +158,8 @@
     }
 
     .device-pill a {
-      color: inherit;
       text-decoration: none;
+      color: inherit;
     }
 
     .hp {
@@ -165,12 +167,18 @@
       border-color: #fca5a5;
       color: #b91c1c;
     }
+
+    .empty-msg {
+      font-size: 12px;
+      color: #6b7280;
+      font-style: italic;
+    }
   </style>
 </head>
 
 <body>
 
-<h1>Tableau de travail d’avancement – v1.2</h1>
+<h1>Tableau de travail d’avancement – v1.3</h1>
 
 <div id="counters" class="counters">Chargement…</div>
 
@@ -188,152 +196,218 @@
 <div id="boardHP" class="board" style="display:none;"></div>
 
 <script>
+
 const postesURL = "postes.json";
 const appareilsURL = "appareils.json";
 
 let postes = [];
 let appareils = [];
 
-/* Tri des SAT */
+/* --- Tri SAT : Poste principal → SAT → SAT1 → SAT2 → SAT10 --- */
 function sortSatKeys(keys) {
   return keys.sort((a, b) => {
     if (a === "_principal") return -1;
     if (b === "_principal") return 1;
-
     const ex = s => {
       const m = s.match(/^sat(\d*)$/i);
-      return m ? { base: "sat", num: m[1] ? parseInt(m[1]) : 0 }
+      return m ? { base: "sat", num: m[1] ? parseInt(m[1],10) : 0 }
                : { base: s.toLowerCase(), num: null };
     };
-
     const A = ex(a), B = ex(b);
-
     if (A.base !== B.base) return A.base.localeCompare(B.base);
     if (A.num === null && B.num !== null) return -1;
     if (B.num === null && A.num !== null) return 1;
     if (A.num === null && B.num === null) return a.localeCompare(b);
-
     return A.num - B.num;
   });
 }
 
 Promise.all([fetch(postesURL), fetch(appareilsURL)])
-.then(async ([pRes, aRes]) => {
-  postes = await pRes.json();
-  appareils = await aRes.json();
-  build();
-});
+  .then(async ([pRes, aRes]) => {
+    postes = await pRes.json();
+    appareils = await aRes.json();
+    build();
+  });
 
-  function build() {
-  // Exclure les special:true
-  postes = postes.filter(p => !p.special);
-  appareils = appareils.filter(a => !a.special);
+  /* --- Onglets --- */
+document.getElementById("tabPatrimoine").onclick = () => switchTab("patrimoine");
+document.getElementById("tabHP").onclick = () => switchTab("hp");
 
-  const mapHP = new Map();
-  postes.forEach(p => mapHP.set(p.nom, !!p.hors_patrimoine));
+function switchTab(tab) {
+  const isPat = tab === "patrimoine";
+  document.getElementById("tabPatrimoine").classList.toggle("active", isPat);
+  document.getElementById("tabHP").classList.toggle("active", !isPat);
+  document.getElementById("boardPatrimoine").style.display = isPat ? "grid" : "none";
+  document.getElementById("boardHP").style.display = isPat ? "none" : "grid";
+}
 
-  // Regrouper les appareils par poste
-  const mapPostes = new Map();
-  appareils.forEach(a => {
-    const nom = a.nom?.trim();
-    if (!nom) return;
+/* --- Tout plier / déplier --- */
+document.getElementById("btnExpand").onclick = () => {
+  document.querySelectorAll(".poste-card").forEach(div => div.classList.remove("collapsed"));
+};
+document.getElementById("btnCollapse").onclick = () => {
+  document.querySelectorAll(".poste-card").forEach(div => div.classList.add("collapsed"));
+};
+
+/* --- Construction globale --- */
+function build() {
+
+  /* INDEX des postes (hors special:true) */
+  const metaMap = new Map();
+  postes.forEach(p => {
+    if (p.special === true) return;
+    const key = `${p.nom}||${p.type}`;
+    if (!metaMap.has(key)) {
+      metaMap.set(key, {
+        nom: p.nom,
+        type: p.type,
+        hors: p.hors_patrimoine === true
+      });
+    }
+  });
+
+  /* Appareils hors special:true */
+  const validApps = appareils.filter(a => !a.special);
+
+  /* Construction Postes → SAT → Appareils */
+  const postesMap = new Map();
+
+  // Appareils
+  validApps.forEach(a => {
+    const key = `${a.nom}||${a.type}`;
+    if (!postesMap.has(key)) {
+      const meta = metaMap.get(key) || { nom:a.nom, type:a.type, hors:false };
+      postesMap.set(key, { ...meta, sats:{} });
+    }
+    const p = postesMap.get(key);
     const sat = a.SAT && a.SAT.trim() !== "" ? a.SAT.trim() : "_principal";
-    if (!mapPostes.has(nom)) mapPostes.set(nom, { sats: {}, horsPatrimoine: mapHP.get(nom) || false, type: a.type || "" });
-    const p = mapPostes.get(nom);
     if (!p.sats[sat]) p.sats[sat] = [];
     p.sats[sat].push(a);
   });
 
-  // Calcul des compteurs
-  const postesPatrimoine = postes.filter(p => !p.hors_patrimoine).length;
-  const postesHP = postes.filter(p => p.hors_patrimoine).length;
-
-  const satsPatrimoine = new Set();
-  const satsHP = new Set();
-  appareils.forEach(a => {
-    if (a.SAT && !a.hors_patrimoine) satsPatrimoine.add(a.nom + "_" + a.SAT);
-    if (a.SAT && a.hors_patrimoine) satsHP.add(a.nom + "_" + a.SAT);
+  // Postes n’ayant aucun appareil
+  metaMap.forEach((meta, key) => {
+    if (!postesMap.has(key)) {
+      postesMap.set(key, { ...meta, sats:{} });
+    }
   });
 
-  const appPatrimoine = appareils.filter(a => !a.hors_patrimoine).length;
-  const appHP = appareils.filter(a => a.hors_patrimoine).length;
+  const arr = Array.from(postesMap.values());
 
-  document.getElementById("counters").innerHTML = `
-  Patrimoine : 📍 ${postesPatrimoine} postes • 🛰️ ${satsPatrimoine.size} SAT • 🔌 ${appPatrimoine} appareils<br>
-  Hors patrimoine : 📍 ${postesHP} postes • 🛰️ ${satsHP.size} SAT • 🔌 ${appHP} appareils
-  `;
+  /* Compteurs Patrimoine */
+  const postesPat = arr.filter(p => !p.hors);
+  const appsPat = validApps.filter(a => !a.hors_patrimoine);
+  const satSetPat = new Set();
+  appsPat.forEach(a => {
+    if (!metaMap.get(`${a.nom}||${a.type}`).hors) {
+      if (a.SAT?.trim()) satSetPat.add(`${a.nom}||${a.type}||${a.SAT}`);
+    }
+  });
 
-  // Construire cartes
+  /* Compteurs HP */
+  const postesHP = arr.filter(p => p.hors);
+  const appsHP = validApps.filter(a => a.hors_patrimoine);
+  const satSetHP = new Set();
+  appsHP.forEach(a => {
+    if (a.SAT?.trim()) satSetHP.add(`${a.nom}||${a.type}||${a.SAT}`);
+  });
+
+  document.getElementById("counters").textContent =
+    `Patrimoine : ${postesPat.length} postes · ${satSetPat.size} SAT · ${appsPat.length} appareils  |  ` +
+    `Hors patrimoine : ${postesHP.length} postes · ${satSetHP.size} SAT · ${appsHP.length} appareils`;
+
+  /* Affichage Patrimoine */
   const boardP = document.getElementById("boardPatrimoine");
-  const boardH = document.getElementById("boardHP");
-  boardP.innerHTML = boardH.innerHTML = "";
+  boardP.innerHTML = "";
+  postesPat.sort((a,b)=>a.nom.localeCompare(b.nom,"fr")).forEach(p=>{
+    boardP.appendChild(renderPoste(p,false));
+  });
 
-  mapPostes.forEach((p, nom) => {
-    const card = renderPoste(nom, p.type, p.sats, p.horsPatrimoine);
-    if (p.horsPatrimoine) boardH.appendChild(card);
-    else boardP.appendChild(card);
+  /* Affichage Hors Patrimoine */
+  const boardH = document.getElementById("boardHP");
+  boardH.innerHTML = "";
+
+  arr.forEach(p=>{
+    const hasHP = Object.values(p.sats).some(g => g.some(a=>a.hors_patrimoine));
+    if (p.hors || hasHP) {
+      boardH.appendChild(renderPoste(p,true));
+    }
   });
 }
 
-// Rend une carte de poste
-function renderPoste(nom, type, sats, horsP = false) {
+/* --- Rendu d'un Poste entier --- */
+function renderPoste(poste, isHP){
   const card = document.createElement("div");
   card.className = "poste-card";
 
-  const head = document.createElement("div");
-  head.className = "poste-title";
-  head.innerHTML = `<span>${nom}</span>${type ? `<span class="type-badge">${type}</span>` : ""}`;
-  card.appendChild(head);
+  const title = document.createElement("div");
+  title.className = "poste-title";
+  title.innerHTML = `
+    <span>${poste.nom}</span>
+    ${poste.type ? `<span class="type-badge">${poste.type}</span>` : ""}
+  `;
+  card.appendChild(title);
 
-  const keys = sortSatKeys(Object.keys(sats));
+  /* Clic sur le titre => plier/déplier */
+  title.onclick = () => card.classList.toggle("collapsed");
+
+  const sats = poste.sats;
+  let keys = Object.keys(sats);
+  if (keys.length === 0) keys = ["_principal"];
+  keys = sortSatKeys(keys);
+
   keys.forEach(sat => {
-    const group = sats[sat] || [];
-    const div = document.createElement("div");
-    div.className = "sat-group collapsed";
+    const groupHP = isHP
+      ? (sats[sat] || []).filter(a => a.hors_patrimoine)
+      : (sats[sat] || []).filter(a => !a.hors_patrimoine);
 
-    const title = document.createElement("div");
-    title.className = "sat-title";
-    title.innerHTML = sat === "_principal" ? `<span class="principal-badge">Poste principal</span>` : `<span class="sat-badge">${sat}</span>`;
-    title.onclick = () => div.classList.toggle("collapsed");
-    div.appendChild(title);
+    const satDiv = document.createElement("div");
+    satDiv.className = "sat-group";
+
+    const titleDiv = document.createElement("div");
+    titleDiv.className = "sat-title";
+
+    const badge = sat === "_principal"
+      ? `<span class="principal-badge">Poste principal</span>`
+      : `<span class="sat-badge">${sat}</span>`;
+
+    titleDiv.innerHTML = `
+      ${badge}
+      <span class="sat-count">${groupHP.length} appareil(s)</span>
+    `;
+
+    titleDiv.onclick = () => satDiv.classList.toggle("collapsed");
 
     const list = document.createElement("div");
     list.className = "device-list";
-    if (group.length === 0) {
-      list.innerHTML = `<div style="font-size:12px;color:#6b7280">Aucun appareil enregistré pour le moment.</div>`;
+
+    if (groupHP.length === 0) {
+      const msg = document.createElement("div");
+      msg.className = "empty-msg";
+      msg.textContent = "Aucun appareil enregistré pour le moment.";
+      list.appendChild(msg);
     } else {
-      group.forEach(a => {
+      groupHP.sort((a,b)=>a.appareil.localeCompare(b.appareil,"fr",{numeric:true})).forEach(a=>{
         const pill = document.createElement("div");
-        pill.className = "device-pill" + (a.hors_patrimoine ? " hp" : "");
-        const url = `index.html?id=${encodeURIComponent(a.appareil || a.nom || "")}`;
-        pill.innerHTML = `<a href="${url}">${a.appareil || a.nom}</a>`;
+        pill.className = "device-pill";
+        if (a.hors_patrimoine) pill.classList.add("hp");
+
+        const id = `${a.appareil} ${a.nom} ${a.type || ""} ${a.SAT || ""}`.trim();
+        const url = `index.html?id=${encodeURIComponent(id)}`;
+
+        pill.innerHTML = `<a href="${url}">${a.appareil}</a>`;
         list.appendChild(pill);
       });
     }
-    div.appendChild(list);
-    card.appendChild(div);
+
+    satDiv.appendChild(titleDiv);
+    satDiv.appendChild(list);
+    card.appendChild(satDiv);
   });
+
   return card;
 }
 
-// Tabs
-document.getElementById("tabPatrimoine").onclick = () => tab("Patrimoine");
-document.getElementById("tabHP").onclick = () => tab("HP");
-
-function tab(which) {
-  document.getElementById("tabPatrimoine").classList.toggle("active", which === "Patrimoine");
-  document.getElementById("tabHP").classList.toggle("active", which === "HP");
-  document.getElementById("boardPatrimoine").style.display = which === "Patrimoine" ? "grid" : "none";
-  document.getElementById("boardHP").style.display = which === "HP" ? "grid" : "none";
-}
-
-// Boutons plier / déplier
-document.getElementById("btnExpand").onclick = () => {
-  document.querySelectorAll(".sat-group").forEach(g => g.classList.remove("collapsed"));
-};
-document.getElementById("btnCollapse").onclick = () => {
-  document.querySelectorAll(".sat-group").forEach(g => g.classList.add("collapsed"));
-};
 </script>
 </body>
 </html>
