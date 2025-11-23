@@ -53,7 +53,7 @@ border-radius:10px;margin-top:12px;}
   border-radius:16px;padding:16px;transition:.2s;
 }
 .card:hover{transform:translateY(-3px);box-shadow:0 5px 15px rgba(0,0,0,.15);}
-.card-header{display:flex;justify-content:space-between;align-items:center;}
+.card-header{display:flex;justify-content:space-between;align-items:center;cursor:pointer;}
 .card-title{font-size:18px;font-weight:700;}
 .badge-type{background:var(--pill-poste);color:#fff;padding:4px 8px;border-radius:8px;font-size:12px;}
 .section{border:1px dashed var(--border);border-radius:12px;padding:10px;margin-top:10px;}
@@ -66,6 +66,13 @@ margin:3px;transition:.2s;cursor:default;}
 .pill-app:hover{transform:scale(1.08);}
 .pill-hp{background:var(--pill-hp)!important;color:#fff!important;}
 em{font-size:13px;opacity:.7;}
+.card-content{margin-top:12px;display:block;}
+.card.collapsed .card-content{display:none;}
+.toggle-btn{
+  font-size:12px;
+  opacity:.6;
+  margin-left:10px;
+}
 </style>
 </head>
 <body>
@@ -91,116 +98,213 @@ em{font-size:13px;opacity:.7;}
 <script>
 const URL_POSTES="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/postes.json";
 const URL_APP="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/appareils.json";
-let postes=[],appareils=[],currentTab="patrimoine",currentFilter=null,searchTerm="";
+
+let postes=[], appareils=[];
+let currentTab="patrimoine", currentFilter=null, searchTerm="";
 
 /* ---- Utils ---- */
-function dist(a,b){const dx=(a.poste_latitude||0)-(b.poste_latitude||0),dy=(a.poste_longitude||0)-(b.poste_longitude||0);return Math.sqrt(dx*dx+dy*dy);}
-function groupByPoste(list){const m={};for(const p of list){if(!m[p.nom])m[p.nom]=[];m[p.nom].push(p);}return m;}
-function getApps(nom,type,SAT){
-  return appareils.filter(a=>
-    a.nom===nom&&a.type===type&&
-    (SAT?a.SAT===SAT:(!a.SAT||a.SAT===""))&&
-    (currentTab==="hp"?a.hors_patrimoine===true:a.hors_patrimoine!==true)
+function dist(a,b){
+  const dx=(a.poste_latitude||0)-(b.poste_latitude||0),
+        dy=(a.poste_longitude||0)-(b.poste_longitude||0);
+  return Math.sqrt(dx*dx+dy*dy);
+}
+
+function groupByPoste(list){
+  const m={};
+  for(const p of list){
+    if(!m[p.nom]) m[p.nom]=[];
+    m[p.nom].push(p);
+  }
+  return m;
+}
+
+/* IMPORTANT : getApps corrigé */
+function getApps(nom, type, SAT){
+  return appareils.filter(a =>
+    a.nom === nom &&
+    (currentTab === "hp" ? true : a.type === type) &&
+    (SAT ? a.SAT === SAT : (!a.SAT || a.SAT === "")) &&
+    (currentTab === "hp" ? a.hors_patrimoine === true : a.hors_patrimoine !== true)
   );
 }
+
 function countApps(list){
   let n=0;
   for(const p of list){
-    const apps=appareils.filter(a=>
-      a.nom===p.nom&&a.type===p.type&&
-      ((!a.SAT&&!p.SAT)||a.SAT===p.SAT)&&
-      (currentTab==="hp"?a.hors_patrimoine===true:a.hors_patrimoine!==true)
+    const apps=appareils.filter(a =>
+      a.nom===p.nom &&
+      (
+        currentTab==="hp"
+        ? a.hors_patrimoine===true
+        : a.hors_patrimoine!==true && a.type===p.type
+      ) &&
+      ((!a.SAT&&!p.SAT) || a.SAT===p.SAT)
     );
     n+=apps.length;
-  }return n;
+  }
+  return n;
 }
 
 /* ---- Build Cards ---- */
 function buildCards(){
-  const cont=document.getElementById("cardsContainer");cont.innerHTML="";
+  const cont=document.getElementById("cardsContainer");
+  cont.innerHTML="";
+
   const filteredPostes=postes.filter(p=>{
-    if(currentTab==="patrimoine"){if(p.special||p.hors_patrimoine)return false;return true;}
+    if(currentTab==="patrimoine"){
+      if(p.special || p.hors_patrimoine) return false;
+      return true;
+    }
     if(currentTab==="hp"){
-      const hasHP=appareils.some(a=>a.nom===p.nom&&a.type===p.type&&a.hors_patrimoine);
-      return p.hors_patrimoine===true||hasHP;
-    }return true;
+      const hasHP=appareils.some(a => a.nom===p.nom && a.hors_patrimoine);
+      return p.hors_patrimoine===true || hasHP;
+    }
+    return true;
   });
+
   const grouped=groupByPoste(filteredPostes);
   let names=Object.keys(grouped);
-  if(currentFilter==="az")names.sort();
-  if(currentFilter==="za")names.sort().reverse();
-  if(currentFilter==="plus")names.sort((a,b)=>countApps(grouped[b])-countApps(grouped[a]));
-  if(currentFilter==="moins")names.sort((a,b)=>countApps(grouped[a])-countApps(grouped[b]));
-  if(currentFilter==="gps")names.sort((a,b)=>dist(grouped[a][0],grouped[b][0])-dist(grouped[b][0],grouped[a][0]));
-  if(searchTerm)names.sort((a,b)=>(a.toLowerCase().includes(searchTerm)?-1:1));
+
+  if(currentFilter==="az") names.sort();
+  if(currentFilter==="za") names.sort().reverse();
+  if(currentFilter==="plus") names.sort((a,b)=>countApps(grouped[b])-countApps(grouped[a]));
+  if(currentFilter==="moins") names.sort((a,b)=>countApps(grouped[a])-countApps(grouped[b]));
+  if(currentFilter==="gps") names.sort((a,b)=>dist(grouped[a][0],grouped[b][0]) - dist(grouped[b][0],grouped[a][0]));
+
+  if(searchTerm){
+    names = names.sort((a,b)=>
+      (a.toLowerCase().includes(searchTerm)?-1:1)
+    );
+  }
 
   for(const nom of names){
-    const blocPoste=grouped[nom];
-    const ville=nom;
-    const card=document.createElement("div");card.className="card";
-    const p0=blocPoste.find(x=>!x.SAT||x.SAT==="");
-    const isHP=currentTab==="hp";
-    let title=nom;
-    let typeToShow="";
-    if(isHP){
-      const isPosteHP=blocPoste.some(x=>x.hors_patrimoine===true);
-      const isPostePatrimoineDansHP=!isPosteHP&&appareils.some(a=>a.nom===nom&&a.hors_patrimoine);
-      if(isPosteHP){title=`${nom} (${ville})`;}
-      if(isPostePatrimoineDansHP){title=`${nom}`;typeToShow=blocPoste[0].type;}
-    }else if(p0){typeToShow=p0.type;}
+    const blocPoste = grouped[nom];
+    const ville = nom;
+    const card = document.createElement("div");
+    card.className="card";
 
-    card.innerHTML=`<div class="card-header">
+    const p0=blocPoste.find(x=>!x.SAT || x.SAT==="");
+    let title = nom;
+    let typeToShow = "";
+
+    const isHP = currentTab==="hp";
+
+    /* Déterminer si poste HP */
+    const isPosteHP = blocPoste.some(x => x.hors_patrimoine === true);
+
+    /* Déterminer typeFinal pour matching appareils */
+    let typeFinal = p0 ? p0.type : "";
+    if(isHP){
+      const appMatch=appareils.find(a => a.nom===nom && a.hors_patrimoine);
+      if(appMatch) typeFinal=appMatch.type || "";
+    }
+
+    if(isHP){
+      if(isPosteHP){
+        title = `${nom} (Ville)`;
+      } else {
+        typeToShow = p0 ? p0.type : "";
+      }
+    } else if(p0){
+      typeToShow = p0.type;
+    }
+
+    card.innerHTML = `
+      <div class="card-header">
         <div class="card-title">${title}</div>
         <div>${typeToShow?`<span class="badge-type">${typeToShow}</span>`:""}</div>
-      </div>`;
+        <span class="toggle-btn">(cliquer pour plier / déplier)</span>
+      </div>
+      <div class="card-content"></div>
+    `;
 
-    if(p0&&!blocPoste.some(x=>x.hors_patrimoine===true)){
-      const apps=getApps(nom,p0.type,"");
-      card.innerHTML+=sectionHTML("Poste principal",apps,false);
+    const content = card.querySelector(".card-content");
+
+    /* Poste principal */
+    if(p0 && !isPosteHP){
+      const apps = getApps(nom, typeFinal, "");
+      content.innerHTML += sectionHTML("Poste principal", apps, false);
     }
 
-    const satUniques=[...new Set(blocPoste.filter(x=>x.SAT&&x.SAT!=="").map(x=>x.SAT))];
+    /* SAT uniques */
+    const satUniques = [...new Set(blocPoste.filter(x=>x.SAT).map(x=>x.SAT))];
+
     for(const satName of satUniques){
-      const appsSAT=getApps(nom,blocPoste[0].type,satName);
-      if(currentTab==="hp"&&!appsSAT.some(a=>a.hors_patrimoine))continue;
-      card.innerHTML+=sectionHTML(satName,appsSAT,true);
+      const appsSAT = getApps(nom, typeFinal, satName);
+      if(currentTab==="hp" && !appsSAT.some(a=>a.hors_patrimoine)) continue;
+      content.innerHTML += sectionHTML(satName, appsSAT, true);
     }
+
+    /* Toggle */
+    card.querySelector(".card-header").onclick = ()=> card.classList.toggle("collapsed");
+
     cont.appendChild(card);
   }
+
   updateCounters(filteredPostes);
 }
 
 /* ---- Section HTML ---- */
 function sectionHTML(title,apps,isSAT){
-  let showTitle=isSAT?`<span class="pill-sat">${title}</span>`:`<span class="pill-poste">${title}</span>`;
-  return `<div class="section"><div class="section-title">${showTitle}</div>
-    <div>${apps.length===0?"<em>Aucun appareil trouvé</em>":apps.map(a=>`<span class="pill-app ${a.hors_patrimoine?"pill-hp":""}">${a.appareil}</span>`).join("")}</div></div>`;
+  const badge = isSAT ? `<span class="pill-sat">${title}</span>`
+                      : `<span class="pill-poste">${title}</span>`;
+  return `
+    <div class="section">
+      <div class="section-title">${badge}</div>
+      <div>
+        ${apps.length===0
+          ? "<em>Aucun appareil trouvé</em>"
+          : apps.map(a=>`<span class="pill-app ${a.hors_patrimoine?"pill-hp":""}">${a.appareil}</span>`).join("")}
+      </div>
+    </div>
+  `;
 }
 
 /* ---- Counters ---- */
 function updateCounters(list){
   const posts=list.length;
-  const sats=list.filter(x=>x.SAT&&x.SAT!=="").length;
-  const appsCount=appareils.filter(a=>currentTab==="hp"?a.hors_patrimoine===true:a.hors_patrimoine!==true).length;
-  document.getElementById("globalCounters").innerText=`Postes : ${posts} · SAT : ${sats} · Appareils : ${appsCount}`;
+  const sats=list.filter(x=>x.SAT).length;
+  const appsCount=appareils.filter(a =>
+    currentTab==="hp"?a.hors_patrimoine===true:a.hors_patrimoine!==true
+  ).length;
+
+  document.getElementById("globalCounters").innerText=
+    `Postes : ${posts} · SAT : ${sats} · Appareils : ${appsCount}`;
 }
 
 /* ---- Interactions ---- */
 document.querySelectorAll(".tab").forEach(t=>{
-  t.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
-    t.classList.add("active");currentTab=t.dataset.tab;buildCards();};
+  t.onclick=()=>{
+    document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+    t.classList.add("active");
+    currentTab=t.dataset.tab;
+    buildCards();
+  };
 });
+
 document.querySelectorAll(".filter-btn").forEach(f=>{
-  f.onclick=()=>{document.querySelectorAll(".filter-btn").forEach(x=>x.classList.remove("active"));
-    f.classList.add("active");currentFilter=f.dataset.filter;buildCards();};
+  f.onclick=()=>{
+    document.querySelectorAll(".filter-btn").forEach(x=>x.classList.remove("active"));
+    f.classList.add("active");
+    currentFilter=f.dataset.filter;
+    buildCards();
+  };
 });
+
 document.getElementById("searchBox").oninput=e=>{
-  searchTerm=e.target.value.toLowerCase().trim();buildCards();
+  searchTerm=e.target.value.toLowerCase().trim();
+  buildCards();
 };
 
 /* ---- Init ---- */
-Promise.all([fetch(URL_POSTES).then(r=>r.json()),fetch(URL_APP).then(r=>r.json())])
-.then(([p,a])=>{postes=p;appareils=a;buildCards();});
+Promise.all([
+  fetch(URL_POSTES).then(r=>r.json()),
+  fetch(URL_APP).then(r=>r.json())
+])
+.then(([p,a])=>{
+  postes=p; appareils=a;
+  buildCards();
+});
 </script>
 </body>
 </html>
