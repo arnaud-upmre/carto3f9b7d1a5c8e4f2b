@@ -222,7 +222,7 @@ input.error{border:2px solid #c62828!important;background:#ffecec}
       <label>📍 Comment localiser l’appareil ?</label>
 <div class="pill-group">
   <div class="pill" id="pill-oui" data-value="oui">📡 Avec ma position GPS</div>
-  <div class="pill" id="pill-non" data-value="non">🔗 Lien Google Maps (conseillé)</div>
+  <div class="pill" id="pill-non" data-value="non">🔗 Lien Maps (Google ou NonoMaps)</div>
 </div>
         <input type="hidden" id="presentValue">
         <div class="btn-row">
@@ -555,7 +555,7 @@ if(item.value.includes(",") && !item.value.startsWith("http")){
   link.href = `https://www.google.com/maps/@${lat.trim()},${lon.trim()},20z/data=!3m1!1e3`;
   link.target = "_blank";
   link.rel = "noopener";
-  link.textContent = " 🔎 Voir sur Google Maps";
+  link.textContent = " 🔎 Voir sur la carte";
   link.style.marginLeft = "8px";
   link.style.color = "#0b6cff";
   link.style.textDecoration = "underline";
@@ -577,7 +577,7 @@ if(item.value.includes(",") && !item.value.startsWith("http")){
   link.href = url; 
   link.target = "_blank";
   link.rel = "noopener";
-  link.textContent = " 🔎 Voir sur Google Maps";
+  link.textContent = " 🔎 Voir sur la carte";
   link.style.marginLeft = "8px";
   link.style.color = "#0b6cff";
   link.style.textDecoration = "underline";
