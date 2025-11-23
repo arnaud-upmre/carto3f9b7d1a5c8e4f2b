@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8" />
-<title>Tableau d’avancement – v1</title>
+<title>Tableau d’avancement – v1.1</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
 <style>
@@ -107,6 +107,22 @@ function build(postes, apps){
 
   meta.forEach((m,key)=>{ if(!m.hp && !patMap.has(key)) patMap.set(key,{...m,sats:{}}); });
 
+  // AJOUT DES SAT VIDES POUR LES POSTES PATRIMOINE
+postes.forEach(p => {
+  if (p.special) return; // on ignore les spéciaux
+
+  const key = `${p.nom}||${p.type}`;
+  const entry = patMap.get(key);
+  if (!entry) return; // ce poste n’est pas patrimoine → ignore
+
+  // Si postes.json déclare des SAT → on les ajoute même s'ils sont vides
+  if (Array.isArray(p.SAT)) {
+    p.SAT.forEach(satName => {
+      if (!entry.sats[satName]) entry.sats[satName] = [];
+    });
+  }
+});
+  
   // --- Construction Hors Patrimoine ---
   const hpApps=valApps.filter(a=>a.hors_patrimoine);
 
