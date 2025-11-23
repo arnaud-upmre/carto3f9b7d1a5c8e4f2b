@@ -779,18 +779,27 @@ link.addEventListener("click", (ev) => {
 
 
 if (showMarker && !isNaN(lat) && !isNaN(lon)) {
+
   const shared = L.marker([lat, lon], {
     icon: L.divIcon({
       html: `<div style="font-size:38px; line-height:38px;">📍</div>`,
       className: "",
       iconSize: [38, 38],
-      iconAnchor: [19, 38]  
+      iconAnchor: [19, 38]
     })
   }).addTo(map);
 
-shared.bindPopup("📍 Position partagée", {
-  className: "popup-share"
-}).openPopup();
+  shared.bindPopup("📍 Position partagée", {
+    className: "popup-share"
+  }).openPopup();
+
+  shared.on("popupclose", () => {
+    setTimeout(() => {
+      if (map.hasLayer(shared)) {
+        map.removeLayer(shared);
+      }
+    }, 7000); 
+  });
 }
 }
 
