@@ -270,7 +270,11 @@ function renderHPPost(p){
 
     const t=document.createElement("div");
     t.className="sat-title";
-    t.innerHTML=`<span class="sat-badge">${s}</span><span>${grp.length} appareil(s)</span>`;
+t.innerHTML = `${
+  s === "_principal"
+    ? '<span class="principal-badge">Poste principal</span>'
+    : `<span class="sat-badge">${s}</span>`
+}<span>${grp.length} appareil(s)</span>`;
     t.onclick=()=>div.classList.toggle("collapsed");
     div.appendChild(t);
 
