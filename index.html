@@ -1229,8 +1229,8 @@ Promise.all([
       { name: "accès", getFn: o => o.accès?.toString?.() || "", weight: 0.2 }
     ],
     includeScore: true,
-    threshold: 0.22,
-    distance: 20,
+    threshold: 0.25,
+    distance: 30,
     minMatchCharLength: 3,
     ignoreLocation: true
   });
@@ -1291,8 +1291,6 @@ document.getElementById("search").addEventListener("input", e => {
   if (!query || query.length < 2 || !fuseMix) return;
 
 let results = fuseMix.search(query).map(r => r.item);
-
-  
   const cleanedQuery = query.replace(/\s+/g, "").toLowerCase();
 
 const queryWords = query.split(/\s+/);
