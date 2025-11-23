@@ -775,7 +775,7 @@ link.addEventListener("click", (ev) => {
 
 
 if (showMarker && !isNaN(lat) && !isNaN(lon)) {
-  L.marker([lat, lon], {
+  const shared = L.marker([lat, lon], {
     icon: L.divIcon({
       html: `<div style="font-size:38px; line-height:38px;">📍</div>`,
       className: "",
@@ -783,6 +783,8 @@ if (showMarker && !isNaN(lat) && !isNaN(lon)) {
       iconAnchor: [19, 38]  
     })
   }).addTo(map);
+
+  shared.bindPopup("📍 Position partagée").openPopup();
 }
 }
 
