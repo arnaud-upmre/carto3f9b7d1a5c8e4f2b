@@ -1291,6 +1291,20 @@ document.getElementById("search").addEventListener("input", e => {
   if (!query || query.length < 2 || !fuseMix) return;
 
 let results = fuseMix.search(query).map(r => r.item);
+
+  
+  const q = normalize(query);
+results = results.filter(item => {
+  const nom = normalize(item.nom || "");
+  const appareil = normalize(item.appareil || "");
+  const aliasList = Array.isArray(item.alias) ? item.alias.map(a => normalize(a)) : [];
+  if (item.category === "poste" && nom.startsWith(q)) return true;
+ if (item.category === "appareil" && appareil.startsWith(q)) return true;
+if (aliasList.some(a => a.startsWith(q))) return true;
+  return false;  
+});
+
+  
   const cleanedQuery = query.replace(/\s+/g, "").toLowerCase();
 
 const queryWords = query.split(/\s+/);
