@@ -238,7 +238,7 @@ function getApps(nom, type, SAT) {
     a.nom === nom &&
     a.type === type &&
     (SAT ? a.SAT === SAT : (!a.SAT || a.SAT === "")) &&
-    (!a.hors_patrimoine || currentTab === "hp")
+    (currentTab === "hp" ? a.hors_patrimoine === true : !a.hors_patrimoine)
   );
 }
 
@@ -255,9 +255,12 @@ function buildCards() {
       if (p.hors_patrimoine) return false;
       return true;
     }
-    if (currentTab === "hp") {
-      return p.hors_patrimoine === true;
-    }
+     
+if (currentTab === "hp") {
+  // poste HP OU poste patrimoine qui contient au moins un appareil HP
+  const hasHP = appareils.some(a => a.nom === p.nom && a.type === p.type && a.hors_patrimoine);
+  return p.hors_patrimoine === true || hasHP;
+}
     return true;
   });
 
@@ -293,7 +296,7 @@ function buildCards() {
     const isHP = (currentTab==="hp");
 
     let title = nom;
-    if (isHP) title += ` (${nom})`;
+    if (isHP) title = `${nom} (Ville)`;
 
     card.innerHTML = `
       <div class="card-header">
