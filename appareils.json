@@ -1404,6 +1404,8 @@
     "latitude": 50.51995,
     "longitude": 1.6355,
     "description": ""
+    "description": "",
+    "hors_patrimoine": true
   },
   {
     "nom": "Etaples",
@@ -1414,6 +1416,8 @@
     "latitude": 50.51995,
     "longitude": 1.63542,
     "description": ""
+    "description": "",
+    "hors_patrimoine": true
   },
   {
     "nom": "Etaples",
@@ -1463,7 +1467,8 @@
     "appareil": "TRA",
     "latitude": 50.5072073,
     "longitude": 1.6444281,
-    "description": ""
+    "description": "",
+    "hors_patrimoine": true
   },
   {
     "nom": "Etaples",
@@ -1473,7 +1478,8 @@
     "appareil": "SRB2 (TRA)",
     "latitude": 50.50717,
     "longitude": 1.64444,
-    "description": ""
+    "description": "",
+    "hors_patrimoine": true
   },
   {
     "nom": "Etaples",
@@ -2046,7 +2052,7 @@
     "appareil": "7506",
     "latitude": 50.978788,
     "longitude": 2.1207281,
-    "description": "Manœuvre avec accord de agent E  Fréthun. 03 21 46 82 34"
+    "description": "Manœuvre avec accord de agent E Fréthun"
   },
   {
     "nom": "Gravelines",
@@ -2056,7 +2062,7 @@
     "appareil": "7507",
     "latitude": 50.9787853,
     "longitude": 2.1207791,
-    "description": "Manœuvre avec accord de agent E Fréthun. 03 21 46 82 34"
+    "description": "Manœuvre avec accord de agent E Fréthun"
   },
   {
     "nom": "Gravelines",
@@ -4553,6 +4559,8 @@
     "latitude": 50.06042,
     "longitude": 3.468744,
     "description": "Rechauffage"
+    "description": "",
+    "hors_patrimoine": true
   },
   {
     "nom": "Honnechy",
@@ -4571,8 +4579,8 @@
     "accès": "",
     "appareil": "I90505",
     "latitude": 50.05965,
-    "longitude": 3.466145,
-    "description": "Sur le même support que le TT"
+    "longitude": 3.466126,
+    "description": ""
   },
   {
     "nom": "Honnechy",
@@ -4582,7 +4590,7 @@
     "appareil": "TT90505",
     "latitude": 50.05965,
     "longitude": 3.466126,
-    "description": "Sur le même support que l'interrupteur"
+    "description": ""
   },
   {
     "nom": "Sassegnies",
@@ -4852,7 +4860,7 @@
     "appareil": "IA1",
     "latitude": 50.61503,
     "longitude": 3.08983,
-    "description": "IA1 : demande à l'agent E pour manoeuvre de l'appareil, secours par S 5067-102 "
+    "description": "IA1 : demande à l'agent E pour manoeuvre de l'appareil, secours par S-5067-102 "
   },
   {
     "nom": "Saint Sauveur",
@@ -6674,7 +6682,7 @@
     "appareil": "130.8A",
     "latitude": 49.889682,
     "longitude": 2.315180,
-    "description": "⚠️ Risque ferroviaire travail avec annonce - Accès par le bout du quai Dr la voie 1",
+    "description": "⚠️ Risque ferroviaire travail avec annonce - Accès par le bout du quai de la voie 1",
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.889648587325496,2.315277873528098;uid=71f3344f-9ff6-47c6-a184-a34d27521007_270;"
   },
   {
