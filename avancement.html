@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<title>Tableau d’avancement – v1</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<style>
+body { margin:0; padding:20px; font-family:Inter,system-ui,sans-serif; background:#f3f4f6; color:#111; }
+h1 { margin-bottom:10px; font-size:22px; }
+.counters { font-size:15px; margin-bottom:15px; font-weight:600; color:#374151; }
+.actions { margin-bottom:20px; display:flex; gap:12px; flex-wrap:wrap; }
+.btn { padding:8px 12px; background:#3b82f6; color:white; border-radius:8px; border:none; font-weight:600; cursor:pointer; }
+.tabs { display:flex; gap:12px; margin-bottom:20px; }
+.tab { padding:8px 14px; background:#e5e7eb; border-radius:8px; cursor:pointer; font-weight:600; }
+.tab.active { background:#3b82f6; color:white; }
+.board { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:18px; }
+.poste-card { background:white; border-radius:14px; border:1px solid #e5e7eb; padding:14px; box-shadow:0 2px 4px rgba(0,0,0,0.05); transition:.2s; }
+.poste-card.collapsed .sat-group, .poste-card.collapsed .city-devices { display:none; }
+.poste-title { font-size:18px; font-weight:700; display:flex; justify-content:space-between; cursor:pointer; margin-bottom:10px; }
+.type-badge { background:#dbeafe; border:1px solid #bfdbfe; padding:2px 6px; border-radius:6px; font-size:11px; font-weight:600; color:#1e40af;}
+.sat-group { background:#f9fafb; border:1px dashed #d1d5db; padding:10px; border-radius:10px; margin-top:8px; }
+.sat-title { font-weight:600; margin-bottom:8px; cursor:pointer; display:flex; justify-content:space-between; }
+.sat-badge { background:#fef9c3; border:1px solid #facc15; padding:2px 8px; border-radius:6px; font-size:11px; }
+.city-devices { padding-left:4px; display:flex; flex-wrap:wrap; gap:6px; }
+.device-list { display:flex; flex-wrap:wrap; gap:6px; }
+.device-pill { background:white; border:1px solid #d1d5db; padding:4px 10px; border-radius:999px; font-size:13px; transition:0.15s; }
+.device-pill:hover { transform:scale(1.06); background:#e8f1ff; border-color:#93c5fd; box-shadow:0 4px 10px rgba(0,0,0,0.1); }
+.device-pill a { color:inherit; text-decoration:none; }
+.empty-msg { font-size:12px; font-style:italic; color:#6b7280; }
+.city-pill { background:#fee2e2; border:1px solid #fca5a5; }
+</style>
+</head>
+
+<body>
+
+<h1>Tableau d’avancement – v1.8</h1>
+<div class="counters" id="counters">Chargement…</div>
+
+<div class="actions">
+  <button class="btn" id="btnExpand">Tout déplier</button>
+  <button class="btn" id="btnCollapse">Tout plier</button>
+</div>
+
+<div class="tabs">
+  <div id="tabPat" class="tab active">Patrimoine</div>
+  <div id="tabHP" class="tab">Hors patrimoine</div>
+</div>
+
+<div id="boardPat" class="board"></div>
+<div id="boardHP" class="board" style="display:none;"></div>
+
+<script>
+Promise.all([ fetch("postes.json"), fetch("appareils.json") ])
+.then(r=>Promise.all(r.map(x=>x.json())))
+.then(([postes, apps]) => build(postes, apps));
+
+function sortSAT(keys){
+  return keys.sort((a,b)=>{
+    if(a=="_principal")return-1;
+    if(b=="_principal")return 1;
+    const na=a.match(/^sat(\d*)$/i); 
+    const nb=b.match(/^sat(\d*)$/i);
+    if(na&&nb){return (parseInt(na[1]||0)-parseInt(nb[1]||0));}
+    if(na)return-1;
+    if(nb)return 1;
+    return a.localeCompare(b);
+  });
+}
+
+document.getElementById("tabPat").onclick=()=>switchTab(true);
+document.getElementById("tabHP").onclick=()=>switchTab(false);
+
+function switchTab(pat){
+  document.getElementById("tabPat").classList.toggle("active",pat);
+  document.getElementById("tabHP").classList.toggle("active",!pat);
+  document.getElementById("boardPat").style.display=pat?"grid":"none";
+  document.getElementById("boardHP").style.display=pat?"none":"grid";
+}
+
+document.getElementById("btnExpand").onclick=()=>document.querySelectorAll(".poste-card").forEach(c=>c.classList.remove("collapsed"));
+document.getElementById("btnCollapse").onclick=()=>document.querySelectorAll(".poste-card").forEach(c=>c.classList.add("collapsed"));
+
+function build(postes, apps){
+
+  const meta=new Map();
+  postes.forEach(p=>{
+    if(p.special)return;
+    meta.set(`${p.nom}||${p.type}`,{nom:p.nom,type:p.type,hp:p.hors_patrimoine===true});
+  });
+
+  const valApps=apps.filter(a=>!a.special);
+
+  // --- Construction Patrimoine ---
+  const patMap=new Map();
+  valApps.forEach(a=>{
+    if(a.hors_patrimoine)return;
+    const key=`${a.nom}||${a.type}`;
+    if(!patMap.has(key)){
+      const m=meta.get(key)||{nom:a.nom,type:a.type,hp:false};
+      patMap.set(key,{...m,sats:{}});
+    }
+    const sat=a.SAT&&a.SAT.trim()?a.SAT.trim():"_principal";
+    patMap.get(key).sats[sat]??=[];
+    patMap.get(key).sats[sat].push(a);
+  });
+
+  meta.forEach((m,key)=>{ if(!m.hp && !patMap.has(key)) patMap.set(key,{...m,sats:{}}); });
+
+  // --- Construction Hors Patrimoine ---
+  const hpApps=valApps.filter(a=>a.hors_patrimoine);
+
+  const hpCities=new Map();      // villes hors patrimoine
+  const hpPatPosts=new Map();    // postes patrimoine qui ont des HP
+
+  hpApps.forEach(a=>{
+    const key=`${a.nom}||${a.type}`;
+    const m=meta.get(key);
+
+    if(m && !m.hp){
+      // Poste patrimoine : structure technique avec SAT
+      let post=hpPatPosts.get(key);
+      if(!post) post={nom:m.nom,type:m.type,sats:{}};
+      const sat=a.SAT&&a.SAT.trim()?a.SAT.trim():"_principal";
+      post.sats[sat]??=[];
+      post.sats[sat].push(a);
+      hpPatPosts.set(key,post);
+    } else {
+      // Ville pure (HP)
+      let city=hpCities.get(a.nom);
+      if(!city) city={nom:a.nom,devices:[]};
+      city.devices.push(a);
+      hpCities.set(a.nom,city);
+    }
+  });
+
+  // --- Compteurs ---
+  const patPosts=[...patMap.values()];
+  const patDevs=valApps.filter(a=>!a.hors_patrimoine);
+  const patSAT=new Set();
+  patDevs.forEach(a=>a.SAT&&patSAT.add(a.SAT));
+
+  const hpPostsCount=hpCities.size+hpPatPosts.size;
+  const hpDevsCount=hpApps.length;
+  const hpSATCount=(()=>{
+    let s=new Set();
+    hpApps.forEach(a=>a.SAT&&s.add(a.SAT));
+    return s.size;
+  })();
+
+  counters.textContent=
+    `Patrimoine : ${patPosts.length} postes · ${patSAT.size} SAT · ${patDevs.length} appareils | `+
+    `Hors patrimoine : ${hpPostsCount} villes/postes · ${hpSATCount} SAT · ${hpDevsCount} appareils`;
+
+  // --- Render Patrimoine ---
+  boardPat.innerHTML="";
+  patPosts.sort((a,b)=>a.nom.localeCompare(b.nom,"fr")).forEach(p=>{
+    boardPat.appendChild(renderPatPost(p));
+  });
+
+  // --- Render Hors Patrimoine ---
+  boardHP.innerHTML="";
+
+  // villes HP
+  [...hpCities.values()].sort((a,b)=>a.nom.localeCompare(b.nom,"fr")).forEach(c=>{
+    boardHP.appendChild(renderCity(c));
+  });
+
+  // postes patrimoine avec appareils HP
+  [...hpPatPosts.values()].sort((a,b)=>a.nom.localeCompare(b.nom,"fr")).forEach(p=>{
+    boardHP.appendChild(renderHPPost(p));
+  });
+}
+
+function renderPatPost(p){
+  const card=document.createElement("div");
+  card.className="poste-card";
+  const title=document.createElement("div");
+  title.className="poste-title";
+  title.innerHTML=`<span>${p.nom}</span>${p.type?`<span class="type-badge">${p.type}</span>`:""}`;
+  title.onclick=()=>card.classList.toggle("collapsed");
+  card.appendChild(title);
+
+  let sats = Object.keys(p.sats).length > 0 ? Object.keys(p.sats) : ["_principal"];
+  if(sats.length===0) sats=["_principal"];
+  sats=sortSAT(sats);
+
+  sats.forEach(s=>{
+    const grp=p.sats[s]||[];
+    const div=document.createElement("div");
+    div.className="sat-group";
+
+    const t=document.createElement("div");
+    t.className="sat-title";
+    const badge=(s=="_principal")?'<span class="principal-badge">Poste principal</span>'
+                                 :`<span class="sat-badge">${s}</span>`;
+    t.innerHTML=`${badge}<span>${grp.length} appareil(s)</span>`;
+    t.onclick=()=>div.classList.toggle("collapsed");
+    div.appendChild(t);
+
+    const list=document.createElement("div");
+    list.className="device-list";
+
+    if(grp.length===0){
+      const e=document.createElement("div");
+      e.className="empty-msg";
+      e.textContent="Aucun appareil enregistré.";
+      list.appendChild(e);
+    } else {
+      grp.sort((a,b)=>a.appareil.localeCompare(b.appareil,"fr",{numeric:true}))
+         .forEach(a=>{
+           const pill=document.createElement("div");
+           pill.className="device-pill";
+           const id=`${a.appareil} ${a.nom} ${a.type||""} ${a.SAT||""}`.trim();
+           pill.innerHTML=`<a href="index.html?id=${encodeURIComponent(id)}">${a.appareil}</a>`;
+           list.appendChild(pill);
+         });
+    }
+    div.appendChild(list);
+    card.appendChild(div);
+  });
+
+  return card;
+}
+
+function renderCity(city){
+  const card=document.createElement("div");
+  card.className="poste-card";
+
+  const title=document.createElement("div");
+  title.className="poste-title";
+  title.innerHTML=`<span>${city.nom} (Ville)</span>`;
+  title.onclick=()=>card.classList.toggle("collapsed");
+  card.appendChild(title);
+
+  const list=document.createElement("div");
+  list.className="city-devices";
+
+  city.devices
+    .sort((a,b)=>a.appareil.localeCompare(b.appareil,"fr",{numeric:true}))
+    .forEach(a=>{
+      const pill=document.createElement("div");
+      pill.className="device-pill city-pill";
+      const id=`${a.appareil} ${a.nom} ${a.type||""} ${a.SAT||""}`.trim();
+      pill.innerHTML=`<a href="index.html?id=${encodeURIComponent(id)}">${a.appareil}</a>`;
+      list.appendChild(pill);
+    });
+
+  card.appendChild(list);
+  return card;
+}
+
+function renderHPPost(p){
+  const card=document.createElement("div");
+  card.className="poste-card";
+
+  const title=document.createElement("div");
+  title.className="poste-title";
+  title.innerHTML=`<span>${p.nom}</span>${p.type?`<span class="type-badge">${p.type}</span>`:""}`;
+  title.onclick=()=>card.classList.toggle("collapsed");
+  card.appendChild(title);
+
+  let sats=Object.keys(p.sats).filter(s=>p.sats[s].length>0);
+  sats=sortSAT(sats);
+
+  sats.forEach(s=>{
+    const grp=p.sats[s];
+    const div=document.createElement("div");
+    div.className="sat-group";
+
+    const t=document.createElement("div");
+    t.className="sat-title";
+t.innerHTML = `${
+  s === "_principal"
+    ? '<span class="principal-badge">Poste principal</span>'
+    : `<span class="sat-badge">${s}</span>`
+}<span>${grp.length} appareil(s)</span>`;
+    t.onclick=()=>div.classList.toggle("collapsed");
+    div.appendChild(t);
+
+    const list=document.createElement("div");
+    list.className="device-list";
+
+    grp.sort((a,b)=>a.appareil.localeCompare(b.appareil,"fr",{numeric:true}))
+       .forEach(a=>{
+         const pill=document.createElement("div");
+         pill.className="device-pill";
+         const id=`${a.appareil} ${a.nom} ${a.type||""} ${a.SAT||""}`.trim();
+         pill.innerHTML=`<a href="index.html?id=${encodeURIComponent(id)}">${a.appareil}</a>`;
+         list.appendChild(pill);
+       });
+
+    div.appendChild(list);
+    card.appendChild(div);
+  });
+
+  return card;
+}
+</script>
+
+</body>
+</html>
