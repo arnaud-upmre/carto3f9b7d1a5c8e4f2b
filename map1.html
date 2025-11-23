@@ -6,6 +6,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <style>
+
+    .device-pill {
+  background: white;
+  border: 1px solid #d1d5db;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+}
+
+.device-pill:hover {
+  transform: scale(1.03);
+  background: #e8f1ff;
+  border-color: #93c5fd;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.device-pill a {
+  text-decoration: none;
+  color: inherit;
+}
+    
     body {
       margin: 0;
       padding: 20px;
