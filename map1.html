@@ -2,232 +2,297 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8" />
+<title>Tableau d’avancement – v1.8</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Tableau de travail d’avancement – v1.6</title>
+
 <style>
-body {
-  margin: 0;
-  padding: 20px;
-  font-family: Inter, system-ui, sans-serif;
-  background: #f3f4f6;
-  color: #111827;
-}
-h1 { margin-bottom: 10px; font-size: 22px; }
-.counters {
-  font-size: 15px; margin-bottom: 15px;
-  font-weight: 600; color: #374151;
-}
-.actions { margin-bottom: 22px; display: flex; gap: 12px; flex-wrap: wrap; }
-.btn {
-  padding: 8px 12px; background: #3b82f6; color: white;
-  border-radius: 8px; cursor: pointer; font-size: 14px;
-  font-weight: 600; border: none;
-}
-.tabs { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
-.tab {
-  padding: 8px 14px; background: #e5e7eb;
-  border-radius: 8px; cursor: pointer; font-weight: 600;
-}
-.tab.active { background: #3b82f6; color: white; }
-.board {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 18px;
-}
-.poste-card {
-  background: white; border-radius: 14px; border: 1px solid #e5e7eb;
-  padding: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-  transition: all .2s ease;
-}
-.poste-card.collapsed .sat-group { display: none; }
-.poste-title {
-  font-size: 18px; font-weight: 700; display: flex;
-  justify-content: space-between; margin-bottom: 8px; cursor: pointer;
-}
-.type-badge {
-  background: #dbeafe; border: 1px solid #bfdbfe;
-  padding: 2px 6px; border-radius: 6px;
-  font-size: 11px; font-weight: 600; color: #1e40af;
-}
-.sat-group {
-  background: #f9fafb; border: 1px dashed #d1d5db;
-  padding: 10px; border-radius: 10px; margin-top: 8px;
-}
-.sat-title {
-  font-weight: 600; font-size: 14px; margin-bottom: 8px;
-  display: flex; justify-content: space-between; align-items: center;
-}
-.principal-badge {
-  background: #e5e7eb; border: 1px solid #d1d5db;
-  padding: 2px 8px; border-radius: 6px;
-  font-size: 11px; font-weight: 600;
-}
-.device-list { display: flex; flex-wrap: wrap; gap: 6px; }
-.device-pill {
-  background: white; border: 1px solid #d1d5db;
-  padding: 4px 10px; border-radius: 999px;
-  font-size: 13px; display: inline-flex; align-items: center;
-  gap: 6px; cursor: pointer; transition: all 0.15s ease-in-out;
-}
-.device-pill:hover {
-  transform: scale(1.06);
-  background: #e8f1ff; border-color: #93c5fd;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-}
-.device-pill a { text-decoration: none; color: inherit; }
-.hp {
-  background: #fee2e2; border-color: #fca5a5; color: #b91c1c;
-}
-.empty-msg {
-  font-size: 12px; color: #6b7280; font-style: italic;
-}
+body { margin:0; padding:20px; font-family:Inter,system-ui,sans-serif; background:#f3f4f6; color:#111; }
+h1 { margin-bottom:10px; font-size:22px; }
+.counters { font-size:15px; margin-bottom:15px; font-weight:600; color:#374151; }
+.actions { margin-bottom:20px; display:flex; gap:12px; flex-wrap:wrap; }
+.btn { padding:8px 12px; background:#3b82f6; color:white; border-radius:8px; border:none; font-weight:600; cursor:pointer; }
+.tabs { display:flex; gap:12px; margin-bottom:20px; }
+.tab { padding:8px 14px; background:#e5e7eb; border-radius:8px; cursor:pointer; font-weight:600; }
+.tab.active { background:#3b82f6; color:white; }
+.board { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:18px; }
+.poste-card { background:white; border-radius:14px; border:1px solid #e5e7eb; padding:14px; box-shadow:0 2px 4px rgba(0,0,0,0.05); transition:.2s; }
+.poste-card.collapsed .sat-group, .poste-card.collapsed .city-devices { display:none; }
+.poste-title { font-size:18px; font-weight:700; display:flex; justify-content:space-between; cursor:pointer; margin-bottom:10px; }
+.type-badge { background:#dbeafe; border:1px solid #bfdbfe; padding:2px 6px; border-radius:6px; font-size:11px; font-weight:600; color:#1e40af;}
+.sat-group { background:#f9fafb; border:1px dashed #d1d5db; padding:10px; border-radius:10px; margin-top:8px; }
+.sat-title { font-weight:600; margin-bottom:8px; cursor:pointer; display:flex; justify-content:space-between; }
+.sat-badge { background:#fef9c3; border:1px solid #facc15; padding:2px 8px; border-radius:6px; font-size:11px; }
+.city-devices { padding-left:4px; display:flex; flex-wrap:wrap; gap:6px; }
+.device-list { display:flex; flex-wrap:wrap; gap:6px; }
+.device-pill { background:white; border:1px solid #d1d5db; padding:4px 10px; border-radius:999px; font-size:13px; transition:0.15s; }
+.device-pill:hover { transform:scale(1.06); background:#e8f1ff; border-color:#93c5fd; box-shadow:0 4px 10px rgba(0,0,0,0.1); }
+.device-pill a { color:inherit; text-decoration:none; }
+.empty-msg { font-size:12px; font-style:italic; color:#6b7280; }
+.city-pill { background:#fee2e2; border:1px solid #fca5a5; }
 </style>
 </head>
+
 <body>
 
-<h1>Tableau de travail d’avancement – v1.6</h1>
-<div id="counters" class="counters">Chargement…</div>
+<h1>Tableau d’avancement – v1.8</h1>
+<div class="counters" id="counters">Chargement…</div>
+
 <div class="actions">
   <button class="btn" id="btnExpand">Tout déplier</button>
   <button class="btn" id="btnCollapse">Tout plier</button>
 </div>
+
 <div class="tabs">
-  <div id="tabPatrimoine" class="tab active">Patrimoine</div>
+  <div id="tabPat" class="tab active">Patrimoine</div>
   <div id="tabHP" class="tab">Hors patrimoine</div>
 </div>
-<div id="boardPatrimoine" class="board"></div>
+
+<div id="boardPat" class="board"></div>
 <div id="boardHP" class="board" style="display:none;"></div>
 
 <script>
-const postesURL = "postes.json";
-const appareilsURL = "appareils.json";
+Promise.all([ fetch("postes.json"), fetch("appareils.json") ])
+.then(r=>Promise.all(r.map(x=>x.json())))
+.then(([postes, apps]) => build(postes, apps));
 
-let postes=[], appareils=[];
-
-Promise.all([fetch(postesURL), fetch(appareilsURL)])
-.then(async ([pRes, aRes])=>{
-  postes=await pRes.json(); appareils=await aRes.json(); build();
-});
-
-/* --- Onglets --- */
-document.getElementById("tabPatrimoine").onclick=()=>switchTab("patrimoine");
-document.getElementById("tabHP").onclick=()=>switchTab("hp");
-function switchTab(tab){
-  const isPat=tab==="patrimoine";
-  document.getElementById("tabPatrimoine").classList.toggle("active",isPat);
-  document.getElementById("tabHP").classList.toggle("active",!isPat);
-  document.getElementById("boardPatrimoine").style.display=isPat?"grid":"none";
-  document.getElementById("boardHP").style.display=isPat?"none":"grid";
+function sortSAT(keys){
+  return keys.sort((a,b)=>{
+    if(a=="_principal")return-1;
+    if(b=="_principal")return 1;
+    const na=a.match(/^sat(\d*)$/i); 
+    const nb=b.match(/^sat(\d*)$/i);
+    if(na&&nb){return (parseInt(na[1]||0)-parseInt(nb[1]||0));}
+    if(na)return-1;
+    if(nb)return 1;
+    return a.localeCompare(b);
+  });
 }
+
+document.getElementById("tabPat").onclick=()=>switchTab(true);
+document.getElementById("tabHP").onclick=()=>switchTab(false);
+
+function switchTab(pat){
+  document.getElementById("tabPat").classList.toggle("active",pat);
+  document.getElementById("tabHP").classList.toggle("active",!pat);
+  document.getElementById("boardPat").style.display=pat?"grid":"none";
+  document.getElementById("boardHP").style.display=pat?"none":"grid";
+}
+
 document.getElementById("btnExpand").onclick=()=>document.querySelectorAll(".poste-card").forEach(c=>c.classList.remove("collapsed"));
 document.getElementById("btnCollapse").onclick=()=>document.querySelectorAll(".poste-card").forEach(c=>c.classList.add("collapsed"));
 
-function build(){
-  const metaMap=new Map();
+function build(postes, apps){
+
+  const meta=new Map();
   postes.forEach(p=>{
-    if(p.special===true)return;
-    const key=`${p.nom}||${p.type}`;
-    if(!metaMap.has(key))metaMap.set(key,{nom:p.nom,type:p.type,hors:p.hors_patrimoine===true});
+    if(p.special)return;
+    meta.set(`${p.nom}||${p.type}`,{nom:p.nom,type:p.type,hp:p.hors_patrimoine===true});
   });
 
-  const validApps=appareils.filter(a=>!a.special);
-  const postesMap=new Map();
-  validApps.forEach(a=>{
+  const valApps=apps.filter(a=>!a.special);
+
+  // --- Construction Patrimoine ---
+  const patMap=new Map();
+  valApps.forEach(a=>{
+    if(a.hors_patrimoine)return;
     const key=`${a.nom}||${a.type}`;
-    if(!postesMap.has(key)){
-      const meta=metaMap.get(key)||{nom:a.nom,type:a.type,hors:a.hors_patrimoine===true};
-      postesMap.set(key,{...meta,sats:{}});
+    if(!patMap.has(key)){
+      const m=meta.get(key)||{nom:a.nom,type:a.type,hp:false};
+      patMap.set(key,{...m,sats:{}});
     }
-    const sat=a.SAT&&a.SAT.trim()!==""?a.SAT.trim():"_principal";
-    const p=postesMap.get(key);
-    if(!p.sats[sat])p.sats[sat]=[];
-    p.sats[sat].push(a);
+    const sat=a.SAT&&a.SAT.trim()?a.SAT.trim():"_principal";
+    patMap.get(key).sats[sat]??=[];
+    patMap.get(key).sats[sat].push(a);
   });
-  metaMap.forEach((m,k)=>{if(!postesMap.has(k))postesMap.set(k,{...m,sats:{}});});
-  const arr=Array.from(postesMap.values());
-  const postesPat=arr.filter(p=>!p.hors);
-  const devicesPat=validApps.filter(a=>!a.hors_patrimoine);
-  const boardP=document.getElementById("boardPatrimoine");
-  boardP.innerHTML="";
-  postesPat.sort((a,b)=>a.nom.localeCompare(b.nom,"fr")).forEach(p=>boardP.appendChild(renderPat(p)));
-  buildHP(validApps);
+
+  meta.forEach((m,key)=>{ if(!m.hp && !patMap.has(key)) patMap.set(key,{...m,sats:{}}); });
+
+  // --- Construction Hors Patrimoine ---
+  const hpApps=valApps.filter(a=>a.hors_patrimoine);
+
+  const hpCities=new Map();      // villes hors patrimoine
+  const hpPatPosts=new Map();    // postes patrimoine qui ont des HP
+
+  hpApps.forEach(a=>{
+    const key=`${a.nom}||${a.type}`;
+    const m=meta.get(key);
+
+    if(m && !m.hp){
+      // Poste patrimoine : structure technique avec SAT
+      let post=hpPatPosts.get(key);
+      if(!post) post={nom:m.nom,type:m.type,sats:{}};
+      const sat=a.SAT&&a.SAT.trim()?a.SAT.trim():"_principal";
+      post.sats[sat]??=[];
+      post.sats[sat].push(a);
+      hpPatPosts.set(key,post);
+    } else {
+      // Ville pure (HP)
+      let city=hpCities.get(a.nom);
+      if(!city) city={nom:a.nom,devices:[]};
+      city.devices.push(a);
+      hpCities.set(a.nom,city);
+    }
+  });
+
+  // --- Compteurs ---
+  const patPosts=[...patMap.values()];
+  const patDevs=valApps.filter(a=>!a.hors_patrimoine);
+  const patSAT=new Set();
+  patDevs.forEach(a=>a.SAT&&patSAT.add(a.SAT));
+
+  const hpPostsCount=hpCities.size+hpPatPosts.size;
+  const hpDevsCount=hpApps.length;
+  const hpSATCount=(()=>{
+    let s=new Set();
+    hpApps.forEach(a=>a.SAT&&s.add(a.SAT));
+    return s.size;
+  })();
+
+  counters.textContent=
+    `Patrimoine : ${patPosts.length} postes · ${patSAT.size} SAT · ${patDevs.length} appareils | `+
+    `Hors patrimoine : ${hpPostsCount} villes/postes · ${hpSATCount} SAT · ${hpDevsCount} appareils`;
+
+  // --- Render Patrimoine ---
+  boardPat.innerHTML="";
+  patPosts.sort((a,b)=>a.nom.localeCompare(b.nom,"fr")).forEach(p=>{
+    boardPat.appendChild(renderPatPost(p));
+  });
+
+  // --- Render Hors Patrimoine ---
+  boardHP.innerHTML="";
+
+  // villes HP
+  [...hpCities.values()].sort((a,b)=>a.nom.localeCompare(b.nom,"fr")).forEach(c=>{
+    boardHP.appendChild(renderCity(c));
+  });
+
+  // postes patrimoine avec appareils HP
+  [...hpPatPosts.values()].sort((a,b)=>a.nom.localeCompare(b.nom,"fr")).forEach(p=>{
+    boardHP.appendChild(renderHPPost(p));
+  });
 }
 
-function renderPat(poste){
+function renderPatPost(p){
   const card=document.createElement("div");
   card.className="poste-card";
   const title=document.createElement("div");
   title.className="poste-title";
-  title.innerHTML=`<span>${poste.nom}</span>${poste.type?`<span class="type-badge">${poste.type}</span>`:""}`;
+  title.innerHTML=`<span>${p.nom}</span>${p.type?`<span class="type-badge">${p.type}</span>`:""}`;
   title.onclick=()=>card.classList.toggle("collapsed");
   card.appendChild(title);
-  const sats=poste.sats;
-  let keys=Object.keys(sats);
-  if(keys.length===0)keys=["_principal"];
-  keys.forEach(k=>{
-    const group=sats[k]||[];
-    const satDiv=document.createElement("div");
-    satDiv.className="sat-group";
-    const titleDiv=document.createElement("div");
-    titleDiv.className="sat-title";
-    const badge=k==="_principal"?`<span class="principal-badge">Poste principal</span>`:`<span class="sat-badge">${k}</span>`;
-    titleDiv.innerHTML=`${badge}<span class="sat-count">${group.length} appareil(s)</span>`;
-    titleDiv.onclick=()=>satDiv.classList.toggle("collapsed");
+
+  let sats=Object.keys(p.sats);
+  if(sats.length===0) sats=["_principal"];
+  sats=sortSAT(sats);
+
+  sats.forEach(s=>{
+    const grp=p.sats[s]||[];
+    const div=document.createElement("div");
+    div.className="sat-group";
+
+    const t=document.createElement("div");
+    t.className="sat-title";
+    const badge=(s=="_principal")?'<span class="principal-badge">Poste principal</span>'
+                                 :`<span class="sat-badge">${s}</span>`;
+    t.innerHTML=`${badge}<span>${grp.length} appareil(s)</span>`;
+    t.onclick=()=>div.classList.toggle("collapsed");
+    div.appendChild(t);
+
     const list=document.createElement("div");
     list.className="device-list";
-    if(group.length===0){
-      const msg=document.createElement("div");
-      msg.className="empty-msg"; msg.textContent="Aucun appareil enregistré pour le moment.";
-      list.appendChild(msg);
+
+    if(grp.length===0){
+      const e=document.createElement("div");
+      e.className="empty-msg";
+      e.textContent="Aucun appareil enregistré.";
+      list.appendChild(e);
     } else {
-      group.sort((a,b)=>a.appareil.localeCompare(b.appareil,"fr",{numeric:true})).forEach(a=>{
-        const pill=document.createElement("div"); pill.className="device-pill";
-        const id=`${a.appareil} ${a.nom} ${a.type||""} ${a.SAT||""}`.trim();
-        pill.innerHTML=`<a href="index.html?id=${encodeURIComponent(id)}">${a.appareil}</a>`;
-        list.appendChild(pill);
-      });
+      grp.sort((a,b)=>a.appareil.localeCompare(b.appareil,"fr",{numeric:true}))
+         .forEach(a=>{
+           const pill=document.createElement("div");
+           pill.className="device-pill";
+           const id=`${a.appareil} ${a.nom} ${a.type||""} ${a.SAT||""}`.trim();
+           pill.innerHTML=`<a href="index.html?id=${encodeURIComponent(id)}">${a.appareil}</a>`;
+           list.appendChild(pill);
+         });
     }
-    satDiv.appendChild(titleDiv); satDiv.appendChild(list); card.appendChild(satDiv);
+    div.appendChild(list);
+    card.appendChild(div);
   });
+
   return card;
 }
 
-/* --- HORS PATRIMOINE : fusion par ville --- */
-function buildHP(apps){
-  const hpApps=apps.filter(a=>a.hors_patrimoine);
-  const cityMap=new Map();
-  hpApps.forEach(a=>{
-    const city=a.nom.trim();
-    if(!cityMap.has(city))cityMap.set(city,[]);
-    cityMap.get(city).push(a);
-  });
-  const board=document.getElementById("boardHP");
-  board.innerHTML="";
-  Array.from(cityMap.keys()).sort((a,b)=>a.localeCompare(b,"fr")).forEach(city=>{
-    const list=cityMap.get(city);
-    const card=document.createElement("div");
-    card.className="poste-card";
-    const title=document.createElement("div");
-    title.className="poste-title";
-    title.innerHTML=`<span>${city} (Ville)</span>`;
-    title.onclick=()=>card.classList.toggle("collapsed");
-    card.appendChild(title);
-    const groupDiv=document.createElement("div");
-    groupDiv.className="sat-group";
-    const listDiv=document.createElement("div");
-    listDiv.className="device-list";
-    list.sort((a,b)=>a.appareil.localeCompare(b.appareil,"fr",{numeric:true})).forEach(a=>{
+function renderCity(city){
+  const card=document.createElement("div");
+  card.className="poste-card";
+
+  const title=document.createElement("div");
+  title.className="poste-title";
+  title.innerHTML=`<span>${city.nom} (Ville)</span>`;
+  title.onclick=()=>card.classList.toggle("collapsed");
+  card.appendChild(title);
+
+  const list=document.createElement("div");
+  list.className="city-devices";
+
+  city.devices
+    .sort((a,b)=>a.appareil.localeCompare(b.appareil,"fr",{numeric:true}))
+    .forEach(a=>{
       const pill=document.createElement("div");
-      pill.className="device-pill hp";
+      pill.className="device-pill city-pill";
       const id=`${a.appareil} ${a.nom} ${a.type||""} ${a.SAT||""}`.trim();
       pill.innerHTML=`<a href="index.html?id=${encodeURIComponent(id)}">${a.appareil}</a>`;
-      listDiv.appendChild(pill);
+      list.appendChild(pill);
     });
-    groupDiv.appendChild(listDiv);
-    card.appendChild(groupDiv);
-    board.appendChild(card);
+
+  card.appendChild(list);
+  return card;
+}
+
+function renderHPPost(p){
+  const card=document.createElement("div");
+  card.className="poste-card";
+
+  const title=document.createElement("div");
+  title.className="poste-title";
+  title.innerHTML=`<span>${p.nom}</span>${p.type?`<span class="type-badge">${p.type}</span>`:""}`;
+  title.onclick=()=>card.classList.toggle("collapsed");
+  card.appendChild(title);
+
+  let sats=Object.keys(p.sats).filter(s=>p.sats[s].length>0);
+  sats=sortSAT(sats);
+
+  sats.forEach(s=>{
+    const grp=p.sats[s];
+    const div=document.createElement("div");
+    div.className="sat-group";
+
+    const t=document.createElement("div");
+    t.className="sat-title";
+    t.innerHTML=`<span class="sat-badge">${s}</span><span>${grp.length} appareil(s)</span>`;
+    t.onclick=()=>div.classList.toggle("collapsed");
+    div.appendChild(t);
+
+    const list=document.createElement("div");
+    list.className="device-list";
+
+    grp.sort((a,b)=>a.appareil.localeCompare(b.appareil,"fr",{numeric:true}))
+       .forEach(a=>{
+         const pill=document.createElement("div");
+         pill.className="device-pill";
+         const id=`${a.appareil} ${a.nom} ${a.type||""} ${a.SAT||""}`.trim();
+         pill.innerHTML=`<a href="index.html?id=${encodeURIComponent(id)}">${a.appareil}</a>`;
+         list.appendChild(pill);
+       });
+
+    div.appendChild(list);
+    card.appendChild(div);
   });
+
+  return card;
 }
 </script>
+
 </body>
 </html>
