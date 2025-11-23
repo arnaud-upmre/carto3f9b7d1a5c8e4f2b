@@ -1415,7 +1415,7 @@
     "appareil": "TRA (SRB3)",
     "latitude": 50.51995,
     "longitude": 1.63542,
-    "description": ""
+    "description": "",
     "description": "",
     "hors_patrimoine": true
   },
@@ -2397,7 +2397,7 @@
     "appareil": "TT5737",
     "latitude": 50.7130819,
     "longitude": 1.6080163,
-    "description": ""
+    "description": "TT avec grillage"
   },
   {
     "nom": "Hauteville",
@@ -4558,7 +4558,7 @@
     "appareil": "183-09 bis",
     "latitude": 50.06042,
     "longitude": 3.468744,
-    "description": "Rechauffage"
+    "description": "Rechauffage",
     "description": "",
     "hors_patrimoine": true
   },
