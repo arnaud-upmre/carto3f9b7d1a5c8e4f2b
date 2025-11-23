@@ -777,36 +777,10 @@ link.addEventListener("click", (ev) => {
 if (showMarker && !isNaN(lat) && !isNaN(lon)) {
   L.marker([lat, lon], {
     icon: L.divIcon({
-      html: `
-        <div style="
-          position: relative;
-          width: 40px;
-          height: 40px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transform: translate(-50%, -50%);
-        ">
-          <div style="
-            position: absolute;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.9);
-            box-shadow: 0 0 6px rgba(0,0,0,0.25);
-          "></div>
-
-          <div style="
-            font-size: 32px;
-            line-height: 32px;
-            position: relative;
-            z-index: 2;
-          ">📍</div>
-        </div>
-      `,
+      html: `<div style="font-size:38px; line-height:38px;">📍</div>`,
       className: "",
-      iconSize: [40, 40],
-      iconAnchor: [20, 40]   
+      iconSize: [38, 38],
+      iconAnchor: [19, 38]  
     })
   }).addTo(map);
 }
