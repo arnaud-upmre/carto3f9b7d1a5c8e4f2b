@@ -773,27 +773,16 @@ link.addEventListener("click", (ev) => {
 }
    }
 
+
   if (showMarker && !isNaN(lat) && !isNaN(lon)) {
-    const shared = L.marker([lat, lon], {
+    L.marker([lat, lon], {
       icon: L.divIcon({
-        html: `<div style="
-          width:34px;height:34px;
-          border-radius:50%;
-          background:white;
-          border:2px solid #2563eb;
-          box-shadow:0 0 10px #2563eb;
-        "></div>`,
+        html: `<div style="font-size:32px; line-height:32px;">📍</div>`,
         className: "",
-        iconSize: [34, 34],
-        iconAnchor: [17, 17]
+        iconSize: [32, 32],
+        iconAnchor: [16, 32]  
       })
     }).addTo(map);
-
-    shared.bindPopup("📍 Position partagée").openPopup();
-
-    setTimeout(() => {
-      if (shared._bringToFront) shared._bringToFront();
-    }, 50);
   }
 }
 
