@@ -6992,5 +6992,38 @@
     "longitude": 2.86816,
     "description": "",
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.29517689176147,2.868127136598572;uid=3695de9f-cf4a-43d7-b869-1b6c04e932af_1091;"
+  },
+  {
+    "nom": "Marquise",
+    "type": "SSP",
+    "SAT": "",
+    "appareil": "IL1",
+    "latitude": 50.80572, 
+    "longitude": 1.72813,
+    "description": "",
+    "imajnet": "",
+    "hors_patrimoine": ""
+  },
+  {
+    "nom": "Marquise",
+    "type": "SSP",
+    "SAT": "",
+    "appareil": "IL3",
+    "latitude": 50.80572, 
+    "longitude": 1.72813,
+    "description": "",
+    "imajnet": "",
+    "hors_patrimoine": ""
+  },
+  {
+    "nom": "Marquise",
+    "type": "SSP",
+    "SAT": "",
+    "appareil": "T1",
+    "latitude": 50.80572, 
+    "longitude": 1.72813,
+    "description": "",
+    "imajnet": "",
+    "hors_patrimoine": "true"
   }
 ]
