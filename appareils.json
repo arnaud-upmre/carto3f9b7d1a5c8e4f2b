@@ -7013,8 +7013,8 @@
     "latitude": 50.80572, 
     "longitude": 1.72813,
     "description": "",
-    "imajnet": "",
-    "hors_patrimoine": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.80567396514344,1.7278292441390382;uid=f8c7127b-b56d-4340-984a-4f3ac504c4ca_1735;"
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.80567396514344,1.7278292441390382;uid=f8c7127b-b56d-4340-984a-4f3ac504c4ca_1735;",
+    "hors_patrimoine": ""
   },
   {
     "nom": "Marquise",
