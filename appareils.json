@@ -7050,20 +7050,30 @@
   {
     "nom": "Marquise",
     "type": "SSP",
-    "appareil": "T3",
+    "appareil": "T4",
+    "latitude": 50.80571, 
+    "longitude": 1.72820,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.80567396514344,1.7278292441390382;uid=f8c7127b-b56d-4340-984a-4f3ac504c4ca_1735;",
+    "hors_patrimoine": "true"
+  },
+  {
+    "nom": "Marquise",
+    "type": "SSP",
+    "appareil": "IL2",
     "latitude": 50.80571,
     "longitude": 1.72826,
-    "description": "IL2",
+    "description": "",
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.80567396514344,1.7278292441390382;uid=f8c7127b-b56d-4340-984a-4f3ac504c4ca_1735;",
     "hors_patrimoine": ""
   },
   {
     "nom": "Marquise",
     "type": "SSP",
-    "appareil": "T3",
+    "appareil": "IL4",
     "latitude": 50.80571,
     "longitude": 1.72826,
-    "description": "IL4",
+    "description": "",
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.80567396514344,1.7278292441390382;uid=f8c7127b-b56d-4340-984a-4f3ac504c4ca_1735;",
     "hors_patrimoine": ""
   }
