@@ -7246,25 +7246,5 @@
     "description": "",
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.294764622405786,2.827736959368596;uid=9781d04f-64d4-4445-89b1-ef4d53a03b34_79;",
     "hors_patrimoine": ""
-  },
-  {
-    "nom": "Blangy Est",
-    "type": "L",
-    "appareil": "S-TRA",
-    "latitude": 50.29481, 
-    "longitude": 2.82954,
-    "description": "",
-    "imajnet": "",
-    "hors_patrimoine": "true"
-  },
-  {
-    "nom": "Blangy Est",
-    "type": "L",
-    "appareil": "TRA",
-    "latitude": 50.29483, 
-    "longitude": 2.82960,
-    "description": "",
-    "imajnet": "",
-    "hors_patrimoine": "true"
   }
 ]
