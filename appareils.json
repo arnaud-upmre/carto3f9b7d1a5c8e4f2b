@@ -7246,5 +7246,15 @@
     "description": "",
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.294764622405786,2.827736959368596;uid=9781d04f-64d4-4445-89b1-ef4d53a03b34_79;",
     "hors_patrimoine": ""
+  },
+  {
+    "nom": "Aubigny Au Bac",
+    "type": "L",
+    "appareil": "I42",
+    "latitude": 50.27049, 
+    "longitude": 3.15933,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.27040325795367,3.159255335042094;uid=132fce51-c0f3-42a2-980b-fee54ad5ebbc_1929;",
+    "hors_patrimoine": ""
   }
 ]
