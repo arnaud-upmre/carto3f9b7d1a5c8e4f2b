@@ -3,7 +3,7 @@
 <head>
   <meta name="robots" content="noindex, nofollow" />
   <meta charset="UTF-8" />
-  <title>Cartographie des postes</title>
+  <title>Nono Maps</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
  
   <meta property="og:title" content="Nono Maps">
@@ -1381,9 +1381,8 @@ const labelFor = (item) =>
 
 results.forEach((item, i) => {
 
-if (item.hors_patrimoine === true && item.category === "poste" && item.accès) {
-    return; 
-}
+  
+if (item.hors_patrimoine === "true") item.hors_patrimoine = true;
   
   const li = document.createElement("li");
   
