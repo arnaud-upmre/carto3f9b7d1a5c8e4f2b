@@ -6036,6 +6036,24 @@
     "pk": "209,035",
     "poste_latitude": "50.27050", 
     "poste_longitude": "3.15938"
+  }, 
+  {
+    "nom": "Avelin",
+    "type": "PRCI",
+    "SAT": "",
+    "accès": "",
+    "latitude": 50.54338, 
+    "longitude": 3.06977,
+    "description": "",
+        "description_telecommande": "",
+    "rss": "A",
+    "contact": "",
+    "portail": "",
+    "lignes": "GONESSE à LILLE-FRONTIERE (LGV)",
+    "numero_ligne": 226000,
+    "pk": "193,998",
+    "poste_latitude": "50.54302",
+    "poste_longitude": "3.06927"
   }
 ]
 
