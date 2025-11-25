@@ -10,7 +10,6 @@
 
 <style>
 
-
     body {
         font-family: Inter, sans-serif;
         margin: 0;
@@ -19,9 +18,34 @@
     }
 
     h1 {
-        margin-bottom: 20px;
+        margin-bottom: 10px;
         font-size: 22px;
         font-weight: 600;
+    }
+
+    /* Compteurs */
+    #counters {
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 20px;
+    }
+
+    /* Onglets */
+    .tabs {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+    .tab {
+        padding: 8px 16px;
+        background: #ddd;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+    }
+    .tab.active {
+        background: #1a73e8;
+        color: white;
     }
 
     /* Barre de recherche */
@@ -95,6 +119,7 @@
         font-size: 12px;
         margin-left: 6px;
     }
+
 .section-title {
     font-weight: 600;
     font-size: 14px;
@@ -118,6 +143,15 @@
 
 <h1>Tableau blanc – Nono Maps</h1>
 
+<!-- Compteurs -->
+<div id="counters">Chargement…</div>
+
+<!-- ONGLET -->
+<div class="tabs">
+    <div class="tab active" id="tab-patrimoine">Patrimoine</div>
+    <div class="tab" id="tab-hp">Hors Patrimoine</div>
+</div>
+
 <!-- Barre de recherche intelligente -->
 <input type="text" id="search" placeholder="Rechercher un poste…">
 
@@ -135,41 +169,74 @@
 <script>
 const urlPostes = "https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/postes.json";
 
-let groupesGlobaux = {};   // tous les postes regroupés
-let groupesAffiches = {};  // ceux filtrés / triés
+let groupesGlobaux = {};  
+let groupesAffiches = {};  
+let mode = "patrimoine";   // onglet actif
 
-// Chargement JSON --------------------------------------------------
+// ----- COMPTEURS -----
+function majCompteurs(groupes) {
+    const noms = Object.keys(groupes);
+
+    let totalSat = 0;
+    noms.forEach(n => {
+        groupes[n].forEach(p => {
+            if (p.SAT) totalSat++;
+        });
+    });
+
+    document.getElementById("counters").textContent =
+        `Nombre de postes : ${noms.length} — Nombre de SAT : ${totalSat}`;
+}
+
+// ----- CHARGEMENT JSON -----
 async function chargerPostes() {
     const res = await fetch(urlPostes);
     const postes = await res.json();
 
-    // ⚠️ Exclusion demandée : special:true + hors_patrimoine:true
-    const filtres = postes.filter(p => p.special !== true && p.hors_patrimoine !== true);
+    // Groupe Patrimoine
+    const patrimoine = postes.filter(p =>
+        p.special !== true &&
+        p.hors_patrimoine !== true &&
+        !String(p.nom).includes("HP")
+    );
 
-    // Regroupement par nom
-    groupesGlobaux = {};
-    filtres.forEach(item => {
-        if (!groupesGlobaux[item.nom]) groupesGlobaux[item.nom] = [];
-        groupesGlobaux[item.nom].push(item);
-    });
+    // Groupe Hors Patrimoine (tu as dit "tous les postes nommés HP")
+    const hp = postes.filter(p => String(p.nom).includes("HP"));
 
-    groupesAffiches = {...groupesGlobaux};
-    afficher(groupesAffiches);
+    // Regrouper par nom
+    function group(liste) {
+        const g = {};
+        liste.forEach(i => {
+            if (!g[i.nom]) g[i.nom] = [];
+            g[i.nom].push(i);
+        });
+        return g;
+    }
+
+    groupesGlobaux = {
+        patrimoine: group(patrimoine),
+        hp: group(hp)
+    };
+
+    afficher(groupesGlobaux.patrimoine);
 }
 
-// Affichage des cartes ---------------------------------------------
+// ----- AFFICHAGE -----
 function afficher(groupes) {
+    groupesAffiches = groupes;
+    majCompteurs(groupes);
+
     const zone = document.getElementById("postesZone");
     zone.innerHTML = "";
 
     Object.keys(groupes).forEach(nomPoste => {
+
         const items = groupes[nomPoste];
         const type = items[0].type || "";
 
         const principal = items.filter(i => !i.SAT);
         const sats = items.filter(i => i.SAT);
 
-        // Regroupement SAT
         const satsGroupes = {};
         sats.forEach(s => {
             if (!satsGroupes[s.SAT]) satsGroupes[s.SAT] = [];
@@ -179,13 +246,9 @@ function afficher(groupes) {
         let html = `
             <div class="card">
                 <div class="card-title">${nomPoste} <span class="pill">${type}</span></div>
-
-                <div>
-                    <div class="section-title">Poste principal</div>
-                </div>
+                <div><div class="section-title">Poste principal</div></div>
         `;
 
-        // Ajout SAT (sans appareils)
         Object.keys(satsGroupes).sort().forEach(sat => {
             html += `
                 <div class="sat-block">
@@ -199,68 +262,71 @@ function afficher(groupes) {
     });
 }
 
-// Recherche intelligente --------------------------------------------
-document.getElementById("search").addEventListener("input", function () {
+// ----- ONGLET -----
+document.getElementById("tab-patrimoine").onclick = () => {
+    mode = "patrimoine";
+    document.getElementById("tab-patrimoine").classList.add("active");
+    document.getElementById("tab-hp").classList.remove("active");
+    afficher(groupesGlobaux.patrimoine);
+};
+document.getElementById("tab-hp").onclick = () => {
+    mode = "hp";
+    document.getElementById("tab-hp").classList.add("active");
+    document.getElementById("tab-patrimoine").classList.remove("active");
+    afficher(groupesGlobaux.hp);
+};
 
+// ----- RECHERCHE -----
+document.getElementById("search").addEventListener("input", function () {
     const txt = this.value.trim();
 
-    if (txt === "") {
-        groupesAffiches = {...groupesGlobaux};
-        afficher(groupesAffiches);
-        return;
-    }
+    const groupeBase = groupesGlobaux[mode];
+    if (txt === "") return afficher(groupeBase);
 
-    const fuse = new Fuse(Object.keys(groupesGlobaux), {
+    const fuse = new Fuse(Object.keys(groupeBase), {
         threshold: 0.3,
         includeScore: true
     });
 
     const results = fuse.search(txt);
+    const newGroup = {};
+    results.forEach(r => newGroup[r.item] = groupeBase[r.item]);
 
-    let newGroup = {};
-    results.forEach(r => {
-        newGroup[r.item] = groupesGlobaux[r.item];
-    });
-
-    groupesAffiches = newGroup;
-    afficher(groupesAffiches);
+    afficher(newGroup);
 });
 
-// Tri ---------------------------------------------------------------
+// ----- TRI -----
 document.querySelectorAll(".filters button").forEach(btn => {
     btn.addEventListener("click", () => {
-        const sort = btn.dataset.sort;
 
+        const sort = btn.dataset.sort;
         let noms = Object.keys(groupesAffiches);
 
         if (sort === "az") noms.sort();
         if (sort === "za") noms.sort().reverse();
 
         if (sort === "num") {
-            noms.sort((a,b) => {
-                const na = groupesAffiches[a][0].numero_ligne || 999999;
-                const nb = groupesAffiches[b][0].numero_ligne || 999999;
-                return na - nb;
-            });
+            noms.sort((a,b) =>
+                (groupesAffiches[a][0].numero_ligne || 999999) -
+                (groupesAffiches[b][0].numero_ligne || 999999)
+            );
         }
 
         if (sort === "numdesc") {
-            noms.sort((a,b) => {
-                const na = groupesAffiches[a][0].numero_ligne || 0;
-                const nb = groupesAffiches[b][0].numero_ligne || 0;
-                return nb - na;
-            });
+            noms.sort((a,b) =>
+                (groupesAffiches[b][0].numero_ligne || 0) -
+                (groupesAffiches[a][0].numero_ligne || 0)
+            );
         }
 
-        // reconstruction du groupe trié
-        let sorted = {};
+        const sorted = {};
         noms.forEach(n => sorted[n] = groupesAffiches[n]);
 
         afficher(sorted);
     });
 });
 
-// Lancement
+// ----- Lancement -----
 chargerPostes();
 </script>
 
