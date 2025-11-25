@@ -5953,7 +5953,8 @@
     "latitude": 50.84420, 
     "longitude": 2.19507,
     "description": "Herse LGV",
-    "imajnet": ""
+    "imajnet": "",
+    "hors_patrimoine": true
   }, 
   {
     "nom": "Ruminghem",
@@ -5997,7 +5998,8 @@
     "latitude": 50.84421, 
     "longitude": 2.19513,
     "description": "Herse LGV",
-    "imajnet": ""
+    "imajnet": "",
+    "hors_patrimoine": true
   }, 
   {
     "nom": "Ruminghem",
@@ -6052,7 +6054,8 @@
     "latitude": 50.84422, 
     "longitude": 2.19526,
     "description": "Herse LGV",
-    "imajnet": ""
+    "imajnet": "",
+    "hors_patrimoine": true
   }, 
   {
     "nom": "Ruminghem",
@@ -6096,7 +6099,8 @@
     "latitude": 50.84422, 
     "longitude": 2.19533,
     "description": "Herse LGV",
-    "imajnet": ""
+    "imajnet": "",
+    "hors_patrimoine": true
   }, 
   {
     "nom": "Ruminghem",
@@ -6129,7 +6133,8 @@
     "latitude": 50.84450, 
     "longitude": 2.19357,
     "description": "Herse LC",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.844765227237154,2.1931189636506208;uid=ceab492a-9d08-4c8c-a571-1c8b8c0c0df2_209;"
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.844765227237154,2.1931189636506208;uid=ceab492a-9d08-4c8c-a571-1c8b8c0c0df2_209;",
+    "hors_patrimoine": true
   }, 
   {
     "nom": "Ruminghem",
@@ -6162,7 +6167,8 @@
     "latitude": 50.84457, 
     "longitude": 2.19349,
     "description": "Herse LC",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.844765227237154,2.1931189636506208;uid=ceab492a-9d08-4c8c-a571-1c8b8c0c0df2_209;"
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.844765227237154,2.1931189636506208;uid=ceab492a-9d08-4c8c-a571-1c8b8c0c0df2_209;",
+    "hors_patrimoine": true
   }, 
   {
     "nom": "Ruminghem",
@@ -6195,7 +6201,8 @@
     "latitude": 50.84461, 
     "longitude": 2.19345,
     "description": "Herse LC",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.844765227237154,2.1931189636506208;uid=ceab492a-9d08-4c8c-a571-1c8b8c0c0df2_209;"
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.844765227237154,2.1931189636506208;uid=ceab492a-9d08-4c8c-a571-1c8b8c0c0df2_209;",
+    "hors_patrimoine": true
   }, 
   {
     "nom": "Ruminghem",
@@ -6250,7 +6257,8 @@
     "latitude": 50.84464,
     "longitude": 2.19340,
     "description": "Herse LC",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.844765227237154,2.1931189636506208;uid=ceab492a-9d08-4c8c-a571-1c8b8c0c0df2_209;"
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.844765227237154,2.1931189636506208;uid=ceab492a-9d08-4c8c-a571-1c8b8c0c0df2_209;",
+    "hors_patrimoine": true
   }, 
   {
     "nom": "Ruminghem",
@@ -6347,7 +6355,8 @@
     "latitude": 50.64568,
     "longitude": 2.89851,
     "description": "",
-    "imajnet": ""
+    "imajnet": "",
+    "hors_patrimoine": true
   }, 
   {
     "nom": "Flamengrie",
@@ -6410,7 +6419,8 @@
     "latitude": 50.64578, 
     "longitude": 2.89843,
     "description": "",
-    "imajnet": ""
+    "imajnet": "",
+    "hors_patrimoine": true
   }, 
   {
     "nom": "Flamengrie",
@@ -6446,7 +6456,8 @@
     "latitude": 50.64579,
     "longitude": 2.89838,
     "description": "",
-    "imajnet": ""
+    "imajnet": "",
+    "hors_patrimoine": true
   }, 
   {
     "nom": "Flamengrie",
@@ -6491,7 +6502,8 @@
     "latitude": 50.64582, 
     "longitude": 2.89826,
     "description": "",
-    "imajnet": ""
+    "imajnet": "",
+    "hors_patrimoine": true
   }, 
   {
     "nom": "Flamengrie",
@@ -6527,7 +6539,8 @@
     "latitude": 50.64584, 
     "longitude": 2.89819,
     "description": "",
-    "imajnet": ""
+    "imajnet": "",
+    "hors_patrimoine": true
   }, 
   {
     "nom": "Flamengrie",
