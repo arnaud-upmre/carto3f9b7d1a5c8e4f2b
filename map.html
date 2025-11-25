@@ -733,13 +733,13 @@ if (id.startsWith("DU")) {
   id.startsWith("TSA") ||
   id.startsWith("TC") ||
   id.startsWith("TRA") ||
-  id === "GT1" ||
-  id === "GT2"
+  /^GT[0-9]+$/.test(id) ||
+  /^AT[0-9]+$/.test(id)
 ) {
   iconFile = "TT.png";
 
 } else if (
-  /^T([1-9]|10)\b/.test(id) ||      // ← FIX !!!
+  /^T([1-9]|10)\b/.test(id) ||     
   /^[0-9]/.test(id) ||
   id.startsWith("S") ||
   id.startsWith("ST") ||
@@ -1254,10 +1254,12 @@ if (ref.startsWith("DU")) {
   ref.startsWith("TT") ||
   ref.startsWith("TSA") ||
   ref.startsWith("TC") ||
-  ref.startsWith("TRA")||
-  ref === "GT1" ||
-  ref === "GT2"
+  ref.startsWith("TRA") ||
+  /^GT[0-9]+$/.test(ref) ||   
+  /^AT[0-9]+$/.test(ref)      
 ) {
+
+  
   appareilIcon = L.divIcon({
     html: `
       <div style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;">
