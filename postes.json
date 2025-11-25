@@ -5397,6 +5397,24 @@
     "poste_longitude": "3.34292"
   },
   {
+    "nom": "Lourches",
+    "type": "L",
+    "SAT": "SAT",
+    "accès": "",
+    "latitude": 50.30664, 
+    "longitude": 3.34714,
+    "description": "",
+    "description_telecommande": "ACS21",
+    "rss": "B",
+    "contact": "",
+    "portail": "",
+    "lignes": "BUSIGNY à SOMAIN",
+    "numero_ligne": 250000,
+    "pk": "",
+    "poste_latitude": "50.30459",
+    "poste_longitude": "3.34591"
+  },
+  {
     "nom": "Siege Exploitation Eurotunnel",
     "latitude": 50.92426,
     "longitude": 1.80846,
