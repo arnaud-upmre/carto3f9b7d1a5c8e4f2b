@@ -235,7 +235,12 @@ appareils = appareils.filter(a => a.hors_patrimoine !== true);
         hp: group(hp)
     };
 
-    afficher(groupesGlobaux.patrimoine);
+ // Tri A → Z par défaut
+let noms = Object.keys(groupesGlobaux.patrimoine).sort();
+let sorted = {};
+noms.forEach(n => sorted[n] = groupesGlobaux.patrimoine[n]);
+
+afficher(sorted);
 }
 
 // ----- AFFICHAGE -----
