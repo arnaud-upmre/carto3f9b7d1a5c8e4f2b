@@ -6000,6 +6000,24 @@
     "numero_ligne": "",
     "pk": "",
     "hors_patrimoine": true
+  }, 
+  {
+    "nom": "Bohain",
+    "type": "L",
+    "SAT": "",
+    "accès": "",
+    "latitude": 49.98822,
+    "longitude": 3.44319,
+    "description": "",
+        "description_telecommande": "ACS21",
+    "rss": "B",
+    "contact": "",
+    "portail": "",
+    "lignes": "CREIL à JEUMONT",
+    "numero_ligne": 242000,
+    "pk": "",
+    "poste_latitude": "49.98814",
+    "poste_longitude": "3.44302"
   }
 ]
 
