@@ -6018,6 +6018,24 @@
     "pk": "",
     "poste_latitude": "49.98792",
     "poste_longitude": "3.44294"
+  }, 
+  {
+    "nom": "Aubigny Au Bac",
+    "type": "L",
+    "SAT": "",
+    "accès": "",
+    "latitude": 50.27188, 
+    "longitude": 3.15964,
+    "description": "",
+        "description_telecommande": "",
+    "rss": "B",
+    "contact": "",
+    "portail": "",
+    "lignes": "CREIL à JEUMONT",
+    "numero_ligne": 259000,
+    "pk": "",
+    "poste_latitude": "50.27050", 
+    "poste_longitude": "3.15938"
   }
 ]
 
