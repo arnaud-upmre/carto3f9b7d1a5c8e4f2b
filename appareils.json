@@ -7136,5 +7136,55 @@
     "description": "",
     "imajnet": "",
     "hors_patrimoine": ""
+  },
+  {
+    "nom": "Yeuse",
+    "type": "P",
+    "appareil": "AT2",
+    "latitude": 50.81890, 
+    "longitude": 1.97690,
+    "description": "",
+    "imajnet": "",
+    "hors_patrimoine": ""
+  },
+  {
+    "nom": "Yeuse",
+    "type": "P",
+    "appareil": "SAT1",
+    "latitude": 50.81890, 
+    "longitude": 1.97690,
+    "description": "",
+    "imajnet": "",
+    "hors_patrimoine": ""
+  },
+  {
+    "nom": "Yeuse",
+    "type": "P",
+    "appareil": "SAT1",
+    "latitude": 50.81890,
+    "longitude": 1.97697,
+    "description": "",
+    "imajnet": "",
+    "hors_patrimoine": ""
+  },
+  {
+    "nom": "Yeuse",
+    "type": "P",
+    "appareil": "IMP2",
+    "latitude": 50.81890,
+    "longitude": 1.97697,
+    "description": "",
+    "imajnet": "",
+    "hors_patrimoine": ""
+  },
+  {
+    "nom": "Yeuse",
+    "type": "P",
+    "appareil": "TSA",
+    "latitude": 50.81890, 
+    "longitude": 1.97693,
+    "description": "",
+    "imajnet": "",
+    "hors_patrimoine": ""
   }
 ]
