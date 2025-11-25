@@ -168,6 +168,8 @@
 
 <script>
 const urlPostes = "https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/postes.json";
+    const urlAppareils = "https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/appareils.json";
+let appareils = [];
 
 let groupesGlobaux = {};  
 let groupesAffiches = {};  
@@ -192,6 +194,13 @@ function majCompteurs(groupes) {
 async function chargerPostes() {
     const res = await fetch(urlPostes);
     const postes = await res.json();
+
+    // Charger appareils.json
+const resApp = await fetch(urlAppareils);
+appareils = await resApp.json();
+
+// Exclure les appareils HP (on les affichera plus tard dans l'onglet HP)
+appareils = appareils.filter(a => a.hors_patrimoine !== true);
 
     // Groupe Patrimoine
     const patrimoine = postes.filter(p =>
@@ -246,21 +255,43 @@ function afficher(groupes) {
         let html = `
             <div class="card">
                 <div class="card-title">${nomPoste} <span class="pill">${type}</span></div>
-                <div><div class="section-title">Poste principal</div></div>
+                <div>
+    <div class="section-title">Poste principal</div>
+
+    ${
+        appareils.filter(a =>
+            a.nom === nomPoste &&
+            a.type === type &&
+            (!a.SAT || a.SAT.trim() === "")
+        ).map(a => `<span class="pill">${a.appareil}</span>`).join("")
+        ||
+        `<em style="color:#666;font-size:13px">Aucun appareil</em>`
+    }
+</div>
         `;
+Object.keys(satsGroupes).sort().forEach(sat => {
+    // Appareils de ce SAT
+    const appareilsSat = appareils.filter(a =>
+        a.nom === nomPoste &&
+        a.type === type &&
+        a.SAT === sat
+    );
 
-        Object.keys(satsGroupes).sort().forEach(sat => {
-            html += `
-                <div class="sat-block">
-                    <div class="section-title">${sat}</div>
-                </div>
-            `;
-        });
+    html += `
+        <div class="sat-block">
+            <div class="section-title">${sat}</div>
+            ${appareilsSat.length
+                ? appareilsSat.map(a => `<span class="pill">${a.appareil}</span>`).join("")
+                : `<em style="color:#666;font-size:13px">Aucun appareil</em>`}
+        </div>
+    `;
+});
+html += `</div>`; 
+zone.innerHTML += html;
 
-        html += `</div>`;
-        zone.innerHTML += html;
-    });
-}
+}); 
+
+} 
 
 // ----- ONGLET -----
 document.getElementById("tab-patrimoine").onclick = () => {
