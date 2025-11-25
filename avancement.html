@@ -110,15 +110,15 @@
         margin-bottom: 12px;
     }
 
-    .pill {
-        display: inline-block;
-        padding: 4px 8px;
-        background: #e5ebff;
-        color: #1a4ce8;
-        border-radius: 8px;
-        font-size: 12px;
-        margin-left: 6px;
-    }
+.pill {
+    display: inline-block;
+    padding: 4px 8px;
+    background: #e5ebff;
+    color: #1a4ce8;
+    border-radius: 8px;
+    font-size: 12px;
+    margin: 4px 6px 4px 0; /* <-- espacement horizontal ET vertical */
+}
 
 .section-title {
     font-weight: 600;
@@ -179,6 +179,7 @@ let mode = "patrimoine";   // onglet actif
 function majCompteurs(groupes) {
     const noms = Object.keys(groupes);
 
+    // Compter les SAT
     let totalSat = 0;
     noms.forEach(n => {
         groupes[n].forEach(p => {
@@ -186,8 +187,13 @@ function majCompteurs(groupes) {
         });
     });
 
+    // Compter les appareils en filtrant sur les postes affichés
+    const totalAppareils = appareils.filter(a =>
+        noms.includes(a.nom)
+    ).length;
+
     document.getElementById("counters").textContent =
-        `Nombre de postes : ${noms.length} — Nombre de SAT : ${totalSat}`;
+        `Nombre de postes : ${noms.length} — Nombre de SAT : ${totalSat} — Nombre d’appareils : ${totalAppareils}`;
 }
 
 // ----- CHARGEMENT JSON -----
