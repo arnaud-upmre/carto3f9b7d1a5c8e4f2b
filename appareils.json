@@ -3261,7 +3261,7 @@
     "longitude": 1.72832,
     "description": "",
     "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.80563697244964,1.7285181681642119;uid=cac35c07-3119-4957-94ad-77b33e9fb6fe_1774;",
-    "hors_patrimoine": "true"
+    "hors_patrimoine": true
   },
   {
     "nom": "Marquise",
