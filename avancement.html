@@ -161,6 +161,8 @@
     <button data-sort="za">Z → A</button>
     <button data-sort="num">Num. ligne ↑</button>
     <button data-sort="numdesc">Num. ligne ↓</button>
+    <button data-sort="appmax">+ appareils</button>
+    <button data-sort="appmin">- appareils</button>
 </div>
 
 <!-- Zone des postes -->
@@ -355,6 +357,24 @@ document.querySelectorAll(".filters button").forEach(btn => {
                 (groupesAffiches[a][0].numero_ligne || 0)
             );
         }
+
+        // Tri par nombre d’appareils (du plus au moins)
+if (sort === "appmax") {
+    noms.sort((a, b) => {
+        const countA = appareils.filter(x => x.nom === a).length;
+        const countB = appareils.filter(x => x.nom === b).length;
+        return countB - countA; // plus → moins
+    });
+}
+
+// Tri par nombre d’appareils (du moins au plus)
+if (sort === "appmin") {
+    noms.sort((a, b) => {
+        const countA = appareils.filter(x => x.nom === a).length;
+        const countB = appareils.filter(x => x.nom === b).length;
+        return countA - countB; // moins → plus
+    });
+}
 
         const sorted = {};
         noms.forEach(n => sorted[n] = groupesAffiches[n]);
