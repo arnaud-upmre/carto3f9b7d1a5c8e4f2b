@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Tableau Blanc – Nono Maps</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+    body {
+        font-family: Inter, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background:#f5f5f5;
+    }
+
+    h1 {
+        margin-bottom: 20px;
+        font-size: 22px;
+        font-weight: 600;
+    }
+
+    .tabs {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+    .tab {
+        padding: 8px 16px;
+        background: #ddd;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+    }
+    .tab.active {
+        background: #1a73e8;
+        color: white;
+    }
+
+    .post-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill,minmax(320px,1fr));
+        gap: 18px;
+    }
+
+    .card {
+        background: white;
+        padding: 15px;
+        border-radius: 14px;
+        box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+        border:1px solid #e6e6e6;
+    }
+
+    .card-title {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 12px;
+    }
+
+    .section-title {
+        font-weight: 600;
+        font-size: 14px;
+        background: #e9f0ff;
+        padding: 6px 10px;
+        border-radius: 6px;
+        display: inline-block;
+        margin-bottom: 6px;
+    }
+
+    .pill {
+        display:inline-block;
+        padding:4px 8px;
+        background:#eee;
+        border-radius:8px;
+        margin:2px;
+        font-size: 13px;
+    }
+
+    .sat-block {
+        margin-top: 12px;
+        padding-top: 8px;
+        border-top:1px dashed #ccc;
+    }
+</style>
+</head>
+<body>
+
+<h1>Tableau blanc – Nono Maps</h1>
+
+<div class="tabs">
+    <div class="tab active" id="tab-patrimoine">Patrimoine</div>
+    <div class="tab" id="tab-hors">Hors Patrimoine</div>
+</div>
+
+<div id="postesZone" class="post-container"></div>
+
+<script>
+const urlPostes = "https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/postes.json";
+
+async function chargerPostes() {
+    const res = await fetch(urlPostes);
+    const postes = await res.json();
+
+    // ➜ Filtre : on exclut special:true et hors_patrimoine:true
+    const filtres = postes.filter(p => p.special !== true && p.hors_patrimoine !== true);
+
+    // ➜ Regroupement par nom
+    const groupes = {};
+    filtres.forEach(item => {
+        if (!groupes[item.nom]) groupes[item.nom] = [];
+        groupes[item.nom].push(item);
+    });
+
+    afficherPatrimoine(groupes);
+}
+
+function afficherPatrimoine(groupes) {
+    const zone = document.getElementById("postesZone");
+    zone.innerHTML = "";
+
+    Object.keys(groupes).sort().forEach(nomPoste => {
+        const items = groupes[nomPoste];
+
+        // Type = type du premier élément (tous identiques normalement)
+        const type = items[0].type || "";
+
+        // Poste principal = SAT vide
+        const principal = items.filter(i => !i.SAT);
+        const sats = items.filter(i => i.SAT);
+
+        // Regroupement par SAT
+        const satsGroupes = {};
+        sats.forEach(s => {
+            if (!satsGroupes[s.SAT]) satsGroupes[s.SAT] = [];
+            satsGroupes[s.SAT].push(s);
+        });
+
+        // Construction HTML
+        let html = `<div class="card">
+            <div class="card-title">${nomPoste} <span class="pill">${type}</span></div>
+            
+            <div>
+                <div class="section-title">Poste principal</div>
+                ${principal.length ? principal.map(p => `<span class="pill">${p.appareil || ''}</span>`).join("") : '<em>Aucun appareil trouvé</em>'}
+            </div>
+        `;
+
+        // Ajout des SAT
+        Object.keys(satsGroupes).sort().forEach(sat => {
+            html += `
+                <div class="sat-block">
+                    <div class="section-title">${sat}</div>
+                    ${satsGroupes[sat].map(p => `<span class="pill">${p.appareil}</span>`).join("")}
+                </div>
+            `;
+        });
+
+        html += `</div>`;
+
+        zone.innerHTML += html;
+    });
+}
+
+chargerPostes();
+</script>
+
+</body>
+</html>
