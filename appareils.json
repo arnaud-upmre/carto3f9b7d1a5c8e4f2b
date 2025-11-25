@@ -3104,7 +3104,17 @@
     "type": "SP",
     "SAT": "",
     "accès": "",
-    "appareil": "SM4 + TT",
+    "appareil": "SM4",
+    "latitude": 50.6032593,
+    "longitude": 3.1079311,
+    "description": ""
+  },
+  {
+    "nom": "Lesquin",
+    "type": "SP",
+    "SAT": "",
+    "accès": "",
+    "appareil": "TT5202",
     "latitude": 50.6032593,
     "longitude": 3.1079311,
     "description": ""
