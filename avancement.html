@@ -276,7 +276,7 @@ function afficher(groupes) {
             a.nom === nomPoste &&
             a.type === type &&
             (!a.SAT || a.SAT.trim() === "")
-        ).map(a => `<span class="pill">${a.appareil}</span>`).join("")
+        ).map(a => `     <span class="pill"           onclick="window.location.href='index.html?id=${encodeURIComponent(a.appareil + ' ' + a.nom + ' ' + a.type + ' ' + (a.SAT || ''))}'">         ${a.appareil}     </span> `).join("")
         ||
         `<em style="color:#666;font-size:13px">Aucun appareil</em>`
     }
@@ -294,7 +294,12 @@ Object.keys(satsGroupes).sort().forEach(sat => {
         <div class="sat-block">
             <div class="section-title">${sat}</div>
             ${appareilsSat.length
-                ? appareilsSat.map(a => `<span class="pill">${a.appareil}</span>`).join("")
+       ? appareilsSat.map(a => `
+      <span class="pill"
+            onclick="window.location.href='index.html?id=${encodeURIComponent(a.appareil + ' ' + a.nom + ' ' + a.type + ' ' + (a.SAT || ''))}'">
+          ${a.appareil}
+      </span>
+  `).join("")
                 : `<em style="color:#666;font-size:13px">Aucun appareil</em>`}
         </div>
     `;
