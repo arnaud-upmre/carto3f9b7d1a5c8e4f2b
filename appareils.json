@@ -7206,5 +7206,45 @@
     "description": "",
     "imajnet": "",
     "hors_patrimoine": ""
+  },
+  {
+    "nom": "Blangy Est",
+    "type": "L",
+    "appareil": "I19",
+    "latitude": 50.29489, 
+    "longitude": 2.82737,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.294764622405786,2.827736959368596;uid=9781d04f-64d4-4445-89b1-ef4d53a03b34_79;",
+    "hors_patrimoine": ""
+  },
+  {
+    "nom": "Blangy Est",
+    "type": "L",
+    "appareil": "I15",
+    "latitude": 50.29489, 
+    "longitude": 2.82730,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.294764622405786,2.827736959368596;uid=9781d04f-64d4-4445-89b1-ef4d53a03b34_79;",
+    "hors_patrimoine": ""
+  },
+  {
+    "nom": "Blangy Est",
+    "type": "L",
+    "appareil": "I14",
+    "latitude": 50.29489, 
+    "longitude": 2.82723,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.294764622405786,2.827736959368596;uid=9781d04f-64d4-4445-89b1-ef4d53a03b34_79;",
+    "hors_patrimoine": ""
+  },
+  {
+    "nom": "Blangy Est",
+    "type": "L",
+    "appareil": "I17",
+    "latitude": 50.29489, 
+    "longitude": 2.82717,
+    "description": "",
+    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.294764622405786,2.827736959368596;uid=9781d04f-64d4-4445-89b1-ef4d53a03b34_79;",
+    "hors_patrimoine": ""
   }
 ]
