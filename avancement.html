@@ -201,7 +201,7 @@ async function chargerPostes() {
     );
 
     // Groupe Hors Patrimoine (tu as dit "tous les postes nommés HP")
-    const hp = postes.filter(p => String(p.nom).includes("HP"));
+ const hp = postes.filter(p => p.hors_patrimoine === true);
 
     // Regrouper par nom
     function group(liste) {
