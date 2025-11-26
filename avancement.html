@@ -282,8 +282,8 @@ function afficher(groupes) {
     <div class="section-title">Poste principal</div>
 
     ${
-       appareils.filter(a =>
-    a.hors_patrimoine !== true &&
+appareils.filter(a =>
+    (mode === "patrimoine" ? a.hors_patrimoine !== true : a.hors_patrimoine === true) &&
     a.nom === nomPoste &&
     a.type === type &&
     (!a.SAT || a.SAT.trim() === "")
@@ -305,8 +305,8 @@ function afficher(groupes) {
         `;
 Object.keys(satsGroupes).sort().forEach(sat => {
     // Appareils de ce SAT
-  const appareilsSat = appareils.filter(a =>
-    a.hors_patrimoine !== true &&
+const appareilsSat = appareils.filter(a =>
+    (mode === "patrimoine" ? a.hors_patrimoine !== true : a.hors_patrimoine === true) &&
     a.nom === nomPoste &&
     a.type === type &&
     a.SAT === sat
