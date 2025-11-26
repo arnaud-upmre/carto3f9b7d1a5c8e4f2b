@@ -207,9 +207,6 @@ async function chargerPostes() {
 const resApp = await fetch(urlAppareils);
 appareils = await resApp.json();
 
-// Exclure les appareils HP (on les affichera plus tard dans l'onglet HP)
-appareils = appareils.filter(a => a.hors_patrimoine !== true);
-
     // Groupe Patrimoine
     const patrimoine = postes.filter(p =>
         p.special !== true &&
@@ -217,19 +214,15 @@ appareils = appareils.filter(a => a.hors_patrimoine !== true);
         !String(p.nom).includes("HP")
     );
 
-    // Groupe Hors Patrimoine (tu as dit "tous les postes nommés HP")
 // 1) Postes hors patrimoine déclarés
 let hp = postes.filter(p => p.hors_patrimoine === true);
 
-// 2) On récupère TOUS les appareils HP
+// 2) On récupère TOUS les appareils HP (car maintenant appareils contient tout)
 const appareilsHP = appareils.filter(a => a.hors_patrimoine === true);
 
-// 3) On ajoute les postes patrimoine qui contiennent au moins un appareil HP
+// 3) On ajoute les postes patrimoine contenant un ou plusieurs appareils HP
 appareilsHP.forEach(a => {
-    const key = a.nom;
-    // vérifier si le poste existe déjà dans HP
     if (!hp.some(p => p.nom === a.nom)) {
-        // trouver le poste dans patrimoine
         const posteOriginal = postes.find(p => p.nom === a.nom);
         if (posteOriginal) {
             hp.push(posteOriginal);
@@ -289,11 +282,14 @@ function afficher(groupes) {
     <div class="section-title">Poste principal</div>
 
     ${
-        appareils.filter(a =>
-            a.nom === nomPoste &&
-            a.type === type &&
-            (!a.SAT || a.SAT.trim() === "")
-        ).map(a => {
+       appareils.filter(a =>
+    a.hors_patrimoine !== true &&
+    a.nom === nomPoste &&
+    a.type === type &&
+    (!a.SAT || a.SAT.trim() === "")
+)
+        
+        .map(a => {
     const id = `${a.appareil} ${a.nom} ${a.type} ${a.SAT || ''}`.trim();
     return `
         <span class="pill"
@@ -309,11 +305,12 @@ function afficher(groupes) {
         `;
 Object.keys(satsGroupes).sort().forEach(sat => {
     // Appareils de ce SAT
-    const appareilsSat = appareils.filter(a =>
-        a.nom === nomPoste &&
-        a.type === type &&
-        a.SAT === sat
-    );
+  const appareilsSat = appareils.filter(a =>
+    a.hors_patrimoine !== true &&
+    a.nom === nomPoste &&
+    a.type === type &&
+    a.SAT === sat
+);
 
     html += `
         <div class="sat-block">
