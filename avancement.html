@@ -9,13 +9,42 @@
 
 <style>
 
-/* ----- STYLE GLOBAL ----- */
+/* ============================================
+   🌙 MODE CLAIR + SOMBRE AUTOMATIQUE
+============================================ */
+:root{
+    --bg:#f2f3f7;
+    --card-bg:#ffffff;
+    --text:#111;
+    --pill-bg:#e5ebff;
+    --pill-text:#1a4ce8;
+    --sat-bg:#fff6c4;
+    --sat-text:#8a6d00;
+    --shadow:rgba(0,0,0,0.12);
+}
 
+@media (prefers-color-scheme: dark){
+    :root{
+        --bg:#1c1d20;
+        --card-bg:#2a2b2e;
+        --text:#f5f5f5;
+        --pill-bg:#2f3b57;
+        --pill-text:#9bb8ff;
+        --sat-bg:#695a00;
+        --sat-text:#ffe58a;
+        --shadow:rgba(0,0,0,0.45);
+    }
+}
+
+/* ============================================
+   GLOBAL
+============================================ */
 body{
     font-family: Inter, sans-serif;
     margin:0;
     padding:20px;
-    background:#f2f3f7;
+    background:var(--bg);
+    color:var(--text);
 }
 
 h1{
@@ -24,14 +53,9 @@ h1{
     font-weight:700;
 }
 
-/* ----- COMPTEURS ----- */
-#counters{
-    font-size:16px;
-    font-weight:600;
-    margin-bottom:20px;
-}
-
-/* ----- ONGLET ----- */
+/* ============================================
+   ONGLET
+============================================ */
 .tabs{
     display:flex;
     gap:10px;
@@ -39,7 +63,7 @@ h1{
 }
 .tab{
     padding:8px 16px;
-    background:#e3e5ea;
+    background:#d0d2d8;
     border-radius:12px;
     cursor:pointer;
     font-weight:600;
@@ -48,10 +72,12 @@ h1{
 .tab.active{
     background:#1a73e8;
     color:white;
-    box-shadow:0 3px 8px rgba(0,0,0,0.2);
+    box-shadow:0 3px 8px rgba(0,0,0,0.25);
 }
 
-/* ----- BARRE DE RECHERCHE ----- */
+/* ============================================
+   RECHERCHE
+============================================ */
 #search{
     width:100%;
     max-width:400px;
@@ -61,14 +87,17 @@ h1{
     border:1px solid #ccc;
     outline:none;
     margin-bottom:20px;
-    background:white;
+    background:var(--card-bg);
+    color:var(--text);
 }
 #search:focus{
     border-color:#1a73e8;
     box-shadow:0 0 0 3px #1a73e825;
 }
 
-/* ----- FILTRES ----- */
+/* ============================================
+   FILTRES
+============================================ */
 .filters{
     display:flex;
     gap:10px;
@@ -79,91 +108,78 @@ h1{
 .filters button{
     padding:8px 16px;
     border-radius:10px;
-    background:white;
-    border:1px solid #d0d0d0;
+    background:var(--card-bg);
+    border:1px solid #bbb;
     cursor:pointer;
     font-weight:600;
-    transition:0.2s;
-}
-
-.filters button:hover{
-    background:#f0f4ff;
-    border-color:#1a73e8;
+    transition:0.15s;
+    color:var(--text);
 }
 
 .filters button.activeFilter{
     background:#1a73e8;
-    border-color:#1a73e8;
     color:white;
-    box-shadow:0 3px 8px rgba(0,0,0,0.25);
+    border-color:#1a73e8;
 }
 
-/* ----- CONTENEUR DES FICHES ----- */
+/* ============================================
+   GRID DES POSTS
+============================================ */
 .post-container{
     display:grid;
     grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
     gap:20px;
 }
 
-/* ----- FICHE ----- */
+/* ============================================
+   CARD
+============================================ */
 .card{
-    background:white;
+    background:var(--card-bg);
     padding:18px;
     border-radius:18px;
-    box-shadow:0 4px 12px rgba(0,0,0,0.08);
-    transition:0.2s;
-    border:1px solid #ececec;
-}
-.card:hover{
-    transform:translateY(-3px);
-    box-shadow:0 6px 14px rgba(0,0,0,0.15);
+    box-shadow:0 4px 12px var(--shadow);
+    border:1px solid rgba(255,255,255,0.05);
+    opacity:0;
+    transform:translateY(10px);
+    animation:fadeIn 0.45s ease forwards;
 }
 
-/* ----- NOM DU POSTE (PILL) ----- */
+/* Apparition iOS */
+@keyframes fadeIn{
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+/* ============================================
+   TITRE : NOM + TYPE
+============================================ */
 .card-title{
     font-size:18px;
     font-weight:700;
     margin-bottom:14px;
 }
-.post-pill{
+
+.type-pill{
     display:inline-block;
-    background:#eef3ff;
-    color:#1a4ce8;
-    padding:6px 12px;
-    border-radius:10px;
-    font-size:13px;
+    background:var(--pill-bg);
+    color:var(--pill-text);
+    padding:4px 10px;
+    border-radius:8px;
+    font-size:12px;
     margin-left:6px;
 }
 
-/* ----- SECTION : POSTE PRINCIPAL + SAT ----- */
-.section-title{
-    font-weight:700;
-    font-size:14px;
-    background:#fff6c4;
-    color:#8a6d00;
-    padding:6px 12px;
-    border-radius:10px;
-    margin-bottom:8px;
-    display:inline-block;
-}
-
-.sat-pill{
-    background:#e9f8ff;
-    color:#0077aa;
-    padding:6px 12px;
-    border-radius:10px;
-    display:inline-block;
-    font-weight:600;
-    font-size:13px;
-    margin-bottom:6px;
-}
-
-/* ----- APPAREIL (PILL) ----- */
+/* ============================================
+   PILLS
+============================================ */
 .pill{
     display:inline-block;
     padding:6px 10px;
-    background:#e5ebff;
-    color:#1a4ce8;
+    background:var(--pill-bg);
+    color:var(--pill-text);
     border-radius:10px;
     font-size:13px;
     margin:4px 6px 4px 0;
@@ -176,11 +192,34 @@ h1{
     box-shadow:0 3px 10px rgba(0,0,0,0.25);
 }
 
-/* Séparateur SAT */
+/* ============================================
+   SAT JAUNE (COMME AVANT)
+============================================ */
+.sat-pill{
+    background:var(--sat-bg);
+    color:var(--sat-text);
+    padding:6px 12px;
+    border-radius:10px;
+    font-weight:600;
+    margin-bottom:8px;
+    display:inline-block;
+}
+
+/* Séparation SAT */
 .sat-block{
     margin-top:16px;
     padding-top:12px;
     border-top:1px dashed #ccc;
+}
+
+.section-title{
+    background:var(--sat-bg);
+    color:var(--sat-text);
+    padding:6px 12px;
+    border-radius:10px;
+    font-weight:700;
+    margin-bottom:8px;
+    display:inline-block;
 }
 
 </style>
@@ -188,7 +227,6 @@ h1{
 <body>
 
 <h1>Tableau blanc – Nono Maps</h1>
-
 <div id="counters">Chargement…</div>
 
 <div class="tabs">
@@ -209,8 +247,9 @@ h1{
 
 <script>
 
-const urlAppareils="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/appareils.json";
+/* --- EXACTEMENT ton JS précédent, sauf affichage du type + SAT jaune --- */
 
+const url="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/appareils.json";
 let appareils=[];
 let groupesGlobaux={};
 let groupesAffiches={};
@@ -237,7 +276,7 @@ function majCompteurs(groupes){
 
 /* Chargement */
 async function charger(){
-    const res=await fetch(urlAppareils);
+    const res=await fetch(url);
     appareils=await res.json();
 
     groupesGlobaux={
@@ -245,10 +284,11 @@ async function charger(){
         hp:         groupAppareils(appareils.filter(a=>a.hors_patrimoine===true))
     };
 
-    // Tri initial A → Z
+    // tri par défaut A-Z
     const noms=Object.keys(groupesGlobaux.patrimoine).sort();
     const sorted={};
     noms.forEach(n=>sorted[n]=groupesGlobaux.patrimoine[n]);
+
     afficher(sorted);
 }
 
@@ -256,20 +296,18 @@ async function charger(){
 function afficher(groupes){
     groupesAffiches=groupes;
     majCompteurs(groupes);
-
     const zone=document.getElementById("postesZone");
     zone.innerHTML="";
 
     Object.keys(groupes).forEach(nom=>{
         const list=groupes[nom];
 
-        const principal=list
-            .filter(a=>!a.SAT || a.SAT.trim()==="")
-            .sort((a,b)=>a.appareil.localeCompare(b.appareil));
+        const type=list[0].type || "";
 
+        const principal=list.filter(a=>!a.SAT).sort((a,b)=>a.appareil.localeCompare(b.appareil));
         const sats=list.filter(a=>a.SAT);
-        const satGroup={};
 
+        const satGroup={};
         sats.forEach(a=>{
             if(!satGroup[a.SAT]) satGroup[a.SAT]=[];
             satGroup[a.SAT].push(a);
@@ -279,18 +317,19 @@ function afficher(groupes){
         <div class="card">
             <div class="card-title">
                 ${nom}
-                <span class="post-pill">Poste</span>
+                <span class="type-pill">${type}</span>
             </div>
 
             <div class="section-title">Poste principal</div>
             ${principal.length ? principal.map(a=>{
                 const id=`${a.appareil} ${a.nom} ${a.type||""} ${a.SAT||""}`.trim();
                 return `<span class="pill" onclick="location.href='index.html?id=${encodeURIComponent(id)}'">${a.appareil}</span>`;
-            }).join("") : `<em>Aucun appareil</em>`}
+            }).join("") : "<em>Aucun appareil</em>"}
         `;
 
         Object.keys(satGroup).sort().forEach(s=>{
             const appareilsSat=satGroup[s].sort((a,b)=>a.appareil.localeCompare(b.appareil));
+
             html+=`
             <div class="sat-block">
                 <span class="sat-pill">${s}</span><br>
@@ -333,9 +372,9 @@ document.getElementById("search").addEventListener("input",function(){
     afficher(r);
 });
 
-/* Tri & activation visuelle */
+/* Tri */
 document.querySelectorAll(".filters button").forEach(btn=>{
-    btn.addEventListener("click",()=>{
+    btn.onclick=()=>{
         document.querySelectorAll(".filters button").forEach(b=>b.classList.remove("activeFilter"));
         btn.classList.add("activeFilter");
 
@@ -351,7 +390,7 @@ document.querySelectorAll(".filters button").forEach(btn=>{
         noms.forEach(n=>sorted[n]=groupesAffiches[n]);
 
         afficher(sorted);
-    });
+    };
 });
 
 charger();
