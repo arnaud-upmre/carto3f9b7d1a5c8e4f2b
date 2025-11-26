@@ -61,10 +61,6 @@
         box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
 
-    #search:focus {
-        border-color: #1a73e8;
-    }
-
     /* Filtres */
     .filters {
         display: flex;
@@ -82,20 +78,14 @@
         font-weight: 600;
         transition: 0.2s;
     }
-    .filters button:hover {
-        background: #e8f0fe;
-        border-color: #1a73e8;
-        color: #1a73e8;
-    }
 
-    /* Conteneur des cartes */
+    /* Grille */
     .post-container {
         display: grid;
         grid-template-columns: repeat(auto-fill,minmax(320px,1fr));
         gap: 18px;
     }
 
-    /* Carte poste */
     .card {
         background: white;
         padding: 15px;
@@ -110,150 +100,105 @@
         margin-bottom: 12px;
     }
 
-.pill {
-    display: inline-block;
-    padding: 4px 8px;
-    background: #e5ebff;
-    color: #1a4ce8;
-    border-radius: 8px;
-    font-size: 12px;
-    margin: 4px 6px 4px 0; /* <-- espacement horizontal ET vertical */
-}
+    .pill {
+        display: inline-block;
+        padding: 4px 8px;
+        background: #e5ebff;
+        color: #1a4ce8;
+        border-radius: 8px;
+        font-size: 12px;
+        margin: 4px 6px 4px 0;
+        cursor: pointer;
+    }
 
-.section-title {
-    font-weight: 600;
-    font-size: 14px;
-    background: #fff6c4;   
-    color: #8a6d00;      
-    padding: 6px 10px;
-    border-radius: 6px;
-    display: inline-block;
-    margin-bottom: 6px;
-}
+    .section-title {
+        font-weight: 600;
+        font-size: 14px;
+        background: #fff6c4;
+        color: #8a6d00;
+        padding: 6px 10px;
+        border-radius: 6px;
+        display: inline-block;
+        margin-bottom: 6px;
+    }
 
     .sat-block {
         margin-top: 12px;
         padding-top: 8px;
         border-top: 1px dashed #ccc;
     }
-</style>
 
+</style>
 </head>
 <body>
 
 <h1>Tableau blanc – Nono Maps</h1>
 
-<!-- Compteurs -->
 <div id="counters">Chargement…</div>
 
-<!-- ONGLET -->
 <div class="tabs">
     <div class="tab active" id="tab-patrimoine">Patrimoine</div>
     <div class="tab" id="tab-hp">Hors Patrimoine</div>
 </div>
 
-<!-- Barre de recherche intelligente -->
 <input type="text" id="search" placeholder="Rechercher un poste…">
 
-<!-- Filtres -->
 <div class="filters">
     <button data-sort="az">A → Z</button>
     <button data-sort="za">Z → A</button>
-    <button data-sort="num">Num. ligne ↑</button>
-    <button data-sort="numdesc">Num. ligne ↓</button>
     <button data-sort="appmax">+ appareils</button>
     <button data-sort="appmin">- appareils</button>
 </div>
 
-<!-- Zone des postes -->
 <div id="postesZone" class="post-container"></div>
 
 <script>
-const urlPostes = "https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/postes.json";
-    const urlAppareils = "https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/appareils.json";
+
+const urlAppareils = "https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/appareils.json";
+
 let appareils = [];
+let groupesGlobaux = {};
+let groupesAffiches = {};
+let mode = "patrimoine";
 
-let groupesGlobaux = {};  
-let groupesAffiches = {};  
-let mode = "patrimoine";   // onglet actif
+/* Groupement par nom */
+function groupAppareils(liste) {
+    const g = {};
+    liste.forEach(a => {
+        if (!g[a.nom]) g[a.nom] = [];
+        g[a.nom].push(a);
+    });
+    return g;
+}
 
-// ----- COMPTEURS -----
+/* Compteurs */
 function majCompteurs(groupes) {
     const noms = Object.keys(groupes);
-
-    // Compter les SAT
-    let totalSat = 0;
-    noms.forEach(n => {
-        groupes[n].forEach(p => {
-            if (p.SAT) totalSat++;
-        });
-    });
-
-    // Compter les appareils en filtrant sur les postes affichés
-    const totalAppareils = appareils.filter(a =>
-        noms.includes(a.nom)
-    ).length;
+    let totalAppareils = 0;
+    noms.forEach(n => totalAppareils += groupes[n].length);
 
     document.getElementById("counters").textContent =
-        `Nombre de postes : ${noms.length} — Nombre de SAT : ${totalSat} — Nombre d’appareils : ${totalAppareils}`;
+        `Nombre de postes : ${noms.length} — Nombre d’appareils : ${totalAppareils}`;
 }
 
-// ----- CHARGEMENT JSON -----
-async function chargerPostes() {
-    const res = await fetch(urlPostes);
-    const postes = await res.json();
-
-    // Charger appareils.json
-const resApp = await fetch(urlAppareils);
-appareils = await resApp.json();
-
-    // Groupe Patrimoine
-    const patrimoine = postes.filter(p =>
-        p.special !== true &&
-        p.hors_patrimoine !== true &&
-        !String(p.nom).includes("HP")
-    );
-
-// 1) Postes hors patrimoine déclarés
-let hp = postes.filter(p => p.hors_patrimoine === true);
-
-// 2) On récupère TOUS les appareils HP (car maintenant appareils contient tout)
-const appareilsHP = appareils.filter(a => a.hors_patrimoine === true);
-
-// 3) On ajoute les postes patrimoine contenant un ou plusieurs appareils HP
-appareilsHP.forEach(a => {
-    if (!hp.some(p => p.nom === a.nom)) {
-        const posteOriginal = postes.find(p => p.nom === a.nom);
-        if (posteOriginal) {
-            hp.push(posteOriginal);
-        }
-    }
-});
-
-    // Regrouper par nom
-    function group(liste) {
-        const g = {};
-        liste.forEach(i => {
-            if (!g[i.nom]) g[i.nom] = [];
-            g[i.nom].push(i);
-        });
-        return g;
-    }
+/* Chargement */
+async function charger() {
+    const res = await fetch(urlAppareils);
+    appareils = await res.json();
 
     groupesGlobaux = {
-        patrimoine: group(patrimoine),
-        hp: group(hp)
+        patrimoine: groupAppareils(appareils.filter(a => a.hors_patrimoine !== true)),
+        hp:         groupAppareils(appareils.filter(a => a.hors_patrimoine === true))
     };
 
- // Tri A → Z par défaut
-let noms = Object.keys(groupesGlobaux.patrimoine).sort();
-let sorted = {};
-noms.forEach(n => sorted[n] = groupesGlobaux.patrimoine[n]);
+    let noms = Object.keys(groupesGlobaux.patrimoine).sort();
+    const sorted = {};
+    noms.forEach(n => sorted[n] = groupesGlobaux.patrimoine[n]);
 
-afficher(sorted);
+    afficher(sorted);
 }
 
-// ----- AFFICHAGE -----
+/* Affichage */
 function afficher(groupes) {
     groupesAffiches = groupes;
     majCompteurs(groupes);
@@ -261,88 +206,37 @@ function afficher(groupes) {
     const zone = document.getElementById("postesZone");
     zone.innerHTML = "";
 
-    Object.keys(groupes).forEach(nomPoste => {
-
-        const items = groupes[nomPoste];
-        const type = items[0].type || "";
-
-        const principal = items.filter(i => !i.SAT);
-        const sats = items.filter(i => i.SAT);
-
-        const satsGroupes = {};
-        sats.forEach(s => {
-            if (!satsGroupes[s.SAT]) satsGroupes[s.SAT] = [];
-            satsGroupes[s.SAT].push(s);
-        });
+    Object.keys(groupes).forEach(nom => {
+        const list = groupes[nom];
 
         let html = `
             <div class="card">
-                <div class="card-title">${nomPoste} <span class="pill">${type}</span></div>
-                <div>
-    <div class="section-title">Poste principal</div>
-
-    ${
-appareils.filter(a =>
-    (mode === "patrimoine" ? a.hors_patrimoine !== true : a.hors_patrimoine === true) &&
-    a.nom === nomPoste &&
-    a.type === type &&
-    (!a.SAT || a.SAT.trim() === "")
-)
-        
-        .map(a => {
-    const id = `${a.appareil} ${a.nom} ${a.type} ${a.SAT || ''}`.trim();
-    return `
-        <span class="pill"
-              onclick="window.location.href='index.html?id=${encodeURIComponent(id)}'">
-            ${a.appareil}
-        </span>
-    `;
-}).join("")
-        ||
-        `<em style="color:#666;font-size:13px">Aucun appareil</em>`
-    }
-</div>
+                <div class="card-title">${nom}</div>
+                <div class="section-title">Appareils</div>
         `;
-Object.keys(satsGroupes).sort().forEach(sat => {
-    // Appareils de ce SAT
-const appareilsSat = appareils.filter(a =>
-    (mode === "patrimoine" ? a.hors_patrimoine !== true : a.hors_patrimoine === true) &&
-    a.nom === nomPoste &&
-    a.type === type &&
-    a.SAT === sat
-);
 
-    html += `
-        <div class="sat-block">
-            <div class="section-title">${sat}</div>
-            ${appareilsSat.length
-  ? appareilsSat.map(a => {
-      const id = `${a.appareil} ${a.nom} ${a.type} ${a.SAT || ''}`.trim();
-      return `
-          <span class="pill"
-                onclick="window.location.href='index.html?id=${encodeURIComponent(id)}'">
-              ${a.appareil}
-          </span>
-      `;
-  }).join("")
-                : `<em style="color:#666;font-size:13px">Aucun appareil</em>`}
-        </div>
-    `;
-});
-html += `</div>`; 
-zone.innerHTML += html;
+        html += list.map(a => {
+            const id = `${a.appareil} ${a.nom} ${a.type ?? ""} ${a.SAT ?? ""}`.trim();
+            return `
+                <span class="pill"
+                    onclick="window.location.href='index.html?id=${encodeURIComponent(id)}'">
+                    ${a.appareil}
+                </span>`;
+        }).join("");
 
-}); 
+        html += `</div>`;
+        zone.innerHTML += html;
+    });
+}
 
-} 
-
-// ----- ONGLET -----
+/* Onglets */
 document.getElementById("tab-patrimoine").onclick = () => {
     mode = "patrimoine";
     document.getElementById("tab-patrimoine").classList.add("active");
     document.getElementById("tab-hp").classList.remove("active");
     afficher(groupesGlobaux.patrimoine);
 };
+
 document.getElementById("tab-hp").onclick = () => {
     mode = "hp";
     document.getElementById("tab-hp").classList.add("active");
@@ -350,26 +244,22 @@ document.getElementById("tab-hp").onclick = () => {
     afficher(groupesGlobaux.hp);
 };
 
-// ----- RECHERCHE -----
+/* Recherche */
 document.getElementById("search").addEventListener("input", function () {
-    const txt = this.value.trim();
+    const txt = this.value.trim().toLowerCase();
+    const base = groupesGlobaux[mode];
 
-    const groupeBase = groupesGlobaux[mode];
-    if (txt === "") return afficher(groupeBase);
+    if (txt === "") return afficher(base);
 
-    const fuse = new Fuse(Object.keys(groupeBase), {
-        threshold: 0.3,
-        includeScore: true
+    const results = {};
+    Object.keys(base).forEach(nom => {
+        if (nom.toLowerCase().includes(txt)) results[nom] = base[nom];
     });
 
-    const results = fuse.search(txt);
-    const newGroup = {};
-    results.forEach(r => newGroup[r.item] = groupeBase[r.item]);
-
-    afficher(newGroup);
+    afficher(results);
 });
 
-// ----- TRI -----
+/* Tri */
 document.querySelectorAll(".filters button").forEach(btn => {
     btn.addEventListener("click", () => {
 
@@ -379,37 +269,13 @@ document.querySelectorAll(".filters button").forEach(btn => {
         if (sort === "az") noms.sort();
         if (sort === "za") noms.sort().reverse();
 
-        if (sort === "num") {
-            noms.sort((a,b) =>
-                (groupesAffiches[a][0].numero_ligne || 999999) -
-                (groupesAffiches[b][0].numero_ligne || 999999)
-            );
+        if (sort === "appmax") {
+            noms.sort((a, b) => groupesAffiches[b].length - groupesAffiches[a].length);
         }
 
-        if (sort === "numdesc") {
-            noms.sort((a,b) =>
-                (groupesAffiches[b][0].numero_ligne || 0) -
-                (groupesAffiches[a][0].numero_ligne || 0)
-            );
+        if (sort === "appmin") {
+            noms.sort((a, b) => groupesAffiches[a].length - groupesAffiches[b].length);
         }
-
-        // Tri par nombre d’appareils (du plus au moins)
-if (sort === "appmax") {
-    noms.sort((a, b) => {
-        const countA = appareils.filter(x => x.nom === a).length;
-        const countB = appareils.filter(x => x.nom === b).length;
-        return countB - countA; // plus → moins
-    });
-}
-
-// Tri par nombre d’appareils (du moins au plus)
-if (sort === "appmin") {
-    noms.sort((a, b) => {
-        const countA = appareils.filter(x => x.nom === a).length;
-        const countB = appareils.filter(x => x.nom === b).length;
-        return countA - countB; // moins → plus
-    });
-}
 
         const sorted = {};
         noms.forEach(n => sorted[n] = groupesAffiches[n]);
@@ -418,8 +284,9 @@ if (sort === "appmin") {
     });
 });
 
-// ----- Lancement -----
-chargerPostes();
+/* Start */
+charger();
+
 </script>
 
 </body>
