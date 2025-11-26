@@ -89,7 +89,7 @@ let groupesGlobaux={};
 let groupesAffiches={};
 let mode="patrimoine";
 
-/* Groupe par poste */
+/* Groupement par poste */
 function groupAppareils(liste){
     const g={};
     liste.forEach(a=>{
@@ -104,7 +104,6 @@ function majCompteurs(groupes){
     const noms=Object.keys(groupes);
     let total=0;
     noms.forEach(n=> total+=groupes[n].length);
-
     document.getElementById("counters").textContent=
         `Nombre de postes : ${noms.length} — Nombre d’appareils : ${total}`;
 }
@@ -119,6 +118,7 @@ async function charger(){
         hp:         groupAppareils(appareils.filter(a=>a.hors_patrimoine===true))
     };
 
+    // TRI AUTOMATIQUE A → Z DES LE CHARGEMENT
     let noms=Object.keys(groupesGlobaux.patrimoine).sort();
     const sorted={};
     noms.forEach(n=> sorted[n]=groupesGlobaux.patrimoine[n]);
@@ -137,15 +137,21 @@ function afficher(groupes){
     Object.keys(groupes).forEach(nom=>{
         const list=groupes[nom];
 
-        const principal=list.filter(a=>!a.SAT || a.SAT.trim()==="");
-        const sats   =list.filter(a=>a.SAT && a.SAT.trim()!=="");
+        // Poste principal : tri A→Z
+        const principal=list
+            .filter(a=>!a.SAT || a.SAT.trim()==="")
+            .sort((a,b)=>a.appareil.localeCompare(b.appareil));
 
-        /* Regroupe par SAT */
+        // SAT tri A→Z puis appareils par A→Z
+        const sats=list.filter(a=>a.SAT && a.SAT.trim()!=="");
         const satsGroup={};
         sats.forEach(a=>{
             if(!satsGroup[a.SAT]) satsGroup[a.SAT]=[];
             satsGroup[a.SAT].push(a);
         });
+
+        // TRIER les SAT par leur nom
+        const sortedSAT=Object.keys(satsGroup).sort();
 
         let html=`
         <div class="card">
@@ -158,12 +164,14 @@ function afficher(groupes){
             }).join("") : `<em>Aucun appareil</em>`}
         `;
 
-        /* SAT */
-        Object.keys(satsGroup).sort().forEach(s=>{
+        // Pour chaque SAT trié
+        sortedSAT.forEach(s=>{
+            const appareilsSat=satsGroup[s].sort((a,b)=>a.appareil.localeCompare(b.appareil));
+
             html+=`
             <div class="sat-block">
                 <div class="section-title">${s}</div>
-                ${satsGroup[s].map(a=>{
+                ${appareilsSat.map(a=>{
                     const id=`${a.appareil} ${a.nom} ${a.type??""} ${a.SAT??""}`.trim();
                     return `<span class="pill" onclick="location.href='index.html?id=${encodeURIComponent(id)}'">${a.appareil}</span>`;
                 }).join("")}
@@ -182,7 +190,6 @@ document.getElementById("tab-patrimoine").onclick=()=>{
     document.getElementById("tab-hp").classList.remove("active");
     afficher(groupesGlobaux.patrimoine);
 };
-
 document.getElementById("tab-hp").onclick=()=>{
     mode="hp";
     document.getElementById("tab-hp").classList.add("active");
@@ -214,13 +221,11 @@ document.querySelectorAll(".filters button").forEach(btn=>{
         if(sort==="az") noms.sort();
         if(sort==="za") noms.sort().reverse();
 
-        if(sort==="appmax"){
+        if(sort==="appmax")
             noms.sort((a,b)=> groupesAffiches[b].length - groupesAffiches[a].length);
-        }
 
-        if(sort==="appmin"){
+        if(sort==="appmin")
             noms.sort((a,b)=> groupesAffiches[a].length - groupesAffiches[b].length);
-        }
 
         const sorted={};
         noms.forEach(n=> sorted[n]=groupesAffiches[n]);
@@ -228,6 +233,7 @@ document.querySelectorAll(".filters button").forEach(btn=>{
     });
 });
 
+/* Start */
 charger();
 
 </script>
