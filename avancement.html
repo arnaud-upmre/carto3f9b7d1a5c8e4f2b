@@ -9,50 +9,177 @@
 
 <style>
 
-body{font-family:Inter,sans-serif;margin:0;padding:20px;background:#f5f6fa;}
-h1{margin-bottom:10px;font-size:22px;font-weight:600;}
+/* ----- STYLE GLOBAL ----- */
 
-#counters{font-size:16px;font-weight:600;margin-bottom:20px;}
+body{
+    font-family: Inter, sans-serif;
+    margin:0;
+    padding:20px;
+    background:#f2f3f7;
+}
 
-.tabs{display:flex;gap:10px;margin-bottom:20px;}
-.tab{padding:8px 16px;background:#ddd;border-radius:8px;cursor:pointer;font-weight:600;}
-.tab.active{background:#1a73e8;color:white;}
+h1{
+    margin-bottom:10px;
+    font-size:24px;
+    font-weight:700;
+}
 
-#search{width:100%;max-width:400px;padding:12px 16px;font-size:15px;border-radius:10px;border:1px solid #bbb;margin-bottom:20px;}
-
-.filters{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
-.filters button{padding:8px 14px;border:1px solid #ccc;border-radius:8px;background:white;font-weight:600;cursor:pointer;}
-
-.post-container{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px;}
-
-.card{background:white;padding:15px;border-radius:14px;box-shadow:0 3px 12px rgba(0,0,0,0.12);}
-.card-title{font-size:18px;font-weight:600;margin-bottom:12px;}
-
-.section-title{
+/* ----- COMPTEURS ----- */
+#counters{
+    font-size:16px;
     font-weight:600;
+    margin-bottom:20px;
+}
+
+/* ----- ONGLET ----- */
+.tabs{
+    display:flex;
+    gap:10px;
+    margin-bottom:20px;
+}
+.tab{
+    padding:8px 16px;
+    background:#e3e5ea;
+    border-radius:12px;
+    cursor:pointer;
+    font-weight:600;
+    transition:0.2s;
+}
+.tab.active{
+    background:#1a73e8;
+    color:white;
+    box-shadow:0 3px 8px rgba(0,0,0,0.2);
+}
+
+/* ----- BARRE DE RECHERCHE ----- */
+#search{
+    width:100%;
+    max-width:400px;
+    padding:12px 18px;
+    font-size:15px;
+    border-radius:12px;
+    border:1px solid #ccc;
+    outline:none;
+    margin-bottom:20px;
+    background:white;
+}
+#search:focus{
+    border-color:#1a73e8;
+    box-shadow:0 0 0 3px #1a73e825;
+}
+
+/* ----- FILTRES ----- */
+.filters{
+    display:flex;
+    gap:10px;
+    margin-bottom:20px;
+    flex-wrap:wrap;
+}
+
+.filters button{
+    padding:8px 16px;
+    border-radius:10px;
+    background:white;
+    border:1px solid #d0d0d0;
+    cursor:pointer;
+    font-weight:600;
+    transition:0.2s;
+}
+
+.filters button:hover{
+    background:#f0f4ff;
+    border-color:#1a73e8;
+}
+
+.filters button.activeFilter{
+    background:#1a73e8;
+    border-color:#1a73e8;
+    color:white;
+    box-shadow:0 3px 8px rgba(0,0,0,0.25);
+}
+
+/* ----- CONTENEUR DES FICHES ----- */
+.post-container{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+    gap:20px;
+}
+
+/* ----- FICHE ----- */
+.card{
+    background:white;
+    padding:18px;
+    border-radius:18px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.08);
+    transition:0.2s;
+    border:1px solid #ececec;
+}
+.card:hover{
+    transform:translateY(-3px);
+    box-shadow:0 6px 14px rgba(0,0,0,0.15);
+}
+
+/* ----- NOM DU POSTE (PILL) ----- */
+.card-title{
+    font-size:18px;
+    font-weight:700;
+    margin-bottom:14px;
+}
+.post-pill{
+    display:inline-block;
+    background:#eef3ff;
+    color:#1a4ce8;
+    padding:6px 12px;
+    border-radius:10px;
+    font-size:13px;
+    margin-left:6px;
+}
+
+/* ----- SECTION : POSTE PRINCIPAL + SAT ----- */
+.section-title{
+    font-weight:700;
     font-size:14px;
     background:#fff6c4;
     color:#8a6d00;
-    padding:6px 10px;
-    border-radius:6px;
-    margin-bottom:6px;
+    padding:6px 12px;
+    border-radius:10px;
+    margin-bottom:8px;
     display:inline-block;
 }
 
+.sat-pill{
+    background:#e9f8ff;
+    color:#0077aa;
+    padding:6px 12px;
+    border-radius:10px;
+    display:inline-block;
+    font-weight:600;
+    font-size:13px;
+    margin-bottom:6px;
+}
+
+/* ----- APPAREIL (PILL) ----- */
 .pill{
     display:inline-block;
-    padding:4px 8px;
+    padding:6px 10px;
     background:#e5ebff;
     color:#1a4ce8;
-    border-radius:8px;
-    font-size:12px;
+    border-radius:10px;
+    font-size:13px;
     margin:4px 6px 4px 0;
     cursor:pointer;
+    transition:0.15s;
 }
 
+.pill:hover{
+    transform:translateY(-2px);
+    box-shadow:0 3px 10px rgba(0,0,0,0.25);
+}
+
+/* Séparateur SAT */
 .sat-block{
-    margin-top:12px;
-    padding-top:8px;
+    margin-top:16px;
+    padding-top:12px;
     border-top:1px dashed #ccc;
 }
 
@@ -69,7 +196,7 @@ h1{margin-bottom:10px;font-size:22px;font-weight:600;}
     <div class="tab" id="tab-hp">Hors Patrimoine</div>
 </div>
 
-<input type="text" id="search" placeholder="Rechercher un poste…">
+<input id="search" type="text" placeholder="Rechercher un poste…">
 
 <div class="filters">
     <button data-sort="az">A → Z</button>
@@ -89,7 +216,7 @@ let groupesGlobaux={};
 let groupesAffiches={};
 let mode="patrimoine";
 
-/* Groupement par poste */
+/* Groupement */
 function groupAppareils(liste){
     const g={};
     liste.forEach(a=>{
@@ -118,11 +245,10 @@ async function charger(){
         hp:         groupAppareils(appareils.filter(a=>a.hors_patrimoine===true))
     };
 
-    // TRI AUTOMATIQUE A → Z DES LE CHARGEMENT
-    let noms=Object.keys(groupesGlobaux.patrimoine).sort();
+    // Tri initial A → Z
+    const noms=Object.keys(groupesGlobaux.patrimoine).sort();
     const sorted={};
-    noms.forEach(n=> sorted[n]=groupesGlobaux.patrimoine[n]);
-
+    noms.forEach(n=>sorted[n]=groupesGlobaux.patrimoine[n]);
     afficher(sorted);
 }
 
@@ -137,42 +263,39 @@ function afficher(groupes){
     Object.keys(groupes).forEach(nom=>{
         const list=groupes[nom];
 
-        // Poste principal : tri A→Z
         const principal=list
             .filter(a=>!a.SAT || a.SAT.trim()==="")
             .sort((a,b)=>a.appareil.localeCompare(b.appareil));
 
-        // SAT tri A→Z puis appareils par A→Z
-        const sats=list.filter(a=>a.SAT && a.SAT.trim()!=="");
-        const satsGroup={};
-        sats.forEach(a=>{
-            if(!satsGroup[a.SAT]) satsGroup[a.SAT]=[];
-            satsGroup[a.SAT].push(a);
-        });
+        const sats=list.filter(a=>a.SAT);
+        const satGroup={};
 
-        // TRIER les SAT par leur nom
-        const sortedSAT=Object.keys(satsGroup).sort();
+        sats.forEach(a=>{
+            if(!satGroup[a.SAT]) satGroup[a.SAT]=[];
+            satGroup[a.SAT].push(a);
+        });
 
         let html=`
         <div class="card">
-            <div class="card-title">${nom}</div>
+            <div class="card-title">
+                ${nom}
+                <span class="post-pill">Poste</span>
+            </div>
 
             <div class="section-title">Poste principal</div>
             ${principal.length ? principal.map(a=>{
-                const id=`${a.appareil} ${a.nom} ${a.type??""} ${a.SAT??""}`.trim();
+                const id=`${a.appareil} ${a.nom} ${a.type||""} ${a.SAT||""}`.trim();
                 return `<span class="pill" onclick="location.href='index.html?id=${encodeURIComponent(id)}'">${a.appareil}</span>`;
             }).join("") : `<em>Aucun appareil</em>`}
         `;
 
-        // Pour chaque SAT trié
-        sortedSAT.forEach(s=>{
-            const appareilsSat=satsGroup[s].sort((a,b)=>a.appareil.localeCompare(b.appareil));
-
+        Object.keys(satGroup).sort().forEach(s=>{
+            const appareilsSat=satGroup[s].sort((a,b)=>a.appareil.localeCompare(b.appareil));
             html+=`
             <div class="sat-block">
-                <div class="section-title">${s}</div>
+                <span class="sat-pill">${s}</span><br>
                 ${appareilsSat.map(a=>{
-                    const id=`${a.appareil} ${a.nom} ${a.type??""} ${a.SAT??""}`.trim();
+                    const id=`${a.appareil} ${a.nom} ${a.type||""} ${a.SAT||""}`.trim();
                     return `<span class="pill" onclick="location.href='index.html?id=${encodeURIComponent(id)}'">${a.appareil}</span>`;
                 }).join("")}
             </div>`;
@@ -186,54 +309,51 @@ function afficher(groupes){
 /* Onglets */
 document.getElementById("tab-patrimoine").onclick=()=>{
     mode="patrimoine";
+    afficher(groupesGlobaux.patrimoine);
     document.getElementById("tab-patrimoine").classList.add("active");
     document.getElementById("tab-hp").classList.remove("active");
-    afficher(groupesGlobaux.patrimoine);
 };
 document.getElementById("tab-hp").onclick=()=>{
     mode="hp";
+    afficher(groupesGlobaux.hp);
     document.getElementById("tab-hp").classList.add("active");
     document.getElementById("tab-patrimoine").classList.remove("active");
-    afficher(groupesGlobaux.hp);
 };
 
 /* Recherche */
 document.getElementById("search").addEventListener("input",function(){
     const txt=this.value.trim().toLowerCase();
     const base=groupesGlobaux[mode];
-
     if(txt==="") return afficher(base);
 
-    const result={};
+    const r={};
     Object.keys(base).forEach(n=>{
-        if(n.toLowerCase().includes(txt)) result[n]=base[n];
+        if(n.toLowerCase().includes(txt)) r[n]=base[n];
     });
-
-    afficher(result);
+    afficher(r);
 });
 
-/* Tri */
+/* Tri & activation visuelle */
 document.querySelectorAll(".filters button").forEach(btn=>{
     btn.addEventListener("click",()=>{
+        document.querySelectorAll(".filters button").forEach(b=>b.classList.remove("activeFilter"));
+        btn.classList.add("activeFilter");
+
         const sort=btn.dataset.sort;
         let noms=Object.keys(groupesAffiches);
 
         if(sort==="az") noms.sort();
         if(sort==="za") noms.sort().reverse();
-
-        if(sort==="appmax")
-            noms.sort((a,b)=> groupesAffiches[b].length - groupesAffiches[a].length);
-
-        if(sort==="appmin")
-            noms.sort((a,b)=> groupesAffiches[a].length - groupesAffiches[b].length);
+        if(sort==="appmax") noms.sort((a,b)=>groupesAffiches[b].length - groupesAffiches[a].length);
+        if(sort==="appmin") noms.sort((a,b)=>groupesAffiches[a].length - groupesAffiches[b].length);
 
         const sorted={};
-        noms.forEach(n=> sorted[n]=groupesAffiches[n]);
+        noms.forEach(n=>sorted[n]=groupesAffiches[n]);
+
         afficher(sorted);
     });
 });
 
-/* Start */
 charger();
 
 </script>
