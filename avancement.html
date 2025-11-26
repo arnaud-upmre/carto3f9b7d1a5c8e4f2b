@@ -5,128 +5,56 @@
 <title>Tableau Blanc – Nono Maps</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- Fuse.js pour la recherche intelligente -->
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
 
 <style>
 
-    body {
-        font-family: Inter, sans-serif;
-        margin: 0;
-        padding: 20px;
-        background: #f5f6fa;
-    }
+body{font-family:Inter,sans-serif;margin:0;padding:20px;background:#f5f6fa;}
+h1{margin-bottom:10px;font-size:22px;font-weight:600;}
 
-    h1 {
-        margin-bottom: 10px;
-        font-size: 22px;
-        font-weight: 600;
-    }
+#counters{font-size:16px;font-weight:600;margin-bottom:20px;}
 
-    /* Compteurs */
-    #counters {
-        font-size: 16px;
-        font-weight: 600;
-        margin-bottom: 20px;
-    }
+.tabs{display:flex;gap:10px;margin-bottom:20px;}
+.tab{padding:8px 16px;background:#ddd;border-radius:8px;cursor:pointer;font-weight:600;}
+.tab.active{background:#1a73e8;color:white;}
 
-    /* Onglets */
-    .tabs {
-        display: flex;
-        gap: 10px;
-        margin-bottom: 20px;
-    }
-    .tab {
-        padding: 8px 16px;
-        background: #ddd;
-        border-radius: 8px;
-        cursor: pointer;
-        font-weight: 600;
-    }
-    .tab.active {
-        background: #1a73e8;
-        color: white;
-    }
+#search{width:100%;max-width:400px;padding:12px 16px;font-size:15px;border-radius:10px;border:1px solid #bbb;margin-bottom:20px;}
 
-    /* Barre de recherche */
-    #search {
-        width: 100%;
-        max-width: 400px;
-        padding: 12px 16px;
-        font-size: 15px;
-        border-radius: 10px;
-        border: 1px solid #bbb;
-        outline: none;
-        margin-bottom: 20px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    }
+.filters{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
+.filters button{padding:8px 14px;border:1px solid #ccc;border-radius:8px;background:white;font-weight:600;cursor:pointer;}
 
-    /* Filtres */
-    .filters {
-        display: flex;
-        gap: 8px;
-        margin-bottom: 20px;
-        flex-wrap: wrap;
-    }
+.post-container{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px;}
 
-    .filters button {
-        padding: 8px 14px;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        background: white;
-        cursor: pointer;
-        font-weight: 600;
-        transition: 0.2s;
-    }
+.card{background:white;padding:15px;border-radius:14px;box-shadow:0 3px 12px rgba(0,0,0,0.12);}
+.card-title{font-size:18px;font-weight:600;margin-bottom:12px;}
 
-    /* Grille */
-    .post-container {
-        display: grid;
-        grid-template-columns: repeat(auto-fill,minmax(320px,1fr));
-        gap: 18px;
-    }
+.section-title{
+    font-weight:600;
+    font-size:14px;
+    background:#fff6c4;
+    color:#8a6d00;
+    padding:6px 10px;
+    border-radius:6px;
+    margin-bottom:6px;
+    display:inline-block;
+}
 
-    .card {
-        background: white;
-        padding: 15px;
-        border-radius: 14px;
-        box-shadow: 0 3px 12px rgba(0,0,0,0.12);
-        border: 1px solid #e6e6e6;
-    }
+.pill{
+    display:inline-block;
+    padding:4px 8px;
+    background:#e5ebff;
+    color:#1a4ce8;
+    border-radius:8px;
+    font-size:12px;
+    margin:4px 6px 4px 0;
+    cursor:pointer;
+}
 
-    .card-title {
-        font-size: 18px;
-        font-weight: 600;
-        margin-bottom: 12px;
-    }
-
-    .pill {
-        display: inline-block;
-        padding: 4px 8px;
-        background: #e5ebff;
-        color: #1a4ce8;
-        border-radius: 8px;
-        font-size: 12px;
-        margin: 4px 6px 4px 0;
-        cursor: pointer;
-    }
-
-    .section-title {
-        font-weight: 600;
-        font-size: 14px;
-        background: #fff6c4;
-        color: #8a6d00;
-        padding: 6px 10px;
-        border-radius: 6px;
-        display: inline-block;
-        margin-bottom: 6px;
-    }
-
-    .sat-block {
-        margin-top: 12px;
-        padding-top: 8px;
-        border-top: 1px dashed #ccc;
-    }
+.sat-block{
+    margin-top:12px;
+    padding-top:8px;
+    border-top:1px dashed #ccc;
+}
 
 </style>
 </head>
@@ -154,137 +82,152 @@
 
 <script>
 
-const urlAppareils = "https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/appareils.json";
+const urlAppareils="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/appareils.json";
 
-let appareils = [];
-let groupesGlobaux = {};
-let groupesAffiches = {};
-let mode = "patrimoine";
+let appareils=[];
+let groupesGlobaux={};
+let groupesAffiches={};
+let mode="patrimoine";
 
-/* Groupement par nom */
-function groupAppareils(liste) {
-    const g = {};
-    liste.forEach(a => {
-        if (!g[a.nom]) g[a.nom] = [];
+/* Groupe par poste */
+function groupAppareils(liste){
+    const g={};
+    liste.forEach(a=>{
+        if(!g[a.nom]) g[a.nom]=[];
         g[a.nom].push(a);
     });
     return g;
 }
 
 /* Compteurs */
-function majCompteurs(groupes) {
-    const noms = Object.keys(groupes);
-    let totalAppareils = 0;
-    noms.forEach(n => totalAppareils += groupes[n].length);
+function majCompteurs(groupes){
+    const noms=Object.keys(groupes);
+    let total=0;
+    noms.forEach(n=> total+=groupes[n].length);
 
-    document.getElementById("counters").textContent =
-        `Nombre de postes : ${noms.length} — Nombre d’appareils : ${totalAppareils}`;
+    document.getElementById("counters").textContent=
+        `Nombre de postes : ${noms.length} — Nombre d’appareils : ${total}`;
 }
 
 /* Chargement */
-async function charger() {
-    const res = await fetch(urlAppareils);
-    appareils = await res.json();
+async function charger(){
+    const res=await fetch(urlAppareils);
+    appareils=await res.json();
 
-    groupesGlobaux = {
-        patrimoine: groupAppareils(appareils.filter(a => a.hors_patrimoine !== true)),
-        hp:         groupAppareils(appareils.filter(a => a.hors_patrimoine === true))
+    groupesGlobaux={
+        patrimoine: groupAppareils(appareils.filter(a=>a.hors_patrimoine!==true)),
+        hp:         groupAppareils(appareils.filter(a=>a.hors_patrimoine===true))
     };
 
-    let noms = Object.keys(groupesGlobaux.patrimoine).sort();
-    const sorted = {};
-    noms.forEach(n => sorted[n] = groupesGlobaux.patrimoine[n]);
+    let noms=Object.keys(groupesGlobaux.patrimoine).sort();
+    const sorted={};
+    noms.forEach(n=> sorted[n]=groupesGlobaux.patrimoine[n]);
 
     afficher(sorted);
 }
 
 /* Affichage */
-function afficher(groupes) {
-    groupesAffiches = groupes;
+function afficher(groupes){
+    groupesAffiches=groupes;
     majCompteurs(groupes);
 
-    const zone = document.getElementById("postesZone");
-    zone.innerHTML = "";
+    const zone=document.getElementById("postesZone");
+    zone.innerHTML="";
 
-    Object.keys(groupes).forEach(nom => {
-        const list = groupes[nom];
+    Object.keys(groupes).forEach(nom=>{
+        const list=groupes[nom];
 
-        let html = `
-            <div class="card">
-                <div class="card-title">${nom}</div>
-                <div class="section-title">Appareils</div>
+        const principal=list.filter(a=>!a.SAT || a.SAT.trim()==="");
+        const sats   =list.filter(a=>a.SAT && a.SAT.trim()!=="");
+
+        /* Regroupe par SAT */
+        const satsGroup={};
+        sats.forEach(a=>{
+            if(!satsGroup[a.SAT]) satsGroup[a.SAT]=[];
+            satsGroup[a.SAT].push(a);
+        });
+
+        let html=`
+        <div class="card">
+            <div class="card-title">${nom}</div>
+
+            <div class="section-title">Poste principal</div>
+            ${principal.length ? principal.map(a=>{
+                const id=`${a.appareil} ${a.nom} ${a.type??""} ${a.SAT??""}`.trim();
+                return `<span class="pill" onclick="location.href='index.html?id=${encodeURIComponent(id)}'">${a.appareil}</span>`;
+            }).join("") : `<em>Aucun appareil</em>`}
         `;
 
-        html += list.map(a => {
-            const id = `${a.appareil} ${a.nom} ${a.type ?? ""} ${a.SAT ?? ""}`.trim();
-            return `
-                <span class="pill"
-                    onclick="window.location.href='index.html?id=${encodeURIComponent(id)}'">
-                    ${a.appareil}
-                </span>`;
-        }).join("");
+        /* SAT */
+        Object.keys(satsGroup).sort().forEach(s=>{
+            html+=`
+            <div class="sat-block">
+                <div class="section-title">${s}</div>
+                ${satsGroup[s].map(a=>{
+                    const id=`${a.appareil} ${a.nom} ${a.type??""} ${a.SAT??""}`.trim();
+                    return `<span class="pill" onclick="location.href='index.html?id=${encodeURIComponent(id)}'">${a.appareil}</span>`;
+                }).join("")}
+            </div>`;
+        });
 
-        html += `</div>`;
-        zone.innerHTML += html;
+        html+="</div>";
+        zone.innerHTML+=html;
     });
 }
 
 /* Onglets */
-document.getElementById("tab-patrimoine").onclick = () => {
-    mode = "patrimoine";
+document.getElementById("tab-patrimoine").onclick=()=>{
+    mode="patrimoine";
     document.getElementById("tab-patrimoine").classList.add("active");
     document.getElementById("tab-hp").classList.remove("active");
     afficher(groupesGlobaux.patrimoine);
 };
 
-document.getElementById("tab-hp").onclick = () => {
-    mode = "hp";
+document.getElementById("tab-hp").onclick=()=>{
+    mode="hp";
     document.getElementById("tab-hp").classList.add("active");
     document.getElementById("tab-patrimoine").classList.remove("active");
     afficher(groupesGlobaux.hp);
 };
 
 /* Recherche */
-document.getElementById("search").addEventListener("input", function () {
-    const txt = this.value.trim().toLowerCase();
-    const base = groupesGlobaux[mode];
+document.getElementById("search").addEventListener("input",function(){
+    const txt=this.value.trim().toLowerCase();
+    const base=groupesGlobaux[mode];
 
-    if (txt === "") return afficher(base);
+    if(txt==="") return afficher(base);
 
-    const results = {};
-    Object.keys(base).forEach(nom => {
-        if (nom.toLowerCase().includes(txt)) results[nom] = base[nom];
+    const result={};
+    Object.keys(base).forEach(n=>{
+        if(n.toLowerCase().includes(txt)) result[n]=base[n];
     });
 
-    afficher(results);
+    afficher(result);
 });
 
 /* Tri */
-document.querySelectorAll(".filters button").forEach(btn => {
-    btn.addEventListener("click", () => {
+document.querySelectorAll(".filters button").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+        const sort=btn.dataset.sort;
+        let noms=Object.keys(groupesAffiches);
 
-        const sort = btn.dataset.sort;
-        let noms = Object.keys(groupesAffiches);
+        if(sort==="az") noms.sort();
+        if(sort==="za") noms.sort().reverse();
 
-        if (sort === "az") noms.sort();
-        if (sort === "za") noms.sort().reverse();
-
-        if (sort === "appmax") {
-            noms.sort((a, b) => groupesAffiches[b].length - groupesAffiches[a].length);
+        if(sort==="appmax"){
+            noms.sort((a,b)=> groupesAffiches[b].length - groupesAffiches[a].length);
         }
 
-        if (sort === "appmin") {
-            noms.sort((a, b) => groupesAffiches[a].length - groupesAffiches[b].length);
+        if(sort==="appmin"){
+            noms.sort((a,b)=> groupesAffiches[a].length - groupesAffiches[b].length);
         }
 
-        const sorted = {};
-        noms.forEach(n => sorted[n] = groupesAffiches[n]);
-
+        const sorted={};
+        noms.forEach(n=> sorted[n]=groupesAffiches[n]);
         afficher(sorted);
     });
 });
 
-/* Start */
 charger();
 
 </script>
