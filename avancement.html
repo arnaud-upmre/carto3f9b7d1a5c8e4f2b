@@ -13,32 +13,31 @@
    🌙 MODE CLAIR + SOMBRE AUTOMATIQUE
 ============================================ */
 :root{
-    --bg:#f2f3f7;
-    --card-bg:#ffffff;
+    --bg:#eef0f5;
+    --glass-bg:rgba(255,255,255,0.55);
+    --glass-border:rgba(255,255,255,0.35);
     --text:#111;
-    --pill-bg:#e5ebff;
-    --pill-text:#1a4ce8;
-    --sat-bg:#fff6c4;
-    --sat-text:#8a6d00;
-    --shadow:rgba(0,0,0,0.12);
+    --pill-bg:#edf1ff;
+    --pill-text:#2f5edb;
+    --sat-bg:#fff4b8;
+    --sat-text:#7a5f00;
+    --shadow:rgba(0,0,0,0.10);
 }
 
 @media (prefers-color-scheme: dark){
     :root{
         --bg:#1c1d20;
-        --card-bg:#2a2b2e;
-        --text:#f5f5f5;
-        --pill-bg:#2f3b57;
-        --pill-text:#9bb8ff;
-        --sat-bg:#695a00;
-        --sat-text:#ffe58a;
-        --shadow:rgba(0,0,0,0.45);
+        --glass-bg:rgba(255,255,255,0.05);
+        --glass-border:rgba(255,255,255,0.10);
+        --text:#f4f4f4;
+        --pill-bg:#2b3348;
+        --pill-text:#aec4ff;
+        --sat-bg:#5c4a00;
+        --sat-text:#ffd76c;
+        --shadow:rgba(0,0,0,0.6);
     }
 }
 
-/* ============================================
-   GLOBAL
-============================================ */
 body{
     font-family: Inter, sans-serif;
     margin:0;
@@ -47,105 +46,22 @@ body{
     color:var(--text);
 }
 
-h1{
-    margin-bottom:10px;
-    font-size:24px;
-    font-weight:700;
-}
-
 /* ============================================
-   ONGLET
-============================================ */
-.tabs{
-    display:flex;
-    gap:10px;
-    margin-bottom:20px;
-}
-.tab{
-    padding:8px 16px;
-    background:#d0d2d8;
-    border-radius:12px;
-    cursor:pointer;
-    font-weight:600;
-    transition:0.2s;
-}
-.tab.active{
-    background:#1a73e8;
-    color:white;
-    box-shadow:0 3px 8px rgba(0,0,0,0.25);
-}
-
-/* ============================================
-   RECHERCHE
-============================================ */
-#search{
-    width:100%;
-    max-width:400px;
-    padding:12px 18px;
-    font-size:15px;
-    border-radius:12px;
-    border:1px solid #ccc;
-    outline:none;
-    margin-bottom:20px;
-    background:var(--card-bg);
-    color:var(--text);
-}
-#search:focus{
-    border-color:#1a73e8;
-    box-shadow:0 0 0 3px #1a73e825;
-}
-
-/* ============================================
-   FILTRES
-============================================ */
-.filters{
-    display:flex;
-    gap:10px;
-    margin-bottom:20px;
-    flex-wrap:wrap;
-}
-
-.filters button{
-    padding:8px 16px;
-    border-radius:10px;
-    background:var(--card-bg);
-    border:1px solid #bbb;
-    cursor:pointer;
-    font-weight:600;
-    transition:0.15s;
-    color:var(--text);
-}
-
-.filters button.activeFilter{
-    background:#1a73e8;
-    color:white;
-    border-color:#1a73e8;
-}
-
-/* ============================================
-   GRID DES POSTS
-============================================ */
-.post-container{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
-    gap:20px;
-}
-
-/* ============================================
-   CARD
+   CARDS – GLASSMORPHISM iOS
 ============================================ */
 .card{
-    background:var(--card-bg);
-    padding:18px;
-    border-radius:18px;
-    box-shadow:0 4px 12px var(--shadow);
-    border:1px solid rgba(255,255,255,0.05);
-    opacity:0;
-    transform:translateY(10px);
+    background:var(--glass-bg);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    padding:16px 18px;
+    border-radius:20px;
+    border:1px solid var(--glass-border);
+    box-shadow:0 6px 18px var(--shadow);
     animation:fadeIn 0.45s ease forwards;
+    opacity:0;
+    transform:translateY(8px);
 }
 
-/* Apparition iOS */
 @keyframes fadeIn{
     to{
         opacity:1;
@@ -157,69 +73,117 @@ h1{
    TITRE : NOM + TYPE
 ============================================ */
 .card-title{
-    font-size:18px;
+    font-size:17px;
     font-weight:700;
-    margin-bottom:14px;
+    margin-bottom:10px;
+    display:flex;
+    align-items:center;
+    gap:6px;
 }
 
 .type-pill{
-    display:inline-block;
     background:var(--pill-bg);
     color:var(--pill-text);
-    padding:4px 10px;
-    border-radius:8px;
-    font-size:12px;
-    margin-left:6px;
+    padding:3px 8px;
+    border-radius:6px;
+    font-size:11px;
+    font-weight:600;
 }
 
 /* ============================================
-   PILLS
+   PILLS APPAREILS (affinées iOS)
 ============================================ */
 .pill{
     display:inline-block;
-    padding:6px 10px;
+    padding:4px 8px;
+    font-size:11px;
     background:var(--pill-bg);
     color:var(--pill-text);
-    border-radius:10px;
-    font-size:13px;
-    margin:4px 6px 4px 0;
+    border-radius:9px;
+    margin:3px 4px 3px 0;
     cursor:pointer;
     transition:0.15s;
 }
 
 .pill:hover{
-    transform:translateY(-2px);
-    box-shadow:0 3px 10px rgba(0,0,0,0.25);
+    transform:translateY(-1px);
+    box-shadow:0 3px 8px rgba(0,0,0,0.18);
 }
 
 /* ============================================
-   SAT JAUNE (COMME AVANT)
+   SAT pills plus sobres
 ============================================ */
 .sat-pill{
     background:var(--sat-bg);
     color:var(--sat-text);
-    padding:6px 12px;
-    border-radius:10px;
+    padding:4px 12px;
+    font-size:12px;
+    border-radius:8px;
     font-weight:600;
-    margin-bottom:8px;
+    margin-top:8px;
+    margin-bottom:6px;
     display:inline-block;
-}
-
-/* Séparation SAT */
-.sat-block{
-    margin-top:16px;
-    padding-top:12px;
-    border-top:1px dashed #ccc;
+    opacity:0.95;
 }
 
 .section-title{
     background:var(--sat-bg);
     color:var(--sat-text);
-    padding:6px 12px;
-    border-radius:10px;
-    font-weight:700;
-    margin-bottom:8px;
+    padding:4px 10px;
+    border-radius:8px;
+    font-size:12px;
+    font-weight:600;
+    margin-bottom:5px;
     display:inline-block;
+}
+
+/* Trait SAT plus fin */
+.sat-block{
+    margin-top:12px;
+    padding-top:8px;
+    border-top:1px dashed rgba(0,0,0,0.12);
+}
+
+/* ============================================
+   RECHERCHE / FILTRES / ONGLETS
+============================================ */
+
+#search{
+    border-radius:14px;
+    background:var(--glass-bg);
+    border:1px solid var(--glass-border);
+    backdrop-filter:blur(10px);
+    color:var(--text);
+}
+
+.filters button{
+    background:var(--glass-bg);
+    border:1px solid var(--glass-border);
+    backdrop-filter:blur(8px);
+    border-radius:10px;
+    transition:0.15s;
+    font-size:13px;
+    padding:6px 12px;
+}
+.filters button:hover{
+    transform:translateY(-1px);
+    box-shadow:0 3px 10px var(--shadow);
+}
+.filters button.activeFilter{
+    background:#1a73e8;
+    color:white;
+    border-color:#1a73e8;
+}
+
+.tab{
+    border-radius:14px;
+    background:var(--glass-bg);
+    border:1px solid var(--glass-border);
+    backdrop-filter:blur(12px);
+}
+.tab.active{
+    background:#1a73e8;
+    color:white;
 }
 
 </style>
