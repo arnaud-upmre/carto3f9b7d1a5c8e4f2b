@@ -218,7 +218,24 @@ appareils = appareils.filter(a => a.hors_patrimoine !== true);
     );
 
     // Groupe Hors Patrimoine (tu as dit "tous les postes nommés HP")
- const hp = postes.filter(p => p.hors_patrimoine === true);
+// 1) Postes hors patrimoine déclarés
+let hp = postes.filter(p => p.hors_patrimoine === true);
+
+// 2) On récupère TOUS les appareils HP
+const appareilsHP = appareils.filter(a => a.hors_patrimoine === true);
+
+// 3) On ajoute les postes patrimoine qui contiennent au moins un appareil HP
+appareilsHP.forEach(a => {
+    const key = a.nom;
+    // vérifier si le poste existe déjà dans HP
+    if (!hp.some(p => p.nom === a.nom)) {
+        // trouver le poste dans patrimoine
+        const posteOriginal = postes.find(p => p.nom === a.nom);
+        if (posteOriginal) {
+            hp.push(posteOriginal);
+        }
+    }
+});
 
     // Regrouper par nom
     function group(liste) {
