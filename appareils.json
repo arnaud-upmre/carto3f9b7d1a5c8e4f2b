@@ -68,8 +68,7 @@
     "appareil": "I5425",
     "latitude": 50.8715012,
     "longitude": 2.103808,
-    "description": "",
-    "imajnet" : "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.87153681170447,2.103658993150489;"
+    "description": ""
   },
   {
     "nom": "Audruicq",
@@ -400,7 +399,6 @@
     "latitude": 51.0058819,
     "longitude": 2.3808393,
     "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=51.00577279695637,2.380838793053;uid=f9165a5e-3171-48ad-bef0-d7691faa8608_974;",
     "hors_patrimoine": true
   },
   {
@@ -412,7 +410,6 @@
     "latitude": 51.0062885,
     "longitude": 2.3805026,
     "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=51.00634536870912,2.3804990611431216;uid=8f9a27b8-410a-4400-b0f9-0b8aa5e93c0f_1614;",
     "hors_patrimoine": true
   },
   {
@@ -423,8 +420,7 @@
     "appareil": "TT12",
     "latitude": 50.995516,
     "longitude": 2.390379,
-    "description": "🏗️ Accessible en nacelle",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.99548465203315,2.39051135584085;"
+    "description": "🏗️ Accessible en nacelle"
   },
   {
     "nom": "Coudekerque",
@@ -434,8 +430,7 @@
     "appareil": "TT11",
     "latitude": 50.995261,
     "longitude": 2.390696,
-    "description": "🏗️ Accessible en nacelle",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.99522512993907,2.390846281527364;"
+    "description": "🏗️ Accessible en nacelle"
   },
   {
     "nom": "Coudekerque",
@@ -445,8 +440,7 @@
     "appareil": "TT1",
     "latitude": 50.995208,
     "longitude": 2.390762,
-    "description": "🏗️ Accessible en nacelle<br><br> ➡️PA sur TT",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.995181864558816,2.3909020534106884;uid=da519a1f-3850-4381-b4ad-de849f9d5996_1299;"
+    "description": "🏗️ Accessible en nacelle<br><br> ➡️PA sur TT"
   },
   {
     "nom": "Coudekerque",
@@ -456,8 +450,7 @@
     "appareil": "TT2",
     "latitude": 50.995208,
     "longitude": 2.390762,
-    "description": "🏗️ Accessible en nacelle",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.995181864558816,2.3909020534106884;uid=da519a1f-3850-4381-b4ad-de849f9d5996_1299;"
+    "description": "🏗️ Accessible en nacelle"
   },
   {
     "nom": "Coudekerque",
@@ -467,8 +460,7 @@
     "appareil": "P2",
     "latitude": 50.995208,
     "longitude": 2.390762,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.995181864558816,2.3909020534106884;uid=da519a1f-3850-4381-b4ad-de849f9d5996_1299;"
+    "description": ""
   },
   {
     "nom": "Coudekerque",
@@ -478,8 +470,7 @@
     "appareil": "TT18",
     "latitude": 50.995166,
     "longitude": 2.390830,
-    "description": "🏗️ Accessible en nacelle",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.99511697085506,2.3909857065348703;uid=da519a1f-3850-4381-b4ad-de849f9d5996_1296;"
+    "description": "🏗️ Accessible en nacelle"
   },
   {
     "nom": "Coudekerque",
@@ -489,8 +480,7 @@
     "appareil": "TT13",
     "latitude": 50.995166,
     "longitude": 2.390830,
-    "description": "🏗️ Accessible en nacelle<br><br> ➡️PA sur TT",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.99511697085506,2.3909857065348703;uid=da519a1f-3850-4381-b4ad-de849f9d5996_1296;"
+    "description": "🏗️ Accessible en nacelle<br><br> ➡️PA sur TT"
   },
   {
     "nom": "Coudekerque",
@@ -500,8 +490,7 @@
     "appareil": "P1",
     "latitude": 50.995166,
     "longitude": 2.390830,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.99511697085506,2.3909857065348703;uid=da519a1f-3850-4381-b4ad-de849f9d5996_1296;"
+    "description": ""
   },
   {
     "nom": "Coulogne",
@@ -1211,8 +1200,7 @@
     "appareil": "I1061",
     "latitude": 50.5475115,
     "longitude": 2.9061102,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.54757990889308,2.90623490009596;uid=29beaa8d-ccc1-4ad2-9fad-0c4bb761f1f8_977;"
+    "description": ""
   },
   {
     "nom": "Don Sainghin",
@@ -1222,8 +1210,7 @@
     "appareil": "S1051-1056",
     "latitude": 50.5475115,
     "longitude": 2.9061102,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.54757990889308,2.90623490009596;uid=29beaa8d-ccc1-4ad2-9fad-0c4bb761f1f8_977;"
+    "description": ""
   },
   {
     "nom": "Don Sainghin",
@@ -1917,8 +1904,7 @@
     "appareil": "IA5",
     "latitude": 50.62779, 
     "longitude": 3.08433,
-    "description": "",
-    "imajnet":"https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.62787228307579,3.08420002884093;uid=1438c5fb-5e52-4c45-afdf-e90ce9d15092_29;"
+    "description": ""
   },
   {
     "nom": "Fives",
@@ -1959,8 +1945,7 @@
     "appareil": "TC IA5",
     "latitude": 50.62779, 
     "longitude": 3.08433,
-    "description": "",
-    "imajnet":"https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.62787228307579,3.08420002884093;uid=1438c5fb-5e52-4c45-afdf-e90ce9d15092_29;"
+    "description": ""
   },
   {
     "nom": "Fives",
@@ -2476,7 +2461,6 @@
     "latitude": 50.72339, 
     "longitude": 2.55115,
     "description": "👤 À la demande du régulateur, appareil à manœuvrer pour les consignations C de Thiennes.",
-    "imajnet":"https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.72330604890766,2.551230536035801;uid=63536840-7ee5-43a0-a1b8-5bcc0d619b45_177;",
     "hors_patrimoine": true
   },
   {
@@ -3237,9 +3221,8 @@
     "appareil": "TT5833",
     "latitude": 50.80558,
     "longitude": 1.7283,
-    "description": "TT avec grillage.",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.80560699912938,1.728482346667809;uid=a65e1b9b-e3d2-43f3-8780-05d7ca0842e8_2275;"
-  },
+    "description": "TT avec grillage."
+    },
   {
     "nom": "Marquise",
     "type": "SSP",
@@ -3248,8 +3231,7 @@
     "appareil": "TT5834",
     "latitude": 50.80569, 
     "longitude": 1.72832,
-    "description": "TT avec grillage.",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.80563697244964,1.7285181681642119;uid=cac35c07-3119-4957-94ad-77b33e9fb6fe_1774;"
+    "description": "TT avec grillage."
   },
   {
     "nom": "Marquise",
@@ -3260,7 +3242,6 @@
     "latitude": 50.80569, 
     "longitude": 1.72832,
     "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.80563697244964,1.7285181681642119;uid=cac35c07-3119-4957-94ad-77b33e9fb6fe_1774;",
     "hors_patrimoine": true
   },
   {
@@ -3271,8 +3252,7 @@
     "appareil": "TT 5837",
     "latitude": 50.80549,
     "longitude": 1.72944,
-    "description": "TT avec grillage.",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.80551550753236,1.7296419430555587;uid=a65e1b9b-e3d2-43f3-8780-05d7ca0842e8_2248;"
+    "description": "TT avec grillage."
   },
   {
     "nom": "Marquise",
@@ -3292,8 +3272,7 @@
     "appareil": "I5838",
     "latitude": 50.806742,
     "longitude": 1.7425758,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.80666365692494,1.7425081060935306;uid=006e59c8-d759-4847-89d7-e299311453c8_174;"
+    "description": ""
   },
   {
     "nom": "Marquise",
@@ -3303,8 +3282,7 @@
     "appareil": "TT5836",
     "latitude": 50.806742,
     "longitude": 1.7425758,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.80666365692494,1.7425081060935306;uid=006e59c8-d759-4847-89d7-e299311453c8_174;"
+    "description": ""
   },
   {
     "nom": "Moulin",
@@ -3757,8 +3735,7 @@
     "appareil": "I7316",
     "latitude": 50.9315559,
     "longitude": 1.8435428,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.931465981775595,1.843402559907044;uid=b18c00eb-fe61-4d49-9bd4-f9075f07f73d_196;"
+    "description": ""
   },
   {
     "nom": "Riviere",
@@ -4068,8 +4045,7 @@
     "appareil": "IMPF",
     "latitude": 50.7082,
     "longitude": 2.67608,
-    "description": "",
-    "imajnet":"https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.70823139278624,2.6759553520567407;uid=16beb0c5-421e-44bd-94f4-8cce07755ba9_1173;"
+    "description": ""
   },
   {
     "nom": "Strazeele",
@@ -4079,8 +4055,7 @@
     "appareil": "IMPR",
     "latitude": 50.7082,
     "longitude": 2.67601,
-    "description": "",
-    "imajnet":"https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.70823042103493,2.6758654796567503;uid=16beb0c5-421e-44bd-94f4-8cce07755ba9_1175;"
+    "description": ""
   },
   {
     "nom": "Strazeele",
@@ -4090,8 +4065,7 @@
     "appareil": "IP1",
     "latitude": 50.7082,
     "longitude": 2.67595,
-    "description": "",
-    "imajnet":"https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.70822994014469,2.6758205609426167;uid=16beb0c5-421e-44bd-94f4-8cce07755ba9_1176;"
+    "description": ""
   },
   {
     "nom": "Strazeele",
@@ -4101,8 +4075,7 @@
     "appareil": "IP2",
     "latitude": 50.7082,
     "longitude": 2.67601,
-    "description": "",
-    "imajnet":"https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.70823042103493,2.6758654796567503;uid=16beb0c5-421e-44bd-94f4-8cce07755ba9_1175;"
+    "description": ""
   },
   {
     "nom": "Strazeele",
@@ -4112,8 +4085,7 @@
     "appareil": "SM1",
     "latitude": 50.7082,
     "longitude": 2.67576,
-    "description": "",
-    "imajnet":"https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.70822738458969,2.6755064809479254;uid=16beb0c5-421e-44bd-94f4-8cce07755ba9_1183;"
+    "description": ""
   },
   {
     "nom": "Strazeele",
@@ -4173,8 +4145,7 @@
     "appareil": "TSA",
     "latitude": 50.7082,
     "longitude": 2.67589,
-    "description": "",
-    "imajnet":"https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.708229045477786,2.675730760989815;uid=16beb0c5-421e-44bd-94f4-8cce07755ba9_1178;"
+    "description": ""
   },
   {
     "nom": "Strazeele",
@@ -4204,8 +4175,7 @@
     "appareil": "I50",
     "latitude": 50.70834,
     "longitude": 2.67281,
-    "description": "",
-    "imajnet":"https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.70829919946153,2.673006363024515;uid=9bf2ecd0-051c-4043-b787-6ca1552e0a02_555;"
+    "description": ""
   },
   {
     "nom": "Strazeele",
@@ -4215,8 +4185,7 @@
     "appareil": "I19",
     "latitude": 50.70859,
     "longitude": 2.68251,
-    "description": "",
-    "imajnet":"https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.708605806017076,2.682324053812143;uid=16beb0c5-421e-44bd-94f4-8cce07755ba9_1027;"
+    "description": ""
   },
   {
     "nom": "Thiennes",
@@ -4940,8 +4909,7 @@
     "appareil": "I83502",
     "latitude": 50.16997,
     "longitude": 3.2579,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.170064586855496,3.2579380248161103;uid=a2185c49-97ec-4152-8132-26089b3caf8f_2465;"
+    "description": ""
   },
   {
     "nom": "Cambrai",
@@ -4951,8 +4919,7 @@
     "appareil": "I83507",
     "latitude": 50.164523,
     "longitude": 3.264991,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.16459598121967,3.2647986541672767;uid=af3b6057-588e-4bd9-bbfa-322a8772c60b_1696;"
+    "description": ""
   },
   {
     "nom": "Cambrai",
@@ -4962,8 +4929,7 @@
     "appareil": "SI83501/83505",
     "latitude": 50.16693,
     "longitude": 3.25982,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.16701600526812,3.2597271356402917;uid=2f8e8991-dabe-4a1c-baa2-34d07b9a3111_598;"
+    "description": ""
   },
   {
     "nom": "Cambrai",
@@ -4973,8 +4939,7 @@
     "appareil": "I83501",
     "latitude": 50.16695,
     "longitude": 3.25976,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.1670601768086,3.2596197892377825;uid=2f8e8991-dabe-4a1c-baa2-34d07b9a3111_601;"
+    "description": ""
   },
   {
     "nom": "Amiens CU",
@@ -4984,8 +4949,7 @@
     "appareil": "I34",
     "latitude": 49.87988,
     "longitude": 2.33867,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.87971746735254,2.3387811479920986;"
+    "description": ""
   },
   {
     "nom": "Amiens CU",
@@ -4995,8 +4959,7 @@
     "appareil": "I35",
     "latitude": 49.87991,
     "longitude": 2.33863,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.879961213066736,2.3384539970817952;"
+    "description": ""
   },
   {
     "nom": "Poix",
@@ -5006,8 +4969,7 @@
     "appareil": "TT24",
     "latitude": 49.77859,
     "longitude": 1.98887,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.77850020285,1.9889642961509086;uid=acab237a-a08b-400a-a252-e35e6a8ed1c6_461;"
+    "description": ""
   },
   {
     "nom": "Poix",
@@ -5017,8 +4979,7 @@
     "appareil": "TT25",
     "latitude": 49.77921,
     "longitude": 1.98756,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.77931719900133,1.9874417620745377;"
+    "description": ""
   },
   {
     "nom": "Poix",
@@ -5028,8 +4989,7 @@
     "appareil": "TSA",
     "latitude": 49.7785,
     "longitude": 1.98881,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.778571683881935,1.9887460067970553;"
+    "description": ""
   },
   {
     "nom": "Poix",
@@ -5039,8 +4999,7 @@
     "appareil": "I22",
     "latitude": 49.77644, 
     "longitude": 1.99264,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.77649588721273,1.9923761180824238;uid=9f86b405-8776-492e-8bbb-27a22dbaa813_1866;"
+    "description": ""
   },
   {
     "nom": "Harponlieu",
@@ -5050,8 +5009,7 @@
     "appareil": "I1039",
     "latitude": 50.455890,
     "longitude": 3.015496,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.45605840300826,3.015275135788091;uid=cdcfcffa-dbf4-46f0-aceb-a29ba0619451_932;"
+    "description": ""
   },
   {
     "nom": "Harponlieu",
@@ -5061,8 +5019,7 @@
     "appareil": "IA1",
     "latitude": 50.455842,
     "longitude": 3.015416,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.45605840300826,3.015275135788091;uid=cdcfcffa-dbf4-46f0-aceb-a29ba0619451_932;"
+    "description": ""
   },
   {
     "nom": "Harponlieu",
@@ -5072,8 +5029,7 @@
     "appareil": "TT IA1",
     "latitude": 50.455842,
     "longitude": 3.015416,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.45605840300826,3.015275135788091;uid=cdcfcffa-dbf4-46f0-aceb-a29ba0619451_932;"
+    "description": ""
   },
   {
     "nom": "Harponlieu",
@@ -5083,8 +5039,7 @@
     "appareil": "TC IA1",
     "latitude": 50.455842,
     "longitude": 3.015416,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.45605840300826,3.015275135788091;uid=cdcfcffa-dbf4-46f0-aceb-a29ba0619451_932;"
+    "description": ""
   },
   {
     "nom": "Harponlieu",
@@ -5094,8 +5049,7 @@
     "appareil": "I1040",
     "latitude": 50.45511,
     "longitude": 3.01669,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.45522592530385,3.016571695945211;uid=cdcfcffa-dbf4-46f0-aceb-a29ba0619451_889;"
+    "description": ""
   },
   {
     "nom": "Harponlieu",
@@ -5105,8 +5059,7 @@
     "appareil": "I1037",
     "latitude": 50.454182,
     "longitude": 3.018119,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.45427017916544,3.018028741104198;uid=cdcfcffa-dbf4-46f0-aceb-a29ba0619451_840;"
+    "description": ""
   },
   {
     "nom": "Mercatel",
@@ -5116,8 +5069,7 @@
     "appareil": "189 37",
     "latitude": 50.271221,
     "longitude": 2.763582,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.27101604163,2.7636511042888445;uid=6932045e-e131-437a-8eb5-2e5805feabd6_2088;"
+    "description": ""
   },
   {
     "nom": "Mercatel",
@@ -5127,8 +5079,7 @@
     "appareil": "189 24",
     "latitude": 50.268985,
     "longitude": 2.763932,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.26888148027838,2.7638974540793804;uid=886f4a18-5d4a-4d61-b080-1b3ea804efff_2504;"
+    "description": ""
   },
   {
     "nom": "Mercatel",
@@ -5138,8 +5089,7 @@
     "appareil": "190 02",
     "latitude": 50.272563,
     "longitude": 2.763637,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.27248244326403,2.763609078611238;uid=ede4b7f3-0f7b-4d0a-abab-ccd7517c9f60_1175;"
+    "description": ""
   },
   {
     "nom": "Mercatel",
@@ -5149,8 +5099,7 @@
     "appareil": "I39",
     "latitude": 50.251221,
     "longitude": 2.765119,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.25157486837769,2.7652527417882866;uid=6932045e-e131-437a-8eb5-2e5805feabd6_1378;"
+    "description": ""
   },
   {
     "nom": "Mercatel",
@@ -5160,8 +5109,7 @@
     "appareil": "I41",
     "latitude": 50.25131,
     "longitude": 2.76513,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.25157486837769,2.7652527417882866;uid=6932045e-e131-437a-8eb5-2e5805feabd6_1378;"
+    "description": ""
   },
   {
     "nom": "Mercatel",
@@ -5171,8 +5119,7 @@
     "appareil": "I38",
     "latitude": 50.24233,
     "longitude": 2.7664,
-    "description": "",
-    "imajnet": ""
+    "description": ""
   },
   {
     "nom": "Mercatel",
@@ -5182,8 +5129,7 @@
     "appareil": "I40",
     "latitude": 50.24225,
     "longitude": 2.7664,
-    "description": "",
-    "imajnet": ""
+    "description": ""
   },
   {
     "nom": "Le Quesnoy",
@@ -5193,8 +5139,7 @@
     "appareil": "IL1",
     "latitude": 50.250747,
     "longitude": 3.645701,
-    "description": "",
-    "imajnet": ""
+    "description": ""
   },
   {
     "nom": "Le Quesnoy",
@@ -5204,8 +5149,7 @@
     "appareil": "IMP",
     "latitude": 50.250767,
     "longitude": 3.645664,
-    "description": "",
-    "imajnet": ""
+    "description": ""
   },
   {
     "nom": "Le Quesnoy",
@@ -5215,8 +5159,7 @@
     "appareil": "IL2",
     "latitude": 50.250777,
     "longitude": 3.645631,
-    "description": "",
-    "imajnet": ""
+    "description": ""
   },
   {
     "nom": "Le Quesnoy",
@@ -5226,8 +5169,7 @@
     "appareil": "TT Sel 4 Ssr Maing - Le Quesnoy V2",
     "latitude": 50.25076,
     "longitude": 3.6456,
-    "description": "PA",
-    "imajnet": ""
+    "description": "PA"
   },
   {
     "nom": "Le Quesnoy",
@@ -5237,8 +5179,7 @@
     "appareil": "TT Sel 7 - Ssr Le Quesnoy - Berlaimont V1",
     "latitude": 50.25073,
     "longitude": 3.64567,
-    "description": "PA",
-    "imajnet": ""
+    "description": "PA"
   },
   {
     "nom": "Blecourt",
@@ -5248,8 +5189,7 @@
     "appareil": "SM1",
     "latitude": 50.2192,
     "longitude": 3.20361,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.219063481110275,3.2034484735244453;uid=2c7d00f9-bae0-4a47-bc13-19ef4d6d3b44_246;"
+    "description": ""
   },
   {
     "nom": "Blecourt",
@@ -5259,8 +5199,7 @@
     "appareil": "TSA",
     "latitude": 50.21923,
     "longitude": 3.20364,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.219159153938385,3.203525017925239;uid=2c7d00f9-bae0-4a47-bc13-19ef4d6d3b44_242;"
+    "description": ""
   },
   {
     "nom": "Blecourt",
@@ -5270,8 +5209,7 @@
     "appareil": "TT Sin Blecourt",
     "latitude": 50.21949,
     "longitude": 3.20384,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.21937504108667,3.2036974522160553;uid=2c7d00f9-bae0-4a47-bc13-19ef4d6d3b44_233;"
+    "description": ""
   },
   {
     "nom": "Blecourt",
@@ -5281,8 +5219,7 @@
     "appareil": "IP1",
     "latitude": 50.21901,
     "longitude": 3.20347,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.2189153174494,3.203329823111707;uid=2c7d00f9-bae0-4a47-bc13-19ef4d6d3b44_252;"
+    "description": ""
   },
   {
     "nom": "Blecourt",
@@ -5292,8 +5229,7 @@
     "appareil": "TT Cambrai Blecourt",
     "latitude": 50.2187,
     "longitude": 3.2032,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.218615654432256,3.203090080624642;uid=2c7d00f9-bae0-4a47-bc13-19ef4d6d3b44_264;"
+    "description": ""
   },
   {
     "nom": "Baisieux",
@@ -5303,8 +5239,7 @@
     "appareil": "TT 5238",
     "latitude": 50.61744,
     "longitude": 3.26275,
-    "description": "",
-    "imajnet": ""
+    "description": ""
   },
   {
     "nom": "Baisieux",
@@ -5314,8 +5249,7 @@
     "appareil": "TT 5237",
     "latitude": 50.61751,
     "longitude": 3.26334,
-    "description": "",
-    "imajnet": ""
+    "description": ""
   },
   {
     "nom": "Baisieux",
@@ -5325,8 +5259,7 @@
     "appareil": "TT B",
     "latitude": 50.61751,
     "longitude": 3.2634,
-    "description": "➡️ PA sur TTB (TT Sel 5241)",
-    "imajnet": ""
+    "description": "➡️ PA sur TTB (TT Sel 5241)"
   },
   {
     "nom": "Baisieux",
@@ -5336,8 +5269,7 @@
     "appareil": "TSA",
     "latitude": 50.61741,
     "longitude": 3.26325,
-    "description": "",
-    "imajnet": ""
+    "description": ""
   },
   {
     "nom": "Baisieux",
@@ -5347,8 +5279,7 @@
     "appareil": "IMP Fives",
     "latitude": 50.61741,
     "longitude": 3.26332,
-    "description": "",
-    "imajnet": ""
+    "description": ""
   },
   {
     "nom": "Baisieux",
@@ -5358,8 +5289,7 @@
     "appareil": "IL1",
     "latitude": 50.61741,
     "longitude": 3.26339,
-    "description": "",
-    "imajnet": ""
+    "description": ""
   },
   {
     "nom": "Baisieux",
@@ -5369,8 +5299,7 @@
     "appareil": "TC1",
     "latitude": 50.61741,
     "longitude": 3.26339,
-    "description": "",
-    "imajnet": ""
+    "description": ""
   },
   {
     "nom": "Baisieux",
@@ -5380,8 +5309,7 @@
     "appareil": "IMP Froyen",
     "latitude": 50.61740,
     "longitude": 3.26345,
-    "description": "",
-    "imajnet": ""
+    "description": ""
   },
   {
     "nom": "Baisieux",
@@ -5391,8 +5319,7 @@
     "appareil": "TT A",
     "latitude": 50.61740,
     "longitude": 3.26351,
-    "description": "➡️ PA sur TTA (TT Sel 5242)",
-    "imajnet": ""
+    "description": "➡️ PA sur TTA (TT Sel 5242)"
   },
   {
     "nom": "Baisieux",
@@ -5402,8 +5329,7 @@
     "appareil": "IL2",
     "latitude": 50.61741,
     "longitude": 3.26358,
-    "description": "",
-    "imajnet": ""
+    "description": ""
   },
   {
     "nom": "Baisieux",
@@ -5413,8 +5339,7 @@
     "appareil": "TC2",
     "latitude": 50.61741,
     "longitude": 3.26358,
-    "description": "",
-    "imajnet": ""
+    "description": ""
   },
   {
     "nom": "Achiet",
@@ -5424,8 +5349,7 @@
     "appareil": "I22",
     "latitude": 50.127977,
     "longitude": 2.780158,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.127851553689666,2.7800653784079814;uid=6369e924-e08a-4d03-bf74-4d6fa1f3e253_1008;"
+    "description": ""
   },
   {
     "nom": "Arneke",
@@ -5435,8 +5359,7 @@
     "appareil": "IMP",
     "latitude": 50.8312,
     "longitude": 2.40834,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.83145367269037,2.408290209536079;uid=03d7faab-709a-4db2-8a31-5497f9f6f8df_2239;"
+    "description": ""
   },
   {
     "nom": "Arneke",
@@ -5446,8 +5369,7 @@
     "appareil": "IL1",
     "latitude": 50.83123,
     "longitude": 2.40835,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.83145367269037,2.408290209536079;uid=03d7faab-709a-4db2-8a31-5497f9f6f8df_2239;"
+    "description": ""
   },
   {
     "nom": "Arneke",
@@ -5457,8 +5379,7 @@
     "appareil": "IL2",
     "latitude": 50.83126,
     "longitude": 2.40835,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.83145367269037,2.408290209536079;uid=03d7faab-709a-4db2-8a31-5497f9f6f8df_2239;"
+    "description": ""
   },
   {
     "nom": "Arneke",
@@ -5468,8 +5389,7 @@
     "appareil": "TT2",
     "latitude": 50.83126,
     "longitude": 2.40831,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.83145367269037,2.408290209536079;uid=03d7faab-709a-4db2-8a31-5497f9f6f8df_2239;"
+    "description": ""
   },
   {
     "nom": "Arneke",
@@ -5479,8 +5399,7 @@
     "appareil": "TT1",
     "latitude": 50.83121,
     "longitude": 2.4083,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.83145367269037,2.408290209536079;uid=03d7faab-709a-4db2-8a31-5497f9f6f8df_2239;"
+    "description": ""
   },
   {
     "nom": "Lillers",
@@ -5490,8 +5409,7 @@
     "appareil": "IL1",
     "latitude": 50.56109,
     "longitude": 2.47945,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.56127458475546,2.4791157801408867;uid=a65ef5f3-acbe-478d-9f34-e0bd7f024b73_915;"
+    "description": ""
   },
   {
     "nom": "Lillers",
@@ -5501,8 +5419,7 @@
     "appareil": "IL2",
     "latitude": 50.56111,
     "longitude": 2.47942,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.56127458475546,2.4791157801408867;uid=a65ef5f3-acbe-478d-9f34-e0bd7f024b73_915;"
+    "description": ""
   },
   {
     "nom": "Lillers",
@@ -5512,8 +5429,7 @@
     "appareil": "IMP",
     "latitude": 50.56114,
     "longitude": 2.4794,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.56127458475546,2.4791157801408867;uid=a65ef5f3-acbe-478d-9f34-e0bd7f024b73_915;"
+    "description": ""
   },
   {
     "nom": "Lillers",
@@ -5523,8 +5439,7 @@
     "appareil": "TT SSr Bethune Lillers V2 - Sel 8",
     "latitude": 50.56112,
     "longitude": 2.47935,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.56127458475546,2.4791157801408867;uid=a65ef5f3-acbe-478d-9f34-e0bd7f024b73_915;"
+    "description": ""
   },
   {
     "nom": "Lillers",
@@ -5534,8 +5449,7 @@
     "appareil": "TT SSr Bethune Lillers V1 - Sel 19",
     "latitude": 50.56108,
     "longitude": 2.47939,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.56127458475546,2.4791157801408867;uid=a65ef5f3-acbe-478d-9f34-e0bd7f024b73_915;"
+    "description": ""
   },
   {
     "nom": "Jeumont",
@@ -5545,8 +5459,7 @@
     "appareil": "IL2",
     "latitude": 50.2917,
     "longitude": 4.07666,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.29165576914505,4.076460358343655;uid=0b8b6eed-4203-41eb-a609-3ab811e9bc32_209;"
+    "description": ""
   },
   {
     "nom": "Jeumont",
@@ -5556,8 +5469,7 @@
     "appareil": "IL1",
     "latitude": 50.29172,
     "longitude": 4.0767,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.29165576914505,4.076460358343655;uid=0b8b6eed-4203-41eb-a609-3ab811e9bc32_209;"
+    "description": ""
   },
   {
     "nom": "Jeumont",
@@ -5567,8 +5479,7 @@
     "appareil": "IA25",
     "latitude": 50.29174,
     "longitude": 4.07673,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.29165576914505,4.076460358343655;uid=0b8b6eed-4203-41eb-a609-3ab811e9bc32_209;"
+    "description": ""
   },
   {
     "nom": "Jeumont",
@@ -5578,8 +5489,7 @@
     "appareil": "TTIA25",
     "latitude": 50.29174,
     "longitude": 4.07673,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.29165576914505,4.076460358343655;uid=0b8b6eed-4203-41eb-a609-3ab811e9bc32_209;"
+    "description": ""
   },
   {
     "nom": "Jeumont",
@@ -5589,8 +5499,7 @@
     "appareil": "TCIA25",
     "latitude": 50.29174,
     "longitude": 4.07673,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.29165576914505,4.076460358343655;uid=0b8b6eed-4203-41eb-a609-3ab811e9bc32_209;"
+    "description": ""
   },
   {
     "nom": "Ailly sur Noye",
@@ -5600,8 +5509,7 @@
     "appareil": "IL2",
     "latitude": 49.75491,
     "longitude": 2.36433,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.75481629859239,2.364220620455542;uid=a745d81d-8b44-4538-9110-7e60018831ee_2206;"
+    "description": ""
   },
   {
     "nom": "Ailly sur Noye",
@@ -5611,8 +5519,7 @@
     "appareil": "TT4",
     "latitude": 49.75491,
     "longitude": 2.36433,
-    "description": "TT avec grillage",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.75481629859239,2.364220620455542;uid=a745d81d-8b44-4538-9110-7e60018831ee_2206;"
+    "description": "TT avec grillage"
   },
   {
     "nom": "Ailly sur Noye",
@@ -5622,8 +5529,7 @@
     "appareil": "TT2",
     "latitude": 49.75491,
     "longitude": 2.36433,
-    "description": "TT avec grillage",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.75481629859239,2.364220620455542;uid=a745d81d-8b44-4538-9110-7e60018831ee_2206;"
+    "description": "TT avec grillage"
   },
   {
     "nom": "Ailly sur Noye",
@@ -5633,8 +5539,7 @@
     "appareil": "TT3",
     "latitude": 49.752355,
     "longitude": 2.362686,
-    "description": "TT avec grillage",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.75216143047826,2.362696019422481;uid=a745d81d-8b44-4538-9110-7e60018831ee_2309;"
+    "description": "TT avec grillage"
   },
   {
     "nom": "Ailly sur Noye",
@@ -5644,8 +5549,7 @@
     "appareil": "IL3",
     "latitude": 49.752355,
     "longitude": 2.362686,
-    "description": "TT avec grillage",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.75216143047826,2.362696019422481;uid=a745d81d-8b44-4538-9110-7e60018831ee_2309;"
+    "description": "TT avec grillage"
   },
   {
     "nom": "Ailly sur Noye",
@@ -5655,8 +5559,7 @@
     "appareil": "IL1",
     "latitude": 49.75571,
     "longitude": 2.36479,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.75560783542727,2.3646752727472236;uid=a745d81d-8b44-4538-9110-7e60018831ee_2175;"
+    "description": ""
   },
   {
     "nom": "Ailly sur Noye",
@@ -5666,8 +5569,7 @@
     "appareil": "IMP",
     "latitude": 49.75571,
     "longitude": 2.36479,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.75560783542727,2.3646752727472236;uid=a745d81d-8b44-4538-9110-7e60018831ee_2175;"
+    "description": ""
   },
   {
     "nom": "Ailly sur Noye",
@@ -5677,8 +5579,7 @@
     "appareil": "TT1",
     "latitude": 49.75571,
     "longitude": 2.36479,
-    "description": "TT avec grillage",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.75560783542727,2.3646752727472236;uid=a745d81d-8b44-4538-9110-7e60018831ee_2175;"
+    "description": "TT avec grillage"
   },
   {
     "nom": "Ailly sur Noye",
@@ -5688,8 +5589,7 @@
     "appareil": "F/IMP",
     "latitude": 49.75571,
     "longitude": 2.36479,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.75560783542727,2.3646752727472236;uid=a745d81d-8b44-4538-9110-7e60018831ee_2175;"
+    "description": ""
   },
   {
     "nom": "Saint Just",
@@ -5699,8 +5599,7 @@
     "appareil": "TSA",
     "latitude": 49.51151,
     "longitude": 2.43503,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.51167809795008,2.435199602072412;uid=10c6c0d1-94f0-4aa7-9cf8-e1b7d28e75e3_1820;"
+    "description": ""
   },
   {
     "nom": "Saint Just",
@@ -5710,8 +5609,7 @@
     "appareil": "S/TSA",
     "latitude": 49.51151,
     "longitude": 2.43503,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.51167809795008,2.435199602072412;uid=10c6c0d1-94f0-4aa7-9cf8-e1b7d28e75e3_1820;"
+    "description": ""
   },
   {
     "nom": "Saint Just",
@@ -5721,8 +5619,7 @@
     "appareil": "IL2",
     "latitude": 49.51148,
     "longitude": 2.43501,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.51167809795008,2.435199602072412;uid=10c6c0d1-94f0-4aa7-9cf8-e1b7d28e75e3_1820;"
+    "description": ""
   },
   {
     "nom": "Saint Just",
@@ -5732,8 +5629,7 @@
     "appareil": "IMP",
     "latitude": 49.51144,
     "longitude": 2.43499,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.51167809795008,2.435199602072412;uid=10c6c0d1-94f0-4aa7-9cf8-e1b7d28e75e3_1820;"
+    "description": ""
   },
   {
     "nom": "Saint Just",
@@ -5743,8 +5639,7 @@
     "appareil": "B/IMP",
     "latitude": 49.51144,
     "longitude": 2.43499,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.51167809795008,2.435199602072412;uid=10c6c0d1-94f0-4aa7-9cf8-e1b7d28e75e3_1820;"
+    "description": ""
   },
   {
     "nom": "Saint Just",
@@ -5754,8 +5649,7 @@
     "appareil": "IL1",
     "latitude": 49.51141,
     "longitude": 2.43498,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.51167809795008,2.435199602072412;uid=10c6c0d1-94f0-4aa7-9cf8-e1b7d28e75e3_1820;"
+    "description": ""
   },
   {
     "nom": "PE4 Pondereux",
@@ -5765,8 +5659,7 @@
     "appareil": "DA2",
     "latitude": 50.99317,
     "longitude": 2.27597,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.99323843560965,2.2755357077436393;uid=967c6f1b-8f1a-4c4a-9e45-8aaa4fe4d7a1_337;"
+    "description": ""
   },
   {
     "nom": "PE4 Pondereux",
@@ -5776,8 +5669,7 @@
     "appareil": "TT DA2",
     "latitude": 50.99317,
     "longitude": 2.27597,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.99323843560965,2.2755357077436393;uid=967c6f1b-8f1a-4c4a-9e45-8aaa4fe4d7a1_337;"
+    "description": ""
   },
   {
     "nom": "PE4 Pondereux",
@@ -5787,8 +5679,7 @@
     "appareil": "TC DA2",
     "latitude": 50.99317,
     "longitude": 2.27597,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.99323843560965,2.2755357077436393;uid=967c6f1b-8f1a-4c4a-9e45-8aaa4fe4d7a1_337;"
+    "description": ""
   },
   {
     "nom": "Puyt Houck",
@@ -5798,8 +5689,7 @@
     "appareil": "IL2",
     "latitude": 50.99321,
     "longitude": 2.27596,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.993284351700595,2.276248299940909;uid=8792e331-f738-4482-8578-c4f1a3588111_453;"
+    "description": ""
   },
   {
     "nom": "Puyt Houck",
@@ -5809,8 +5699,7 @@
     "appareil": "SIA2",
     "latitude": 50.99321,
     "longitude": 2.27602,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.993284351700595,2.276248299940909;uid=8792e331-f738-4482-8578-c4f1a3588111_453;"
+    "description": ""
   }, 
   {
     "nom": "Puyt Houck",
@@ -5820,8 +5709,7 @@
     "appareil": "IL1",
     "latitude": 50.99321,
     "longitude": 2.27609,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.993284351700595,2.276248299940909;uid=8792e331-f738-4482-8578-c4f1a3588111_453;"
+    "description": ""
   }, 
   {
     "nom": "Puyt Houck",
@@ -5831,8 +5719,7 @@
     "appareil": "IL3",
     "latitude": 50.99321,
     "longitude": 2.27609,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.993284351700595,2.276248299940909;uid=8792e331-f738-4482-8578-c4f1a3588111_453;"
+    "description": ""
   }, 
   {
     "nom": "Puyt Houck",
@@ -5842,8 +5729,7 @@
     "appareil": "TT1 (IL3)",
     "latitude": 50.99321,
     "longitude": 2.27609,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.993284351700595,2.276248299940909;uid=8792e331-f738-4482-8578-c4f1a3588111_453;"
+    "description": ""
   }, 
   {
     "nom": "Puyt Houck",
@@ -5853,8 +5739,7 @@
     "appareil": "FS2",
     "latitude": 50.99321,
     "longitude": 2.27605,
-    "description": "Sectionneur manuel",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.993284351700595,2.276248299940909;uid=8792e331-f738-4482-8578-c4f1a3588111_453;"
+    "description": "Sectionneur manuel"
   }, 
   {
     "nom": "Puyt Houck",
@@ -5864,8 +5749,7 @@
     "appareil": "F13",
     "latitude": 50.99321,
     "longitude": 2.27605,
-    "description": "Sectionneur manuel",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.993284351700595,2.276248299940909;uid=8792e331-f738-4482-8578-c4f1a3588111_453;"
+    "description": "Sectionneur manuel"
   }, 
   {
     "nom": "Puyt Houck",
@@ -5875,8 +5759,7 @@
     "appareil": "F24",
     "latitude": 50.99321,
     "longitude": 2.27599,
-    "description": "Sectionneur manuel",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.993284351700595,2.276248299940909;uid=8792e331-f738-4482-8578-c4f1a3588111_453;"
+    "description": "Sectionneur manuel"
   }, 
   {
     "nom": "Grande Synthe IA2",
@@ -5886,8 +5769,7 @@
     "appareil": "IA2",
     "latitude": 51.00215,
     "longitude": 2.31164,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=51.0020828854331,2.3113125356637125;uid=200f8f46-7527-41d1-98b5-5f612aa9001f_2188;"
+    "description": ""
   }, 
   {
     "nom": "Grande Synthe IA2",
@@ -5897,8 +5779,7 @@
     "appareil": "TT IA2",
     "latitude": 51.00215,
     "longitude": 2.31164,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=51.0020828854331,2.3113125356637125;uid=200f8f46-7527-41d1-98b5-5f612aa9001f_2188;"
+    "description": ""
   }, 
   {
     "nom": "Grande Synthe IA2",
@@ -5908,8 +5789,7 @@
     "appareil": "TC IA2",
     "latitude": 51.00215,
     "longitude": 2.31164,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=51.0020828854331,2.3113125356637125;uid=200f8f46-7527-41d1-98b5-5f612aa9001f_2188;"
+    "description": ""
   }, 
   {
     "nom": "Ruminghem",
@@ -5919,8 +5799,7 @@
     "appareil": "P2",
     "latitude": 50.84420, 
     "longitude": 2.19500,
-    "description": "Herse LGV",
-    "imajnet": ""
+    "description": "Herse LGV"
   }, 
   {
     "nom": "Ruminghem",
@@ -5930,8 +5809,7 @@
     "appareil": "SM1",
     "latitude": 50.84419,  
     "longitude": 2.19482,
-    "description": "Herse LGV",
-    "imajnet": ""
+    "description": "Herse LGV"
   }, 
   {
     "nom": "Ruminghem",
@@ -5941,8 +5819,7 @@
     "appareil": "SM2",
     "latitude": 50.84419, 
     "longitude": 2.19475,
-    "description": "Herse LGV",
-    "imajnet": ""
+    "description": "Herse LGV"
   }, 
   {
     "nom": "Ruminghem",
@@ -5953,7 +5830,6 @@
     "latitude": 50.84420, 
     "longitude": 2.19507,
     "description": "Herse LGV",
-    "imajnet": "",
     "hors_patrimoine": true
   }, 
   {
@@ -5964,8 +5840,7 @@
     "appareil": "TT C4",
     "latitude": 50.84420, 
     "longitude": 2.19507,
-    "description": "Herse LGV",
-    "imajnet": ""
+    "description": "Herse LGV"
   }, 
   {
     "nom": "Ruminghem",
@@ -5975,8 +5850,7 @@
     "appareil": "TT F4",
     "latitude": 50.84420, 
     "longitude": 2.19507,
-    "description": "Herse LGV",
-    "imajnet": ""
+    "description": "Herse LGV"
   }, 
   {
     "nom": "Ruminghem",
@@ -5986,8 +5860,7 @@
     "appareil": "ST",
     "latitude": 50.84421, 
     "longitude": 2.19510,
-    "description": "Herse LGV",
-    "imajnet": ""
+    "description": "Herse LGV"
   }, 
   {
     "nom": "Ruminghem",
@@ -5998,7 +5871,6 @@
     "latitude": 50.84421, 
     "longitude": 2.19513,
     "description": "Herse LGV",
-    "imajnet": "",
     "hors_patrimoine": true
   }, 
   {
@@ -6009,8 +5881,7 @@
     "appareil": "TT C3",
     "latitude": 50.84421, 
     "longitude": 2.19513,
-    "description": "Herse LGV",
-    "imajnet": ""
+    "description": "Herse LGV"
   }, 
   {
     "nom": "Ruminghem",
@@ -6020,8 +5891,7 @@
     "appareil": "TT F3",
     "latitude": 50.84421, 
     "longitude": 2.19513,
-    "description": "Herse LGV",
-    "imajnet": ""
+    "description": "Herse LGV"
   }, 
   {
     "nom": "Ruminghem",
@@ -6031,8 +5901,7 @@
     "appareil": "613 MR",
     "latitude": 50.84422, 
     "longitude": 2.19519,
-    "description": "Herse LGV",
-    "imajnet": ""
+    "description": "Herse LGV"
   }, 
   {
     "nom": "Ruminghem",
@@ -6042,8 +5911,7 @@
     "appareil": "P1",
     "latitude": 50.84422, 
     "longitude": 2.19523,
-    "description": "Herse LGV",
-    "imajnet": ""
+    "description": "Herse LGV"
   }, 
   {
     "nom": "Ruminghem",
@@ -6054,7 +5922,6 @@
     "latitude": 50.84422, 
     "longitude": 2.19526,
     "description": "Herse LGV",
-    "imajnet": "",
     "hors_patrimoine": true
   }, 
   {
@@ -6065,8 +5932,7 @@
     "appareil": "TT F1",
     "latitude": 50.84422, 
     "longitude": 2.19526,
-    "description": "Herse LGV",
-    "imajnet": ""
+    "description": "Herse LGV"
   }, 
   {
     "nom": "Ruminghem",
@@ -6076,8 +5942,7 @@
     "appareil": "TT C1",
     "latitude": 50.84422, 
     "longitude": 2.19526,
-    "description": "Herse LGV",
-    "imajnet": ""
+    "description": "Herse LGV"
   }, 
   {
     "nom": "Ruminghem",
@@ -6087,8 +5952,7 @@
     "appareil": "SP",
     "latitude": 50.84422, 
     "longitude": 2.19529,
-    "description": "Herse LGV",
-    "imajnet": ""
+    "description": "Herse LGV"
   }, 
   {
     "nom": "Ruminghem",
@@ -6099,7 +5963,6 @@
     "latitude": 50.84422, 
     "longitude": 2.19533,
     "description": "Herse LGV",
-    "imajnet": "",
     "hors_patrimoine": true
   }, 
   {
@@ -6110,8 +5973,7 @@
     "appareil": "TT C2",
     "latitude": 50.84422, 
     "longitude": 2.19533,
-    "description": "Herse LGV",
-    "imajnet": ""
+    "description": "Herse LGV"
   }, 
   {
     "nom": "Ruminghem",
@@ -6121,8 +5983,7 @@
     "appareil": "TT F2",
     "latitude": 50.84422, 
     "longitude": 2.19533,
-    "description": "Herse LGV",
-    "imajnet": ""
+    "description": "Herse LGV"
   }, 
   {
     "nom": "Ruminghem",
@@ -6133,7 +5994,6 @@
     "latitude": 50.84450, 
     "longitude": 2.19357,
     "description": "Herse LC",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.844765227237154,2.1931189636506208;uid=ceab492a-9d08-4c8c-a571-1c8b8c0c0df2_209;",
     "hors_patrimoine": true
   }, 
   {
@@ -6144,8 +6004,7 @@
     "appareil": "TT F5",
     "latitude": 50.84450, 
     "longitude": 2.19357,
-    "description": "Herse LC",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.844765227237154,2.1931189636506208;uid=ceab492a-9d08-4c8c-a571-1c8b8c0c0df2_209;"
+    "description": "Herse LC"
   }, 
   {
     "nom": "Ruminghem",
@@ -6155,8 +6014,7 @@
     "appareil": "TT C5",
     "latitude": 50.84450, 
     "longitude": 2.19357,
-    "description": "Herse LC",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.844765227237154,2.1931189636506208;uid=ceab492a-9d08-4c8c-a571-1c8b8c0c0df2_209;"
+    "description": "Herse LC"
   }, 
   {
     "nom": "Ruminghem",
@@ -6167,7 +6025,6 @@
     "latitude": 50.84457, 
     "longitude": 2.19349,
     "description": "Herse LC",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.844765227237154,2.1931189636506208;uid=ceab492a-9d08-4c8c-a571-1c8b8c0c0df2_209;",
     "hors_patrimoine": true
   }, 
   {
@@ -6178,8 +6035,7 @@
     "appareil": "TT C6",
     "latitude": 50.84457, 
     "longitude": 2.19349,
-    "description": "Herse LC",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.844765227237154,2.1931189636506208;uid=ceab492a-9d08-4c8c-a571-1c8b8c0c0df2_209;"
+    "description": "Herse LC"
   }, 
   {
     "nom": "Ruminghem",
@@ -6189,8 +6045,7 @@
     "appareil": "TT F6",
     "latitude": 50.84457, 
     "longitude": 2.19349,
-    "description": "Herse LC",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.844765227237154,2.1931189636506208;uid=ceab492a-9d08-4c8c-a571-1c8b8c0c0df2_209;"
+    "description": "Herse LC"
   }, 
   {
     "nom": "Ruminghem",
@@ -6201,7 +6056,6 @@
     "latitude": 50.84461, 
     "longitude": 2.19345,
     "description": "Herse LC",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.844765227237154,2.1931189636506208;uid=ceab492a-9d08-4c8c-a571-1c8b8c0c0df2_209;",
     "hors_patrimoine": true
   }, 
   {
@@ -6212,8 +6066,7 @@
     "appareil": "TT F8",
     "latitude": 50.84461, 
     "longitude": 2.19345,
-    "description": "Herse LC",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.844765227237154,2.1931189636506208;uid=ceab492a-9d08-4c8c-a571-1c8b8c0c0df2_209;"
+    "description": "Herse LC"
   }, 
   {
     "nom": "Ruminghem",
@@ -6223,8 +6076,7 @@
     "appareil": "TT C8",
     "latitude": 50.84461, 
     "longitude": 2.19345,
-    "description": "Herse LC",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.844765227237154,2.1931189636506208;uid=ceab492a-9d08-4c8c-a571-1c8b8c0c0df2_209;"
+    "description": "Herse LC"
   }, 
   {
     "nom": "Ruminghem",
@@ -6234,8 +6086,7 @@
     "appareil": "P4",
     "latitude": 50.84459, 
     "longitude": 2.19347,
-    "description": "Herse LC",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.844765227237154,2.1931189636506208;uid=ceab492a-9d08-4c8c-a571-1c8b8c0c0df2_209;"
+    "description": "Herse LC"
   }, 
   {
     "nom": "Ruminghem",
@@ -6245,8 +6096,7 @@
     "appareil": "SM4",
     "latitude": 50.84459, 
     "longitude": 2.19347,
-    "description": "Herse LC",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.844765227237154,2.1931189636506208;uid=ceab492a-9d08-4c8c-a571-1c8b8c0c0df2_209;"
+    "description": "Herse LC"
   }, 
   {
     "nom": "Ruminghem",
@@ -6257,7 +6107,6 @@
     "latitude": 50.84464,
     "longitude": 2.19340,
     "description": "Herse LC",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.844765227237154,2.1931189636506208;uid=ceab492a-9d08-4c8c-a571-1c8b8c0c0df2_209;",
     "hors_patrimoine": true
   }, 
   {
@@ -6268,8 +6117,7 @@
     "appareil": "TT C7",
     "latitude": 50.84464,
     "longitude": 2.19340,
-    "description": "Herse LC",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.844765227237154,2.1931189636506208;uid=ceab492a-9d08-4c8c-a571-1c8b8c0c0df2_209;"
+    "description": "Herse LC"
   }, 
   {
     "nom": "Ruminghem",
@@ -6279,8 +6127,7 @@
     "appareil": "TT F7",
     "latitude": 50.84464,
     "longitude": 2.19340,
-    "description": "Herse LC",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.844765227237154,2.1931189636506208;uid=ceab492a-9d08-4c8c-a571-1c8b8c0c0df2_209;"
+    "description": "Herse LC"
   }, 
   {
     "nom": "Ruminghem",
@@ -6290,8 +6137,7 @@
     "appareil": "SM3",
     "latitude": 50.84467,
     "longitude": 2.19337,
-    "description": "Herse LC",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.844765227237154,2.1931189636506208;uid=ceab492a-9d08-4c8c-a571-1c8b8c0c0df2_209;"
+    "description": "Herse LC"
   }, 
   {
     "nom": "Ruminghem",
@@ -6301,8 +6147,7 @@
     "appareil": "P3",
     "latitude": 50.84470,
     "longitude": 2.19333,
-    "description": "Herse LC",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.844765227237154,2.1931189636506208;uid=ceab492a-9d08-4c8c-a571-1c8b8c0c0df2_209;"
+    "description": "Herse LC"
   }, 
   {
     "nom": "Ruminghem",
@@ -6312,8 +6157,7 @@
     "appareil": "GT1",
     "latitude": 50.84462, 
     "longitude": 2.19546,
-    "description": "",
-    "imajnet": ""
+    "description": ""
   }, 
   {
     "nom": "Ruminghem",
@@ -6323,8 +6167,7 @@
     "appareil": "GT2",
     "latitude": 50.84462, 
     "longitude": 2.19525,
-    "description": "",
-    "imajnet": ""
+    "description": ""
   }, 
   {
     "nom": "Flamengrie",
@@ -6334,8 +6177,7 @@
     "appareil": "GT2",
     "latitude": 50.64564,
     "longitude": 2.89634,
-    "description": "GEC ALSTHOM <br> Année de fabrication 1992 <br> N°224968-14 <br> Masse totale : 123000kg <br> Masses d'huile : 28000kg <br> Refroidissement ONAN <br> Rebobiné en 2012<br> Respirant <br> Cartouches",
-    "imajnet": ""
+    "description": "GEC ALSTHOM <br> Année de fabrication 1992 <br> N°224968-14 <br> Masse totale : 123000kg <br> Masses d'huile : 28000kg <br> Refroidissement ONAN <br> Rebobiné en 2012<br> Respirant <br> Cartouches"
   }, 
   {
     "nom": "Flamengrie",
@@ -6345,8 +6187,7 @@
     "appareil": "GT1",
     "latitude": 50.64555,
     "longitude": 2.89650,
-    "description": "AREVA - Type TE 9848 A <br> Année de fabrication 2009 <br> N°3247PG153 08 <br> Masse totale : 122000kg <br> Masses d'huile : 38500kg <br> Refroidissement ONAN <br> Respirant <br> Cartouches",
-    "imajnet": ""
+    "description": "AREVA - Type TE 9848 A <br> Année de fabrication 2009 <br> N°3247PG153 08 <br> Masse totale : 122000kg <br> Masses d'huile : 38500kg <br> Refroidissement ONAN <br> Respirant <br> Cartouches"
   }, 
   {
     "nom": "Flamengrie",
@@ -6355,7 +6196,6 @@
     "latitude": 50.64568,
     "longitude": 2.89851,
     "description": "",
-    "imajnet": "",
     "hors_patrimoine": true
   }, 
   {
@@ -6364,8 +6204,7 @@
     "appareil": "SPLT3",
     "latitude": 50.64574,
     "longitude": 2.89856,
-    "description": "",
-    "imajnet": ""
+    "description": ""
   }, 
   {
     "nom": "Flamengrie",
@@ -6373,8 +6212,7 @@
     "appareil": "TT5 C",
     "latitude": 50.64574,
     "longitude": 2.89856,
-    "description": "",
-    "imajnet": ""
+    "description": ""
   }, 
   {
     "nom": "Flamengrie",
@@ -6382,8 +6220,7 @@
     "appareil": "TT5 F",
     "latitude": 50.64574,
     "longitude": 2.89856,
-    "description": "",
-    "imajnet": ""
+    "description": ""
   }, 
   {
     "nom": "Flamengrie",
@@ -6391,8 +6228,7 @@
     "appareil": "TC D",
     "latitude": 50.64576, 
     "longitude": 2.89850,
-    "description": "",
-    "imajnet": ""
+    "description": ""
   }, 
   {
     "nom": "Flamengrie",
@@ -6400,8 +6236,7 @@
     "appareil": "P1",
     "latitude": 50.64577, 
     "longitude": 2.89846,
-    "description": "",
-    "imajnet": ""
+    "description": ""
   }, 
   {
     "nom": "Flamengrie",
@@ -6409,8 +6244,7 @@
     "appareil": "573 MR",
     "latitude": 50.64577, 
     "longitude": 2.89846,
-    "description": "",
-    "imajnet": ""
+    "description": ""
   }, 
   {
     "nom": "Flamengrie",
@@ -6419,7 +6253,6 @@
     "latitude": 50.64578, 
     "longitude": 2.89843,
     "description": "",
-    "imajnet": "",
     "hors_patrimoine": true
   }, 
   {
@@ -6428,8 +6261,7 @@
     "appareil": "TT1 F",
     "latitude": 50.64578, 
     "longitude": 2.89843,
-    "description": "",
-    "imajnet": ""
+    "description": ""
   }, 
   {
     "nom": "Flamengrie",
@@ -6437,8 +6269,7 @@
     "appareil": "TT1 C",
     "latitude": 50.64578,
     "longitude": 2.89843,
-    "description": "",
-    "imajnet": ""
+    "description": ""
   }, 
   {
     "nom": "Flamengrie",
@@ -6446,8 +6277,7 @@
     "appareil": "SP",
     "latitude": 50.64578,
     "longitude": 2.89841,
-    "description": "",
-    "imajnet": ""
+    "description": ""
   }, 
   {
     "nom": "Flamengrie",
@@ -6456,7 +6286,6 @@
     "latitude": 50.64579,
     "longitude": 2.89838,
     "description": "",
-    "imajnet": "",
     "hors_patrimoine": true
   }, 
   {
@@ -6465,8 +6294,7 @@
     "appareil": "TT2 C",
     "latitude": 50.64579,
     "longitude": 2.89838,
-    "description": "",
-    "imajnet": ""
+    "description": ""
   }, 
   {
     "nom": "Flamengrie",
@@ -6474,8 +6302,7 @@
     "appareil": "TT2 F",
     "latitude": 50.64579,
     "longitude": 2.89838,
-    "description": "",
-    "imajnet": ""
+    "description": ""
   }, 
   {
     "nom": "Flamengrie",
@@ -6483,8 +6310,7 @@
     "appareil": "SM2",
     "latitude": 50.64581, 
     "longitude": 2.89830,
-    "description": "",
-    "imajnet": ""
+    "description": ""
   }, 
   {
     "nom": "Flamengrie",
@@ -6492,8 +6318,7 @@
     "appareil": "P2",
     "latitude": 50.64581, 
     "longitude": 2.89830,
-    "description": "",
-    "imajnet": ""
+    "description": ""
   }, 
   {
     "nom": "Flamengrie",
@@ -6502,7 +6327,6 @@
     "latitude": 50.64582, 
     "longitude": 2.89826,
     "description": "",
-    "imajnet": "",
     "hors_patrimoine": true
   }, 
   {
@@ -6511,8 +6335,7 @@
     "appareil": "TT4 C",
     "latitude": 50.64582, 
     "longitude": 2.89826,
-    "description": "",
-    "imajnet": ""
+    "description": ""
   }, 
   {
     "nom": "Flamengrie",
@@ -6520,8 +6343,7 @@
     "appareil": "TT4 F",
     "latitude": 50.64582, 
     "longitude": 2.89826,
-    "description": "",
-    "imajnet": ""
+    "description": ""
   }, 
   {
     "nom": "Flamengrie",
@@ -6529,8 +6351,7 @@
     "appareil": "ST",
     "latitude": 50.64583, 
     "longitude": 2.89823,
-    "description": "",
-    "imajnet": ""
+    "description": ""
   }, 
   {
     "nom": "Flamengrie",
@@ -6539,7 +6360,6 @@
     "latitude": 50.64584, 
     "longitude": 2.89819,
     "description": "",
-    "imajnet": "",
     "hors_patrimoine": true
   }, 
   {
@@ -6548,8 +6368,7 @@
     "appareil": "TT3 C",
     "latitude": 50.64584, 
     "longitude": 2.89819,
-    "description": "",
-    "imajnet": ""
+    "description": ""
   }, 
   {
     "nom": "Flamengrie",
@@ -6557,8 +6376,7 @@
     "appareil": "TT3 F",
     "latitude": 50.64584,
     "longitude": 2.89819,
-    "description": "",
-    "imajnet": ""
+    "description": ""
   }, 
   {
     "nom": "Flamengrie",
@@ -6566,8 +6384,7 @@
     "appareil": "SM1",
     "latitude": 50.64586, 
     "longitude": 2.89807,
-    "description": "",
-    "imajnet": ""
+    "description": ""
   }, 
   {
     "nom": "Bollaert",
@@ -6575,8 +6392,7 @@
     "appareil": "IL3",
     "latitude": 50.42872, 
     "longitude": 2.82325,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.42892294832188,2.8224768451791884;uid=93f0f16d-34a1-4f49-b2c7-75d4c668f304_2756;"
+    "description": ""
   }, 
   {
     "nom": "Bollaert",
@@ -6584,8 +6400,7 @@
     "appareil": "TT Ssr Bollaert Lens V1",
     "latitude": 50.42874, 
     "longitude": 2.82317,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.42892294832188,2.8224768451791884;uid=93f0f16d-34a1-4f49-b2c7-75d4c668f304_2756;"
+    "description": ""
   }, 
   {
     "nom": "Bollaert",
@@ -6593,8 +6408,7 @@
     "appareil": "IL5",
     "latitude": 50.42875,
     "longitude": 2.82314,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.42892294832188,2.8224768451791884;uid=93f0f16d-34a1-4f49-b2c7-75d4c668f304_2756;"
+    "description": ""
   }, 
   {
     "nom": "Bollaert",
@@ -6602,8 +6416,7 @@
     "appareil": "IL1",
     "latitude": 50.42877,
     "longitude": 2.82309,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.42892294832188,2.8224768451791884;uid=93f0f16d-34a1-4f49-b2c7-75d4c668f304_2756;"
+    "description": ""
   }, 
   {
     "nom": "Bollaert",
@@ -6611,8 +6424,7 @@
     "appareil": "I23",
     "latitude": 50.42879, 
     "longitude": 2.82302,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.42892294832188,2.8224768451791884;uid=93f0f16d-34a1-4f49-b2c7-75d4c668f304_2756;"
+    "description": ""
   }, 
   {
     "nom": "Bollaert",
@@ -6620,8 +6432,7 @@
     "appareil": "IMP",
     "latitude": 50.42881,
     "longitude": 2.82296,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.42892294832188,2.8224768451791884;uid=93f0f16d-34a1-4f49-b2c7-75d4c668f304_2756;"
+    "description": ""
   }, 
   {
     "nom": "Bollaert",
@@ -6629,8 +6440,7 @@
     "appareil": "TT1",
     "latitude": 50.42881, 
     "longitude": 2.82296,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.42892294832188,2.8224768451791884;uid=93f0f16d-34a1-4f49-b2c7-75d4c668f304_2756;"
+    "description": ""
   }, 
   {
     "nom": "Bollaert",
@@ -6638,8 +6448,7 @@
     "appareil": "TT2",
     "latitude": 50.42881,
     "longitude": 2.82296,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.42892294832188,2.8224768451791884;uid=93f0f16d-34a1-4f49-b2c7-75d4c668f304_2756;"
+    "description": ""
   }, 
   {
     "nom": "Bollaert",
@@ -6647,8 +6456,7 @@
     "appareil": "IL6",
     "latitude": 50.42883, 
     "longitude": 2.82290,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.42892294832188,2.8224768451791884;uid=93f0f16d-34a1-4f49-b2c7-75d4c668f304_2756;"
+    "description": ""
   }, 
   {
     "nom": "Bollaert",
@@ -6656,8 +6464,7 @@
     "appareil": "IL4",
     "latitude": 50.42885, 
     "longitude": 2.82284,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.42892294832188,2.8224768451791884;uid=93f0f16d-34a1-4f49-b2c7-75d4c668f304_2756;"
+    "description": ""
   }, 
   {
     "nom": "Bollaert",
@@ -6665,8 +6472,7 @@
     "appareil": "TT Ssr Bollaert Lens V2",
     "latitude": 50.42886, 
     "longitude": 2.82280,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.42892294832188,2.8224768451791884;uid=93f0f16d-34a1-4f49-b2c7-75d4c668f304_2756;"
+    "description": ""
   }, 
   {
     "nom": "Bollaert",
@@ -6674,8 +6480,7 @@
     "appareil": "IL2",
     "latitude": 50.42887, 
     "longitude": 2.82276,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.42892294832188,2.8224768451791884;uid=93f0f16d-34a1-4f49-b2c7-75d4c668f304_2756;"
+    "description": ""
   }, 
   {
     "nom": "Bollaert",
@@ -6683,8 +6488,7 @@
     "appareil": "TRA",
     "latitude": 50.42889, 
     "longitude": 2.82269,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.42892294832188,2.8224768451791884;uid=93f0f16d-34a1-4f49-b2c7-75d4c668f304_2756;"
+    "description": ""
   }, 
   {
     "nom": "Bollaert",
@@ -6692,8 +6496,7 @@
     "appareil": "211-40C",
     "latitude": 50.42889, 
     "longitude": 2.82269,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.42892294832188,2.8224768451791884;uid=93f0f16d-34a1-4f49-b2c7-75d4c668f304_2756;"
+    "description": ""
   },
   {
     "nom": "Amiens",
@@ -6703,8 +6506,7 @@
     "appareil": "130.12",
     "latitude": 49.88948,
     "longitude": 2.31658,
-    "description": "Accès à pied au bout du quai de la voie 1",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.88951854744169,2.316438819222649;uid=c35babcd-66ed-43ad-a389-181ad1b65afb_1751;"
+    "description": "Accès à pied au bout du quai de la voie 1"
   },
   {
     "nom": "Amiens",
@@ -6714,8 +6516,7 @@
     "appareil": "130.8A",
     "latitude": 49.889682,
     "longitude": 2.315180,
-    "description": "⚠️ Risque ferroviaire travail avec annonce - Accès par le bout du quai de la voie 1",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.889648587325496,2.315277873528098;uid=71f3344f-9ff6-47c6-a184-a34d27521007_270;"
+    "description": "⚠️ Risque ferroviaire travail avec annonce - Accès par le bout du quai de la voie 1"
   },
   {
     "nom": "Amiens",
@@ -6725,8 +6526,7 @@
     "appareil": "IL1",
     "latitude": 49.88971, 
     "longitude": 2.31289,
-    "description": "",
-    "imajnet": ""
+    "description": ""
   },
   {
     "nom": "Amiens",
@@ -6736,8 +6536,7 @@
     "appareil": "TT39",
     "latitude": 49.88971, 
     "longitude": 2.31289,
-    "description": "",
-    "imajnet": ""
+    "description": ""
   },
   {
     "nom": "Amiens",
@@ -6747,8 +6546,7 @@
     "appareil": "B/IL1",
     "latitude": 49.88971, 
     "longitude": 2.31289,
-    "description": "",
-    "imajnet": ""
+    "description": ""
   },
   {
     "nom": "Amiens",
@@ -6758,8 +6556,7 @@
     "appareil": "IL4",
     "latitude": 49.88971, 
     "longitude": 2.31284,
-    "description": "",
-    "imajnet": ""
+    "description": ""
   },
   {
     "nom": "Amiens",
@@ -6769,8 +6566,7 @@
     "appareil": "B/IL4",
     "latitude": 49.88971, 
     "longitude": 2.31284,
-    "description": "",
-    "imajnet": ""
+    "description": ""
   },
   {
     "nom": "Amiens",
@@ -6780,8 +6576,7 @@
     "appareil": "IA2",
     "latitude": 49.88971, 
     "longitude": 2.31277,
-    "description": "",
-    "imajnet": ""
+    "description": ""
   },
   {
     "nom": "Amiens",
@@ -6791,8 +6586,7 @@
     "appareil": "TC IA2",
     "latitude": 49.88971, 
     "longitude": 2.31277,
-    "description": "",
-    "imajnet": ""
+    "description": ""
   },
   {
     "nom": "Amiens",
@@ -6802,8 +6596,7 @@
     "appareil": "TT IA2",
     "latitude": 49.88971, 
     "longitude": 2.31277,
-    "description": "",
-    "imajnet": ""
+    "description": ""
   },
   {
     "nom": "Amiens",
@@ -6813,8 +6606,7 @@
     "appareil": "IL2",
     "latitude": 49.88972, 
     "longitude": 2.31270,
-    "description": "",
-    "imajnet": ""
+    "description": ""
   },
   {
     "nom": "Amiens",
@@ -6824,8 +6616,7 @@
     "appareil": "TT 40",
     "latitude": 49.88972, 
     "longitude": 2.31270,
-    "description": "",
-    "imajnet": ""
+    "description": ""
   },
   {
     "nom": "Amiens",
@@ -6835,8 +6626,7 @@
     "appareil": "B/IL2",
     "latitude": 49.88972, 
     "longitude": 2.31270,
-    "description": "",
-    "imajnet": ""
+    "description": ""
   },
   {
     "nom": "Amiens",
@@ -6846,8 +6636,7 @@
     "appareil": "IL3",
     "latitude": 49.88972, 
     "longitude": 2.31264,
-    "description": "",
-    "imajnet": ""
+    "description": ""
   },
   {
     "nom": "Amiens",
@@ -6857,8 +6646,7 @@
     "appareil": "B/IL3",
     "latitude": 49.88972, 
     "longitude": 2.31264,
-    "description": "",
-    "imajnet": ""
+    "description": ""
   },
   {
     "nom": "Aveluy",
@@ -6868,8 +6656,7 @@
     "appareil": "SM1",
     "latitude": 50.04046,
     "longitude": 2.66044,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.04036183467361,2.6602993219612032;uid=f22b67d0-1293-422a-ae09-7dd18dc7c080_1406;"
+    "description": ""
   },
   {
     "nom": "Aveluy",
@@ -6879,8 +6666,7 @@
     "appareil": "SM2",
     "latitude": 50.04049,
     "longitude": 2.66046,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.04036183467361,2.6602993219612032;uid=f22b67d0-1293-422a-ae09-7dd18dc7c080_1406;"
+    "description": ""
   },
   {
     "nom": "Aveluy",
@@ -6888,8 +6674,7 @@
     "appareil": "TT22",
     "latitude": 50.04582, 
     "longitude": 2.66271,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.04560816133237,2.66260134805654;uid=797af9e5-90d6-484b-80ce-f355078692d0_2263;"
+    "description": ""
   },
   {
     "nom": "Aveluy",
@@ -6897,8 +6682,7 @@
     "appareil": "TT25",
     "latitude": 50.04582, 
     "longitude": 2.66271,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.04560816133237,2.66260134805654;uid=797af9e5-90d6-484b-80ce-f355078692d0_2263;"
+    "description": ""
   },
   {
     "nom": "Aveluy",
@@ -6906,8 +6690,7 @@
     "appareil": "TT15",
     "latitude": 50.04578, 
     "longitude": 2.66269,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.04560816133237,2.66260134805654;uid=797af9e5-90d6-484b-80ce-f355078692d0_2263;"
+    "description": ""
   },
   {
     "nom": "Aveluy",
@@ -6915,8 +6698,7 @@
     "appareil": "TT12",
     "latitude": 50.04578, 
     "longitude": 2.66269,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.04560816133237,2.66260134805654;uid=797af9e5-90d6-484b-80ce-f355078692d0_2263;"
+    "description": ""
   },
   {
     "nom": "Aveluy",
@@ -6924,8 +6706,7 @@
     "appareil": "IMP Longueau",
     "latitude": 50.04572, 
     "longitude": 2.66275,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.04560816133237,2.66260134805654;uid=797af9e5-90d6-484b-80ce-f355078692d0_2263;"
+    "description": ""
   },
   {
     "nom": "Aveluy",
@@ -6933,8 +6714,7 @@
     "appareil": "B/IMP Lamotte",
     "latitude": 50.04572, 
     "longitude": 2.66275,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.04560816133237,2.66260134805654;uid=797af9e5-90d6-484b-80ce-f355078692d0_2263;"
+    "description": ""
   },
   {
     "nom": "Aveluy",
@@ -6942,8 +6722,7 @@
     "appareil": "IP1",
     "latitude": 50.04576, 
     "longitude": 2.66277,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.04560816133237,2.66260134805654;uid=797af9e5-90d6-484b-80ce-f355078692d0_2263;"
+    "description": ""
   },
   {
     "nom": "Aveluy",
@@ -6951,8 +6730,7 @@
     "appareil": "B/IP1",
     "latitude": 50.04576, 
     "longitude": 2.66277,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.04560816133237,2.66260134805654;uid=797af9e5-90d6-484b-80ce-f355078692d0_2263;"
+    "description": ""
   },
   {
     "nom": "Aveluy",
@@ -6960,8 +6738,7 @@
     "appareil": "IMP Achiet",
     "latitude": 50.04579, 
     "longitude": 2.66279,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.04560816133237,2.66260134805654;uid=797af9e5-90d6-484b-80ce-f355078692d0_2263;"
+    "description": ""
   },
   {
     "nom": "Aveluy",
@@ -6969,8 +6746,7 @@
     "appareil": "B/IMP Achiet",
     "latitude": 50.04579, 
     "longitude": 2.66279,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.04560816133237,2.66260134805654;uid=797af9e5-90d6-484b-80ce-f355078692d0_2263;"
+    "description": ""
   },
   {
     "nom": "Aveluy",
@@ -6978,8 +6754,7 @@
     "appareil": "IP2",
     "latitude": 50.04583, 
     "longitude": 2.66281,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.04560816133237,2.66260134805654;uid=797af9e5-90d6-484b-80ce-f355078692d0_2263;"
+    "description": ""
   },
   {
     "nom": "Aveluy",
@@ -6987,8 +6762,7 @@
     "appareil": "B/IP2",
     "latitude": 50.04583, 
     "longitude": 2.66281,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.04560816133237,2.66260134805654;uid=797af9e5-90d6-484b-80ce-f355078692d0_2263;"
+    "description": ""
   },
   {
     "nom": "Aveluy",
@@ -6996,8 +6770,7 @@
     "appareil": "TSA",
     "latitude": 50.04585, 
     "longitude": 2.66275,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.04560816133237,2.66260134805654;uid=797af9e5-90d6-484b-80ce-f355078692d0_2263;"
+    "description": ""
   },
   {
     "nom": "Aveluy",
@@ -7005,8 +6778,7 @@
     "appareil": "S/TSA",
     "latitude": 50.04585, 
     "longitude": 2.66275,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.04560816133237,2.66260134805654;uid=797af9e5-90d6-484b-80ce-f355078692d0_2263;"
+    "description": ""
   },
   {
     "nom": "Fampoux",
@@ -7015,8 +6787,7 @@
     "appareil": "I16",
     "latitude": 50.29821, 
     "longitude": 2.87730,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.298255609270086,2.877322686489495;uid=34a7ba10-435f-411f-9bb5-6fb6cc73a45c_1811;"
+    "description": ""
   },
   {
     "nom": "Fampoux",
@@ -7025,8 +6796,7 @@
     "appareil": "I21",
     "latitude": 50.29511, 
     "longitude": 2.86816,
-    "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.29517689176147,2.868127136598572;uid=3695de9f-cf4a-43d7-b869-1b6c04e932af_1091;"
+    "description": ""
   },
   {
     "nom": "Marquise",
@@ -7036,7 +6806,6 @@
     "latitude": 50.80572, 
     "longitude": 1.72813,
     "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.80567396514344,1.7278292441390382;uid=f8c7127b-b56d-4340-984a-4f3ac504c4ca_1735;",
     "hors_patrimoine": ""
   },
   {
@@ -7047,7 +6816,6 @@
     "latitude": 50.80572, 
     "longitude": 1.72813,
     "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.80567396514344,1.7278292441390382;uid=f8c7127b-b56d-4340-984a-4f3ac504c4ca_1735;",
     "hors_patrimoine": ""
   },
   {
@@ -7057,7 +6825,6 @@
     "latitude": 50.80572, 
     "longitude": 1.72813,
     "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.80567396514344,1.7278292441390382;uid=f8c7127b-b56d-4340-984a-4f3ac504c4ca_1735;",
     "hors_patrimoine": "true"
   },
   {
@@ -7067,7 +6834,6 @@
     "latitude": 50.80571, 
     "longitude": 1.72820,
     "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.80567396514344,1.7278292441390382;uid=f8c7127b-b56d-4340-984a-4f3ac504c4ca_1735;",
     "hors_patrimoine": "true"
   },
   {
@@ -7077,7 +6843,6 @@
     "latitude": 50.80571, 
     "longitude": 1.72820,
     "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.80567396514344,1.7278292441390382;uid=f8c7127b-b56d-4340-984a-4f3ac504c4ca_1735;",
     "hors_patrimoine": "true"
   },
   {
@@ -7087,7 +6852,6 @@
     "latitude": 50.80571,
     "longitude": 1.72826,
     "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.80567396514344,1.7278292441390382;uid=f8c7127b-b56d-4340-984a-4f3ac504c4ca_1735;",
     "hors_patrimoine": ""
   },
   {
@@ -7097,7 +6861,6 @@
     "latitude": 50.80571,
     "longitude": 1.72826,
     "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.80567396514344,1.7278292441390382;uid=f8c7127b-b56d-4340-984a-4f3ac504c4ca_1735;",
     "hors_patrimoine": ""
   },
   {
@@ -7107,7 +6870,6 @@
     "latitude": 50.81883, 
     "longitude": 1.97688,
     "description": "",
-    "imajnet": "",
     "hors_patrimoine": ""
   },
   {
@@ -7117,7 +6879,6 @@
     "latitude": 50.81883, 
     "longitude": 1.97688,
     "description": "",
-    "imajnet": "",
     "hors_patrimoine": "true"
   },
   {
@@ -7127,7 +6888,6 @@
     "latitude": 50.81883, 
     "longitude": 1.97699,
     "description": "",
-    "imajnet": "",
     "hors_patrimoine": ""
   },
   {
@@ -7137,7 +6897,6 @@
     "latitude": 50.81883, 
     "longitude": 1.97699,
     "description": "",
-    "imajnet": "",
     "hors_patrimoine": "true"
   },
   {
@@ -7147,7 +6906,6 @@
     "latitude": 50.81890, 
     "longitude": 1.97685,
     "description": "",
-    "imajnet": "",
     "hors_patrimoine": ""
   },
   {
@@ -7157,7 +6915,6 @@
     "latitude": 50.81890, 
     "longitude": 1.97704,
     "description": "",
-    "imajnet": "",
     "hors_patrimoine": ""
   },
   {
@@ -7167,7 +6924,6 @@
     "latitude": 50.81890, 
     "longitude": 1.97690,
     "description": "",
-    "imajnet": "",
     "hors_patrimoine": ""
   },
   {
@@ -7177,7 +6933,6 @@
     "latitude": 50.81890, 
     "longitude": 1.97690,
     "description": "",
-    "imajnet": "",
     "hors_patrimoine": ""
   },
   {
@@ -7187,7 +6942,6 @@
     "latitude": 50.81890,
     "longitude": 1.97697,
     "description": "",
-    "imajnet": "",
     "hors_patrimoine": ""
   },
   {
@@ -7197,7 +6951,6 @@
     "latitude": 50.81890,
     "longitude": 1.97697,
     "description": "",
-    "imajnet": "",
     "hors_patrimoine": ""
   },
   {
@@ -7207,7 +6960,6 @@
     "latitude": 50.81890, 
     "longitude": 1.97694,
     "description": "",
-    "imajnet": "",
     "hors_patrimoine": ""
   },
   {
@@ -7217,7 +6969,6 @@
     "latitude": 49.98815,
     "longitude": 3.44295,
     "description": "",
-    "imajnet": "",
     "hors_patrimoine": ""
   },
   {
@@ -7227,7 +6978,6 @@
     "latitude": 50.29489, 
     "longitude": 2.82737,
     "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.294764622405786,2.827736959368596;uid=9781d04f-64d4-4445-89b1-ef4d53a03b34_79;",
     "hors_patrimoine": ""
   },
   {
@@ -7237,7 +6987,6 @@
     "latitude": 50.29489, 
     "longitude": 2.82730,
     "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.294764622405786,2.827736959368596;uid=9781d04f-64d4-4445-89b1-ef4d53a03b34_79;",
     "hors_patrimoine": ""
   },
   {
@@ -7247,7 +6996,6 @@
     "latitude": 50.29489, 
     "longitude": 2.82723,
     "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.294764622405786,2.827736959368596;uid=9781d04f-64d4-4445-89b1-ef4d53a03b34_79;",
     "hors_patrimoine": ""
   },
   {
@@ -7257,7 +7005,6 @@
     "latitude": 50.29489, 
     "longitude": 2.82717,
     "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.294764622405786,2.827736959368596;uid=9781d04f-64d4-4445-89b1-ef4d53a03b34_79;",
     "hors_patrimoine": ""
   },
   {
@@ -7267,7 +7014,6 @@
     "latitude": 50.27049, 
     "longitude": 3.15933,
     "description": "",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.27040325795367,3.159255335042094;uid=132fce51-c0f3-42a2-980b-fee54ad5ebbc_1929;",
     "hors_patrimoine": ""
   }
 ]
