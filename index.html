@@ -691,11 +691,12 @@ function formatContact(val) {
   return `<p><strong id="editable-contact">👤 Contact :</strong> ${texteSansNum} ${boutons}</p>`;
 }
 
-function imajnetLink(lat, lon, zoom = 18, offset = 0) {
-  const R = 6378137;
-  const newLat = lat + (offset / R) * (180 / Math.PI);
-  const newLon = lon;
-  return `https://gecko.imajnet.net/#map=OSM;zoom=${zoom};loc=${newLat},${newLon};`;
+function imajnetLink(lat, lon, zoom = 18) {
+  // Recule légèrement la caméra
+  const offsetLat = lat - 0.00012;  
+  const offsetLon = lon - 0.00008;
+
+  return `https://gecko.imajnet.net/#map=OSM;zoom=${zoom};loc=${offsetLat},${offsetLon};`;
 }
 
     function cartoTchooLink(lat, lon, zoom = 17) {
@@ -1092,11 +1093,10 @@ if (lieu.hors_patrimoine !== true) {
       usePoste
         ? `
           <a href="${myMapsViewer(lieu.poste_latitude || lieu.latitude, lieu.poste_longitude || lieu.longitude)}">🛰️ Vue satellite</a>
-          <a href="${
-            lieu.imajnet && lieu.imajnet.trim() !== "" 
-              ? lieu.imajnet 
-              : imajnetLink(lieu.poste_latitude || lieu.latitude, lieu.poste_longitude || lieu.longitude)
-          }" target="_blank">🚄 Imajnet</a>
+
+<a href="${imajnetLink(lieu.poste_latitude || lieu.latitude, lieu.poste_longitude || lieu.longitude)}"
+   target="_blank">🚄 Imajnet</a>
+     
           <a href="${cartoTchooLink(lieu.poste_latitude || lieu.latitude, lieu.poste_longitude || lieu.longitude)}" target="_blank">
   🗺️ Carto Tchoo
 </a>
@@ -1497,11 +1497,7 @@ let html = `<h2>
   <p id="editable-rep-appareil"><span class="emoji">💡</span> Repérer l’appareil :</p>
   <div class="inline-links pills-2">
     <a href="${myMapsViewer(app.latitude, app.longitude)}">🛰️ Vue satellite</a>
-    <a href="${
-      app.imajnet && app.imajnet.trim() !== "" 
-        ? app.imajnet 
-        : imajnetLink(app.latitude, app.longitude)
-    }" target="_blank">🚄 Imajnet</a>
+<a href="${imajnetLink(app.latitude, app.longitude)}" target="_blank">🚄 Imajnet</a>
   </div>
 </div>`;
 
