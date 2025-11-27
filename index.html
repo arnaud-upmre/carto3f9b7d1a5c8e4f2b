@@ -692,9 +692,8 @@ function formatContact(val) {
 }
 
 function imajnetLink(lat, lon, zoom = 18) {
-  // Recule légèrement la caméra
-  const offsetLat = lat - 0.00012;  
-  const offsetLon = lon - 0.00008;
+  const offsetLat = lat - 0.00025;  
+  const offsetLon = lon - 0.00018;
 
   return `https://gecko.imajnet.net/#map=OSM;zoom=${zoom};loc=${offsetLat},${offsetLon};`;
 }
