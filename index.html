@@ -692,10 +692,7 @@ function formatContact(val) {
 }
 
 function imajnetLink(lat, lon, zoom = 18) {
-  const offsetLat = lat - 0.00025;  
-  const offsetLon = lon - 0.00018;
-
-  return `https://gecko.imajnet.net/#map=OSM;zoom=${zoom};loc=${offsetLat},${offsetLon};`;
+  return `https://gecko.imajnet.net/#map=OSM;zoom=${zoom};loc=${lat},${lon};`;
 }
 
     function cartoTchooLink(lat, lon, zoom = 17) {
