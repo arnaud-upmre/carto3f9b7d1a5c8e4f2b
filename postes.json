@@ -69,8 +69,7 @@
     "numero_ligne": 272000,
     "pk": "",
     "poste_latitude": "50.128810",
-    "poste_longitude": "2.780311",
-    "imajnet":""
+    "poste_longitude": "2.780311"
   },
   {
     "nom": "Alleux",
@@ -1463,8 +1462,7 @@
     "numero_ligne": 272000,
     "pk": "199,255",
     "poste_latitude": "50.29765", 
-    "poste_longitude": "2.87565",
-    "imajnet":""
+    "poste_longitude": "2.87565"
   },
   {
     "nom": "Fives",
@@ -1739,8 +1737,7 @@
     "numero_ligne": 304000,
     "pk": "23,700",
     "poste_latitude": "50.9786499",
-    "poste_longitude": "2.1225921",
-    "imajnet": ""
+    "poste_longitude": "2.1225921"
   },
   {
     "nom": "Gravelines",
@@ -1758,8 +1755,7 @@
     "numero_ligne": 304000,
     "pk": "23,170",
     "poste_latitude": "50.978107",
-    "poste_longitude": "2.1302745",
-    "imajnet": ""
+    "poste_longitude": "2.1302745"
   },
   {
     "nom": "Gravelines",
@@ -1777,8 +1773,7 @@
     "numero_ligne": 304000,
     "pk": "23,882",
     "poste_latitude": "50.9788961",
-    "poste_longitude": "2.1201756",
-    "imajnet": ""
+    "poste_longitude": "2.1201756"
   },
   {
     "nom": "Gravelines",
@@ -1796,8 +1791,7 @@
     "numero_ligne": 304000,
     "pk": "24,870",
     "poste_latitude": "50.9774895",
-    "poste_longitude": "2.1060996",
-    "imajnet": ""
+    "poste_longitude": "2.1060996"
   },
   {
     "nom": "Guines",
@@ -3029,8 +3023,7 @@
     "numero_ligne": "226306",
     "pk": "",
     "poste_latitude": "50.25198",
-    "poste_longitude": "2.76505",
-    "imajnet": ""
+    "poste_longitude": "2.76505"
   },
   {
     "nom": "Mercatel",
@@ -3050,9 +3043,7 @@
     "numero_ligne": "226306",
     "pk": "",
     "poste_latitude": "50.27163",
-    "poste_longitude": "2.76388",
-    "imajnet": ""
-    
+    "poste_longitude": "2.76388"
   },
   {
     "nom": "Moulin",
@@ -3630,8 +3621,7 @@
     "numero_ligne": 314000,
     "pk": "",
     "poste_latitude": "50.93157",
-    "poste_longitude": "1.84357",
-    "imajnet": ""
+    "poste_longitude": "1.84357"
   },
   {
     "nom": "Riviere",
@@ -4283,8 +4273,7 @@
     "numero_ligne": 295000,
     "pk": "36,523",
     "poste_latitude": "50.70816",
-    "poste_longitude": "2.67578",
-    "imajnet": ""
+    "poste_longitude": "2.67578"
   },
   {
     "nom": "Strazeele",
@@ -4302,8 +4291,7 @@
     "numero_ligne": 295000,
     "pk": "",
     "poste_latitude": "50.70822",
-    "poste_longitude": "2.67262",
-    "imajnet": ""
+    "poste_longitude": "2.67262"
   },
   {
     "nom": "Strazeele",
@@ -4321,8 +4309,7 @@
     "numero_ligne": 295000,
     "pk": "",
     "poste_latitude": "50.70861",
-    "poste_longitude": "2.68289",
-    "imajnet": ""
+    "poste_longitude": "2.68289"
   },
   {
     "nom": "Tergnier",
@@ -4813,8 +4800,7 @@
     "numero_ligne": 321000,
     "pk": "57,852",
     "poste_latitude": "49.64701",
-    "poste_longitude": "1.70003",
-    "imajnet": ""
+    "poste_longitude": "1.70003"
   },
     {
     "nom": "Abancourt",
@@ -4831,8 +4817,7 @@
     "numero_ligne": 321000,
     "pk": "50,500",
     "poste_latitude": "49.6882",
-    "poste_longitude": "1.77699",
-    "imajnet": ""
+    "poste_longitude": "1.77699"
   },
  {
     "nom": "Abancourt",
@@ -4850,8 +4835,7 @@
     "numero_ligne": 321000,
     "pk": "49,300",
     "poste_latitude": "49.69739",
-    "poste_longitude": "1.785",
-    "imajnet": ""
+    "poste_longitude": "1.785"
    },
  {
     "nom": "Abancourt",
@@ -4869,8 +4853,7 @@
     "numero_ligne": 321000,
     "pk": "",
     "poste_latitude": "49.68086",
-    "poste_longitude": "1.77043",
-    "imajnet": ""
+    "poste_longitude": "1.77043"
    },
  {
     "nom": "Abancourt",
@@ -4888,8 +4871,7 @@
     "numero_ligne": 321000,
     "pk": "",
     "poste_latitude": "49.671655",
-    "poste_longitude": "1.757276",
-    "imajnet": ""
+    "poste_longitude": "1.757276"
    },
  {
     "nom": "Abancourt",
@@ -4907,8 +4889,7 @@
     "numero_ligne": 321000,
     "pk": "",
     "poste_latitude": "49.6863",
-    "poste_longitude": "1.77553",
-    "imajnet": ""
+    "poste_longitude": "1.77553"
    },
     {
     "nom": "Hellemmes",
@@ -5174,8 +5155,7 @@
     "numero_ligne": 272000,
     "pk": "80,500",
     "poste_latitude": "49.51155",
-    "poste_longitude": "2.43506",
-    "imajnet":""
+    "poste_longitude": "2.43506"
   },
   {
     "nom": "La Faloise",
@@ -5193,8 +5173,7 @@
     "numero_ligne": 272000,
     "pk": "102,800",
     "poste_latitude": "49.6856",
-    "poste_longitude": "2.34038",
-    "imajnet":""
+    "poste_longitude": "2.34038"
   },
   {
     "nom": "Ailly sur Noye",
@@ -5212,8 +5191,7 @@
     "numero_ligne": 272000,
     "pk": "111,160",
     "poste_latitude": "49.75519",
-    "poste_longitude": "2.36455",
-    "imajnet":""
+    "poste_longitude": "2.36455"
   },
   {
     "nom": "Longueau",
@@ -5320,8 +5298,7 @@
     "numero_ligne": 250000,
     "pk": "204,620",
     "poste_latitude": "50.16679",
-    "poste_longitude": "3.25999",
-    "imajnet": ""
+    "poste_longitude": "3.25999"
   },
   {
     "nom": "Cambrai",
@@ -5339,8 +5316,7 @@
     "numero_ligne": 250311,
     "pk": "205,191",
     "poste_latitude": "50.16679",
-    "poste_longitude": "3.25999",
-    "imajnet": ""
+    "poste_longitude": "3.25999"
   },
   {
     "nom": "Cambrai",
@@ -5585,8 +5561,7 @@
     "numero_ligne": 272000,
     "pk": "159,0800",
     "poste_latitude": "50.04033",
-    "poste_longitude": "2.66022",
-    "imajnet":""
+    "poste_longitude": "2.66022"
   },
   {
     "nom": "Arras",
@@ -5700,8 +5675,7 @@
     "numero_ligne": 242000,
     "pk": "143,900",
     "poste_latitude": "49.765996",
-    "poste_longitude": "3.257934",
-    "imajnet": ""
+    "poste_longitude": "3.257934"
    },
  {
     "nom": "Amiens CU",
@@ -5720,8 +5694,7 @@
     "numero_ligne": 272000,
     "pk": "129,316",
     "poste_latitude": "49.88789",
-    "poste_longitude": "2.32658",
-    "imajnet": ""
+    "poste_longitude": "2.32658"
    },
  {
     "nom": "Amiens CU",
@@ -5739,8 +5712,7 @@
     "numero_ligne": 272000,
     "pk": "128,000",
     "poste_latitude": "49.87985084012555",
-    "poste_longitude": "2.3387081857947383",
-    "imajnet": ""
+    "poste_longitude": "2.3387081857947383"
    },
  {
     "nom": "Poix",
@@ -5758,8 +5730,7 @@
     "numero_ligne": 321000,
     "pk": "30,300",
     "poste_latitude": "49.778478",
-    "poste_longitude": "1.988871",
-    "imajnet": ""
+    "poste_longitude": "1.988871"
    },
  {
     "nom": "Poix",
@@ -5777,8 +5748,7 @@
     "numero_ligne": 321000,
     "pk": "30,022",
     "poste_latitude": "49.77647",
-    "poste_longitude": "1.99261",
-    "imajnet": ""
+    "poste_longitude": "1.99261"
    },
  {
     "nom": "Saint Roch",
@@ -5797,8 +5767,7 @@
     "numero_ligne": 321000,
     "pk": "1,900",
     "poste_latitude": "49.892510",
-    "poste_longitude": "2.285882",
-    "imajnet": ""
+    "poste_longitude": "2.285882"
    },
  {
     "nom": "Saint Roch",
@@ -5817,8 +5786,7 @@
     "numero_ligne": 321000,
     "pk": "",
     "poste_latitude": "49.888155",
-    "poste_longitude": "2.300535",
-    "imajnet": ""
+    "poste_longitude": "2.300535"
    },
  {
     "nom": "Essigny le Petit",
@@ -5837,8 +5805,7 @@
     "numero_ligne": 242000,
     "pk": "162,230",
     "poste_latitude": "49.897510",
-    "poste_longitude": "3.366077",
-    "imajnet": ""
+    "poste_longitude": "3.366077"
    },
  {
     "nom": "Blecourt",
@@ -5858,8 +5825,7 @@
     "numero_ligne": "259000",
     "pk": "200,525",
     "poste_latitude": "50.219083",
-    "poste_longitude": "3.203522",
-    "imajnet": ""
+    "poste_longitude": "3.203522"
    },
   {
     "nom": "Agent E (Dunkerque P8)",
