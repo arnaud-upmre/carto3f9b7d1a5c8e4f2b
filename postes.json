@@ -6020,6 +6020,24 @@
     "pk": "193,998",
     "poste_latitude": "50.54302",
     "poste_longitude": "3.06927"
+  }, 
+  {
+    "nom": "Beuvrage",
+    "type": "SSP",
+    "SAT": "",
+    "accès": "",
+    "latitude": "", 
+    "longitude": "",
+    "description": "",
+        "description_telecommande": "",
+    "rss": "B",
+    "contact": "",
+    "portail": "",
+    "lignes": "GONESSE à LILLE-FRONTIERE (LGV)",
+    "numero_ligne": 226000,
+    "pk": "246,820",
+    "poste_latitude": "50.38813683742428",
+    "poste_longitude": "3.5130278958056063"
   }
 ]
 
