@@ -70,7 +70,7 @@
     "pk": "",
     "poste_latitude": "50.128810",
     "poste_longitude": "2.780311",
-    "imajnet":"https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.128738300363686,2.780246186209973;uid=6369e924-e08a-4d03-bf74-4d6fa1f3e253_975;"
+    "imajnet":""
   },
   {
     "nom": "Alleux",
@@ -1464,7 +1464,7 @@
     "pk": "199,255",
     "poste_latitude": "50.29765", 
     "poste_longitude": "2.87565",
-    "imajnet":"https://gecko.imajnet.net/#map=OSM;zoom=19;loc=50.29763712382922,2.8754944921510863;uid=43927e57-56e8-4f6f-a6ce-193fb00c2ee9_934;"
+    "imajnet":""
   },
   {
     "nom": "Fives",
@@ -1740,7 +1740,7 @@
     "pk": "23,700",
     "poste_latitude": "50.9786499",
     "poste_longitude": "2.1225921",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.97875878294445,2.1220948859995596;"
+    "imajnet": ""
   },
   {
     "nom": "Gravelines",
@@ -1759,7 +1759,7 @@
     "pk": "23,170",
     "poste_latitude": "50.978107",
     "poste_longitude": "2.1302745",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.97824179324051,2.1299238925946544;"
+    "imajnet": ""
   },
   {
     "nom": "Gravelines",
@@ -1778,7 +1778,7 @@
     "pk": "23,882",
     "poste_latitude": "50.9788961",
     "poste_longitude": "2.1201756",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.97881292286586,2.1199124097002247;"
+    "imajnet": ""
   },
   {
     "nom": "Gravelines",
@@ -1797,7 +1797,7 @@
     "pk": "24,870",
     "poste_latitude": "50.9774895",
     "poste_longitude": "2.1060996",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.977569434045,2.1064621839738433;"
+    "imajnet": ""
   },
   {
     "nom": "Guines",
@@ -3030,7 +3030,7 @@
     "pk": "",
     "poste_latitude": "50.25198",
     "poste_longitude": "2.76505",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.252214634521806,2.7652001681483647;uid=6932045e-e131-437a-8eb5-2e5805feabd6_1401;"
+    "imajnet": ""
   },
   {
     "nom": "Mercatel",
@@ -3051,7 +3051,7 @@
     "pk": "",
     "poste_latitude": "50.27163",
     "poste_longitude": "2.76388",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.271352746620344,2.763685697192217;uid=ede4b7f3-0f7b-4d0a-abab-ccd7517c9f60_1216;"
+    "imajnet": ""
     
   },
   {
@@ -3631,7 +3631,7 @@
     "pk": "",
     "poste_latitude": "50.93157",
     "poste_longitude": "1.84357",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.931465981775595,1.843402559907044;uid=b18c00eb-fe61-4d49-9bd4-f9075f07f73d_196;"
+    "imajnet": ""
   },
   {
     "nom": "Riviere",
@@ -4284,7 +4284,7 @@
     "pk": "36,523",
     "poste_latitude": "50.70816",
     "poste_longitude": "2.67578",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.70822738458969,2.6755064809479254;"
+    "imajnet": ""
   },
   {
     "nom": "Strazeele",
@@ -4303,7 +4303,7 @@
     "pk": "",
     "poste_latitude": "50.70822",
     "poste_longitude": "2.67262",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.70829641608169,2.6730916264058635;"
+    "imajnet": ""
   },
   {
     "nom": "Strazeele",
@@ -4322,7 +4322,7 @@
     "pk": "",
     "poste_latitude": "50.70861",
     "poste_longitude": "2.68289",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.70861052828933,2.682368520582081;"
+    "imajnet": ""
   },
   {
     "nom": "Tergnier",
@@ -4814,7 +4814,7 @@
     "pk": "57,852",
     "poste_latitude": "49.64701",
     "poste_longitude": "1.70003",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.646885723610495,1.6996557913540664;"
+    "imajnet": ""
   },
     {
     "nom": "Abancourt",
@@ -4832,7 +4832,7 @@
     "pk": "50,500",
     "poste_latitude": "49.6882",
     "poste_longitude": "1.77699",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.68777043927786,1.7765395544315548;"
+    "imajnet": ""
   },
  {
     "nom": "Abancourt",
@@ -4851,7 +4851,7 @@
     "pk": "49,300",
     "poste_latitude": "49.69739",
     "poste_longitude": "1.785",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.697606466935284,1.7852581893704227;uid=cab4fcd3-8dcc-4f5d-b00d-f0a1e47a94d4_1147;"
+    "imajnet": ""
    },
  {
     "nom": "Abancourt",
@@ -4870,7 +4870,7 @@
     "pk": "",
     "poste_latitude": "49.68086",
     "poste_longitude": "1.77043",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.68093807944282,1.770593999269676;uid=2b84b02c-cd28-49e8-a941-6945eb1bcb0d_130;"
+    "imajnet": ""
    },
  {
     "nom": "Abancourt",
@@ -4889,7 +4889,7 @@
     "pk": "",
     "poste_latitude": "49.671655",
     "poste_longitude": "1.757276",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.671560316849764,1.756983447913021;uid=2b3422e9-0c67-429c-ade3-21b748d6ae96_77;"
+    "imajnet": ""
    },
  {
     "nom": "Abancourt",
@@ -4908,7 +4908,7 @@
     "pk": "",
     "poste_latitude": "49.6863",
     "poste_longitude": "1.77553",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.686530180637064,1.7755475758547308;uid=cb63f504-70d4-407e-a127-4c3090fc0f1f_283;"
+    "imajnet": ""
    },
     {
     "nom": "Hellemmes",
@@ -5175,7 +5175,7 @@
     "pk": "80,500",
     "poste_latitude": "49.51155",
     "poste_longitude": "2.43506",
-    "imajnet":"https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.51167809795008,2.435199602072412;uid=10c6c0d1-94f0-4aa7-9cf8-e1b7d28e75e3_1820;"
+    "imajnet":""
   },
   {
     "nom": "La Faloise",
@@ -5213,7 +5213,7 @@
     "pk": "111,160",
     "poste_latitude": "49.75519",
     "poste_longitude": "2.36455",
-    "imajnet":"https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.75507227185618,2.364367356017467;uid=a745d81d-8b44-4538-9110-7e60018831ee_2196;"
+    "imajnet":""
   },
   {
     "nom": "Longueau",
@@ -5321,7 +5321,7 @@
     "pk": "204,620",
     "poste_latitude": "50.16679",
     "poste_longitude": "3.25999",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.16698547718145,3.2597980695850657;uid=2f8e8991-dabe-4a1c-baa2-34d07b9a3111_596;"
+    "imajnet": ""
   },
   {
     "nom": "Cambrai",
@@ -5340,7 +5340,7 @@
     "pk": "205,191",
     "poste_latitude": "50.16679",
     "poste_longitude": "3.25999",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.16698547718145,3.2597980695850657;uid=2f8e8991-dabe-4a1c-baa2-34d07b9a3111_596;"
+    "imajnet": ""
   },
   {
     "nom": "Cambrai",
@@ -5586,7 +5586,7 @@
     "pk": "159,0800",
     "poste_latitude": "50.04033",
     "poste_longitude": "2.66022",
-    "imajnet":"https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.04022415146432,2.6602397545667458;uid=f22b67d0-1293-422a-ae09-7dd18dc7c080_1401;"
+    "imajnet":""
   },
   {
     "nom": "Arras",
@@ -5701,7 +5701,7 @@
     "pk": "143,900",
     "poste_latitude": "49.765996",
     "poste_longitude": "3.257934",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.76621384456837,3.2578616419937787;"
+    "imajnet": ""
    },
  {
     "nom": "Amiens CU",
@@ -5721,7 +5721,7 @@
     "pk": "129,316",
     "poste_latitude": "49.88789",
     "poste_longitude": "2.32658",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.887941509079496,2.3263614897602816;"
+    "imajnet": ""
    },
  {
     "nom": "Amiens CU",
@@ -5740,7 +5740,7 @@
     "pk": "128,000",
     "poste_latitude": "49.87985084012555",
     "poste_longitude": "2.3387081857947383",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.879732925688266,2.3387607820517213;"
+    "imajnet": ""
    },
  {
     "nom": "Poix",
@@ -5759,7 +5759,7 @@
     "pk": "30,300",
     "poste_latitude": "49.778478",
     "poste_longitude": "1.988871",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.778609297262,1.9886801445019662;"
+    "imajnet": ""
    },
  {
     "nom": "Poix",
@@ -5778,7 +5778,7 @@
     "pk": "30,022",
     "poste_latitude": "49.77647",
     "poste_longitude": "1.99261",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.77636189107446,1.9927077504992106;uid=bf2cfb96-1d34-4298-b311-b833d5836d69_2337;"
+    "imajnet": ""
    },
  {
     "nom": "Saint Roch",
@@ -5798,7 +5798,7 @@
     "pk": "1,900",
     "poste_latitude": "49.892510",
     "poste_longitude": "2.285882",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.89231578263927,2.2861218787092095;uid=86724556-3239-471f-9415-3ac52fc83761_28;"
+    "imajnet": ""
    },
  {
     "nom": "Saint Roch",
@@ -5818,7 +5818,7 @@
     "pk": "",
     "poste_latitude": "49.888155",
     "poste_longitude": "2.300535",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.88818681875912,2.300868375300649;uid=849d805c-d2bd-4352-8b63-3c20e112f8be_2017;"
+    "imajnet": ""
    },
  {
     "nom": "Essigny le Petit",
@@ -5838,7 +5838,7 @@
     "pk": "162,230",
     "poste_latitude": "49.897510",
     "poste_longitude": "3.366077",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=49.89749007564915,3.366309669367649;uid=ca3594a6-0278-41fb-a419-4743d9f7416f_2140;"
+    "imajnet": ""
    },
  {
     "nom": "Blecourt",
@@ -5859,7 +5859,7 @@
     "pk": "200,525",
     "poste_latitude": "50.219083",
     "poste_longitude": "3.203522",
-    "imajnet": "https://gecko.imajnet.net/#map=OSM;zoom=18;loc=50.21892995692643,3.203341647960769;uid=f4f1997d-4f48-46e6-9952-278cd7e917d4_1941;"
+    "imajnet": ""
    },
   {
     "nom": "Agent E (Dunkerque P8)",
