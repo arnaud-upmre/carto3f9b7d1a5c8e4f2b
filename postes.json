@@ -4833,7 +4833,7 @@
     "secure": "",
     "lignes": "Saint-Roch à Darnétal-Bifurcation",
     "numero_ligne": 321000,
-    "pk": "49,300",
+    "pk": "49,330",
     "poste_latitude": "49.69739",
     "poste_longitude": "1.785"
    },
@@ -4851,7 +4851,7 @@
     "secure": "",
     "lignes": "Saint-Roch à Darnétal-Bifurcation",
     "numero_ligne": 321000,
-    "pk": "",
+    "pk": "51,457",
     "poste_latitude": "49.68086",
     "poste_longitude": "1.77043"
    },
@@ -4869,7 +4869,7 @@
     "secure": "",
     "lignes": "Saint-Roch à Darnétal-Bifurcation",
     "numero_ligne": 321000,
-    "pk": "",
+    "pk": "52,856",
     "poste_latitude": "49.671655",
     "poste_longitude": "1.757276"
    },
@@ -4887,7 +4887,7 @@
     "secure": "",
     "lignes": "Saint-Roch à Darnétal-Bifurcation",
     "numero_ligne": 321000,
-    "pk": "",
+    "pk": "0,090",
     "poste_latitude": "49.6863",
     "poste_longitude": "1.77553"
    },
@@ -5559,7 +5559,7 @@
     "portail": "",
     "lignes": "PARIS-NORD à LILLE",
     "numero_ligne": 272000,
-    "pk": "159,0800",
+    "pk": "159,258",
     "poste_latitude": "50.04033",
     "poste_longitude": "2.66022"
   },
@@ -5784,7 +5784,7 @@
     "secure": "",
     "lignes": "Saint-Roch à Darnétal-Bifurcation",
     "numero_ligne": 321000,
-    "pk": "",
+    "pk": "131,238",
     "poste_latitude": "49.888155",
     "poste_longitude": "2.300535"
    },
@@ -5932,9 +5932,9 @@
     "description": "",
     "rss": "C",
     "contact": "",
-    "lignes": "",
-    "numero_ligne": "",
-    "pk": "130.290",
+    "lignes": "LONGUEAU à BOULOGNE-VILLE",
+    "numero_ligne": 311000,
+    "pk": "130,268",
     "portail": "Accès par Carmillon",
     "poste_latitude": "49.88971", 
     "poste_longitude": "2.31291"
@@ -5950,6 +5950,9 @@
     "rss": "C",
     "contact": "",
     "portail": "Accès par Carmillon",
+    "lignes": "LONGUEAU à BOULOGNE-VILLE",
+    "numero_ligne": 311000,
+    "pk": "130,021",
     "poste_latitude": "49.889496", 
     "poste_longitude": "2.316408"
   },
@@ -5962,9 +5965,9 @@
     "rss": "A",
     "contact": "",
     "portail": "",
-    "lignes": "",
-    "numero_ligne": "",
-    "pk": "",
+    "lignes": "ARRAS à DUNKERQUE",
+    "numero_ligne": 301000,
+    "pk": "263,303",
     "hors_patrimoine": true
   }, 
   {
