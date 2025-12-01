@@ -7015,5 +7015,14 @@
     "longitude": 3.15933,
     "description": "",
     "hors_patrimoine": ""
+  },
+  {
+    "nom": "Bollaert",
+    "type": "SSP",
+    "appareil": "212-17",
+    "latitude": 50.43225, 
+    "longitude": 2.81325,
+    "description": "",
+    "hors_patrimoine": "true"
   }
 ]
