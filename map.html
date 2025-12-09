@@ -739,6 +739,7 @@ if (id.startsWith("DU")) {
   iconFile = "TT.png";
 
 } else if (
+  id.startsWith("T/") ||  
   /^T([1-9]|10)\b/.test(id) ||     
   /^[0-9]/.test(id) ||
   id.startsWith("S") ||
@@ -1273,6 +1274,7 @@ if (ref.startsWith("DU")) {
   });
 
 } else if (
+  ref.startsWith("T/") ||   
   /^T([1-9]|10)$/.test(ref) || 
   /^[0-9]/.test(ref) ||
   ref.startsWith("S") ||
