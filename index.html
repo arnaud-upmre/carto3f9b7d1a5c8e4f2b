@@ -1280,6 +1280,24 @@ document.getElementById("search").addEventListener("input", e => {
   const suggestionsEl = document.getElementById("suggestions");
   const resultEl = document.getElementById("result");
 
+  if (["hors", "horspatrimoine", "hpat", "hp"].includes(query.replace(/\s+/g, ""))) {
+    const results = appareils.filter(app => app.hors_patrimoine === true);
+
+    suggestionsEl.innerHTML = "";
+    resultEl.innerHTML = "";
+    resultEl.style.display = "none";
+
+    results.forEach(app => {
+      const li = document.createElement("li");
+      li.innerHTML = `🚙💡 ${app.appareil} (${app.nom} ${app.type || ""}${app.SAT ? " / " + app.SAT : ""}) 
+        <span style="color:#c62828;font-weight:600;">Hors patrimoine</span>`;
+
+      li.onclick = () => showAppareil(app);
+      suggestionsEl.appendChild(li);
+    });
+    return; 
+  }
+
   suggestionsEl.innerHTML = "";
   resultEl.innerHTML = "";
   resultEl.style.display = "none";
