@@ -7024,5 +7024,77 @@
     "longitude": 2.81325,
     "description": "Sectionneur manuel à ouvrir pour consignation du I23",
     "hors_patrimoine": "true"
+  },
+  {
+    "nom": "Ronchin",
+    "type": "P",
+    "appareil": "IL1",
+    "latitude": 50.61107, 
+    "longitude": 3.08778,
+    "description": "",
+    "hors_patrimoine": ""
+  },
+  {
+    "nom": "Ronchin",
+    "type": "P",
+    "appareil": "TT5261",
+    "latitude": 50.61107, 
+    "longitude": 3.08778,
+    "description": "",
+    "hors_patrimoine": ""
+  },
+  {
+    "nom": "Ronchin",
+    "type": "P",
+    "appareil": "F5261",
+    "latitude": 50.61107, 
+    "longitude": 3.08778,
+    "description": "",
+    "hors_patrimoine": "TRUE"
+  },
+  {
+    "nom": "Ronchin",
+    "type": "P",
+    "appareil": "IL2",
+    "latitude": 50.61111, 
+    "longitude": 3.08782,
+    "description": "",
+    "hors_patrimoine": ""
+  },
+  {
+    "nom": "Ronchin",
+    "type": "P",
+    "appareil": "TT5268",
+    "latitude": 50.61111, 
+    "longitude": 3.08782,
+    "description": "",
+    "hors_patrimoine": ""
+  },
+  {
+    "nom": "Ronchin",
+    "type": "P",
+    "appareil": "F5268",
+    "latitude": 50.61111, 
+    "longitude": 3.08782,
+    "description": "",
+    "hors_patrimoine": "TRUE"
+  },
+  {
+    "nom": "Ronchin",
+    "type": "P",
+    "appareil": "TSA",
+    "latitude": 50.61118, 
+    "longitude": 3.08788,
+    "description": "",
+    "hors_patrimoine": ""
+  },
+  {
+    "nom": "Ronchin",
+    "type": "P",
+    "appareil": "T/TSA",
+    "latitude": 50.61118, 
+    "longitude": 3.08788,
+    "description": "",
+    "hors_patrimoine": "TRUE"
   }
 ]
