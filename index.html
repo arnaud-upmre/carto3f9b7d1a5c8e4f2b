@@ -1378,7 +1378,7 @@ const labelFor = (item) =>
 results.forEach((item, i) => {
 
   
-if (item.hors_patrimoine === "true") item.hors_patrimoine = true;
+item.hors_patrimoine = String(item.hors_patrimoine).toLowerCase().trim() === "true";
   
   const li = document.createElement("li");
   
