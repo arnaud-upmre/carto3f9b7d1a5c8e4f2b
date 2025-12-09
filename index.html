@@ -1289,7 +1289,7 @@ document.getElementById("search").addEventListener("input", e => {
 
     results.forEach(app => {
       const li = document.createElement("li");
-      li.innerHTML = `🚙💡 ${app.appareil} (${app.nom} ${app.type || ""}${app.SAT ? " / " + app.SAT : ""}) 
+      li.innerHTML = `⚠️ ${app.appareil} (${app.nom} ${app.type || ""}${app.SAT ? " / " + app.SAT : ""}) 
         <span style="color:#c62828;font-weight:600;">Hors patrimoine</span>`;
 
       li.onclick = () => showAppareil(app);
@@ -1406,7 +1406,7 @@ if (item.category === "poste") {
     icon = `🚙${item.poste_latitude && item.poste_longitude ? " 📍" : ""}`;
 } else {
 
-    icon = item.hors_patrimoine === true ? "🚙💡" : "💡";
+    icon = item.hors_patrimoine === true ? "⚠️" : "💡";
 }
 
 li.innerHTML = `${icon} ${labelFor(item)}`;
