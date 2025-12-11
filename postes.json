@@ -6041,6 +6041,21 @@
     "pk": "246,820",
     "poste_latitude": "50.38813683742428",
     "poste_longitude": "3.5130278958056063"
+  },
+  {
+    "nom": "Lens",
+    "accès": "",
+    "latitude": 50.42474,
+    "longitude": 2.83377,
+    "description": "Sectionneur à manœuvrer pour les consignations C de Bollaert",
+    "rss": "A",
+    "contact": "",
+    "portail": "",
+    "secure": "https://sncf.sharepoint.com/:w:/r/sites/NonoMapsGrpO3652/Document/Lens%20A.docx?d=w73c6e4ae420c4801ad7433db61a94a34&csf=1&web=1&e=AnOXRA",
+    "lignes": "",
+    "numero_ligne": "",
+    "pk": "",
+    "hors_patrimoine": true
   }
 ]
 
