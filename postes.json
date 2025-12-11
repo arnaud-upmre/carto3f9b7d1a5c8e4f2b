@@ -6055,6 +6055,7 @@
     "lignes": "",
     "numero_ligne": "",
     "pk": "",
+    "special": true,
     "hors_patrimoine": true
   }
 ]
