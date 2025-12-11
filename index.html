@@ -1328,6 +1328,10 @@ results.forEach(it => {
   it.__directAliasHit = aliases.some(a => normalize(a) === query);
 });
 
+results = results.filter(item => {
+  return !(item.category === "poste" && item.hors_patrimoine === true);
+});
+
 results.sort((a, b) => {
   const q = query.toLowerCase();
 
