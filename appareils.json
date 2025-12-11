@@ -6488,7 +6488,8 @@
     "appareil": "TRA",
     "latitude": 50.42889, 
     "longitude": 2.82269,
-    "description": ""
+    "description": "",
+    "hors_patrimoine": true
   }, 
   {
     "nom": "Bollaert",
@@ -6496,7 +6497,8 @@
     "appareil": "211-40C",
     "latitude": 50.42889, 
     "longitude": 2.82269,
-    "description": ""
+    "description": "",
+    "hors_patrimoine": true
   },
   {
     "nom": "Amiens",
