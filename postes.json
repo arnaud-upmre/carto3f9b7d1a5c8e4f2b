@@ -4181,12 +4181,13 @@
     "latitude": 50.40705,
     "longitude": 2.83331,
     "description": "Sectionneur à manœuvrer pour les consignations C de Bailleul sir Berthoult",
-    "rss": "",
+    "rss": "A",
     "contact": "",
     "portail": "",
     "lignes": "",
     "numero_ligne": "",
     "pk": "",
+    "special": true,
     "hors_patrimoine": true
   },
   {
@@ -4195,12 +4196,13 @@
     "latitude": 50.40928,
     "longitude": 2.835957,
     "description": "Sectionneur à manœuvrer pour les consignations C de Bailleul sir Berthoult",
-    "rss": "",
+    "rss": "A",
     "contact": "",
     "portail": "Clé portail spécifique",
     "lignes": "",
     "numero_ligne": "",
     "pk": "",
+    "special": true,
     "hors_patrimoine": true
   },
   {
