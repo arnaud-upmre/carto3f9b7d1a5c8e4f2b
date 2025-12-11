@@ -7098,21 +7098,21 @@
     "hors_patrimoine": "TRUE"
   },
   {
-    "nom": "Bollaert",
-    "type": "SSP",
+    "nom": "Lens",
+    "type": "",
     "appareil": "210-55A",
     "latitude": 50.42506, 
     "longitude": 2.83160,
-    "description": "",
+    "description": "Sectionneur manuel pour consignation de Bollaert SSP",
     "hors_patrimoine": "TRUE"
   },
   {
-    "nom": "Bollaert",
-    "type": "SSP",
+    "nom": "Lens",
+    "type": "",
     "appareil": "210-50",
     "latitude": 50.42478, 
     "longitude": 2.83260,
-    "description": "",
+    "description": "Sectionneur manuel pour consignation de Bollaert SSP",
     "hors_patrimoine": "TRUE"
   }
 ]
