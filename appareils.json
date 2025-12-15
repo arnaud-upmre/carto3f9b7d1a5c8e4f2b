@@ -7126,5 +7126,32 @@
     "longitude": 2.83260,
     "description": "Sectionneur manuel pour consignation de Bollaert SSP",
     "hors_patrimoine": "TRUE"
+  },
+  {
+    "nom": "Saint Eloi",
+    "type": "SSP",
+    "appareil": "TT 36534",
+    "latitude": 50.35681, 
+    "longitude": 3.08391,
+    "description": "",
+    "hors_patrimoine": ""
+  },
+  {
+    "nom": "Saint Eloi",
+    "type": "SSP",
+    "appareil": "TT 36521",
+    "latitude": 50.35679, 
+    "longitude": 3.08386,
+    "description": "",
+    "hors_patrimoine": ""
+  },
+  {
+    "nom": "Saint Eloi",
+    "type": "SSP",
+    "appareil": "TT Feeder A",
+    "latitude": 50.35677, 
+    "longitude": 3.08381,
+    "description": "",
+    "hors_patrimoine": ""
   }
 ]
