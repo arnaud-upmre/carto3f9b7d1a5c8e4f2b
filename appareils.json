@@ -7198,5 +7198,23 @@
     "longitude": 3.08354,
     "description": "",
     "hors_patrimoine": ""
+  },
+  {
+    "nom": "Saint Eloi",
+    "type": "SSP",
+    "appareil": "I36536",
+    "latitude": 50.35665, 
+    "longitude": 3.08348,
+    "description": "",
+    "hors_patrimoine": ""
+  },
+  {
+    "nom": "Saint Eloi",
+    "type": "SSP",
+    "appareil": "TT5",
+    "latitude": 50.35661, 
+    "longitude": 3.08344,
+    "description": "",
+    "hors_patrimoine": ""
   }
 ]
