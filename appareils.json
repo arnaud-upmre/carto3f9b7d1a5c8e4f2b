@@ -3933,8 +3933,8 @@
     "SAT": "SAT4",
     "accès": "",
     "appareil": "IA5",
-    "latitude": 50.91672,
-    "longitude": 1.816206,
+    "latitude": 50.91672, 
+    "longitude": 1.81619,
     "description": ""
   },
   {
@@ -3952,9 +3952,19 @@
     "type": "L",
     "SAT": "SAT4",
     "accès": "",
-    "appareil": "TC et TT de l’IA5",
-    "latitude": 50.91671,
-    "longitude": 1.8161725,
+    "appareil": "TT IA5",
+    "latitude": 50.91672, 
+    "longitude": 1.81619,
+    "description": ""
+  },
+  {
+    "nom": "Rue verte",
+    "type": "L",
+    "SAT": "SAT4",
+    "accès": "",
+    "appareil": "TC IA5",
+    "latitude": 50.91672, 
+    "longitude": 1.81619,
     "description": ""
   },
   {
