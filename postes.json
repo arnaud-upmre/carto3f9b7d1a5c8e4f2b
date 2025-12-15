@@ -3910,8 +3910,8 @@
     "type": "L",
     "SAT": "SAT3",
     "accès": "",
-    "latitude": 50.91544, 
-    "longitude": 1.81412,
+    "latitude": 50.931476,
+    "longitude": 1.839949,
     "description": "",
     "description_telecommande": "PAS900",
     "rss": "A",
@@ -3920,8 +3920,8 @@
     "lignes": "BOULOGNE-VILLE à CALAIS MARITIME",
     "numero_ligne": 314000,
     "pk": "288,687",
-    "poste_latitude": "50.9154433",
-    "poste_longitude": "1.8141352"
+    "poste_latitude": "50.91544",
+    "poste_longitude": "1.81412"
   },
   {
     "nom": "Rue verte",
