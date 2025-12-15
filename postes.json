@@ -3902,8 +3902,8 @@
     "lignes": "BOULOGNE-VILLE à CALAIS MARITIME",
     "numero_ligne": 314000,
     "pk": "288,415",
-    "poste_latitude": "50.9138959",
-    "poste_longitude": "1.8111583"
+    "poste_latitude": "50.91389", 
+    "poste_longitude": "1.81114"
   },
   {
     "nom": "Rue verte",
