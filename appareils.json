@@ -7185,8 +7185,8 @@
     "nom": "Saint Eloi",
     "type": "SSP",
     "appareil": "IS6",
-    "latitude": 50.35670,
-    "longitude": 3.08359,
+    "latitude": 50.35669,
+    "longitude": 3.08361,
     "description": "",
     "hors_patrimoine": ""
   },
@@ -7194,8 +7194,17 @@
     "nom": "Saint Eloi",
     "type": "SSP",
     "appareil": "I36542",
-    "latitude": 50.35666, 
-    "longitude": 3.08354,
+    "latitude": 50.35667,
+    "longitude": 3.08355,
+    "description": "",
+    "hors_patrimoine": ""
+  },
+  {
+    "nom": "Saint Eloi",
+    "type": "SSP",
+    "appareil": "I36540",
+    "latitude": 50.35667,
+    "longitude": 3.08355,
     "description": "",
     "hors_patrimoine": ""
   },
