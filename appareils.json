@@ -2985,6 +2985,36 @@
   },
   {
     "nom": "Lens",
+    "type": "Atelier",
+    "SAT": "",
+    "accès": "",
+    "appareil": "DU n°3",
+    "latitude": 50.40680, 
+    "longitude": 2.85558,
+    "description": ""
+  },
+  {
+    "nom": "Lens",
+    "type": "Atelier",
+    "SAT": "",
+    "accès": "",
+    "appareil": "DU n°4",
+    "latitude": 50.40678,
+    "longitude": 2.85448,
+    "description": ""
+  },
+  {
+    "nom": "Lens",
+    "type": "Atelier",
+    "SAT": "",
+    "accès": "",
+    "appareil": "DU n°5",
+    "latitude": 50.40673,
+    "longitude": 2.85441,
+    "description": ""
+  },
+  {
+    "nom": "Lens",
     "type": "A",
     "SAT": "",
     "accès": "",
