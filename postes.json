@@ -229,7 +229,7 @@
   },
   {
     "nom": "A2000",
-    "type": "Atelier",
+    "type": "",
     "latitude": 50.6203,
     "longitude": 3.08726,
     "description": "",
@@ -252,6 +252,7 @@
     "rss": "C",
     "contact": "",
     "portail": "",
+    "secure": "https://sncf.sharepoint.com/:w:/s/NonoMapsGrpO3652/IQCOhP3H6oVQTocln3szH5OtAWksPvdRn8ezHmu84qgE70o?e=nVNePb",
     "lignes": "ARRAS à DUNKERQUE",
     "numero_ligne": 301000,
     "pk": "211,0200",
