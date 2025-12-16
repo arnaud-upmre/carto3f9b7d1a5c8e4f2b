@@ -2998,9 +2998,9 @@
     "type": "Atelier",
     "SAT": "",
     "accès": "",
-    "appareil": "DU n°4",
-    "latitude": 50.40678,
-    "longitude": 2.85448,
+    "appareil": "DU n°5",
+    "latitude": 50.40718, 
+    "longitude": 2.85359,
     "description": ""
   },
   {
@@ -3008,7 +3008,7 @@
     "type": "Atelier",
     "SAT": "",
     "accès": "",
-    "appareil": "DU n°5",
+    "appareil": "DU n°4",
     "latitude": 50.40673,
     "longitude": 2.85441,
     "description": ""
