@@ -1,5 +1,5 @@
 [
-  {
+   {
     "nom": "Alleux",
     "type": "SP",
     "SAT": "",
@@ -7378,7 +7378,7 @@
     "nom": "Tourcoing",
     "type": "L-A",
     "appareil": "I1423",
-    "latitude": 50.718543,50.718519,3.177741
+    "latitude": 50.718543,
     "longitude": 3.177798,
     "description": "",
     "hors_patrimoine": ""
