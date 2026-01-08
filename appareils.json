@@ -7274,5 +7274,131 @@
     "longitude": 3.08343,
     "description": "",
     "hors_patrimoine": ""
+  },
+  {
+    "nom": "Tourcoing",
+    "type": "L-A",
+    "appareil": "DU n°1",
+    "latitude": 50.71796,
+    "longitude": 3.17715,
+    "description": "",
+    "hors_patrimoine": ""
+  },
+  {
+    "nom": "Tourcoing",
+    "type": "L-A",
+    "appareil": "S IA1",
+    "latitude": 50.71792, 
+    "longitude": 3.17775,
+    "description": "",
+    "hors_patrimoine": ""
+  },
+  {
+    "nom": "Tourcoing",
+    "type": "L-A",
+    "appareil": "IA1",
+    "latitude": 50.71794, 
+    "longitude": 3.17762,
+    "description": "",
+    "hors_patrimoine": ""
+  },
+  {
+    "nom": "Tourcoing",
+    "type": "L-A",
+    "appareil": "TC IA1",
+    "latitude": 50.71794, 
+    "longitude": 3.17762,
+    "description": "",
+    "hors_patrimoine": ""
+  },
+  {
+    "nom": "Tourcoing",
+    "type": "L-A",
+    "appareil": "TT IA1",
+    "latitude": 50.71795, 
+    "longitude": 3.17752,
+    "description": "",
+    "hors_patrimoine": ""
+  },
+  {
+    "nom": "Tourcoing",
+    "type": "L-A",
+    "appareil": "DU n°2",
+    "latitude": 50.71859, 
+    "longitude": 3.17845,
+    "description": "",
+    "hors_patrimoine": ""
+  },
+  {
+    "nom": "Tourcoing",
+    "type": "L-A",
+    "appareil": "DU n°3",
+    "latitude": 50.718418,
+    "longitude": 3.179229,
+    "description": "",
+    "hors_patrimoine": ""
+  },
+  {
+    "nom": "Tourcoing",
+    "type": "L-A",
+    "appareil": "DU n°4",
+    "latitude": 50.718349,
+    "longitude": 3.181580,
+    "description": "",
+    "hors_patrimoine": ""
+  },
+  {
+    "nom": "Tourcoing",
+    "type": "L-A",
+    "appareil": "DU n°5",
+    "latitude": 50.71843, 
+    "longitude": 3.17923,
+    "description": "",
+    "hors_patrimoine": ""
+  },
+  {
+    "nom": "Tourcoing",
+    "type": "L-A",
+    "appareil": "DU n°6",
+    "latitude": 50.718864,
+    "longitude": 3.187458,
+    "description": "",
+    "hors_patrimoine": ""
+  },
+  {
+    "nom": "Tourcoing",
+    "type": "L-A",
+    "appareil": "DU n°7",
+    "latitude": 50.718593,
+    "longitude": 3.181574,
+    "description": "",
+    "hors_patrimoine": ""
+  },
+  {
+    "nom": "Tourcoing",
+    "type": "L-A",
+    "appareil": "I1423",
+    "latitude": 50.718543,50.718519,3.177741
+    "longitude": 3.177798,
+    "description": "",
+    "hors_patrimoine": ""
+  },
+  {
+    "nom": "Tourcoing",
+    "type": "L-A",
+    "appareil": "I1422",
+    "latitude": 50.718543,
+    "longitude": 3.177798,
+    "description": "",
+    "hors_patrimoine": ""
+  },
+  {
+    "nom": "Tourcoing",
+    "type": "L-A",
+    "appareil": "I1421",
+    "latitude": 50.718519,
+    "longitude": 3.177741,
+    "description": "",
+    "hors_patrimoine": ""
   }
 ]
