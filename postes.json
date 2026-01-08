@@ -4399,8 +4399,8 @@
     "lignes": "FIVES à MOUSCRON",
     "numero_ligne": 278000,
     "pk": "14,394",
-    "poste_latitude": "50.7213464",
-    "poste_longitude": "3.1943516"
+    "poste_latitude": "50.72135", 
+    "poste_longitude": "3.19441"
   },
   {
     "nom": "Tricat",
