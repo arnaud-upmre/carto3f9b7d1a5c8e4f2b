@@ -3009,7 +3009,7 @@
     "SAT": "",
     "accès": "",
     "appareil": "DU n°4",
-    "latitude": 50.40678, 
+    "latitude": 50.40678,
     "longitude": 2.85447,
     "description": ""
   },
@@ -7342,8 +7342,8 @@
     "nom": "Tourcoing Gare",
     "type": "L-A",
     "appareil": "DU n°4",
-    "latitude": 50.718349,
-    "longitude": 3.181580,
+    "latitude": 50.71844, 
+    "longitude": 3.18157,
     "description": "",
     "hors_patrimoine": ""
   },
