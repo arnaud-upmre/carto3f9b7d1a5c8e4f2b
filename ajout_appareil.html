@@ -1403,7 +1403,7 @@ for (const [key, val] of formData.entries()) {
   submitBtn.disabled = true;
   submitBtn.textContent = "⏳ Envoi en cours…";
 
-  fetch("https://script.google.com/macros/s/AKfycbz8lUhVMKOrRSdeNBeA0p4ZsQCNOesB0Y4DL27KAoHkHWS78hOqrW-t-9bC_azgN-mY/exec", {method:"POST", body:formData})
+  fetch("https://script.google.com/macros/s/AKfycbzQsgrTGXitjd5S2OpIfT_MMfV-44OBOfhBVa4iO3z_p1nMNIn94JmKi3_P9mi9nY7J/exec", {method:"POST", body:formData})
     .then(r=>r.text())
     .then(()=>{
      setTimeout(() => {
