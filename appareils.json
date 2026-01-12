@@ -7400,5 +7400,104 @@
     "longitude": 3.177741,
     "description": "",
     "hors_patrimoine": ""
+  },
+  {
+    "nom": "Guines",
+    "type": "SP",
+    "appareil": "P1",
+    "latitude": 50.854404,
+    "longitude": 1.848161,
+    "description": "",
+    "hors_patrimoine": ""
+  },
+  {
+    "nom": "Guines",
+    "type": "SP",
+    "appareil": "TT SEL 631",
+    "latitude": 50.854432,
+    "longitude": 1.848110,
+    "description": "",
+    "hors_patrimoine": ""
+  },
+  {
+    "nom": "Guines",
+    "type": "SP",
+    "appareil": "T1",
+    "latitude": 50.854432,
+    "longitude": 1.848110,
+    "description": "",
+    "hors_patrimoine": "true"
+  },
+  {
+    "nom": "Guines",
+    "type": "SP",
+    "appareil": "T2",
+    "latitude": 50.854455,
+    "longitude": 1.848063,
+    "description": "",
+    "hors_patrimoine": "true"
+  },
+  {
+    "nom": "Guines",
+    "type": "SP",
+    "appareil": "TT V2",
+    "latitude": 50.854455,
+    "longitude": 1.848063,
+    "description": "",
+    "hors_patrimoine": ""
+  },
+  {
+    "nom": "Guines",
+    "type": "SP",
+    "appareil": "SM2",
+    "latitude": 50.854471,
+    "longitude": 1.848018,
+    "description": "",
+    "hors_patrimoine": ""
+  },
+  {
+    "nom": "Guines",
+    "type": "SP",
+    "appareil": "TT SEL 7102",
+    "latitude": 50.854502,
+    "longitude": 1.847929,
+    "description": "",
+    "hors_patrimoine": ""
+  },
+  {
+    "nom": "Guines",
+    "type": "SP",
+    "appareil": "T4",
+    "latitude": 50.854502,
+    "longitude": 1.847929,
+    "description": "",
+    "hors_patrimoine": "true"
+  },
+  {
+    "nom": "Guines",
+    "type": "SP",
+    "appareil": "T3",
+    "latitude": 50.854529,
+    "longitude": 1.847878,
+    "description": "",
+    "hors_patrimoine": "true"
+  },
+  {
+    "nom": "Guines",
+    "type": "SP",
+    "appareil": "TT SEL 7105",
+    "latitude": 50.854529,
+    "longitude": 1.847878,
+    "description": "",
+    "hors_patrimoine": ""
+  },
+  {
+    "nom": "Guines",
+    "type": "SP",
+    "appareil": "SM1",
+    "latitude": 50.854583
+    "longitude": 1.847781,
+    "description": "",
+    "hors_patrimoine": ""
   }
 ]
