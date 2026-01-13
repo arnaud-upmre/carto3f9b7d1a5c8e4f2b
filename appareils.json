@@ -7350,18 +7350,9 @@
   {
     "nom": "Tourcoing Gare",
     "type": "L-A",
-    "appareil": "DU n°5",
-    "latitude": 50.71857, 
-    "longitude": 3.17923,
-    "description": "",
-    "hors_patrimoine": ""
-  },
-  {
-    "nom": "Tourcoing Gare",
-    "type": "L-A",
     "appareil": "DU n°6",
-    "latitude": 50.718864,
-    "longitude": 3.187458,
+    "latitude": 50.71868, 
+    "longitude": 3.18520,
     "description": "",
     "hors_patrimoine": ""
   },
@@ -7369,6 +7360,15 @@
     "nom": "Tourcoing Gare",
     "type": "L-A",
     "appareil": "DU n°7",
+    "latitude": 50.71888,
+    "longitude": 3.18740,
+    "description": "",
+    "hors_patrimoine": ""
+  },
+  {
+    "nom": "Tourcoing Gare",
+    "type": "L-A",
+    "appareil": "DU n°5",
     "latitude": 50.718593,
     "longitude": 3.181574,
     "description": "",
