@@ -7499,5 +7499,86 @@
     "longitude": 1.847781,
     "description": "",
     "hors_patrimoine": ""
+  },
+  {
+    "nom": "Bethune",
+    "type": "SUD",
+    "appareil": "IL1",
+    "latitude": 50.51905, 
+    "longitude": 2.64623,
+    "description": "",
+    "hors_patrimoine": ""
+  },
+  {
+    "nom": "Bethune",
+    "type": "SUD",
+    "appareil": "TC1",
+    "latitude": 50.51905, 
+    "longitude": 2.64623,
+    "description": "",
+    "hors_patrimoine": ""
+  },
+  {
+    "nom": "Bethune",
+    "type": "SUD",
+    "appareil": "T1",
+    "latitude": 50.51905, 
+    "longitude": 2.64623,
+    "description": "",
+    "hors_patrimoine": "true"
+  },
+  {
+    "nom": "Bethune",
+    "type": "SUD",
+    "appareil": "IL2",
+    "latitude": 50.51907, 
+    "longitude": 2.64617,
+    "description": "",
+    "hors_patrimoine": ""
+  },
+  {
+    "nom": "Bethune",
+    "type": "SUD",
+    "appareil": "TC2",
+    "latitude": 50.51907, 
+    "longitude": 2.64617,
+    "description": "",
+    "hors_patrimoine": ""
+  },
+  {
+    "nom": "Bethune",
+    "type": "SUD",
+    "appareil": "T2",
+    "latitude": 50.51907, 
+    "longitude": 2.64617,
+    "description": "",
+    "hors_patrimoine": "true"
+  },
+  {
+    "nom": "Bethune",
+    "type": "SUD",
+    "appareil": "44",
+    "latitude": 50.51909, 
+    "longitude": 2.64612,
+    "description": "",
+    "hors_patrimoine": ""
+  },
+  {
+    "nom": "Bethune",
+    "type": "SUD",
+    "appareil": "SI 4/46",
+    "latitude": 50.51910, 
+    "longitude": 2.64606,
+    "description": "",
+    "hors_patrimoine": ""
+  },
+  {
+    "nom": "Bethune",
+    "type": "SUD",
+    "appareil": "4",
+    "latitude": 50.51912, 
+    "longitude": 2.64601,
+    "description": "",
+    "hors_patrimoine": ""
   }
 ]
