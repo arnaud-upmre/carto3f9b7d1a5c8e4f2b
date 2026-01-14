@@ -7580,5 +7580,14 @@
     "longitude": 2.64601,
     "description": "",
     "hors_patrimoine": ""
-  }
+  },{
+   "nom": "Bethune SUD",
+   "type": "SS",
+   "SAT": "",
+   "accès": "",
+   "appareil": "229-29b",
+   "latitude": 50.51964,
+   "longitude": 2.644853,
+   "description": ""
+}
 ]
