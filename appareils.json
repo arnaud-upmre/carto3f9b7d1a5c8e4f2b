@@ -7580,7 +7580,8 @@
     "longitude": 2.64601,
     "description": "",
     "hors_patrimoine": ""
-  },{
+  },
+   {
    "nom": "Bethune SUD",
    "type": "SS",
    "SAT": "",
@@ -7589,5 +7590,15 @@
    "latitude": 50.51964,
    "longitude": 2.644853,
    "description": ""
+},
+{
+   "nom": "Oignies",
+   "type": "PRCI",
+   "SAT": "",
+   "accès": "",
+   "appareil": "I455",
+   "latitude": 50.480166,
+   "longitude": 2.980263,
+   "description": "Accès par PRCI"
 }
 ]
