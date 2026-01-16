@@ -3248,6 +3248,23 @@
     "poste_longitude": "2.97594"
   },
   {
+    "nom": "Oignies",
+    "type": "PRCI",
+    "SAT": "",
+    "accès": "I449",
+    "latitude": 50.463468,
+    "longitude": 2.972546,
+    "description": "",
+    "rss": "A",
+    "contact": "",
+    "portail": "",
+    "lignes": "GONESSE à LILLE-FRONTIERE (LGV)",
+    "numero_ligne": 226000,
+    "pk": "182,0539",
+    "poste_latitude": "50.47095",
+    "poste_longitude": "2.97594"
+  },
+  {
     "nom": "Orchies",
     "type": "SP",
     "SAT": "",
