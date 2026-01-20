@@ -4396,6 +4396,7 @@
     "rss": "A",
     "contact": "Agent E : 03 20 11 68 07  03 20 11 68 20",
     "portail": "",
+    "secure": "https://sncf.sharepoint.com/:w:/s/NonoMapsGrpO3652/IQCLyVRbE3UzQ68fr1PSN2A0AeZix-TuReKCpVRo7GBCT3Y?e=ut7lkN",
     "lignes": "FIVES à MOUSCRON",
     "numero_ligne": 278000,
     "pk": "13,090",
@@ -5926,6 +5927,7 @@
     "rss": "A",
     "contact": "Agent E : 03 20 11 68 07  03 20 11 68 20",
     "portail": "",
+    "secure": "https://sncf.sharepoint.com/:w:/s/NonoMapsGrpO3652/IQCLyVRbE3UzQ68fr1PSN2A0AeZix-TuReKCpVRo7GBCT3Y?e=ut7lkN",
     "poste_latitude": "50.71817",
     "poste_longitude": "3.17659",
     "special": true
