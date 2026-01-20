@@ -7610,5 +7610,23 @@
    "latitude": 50.463358,
    "longitude": 2.972329,
    "description": ""
-}
+},
+  {
+    "nom": "Tourcoing Gare",
+    "type": "L-A",
+    "appareil": "253",
+    "latitude": 50.71793, 
+    "longitude": 3.17563,
+    "description": "",
+    "hors_patrimoine": "true"
+  },
+  {
+    "nom": "Tourcoing Gare",
+    "type": "L-A",
+    "appareil": "S5046-253",
+    "latitude": 50.71782, 
+    "longitude": 3.17416,
+    "description": "Sectionneur de secours pour les VS Tourcoing Marchandise",
+    "hors_patrimoine": "true"
+  }
 ]
