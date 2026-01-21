@@ -6077,6 +6077,17 @@
     "numero_ligne": "",
     "pk": "",
     "hors_patrimoine": true
+  },
+  {
+    "nom": "Cabinet Medical de Dunkerque",
+    "latitude": 51.02978, 
+    "longitude": 2.36651,
+    "description": "",
+    "contact": "0328248169",
+    "portail": "",
+    "poste_latitude": "51.03090" 
+    "poste_longitude": "2.36629",
+    "special": true
   }
 ]
 
