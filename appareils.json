@@ -2644,6 +2644,16 @@
     "description": ""
   },
   {
+    "nom": "Justice",
+    "type": "SSP",
+    "SAT": "SAT1",
+    "accès": "",
+    "appareil": "Alimentation",
+    "latitude": 50.61555,
+    "longitude": 3.06252,
+    "description": "Alimentation SE"
+  },
+  {
     "nom": "La madeleine",
     "type": "L",
     "SAT": "",
