@@ -866,6 +866,36 @@ function formatTechDocs(lieu) {
     </div>
   `;
 }
+
+
+    function formatParticularitesLocales(lieu) {
+  if (lieu?.hors_patrimoine === true) return "";
+
+  const consigne = safeLink(lieu.particularites_consigne);
+  const vitesses = safeLink(lieu.particularites_vitesses);
+  const pistes   = safeLink(lieu.particularites_pistes);
+
+  const consigneBtn = consigne
+    ? `<a class="tech-pill" href="${consigne}" target="_blank" rel="noopener">📌 Consigne des particularités</a>`
+    : `<span class="tech-pill disabled">📌 Consigne des particularités</span>`;
+
+  const vitessesBtn = vitesses
+    ? `<a class="tech-pill" href="${vitesses}" target="_blank" rel="noopener">🚦 Vitesses de ligne</a>`
+    : `<span class="tech-pill disabled">🚦 Vitesses de ligne</span>`;
+
+  const pistesBtn = pistes
+    ? `<a class="tech-pill" href="${pistes}" target="_blank" rel="noopener">🛣️ Pistes & itinéraire</a>`
+    : `<span class="tech-pill disabled">🛣️ Pistes & itinéraire</span>`;
+
+  return `
+    <p><strong>📍 Particularités locales</strong></p>
+    <div class="tech-docs">
+      ${consigneBtn}
+      ${vitessesBtn}
+      ${pistesBtn}
+    </div>
+  `;
+}
     
     
 function generateAppareilListHTML(currentLieu) {
@@ -1203,6 +1233,9 @@ blocs.push(formatRSS(lieu.rss, true));
 
   const techBlock = formatTechDocs(lieu);
 if (techBlock) blocs.push(techBlock);
+
+  const partBlock = formatParticularitesLocales(lieu);
+if (partBlock) blocs.push(partBlock);
 
 const pk = lieu.pk 
   ? `<strong id="editable-pk">${lieu.pk}</strong>` 
