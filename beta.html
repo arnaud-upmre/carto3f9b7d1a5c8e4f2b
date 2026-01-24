@@ -845,7 +845,6 @@ function safeLink(val) {
 }
 
 function formatTechDocs(lieu) {
-  // Si Hors Patrimoine => on n'affiche pas Schéma/Consigne
   if (lieu?.hors_patrimoine === true) return "";
 
   const schema = safeLink(lieu.technique_schema);
@@ -860,7 +859,7 @@ function formatTechDocs(lieu) {
     : `<span class="tech-pill disabled">🦺 Consigne</span>`;
 
   return `
-    <p><strong>🧾 Technique</strong></p>
+    <p><strong>Technique :</strong></p>
     <div class="tech-docs">
       ${schemaBtn}
       ${consigneBtn}
