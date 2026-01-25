@@ -299,8 +299,11 @@ li.best { background-color:#e6f0ff; font-weight:600; }
   .btn-primary:hover{ background:#90caf9; color:#121212; }
 }
 
-#btn-localiser { margin-top: 4rem; }
-#btn-carte { margin-top: 4rem; display: inline-block; }
+#btn-localiser,
+#btn-carte,
+#btn-tableau {
+  margin-top: 0.6rem;
+}
 
 .inline-links {
   display: flex;
@@ -1722,15 +1725,11 @@ if (isMobile()) {
   btnLocaliser.style.display = "block";
   btnTableau.style.display = "block";
 
-  btnCarte.style.marginTop = "1rem";
-  btnLocaliser.style.marginTop = "0.6rem";
-  btnTableau.style.marginTop = "0.6rem";
-
   const actions = document.getElementById("proximite-actions");
 
-  actions.appendChild(btnCarte);
-  actions.appendChild(btnLocaliser);
-  actions.appendChild(btnTableau);
+actions.appendChild(btnCarte);
+actions.appendChild(btnTableau);
+actions.appendChild(btnLocaliser);
 } else {
   document.getElementById("btn-carte").style.display = "inline-block";
   document.getElementById("btn-localiser").style.display = "none";
@@ -1758,6 +1757,9 @@ document.getElementById("btn-localiser").addEventListener("click", () => {
   }
 });
 
+    document.getElementById("btn-tableau").addEventListener("click", () => {
+  window.location.href = "avancement.html";
+});
 
     function construireProximite(postes, appareils) {
   const arr = [];
