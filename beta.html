@@ -672,7 +672,11 @@ li.best { background-color:#e6f0ff; font-weight:600; }
 <button id="btn-localiser" class="btn-primary">
   📍 À proximité
 </button>
-
+  
+<button id="btn-tableau" class="btn-primary">
+  🧾 Tableau blanc
+</button>
+  
 <a id="btn-carte" class="btn-primary" href="map.html" style="display:none;">
   🗺️ Afficher la carte
 </a>
@@ -1712,20 +1716,25 @@ function isMobile() {
 if (isMobile()) {
   const btnCarte = document.getElementById("btn-carte");
   const btnLocaliser = document.getElementById("btn-localiser");
+  const btnTableau = document.getElementById("btn-tableau");
 
   btnCarte.style.display = "block";
   btnLocaliser.style.display = "block";
+  btnTableau.style.display = "block";
 
   btnCarte.style.marginTop = "1rem";
   btnLocaliser.style.marginTop = "0.6rem";
+  btnTableau.style.marginTop = "0.6rem";
 
   const actions = document.getElementById("proximite-actions");
 
   actions.appendChild(btnCarte);
   actions.appendChild(btnLocaliser);
+  actions.appendChild(btnTableau);
 } else {
   document.getElementById("btn-carte").style.display = "inline-block";
   document.getElementById("btn-localiser").style.display = "none";
+  document.getElementById("btn-tableau").style.display = "inline-block";
 }
 
 document.getElementById("btn-localiser").addEventListener("click", () => {
