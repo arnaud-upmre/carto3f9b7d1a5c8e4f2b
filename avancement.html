@@ -9,9 +9,6 @@
 
 <style>
 
-/* ============================================
-   🌙 MODE CLAIR + SOMBRE AUTOMATIQUE
-============================================ */
 :root{
     --bg:#f2f3f7;
     --card-bg:#ffffff;
@@ -36,9 +33,7 @@
     }
 }
 
-/* ============================================
-   GLOBAL
-============================================ */
+
 body{
     font-family: Inter, sans-serif;
     margin:0;
@@ -53,9 +48,7 @@ h1{
     font-weight:700;
 }
 
-/* ============================================
-   ONGLET
-============================================ */
+
 .tabs{
     display:flex;
     gap:10px;
@@ -75,9 +68,7 @@ h1{
     box-shadow:0 3px 8px rgba(0,0,0,0.25);
 }
 
-/* ============================================
-   RECHERCHE
-============================================ */
+
 #search{
     width:100%;
     max-width:400px;
@@ -95,9 +86,7 @@ h1{
     box-shadow:0 0 0 3px #1a73e825;
 }
 
-/* ============================================
-   FILTRES
-============================================ */
+
 .filters{
     display:flex;
     gap:10px;
@@ -122,18 +111,13 @@ h1{
     border-color:#1a73e8;
 }
 
-/* ============================================
-   GRID DES POSTS
-============================================ */
+
 .post-container{
     display:grid;
     grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
     gap:20px;
 }
 
-/* ============================================
-   CARD
-============================================ */
 .card{
     background:var(--card-bg);
     padding:18px;
@@ -153,9 +137,6 @@ h1{
     }
 }
 
-/* ============================================
-   TITRE : NOM + TYPE
-============================================ */
 .card-title{
     font-size:18px;
     font-weight:700;
@@ -172,9 +153,7 @@ h1{
     margin-left:6px;
 }
 
-/* ============================================
-   PILLS
-============================================ */
+
 .pill{
     display:inline-block;
     padding:6px 10px;
@@ -192,9 +171,7 @@ h1{
     box-shadow:0 3px 10px rgba(0,0,0,0.25);
 }
 
-/* ============================================
-   SAT JAUNE (COMME AVANT)
-============================================ */
+
 .sat-pill{
     background:var(--sat-bg);
     color:var(--sat-text);
@@ -247,7 +224,7 @@ h1{
 
 <script>
 
-/* --- EXACTEMENT ton JS précédent, sauf affichage du type + SAT jaune --- */
+
 
 const url="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/appareils.json";
 let appareils=[];
@@ -255,7 +232,6 @@ let groupesGlobaux={};
 let groupesAffiches={};
 let mode="patrimoine";
 
-/* Groupement */
 function groupAppareils(liste){
     const g={};
     liste.forEach(a=>{
@@ -265,7 +241,7 @@ function groupAppareils(liste){
     return g;
 }
 
-/* Compteurs */
+
 function majCompteurs(groupes){
     const noms=Object.keys(groupes);
     let total=0;
@@ -274,7 +250,6 @@ function majCompteurs(groupes){
         `Nombre de postes : ${noms.length} — Nombre d’appareils : ${total}`;
 }
 
-/* Chargement */
 async function charger(){
     const res=await fetch(url);
     appareils=await res.json();
@@ -284,7 +259,7 @@ async function charger(){
         hp:         groupAppareils(appareils.filter(a=>a.hors_patrimoine===true))
     };
 
-    // tri par défaut A-Z
+
     const noms=Object.keys(groupesGlobaux.patrimoine).sort();
     const sorted={};
     noms.forEach(n=>sorted[n]=groupesGlobaux.patrimoine[n]);
@@ -292,7 +267,6 @@ async function charger(){
     afficher(sorted);
 }
 
-/* Affichage */
 function afficher(groupes){
     groupesAffiches=groupes;
     majCompteurs(groupes);
@@ -345,7 +319,7 @@ function afficher(groupes){
     });
 }
 
-/* Onglets */
+
 document.getElementById("tab-patrimoine").onclick=()=>{
     mode="patrimoine";
     afficher(groupesGlobaux.patrimoine);
@@ -359,7 +333,7 @@ document.getElementById("tab-hp").onclick=()=>{
     document.getElementById("tab-patrimoine").classList.remove("active");
 };
 
-/* Recherche */
+
 document.getElementById("search").addEventListener("input",function(){
     const txt=this.value.trim().toLowerCase();
     const base=groupesGlobaux[mode];
@@ -372,7 +346,7 @@ document.getElementById("search").addEventListener("input",function(){
     afficher(r);
 });
 
-/* Tri */
+
 document.querySelectorAll(".filters button").forEach(btn=>{
     btn.onclick=()=>{
         document.querySelectorAll(".filters button").forEach(b=>b.classList.remove("activeFilter"));
