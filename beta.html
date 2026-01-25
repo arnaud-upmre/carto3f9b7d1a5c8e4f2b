@@ -1321,6 +1321,14 @@ Promise.all([
   lieux = postes;
   appareils = apps;
 
+  lieux.forEach(p => {
+  p.hors_patrimoine = p.hors_patrimoine === true;
+});
+
+appareils.forEach(a => {
+  a.hors_patrimoine = a.hors_patrimoine === true;
+});
+
    proximiteData = construireProximite(postes, apps);
 
   appareils.forEach(app => {
@@ -1444,10 +1452,6 @@ results.forEach(it => {
   it.__directAliasHit = aliases.some(a => normalize(a) === query);
 });
 
-results = results.filter(item => {
-  return !(item.category === "poste" && item.hors_patrimoine === true);
-});
-
 results.sort((a, b) => {
   const q = query.toLowerCase();
 
@@ -1514,9 +1518,6 @@ const labelFor = (item) =>
     : `${item.appareil} (${item.nom}${item.type ? ' ' + item.type : ''}${item.SAT ? ' / ' + item.SAT : ''})`;
 
 results.forEach((item, i) => {
-
-  
-item.hors_patrimoine = String(item.hors_patrimoine).toLowerCase().trim() === "true";
   
   const li = document.createElement("li");
   
