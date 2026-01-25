@@ -6867,8 +6867,7 @@
     "appareil": "IL1",
     "latitude": 50.80572, 
     "longitude": 1.72813,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Marquise",
@@ -6877,8 +6876,7 @@
     "appareil": "IL3",
     "latitude": 50.80572, 
     "longitude": 1.72813,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Marquise",
@@ -6887,7 +6885,7 @@
     "latitude": 50.80572, 
     "longitude": 1.72813,
     "description": "",
-    "hors_patrimoine": "true"
+    "hors_patrimoine": true
   },
   {
     "nom": "Marquise",
@@ -6896,7 +6894,7 @@
     "latitude": 50.80571, 
     "longitude": 1.72820,
     "description": "",
-    "hors_patrimoine": "true"
+    "hors_patrimoine": true
   },
   {
     "nom": "Marquise",
@@ -6905,7 +6903,7 @@
     "latitude": 50.80571, 
     "longitude": 1.72820,
     "description": "",
-    "hors_patrimoine": "true"
+    "hors_patrimoine": true
   },
   {
     "nom": "Marquise",
@@ -6913,8 +6911,7 @@
     "appareil": "IL2",
     "latitude": 50.80571,
     "longitude": 1.72826,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Marquise",
@@ -6922,8 +6919,7 @@
     "appareil": "IL4",
     "latitude": 50.80571,
     "longitude": 1.72826,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Yeuse",
@@ -6931,8 +6927,7 @@
     "appareil": "TT Sel 626",
     "latitude": 50.81883, 
     "longitude": 1.97688,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Yeuse",
@@ -6941,7 +6936,7 @@
     "latitude": 50.81883, 
     "longitude": 1.97688,
     "description": "",
-    "hors_patrimoine": "true"
+    "hors_patrimoine": true
   },
   {
     "nom": "Yeuse",
@@ -6949,8 +6944,7 @@
     "appareil": "TT Sel 627",
     "latitude": 50.81883, 
     "longitude": 1.97699,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Yeuse",
@@ -6959,7 +6953,7 @@
     "latitude": 50.81883, 
     "longitude": 1.97699,
     "description": "",
-    "hors_patrimoine": "true"
+    "hors_patrimoine": true
   },
   {
     "nom": "Yeuse",
@@ -6967,8 +6961,7 @@
     "appareil": "AT1",
     "latitude": 50.81890, 
     "longitude": 1.97685,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Yeuse",
@@ -6976,8 +6969,7 @@
     "appareil": "AT2",
     "latitude": 50.81890, 
     "longitude": 1.97704,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Yeuse",
@@ -6985,8 +6977,7 @@
     "appareil": "IMP1",
     "latitude": 50.81890, 
     "longitude": 1.97690,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Yeuse",
@@ -6994,8 +6985,7 @@
     "appareil": "SAT1",
     "latitude": 50.81890, 
     "longitude": 1.97690,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Yeuse",
@@ -7003,8 +6993,7 @@
     "appareil": "SAT2",
     "latitude": 50.81890,
     "longitude": 1.97697,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Yeuse",
@@ -7012,8 +7001,7 @@
     "appareil": "IMP2",
     "latitude": 50.81890,
     "longitude": 1.97697,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Yeuse",
@@ -7021,8 +7009,7 @@
     "appareil": "TSA",
     "latitude": 50.81890, 
     "longitude": 1.97694,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Bohain",
@@ -7030,8 +7017,7 @@
     "appareil": "174-22M",
     "latitude": 49.98815,
     "longitude": 3.44295,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Blangy Est",
@@ -7039,8 +7025,7 @@
     "appareil": "I19",
     "latitude": 50.29489, 
     "longitude": 2.82737,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Blangy Est",
@@ -7048,8 +7033,7 @@
     "appareil": "I15",
     "latitude": 50.29489, 
     "longitude": 2.82730,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Blangy Est",
@@ -7057,8 +7041,7 @@
     "appareil": "I14",
     "latitude": 50.29489, 
     "longitude": 2.82723,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Blangy Est",
@@ -7066,8 +7049,7 @@
     "appareil": "I17",
     "latitude": 50.29489, 
     "longitude": 2.82717,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Aubigny Au Bac",
@@ -7075,8 +7057,7 @@
     "appareil": "I42",
     "latitude": 50.27049, 
     "longitude": 3.15933,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Bollaert",
@@ -7085,7 +7066,7 @@
     "latitude": 50.43225, 
     "longitude": 2.81325,
     "description": "Sectionneur manuel à ouvrir pour consignation du I23",
-    "hors_patrimoine": "true"
+    "hors_patrimoine": true
   },
   {
     "nom": "Ronchin",
@@ -7093,8 +7074,7 @@
     "appareil": "IL1",
     "latitude": 50.61107, 
     "longitude": 3.08778,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Ronchin",
@@ -7102,8 +7082,7 @@
     "appareil": "TT5261",
     "latitude": 50.61107, 
     "longitude": 3.08778,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Ronchin",
@@ -7112,7 +7091,7 @@
     "latitude": 50.61107, 
     "longitude": 3.08778,
     "description": "",
-    "hors_patrimoine": "TRUE"
+    "hors_patrimoine": true
   },
   {
     "nom": "Ronchin",
@@ -7120,8 +7099,7 @@
     "appareil": "IL2",
     "latitude": 50.61111, 
     "longitude": 3.08782,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Ronchin",
@@ -7129,8 +7107,7 @@
     "appareil": "TT5268",
     "latitude": 50.61111, 
     "longitude": 3.08782,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Ronchin",
@@ -7139,7 +7116,7 @@
     "latitude": 50.61111, 
     "longitude": 3.08782,
     "description": "",
-    "hors_patrimoine": "TRUE"
+    "hors_patrimoine": true
   },
   {
     "nom": "Ronchin",
@@ -7147,8 +7124,7 @@
     "appareil": "TSA",
     "latitude": 50.61118, 
     "longitude": 3.08788,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Ronchin",
@@ -7157,7 +7133,7 @@
     "latitude": 50.61118, 
     "longitude": 3.08788,
     "description": "",
-    "hors_patrimoine": "TRUE"
+    "hors_patrimoine": true
   },
   {
     "nom": "Lens",
@@ -7166,7 +7142,7 @@
     "latitude": 50.42506, 
     "longitude": 2.83160,
     "description": "Sectionneur manuel pour consignation de Bollaert SSP",
-    "hors_patrimoine": "TRUE"
+    "hors_patrimoine": true
   },
   {
     "nom": "Lens",
@@ -7175,7 +7151,7 @@
     "latitude": 50.42478, 
     "longitude": 2.83260,
     "description": "Sectionneur manuel pour consignation de Bollaert SSP",
-    "hors_patrimoine": "TRUE"
+    "hors_patrimoine": true
   },
   {
     "nom": "Saint Eloi",
@@ -7183,8 +7159,7 @@
     "appareil": "TT 36534",
     "latitude": 50.35681, 
     "longitude": 3.08391,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Saint Eloi",
@@ -7192,8 +7167,7 @@
     "appareil": "TT 36521",
     "latitude": 50.35679, 
     "longitude": 3.08386,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Saint Eloi",
@@ -7201,8 +7175,7 @@
     "appareil": "TT Feeder A",
     "latitude": 50.35677, 
     "longitude": 3.08381,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Saint Eloi",
@@ -7210,8 +7183,7 @@
     "appareil": "IP1",
     "latitude": 50.35676, 
     "longitude": 3.08375,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Saint Eloi",
@@ -7219,8 +7191,7 @@
     "appareil": "IP2",
     "latitude": 50.35674, 
     "longitude": 3.08370,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Saint Eloi",
@@ -7228,8 +7199,7 @@
     "appareil": "IS5",
     "latitude": 50.35672, 
     "longitude": 3.08366,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Saint Eloi",
@@ -7237,8 +7207,7 @@
     "appareil": "IS6",
     "latitude": 50.35669,
     "longitude": 3.08360,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Saint Eloi",
@@ -7246,8 +7215,7 @@
     "appareil": "I36542",
     "latitude": 50.35667,
     "longitude": 3.08355,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Saint Eloi",
@@ -7255,8 +7223,7 @@
     "appareil": "I36540",
     "latitude": 50.35667,
     "longitude": 3.08355,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Saint Eloi",
@@ -7264,8 +7231,7 @@
     "appareil": "I36536",
     "latitude": 50.35665, 
     "longitude": 3.08348,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Saint Eloi",
@@ -7273,8 +7239,7 @@
     "appareil": "TT6",
     "latitude": 50.35665, 
     "longitude": 3.08348,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Saint Eloi",
@@ -7282,8 +7247,7 @@
     "appareil": "TT5",
     "latitude": 50.35662, 
     "longitude": 3.08343,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Tourcoing Gare",
@@ -7291,8 +7255,7 @@
     "appareil": "DU n°1",
     "latitude": 50.71796,
     "longitude": 3.17715,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Tourcoing Gare",
@@ -7300,8 +7263,7 @@
     "appareil": "S IA1",
     "latitude": 50.71792, 
     "longitude": 3.17775,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Tourcoing Gare",
@@ -7309,8 +7271,7 @@
     "appareil": "IA1",
     "latitude": 50.71794, 
     "longitude": 3.17762,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Tourcoing Gare",
@@ -7318,8 +7279,7 @@
     "appareil": "TC IA1",
     "latitude": 50.71794, 
     "longitude": 3.17762,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Tourcoing Gare",
@@ -7327,8 +7287,7 @@
     "appareil": "TT IA1",
     "latitude": 50.71795, 
     "longitude": 3.17752,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Tourcoing Gare",
@@ -7336,8 +7295,7 @@
     "appareil": "DU n°2",
     "latitude": 50.71858, 
     "longitude": 3.17842,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Tourcoing Gare",
@@ -7345,8 +7303,7 @@
     "appareil": "DU n°3",
     "latitude": 50.718418,
     "longitude": 3.179229,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Tourcoing Gare",
@@ -7354,8 +7311,7 @@
     "appareil": "DU n°4",
     "latitude": 50.71844, 
     "longitude": 3.18157,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Tourcoing Gare",
@@ -7363,8 +7319,7 @@
     "appareil": "DU n°6",
     "latitude": 50.71868, 
     "longitude": 3.18520,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Tourcoing Gare",
@@ -7372,8 +7327,7 @@
     "appareil": "DU n°7",
     "latitude": 50.71888,
     "longitude": 3.18740,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Tourcoing Gare",
@@ -7381,8 +7335,7 @@
     "appareil": "DU n°5",
     "latitude": 50.718593,
     "longitude": 3.181574,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Tourcoing Gare",
@@ -7390,8 +7343,7 @@
     "appareil": "I1423",
     "latitude": 50.718543,
     "longitude": 3.177798,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Tourcoing Gare",
@@ -7399,8 +7351,7 @@
     "appareil": "I1422",
     "latitude": 50.718543,
     "longitude": 3.177798,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Tourcoing Gare",
@@ -7408,8 +7359,7 @@
     "appareil": "I1421",
     "latitude": 50.718519,
     "longitude": 3.177741,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Guines",
@@ -7417,8 +7367,7 @@
     "appareil": "P1",
     "latitude": 50.854404,
     "longitude": 1.848161,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Guines",
@@ -7426,8 +7375,7 @@
     "appareil": "TT SEL 631",
     "latitude": 50.854432,
     "longitude": 1.848110,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Guines",
@@ -7436,7 +7384,7 @@
     "latitude": 50.854432,
     "longitude": 1.848110,
     "description": "",
-    "hors_patrimoine": "true"
+    "hors_patrimoine": true
   },
   {
     "nom": "Guines",
@@ -7445,7 +7393,7 @@
     "latitude": 50.854455,
     "longitude": 1.848063,
     "description": "",
-    "hors_patrimoine": "true"
+    "hors_patrimoine": true
   },
   {
     "nom": "Guines",
@@ -7453,8 +7401,7 @@
     "appareil": "TT SEL 638",
     "latitude": 50.854455,
     "longitude": 1.848063,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Guines",
@@ -7462,8 +7409,7 @@
     "appareil": "SM2",
     "latitude": 50.854471,
     "longitude": 1.848018,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Guines",
@@ -7471,8 +7417,7 @@
     "appareil": "TT SEL 7102",
     "latitude": 50.854502,
     "longitude": 1.847929,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Guines",
@@ -7481,7 +7426,7 @@
     "latitude": 50.854502,
     "longitude": 1.847929,
     "description": "",
-    "hors_patrimoine": "true"
+    "hors_patrimoine": true
   },
   {
     "nom": "Guines",
@@ -7490,7 +7435,7 @@
     "latitude": 50.854529,
     "longitude": 1.847878,
     "description": "",
-    "hors_patrimoine": "true"
+    "hors_patrimoine": true
   },
   {
     "nom": "Guines",
@@ -7498,8 +7443,7 @@
     "appareil": "TT SEL 7105",
     "latitude": 50.854529,
     "longitude": 1.847878,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Guines",
@@ -7507,8 +7451,7 @@
     "appareil": "SM1",
     "latitude": 50.854583,
     "longitude": 1.847781,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Bethune SUD",
@@ -7516,8 +7459,7 @@
     "appareil": "IL1",
     "latitude": 50.51905, 
     "longitude": 2.64623,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Bethune SUD",
@@ -7525,8 +7467,7 @@
     "appareil": "TC1",
     "latitude": 50.51905, 
     "longitude": 2.64623,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Bethune SUD",
@@ -7535,7 +7476,7 @@
     "latitude": 50.51905, 
     "longitude": 2.64623,
     "description": "",
-    "hors_patrimoine": "true"
+    "hors_patrimoine": true
   },
   {
     "nom": "Bethune SUD",
@@ -7543,8 +7484,7 @@
     "appareil": "IL2",
     "latitude": 50.51907, 
     "longitude": 2.64617,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Bethune SUD",
@@ -7552,8 +7492,7 @@
     "appareil": "TC2",
     "latitude": 50.51907, 
     "longitude": 2.64617,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Bethune SUD",
@@ -7562,7 +7501,7 @@
     "latitude": 50.51907, 
     "longitude": 2.64617,
     "description": "",
-    "hors_patrimoine": "true"
+    "hors_patrimoine": true
   },
   {
     "nom": "Bethune SUD",
@@ -7570,8 +7509,7 @@
     "appareil": "44",
     "latitude": 50.51909, 
     "longitude": 2.64612,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Bethune SUD",
@@ -7579,8 +7517,7 @@
     "appareil": "SI 4/46",
     "latitude": 50.51910, 
     "longitude": 2.64606,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
   {
     "nom": "Bethune SUD",
@@ -7588,8 +7525,7 @@
     "appareil": "4",
     "latitude": 50.51912, 
     "longitude": 2.64601,
-    "description": "",
-    "hors_patrimoine": ""
+    "description": ""
   },
    {
    "nom": "Bethune SUD",
@@ -7628,7 +7564,7 @@
     "latitude": 50.71793, 
     "longitude": 3.17563,
     "description": "",
-    "hors_patrimoine": "true"
+    "hors_patrimoine": true
   },
   {
     "nom": "Tourcoing Gare",
@@ -7637,6 +7573,6 @@
     "latitude": 50.71782, 
     "longitude": 3.17416,
     "description": "Sectionneur de secours pour les VS Tourcoing Marchandise",
-    "hors_patrimoine": "true"
+    "hors_patrimoine": true
   }
 ]
