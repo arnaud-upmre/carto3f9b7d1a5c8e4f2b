@@ -847,8 +847,9 @@ function safeLink(val) {
 function formatTechDocs(lieu) {
   if (lieu?.hors_patrimoine === true) return "";
 
-  const schema = safeLink(lieu.technique_schema);
+  const schema   = safeLink(lieu.technique_schema);
   const consigne = safeLink(lieu.technique_consigne);
+  const s11      = safeLink(lieu.technique_s11);
 
   const schemaBtn = schema
     ? `<a class="tech-pill" href="${schema}" target="_blank" rel="noopener">📐 Schéma</a>`
@@ -858,11 +859,16 @@ function formatTechDocs(lieu) {
     ? `<a class="tech-pill" href="${consigne}" target="_blank" rel="noopener">🦺 Consigne</a>`
     : `<span class="tech-pill disabled">🦺 Consigne</span>`;
 
+  const s11Btn = s11
+    ? `<a class="tech-pill" href="${s11}" target="_blank" rel="noopener">⚡️ S11</a>`
+    : `<span class="tech-pill disabled">⚡️ S11</span>`;
+
   return `
     <p><strong>📄 Technique :</strong></p>
     <div class="tech-docs">
       ${schemaBtn}
       ${consigneBtn}
+      ${s11Btn}
     </div>
   `;
 }
