@@ -294,13 +294,12 @@ function afficher(groupes){
                 <span class="type-pill">${type}</span>
             </div>
 
-${principal.length ? `
-<div class="section-title">Poste principal</div>
-${principal.map(a=>{
-    const id=`${a.appareil} ${a.nom} ${a.type||""} ${a.SAT||""}`.trim();
-    return `<span class="pill" onclick="location.href='index.html?id=${encodeURIComponent(id)}'">${a.appareil}</span>`;
-}).join("")}
-` : ""}
+            <div class="section-title">Poste principal</div>
+            ${principal.length ? principal.map(a=>{
+                const id=`${a.appareil} ${a.nom} ${a.type||""} ${a.SAT||""}`.trim();
+                return `<span class="pill" onclick="location.href='index.html?id=${encodeURIComponent(id)}'">${a.appareil}</span>`;
+            }).join("") : ""}
+        `;
 
         Object.keys(satGroup).sort().forEach(s=>{
             const appareilsSat=satGroup[s].sort((a,b)=>a.appareil.localeCompare(b.appareil));
