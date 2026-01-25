@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<title>Zones de régulation – Schéma</title>
+
+<style>
+:root {
+  --bg: #0b0f14;
+  --text: #e5e7eb;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #ffffff;
+    --text: #111827;
+  }
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+#container {
+  width: 100vw;
+  height: 100vh;
+  overflow: auto;
+  touch-action: pan-x pan-y pinch-zoom;
+}
+
+svg {
+  width: 2400px;
+  height: 1400px;
+}
+
+/* Styles généraux */
+text {
+  font-family: system-ui, -apple-system, Segoe UI, Roboto;
+  font-size: 12px;
+  fill: var(--text);
+}
+
+/* Zones */
+.zone1 { stroke: #f59e0b; }
+.zone2 { stroke: #ef4444; }
+.zone3 { stroke: #22c55e; }
+.zone4 { stroke: #3b82f6; }
+.zone5 { stroke: #a855f7; }
+.zone6 { stroke: #14b8a6; }
+.zone7 { stroke: #fb7185; }
+.zone8 { stroke: #84cc16; }
+.zone9 { stroke: #eab308; }
+.zone10 { stroke: #f97316; }
+
+.ligne {
+  fill: none;
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.station {
+  font-size: 11px;
+  fill: var(--text);
+}
+</style>
+</head>
+
+<body>
+<div id="container">
+
+<svg viewBox="0 0 2400 1400">
+
+  <!-- ================= ZONE 1 ================= -->
+  <path class="ligne zone1"
+        d="M100 700 L300 700 L500 650 L700 650" />
+  <text x="110" y="685" class="station">PARIS</text>
+  <text x="320" y="685" class="station">AMIENS</text>
+  <text x="520" y="635" class="station">LONGUEAU</text>
+
+  <!-- ================= ZONE 2 ================= -->
+  <path class="ligne zone2"
+        d="M700 650 L900 550 L1100 500 L1300 480" />
+  <text x="720" y="635" class="station">ROUEN</text>
+  <text x="920" y="535" class="station">POIX</text>
+
+  <!-- ================= ZONE 3 ================= -->
+  <path class="ligne zone3"
+        d="M1300 480 L1500 420 L1700 400" />
+  <text x="1320" y="465" class="station">ARRAS</text>
+  <text x="1520" y="405" class="station">LENS</text>
+
+  <!-- ================= ZONE 4 ================= -->
+  <path class="ligne zone4"
+        d="M1700 400 L1900 350 L2100 330" />
+  <text x="1720" y="385" class="station">LILLE</text>
+  <text x="1920" y="335" class="station">ROUBAIX</text>
+
+  <!-- ================= ZONE 5 ================= -->
+  <path class="ligne zone5"
+        d="M2100 330 L2250 300" />
+  <text x="2120" y="315" class="station">TOURCOING</text>
+
+  <!-- ================= ZONE 6 ================= -->
+  <path class="ligne zone6"
+        d="M1700 400 L1700 650 L1700 900" />
+  <text x="1720" y="650" class="station">DOUAI</text>
+  <text x="1720" y="900" class="station">CAMBRAI</text>
+
+  <!-- ================= ZONE 7 ================= -->
+  <path class="ligne zone7"
+        d="M1700 900 L1500 1050 L1300 1150" />
+  <text x="1520" y="1035" class="station">ST-QUENTIN</text>
+
+  <!-- ================= ZONE 8 ================= -->
+  <path class="ligne zone8"
+        d="M1300 1150 L1100 1200 L900 1250" />
+  <text x="1120" y="1185" class="station">NOYON</text>
+
+  <!-- ================= ZONE 9 ================= -->
+  <path class="ligne zone9"
+        d="M900 1250 L700 1200 L500 1150" />
+  <text x="720" y="1185" class="station">COMPIÈGNE</text>
+
+  <!-- ================= ZONE 10 ================= -->
+  <path class="ligne zone10"
+        d="M500 1150 L300 1050 L150 950" />
+  <text x="320" y="1035" class="station">CREIL</text>
+
+</svg>
+
+</div>
+</body>
+</html>
