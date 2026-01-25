@@ -298,7 +298,7 @@ function afficher(groupes){
             ${principal.length ? principal.map(a=>{
                 const id=`${a.appareil} ${a.nom} ${a.type||""} ${a.SAT||""}`.trim();
                 return `<span class="pill" onclick="location.href='index.html?id=${encodeURIComponent(id)}'">${a.appareil}</span>`;
-            }).join("") : "<em>Aucun appareil</em>"}
+            }).join("") : ""}
         `;
 
         Object.keys(satGroup).sort().forEach(s=>{
