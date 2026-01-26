@@ -580,12 +580,15 @@ ${hasType && principal.length > 0
 ${principal.length > 0 ? principalPills : ""}
 `;
 
-const satKeys = Object.keys(satGroup).sort();
-
+    const satKeys = Object.keys(satGroup).sort();
+const hasPrincipal = principal.length > 0;
+    
 satKeys.forEach((s, idx) => {
+    
     const appareilsSat = satGroup[s].sort((a,b)=>a.appareil.localeCompare(b.appareil));
-
-    const withSeparator = satKeys.length > 1 && idx > 0;
+    const withSeparator =
+        (hasPrincipal && idx === 0) ||
+        (satKeys.length > 1 && idx > 0);
 
     html += `
 <div class="${withSeparator ? "sat-block" : ""}">
@@ -601,7 +604,6 @@ satKeys.forEach((s, idx) => {
         zone.innerHTML+=html;
     });
 }
-
 
 
 document.getElementById("search").addEventListener("input", function () {
