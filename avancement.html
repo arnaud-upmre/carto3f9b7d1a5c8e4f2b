@@ -482,18 +482,32 @@ document.getElementById("tab-hp").onclick=()=>{
     postesZone.classList.add("hp");
 };
 
-document.getElementById("search").addEventListener("input",function(){
-    const txt=this.value.trim().toLowerCase();
-    const base=groupesGlobaux[mode];
-    if(txt==="") return afficher(base);
+document.getElementById("search").addEventListener("input", function () {
+    const txt = this.value.trim().toLowerCase();
+    const base = groupesGlobaux[mode];
 
-    const r={};
-    Object.keys(base).forEach(n=>{
-        if(n.toLowerCase().includes(txt)) r[n]=base[n];
+    if (txt === "") {
+        afficher(base);
+        return;
+    }
+
+    const r = {};
+
+    Object.keys(base).forEach(nomPoste => {
+        const appareils = base[nomPoste];
+
+        const matchNomPoste = nomPoste.toLowerCase().includes(txt);
+        const matchAppareil = appareils.some(a =>
+            (a.appareil || "").toLowerCase().includes(txt)
+        );
+
+        if (matchNomPoste || matchAppareil) {
+            r[nomPoste] = appareils;
+        }
     });
+
     afficher(r);
 });
-
 
 document.querySelectorAll(".filters button").forEach(btn=>{
     btn.onclick=()=>{
