@@ -5279,7 +5279,7 @@
     "type": "S",
     "SAT": "",
     "accès": "",
-    "appareil": "TT Sin Blecourt",
+    "appareil": "TT42",
     "latitude": 50.21949,
     "longitude": 3.20384,
     "description": ""
@@ -5299,7 +5299,7 @@
     "type": "S",
     "SAT": "",
     "accès": "",
-    "appareil": "TT Cambrai Blecourt",
+    "appareil": "TT5",
     "latitude": 50.2187,
     "longitude": 3.2032,
     "description": ""
@@ -6470,7 +6470,7 @@
   {
     "nom": "Bollaert",
     "type": "SSP",
-    "appareil": "TT Ssr Bollaert Lens V1",
+    "appareil": "TT25",
     "latitude": 50.42874, 
     "longitude": 2.82317,
     "description": ""
@@ -6542,7 +6542,7 @@
   {
     "nom": "Bollaert",
     "type": "SSP",
-    "appareil": "TT Ssr Bollaert Lens V2",
+    "appareil": "TT28",
     "latitude": 50.42886, 
     "longitude": 2.82280,
     "description": ""
@@ -6937,7 +6937,7 @@
   {
     "nom": "Yeuse",
     "type": "P",
-    "appareil": "TT Sel 626",
+    "appareil": "TT626",
     "latitude": 50.81883, 
     "longitude": 1.97688,
     "description": ""
@@ -6954,7 +6954,7 @@
   {
     "nom": "Yeuse",
     "type": "P",
-    "appareil": "TT Sel 627",
+    "appareil": "TT627",
     "latitude": 50.81883, 
     "longitude": 1.97699,
     "description": ""
@@ -7387,7 +7387,7 @@
   {
     "nom": "Guines",
     "type": "SP",
-    "appareil": "TT SEL 631",
+    "appareil": "TT631",
     "latitude": 50.854432,
     "longitude": 1.848110,
     "description": ""
