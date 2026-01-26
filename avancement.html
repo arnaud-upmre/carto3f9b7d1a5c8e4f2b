@@ -287,23 +287,22 @@ function afficher(groupes){
             satGroup[a.SAT].push(a);
         });
 
-   let html=`
-        <div class="card">
-            <div class="card-title">
-                ${nom}
-                ${type ? `<span class="type-pill">${type}</span>` : ""}
-            </div>
-        `;
+const hasType = !!type;
 
-if(type){
-    html+=`
-        <div class="section-title">Poste principal</div>
-        ${principal.length ? principal.map(a=>{
-            const id=\`${a.appareil} ${a.nom} ${a.type||""} ${a.SAT||""}\`.trim();
-            return \`<span class="pill" onclick="location.href='index.html?id=\${encodeURIComponent(id)}'>\${a.appareil}</span>\`;
-        }).join("") : ""}
-    `;
-}
+const principalPills = principal.length ? principal.map(a=>{
+    const id = `${a.appareil} ${a.nom} ${a.type||""} ${a.SAT||""}`.trim();
+    return `<span class="pill" onclick="location.href='index.html?id=${encodeURIComponent(id)}'">${a.appareil}</span>`;
+}).join("") : "";
+
+let html=`
+<div class="card">
+    <div class="card-title">
+        ${nom}
+        ${hasType ? `<span class="type-pill">${type}</span>` : ""}
+    </div>
+
+    ${hasType ? `<div class="section-title">Poste principal</div>${principalPills}` : ""}
+`;
 
         Object.keys(satGroup).sort().forEach(s=>{
             const appareilsSat=satGroup[s].sort((a,b)=>a.appareil.localeCompare(b.appareil));
