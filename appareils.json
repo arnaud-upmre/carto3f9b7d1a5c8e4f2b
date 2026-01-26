@@ -7146,7 +7146,8 @@
     "hors_patrimoine": true
   },
   {
-    "nom": "Lens (sectionneur)",
+    "nom": "Lens",
+    "accès": "Sectionneur",
     "type": "",
     "appareil": "210-55A",
     "latitude": 50.42506, 
@@ -7155,7 +7156,8 @@
     "hors_patrimoine": true
   },
   {
-    "nom": "Lens (sectionneur)",
+    "nom": "Lens",
+    "accès": "Sectionneur",
     "type": "",
     "appareil": "210-50",
     "latitude": 50.42478, 
@@ -7661,7 +7663,8 @@
     "description": ""
  },
   {
-    "nom": "Lens (sectionneur)",
+    "nom": "Lens",
+    "accès": "Sectionneur",
     "type": "",
     "appareil": "S12-13",
     "latitude": 50.42145, 
