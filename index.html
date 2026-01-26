@@ -801,10 +801,9 @@ function generateAppareilListHTML(currentLieu) {
     return "";
   }
   
-  const matchingApps = appareils.filter(app => 
-    app.nom  === currentLieu.nom  &&
-    app.type === currentLieu.type
-  );
+const matchingApps = appareils.filter(app => 
+  normalize(app.nom) === normalize(currentLieu.nom)
+);
 
   const isSAT = currentLieu.SAT && currentLieu.SAT !== "";
   const isAcces = !!currentLieu.accès;
@@ -1535,9 +1534,7 @@ html += formatInformations(app.description);
 
 if (!postePrincipal && app.accès) {
   postePrincipal = lieux.find(l =>
-    normalize(l.nom) === normalize(app.nom) &&
-    normalize(l.type || "") === normalize(app.type || "") &&
-    normalize(l.accès || "") === normalize(app.accès || "")
+    normalize(l.nom) === normalize(app.accès)
   );
 }
 
