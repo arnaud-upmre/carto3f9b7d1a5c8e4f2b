@@ -7581,8 +7581,7 @@
     "appareil": "TT2",
     "latitude": 50.71337, 
     "longitude": 2.78622,
-    "description": "",
-    "hors_patrimoine":
+    "description": ""
   },
   {
     "nom": "Steenwerck",
@@ -7590,8 +7589,7 @@
     "appareil": "TT1",
     "latitude": 50.71334, 
     "longitude": 2.78629,
-    "description": "",
-    "hors_patrimoine":
+    "description": ""
   },
   {
     "nom": "Steenwerck",
@@ -7599,8 +7597,7 @@
     "appareil": "TSA",
     "latitude": 50.71339, 
     "longitude": 2.78623,
-    "description": "",
-    "hors_patrimoine": },
+    "description": ""
  },
   {
     "nom": "Steenwerck",
@@ -7608,8 +7605,7 @@
     "appareil": "IL2",
     "latitude": 50.71339, 
     "longitude": 2.78623,
-    "description": "",
-    "hors_patrimoine": },
+    "description": ""
  },
   {
     "nom": "Steenwerck",
@@ -7635,8 +7631,7 @@
     "appareil": "IMP",
     "latitude": 50.71339,
     "longitude": 2.78627,
-    "description": "",
-    "hors_patrimoine": true
+    "description": ""
  },
   {
     "nom": "Steenwerck",
@@ -7645,7 +7640,7 @@
     "latitude": 50.71336, 
     "longitude": 2.78631,
     "description": "",
-    "hors_patrimoine": true },
+    "hors_patrimoine": true
    },
   {
     "nom": "Steenwerck",
@@ -7653,7 +7648,6 @@
     "appareil": "IL1",
     "latitude": 50.71336, 
     "longitude": 2.78631,
-    "description": "",
-    "hors_patrimoine": true
+    "description": ""
  }
 ]
