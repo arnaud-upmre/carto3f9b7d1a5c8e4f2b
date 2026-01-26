@@ -632,6 +632,10 @@ li.best { background-color:#e6f0ff; font-weight:600; }
 <a id="btn-carte" class="btn-primary" href="map.html" style="display:none;">
   🗺️ Afficher la carte
 </a>
+
+  <a id="btn-tableau" class="btn-primary" href="tableau.html" style="display:none;">
+  🧾 Tableau blanc
+</a>
   
 <div id="proximite" style="margin-top:1rem; font-size:14px;"></div>
 <div id="proximite-actions" style="text-align:center; margin:10px 0;">
@@ -1602,20 +1606,25 @@ function isMobile() {
 
 if (isMobile()) {
   const btnCarte = document.getElementById("btn-carte");
+  const btnTableau = document.getElementById("btn-tableau");
   const btnLocaliser = document.getElementById("btn-localiser");
 
   btnCarte.style.display = "block";
+  btnTableau.style.display = "block";
   btnLocaliser.style.display = "block";
 
   btnCarte.style.marginTop = "1rem";
+  btnTableau.style.marginTop = "0.6rem";
   btnLocaliser.style.marginTop = "0.6rem";
 
   const actions = document.getElementById("proximite-actions");
 
   actions.appendChild(btnCarte);
+  actions.appendChild(btnTableau);
   actions.appendChild(btnLocaliser);
 } else {
   document.getElementById("btn-carte").style.display = "inline-block";
+  document.getElementById("btn-tableau").style.display = "inline-block";
   document.getElementById("btn-localiser").style.display = "none";
 }
 
@@ -2256,7 +2265,7 @@ function formatInformations(val) {
 </div>
 <footer class="about-footer">
   <a href="arnaud.html" class="footer-link">🔧 À propos</a>
-  <a href="version.html" class="footer-link version">📌 Nono Maps V1.13.8_essais</a>
+  <a href="version.html" class="footer-link version">📌 Nono Maps V1.14</a>
 </footer>
 <script>
 (function(){
