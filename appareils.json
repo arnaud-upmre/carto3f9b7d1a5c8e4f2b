@@ -7147,7 +7147,7 @@
   },
   {
     "nom": "Lens",
-    "accès": "Sectionneur",
+    "accès": "sectionneur",
     "type": "",
     "appareil": "210-55A",
     "latitude": 50.42506, 
@@ -7157,7 +7157,7 @@
   },
   {
     "nom": "Lens",
-    "accès": "Sectionneur",
+    "accès": "sectionneur",
     "type": "",
     "appareil": "210-50",
     "latitude": 50.42478, 
@@ -7664,7 +7664,7 @@
  },
   {
     "nom": "Lens",
-    "accès": "Sectionneur",
+    "accès": "sectionneur",
     "type": "",
     "appareil": "S12-13",
     "latitude": 50.42145, 
