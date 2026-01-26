@@ -1524,30 +1524,31 @@ let html = `<h2>
 
 html += formatInformations(app.description);
 
-  let postePrincipal = null;
-  if (app.SAT) {
-    postePrincipal = lieux.find(l =>
-      normalize(l.nom) === normalize(app.nom) &&
-      normalize(l.type || "") === normalize(app.type || "") &&
-      normalize(l.SAT) === normalize(app.SAT)
-    );
-  }
+let postePrincipal = null;
 
-if (!postePrincipal && app.accès) {
+if (app.acces) {
   postePrincipal = lieux.find(l =>
     normalize(l.nom) === normalize(app.nom) &&
     normalize(l.type || "") === normalize(app.type || "") &&
-    normalize(l.accès || "") === normalize(app.accès || "")
+    normalize(l.acces || "") === normalize(app.acces)
   );
 }
 
-  if (!postePrincipal) {
-      postePrincipal = lieux.find(l =>
-      normalize(l.nom) === normalize(app.nom) &&
-      normalize(l.type || "") === normalize(app.type || "") &&
-      !l.SAT && !l.accès
-    );
-  }
+if (!postePrincipal && app.SAT) {
+  postePrincipal = lieux.find(l =>
+    normalize(l.nom) === normalize(app.nom) &&
+    normalize(l.type || "") === normalize(app.type || "") &&
+    normalize(l.SAT || "") === normalize(app.SAT)
+  );
+}
+
+if (!postePrincipal) {
+  postePrincipal = lieux.find(l =>
+    normalize(l.nom) === normalize(app.nom) &&
+    normalize(l.type || "") === normalize(app.type || "") &&
+    !l.SAT && !l.acces
+  );
+}
 
   if (postePrincipal) {
     const sauvegarde = html;
