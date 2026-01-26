@@ -7658,5 +7658,21 @@
     "longitude": 2.83673,
     "description": "Commande SOULE appartenant au SE",
     "hors_patrimoine": true
+ },
+  {
+    "nom": "Caffiers",
+    "type": "L",
+    "appareil": "I5936",
+    "latitude": 50.85399,
+    "longitude": 1.80469,
+    "description": ""
+ },
+  {
+    "nom": "Caffiers",
+    "type": "L",
+    "appareil": "TT5934",
+    "latitude": 50.85401, 
+    "longitude": 1.80463,
+    "description": ""
  }
 ]
