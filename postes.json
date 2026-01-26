@@ -6072,11 +6072,11 @@
     "poste_longitude": "3.5130278958056063"
   },
   {
-    "nom": "Lens",
+    "nom": "Lens (sectionneur)",
     "accès": "",
     "latitude": 50.42474,
     "longitude": 2.83377,
-    "description": "Sectionneur à manœuvrer pour les consignations C de Bollaert",
+    "description": "Sectionneur 210-50 et 210-55A à manœuvrer pour les consignations C de Bollaert",
     "rss": "A",
     "contact": "",
     "portail": "",
