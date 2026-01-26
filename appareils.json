@@ -7649,5 +7649,14 @@
     "latitude": 50.71336, 
     "longitude": 2.78631,
     "description": ""
+ },
+  {
+    "nom": "Lens",
+    "type": "",
+    "appareil": "S12-13",
+    "latitude": 50.42145, 
+    "longitude": 2.83673,
+    "description": "Commande SOULE appartenant au SE",
+    "hors_patrimoine": true
  }
 ]
