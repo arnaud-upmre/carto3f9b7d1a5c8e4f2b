@@ -732,7 +732,7 @@ function formatPortail(val) {
 
   if (isSecure) {
     let html = `<p><strong id="editable-portail">🔑 Portail / Alarme :</strong> 
-      <a href="${secure}" target="_blank" rel="noopener">🔐 Afficher les codes d’acces</a>`;
+      <a href="${secure}" target="_blank" rel="noopener">🔐 Afficher les codes d’accès</a>`;
     if (hasPortail) {
       html += ` – ${val}`;
     }
@@ -767,7 +767,7 @@ function normalize(str) {
 
 function formatNomCompletLieu(obj) {
   const base = `${obj.nom || ''} ${obj.type || ''} ${obj.SAT || ''}`.trim();
-  return obj.acces ? `${base} – accès ${obj.acces}` : base;
+return obj["accès"] ? `${base} – accès ${obj["accès"]}` : base;
 }
 
 
@@ -801,15 +801,13 @@ function generateAppareilListHTML(currentLieu) {
     return "";
   }
   
-const matchingApps = appareils.filter(app =>
-  normalize(app.nom) === normalize(currentLieu.nom) &&
-  normalize(app.type || "") === normalize(currentLieu.type || "") &&
-  normalize(app.SAT || "") === normalize(currentLieu.SAT || "") &&
-  normalize(app.acces || "") === normalize(currentLieu.acces || "")
-);
+  const matchingApps = appareils.filter(app => 
+    app.nom  === currentLieu.nom  &&
+    app.type === currentLieu.type
+  );
 
   const isSAT = currentLieu.SAT && currentLieu.SAT !== "";
-  const isAcces = !!currentLieu.acces;
+  const isAcces = !!currentLieu.accès;
 
 if (!isSAT && !isAcces) {
   let groupedAll = {};
@@ -1017,7 +1015,7 @@ html += `
     <div class="inline-links pills-3">
 
       <a href="${myMapsViewer(latPoste, lonPoste)}">🛰️ Poste</a>
-<a href="${myMapsViewer(latAcces, lonAcces)}">🛰️ accès</a>
+      <a href="${myMapsViewer(latAcces, lonAcces)}">🛰️ Accès</a>
       <a href="#" onclick="openStreetView(${latAcces}, ${lonAcces}); return false;">
         👁️ Street View
       </a>
@@ -1075,7 +1073,7 @@ let html = `<h2>
   📍 <span id="editable-nom">${lieu.nom}</span> 
   <span id="editable-type">${lieu.type ? lieu.type.trim() : ""}</span>
   ${lieu.SAT ? `<span id="editable-sat"> ${lieu.SAT}</span>` : ""}
-${lieu.acces ? `<span id="editable-acces"> – accès ${lieu.acces}</span>` : ""}
+  ${lieu.accès ? `<span id="editable-acces"> – accès ${lieu.accès}</span>` : ""}
   <a href="#" id="edit-toggle">[modifier]</a>
 </h2>`;
 
@@ -1157,7 +1155,7 @@ blocs.push(`
     : '<span class="placeholder">(Complétez cette info en modifiant la fiche)</span>'}
   ${
     lieu.description_acces && lieu.description_acces.trim() !== ""
-      ? `<br><br><strong>🚙 acces :</strong> <span class="desc-value">${lieu.description_acces}</span>`
+      ? `<br><br><strong>🚙 Accès :</strong> <span class="desc-value">${lieu.description_acces}</span>`
       : ""
   }
 </p>
@@ -1186,7 +1184,7 @@ if (lieu.hors_patrimoine === true) {
     html += `<hr class="separator" />${appareilsHTML}`;
   }
 
-if (lieu.SAT || lieu.acces) {
+if (lieu.SAT || lieu.accès) {
   html += `
     <div class="missing-box" onclick="retourFichePrincipale('${encodeURIComponent(lieu.nom)}','${encodeURIComponent(lieu.type)}')">
       ⬅️ Retour à la fiche principale<br>
@@ -1232,7 +1230,7 @@ appareils.forEach(a => {
       { name: "SAT", weight: 0.2 },
       { name: "appareil", weight: 0.6 },
       { name: "alias", weight: 0.7 },
-      { name: "acces", getFn: o => o.acces?.toString?.() || "", weight: 0.2 }
+      { name: "accès", getFn: o => o.accès?.toString?.() || "", weight: 0.2 }
     ],
     includeScore: true,
     threshold: 0.25,
@@ -1251,7 +1249,7 @@ if (idParam) {
   const matchPoste = lieux.find(l => formatNomCompletLieu(l) === idParam);
 
   if (matchPoste) {
-    console.log("✅ Poste/acces trouvé:", matchPoste);
+    console.log("✅ Poste/Accès trouvé:", matchPoste);
     showLieu(matchPoste);
   } else {
 
@@ -1314,14 +1312,7 @@ document.getElementById("search").addEventListener("input", e => {
 
   if (!query || query.length < 2 || !fuseMix) return;
 
-let results = fuseMix.search(query)
-  .map(r => r.item)
-  .filter(item => {
-    if (item.category === "poste" && item.hors_patrimoine === true) {
-      return false;
-    }
-    return true;
-  });
+let results = fuseMix.search(query).map(r => r.item);
   const cleanedQuery = query.replace(/\s+/g, "").toLowerCase();
 
 const queryWords = query.split(/\s+/);
@@ -1380,13 +1371,13 @@ results.sort((a, b) => {
   if (aExact && !bExact) return -1;
   if (bExact && !aExact) return 1;
 
-  const aIsPoste = a.category === "poste" && !a.acces;
-  const bIsPoste = b.category === "poste" && !b.acces;
+  const aIsPoste = a.category === "poste" && !a.accès;
+  const bIsPoste = b.category === "poste" && !b.accès;
   if (aIsPoste && !bIsPoste) return -1;
   if (bIsPoste && !aIsPoste) return 1;
 
-  const aIsAcces = a.category === "poste" && !!a.acces;
-  const bIsAcces = b.category === "poste" && !!b.acces;
+  const aIsAcces = a.category === "poste" && !!a.accès;
+  const bIsAcces = b.category === "poste" && !!b.accès;
   if (aIsAcces && !bIsAcces) return -1;
   if (bIsAcces && !aIsAcces) return 1;
 
@@ -1405,16 +1396,10 @@ const rawQuery = e.target.value.trim();
 
 suggestionsEl.innerHTML = "";
 
-const labelFor = (item) => {
-  if (item.category === "poste") {
-    if (item.acces) {
-      return `${item.nom} ${item.type || ""} – accès ${item.acces}`.trim();
-    }
-    return `${item.nom} ${item.type || ""} ${item.SAT || ""}`.trim();
-  }
-
-  return `${item.appareil} (${item.nom}${item.type ? " " + item.type : ""}${item.SAT ? " / " + item.SAT : ""})`;
-};
+const labelFor = (item) =>
+  (item.category === "poste")
+    ? formatNomCompletLieu(item)
+    : `${item.appareil} (${item.nom}${item.type ? ' ' + item.type : ''}${item.SAT ? ' / ' + item.SAT : ''})`;
 
 results.forEach((item, i) => {
 
@@ -1539,29 +1524,30 @@ let html = `<h2>
 
 html += formatInformations(app.description);
 
-let postePrincipal = null;
+  let postePrincipal = null;
+  if (app.SAT) {
+    postePrincipal = lieux.find(l =>
+      normalize(l.nom) === normalize(app.nom) &&
+      normalize(l.type || "") === normalize(app.type || "") &&
+      normalize(l.SAT) === normalize(app.SAT)
+    );
+  }
 
-if (app.acces) {
-  postePrincipal = lieux.find(l =>
-    normalize(`${l.nom} ${l.type || ""}`) === normalize(app.acces)
-  );
-}
-
-if (!postePrincipal && app.SAT) {
-  postePrincipal = lieux.find(l =>
-    normalize(l.nom) === normalize(app.nom) &&
-    normalize(l.type || "") === normalize(app.type || "") &&
-    normalize(l.SAT || "") === normalize(app.SAT)
-  );
-}
-
-if (!postePrincipal) {
+if (!postePrincipal && app.accès) {
   postePrincipal = lieux.find(l =>
     normalize(l.nom) === normalize(app.nom) &&
     normalize(l.type || "") === normalize(app.type || "") &&
-    !l.SAT && !l.acces
+    normalize(l.accès || "") === normalize(app.accès || "")
   );
 }
+
+  if (!postePrincipal) {
+      postePrincipal = lieux.find(l =>
+      normalize(l.nom) === normalize(app.nom) &&
+      normalize(l.type || "") === normalize(app.type || "") &&
+      !l.SAT && !l.accès
+    );
+  }
 
   if (postePrincipal) {
     const sauvegarde = html;
@@ -1733,9 +1719,7 @@ if (currentItem.rss) {
         originalValues.sat = document.getElementById("editable-sat").textContent.trim();
       }
       if (document.getElementById("editable-acces")) {
-originalValues["acces"] = document
-  .getElementById("editable-acces")
-  .textContent.replace("– accès ","").trim();
+       originalValues["accès"] = document.getElementById("editable-acces").textContent.replace("– accès ","").trim();
       }
         if (document.getElementById("editable-description")) {
     originalValues.description = document.getElementById("editable-description").textContent.trim();
@@ -1779,8 +1763,8 @@ document.addEventListener("click", function(e) {
     if (!editModeAppareil) {
       editModeAppareil = true;
 
-originalAppareil.nomposte =
-  `${currentItem.nom || ''}${currentItem.type ? ' ' + currentItem.type : ''}${currentItem.SAT ? ' ' + currentItem.SAT : ''}${currentItem.acces ? ' – accès ' + currentItem.acces : ''}`;
+      originalAppareil.appareil = currentItem.appareil || "";
+originalAppareil.nomposte = `${currentItem.nom || ''}${currentItem.type ? ' ' + currentItem.type : ''}${currentItem.SAT ? ' ' + currentItem.SAT : ''}${currentItem.accès ? ' – accès ' + currentItem.accès : ''}`;
       originalAppareil.description = currentItem.description || "";
 
       ["editable-appareil","editable-nomposte","editable-rep-appareil","editable-description-appareil"]
@@ -1966,7 +1950,7 @@ document.getElementById("btn-save").addEventListener("click", function(){
   const newNom   = document.getElementById("input-nom")?.value   || originalValues.nom;
   const newType  = document.getElementById("input-type")?.value  || originalValues.type;
   const newSat   = document.getElementById("input-sat")?.value   || originalValues.sat || "";
-  const newAcces = document.getElementById("input-acces")?.value || originalValues["acces"] || "";
+  const newAcces = document.getElementById("input-acces")?.value || originalValues["accès"] || "";
   const newDescription = document.getElementById("input-description")?.value || originalValues.description || "";
   const newContact     = document.getElementById("input-contact")?.value     || originalValues.contact || "";
   const newPortail     = document.getElementById("input-portail")?.value     || originalValues.portail || "";
@@ -1977,7 +1961,7 @@ document.getElementById("btn-save").addEventListener("click", function(){
   
   const demandeur = getDemandeur();
   const ficheOrigine = currentItem
-    ? `${currentItem.nom || ''} ${currentItem.type || ''} ${currentItem.SAT || ''} ${currentItem.acces || ''}`.trim()
+    ? `${currentItem.nom || ''} ${currentItem.type || ''} ${currentItem.SAT || ''} ${currentItem.accès || ''}`.trim()
     : "";
 
   const payload = {
@@ -1994,7 +1978,7 @@ if (currentItem.rssTemp) {
   if (newNom !== originalValues.nom) payload.nom = newNom;
   if (newType !== originalValues.type) payload.type = newType;
   if (newSat !== (originalValues.sat || "")) payload.sat = newSat;
- if (newAcces !== (originalValues["acces"] || "")) payload["acces"] = newAcces;
+ if (newAcces !== (originalValues["accès"] || "")) payload["accès"] = newAcces;
   if (originalValues.rss) payload.rss = originalValues.rss;
 if (newDescription !== (originalValues.description || "")) payload.description = newDescription;
 if (newContact !== (originalValues.contact || "")) payload.contact = newContact;
@@ -2047,7 +2031,7 @@ const payload = {
   nom_orig: currentItem.nom || "",
   type_orig: currentItem.type || "",
   sat_orig: currentItem.SAT || "",
-  acces_orig: currentItem.acces || "",
+  acces_orig: currentItem.accès || "",
   demandeur,
   horodatage: new Date().toISOString()
 };
@@ -2219,7 +2203,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
     originalValues.nom,
     originalValues.type,
     originalValues.sat || "",
-     originalValues["acces"] || ""
+     originalValues["accès"] || ""
   );
   showNotification("🔙 Édition annulée", "info");
 });
@@ -2267,7 +2251,7 @@ function formatInformations(val) {
 </div>
 <footer class="about-footer">
   <a href="arnaud.html" class="footer-link">🔧 À propos</a>
-  <a href="version.html" class="footer-link version">📌 Nono Maps V1.14</a>
+  <a href="version.html" class="footer-link version">📌 Nono Maps V1.13.7</a>
 </footer>
 <script>
 (function(){
@@ -2410,7 +2394,7 @@ document.getElementById("streetview-close").onclick = () => {
   const postePrincipal = lieux.find(l => 
     normalize(l.nom) === normalize(decodeURIComponent(nom)) &&
     normalize(l.type) === normalize(decodeURIComponent(type)) &&
-    !l.SAT && !l.acces
+    !l.SAT && !l.accès
   );
 
   if (postePrincipal) {
@@ -2550,9 +2534,9 @@ function getDistance(lat1, lon1, lat2, lon2) {
 
     let label = "";
     if (p.category === "appareil") 
-    label = `${p.appareil} (${p.nom}${p.type ? " " + p.type : ""}${p.SAT ? " / " + p.SAT : ""}${p.acces ? " – accès " + p.acces : ""})`;
+    label = `${p.appareil} (${p.nom}${p.type ? " " + p.type : ""}${p.SAT ? " / " + p.SAT : ""}${p.accès ? " – accès " + p.accès : ""})`;
     else if (p.category === "generic") label = p.nom;
-    else label = `${p.nom} ${p.type || ""}${p.SAT ? " / " + p.SAT : ""}${p.acces ? " – accès " + p.acces : ""}`.trim();
+    else label = `${p.nom} ${p.type || ""}${p.SAT ? " / " + p.SAT : ""}${p.accès ? " – accès " + p.accès : ""}`.trim();
 
     a.innerHTML = `${icon} ${label} – ${p.distance.toFixed(2).replace(".", ",")} km`;
 
