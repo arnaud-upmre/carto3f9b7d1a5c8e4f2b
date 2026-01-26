@@ -1313,6 +1313,9 @@ document.getElementById("search").addEventListener("input", e => {
   if (!query || query.length < 2 || !fuseMix) return;
 
 let results = fuseMix.search(query).map(r => r.item);
+results = results.filter(item =>
+  !(item.category === "poste" && (item.type || "").toUpperCase() === "HP")
+);
   const cleanedQuery = query.replace(/\s+/g, "").toLowerCase();
 
 const queryWords = query.split(/\s+/);
