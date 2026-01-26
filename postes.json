@@ -246,8 +246,8 @@
     "poste_longitude": "3.08766"
   },
   {
-    "nom": "Lens Atelier",
-    "type": "",
+    "nom": "Lens",
+    "type": "Atelier",
     "latitude": 50.40689,
     "longitude": 2.85233,
     "description": "",
