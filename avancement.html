@@ -484,10 +484,11 @@ switchEl.onclick = () => {
 };
 
 function groupAppareils(liste){
-    const g={};
-    liste.forEach(a=>{
-        if(!g[a.nom]) g[a.nom]=[];
-        g[a.nom].push(a);
+    const g = {};
+    liste.forEach(a => {
+        const key = `${a.nom}__${a.type || ""}`;
+        if (!g[key]) g[key] = [];
+        g[key].push(a);
     });
     return g;
 }
@@ -526,10 +527,12 @@ function afficher(groupes){
     const zone=document.getElementById("postesZone");
     zone.innerHTML="";
 
-    Object.keys(groupes).forEach(nom=>{
-        const list=groupes[nom];
+Object.keys(groupes).forEach(key=>{
+    const list = groupes[key];
 
-        const type=list[0].type || "";
+    const nom = list[0].nom;
+    const type = list[0].type || "";
+    
         const principal = list
     .filter(a=>!a.SAT)
     .sort((a,b)=>a.appareil.localeCompare(b.appareil));
