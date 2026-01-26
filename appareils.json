@@ -4801,8 +4801,8 @@
     "description": ""
   },
   {
-    "nom": "Lille VR GP",
-    "type": "",
+    "nom": "Lille",
+    "type": "VR GP",
     "SAT": "",
     "accès": "",
     "appareil": "IP GP",
