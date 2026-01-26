@@ -225,7 +225,7 @@
     "type": "L",
     "SAT": "",
     "accès": "",
-    "appareil": "TT Ssr Puyt Houck Pondereux V1",
+    "appareil": "TT25",
     "latitude": 50.9926678,
     "longitude": 2.2619477,
     "description": ""
@@ -1037,7 +1037,7 @@
     "type": "SSP",
     "SAT": "",
     "accès": "",
-    "appareil": "TT5623 Dannes Etaples V1",
+    "appareil": "TT5623",
     "latitude": 50.5777278,
     "longitude": 1.6146811,
     "description": ""
@@ -1047,7 +1047,7 @@
     "type": "SSP",
     "SAT": "",
     "accès": "",
-    "appareil": "TT5624 Dannes Etaples V2",
+    "appareil": "TT5624",
     "latitude": 50.5782072,
     "longitude": 1.6146677,
     "description": ""
@@ -1057,7 +1057,7 @@
     "type": "SSP",
     "SAT": "",
     "accès": "",
-    "appareil": "TT5621 Pont de Briques Dannes V1",
+    "appareil": "TT5621",
     "latitude": 50.5786952,
     "longitude": 1.6146556,
     "description": ""
@@ -1419,7 +1419,7 @@
     "type": "SSP",
     "SAT": "",
     "accès": "",
-    "appareil": "TT5824 Dannes Camier Etaples V2",
+    "appareil": "TT5824",
     "latitude": 50.51987,
     "longitude": 1.635743,
     "description": ""
@@ -1429,7 +1429,7 @@
     "type": "SSP",
     "SAT": "",
     "accès": "",
-    "appareil": "TT5625 Etaples Rang du Fliers V1",
+    "appareil": "TT5625",
     "latitude": 50.51993,
     "longitude": 1.63557,
     "description": ""
@@ -1439,7 +1439,7 @@
     "type": "SSP",
     "SAT": "",
     "accès": "",
-    "appareil": "TT5826 Etaples Rang du Fliers V2",
+    "appareil": "TT5826",
     "latitude": 50.51989,
     "longitude": 1.6356773,
     "description": ""
@@ -5236,7 +5236,7 @@
     "type": "SSP",
     "SAT": "",
     "accès": "",
-    "appareil": "TT Sel 4 Ssr Maing - Le Quesnoy V2",
+    "appareil": "TT4",
     "latitude": 50.25076,
     "longitude": 3.6456,
     "description": "PA"
@@ -5246,7 +5246,7 @@
     "type": "SSP",
     "SAT": "",
     "accès": "",
-    "appareil": "TT Sel 7 - Ssr Le Quesnoy - Berlaimont V1",
+    "appareil": "TT7",
     "latitude": 50.25073,
     "longitude": 3.64567,
     "description": "PA"
@@ -5506,7 +5506,7 @@
     "type": "SSP",
     "SAT": "",
     "accès": "",
-    "appareil": "TT SSr Bethune Lillers V2 - Sel 8",
+    "appareil": "TT8",
     "latitude": 50.56112,
     "longitude": 2.47935,
     "description": ""
@@ -5516,7 +5516,7 @@
     "type": "SSP",
     "SAT": "",
     "accès": "",
-    "appareil": "TT SSr Bethune Lillers V1 - Sel 19",
+    "appareil": "TT19",
     "latitude": 50.56108,
     "longitude": 2.47939,
     "description": ""
