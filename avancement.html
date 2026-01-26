@@ -494,11 +494,13 @@ function groupAppareils(liste){
 
 
 function majCompteurs(groupes){
-    const noms=Object.keys(groupes);
-    let total=0;
-    noms.forEach(n=> total+=groupes[n].length);
-    document.getElementById("counters").textContent=
-        `Nombre de postes : ${noms.length} — Nombre d’appareils : ${total}`;
+    let total = 0;
+    Object.values(groupes).forEach(list => {
+        total += list.length;
+    });
+
+    document.getElementById("counters").textContent =
+        `Nombre d’appareils : ${total}`;
 }
 
 async function charger(){
