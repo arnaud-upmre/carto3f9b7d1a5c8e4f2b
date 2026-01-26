@@ -4408,7 +4408,8 @@
     "appareil": "Alimentation",
     "latitude": 50.41541,
     "longitude": 2.9205,
-    "description": "Alimentation SE (guérite SE)"
+    "description": "Alimentation SE (guérite SE)",
+    "hors_patrimoine": true
   },
   {
     "nom": "Billy",
@@ -4548,7 +4549,8 @@
     "appareil": "Alimentation",
     "latitude": 50.52213,
     "longitude": 3.022268,
-    "description": ""
+    "description": "",
+    "hors_patrimoine": true
   },
   {
     "nom": "Roeux",
