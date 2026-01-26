@@ -352,6 +352,56 @@ h1{ display:none; }
     }
 }
 
+
+
+.mode-switch{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-top:8px;
+}
+
+.mode-label{
+    font-size:13px;
+    font-weight:600;
+    opacity:0.5;
+    transition:0.2s;
+}
+
+.mode-label.active{
+    opacity:1;
+}
+
+.switch{
+    width:44px;
+    height:24px;
+    background:#d0d2d8;
+    border-radius:999px;
+    position:relative;
+    cursor:pointer;
+    transition:0.25s;
+}
+
+.switch .knob{
+    width:18px;
+    height:18px;
+    background:white;
+    border-radius:50%;
+    position:absolute;
+    top:3px;
+    left:3px;
+    transition:0.25s;
+    box-shadow:0 2px 6px rgba(0,0,0,0.25);
+}
+
+.switch.hp{
+    background:#1a73e8;
+}
+
+.switch.hp .knob{
+    left:23px;
+}
+
 </style>
 </head>
 <body>
@@ -367,10 +417,15 @@ h1{ display:none; }
   </div>
 
   <div class="board-row">
-    <div class="tabs">
-      <div class="tab active" id="tab-patrimoine">Patrimoine</div>
-      <div class="tab" id="tab-hp">Hors Patrimoine</div>
-    </div>
+<div class="mode-switch">
+  <span class="mode-label active" id="label-patrimoine">Patrimoine</span>
+
+  <div class="switch" id="mode-switch">
+    <div class="knob"></div>
+  </div>
+
+  <span class="mode-label" id="label-hp">Hors patrimoine</span>
+</div>
   </div>
 
   <div class="board-row">
@@ -397,7 +452,36 @@ let appareils=[];
 let groupesGlobaux={};
 let groupesAffiches={};
 let mode="patrimoine";
+
 const postesZone = document.getElementById("postesZone");
+const switchEl = document.getElementById("mode-switch");
+
+const labelPat = document.getElementById("label-patrimoine");
+const labelHp = document.getElementById("label-hp");
+
+switchEl.onclick = () => {
+    if (mode === "patrimoine") {
+        mode = "hp";
+        afficher(groupesGlobaux.hp);
+
+        postesZone.classList.add("hp");
+        postesZone.classList.remove("patrimoine");
+
+        switchEl.classList.add("hp");
+        labelHp.classList.add("active");
+        labelPat.classList.remove("active");
+    } else {
+        mode = "patrimoine";
+        afficher(groupesGlobaux.patrimoine);
+
+        postesZone.classList.remove("hp");
+        postesZone.classList.add("patrimoine");
+
+        switchEl.classList.remove("hp");
+        labelPat.classList.add("active");
+        labelHp.classList.remove("active");
+    }
+};
 
 function groupAppareils(liste){
     const g={};
@@ -495,25 +579,7 @@ ${principal.length > 0 ? principalPills : ""}
     });
 }
 
-document.getElementById("tab-patrimoine").onclick=()=>{
-    mode="patrimoine";
-    afficher(groupesGlobaux.patrimoine);
-    document.getElementById("tab-patrimoine").classList.add("active");
-    document.getElementById("tab-hp").classList.remove("active");
 
-    postesZone.classList.remove("hp");
-    postesZone.classList.add("patrimoine");
-};
-
-document.getElementById("tab-hp").onclick=()=>{
-    mode="hp";
-    afficher(groupesGlobaux.hp);
-    document.getElementById("tab-hp").classList.add("active");
-    document.getElementById("tab-patrimoine").classList.remove("active");
-
-    postesZone.classList.remove("patrimoine");
-    postesZone.classList.add("hp");
-};
 
 document.getElementById("search").addEventListener("input", function () {
     const txt = this.value.trim().toLowerCase();
