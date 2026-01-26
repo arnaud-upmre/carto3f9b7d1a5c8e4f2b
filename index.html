@@ -1314,7 +1314,7 @@ document.getElementById("search").addEventListener("input", e => {
 
 let results = fuseMix.search(query).map(r => r.item);
 results = results.filter(item =>
-  !(item.category === "poste" && (item.type || "").toUpperCase() === "HP")
+  !(item.category === "poste" && item.hors_patrimoine === true)
 );
   const cleanedQuery = query.replace(/\s+/g, "").toLowerCase();
 
@@ -2256,7 +2256,7 @@ function formatInformations(val) {
 </div>
 <footer class="about-footer">
   <a href="arnaud.html" class="footer-link">🔧 À propos</a>
-  <a href="version.html" class="footer-link version">📌 Nono Maps V1.13.8</a>
+  <a href="version.html" class="footer-link version">📌 Nono Maps V1.13.8_essais</a>
 </footer>
 <script>
 (function(){
