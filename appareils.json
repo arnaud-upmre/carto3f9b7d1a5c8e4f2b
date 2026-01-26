@@ -7662,6 +7662,7 @@
   {
     "nom": "Caffiers",
     "type": "L",
+    "SAT": "SAT2",
     "appareil": "I5936",
     "latitude": 50.85399,
     "longitude": 1.80469,
@@ -7670,6 +7671,7 @@
   {
     "nom": "Caffiers",
     "type": "L",
+    "SAT": "SAT2",
     "appareil": "TT5934",
     "latitude": 50.85401, 
     "longitude": 1.80463,
