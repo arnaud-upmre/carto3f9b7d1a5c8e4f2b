@@ -245,6 +245,16 @@
     "type": "L",
     "SAT": "",
     "accès": "",
+    "appareil": "TT5838",
+    "latitude": 50.8444542,
+    "longitude": 1.8120784,
+    "description": ""
+  },
+  {
+    "nom": "Caffiers",
+    "type": "L",
+    "SAT": "",
+    "accès": "",
     "appareil": "I5935",
     "latitude": 50.8455386,
     "longitude": 1.8129268,
