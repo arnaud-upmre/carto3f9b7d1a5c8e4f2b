@@ -6552,13 +6552,13 @@
     "hors_patrimoine": true
   }, 
   {
-    "nom": "Lens",
-    "type": "",
-    "acces": "Bollaert SSP",
+    "nom": "Bollaert",
+    "type": "SSP",
+    "acces": "",
     "appareil": "211-40C",
     "latitude": 50.42889, 
     "longitude": 2.82269,
-    "description": "",
+    "description": "Sectionneur manuel",
     "hors_patrimoine": true
   },
   {
@@ -7061,13 +7061,13 @@
     "description": ""
   },
   {
-    "nom": "Lens",
-    "type": "",
-    "acces": "Bollaert SSP",
+    "nom": "Bollaert",
+    "type": "SSP",
+    "acces": "",
     "appareil": "212-17",
     "latitude": 50.43225, 
     "longitude": 2.81325,
-    "description": "Sectionneur manuel à ouvrir pour consignation du I23 de Bollaert SSP",
+    "description": "Sectionneur manuel à ouvrir pour consignation du I23 de Bollaert",
     "hors_patrimoine": true
   },
   {
