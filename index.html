@@ -1314,7 +1314,14 @@ document.getElementById("search").addEventListener("input", e => {
 
   if (!query || query.length < 2 || !fuseMix) return;
 
-let results = fuseMix.search(query).map(r => r.item);
+let results = fuseMix.search(query)
+  .map(r => r.item)
+  .filter(item => {
+    if (item.category === "poste" && item.hors_patrimoine === true) {
+      return false;
+    }
+    return true;
+  });
   const cleanedQuery = query.replace(/\s+/g, "").toLowerCase();
 
 const queryWords = query.split(/\s+/);
@@ -2263,7 +2270,7 @@ function formatInformations(val) {
 </div>
 <footer class="about-footer">
   <a href="arnaud.html" class="footer-link">🔧 À propos</a>
-  <a href="version.html" class="footer-link version">📌 Nono Maps V1.13.8</a>
+  <a href="version.html" class="footer-link version">📌 Nono Maps V1.14</a>
 </footer>
 <script>
 (function(){
