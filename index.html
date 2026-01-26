@@ -801,8 +801,11 @@ function generateAppareilListHTML(currentLieu) {
     return "";
   }
   
-const matchingApps = appareils.filter(app => 
-  normalize(app.nom) === normalize(currentLieu.nom)
+const matchingApps = appareils.filter(app =>
+  normalize(app.nom) === normalize(currentLieu.nom) &&
+  normalize(app.type || "") === normalize(currentLieu.type || "") &&
+  normalize(app.SAT || "") === normalize(currentLieu.SAT || "") &&
+  normalize(app.acces || "") === normalize(currentLieu.acces || "")
 );
 
   const isSAT = currentLieu.SAT && currentLieu.SAT !== "";
@@ -1529,30 +1532,32 @@ let html = `<h2>
 
 html += formatInformations(app.description);
 
-  let postePrincipal = null;
-  if (app.SAT) {
-    postePrincipal = lieux.find(l =>
-      normalize(l.nom) === normalize(app.nom) &&
-      normalize(l.type || "") === normalize(app.type || "") &&
-      normalize(l.SAT) === normalize(app.SAT)
-    );
-  }
+let postePrincipal = null;
 
-  
-if (!postePrincipal && app.acces) {
+
+if (app.acces) {
   postePrincipal = lieux.find(l =>
-    normalize(`${l.nom} ${l.type || ""}`) === normalize(app.acces) ||
-    normalize(l.nom) === normalize(app.acces)
+    normalize(l.nom) === normalize(app.nom) &&
+    normalize(l.type || "") === normalize(app.type || "") &&
+    normalize(l.acces || "") === normalize(app.acces)
   );
 }
 
-  if (!postePrincipal) {
-      postePrincipal = lieux.find(l =>
-      normalize(l.nom) === normalize(app.nom) &&
-      normalize(l.type || "") === normalize(app.type || "") &&
-      !l.SAT && !l.acces
-    );
-  }
+if (!postePrincipal && app.SAT) {
+  postePrincipal = lieux.find(l =>
+    normalize(l.nom) === normalize(app.nom) &&
+    normalize(l.type || "") === normalize(app.type || "") &&
+    normalize(l.SAT || "") === normalize(app.SAT)
+  );
+}
+
+if (!postePrincipal) {
+  postePrincipal = lieux.find(l =>
+    normalize(l.nom) === normalize(app.nom) &&
+    normalize(l.type || "") === normalize(app.type || "") &&
+    !l.SAT && !l.acces
+  );
+}
 
   if (postePrincipal) {
     const sauvegarde = html;
