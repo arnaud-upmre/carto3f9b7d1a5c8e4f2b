@@ -440,8 +440,11 @@ let html=`
     ${hasType ? `<span class="type-pill">${type}</span>` : ""}
 </div>
 
-${hasType ? `<div class="section-title">Poste principal</div>` : ""}
-${principalPills}
+${hasType && principal.length > 0
+    ? `<div class="section-title">Poste principal</div>`
+    : ""
+}
+${principal.length > 0 ? principalPills : ""}
 `;
 
         Object.keys(satGroup).sort().forEach(s=>{
