@@ -6552,8 +6552,9 @@
     "hors_patrimoine": true
   }, 
   {
-    "nom": "Bollaert",
-    "type": "SSP",
+    "nom": "Lens",
+    "type": "",
+    "acces": "Bollaert SSP",
     "appareil": "211-40C",
     "latitude": 50.42889, 
     "longitude": 2.82269,
