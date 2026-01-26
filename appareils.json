@@ -7574,5 +7574,86 @@
     "longitude": 3.17416,
     "description": "Sectionneur de secours pour les VS Tourcoing Marchandise",
     "hors_patrimoine": true
-  }
+  },
+  {
+    "nom": "Steenwerck",
+    "type": "SSP",
+    "appareil": "TT2",
+    "latitude": 50.71337, 
+    "longitude": 2.78622,
+    "description": "",
+    "hors_patrimoine":
+  },
+  {
+    "nom": "Steenwerck",
+    "type": "SSP",
+    "appareil": "TT1",
+    "latitude": 50.71334, 
+    "longitude": 2.78629,
+    "description": "",
+    "hors_patrimoine":
+  },
+  {
+    "nom": "Steenwerck",
+    "type": "SSP",
+    "appareil": "TSA",
+    "latitude": 50.71339, 
+    "longitude": 2.78623,
+    "description": "",
+    "hors_patrimoine": },
+ },
+  {
+    "nom": "Steenwerck",
+    "type": "SSP",
+    "appareil": "IL2",
+    "latitude": 50.71339, 
+    "longitude": 2.78623,
+    "description": "",
+    "hors_patrimoine": },
+ },
+  {
+    "nom": "Steenwerck",
+    "type": "SSP",
+    "appareil": "T2",
+    "latitude": 50.71339, 
+    "longitude": 2.78623,
+    "description": "",
+    "hors_patrimoine": true
+},
+  {
+    "nom": "Steenwerck",
+    "type": "SSP",
+    "appareil": "T3",
+    "latitude": 50.71339, 50.71338, 
+    "longitude": 2.78627,
+    "description": "",
+    "hors_patrimoine": true
+ },
+  {
+    "nom": "Steenwerck",
+    "type": "SSP",
+    "appareil": "IMP",
+    "latitude": 50.71339,
+    "longitude": 2.78627,
+    "description": "",
+    "hors_patrimoine": true
+ },
+  {
+    "nom": "Steenwerck",
+    "type": "SSP",
+    "appareil": "T3",
+    "latitude": 50.71336, 
+    "longitude": 2.78631,
+    "description": "",
+    "hors_patrimoine": true },
+   },
+  {
+    "nom": "Steenwerck",
+    "type": "SSP",
+    "appareil": "IL1",
+    "latitude": 50.71336, 
+    "longitude": 2.78631,
+    "description": "",
+    "hors_patrimoine": true
+ }
 ]
