@@ -9,6 +9,18 @@
 
 <style>
 
+.hp .pill{
+    background: rgba(220, 53, 69, 0.18);
+    color: #b02a37;
+}
+
+@media (prefers-color-scheme: dark){
+    .hp .pill{
+        background: rgba(220, 53, 69, 0.35);
+        color: #ffb3b8;
+    }
+}
+
 :root{
     --bg:#f2f3f7;
     --card-bg:#ffffff;
@@ -220,7 +232,7 @@ h1{
     <button data-sort="appmin">- appareils</button>
 </div>
 
-<div id="postesZone" class="post-container"></div>
+<div id="postesZone" class="post-container patrimoine"></div>
 
 <script>
 
@@ -231,6 +243,7 @@ let appareils=[];
 let groupesGlobaux={};
 let groupesAffiches={};
 let mode="patrimoine";
+const postesZone = document.getElementById("postesZone");
 
 function groupAppareils(liste){
     const g={};
@@ -325,20 +338,25 @@ ${principalPills}
     });
 }
 
-
 document.getElementById("tab-patrimoine").onclick=()=>{
     mode="patrimoine";
     afficher(groupesGlobaux.patrimoine);
     document.getElementById("tab-patrimoine").classList.add("active");
     document.getElementById("tab-hp").classList.remove("active");
+
+    postesZone.classList.remove("hp");
+    postesZone.classList.add("patrimoine");
 };
+
 document.getElementById("tab-hp").onclick=()=>{
     mode="hp";
     afficher(groupesGlobaux.hp);
     document.getElementById("tab-hp").classList.add("active");
     document.getElementById("tab-patrimoine").classList.remove("active");
-};
 
+    postesZone.classList.remove("patrimoine");
+    postesZone.classList.add("hp");
+};
 
 document.getElementById("search").addEventListener("input",function(){
     const txt=this.value.trim().toLowerCase();
