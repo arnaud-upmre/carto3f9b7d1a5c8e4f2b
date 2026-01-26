@@ -2661,7 +2661,8 @@
     "appareil": "Alimentation",
     "latitude": 50.61555,
     "longitude": 3.06252,
-    "description": "Alimentation SE"
+    "description": "Alimentation SE",
+    "hors_patrimoine": true
   },
   {
     "nom": "La madeleine",
