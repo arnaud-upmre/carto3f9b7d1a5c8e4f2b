@@ -9,6 +9,83 @@
 
 <style>
 
+/* ===============================
+   POPUP BIENVENUE (BÊTA)
+================================ */
+.welcome-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.45);
+    backdrop-filter:blur(4px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:9999;
+}
+
+.welcome-overlay.hidden{
+    display:none;
+}
+
+.welcome-modal{
+    background:var(--card-bg);
+    color:var(--text);
+    max-width:460px;
+    width:90%;
+    padding:24px 26px;
+    border-radius:20px;
+    box-shadow:0 20px 50px rgba(0,0,0,0.35);
+    animation:popupIn 0.35s ease;
+    text-align:center;
+}
+
+.welcome-modal h2{
+    margin-top:0;
+    margin-bottom:14px;
+    font-size:22px;
+    font-weight:800;
+    font-family: "Comic Sans MS","Bradley Hand","Segoe Print", Inter, system-ui, sans-serif;
+}
+
+.welcome-modal p{
+    font-size:14px;
+    line-height:1.5;
+    margin-bottom:14px;
+}
+
+.welcome-modal button{
+    margin-top:10px;
+    padding:10px 18px;
+    border:none;
+    border-radius:14px;
+    background:#1a73e8;
+    color:white;
+    font-weight:700;
+    cursor:pointer;
+    box-shadow:0 6px 16px rgba(26,115,232,0.4);
+}
+
+.welcome-modal button:active{
+    transform:translateY(1px);
+}
+
+@keyframes popupIn{
+    from{
+        opacity:0;
+        transform:translateY(10px) scale(0.97);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0) scale(1);
+    }
+}
+
+
+
+
+
+    
+
 .hp .pill{
     background: rgba(220, 53, 69, 0.18);
     color: #b02a37;
@@ -658,6 +735,43 @@ charger();
 document.querySelector('[data-sort="az"]')?.click();
 
 </script>
+
+
+
+    <div id="welcome-overlay" class="welcome-overlay hidden">
+  <div class="welcome-modal">
+    <h2>Bienvenue sur le Tableau blanc</h2>
+
+    <p>
+      Cette page est encore en <strong>bêta</strong>.<br>
+      Elle regroupe tous les appareils présents sur Nono Maps afin d’offrir
+      une lecture plus globale et différente.
+    </p>
+
+    <p>
+      Le tableau évoluera au fil du temps.<br>
+      <strong>N’hésitez pas à me signaler tout bug ou souci d’affichage 😉</strong>
+    </p>
+
+    <button id="welcome-close">J’ai compris</button>
+  </div>
+</div>
+
+    <script>
+const popupKey = "nonomaps_tableau_blanc_beta_seen";
+
+window.addEventListener("load", () => {
+    if (!localStorage.getItem(popupKey)) {
+        document.getElementById("welcome-overlay").classList.remove("hidden");
+    }
+});
+
+document.getElementById("welcome-close").onclick = () => {
+    localStorage.setItem(popupKey, "true");
+    document.getElementById("welcome-overlay").classList.add("hidden");
+};
+</script>
+
 
 </body>
 </html>
