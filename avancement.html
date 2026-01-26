@@ -278,7 +278,11 @@ function afficher(groupes){
 
         const type=list[0].type || "";
 
-        const principal=list.filter(a=>!a.SAT).sort((a,b)=>a.appareil.localeCompare(b.appareil));
+const principalPills = principal.map(a=>{
+    const id = `${a.appareil} ${a.nom} ${a.type||""} ${a.SAT||""}`.trim();
+    return `<span class="pill" onclick="location.href='index.html?id=${encodeURIComponent(id)}'">${a.appareil}</span>`;
+}).join("");
+        
         const sats=list.filter(a=>a.SAT);
 
         const satGroup={};
@@ -301,7 +305,8 @@ let html=`
         ${hasType ? `<span class="type-pill">${type}</span>` : ""}
     </div>
 
-    ${hasType ? `<div class="section-title">Poste principal</div>${principalPills}` : ""}
+    ${hasType ? `${type ? `<div class="section-title">Poste principal</div>` : ""}
+${principalPills}` : ""}
 `;
 
         Object.keys(satGroup).sort().forEach(s=>{
