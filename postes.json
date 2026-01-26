@@ -6072,8 +6072,8 @@
     "poste_longitude": "3.5130278958056063"
   },
   {
-    "nom": "Lens (sectionneur)",
-    "accès": "",
+    "nom": "Lens",
+    "accès": "Sectionneur",
     "latitude": 50.42474,
     "longitude": 2.83377,
     "description": "Sectionneur 210-50 et 210-55A à manœuvrer pour les consignations C de Bollaert",
@@ -6083,8 +6083,7 @@
     "secure": "https://sncf.sharepoint.com/:w:/r/sites/NonoMapsGrpO3652/Document/Lens%20A.docx?d=w73c6e4ae420c4801ad7433db61a94a34&csf=1&web=1&e=AnOXRA",
     "lignes": "",
     "numero_ligne": "",
-    "pk": "",
-    "hors_patrimoine": true
+    "pk": ""
   },
   {
     "nom": "Cabinet Medical de Dunkerque",
