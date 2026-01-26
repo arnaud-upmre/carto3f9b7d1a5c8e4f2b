@@ -54,12 +54,7 @@ body{
     color:var(--text);
 }
 
-h1{
-    margin-bottom:10px;
-    font-size:24px;
-    font-weight:700;
-}
-
+h1{ display:none; }
 
 .tabs{
     display:flex;
@@ -211,16 +206,137 @@ h1{
     display:inline-block;
 }
 
+
+
+    /* ===== Entête style "tableau blanc" ===== */
+.board-header{
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    margin: 0 0 16px 0;
+    padding: 14px;
+    border-radius: 18px;
+    background:
+        radial-gradient(900px 260px at 10% 0%, rgba(0,0,0,0.06), transparent 60%),
+        radial-gradient(900px 260px at 90% 0%, rgba(0,0,0,0.06), transparent 60%),
+        linear-gradient(180deg, rgba(255,255,255,0.92), rgba(255,255,255,0.84));
+    box-shadow: 0 10px 26px rgba(0,0,0,0.10);
+    border: 1px solid rgba(0,0,0,0.06);
+    backdrop-filter: blur(8px);
+}
+
+@media (prefers-color-scheme: dark){
+    .board-header{
+        background:
+            radial-gradient(900px 260px at 10% 0%, rgba(255,255,255,0.06), transparent 60%),
+            radial-gradient(900px 260px at 90% 0%, rgba(255,255,255,0.06), transparent 60%),
+            linear-gradient(180deg, rgba(40,40,44,0.92), rgba(34,34,38,0.86));
+        border: 1px solid rgba(255,255,255,0.06);
+        box-shadow: 0 10px 26px rgba(0,0,0,0.35);
+    }
+}
+
+.board-top{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:12px;
+}
+
+.board-title{
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 0.2px;
+    margin: 0;
+    line-height: 1.1;
+    transform: rotate(-0.4deg);
+    font-family: "Comic Sans MS","Bradley Hand","Segoe Print", Inter, system-ui, sans-serif;
+}
+
+.board-sub{
+    margin: 6px 0 0 0;
+    font-size: 13px;
+    opacity: 0.85;
+    font-family: "Comic Sans MS","Bradley Hand","Segoe Print", Inter, system-ui, sans-serif;
+}
+
+.btn-home{
+    border: 1px solid rgba(0,0,0,0.10);
+    background: rgba(255,255,255,0.75);
+    color: var(--text);
+    border-radius: 14px;
+    padding: 10px 12px;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.10);
+    display:flex;
+    align-items:center;
+    gap:8px;
+    white-space:nowrap;
+}
+
+@media (prefers-color-scheme: dark){
+    .btn-home{
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(255,255,255,0.10);
+        box-shadow: 0 6px 16px rgba(0,0,0,0.35);
+    }
+}
+
+.btn-home:active{ transform: translateY(1px); }
+
+.board-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+/* on réutilise tes onglets, mais on les rend plus "tableau" */
+.board-header .tabs{
+    margin: 0;
+}
+
+.board-header .tab{
+    border: 1px solid rgba(0,0,0,0.10);
+    background: rgba(255,255,255,0.55);
+}
+
+@media (prefers-color-scheme: dark){
+    .board-header .tab{
+        border: 1px solid rgba(255,255,255,0.10);
+        background: rgba(255,255,255,0.06);
+    }
+}
+
+.board-header .tab.active{
+    background: #1a73e8;
+    color: white;
+    border-color: #1a73e8;
+}
+
 </style>
 </head>
 <body>
 
-<h1>Tableau blanc – Nono Maps</h1>
-<div id="counters">Chargement…</div>
+<div class="board-header">
+  <div class="board-top">
+    <div>
+      <div class="board-title">Tableau blanc — Nono Maps</div>
+      <div class="board-sub" id="counters">Chargement…</div>
+    </div>
 
-<div class="tabs">
-    <div class="tab active" id="tab-patrimoine">Patrimoine</div>
-    <div class="tab" id="tab-hp">Hors Patrimoine</div>
+    <button class="btn-home" onclick="location.href='index.html'">← Accueil</button>
+  </div>
+
+  <div class="board-row">
+    <div class="tabs">
+      <div class="tab active" id="tab-patrimoine">Patrimoine</div>
+      <div class="tab" id="tab-hp">Hors Patrimoine</div>
+    </div>
+  </div>
 </div>
 
 <input id="search" type="text" placeholder="Rechercher un poste…">
