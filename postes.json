@@ -677,9 +677,9 @@
     "portail": "",
     "lignes": "BOULOGNE-VILLE à CALAIS MARITIME",
     "numero_ligne": 314000,
-    "pk": "",
-    "poste_latitude": "50.8506654",
-    "poste_longitude": "1.8113066"
+    "pk": "278,220",
+    "poste_latitude": "50.85033", 
+    "poste_longitude": "1.81153"
   },
   {
     "nom": "Caffiers",
@@ -695,7 +695,7 @@
     "portail": "",
     "lignes": "BOULOGNE-VILLE à CALAIS MARITIME",
     "numero_ligne": 314000,
-    "pk": "",
+    "pk": "278,860",
     "poste_latitude": "50.85397", 
     "poste_longitude": "1.80472"
   },
