@@ -277,8 +277,11 @@ function afficher(groupes){
         const list=groupes[nom];
 
         const type=list[0].type || "";
+        const principal = list
+    .filter(a=>!a.SAT)
+    .sort((a,b)=>a.appareil.localeCompare(b.appareil));
 
-const principalPills = principal.map(a=>{
+        const principalPills = principal.map(a=>{
     const id = `${a.appareil} ${a.nom} ${a.type||""} ${a.SAT||""}`.trim();
     return `<span class="pill" onclick="location.href='index.html?id=${encodeURIComponent(id)}'">${a.appareil}</span>`;
 }).join("");
@@ -293,11 +296,6 @@ const principalPills = principal.map(a=>{
 
 const hasType = !!type;
 
-const principalPills = principal.length ? principal.map(a=>{
-    const id = `${a.appareil} ${a.nom} ${a.type||""} ${a.SAT||""}`.trim();
-    return `<span class="pill" onclick="location.href='index.html?id=${encodeURIComponent(id)}'">${a.appareil}</span>`;
-}).join("") : "";
-
 let html=`
 <div class="card">
     <div class="card-title">
@@ -305,8 +303,8 @@ let html=`
         ${hasType ? `<span class="type-pill">${type}</span>` : ""}
     </div>
 
-    ${hasType ? `${type ? `<div class="section-title">Poste principal</div>` : ""}
-${principalPills}` : ""}
+${hasType ? `<div class="section-title">Poste principal</div>` : ""}
+${principalPills}
 `;
 
         Object.keys(satGroup).sort().forEach(s=>{
