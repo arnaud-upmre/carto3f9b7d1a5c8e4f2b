@@ -7704,5 +7704,15 @@
     "latitude": 50.85066, 
     "longitude": 1.81124,
     "description": ""
+ },
+  {
+    "nom": "Caffiers",
+    "type": "L",
+    "SAT": "SAT1",
+    "appareil": "5942",
+    "latitude": 50.85066, 
+    "longitude": 1.81124,
+    "description": "",
+    "hors_patrimoine": true
  }
 ]
