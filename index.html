@@ -1541,12 +1541,9 @@ html += formatInformations(app.description);
 
 let postePrincipal = null;
 
-
 if (app.acces) {
   postePrincipal = lieux.find(l =>
-    normalize(l.nom) === normalize(app.nom) &&
-    normalize(l.type || "") === normalize(app.type || "") &&
-    normalize(l.acces || "") === normalize(app.acces)
+    normalize(`${l.nom} ${l.type || ""}`) === normalize(app.acces)
   );
 }
 
