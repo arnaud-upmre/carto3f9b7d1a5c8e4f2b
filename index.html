@@ -767,7 +767,7 @@ function normalize(str) {
 
 function formatNomCompletLieu(obj) {
   const base = `${obj.nom || ''} ${obj.type || ''} ${obj.SAT || ''}`.trim();
-return obj["acces"] ? `${base} – acces ${obj["acces"]}` : base;
+  return obj.acces ? `${base} – accès ${obj.acces}` : base;
 }
 
 
@@ -1014,7 +1014,7 @@ html += `
     <div class="inline-links pills-3">
 
       <a href="${myMapsViewer(latPoste, lonPoste)}">🛰️ Poste</a>
-      <a href="${myMapsViewer(latAcces, lonAcces)}">🛰️ acces</a>
+<a href="${myMapsViewer(latAcces, lonAcces)}">🛰️ accès</a>
       <a href="#" onclick="openStreetView(${latAcces}, ${lonAcces}); return false;">
         👁️ Street View
       </a>
@@ -1072,7 +1072,7 @@ let html = `<h2>
   📍 <span id="editable-nom">${lieu.nom}</span> 
   <span id="editable-type">${lieu.type ? lieu.type.trim() : ""}</span>
   ${lieu.SAT ? `<span id="editable-sat"> ${lieu.SAT}</span>` : ""}
-  ${lieu.acces ? `<span id="editable-acces"> – acces ${lieu.acces}</span>` : ""}
+${lieu.acces ? `<span id="editable-acces"> – accès ${lieu.acces}</span>` : ""}
   <a href="#" id="edit-toggle">[modifier]</a>
 </h2>`;
 
@@ -1395,10 +1395,16 @@ const rawQuery = e.target.value.trim();
 
 suggestionsEl.innerHTML = "";
 
-const labelFor = (item) =>
-  (item.category === "poste")
-    ? formatNomCompletLieu(item)
-    : `${item.appareil} (${item.nom}${item.type ? ' ' + item.type : ''}${item.SAT ? ' / ' + item.SAT : ''})`;
+const labelFor = (item) => {
+  if (item.category === "poste") {
+    if (item.acces) {
+      return `${item.nom} ${item.type || ""} – accès ${item.acces}`.trim();
+    }
+    return `${item.nom} ${item.type || ""} ${item.SAT || ""}`.trim();
+  }
+
+  return `${item.appareil} (${item.nom}${item.type ? " " + item.type : ""}${item.SAT ? " / " + item.SAT : ""})`;
+};
 
 results.forEach((item, i) => {
 
@@ -1535,7 +1541,8 @@ html += formatInformations(app.description);
   
 if (!postePrincipal && app.acces) {
   postePrincipal = lieux.find(l =>
-    normalize(`${l.nom} ${l.type || ""}`) === normalize(app.acces)
+    normalize(`${l.nom} ${l.type || ""}`) === normalize(app.acces) ||
+    normalize(l.nom) === normalize(app.acces)
   );
 }
 
@@ -1717,7 +1724,9 @@ if (currentItem.rss) {
         originalValues.sat = document.getElementById("editable-sat").textContent.trim();
       }
       if (document.getElementById("editable-acces")) {
-       originalValues["acces"] = document.getElementById("editable-acces").textContent.replace("– acces ","").trim();
+originalValues["acces"] = document
+  .getElementById("editable-acces")
+  .textContent.replace("– accès ","").trim();
       }
         if (document.getElementById("editable-description")) {
     originalValues.description = document.getElementById("editable-description").textContent.trim();
@@ -1761,8 +1770,8 @@ document.addEventListener("click", function(e) {
     if (!editModeAppareil) {
       editModeAppareil = true;
 
-      originalAppareil.appareil = currentItem.appareil || "";
-originalAppareil.nomposte = `${currentItem.nom || ''}${currentItem.type ? ' ' + currentItem.type : ''}${currentItem.SAT ? ' ' + currentItem.SAT : ''}${currentItem.acces ? ' – acces ' + currentItem.acces : ''}`;
+originalAppareil.nomposte =
+  `${currentItem.nom || ''}${currentItem.type ? ' ' + currentItem.type : ''}${currentItem.SAT ? ' ' + currentItem.SAT : ''}${currentItem.acces ? ' – accès ' + currentItem.acces : ''}`;
       originalAppareil.description = currentItem.description || "";
 
       ["editable-appareil","editable-nomposte","editable-rep-appareil","editable-description-appareil"]
@@ -1894,7 +1903,7 @@ if (e.target.id === "editable-portail") {
 }
   
     const field = e.target.id.replace("editable-","");
-    let currentVal = e.target.textContent.replace("– acces ","").trim();
+    let currentVal = e.target.textContent.replace("– accès ","").trim();
     e.target.innerHTML = `<input type="text" id="input-${field}" value="${currentVal}" style="border:2px solid #1a73e8; padding:3px; border-radius:6px;" />`;
     document.getElementById("edit-buttons").style.display = "block";
     navigator.vibrate?.(50);
@@ -2080,7 +2089,7 @@ function quitEditMode(nom, type, sat = "", acces = ""){
     document.getElementById("editable-sat").textContent = " " + sat;
   }
   if (document.getElementById("editable-acces")) {
-    document.getElementById("editable-acces").textContent = " – acces " + acces;
+    document.getElementById("editable-acces").textContent = " – accès " + acces;
   }
 
 const pkVal = originalValues.pk || currentItem.pk || "(non renseigné)";
@@ -2249,7 +2258,7 @@ function formatInformations(val) {
 </div>
 <footer class="about-footer">
   <a href="arnaud.html" class="footer-link">🔧 À propos</a>
-  <a href="version.html" class="footer-link version">📌 Nono Maps V1.13.7_test</a>
+  <a href="version.html" class="footer-link version">📌 Nono Maps V1.13.8</a>
 </footer>
 <script>
 (function(){
@@ -2532,9 +2541,9 @@ function getDistance(lat1, lon1, lat2, lon2) {
 
     let label = "";
     if (p.category === "appareil") 
-    label = `${p.appareil} (${p.nom}${p.type ? " " + p.type : ""}${p.SAT ? " / " + p.SAT : ""}${p.acces ? " – acces " + p.acces : ""})`;
+    label = `${p.appareil} (${p.nom}${p.type ? " " + p.type : ""}${p.SAT ? " / " + p.SAT : ""}${p.acces ? " – accès " + p.acces : ""})`;
     else if (p.category === "generic") label = p.nom;
-    else label = `${p.nom} ${p.type || ""}${p.SAT ? " / " + p.SAT : ""}${p.acces ? " – acces " + p.acces : ""}`.trim();
+    else label = `${p.nom} ${p.type || ""}${p.SAT ? " / " + p.SAT : ""}${p.acces ? " – accès " + p.acces : ""}`.trim();
 
     a.innerHTML = `${icon} ${label} – ${p.distance.toFixed(2).replace(".", ",")} km`;
 
