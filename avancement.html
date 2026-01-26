@@ -451,7 +451,8 @@ const url="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/appareils.json";
 let appareils=[];
 let groupesGlobaux={};
 let groupesAffiches={};
-let mode="patrimoine";
+let triActif = "az";
+let mode = "patrimoine";
 
 const postesZone = document.getElementById("postesZone");
 const switchEl = document.getElementById("mode-switch");
@@ -462,7 +463,7 @@ const labelHp = document.getElementById("label-hp");
 switchEl.onclick = () => {
     if (mode === "patrimoine") {
         mode = "hp";
-        afficher(groupesGlobaux.hp);
+        afficher(appliquerTri(groupesGlobaux.hp));
 
         postesZone.classList.add("hp");
         postesZone.classList.remove("patrimoine");
@@ -472,7 +473,7 @@ switchEl.onclick = () => {
         labelPat.classList.remove("active");
     } else {
         mode = "patrimoine";
-        afficher(groupesGlobaux.patrimoine);
+        afficher(appliquerTri(groupesGlobaux.patrimoine));
 
         postesZone.classList.remove("hp");
         postesZone.classList.add("patrimoine");
@@ -491,6 +492,19 @@ function groupAppareils(liste){
         g[key].push(a);
     });
     return g;
+}
+
+    function appliquerTri(groupes){
+    let noms = Object.keys(groupes);
+
+    if(triActif==="az") noms.sort();
+    if(triActif==="za") noms.sort().reverse();
+    if(triActif==="appmax") noms.sort((a,b)=>groupes[b].length - groupes[a].length);
+    if(triActif==="appmin") noms.sort((a,b)=>groupes[a].length - groupes[b].length);
+
+    const sorted = {};
+    noms.forEach(n => sorted[n] = groupes[n]);
+    return sorted;
 }
 
 
@@ -618,7 +632,8 @@ document.querySelectorAll(".filters button").forEach(btn=>{
         document.querySelectorAll(".filters button").forEach(b=>b.classList.remove("activeFilter"));
         btn.classList.add("activeFilter");
 
-        const sort=btn.dataset.sort;
+const sort = btn.dataset.sort;
+triActif = sort;
         let noms=Object.keys(groupesAffiches);
 
         if(sort==="az") noms.sort();
