@@ -4172,7 +4172,7 @@
     "type": "SP",
     "SAT": "",
     "accès": "",
-    "appareil": "TT Ssr Hazebrouck-Strazeele V2",
+    "appareil": "TT22",
     "latitude": 50.7082991,
     "longitude": 2.6754153,
     "description": ""
@@ -4182,7 +4182,7 @@
     "type": "SP",
     "SAT": "",
     "accès": "",
-    "appareil": "TC Ssr Hazebrouck-Strazeele V2",
+    "appareil": "TC2",
     "latitude": 50.7082991,
     "longitude": 2.6754153,
     "description": ""
@@ -4192,7 +4192,7 @@
     "type": "SP",
     "SAT": "",
     "accès": "",
-    "appareil": "TC Ssr Steenwerck - Strazeele V1",
+    "appareil": "TC1",
     "latitude": 50.7082159,
     "longitude": 2.6765083,
     "description": ""
@@ -4202,7 +4202,7 @@
     "type": "SP",
     "SAT": "",
     "accès": "",
-    "appareil": "TT Ssr Steenwerck - Strazeele V1",
+    "appareil": "TT11",
     "latitude": 50.7082159,
     "longitude": 2.6765083,
     "description": ""
@@ -4222,7 +4222,7 @@
     "type": "SP",
     "SAT": "",
     "accès": "",
-    "appareil": "TT Ssr Hazebrouck-Strazeele V1",
+    "appareil": "TT21",
     "latitude": 50.7082,
     "longitude": 2.67538,
     "description": ""
@@ -4232,7 +4232,7 @@
     "type": "SP",
     "SAT": "",
     "accès": "",
-    "appareil": "TT Ssr Steenwerck - Strazeele V2",
+    "appareil": "TT12",
     "latitude": 50.7083025,
     "longitude": 2.6761261,
     "description": ""
