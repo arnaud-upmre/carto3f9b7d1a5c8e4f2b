@@ -7063,7 +7063,8 @@
   {
     "nom": "Lens",
     "type": "",
-    "appareil": "Bollaert SSP",
+    "acces": "",
+    "appareil": "212-17",
     "latitude": 50.43225, 
     "longitude": 2.81325,
     "description": "Sectionneur manuel à ouvrir pour consignation du I23 de Bollaert SSP",
