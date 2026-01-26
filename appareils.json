@@ -7061,12 +7061,12 @@
     "description": ""
   },
   {
-    "nom": "Bollaert",
-    "type": "SSP",
-    "appareil": "212-17",
+    "nom": "Lens",
+    "type": "",
+    "appareil": "Bollaert SSP",
     "latitude": 50.43225, 
     "longitude": 2.81325,
-    "description": "Sectionneur manuel à ouvrir pour consignation du I23",
+    "description": "Sectionneur manuel à ouvrir pour consignation du I23 de Bollaert SSP",
     "hors_patrimoine": true
   },
   {
