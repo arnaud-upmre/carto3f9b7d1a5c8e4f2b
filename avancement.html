@@ -134,8 +134,14 @@ h1{ display:none; }
     transform:translateY(10px);
     animation:fadeIn 0.45s ease forwards;
 }
+    @media (max-width: 480px){
+    .card{
+        padding:14px;
+        border-radius:14px;
+        box-shadow:0 3px 8px var(--shadow);
+    }
+}
 
-/* Apparition iOS */
 @keyframes fadeIn{
     to{
         opacity:1;
@@ -147,6 +153,12 @@ h1{ display:none; }
     font-size:18px;
     font-weight:700;
     margin-bottom:14px;
+}
+    @media (max-width: 480px){
+    .card-title{
+        font-size:16px;
+        margin-bottom:10px;
+    }
 }
 
 .type-pill{
@@ -170,6 +182,13 @@ h1{ display:none; }
     margin:4px 6px 4px 0;
     cursor:pointer;
     transition:0.15s;
+}
+    @media (max-width: 480px){
+    .pill{
+        padding:4px 8px;
+        font-size:12px;
+        border-radius:8px;
+    }
 }
 
 .pill:hover{
@@ -205,9 +224,20 @@ h1{ display:none; }
     display:inline-block;
 }
 
+    @media (max-width: 480px){
+    .section-title{
+        padding:4px 10px;
+        font-size:12px;
+        border-radius:8px;
+    }
 
+    .sat-pill{
+        padding:4px 10px;
+        font-size:12px;
+        border-radius:8px;
+    }
+}
 
-    /* ===== Entête style "tableau blanc" ===== */
 .board-header{
     position: sticky;
     top: 0;
