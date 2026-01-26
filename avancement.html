@@ -298,10 +298,10 @@ const hasType = !!type;
 
 let html=`
 <div class="card">
-    <div class="card-title">
-        ${nom}
-        ${hasType ? `<span class="type-pill">${type}</span>` : ""}
-    </div>
+<div class="card-title">
+    ${hasType ? nom : `${nom} (Ville de)`}
+    ${hasType ? `<span class="type-pill">${type}</span>` : ""}
+</div>
 
 ${hasType ? `<div class="section-title">Poste principal</div>` : ""}
 ${principalPills}
