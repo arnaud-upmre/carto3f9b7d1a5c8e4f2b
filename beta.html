@@ -34,8 +34,7 @@
    
   <style id="eale-intro-styles">
 
-
-.tech-docs{
+    .tech-docs{
   display:flex;
   justify-content:center;
   gap:10px;
@@ -72,7 +71,7 @@
     opacity:0.35;
     border-color:rgba(255,255,255,0.25);
     color:rgba(255,255,255,0.55);
-    background:rgba(255,255,255,0.08);
+    background:rgba(255,255,255,0.06);
   }
 }
 
@@ -224,7 +223,6 @@ input[type="text"]{
   box-sizing: border-box;
   outline: none;
   transition: border-color 0.3s ease;
-  margin-bottom: 2rem;
 }
 input[type="text"]:focus { border-color:#1a73e8; box-shadow:0 4px 14px rgba(26,115,232,0.4); }
 
@@ -300,11 +298,8 @@ li.best { background-color:#e6f0ff; font-weight:600; }
   .btn-primary:hover{ background:#90caf9; color:#121212; }
 }
 
-#btn-localiser,
-#btn-carte,
-#btn-tableau {
-  margin-top: 0.6rem;
-}
+#btn-localiser { margin-top: 4rem; }
+#btn-carte { margin-top: 4rem; display: inline-block; }
 
 .inline-links {
   display: flex;
@@ -676,14 +671,14 @@ li.best { background-color:#e6f0ff; font-weight:600; }
 <button id="btn-localiser" class="btn-primary">
   📍 À proximité
 </button>
-  
+
 <a id="btn-carte" class="btn-primary" href="map.html" style="display:none;">
   🗺️ Afficher la carte
 </a>
 
-  <button id="btn-tableau" class="btn-primary">
+  <a id="btn-tableau" class="btn-primary" href="tableau.html" style="display:none;">
   🧾 Tableau blanc
-</button>
+</a>
   
 <div id="proximite" style="margin-top:1rem; font-size:14px;"></div>
 <div id="proximite-actions" style="text-align:center; margin:10px 0;">
@@ -819,7 +814,7 @@ function normalize(str) {
 
 function formatNomCompletLieu(obj) {
   const base = `${obj.nom || ''} ${obj.type || ''} ${obj.SAT || ''}`.trim();
-return obj["accès"] ? `${base} – accès ${obj["accès"]}` : base;
+return obj.acces ? `${base} – accès ${obj.acces}` : base;
 }
 
 
@@ -846,10 +841,12 @@ function formatRSS(table, showPhones = true) {
   return html;
 }
 
-
 function safeLink(val) {
-  const s = (val ?? "").toString().trim();
-  return s;
+  if (!val) return "";
+  const s = String(val).trim();
+  if (!s) return "";
+  if (s.startsWith("http://") || s.startsWith("https://")) return s;
+  return "";
 }
 
 function formatTechDocs(lieu) {
@@ -860,8 +857,8 @@ function formatTechDocs(lieu) {
   const s11      = safeLink(lieu.technique_s11);
 
   const schemaBtn = schema
-    ? `<a class="tech-pill" href="${schema}" target="_blank" rel="noopener">📐 Schéma</a>`
-    : `<span class="tech-pill disabled">📐 Schéma</span>`;
+    ? `<a class="tech-pill" href="${schema}" target="_blank" rel="noopener">🗺️ Schéma</a>`
+    : `<span class="tech-pill disabled">🗺️ Schéma</span>`;
 
   const consigneBtn = consigne
     ? `<a class="tech-pill" href="${consigne}" target="_blank" rel="noopener">🦺 Consigne</a>`
@@ -871,18 +868,18 @@ function formatTechDocs(lieu) {
     ? `<a class="tech-pill" href="${s11}" target="_blank" rel="noopener">⚡️ S11</a>`
     : `<span class="tech-pill disabled">⚡️ S11</span>`;
 
-  return `
-    <p><strong>📄 Technique :</strong></p>
+return `
+  <div class="rep-block info-block">
+    <p><strong>📍 Particularités locales</strong></p>
     <div class="tech-docs">
-      ${schemaBtn}
       ${consigneBtn}
-      ${s11Btn}
+      ${vitessesBtn}
+      ${pistesBtn}
     </div>
-  `;
-}
+  </div>
+`;
 
-
-    function formatParticularitesLocales(lieu) {
+function formatParticularitesLocales(lieu) {
   if (lieu?.hors_patrimoine === true) return "";
 
   const consigne = safeLink(lieu.particularites_consigne);
@@ -910,7 +907,7 @@ function formatTechDocs(lieu) {
     </div>
   `;
 }
-    
+
     
 function generateAppareilListHTML(currentLieu) {
 
@@ -925,7 +922,7 @@ function generateAppareilListHTML(currentLieu) {
   );
 
   const isSAT = currentLieu.SAT && currentLieu.SAT !== "";
-  const isAcces = !!currentLieu.accès;
+  const isAcces = !!currentLieu.acces;
 
 if (!isSAT && !isAcces) {
   let groupedAll = {};
@@ -1191,7 +1188,7 @@ let html = `<h2>
   📍 <span id="editable-nom">${lieu.nom}</span> 
   <span id="editable-type">${lieu.type ? lieu.type.trim() : ""}</span>
   ${lieu.SAT ? `<span id="editable-sat"> ${lieu.SAT}</span>` : ""}
-  ${lieu.accès ? `<span id="editable-acces"> – accès ${lieu.accès}</span>` : ""}
+${lieu.acces ? `<span id="editable-acces"> – accès ${lieu.acces}</span>` : ""}
   <a href="#" id="edit-toggle">[modifier]</a>
 </h2>`;
 
@@ -1244,13 +1241,12 @@ const blocs = [];
 if (lieu.rss) {
 blocs.push(formatRSS(lieu.rss, true));
 }
-
-  const techBlock = formatTechDocs(lieu);
+const techBlock = formatTechDocs(lieu);
 if (techBlock) blocs.push(techBlock);
 
-  const partBlock = formatParticularitesLocales(lieu);
+const partBlock = formatParticularitesLocales(lieu);
 if (partBlock) blocs.push(partBlock);
-
+  
 const pk = lieu.pk 
   ? `<strong id="editable-pk">${lieu.pk}</strong>` 
   : `<span id="editable-pk" class="placeholder">(non renseigné)</span>`;
@@ -1308,7 +1304,7 @@ if (lieu.hors_patrimoine === true) {
     html += `<hr class="separator" />${appareilsHTML}`;
   }
 
-if (lieu.SAT || lieu.accès) {
+if (lieu.SAT || lieu.acces) {
   html += `
     <div class="missing-box" onclick="retourFichePrincipale('${encodeURIComponent(lieu.nom)}','${encodeURIComponent(lieu.type)}')">
       ⬅️ Retour à la fiche principale<br>
@@ -1354,7 +1350,7 @@ appareils.forEach(a => {
       { name: "SAT", weight: 0.2 },
       { name: "appareil", weight: 0.6 },
       { name: "alias", weight: 0.7 },
-      { name: "accès", getFn: o => o.accès?.toString?.() || "", weight: 0.2 }
+      { name: "acces", getFn: o => o.acces?.toString?.() || "", weight: 0.2 }
     ],
     includeScore: true,
     threshold: 0.25,
@@ -1437,6 +1433,9 @@ document.getElementById("search").addEventListener("input", e => {
   if (!query || query.length < 2 || !fuseMix) return;
 
 let results = fuseMix.search(query).map(r => r.item);
+results = results.filter(item =>
+  !(item.category === "poste" && item.hors_patrimoine === true)
+);
   const cleanedQuery = query.replace(/\s+/g, "").toLowerCase();
 
 const queryWords = query.split(/\s+/);
@@ -1495,13 +1494,13 @@ results.sort((a, b) => {
   if (aExact && !bExact) return -1;
   if (bExact && !aExact) return 1;
 
-  const aIsPoste = a.category === "poste" && !a.accès;
-  const bIsPoste = b.category === "poste" && !b.accès;
+  const aIsPoste = a.category === "poste" && !a.acces;
+  const bIsPoste = b.category === "poste" && !b.acces;
   if (aIsPoste && !bIsPoste) return -1;
   if (bIsPoste && !aIsPoste) return 1;
 
-  const aIsAcces = a.category === "poste" && !!a.accès;
-  const bIsAcces = b.category === "poste" && !!b.accès;
+  const aIsAcces = a.category === "poste" && !!a.acces;
+  const bIsAcces = b.category === "poste" && !!b.acces;
   if (aIsAcces && !bIsAcces) return -1;
   if (bIsAcces && !aIsAcces) return 1;
 
@@ -1526,6 +1525,8 @@ const labelFor = (item) =>
     : `${item.appareil} (${item.nom}${item.type ? ' ' + item.type : ''}${item.SAT ? ' / ' + item.SAT : ''})`;
 
 results.forEach((item, i) => {
+
+
   
   const li = document.createElement("li");
   
@@ -1646,30 +1647,32 @@ let html = `<h2>
 
 html += formatInformations(app.description);
 
-  let postePrincipal = null;
-  if (app.SAT) {
-    postePrincipal = lieux.find(l =>
-      normalize(l.nom) === normalize(app.nom) &&
-      normalize(l.type || "") === normalize(app.type || "") &&
-      normalize(l.SAT) === normalize(app.SAT)
-    );
-  }
+let postePrincipal = null;
 
-if (!postePrincipal && app.accès) {
+if (app.acces) {
   postePrincipal = lieux.find(l =>
     normalize(l.nom) === normalize(app.nom) &&
     normalize(l.type || "") === normalize(app.type || "") &&
-    normalize(l.accès || "") === normalize(app.accès || "")
+    normalize(l.acces || "") === normalize(app.acces)
   );
 }
 
-  if (!postePrincipal) {
-      postePrincipal = lieux.find(l =>
-      normalize(l.nom) === normalize(app.nom) &&
-      normalize(l.type || "") === normalize(app.type || "") &&
-      !l.SAT && !l.accès
-    );
-  }
+
+if (!postePrincipal && app.SAT) {
+  postePrincipal = lieux.find(l =>
+    normalize(l.nom) === normalize(app.nom) &&
+    normalize(l.type || "") === normalize(app.type || "") &&
+    normalize(l.SAT || "") === normalize(app.SAT)
+  );
+}
+
+if (!postePrincipal) {
+  postePrincipal = lieux.find(l =>
+    normalize(l.nom) === normalize(app.nom) &&
+    normalize(l.type || "") === normalize(app.type || "") &&
+    !l.SAT && !l.acces
+  );
+}
 
   if (postePrincipal) {
     const sauvegarde = html;
@@ -1719,22 +1722,26 @@ function isMobile() {
 
 if (isMobile()) {
   const btnCarte = document.getElementById("btn-carte");
-  const btnLocaliser = document.getElementById("btn-localiser");
   const btnTableau = document.getElementById("btn-tableau");
+  const btnLocaliser = document.getElementById("btn-localiser");
 
   btnCarte.style.display = "block";
-  btnLocaliser.style.display = "block";
   btnTableau.style.display = "block";
+  btnLocaliser.style.display = "block";
+
+  btnCarte.style.marginTop = "1rem";
+  btnTableau.style.marginTop = "0.6rem";
+  btnLocaliser.style.marginTop = "0.6rem";
 
   const actions = document.getElementById("proximite-actions");
 
-actions.appendChild(btnCarte);
-actions.appendChild(btnTableau);
-actions.appendChild(btnLocaliser);
+  actions.appendChild(btnCarte);
+  actions.appendChild(btnTableau);
+  actions.appendChild(btnLocaliser);
 } else {
   document.getElementById("btn-carte").style.display = "inline-block";
-  document.getElementById("btn-localiser").style.display = "none";
   document.getElementById("btn-tableau").style.display = "inline-block";
+  document.getElementById("btn-localiser").style.display = "none";
 }
 
 document.getElementById("btn-localiser").addEventListener("click", () => {
@@ -1758,9 +1765,6 @@ document.getElementById("btn-localiser").addEventListener("click", () => {
   }
 });
 
-    document.getElementById("btn-tableau").addEventListener("click", () => {
-  window.location.href = "avancement.html";
-});
 
     function construireProximite(postes, appareils) {
   const arr = [];
@@ -1845,7 +1849,7 @@ if (currentItem.rss) {
         originalValues.sat = document.getElementById("editable-sat").textContent.trim();
       }
       if (document.getElementById("editable-acces")) {
-       originalValues["accès"] = document.getElementById("editable-acces").textContent.replace("– accès ","").trim();
+       originalValues["acces"] = document.getElementById("editable-acces").textContent.replace("– accès ","").trim();
       }
         if (document.getElementById("editable-description")) {
     originalValues.description = document.getElementById("editable-description").textContent.trim();
@@ -1890,7 +1894,7 @@ document.addEventListener("click", function(e) {
       editModeAppareil = true;
 
       originalAppareil.appareil = currentItem.appareil || "";
-originalAppareil.nomposte = `${currentItem.nom || ''}${currentItem.type ? ' ' + currentItem.type : ''}${currentItem.SAT ? ' ' + currentItem.SAT : ''}${currentItem.accès ? ' – accès ' + currentItem.accès : ''}`;
+originalAppareil.nomposte = `${currentItem.nom || ''}${currentItem.type ? ' ' + currentItem.type : ''}${currentItem.SAT ? ' ' + currentItem.SAT : ''}${currentItem.acces ? ' – accès ' + currentItem.acces : ''}`;
       originalAppareil.description = currentItem.description || "";
 
       ["editable-appareil","editable-nomposte","editable-rep-appareil","editable-description-appareil"]
@@ -2076,7 +2080,7 @@ document.getElementById("btn-save").addEventListener("click", function(){
   const newNom   = document.getElementById("input-nom")?.value   || originalValues.nom;
   const newType  = document.getElementById("input-type")?.value  || originalValues.type;
   const newSat   = document.getElementById("input-sat")?.value   || originalValues.sat || "";
-  const newAcces = document.getElementById("input-acces")?.value || originalValues["accès"] || "";
+  const newAcces = document.getElementById("input-acces")?.value || originalValues["acces"] || "";
   const newDescription = document.getElementById("input-description")?.value || originalValues.description || "";
   const newContact     = document.getElementById("input-contact")?.value     || originalValues.contact || "";
   const newPortail     = document.getElementById("input-portail")?.value     || originalValues.portail || "";
@@ -2087,7 +2091,7 @@ document.getElementById("btn-save").addEventListener("click", function(){
   
   const demandeur = getDemandeur();
   const ficheOrigine = currentItem
-    ? `${currentItem.nom || ''} ${currentItem.type || ''} ${currentItem.SAT || ''} ${currentItem.accès || ''}`.trim()
+    ? `${currentItem.nom || ''} ${currentItem.type || ''} ${currentItem.SAT || ''} ${currentItem.acces || ''}`.trim()
     : "";
 
   const payload = {
@@ -2104,7 +2108,7 @@ if (currentItem.rssTemp) {
   if (newNom !== originalValues.nom) payload.nom = newNom;
   if (newType !== originalValues.type) payload.type = newType;
   if (newSat !== (originalValues.sat || "")) payload.sat = newSat;
- if (newAcces !== (originalValues["accès"] || "")) payload["accès"] = newAcces;
+ if (newAcces !== (originalValues["acces"] || "")) payload["acces"] = newAcces;
   if (originalValues.rss) payload.rss = originalValues.rss;
 if (newDescription !== (originalValues.description || "")) payload.description = newDescription;
 if (newContact !== (originalValues.contact || "")) payload.contact = newContact;
@@ -2157,7 +2161,7 @@ const payload = {
   nom_orig: currentItem.nom || "",
   type_orig: currentItem.type || "",
   sat_orig: currentItem.SAT || "",
-  acces_orig: currentItem.accès || "",
+  acces_orig: currentItem.acces || "",
   demandeur,
   horodatage: new Date().toISOString()
 };
@@ -2329,7 +2333,7 @@ document.getElementById("btn-cancel").addEventListener("click", function(){
     originalValues.nom,
     originalValues.type,
     originalValues.sat || "",
-     originalValues["accès"] || ""
+     originalValues["acces"] || ""
   );
   showNotification("🔙 Édition annulée", "info");
 });
@@ -2520,7 +2524,7 @@ document.getElementById("streetview-close").onclick = () => {
   const postePrincipal = lieux.find(l => 
     normalize(l.nom) === normalize(decodeURIComponent(nom)) &&
     normalize(l.type) === normalize(decodeURIComponent(type)) &&
-    !l.SAT && !l.accès
+!l.SAT && !l.acces
   );
 
   if (postePrincipal) {
@@ -2660,9 +2664,9 @@ function getDistance(lat1, lon1, lat2, lon2) {
 
     let label = "";
     if (p.category === "appareil") 
-    label = `${p.appareil} (${p.nom}${p.type ? " " + p.type : ""}${p.SAT ? " / " + p.SAT : ""}${p.accès ? " – accès " + p.accès : ""})`;
+    label = `${p.appareil} (${p.nom}${p.type ? " " + p.type : ""}${p.SAT ? " / " + p.SAT : ""}${p.acces ? " – accès " + p.acces : ""})`;
     else if (p.category === "generic") label = p.nom;
-    else label = `${p.nom} ${p.type || ""}${p.SAT ? " / " + p.SAT : ""}${p.accès ? " – accès " + p.accès : ""}`.trim();
+    else label = `${p.nom} ${p.type || ""}${p.SAT ? " / " + p.SAT : ""}${p.acces ? " – accès " + p.acces : ""}`.trim();
 
     a.innerHTML = `${icon} ${label} – ${p.distance.toFixed(2).replace(".", ",")} km`;
 
