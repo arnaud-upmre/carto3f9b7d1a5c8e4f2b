@@ -868,16 +868,17 @@ function formatTechDocs(lieu) {
     ? `<a class="tech-pill" href="${s11}" target="_blank" rel="noopener">⚡️ S11</a>`
     : `<span class="tech-pill disabled">⚡️ S11</span>`;
 
-return `
-  <div class="rep-block info-block">
-    <p><strong>📍 Particularités locales</strong></p>
-    <div class="tech-docs">
-      ${consigneBtn}
-      ${vitessesBtn}
-      ${pistesBtn}
+  return `
+    <div class="rep-block info-block">
+      <p><strong>📄 Technique :</strong></p>
+      <div class="tech-docs">
+        ${schemaBtn}
+        ${consigneBtn}
+        ${s11Btn}
+      </div>
     </div>
-  </div>
-`;
+  `;
+}
 
 function formatParticularitesLocales(lieu) {
   if (lieu?.hors_patrimoine === true) return "";
@@ -899,11 +900,13 @@ function formatParticularitesLocales(lieu) {
     : `<span class="tech-pill disabled">🛣️ Pistes & itinéraire</span>`;
 
   return `
-    <p><strong>📍 Particularités locales</strong></p>
-    <div class="tech-docs">
-      ${consigneBtn}
-      ${vitessesBtn}
-      ${pistesBtn}
+    <div class="rep-block info-block">
+      <p><strong>📍 Particularités locales</strong></p>
+      <div class="tech-docs">
+        ${consigneBtn}
+        ${vitessesBtn}
+        ${pistesBtn}
+      </div>
     </div>
   `;
 }
