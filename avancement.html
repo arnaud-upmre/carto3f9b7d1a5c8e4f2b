@@ -575,7 +575,7 @@ let html=`
 
 ${hasType && principal.length > 0
 ? `<a class="section-title"
-     href="index.html?id=${encodeURIComponent(`${principal[0].appareil} ${principal[0].nom} ${principal[0].type||""}`.trim())}">
+     href="index.html?id=${encodeURIComponent(`${nom} ${type||""}`.trim())}">
      Poste principal
    </a>`
 : ""}
@@ -598,7 +598,7 @@ satKeys.forEach((s, idx) => {
 <div class="${withSeparator ? "sat-block" : ""}">
 
 <a class="sat-pill"
-   href="index.html?id=${encodeURIComponent(`${appareilsSat[0].appareil} ${appareilsSat[0].nom} ${appareilsSat[0].type||""} ${s}`.trim())}">
+   href="index.html?id=${encodeURIComponent(`${nom} ${type||""} ${s}`.trim())}">
    ${s}
 </a>
 
