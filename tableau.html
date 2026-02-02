@@ -9,51 +9,9 @@
 
 <style>
 
-@media (min-width: 900px){
-
-    .pill{
-        padding:4px 8px;
-        font-size:12px;
-        border-radius:8px;
-    }
-
-    .sat-pill,
-    .section-title{
-        padding:4px 10px;
-        font-size:12px;
-        border-radius:8px;
-    }
-
-    .type-pill{
-        padding:3px 8px;
-        font-size:11px;
-    }
-
-    /* Cartes plus compactes */
-    .card{
-        padding:14px;
-        border-radius:14px;
-    }
-
-    .card-title{
-        font-size:16px;
-        margin-bottom:10px;
-    }
-
-    /* Header moins massif */
-    .board-header{
-        padding:10px 14px;
-    }
+    .board-row + .board-row{
+    margin-top:14px;
 }
-
-
-
-.mode-switch{
-    margin-bottom:14px; 
-}
-
-    
-
 
 .section-title,
 .sat-pill{
@@ -61,8 +19,6 @@
     color:inherit;
     cursor:pointer;
 }
-
-
 
 .welcome-overlay{
     position:fixed;
@@ -165,11 +121,11 @@ h1{ display:none; }
 }
 
 .pill{
-    padding:6px 10px;
+    padding:4px 8px;
     background:var(--pill-bg);
     color:var(--pill-text);
     border-radius:10px;
-    font-size:13px;
+    font-size:12px;
     margin:4px 6px 4px 0;
     cursor:pointer;
     transition:0.15s;
@@ -193,7 +149,8 @@ h1{ display:none; }
 .section-title{
     background:var(--sat-bg);
     color:var(--sat-text);
-    padding:6px 12px;
+padding:4px 10px;
+font-size:12px;
     border-radius:10px;
     font-weight:600;
     margin-bottom:8px;
@@ -220,8 +177,8 @@ h1{ display:none; }
 
 .card{
     background:var(--card-bg);
-    padding:18px;
-    border-radius:18px;
+    padding:14px;
+    border-radius:14px;
     box-shadow:0 4px 12px var(--shadow);
     border:1px solid rgba(255,255,255,0.05);
     opacity:0;
