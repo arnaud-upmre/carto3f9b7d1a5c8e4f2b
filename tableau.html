@@ -9,10 +9,17 @@
 
 <style>
 
-    .board-row + .board-row{
+/* ===============================
+   Espacement header
+================================ */
+.board-row + .board-row{
     margin-top:14px;
 }
 
+
+/* ===============================
+   Liens cliquables (poste / sat)
+================================ */
 .section-title,
 .sat-pill{
     text-decoration:none;
@@ -20,6 +27,10 @@
     cursor:pointer;
 }
 
+
+/* ===============================
+   Popup bienvenue
+================================ */
 .welcome-overlay{
     position:fixed;
     inset:0;
@@ -30,7 +41,9 @@
     justify-content:center;
     z-index:9999;
 }
-.welcome-overlay.hidden{ display:none; }
+.welcome-overlay.hidden{
+    display:none;
+}
 
 .welcome-modal{
     background:var(--card-bg);
@@ -68,15 +81,26 @@
     cursor:pointer;
     box-shadow:0 6px 16px rgba(26,115,232,0.4);
 }
-.welcome-modal button:active{ transform:translateY(1px); }
+
+.welcome-modal button:active{
+    transform:translateY(1px);
+}
 
 @keyframes popupIn{
-    from{opacity:0; transform:translateY(10px) scale(0.97);}
-    to{opacity:1; transform:translateY(0) scale(1);}
+    from{
+        opacity:0;
+        transform:translateY(10px) scale(0.97);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0) scale(1);
+    }
 }
 
 
-
+/* ===============================
+   Variables thème
+================================ */
 :root{
     --bg:#f2f3f7;
     --card-bg:#ffffff;
@@ -89,19 +113,22 @@
 }
 
 @media (prefers-color-scheme: dark){
-:root{
-    --bg:#1c1d20;
-    --card-bg:#2a2b2e;
-    --text:#f5f5f5;
-    --pill-bg:#2f3b57;
-    --pill-text:#9bb8ff;
-    --sat-bg:#695a00;
-    --sat-text:#ffe58a;
-    --shadow:rgba(0,0,0,0.45);
-}}
+    :root{
+        --bg:#1c1d20;
+        --card-bg:#2a2b2e;
+        --text:#f5f5f5;
+        --pill-bg:#2f3b57;
+        --pill-text:#9bb8ff;
+        --sat-bg:#695a00;
+        --sat-text:#ffe58a;
+        --shadow:rgba(0,0,0,0.45);
+    }
+}
 
 
-
+/* ===============================
+   Base layout
+================================ */
 body{
     font-family:Inter,sans-serif;
     margin:0;
@@ -110,9 +137,14 @@ body{
     color:var(--text);
 }
 
-h1{ display:none; }
+h1{
+    display:none;
+}
 
 
+/* ===============================
+   Pills
+================================ */
 .pill,
 .sat-pill,
 .section-title,
@@ -149,8 +181,8 @@ h1{ display:none; }
 .section-title{
     background:var(--sat-bg);
     color:var(--sat-text);
-padding:4px 10px;
-font-size:12px;
+    padding:4px 10px;
+    font-size:12px;
     border-radius:10px;
     font-weight:600;
     margin-bottom:8px;
@@ -162,13 +194,16 @@ font-size:12px;
 }
 
 @media (prefers-color-scheme: dark){
-.hp .pill{
-    background:rgba(220,53,69,0.35);
-    color:#ffb3b8;
-}}
+    .hp .pill{
+        background:rgba(220,53,69,0.35);
+        color:#ffb3b8;
+    }
+}
 
 
-
+/* ===============================
+   Cartes / grille
+================================ */
 .post-container{
     display:grid;
     grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
@@ -199,12 +234,21 @@ font-size:12px;
 }
 
 @keyframes fadeIn{
-    to{opacity:1; transform:translateY(0);}
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
 }
 
 
-
-.tabs{ display:flex; gap:10px; margin-bottom:20px; }
+/* ===============================
+   Tabs / filtres / search
+================================ */
+.tabs{
+    display:flex;
+    gap:10px;
+    margin-bottom:20px;
+}
 
 .tab{
     padding:8px 16px;
@@ -214,6 +258,7 @@ font-size:12px;
     font-weight:600;
     transition:0.2s;
 }
+
 .tab.active{
     background:#1a73e8;
     color:white;
@@ -229,6 +274,7 @@ font-size:12px;
     background:var(--card-bg);
     color:var(--text);
 }
+
 #search:focus{
     border-color:#1a73e8;
     box-shadow:0 0 0 3px #1a73e825;
@@ -240,6 +286,7 @@ font-size:12px;
     margin-bottom:20px;
     flex-wrap:wrap;
 }
+
 .filters button{
     padding:8px 16px;
     border-radius:10px;
@@ -248,13 +295,16 @@ font-size:12px;
     cursor:pointer;
     font-weight:600;
 }
+
 .filters button.activeFilter{
     background:#1a73e8;
     color:white;
 }
 
 
-
+/* ===============================
+   Header / navigation
+================================ */
 .board-header{
     position:sticky;
     top:0;
@@ -290,7 +340,9 @@ font-size:12px;
 }
 
 
-
+/* ===============================
+   Switch
+================================ */
 .mode-switch{
     display:flex;
     align-items:center;
@@ -303,7 +355,10 @@ font-size:12px;
     font-weight:600;
     opacity:0.5;
 }
-.mode-label.active{ opacity:1; }
+
+.mode-label.active{
+    opacity:1;
+}
 
 .switch{
     width:44px;
@@ -313,6 +368,7 @@ font-size:12px;
     position:relative;
     cursor:pointer;
 }
+
 .switch .knob{
     width:18px;
     height:18px;
@@ -322,15 +378,39 @@ font-size:12px;
     top:3px;
     left:3px;
 }
-.switch.hp{ background:#1a73e8; }
-.switch.hp .knob{ left:23px; }
 
+.switch.hp{
+    background:#1a73e8;
+}
+
+.switch.hp .knob{
+    left:23px;
+}
+
+
+/* ===============================
+   Mobile
+================================ */
 @media (max-width:480px){
-.card{ padding:14px; border-radius:14px; }
-.card-title{ font-size:16px; }
-.pill{ font-size:12px; padding:4px 8px; }
-.sat-pill,
-.section-title{ font-size:12px; padding:4px 10px; }
+    .card{
+        padding:14px;
+        border-radius:14px;
+    }
+
+    .card-title{
+        font-size:16px;
+    }
+
+    .pill{
+        font-size:12px;
+        padding:4px 8px;
+    }
+
+    .sat-pill,
+    .section-title{
+        font-size:12px;
+        padding:4px 10px;
+    }
 }
 
 </style>
