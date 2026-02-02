@@ -7018,7 +7018,8 @@
     "appareil": "174-22M",
     "latitude": 49.98815,
     "longitude": 3.44295,
-    "description": ""
+    "description": "",
+    "hors_patrimoine": true
   },
   {
     "nom": "Blangy Est",
