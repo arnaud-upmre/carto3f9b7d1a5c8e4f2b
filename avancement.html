@@ -573,15 +573,12 @@ let html=`
     ${hasType ? `<span class="type-pill">${type}</span>` : ""}
 </div>
 
-
 ${hasType && principal.length > 0
-    ? `<div class="section-title"
-         style="cursor:pointer"
-         onclick="location.href='index.html?id=${encodeURIComponent(`${principal[0].appareil} ${principal[0].nom} ${principal[0].type||""}`.trim())}'">
-         Poste principal
-       </div>`
-    : ""
-}
+? `<a class="section-title"
+     href="index.html?id=${encodeURIComponent(`${principal[0].appareil} ${principal[0].nom} ${principal[0].type||""}`.trim())}">
+     Poste principal
+   </a>`
+: ""}
 
 
 ${principal.length > 0 ? principalPills : ""}
@@ -600,11 +597,10 @@ satKeys.forEach((s, idx) => {
     html += `
 <div class="${withSeparator ? "sat-block" : ""}">
 
-<span class="sat-pill"
-      style="cursor:pointer"
-      onclick="location.href='index.html?id=${encodeURIComponent(`${appareilsSat[0].appareil} ${appareilsSat[0].nom} ${appareilsSat[0].type||""} ${s}`.trim())}'">
-      ${s}
-</span>
+<a class="sat-pill"
+   href="index.html?id=${encodeURIComponent(`${appareilsSat[0].appareil} ${appareilsSat[0].nom} ${appareilsSat[0].type||""} ${s}`.trim())}">
+   ${s}
+</a>
 
     ${appareilsSat.map(a=>{
         const id = `${a.appareil} ${a.nom} ${a.type||""} ${a.SAT||""}`.trim();
