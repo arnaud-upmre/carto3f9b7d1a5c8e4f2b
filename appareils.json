@@ -10,6 +10,47 @@
     "description": "",
     "hors_patrimoine": true
   },
+   {
+    "nom": "Alleux",
+    "type": "SP",
+    "SAT": "",
+    "acces": "",
+    "appareil": "T2",
+    "latitude": 50.91475, 
+    "longitude": 1.79863,
+    "description": "Motorisé"
+  },  
+   {
+    "nom": "Alleux",
+    "type": "SP",
+    "SAT": "",
+    "acces": "",
+    "appareil": "T1/2",
+    "latitude": 50.91477, 
+    "longitude": 1.79859,
+    "description": "",
+    "hors_patrimoine": true
+  },
+   {
+    "nom": "Alleux",
+    "type": "SP",
+    "SAT": "",
+    "acces": "",
+    "appareil": "T1",
+    "latitude": 50.91480, 
+    "longitude": 1.79854,
+    "description": ""
+  },
+   {
+    "nom": "Alleux",
+    "type": "SP",
+    "SAT": "",
+    "acces": "",
+    "appareil": "SM3",
+    "latitude": 50.91502, 
+    "longitude": 1.79833,
+    "description": ""
+  },
   {
     "nom": "Alleux",
     "type": "SP",
