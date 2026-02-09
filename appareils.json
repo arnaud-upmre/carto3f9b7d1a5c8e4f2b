@@ -19,6 +19,26 @@
     "latitude": 50.91475, 
     "longitude": 1.79863,
     "description": "Motorisé"
+  },
+   {
+    "nom": "Alleux",
+    "type": "SP",
+    "SAT": "",
+    "acces": "",
+    "appareil": "TT7116",
+    "latitude": 50.91475, 
+    "longitude": 1.79863,
+    "description": ""
+  }, 
+   {
+    "nom": "Alleux",
+    "type": "SP",
+    "SAT": "",
+    "acces": "",
+    "appareil": "TT7120",
+    "latitude": 50.91475, 
+    "longitude": 1.79863,
+    "description": ""
   },  
    {
     "nom": "Alleux",
@@ -37,6 +57,26 @@
     "SAT": "",
     "acces": "",
     "appareil": "T1",
+    "latitude": 50.91480, 
+    "longitude": 1.79854,
+    "description": ""
+  },
+   {
+    "nom": "Alleux",
+    "type": "SP",
+    "SAT": "",
+    "acces": "",
+    "appareil": "TT7117",
+    "latitude": 50.91480, 
+    "longitude": 1.79854,
+    "description": ""
+  },
+   {
+    "nom": "Alleux",
+    "type": "SP",
+    "SAT": "",
+    "acces": "",
+    "appareil": "TT7113",
     "latitude": 50.91480, 
     "longitude": 1.79854,
     "description": ""
@@ -90,6 +130,86 @@
     "appareil": "SM2",
     "latitude": 50.91506, 
     "longitude": 1.79885,
+    "description": ""
+  },
+    {
+    "nom": "Alleux",
+    "type": "SP",
+    "SAT": "",
+    "acces": "",
+    "appareil": "D1",
+    "latitude": 50.91476,
+    "longitude": 1.79843,
+    "description": ""
+  },
+    {
+    "nom": "Alleux",
+    "type": "SP",
+    "SAT": "",
+    "acces": "",
+    "appareil": "TT D1",
+    "latitude": 50.91474, 
+    "longitude": 1.79843,
+    "description": ""
+  },
+    {
+    "nom": "Alleux",
+    "type": "SP",
+    "SAT": "",
+    "acces": "",
+    "appareil": "TC D1",
+    "latitude": 50.91474, 
+    "longitude": 1.79843,
+    "description": ""
+  },
+    {
+    "nom": "Alleux",
+    "type": "SP",
+    "SAT": "",
+    "acces": "",
+    "appareil": "TT D2",
+    "latitude": 50.91469, 
+    "longitude": 1.79851,
+    "description": ""
+  },
+    {
+    "nom": "Alleux",
+    "type": "SP",
+    "SAT": "",
+    "acces": "",
+    "appareil": "TC D2",
+    "latitude": 50.91469, 
+    "longitude": 1.79851,
+    "description": ""
+  },
+    {
+    "nom": "Alleux",
+    "type": "SP",
+    "SAT": "",
+    "acces": "",
+    "appareil": "TC D2",
+    "latitude": 50.91470, 
+    "longitude": 1.79852,
+    "description": ""
+  },
+       {
+    "nom": "Alleux",
+    "type": "SP",
+    "SAT": "",
+    "acces": "",
+    "appareil": "SI D1/D2",
+    "latitude": 50.91471, 
+    "longitude": 1.79847,
+    "description": ""
+  },
+          {
+    "nom": "Alleux",
+    "type": "SP",
+    "SAT": "",
+    "acces": "",
+    "appareil": "TSA",
+    "latitude": 50.91471, 
+    "longitude": 1.79847,
     "description": ""
   },
   {
