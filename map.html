@@ -1223,7 +1223,7 @@ fetch("appareils.json")
       if (!item.latitude || !item.longitude) return;
 
       let appareilIcon;
-      const ref = (item.appareil || "").toUpperCase();
+      const ref = (item.appareil || "").toUpperCase().trim();
 if (ref.startsWith("DU")) {
   appareilIcon = L.divIcon({
     html: `
