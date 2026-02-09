@@ -51,6 +51,47 @@
     "longitude": 1.79833,
     "description": ""
   },
+     {
+    "nom": "Alleux",
+    "type": "SP",
+    "SAT": "",
+    "acces": "",
+    "appareil": "IP3",
+    "latitude": 50.91491, 
+    "longitude": 1.79851,
+    "description": ""
+  },     
+   {
+    "nom": "Alleux",
+    "type": "SP",
+    "SAT": "",
+    "acces": "",
+    "appareil": "T3",
+    "latitude": 50.91491, 
+    "longitude": 1.79851,
+    "description": "",
+    "hors_patrimoine": true
+  }, 
+   {
+    "nom": "Alleux",
+    "type": "SP",
+    "SAT": "",
+    "acces": "",
+    "appareil": "TT7304",
+    "latitude": 50.91487, 
+    "longitude": 1.79856,
+    "description": ""
+  },
+    {
+    "nom": "Alleux",
+    "type": "SP",
+    "SAT": "",
+    "acces": "",
+    "appareil": "SM2",
+    "latitude": 50.91506, 
+    "longitude": 1.79885,
+    "description": ""
+  },
   {
     "nom": "Alleux",
     "type": "SP",
