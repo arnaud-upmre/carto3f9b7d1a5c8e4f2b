@@ -88,8 +88,8 @@
     "lignes": "FRETIN à FRÉTHUN (LGV)",
     "numero_ligne": 216000,
     "pk": "114,400",
-    "poste_latitude": "50.91464",
-    "poste_longitude": "1.79855"
+    "poste_latitude": "50.91462", 
+    "poste_longitude": "1.79856"
   },
   {
     "nom": "Alleux",
