@@ -10,7 +10,7 @@
 <style>
 
    /* Espacement entre compteurs et champ de recherche */
-.board-row + .board-row{
+.board-row{
     margin-top:18px;
 }
 
@@ -757,6 +757,34 @@ searchEl?.addEventListener("input", appliquerRecherche);
     countersEl.textContent = "Erreur de chargement (postes/appareils).";
   }
 })();
+
+   // =========================
+// Boutons de tri
+// =========================
+document.querySelectorAll(".filters button").forEach(btn => {
+  btn.addEventListener("click", () => {
+    // reset visuel
+    document
+      .querySelectorAll(".filters button")
+      .forEach(b => b.classList.remove("activeFilter"));
+
+    // activation du bouton cliqué
+    btn.classList.add("activeFilter");
+
+    // mode de tri actif
+    triActif = btn.dataset.sort;
+
+    // re-render avec le tri
+    render();
+  });
+});
+
+// =========================
+// A → Z actif par défaut
+// =========================
+document
+  .querySelector('[data-sort="az"]')
+  ?.classList.add("activeFilter");
 </script>
 
 
