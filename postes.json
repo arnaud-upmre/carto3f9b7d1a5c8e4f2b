@@ -3509,8 +3509,8 @@
     "poste_longitude": "1.62154"
   },
   {
-    "nom": "PRCI 41",
-    "type": "",
+    "nom": "41",
+    "type": "PRCI",
     "SAT": "",
     "acces": "",
     "latitude": 50.63237,
