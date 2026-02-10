@@ -348,11 +348,11 @@
     "nom": "Bethune",
     "type": "",
     "SAT": "",
-    "acces": "",
+    "acces": "230-37A",
     "appareil": "230-37A",
     "latitude": 50.5239895,
     "longitude": 2.6325533,
-    "description": "A manœuvrer lors de consignation du TT l'IA à la demande du RSS",
+    "description": "A manœuvrer lors de consignation du TT l'IA de Bethune à la demande du RSS",
     "hors_patrimoine": true
   },
   {
