@@ -270,8 +270,8 @@
     "SAT": "SAT3",
     "acces": "",
     "appareil": "IMP Tunnel",
-    "latitude": 50.9126835,
-    "longitude": 1.8040154,
+    "latitude": 50.91268, 
+    "longitude": 1.80398,
     "description": ""
   },
   {
@@ -280,8 +280,8 @@
     "SAT": "SAT3",
     "acces": "",
     "appareil": "IP4",
-    "latitude": 50.9127185,
-    "longitude": 1.8038528,
+    "latitude": 50.91272, 
+    "longitude": 1.80382,
     "description": ""
   },
   {
@@ -290,8 +290,8 @@
     "SAT": "SAT3",
     "acces": "",
     "appareil": "SM4",
-    "latitude": 50.9127481,
-    "longitude": 1.8037227,
+    "latitude": 50.91274, 
+    "longitude": 1.80370,
     "description": ""
   },
   {
