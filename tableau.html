@@ -9,17 +9,23 @@
 
 <style>
 
-/* ============================
-   Espacement header
-================================ */
-.board-row + .board-row{
-    margin-top:14px;
+.ville-card{
+    background:#eef3ff !important;
+}
+
+@media (prefers-color-scheme: dark){
+    .ville-card{
+        background:#1f2636 !important;
+    }
+}
+
+   /* Espacement entre compteurs et champ de recherche */
+.board-row{
+    margin-top:18px;
 }
 
 
-/* ===============================
-   Liens cliquables (poste / sat)
-================================ */
+/* ===============================Liens cliquables (poste / sat)================================ */
 .section-title,
 .sat-pill{
     text-decoration:none;
@@ -27,80 +33,7 @@
     cursor:pointer;
 }
 
-
-/* ===============================
-   Popup bienvenue
-================================ */
-.welcome-overlay{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,0.45);
-    backdrop-filter:blur(4px);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    z-index:9999;
-}
-.welcome-overlay.hidden{
-    display:none;
-}
-
-.welcome-modal{
-    background:var(--card-bg);
-    color:var(--text);
-    max-width:460px;
-    width:90%;
-    padding:24px 26px;
-    border-radius:20px;
-    box-shadow:0 20px 50px rgba(0,0,0,0.35);
-    animation:popupIn 0.35s ease;
-    text-align:center;
-}
-
-.welcome-modal h2{
-    margin:0 0 14px;
-    font-size:22px;
-    font-weight:800;
-    font-family:"Comic Sans MS","Bradley Hand","Segoe Print",Inter,system-ui,sans-serif;
-}
-
-.welcome-modal p{
-    font-size:14px;
-    line-height:1.5;
-    margin-bottom:14px;
-}
-
-.welcome-modal button{
-    margin-top:10px;
-    padding:10px 18px;
-    border:none;
-    border-radius:14px;
-    background:#1a73e8;
-    color:white;
-    font-weight:700;
-    cursor:pointer;
-    box-shadow:0 6px 16px rgba(26,115,232,0.4);
-}
-
-.welcome-modal button:active{
-    transform:translateY(1px);
-}
-
-@keyframes popupIn{
-    from{
-        opacity:0;
-        transform:translateY(10px) scale(0.97);
-    }
-    to{
-        opacity:1;
-        transform:translateY(0) scale(1);
-    }
-}
-
-
-/* ===============================
-   Variables thème
-================================ */
+/* ===============================Variables thème================================ */
 :root{
     --bg:#f2f3f7;
     --card-bg:#ffffff;
@@ -126,9 +59,7 @@
 }
 
 
-/* ===============================
-   Base layout
-================================ */
+/* ===============================Base layout================================ */
 body{
     font-family:Inter,sans-serif;
     margin:0;
@@ -142,9 +73,7 @@ h1{
 }
 
 
-/* ===============================
-   Pills
-================================ */
+/* ===============================Pills================================ */
 .pill,
 .sat-pill,
 .section-title,
@@ -201,9 +130,7 @@ h1{
 }
 
 
-/* ===============================
-   Cartes / grille
-================================ */
+/* ===============================Cartes / grille================================ */
 .post-container{
     display:grid;
     grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
@@ -241,9 +168,7 @@ h1{
 }
 
 
-/* ===============================
-   Tabs / filtres / search
-================================ */
+/* ===============================Tabs / filtres / recherche ================================ */
 .tabs{
     display:flex;
     gap:10px;
@@ -302,9 +227,7 @@ h1{
 }
 
 
-/* ===============================
-   Header / navigation
-================================ */
+/* ===============================Header / navigation================================ */
 .board-header{
     position:sticky;
     top:0;
@@ -340,9 +263,7 @@ h1{
 }
 
 
-/* ===============================
-   Switch
-================================ */
+/* ===============================Switch================================ */
 .mode-switch{
     display:flex;
     align-items:center;
@@ -388,9 +309,7 @@ h1{
 }
 
 
-/* ===============================
-   Mobile
-================================ */
+/* ===============================Mobile================================ */
 @media (max-width:480px){
     .card{
         padding:14px;
@@ -429,17 +348,6 @@ h1{
     <button class="btn-home" onclick="location.href='index.html'">← Accueil</button>
   </div>
 
-  <div class="board-row">
-<div class="mode-switch">
-  <span class="mode-label active" id="label-patrimoine">Patrimoine</span>
-
-  <div class="switch" id="mode-switch">
-    <div class="knob"></div>
-  </div>
-
-  <span class="mode-label" id="label-hp">Hors patrimoine</span>
-</div>
-  </div>
 
   <div class="board-row">
     <input id="search" type="text" placeholder="Rechercher...">
@@ -458,263 +366,335 @@ h1{
 
 <script>
 
-
-
-const url="appareils.json";
-let appareils=[];
-let groupesGlobaux={};
-let groupesAffiches={};
-let triActif = "az";
-let mode = "patrimoine";
+const URL_POSTES = "postes.json";
+const URL_APPAREILS = "appareils.json";
 
 const postesZone = document.getElementById("postesZone");
-const switchEl = document.getElementById("mode-switch");
+const searchEl = document.getElementById("search");
+const countersEl = document.getElementById("counters");
 
-const labelPat = document.getElementById("label-patrimoine");
-const labelHp = document.getElementById("label-hp");
+// Helpers
+const norm = (v) => (v ?? "").toString().trim();
+const normKey = (s) => norm(s).toLowerCase().replace(/\s+/g, " ");
+const makePosteKey = (nom, type) => `${normKey(nom)}__${normKey(type)}`;
 
-switchEl.onclick = () => {
-    if (mode === "patrimoine") {
-        mode = "hp";
-        afficher(appliquerTri(groupesGlobaux.hp));
+// Données en mémoire
+let postesMap = {};          // { key: { nom, type, sats:Set, principal:[], satApp:{sat:[]}} }
+let postesList = [];         // [{key, ...}] triée
+let appareilsAll = [];       // brut
+let viewKeys = [];           // keys affichés après recherche
+let triActif = "az"; // az | za | appmax | appmin
 
-        postesZone.classList.add("hp");
-        postesZone.classList.remove("patrimoine");
+// 1) Charger postes.json et construire la structure
+async function chargerPostes(){
+  const res = await fetch(URL_POSTES, { cache: "no-store" });
+  let postes = await res.json();
 
-        switchEl.classList.add("hp");
-        labelHp.classList.add("active");
-        labelPat.classList.remove("active");
-    } else {
-        mode = "patrimoine";
-        afficher(appliquerTri(groupesGlobaux.patrimoine));
+  //EXCLUSION DES POSTES NON VOULUS
+  postes = postes.filter(p =>
+    p.special !== true &&
+    p.hors_patrimoine !== true
+  );
 
-        postesZone.classList.remove("hp");
-        postesZone.classList.add("patrimoine");
+  const map = {};
 
-        switchEl.classList.remove("hp");
-        labelPat.classList.add("active");
-        labelHp.classList.remove("active");
+  postes.forEach(p => {
+    const nom = norm(p.nom);
+    const type = norm(p.type); // peut être ""
+    const sat = norm(p.SAT);
+
+    const key = makePosteKey(nom, type);
+    if(!map[key]){
+      map[key] = {
+        key,
+        nom,
+        type,
+        sats: new Set(),
+        principal: [],
+        satApp: {}
+      };
     }
-};
 
-function groupAppareils(liste){
-    const g = {};
-    liste.forEach(a => {
-        const key = `${a.nom}__${a.type || ""}`;
-        if (!g[key]) g[key] = [];
-        g[key].push(a);
+    if(sat){
+      map[key].sats.add(sat);
+      if(!map[key].satApp[sat]) map[key].satApp[sat] = [];
+    }
+  });
+
+  postesMap = map;
+
+  postesList = Object.values(postesMap)
+    .sort((a,b) =>
+      `${a.nom} ${a.type}`.localeCompare(`${b.nom} ${b.type}`, "fr", { sensitivity:"base" })
+    );
+
+  viewKeys = postesList.map(p => p.key);
+  render();
+}
+
+// 2) Charger appareils.json et injecter
+async function chargerAppareils(){
+  const res = await fetch(URL_APPAREILS, { cache: "no-store" });
+  const appareils = await res.json();
+  appareilsAll = appareils;
+
+  appareils.forEach(a => {
+    const nom = norm(a.nom);
+    const type = norm(a.type);     // peut être ""
+    const sat = norm(a.SAT);       // "" => principal
+    const key = makePosteKey(nom, type);
+
+    // si le poste n’existe pas dans postes.json, on le crée quand même (sécurité)
+    if(!postesMap[key]){
+      postesMap[key] = {
+        key,
+        nom,
+        type,
+        sats: new Set(),
+        principal: [],
+        satApp: {}
+      };
+      postesList.push(postesMap[key]);
+    }
+
+    const poste = postesMap[key];
+
+    if(sat){
+      poste.sats.add(sat);
+      if(!poste.satApp[sat]) poste.satApp[sat] = [];
+      poste.satApp[sat].push(a);
+    }else{
+      poste.principal.push(a);
+    }
+  });
+
+  // retri (au cas où des postes “fallback” ont été ajoutés)
+  postesList = Object.values(postesMap)
+    .sort((a,b) => `${a.nom} ${a.type}`.localeCompare(`${b.nom} ${b.type}`, "fr", { sensitivity:"base" }));
+
+  viewKeys = postesList.map(p => p.key);
+  render();
+}
+
+// Liens vers index
+function hrefPoste(nom, type){
+  const id = `${norm(nom)} ${norm(type)}`.trim();
+  return `index.html?id=${encodeURIComponent(id)}`;
+}
+function hrefSat(nom, type, sat){
+  const id = `${norm(nom)} ${norm(type)} ${norm(sat)}`.trim();
+  return `index.html?id=${encodeURIComponent(id)}`;
+}
+function hrefAppareil(appareil, nom, type, sat){
+  const id = `${norm(appareil)} ${norm(nom)} ${norm(type)} ${norm(sat)}`.trim();
+  return `index.html?id=${encodeURIComponent(id)}`;
+}
+
+// UI builders
+function pillHtml(a){
+  const label = norm(a.appareil) || "Appareil";
+  const sat = norm(a.SAT);
+  const hp = (a.hors_patrimoine === true);
+  const inner = `<span class="pill" onclick="location.href='${hrefAppareil(label, a.nom, a.type, sat)}'">${escapeHtml(label)}</span>`;
+  return hp ? `<span class="hp">${inner}</span>` : inner;
+}
+
+function escapeHtml(s){
+  return (s ?? "").toString()
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+   function trierKeys(keys){
+  return [...keys].sort((ka, kb) => {
+    const a = postesMap[ka];
+    const b = postesMap[kb];
+
+    if(triActif === "az"){
+      return `${a.nom} ${a.type}`.localeCompare(
+        `${b.nom} ${b.type}`, "fr", { sensitivity:"base" }
+      );
+    }
+
+    if(triActif === "za"){
+      return `${b.nom} ${b.type}`.localeCompare(
+        `${a.nom} ${a.type}`, "fr", { sensitivity:"base" }
+      );
+    }
+
+    const countA =
+      a.principal.length +
+      Object.values(a.satApp).reduce((n,l)=>n+l.length,0);
+
+    const countB =
+      b.principal.length +
+      Object.values(b.satApp).reduce((n,l)=>n+l.length,0);
+
+    if(triActif === "appmax") return countB - countA;
+    if(triActif === "appmin") return countA - countB;
+
+    return 0;
+  });
+}
+   
+function render(){
+  postesZone.innerHTML = "";
+
+  // Compteurs
+  let nbPostes = 0, nbSats = 0, nbApp = 0, nbHp = 0;
+
+ trierKeys(viewKeys).forEach(key => {
+    const p = postesMap[key];
+    if(!p) return;
+
+    if (p.type) {
+  nbPostes++;
+}
+    nbSats += p.sats.size;
+
+    nbApp += p.principal.length;
+    p.principal.forEach(a => { if(a.hors_patrimoine === true) nbHp++; });
+
+    Object.keys(p.satApp).forEach(s => {
+      nbApp += p.satApp[s].length;
+      p.satApp[s].forEach(a => { if(a.hors_patrimoine === true) nbHp++; });
     });
-    return g;
+
+    postesZone.insertAdjacentHTML("beforeend", renderPosteCard(p));
+  });
+
+  countersEl.textContent = `Postes : ${nbPostes} • SAT : ${nbSats} • Appareils : ${nbApp}${nbHp ? ` • HP : ${nbHp}` : ""}`;
 }
 
-    function appliquerTri(groupes){
-    let noms = Object.keys(groupes);
+function renderPosteCard(p){
+  const hasType = !!norm(p.type);
 
-    if(triActif==="az") noms.sort();
-    if(triActif==="za") noms.sort().reverse();
-    if(triActif==="appmax") noms.sort((a,b)=>groupes[b].length - groupes[a].length);
-    if(triActif==="appmin") noms.sort((a,b)=>groupes[a].length - groupes[b].length);
+  const title = hasType
+    ? `${escapeHtml(p.nom)} <span class="type-pill">${escapeHtml(p.type)}</span>`
+    : `${escapeHtml(p.nom)} (Ville de)`;
 
-    const sorted = {};
-    noms.forEach(n => sorted[n] = groupes[n]);
-    return sorted;
+  // principal : tri alpha
+  const principal = [...p.principal].sort((a,b) => norm(a.appareil).localeCompare(norm(b.appareil), "fr", { sensitivity:"base" }));
+  const principalPills = principal.map(pillHtml).join("");
+
+  // SAT : tri alpha par nom de SAT
+  const satNames = Array.from(p.sats).sort((a,b)=>a.localeCompare(b,"fr",{sensitivity:"base"}));
+
+let html = `
+    <div class="card ${hasType ? "" : "ville-card"}">
+      <div class="card-title">${title}</div>
+
+  ${hasType
+  ? `<a class="section-title" href="${hrefPoste(p.nom, p.type)}">Poste principal</a>
+     ${principalPills}`
+  : principalPills
 }
+  `;
 
+  satNames.forEach((sat, idx) => {
+    const list = (p.satApp[sat] || []).slice().sort((a,b) => norm(a.appareil).localeCompare(norm(b.appareil), "fr", { sensitivity:"base" }));
+    const pills = list.map(pillHtml).join("");
 
-function majCompteurs(groupes){
-    let total = 0;
-    Object.values(groupes).forEach(list => {
-        total += list.length;
-    });
-
-    document.getElementById("counters").textContent =
-        `Nombre d’appareils : ${total}`;
-}
-
-async function charger(){
-    const res=await fetch(url);
-    appareils=await res.json();
-
-    groupesGlobaux={
-        patrimoine: groupAppareils(appareils.filter(a=>a.hors_patrimoine!==true)),
-        hp:         groupAppareils(appareils.filter(a=>a.hors_patrimoine===true))
-    };
-
-
-    const noms=Object.keys(groupesGlobaux.patrimoine).sort();
-    const sorted={};
-    noms.forEach(n=>sorted[n]=groupesGlobaux.patrimoine[n]);
-
-    afficher(sorted);
-}
-
-function afficher(groupes){
-    groupesAffiches=groupes;
-    majCompteurs(groupes);
-    const zone=document.getElementById("postesZone");
-    zone.innerHTML="";
-
-Object.keys(groupes).forEach(key=>{
-    const list = groupes[key];
-
-    const nom = list[0].nom;
-    const type = list[0].type || "";
-    
-        const principal = list
-    .filter(a=>!a.SAT)
-    .sort((a,b)=>a.appareil.localeCompare(b.appareil));
-
-        const principalPills = principal.map(a=>{
-    const id = `${a.appareil} ${a.nom} ${a.type||""} ${a.SAT||""}`.trim();
-    return `<span class="pill" onclick="location.href='index.html?id=${encodeURIComponent(id)}'">${a.appareil}</span>`;
-}).join("");
-        
-        const sats=list.filter(a=>a.SAT);
-
-        const satGroup={};
-        sats.forEach(a=>{
-            if(!satGroup[a.SAT]) satGroup[a.SAT]=[];
-            satGroup[a.SAT].push(a);
-        });
-
-const hasType = !!type;
-
-let html=`
-<div class="card">
-<div class="card-title">
-    ${hasType ? nom : `${nom} (Ville de)`}
-    ${hasType ? `<span class="type-pill">${type}</span>` : ""}
-</div>
-
-${hasType && principal.length > 0
-    ? `<a class="section-title"
-         href="index.html?id=${encodeURIComponent(`${nom} ${type||""}`.trim())}">
-         Poste principal
-       </a>`
-    : ""
-}
-
-${principal.length > 0 ? principalPills : ""}
-`;
-
-    const satKeys = Object.keys(satGroup).sort();
-const hasPrincipal = principal.length > 0;
-    
-satKeys.forEach((s, idx) => {
-    
-    const appareilsSat = satGroup[s].sort((a,b)=>a.appareil.localeCompare(b.appareil));
-    const withSeparator =
-        (hasPrincipal && idx === 0) ||
-        (satKeys.length > 1 && idx > 0);
-
+    // séparateur : seulement si ça a du sens visuellement
+    const needSep = (principal.length > 0 && idx === 0) || (idx > 0);
     html += `
-<div class="${withSeparator ? "sat-block" : ""}">
+      <div class="${needSep ? "sat-block" : ""}">
+        <a class="sat-pill" href="${hrefSat(p.nom, p.type, sat)}">${escapeHtml(sat)}</a>
+        ${pills}
+      </div>
+    `;
+  });
 
-<a class="sat-pill"
-   href="index.html?id=${encodeURIComponent(`${nom} ${type||""} ${s}`.trim())}">
-   ${s}
-</a>
-
-    ${appareilsSat.map(a=>{
-        const id = `${a.appareil} ${a.nom} ${a.type||""} ${a.SAT||""}`.trim();
-        return `<span class="pill" onclick="location.href='index.html?id=${encodeURIComponent(id)}'">${a.appareil}</span>`;
-    }).join("")}
-</div>`;
-});
-
-        html+="</div>";
-        zone.innerHTML+=html;
-    });
+  html += `</div>`;
+  return html;
 }
 
+/* =========================Recherche========================= */
+function appliquerRecherche(){
+  const q = norm(searchEl.value).toLowerCase();
+  if(!q){
+    viewKeys = postesList.map(p => p.key);
+    render();
+    return;
+  }
 
-document.getElementById("search").addEventListener("input", function () {
-    const txt = this.value.trim().toLowerCase();
-    const base = groupesGlobaux[mode];
+  const hits = [];
 
-    if (txt === "") {
-        afficher(base);
-        return;
+  postesList.forEach(p => {
+    const hayPoste = `${p.nom} ${p.type}`.toLowerCase();
+
+    // match poste/type direct
+    let ok = hayPoste.includes(q);
+
+    // match sat
+    if(!ok){
+      for(const sat of p.sats){
+        if(sat.toLowerCase().includes(q)){ ok = true; break; }
+      }
     }
 
-    const r = {};
+    // match appareils principal
+    if(!ok){
+      ok = p.principal.some(a => (norm(a.appareil).toLowerCase().includes(q)));
+    }
 
-    Object.keys(base).forEach(nomPoste => {
-        const appareils = base[nomPoste];
-
-        const matchNomPoste = nomPoste.toLowerCase().includes(txt);
-        const matchAppareil = appareils.some(a =>
-            (a.appareil || "").toLowerCase().includes(txt)
-        );
-
-        if (matchNomPoste || matchAppareil) {
-            r[nomPoste] = appareils;
+    // match appareils SAT
+    if(!ok){
+      for(const sat of Object.keys(p.satApp)){
+        if(p.satApp[sat].some(a => (norm(a.appareil).toLowerCase().includes(q)))){
+          ok = true; break;
         }
-    });
-
-    afficher(r);
-});
-
-document.querySelectorAll(".filters button").forEach(btn=>{
-    btn.onclick=()=>{
-        document.querySelectorAll(".filters button").forEach(b=>b.classList.remove("activeFilter"));
-        btn.classList.add("activeFilter");
-
-const sort = btn.dataset.sort;
-triActif = sort;
-        let noms=Object.keys(groupesAffiches);
-
-        if(sort==="az") noms.sort();
-        if(sort==="za") noms.sort().reverse();
-        if(sort==="appmax") noms.sort((a,b)=>groupesAffiches[b].length - groupesAffiches[a].length);
-        if(sort==="appmin") noms.sort((a,b)=>groupesAffiches[a].length - groupesAffiches[b].length);
-
-        const sorted={};
-        noms.forEach(n=>sorted[n]=groupesAffiches[n]);
-
-        afficher(sorted);
-    };
-});
-charger();
-
-document.querySelector('[data-sort="az"]')?.click();
-
-</script>
-
-
-
-    <div id="welcome-overlay" class="welcome-overlay hidden">
-  <div class="welcome-modal">
-    <h2>Bienvenue sur le Tableau blanc</h2>
-
-    <p>
-      Cette page est encore en <strong>bêta</strong>.<br>
-      Elle regroupe tous les appareils présents sur Nono Maps afin d’offrir
-      une lecture plus globale et différente.
-    </p>
-
-    <p>
-      Le tableau évoluera au fil du temps.<br>
-      <strong>N’hésitez pas à me signaler tout bug ou souci d’affichage 😉</strong>
-    </p>
-
-    <button id="welcome-close">J’ai compris</button>
-  </div>
-</div>
-
-    <script>
-const popupKey = "nonomaps_tableau_blanc_beta_seen";
-
-window.addEventListener("load", () => {
-    if (!localStorage.getItem(popupKey)) {
-        document.getElementById("welcome-overlay").classList.remove("hidden");
+      }
     }
+
+    if(ok) hits.push(p.key);
+  });
+
+  viewKeys = hits;
+  render();
+}
+
+searchEl?.addEventListener("input", appliquerRecherche);
+
+/* =========================Lancement========================= */
+(async function init(){
+  try{
+    countersEl.textContent = "Chargement…";
+    await chargerPostes();     // affiche les postes/SAT même vides
+    await chargerAppareils();  // injecte les appareils
+  }catch(e){
+    console.error(e);
+    countersEl.textContent = "Erreur de chargement (postes/appareils).";
+  }
+})();
+
+   // =========================Boutons de tri ========================= //
+document.querySelectorAll(".filters button").forEach(btn => {
+  btn.addEventListener("click", () => {
+    // reset visuel
+    document
+      .querySelectorAll(".filters button")
+      .forEach(b => b.classList.remove("activeFilter"));
+
+    // activation du bouton cliqué
+    btn.classList.add("activeFilter");
+
+    // mode de tri actif
+    triActif = btn.dataset.sort;
+
+    // re-render avec le tri
+    render();
+  });
 });
 
-document.getElementById("welcome-close").onclick = () => {
-    localStorage.setItem(popupKey, "true");
-    document.getElementById("welcome-overlay").classList.add("hidden");
-};
+// A → Z actif par défaut
+
+document
+  .querySelector('[data-sort="az"]')
+  ?.classList.add("activeFilter");
 </script>
 
 
