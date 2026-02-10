@@ -468,6 +468,7 @@ let postesMap = {};          // { key: { nom, type, sats:Set, principal:[], satA
 let postesList = [];         // [{key, ...}] triée
 let appareilsAll = [];       // brut
 let viewKeys = [];           // keys affichés après recherche
+let triActif = "az"; // az | za | appmax | appmin
 
 // 1) Charger postes.json et construire la structure
 async function chargerPostes(){
@@ -595,13 +596,45 @@ function escapeHtml(s){
     .replaceAll("'","&#039;");
 }
 
+   function trierKeys(keys){
+  return [...keys].sort((ka, kb) => {
+    const a = postesMap[ka];
+    const b = postesMap[kb];
+
+    if(triActif === "az"){
+      return `${a.nom} ${a.type}`.localeCompare(
+        `${b.nom} ${b.type}`, "fr", { sensitivity:"base" }
+      );
+    }
+
+    if(triActif === "za"){
+      return `${b.nom} ${b.type}`.localeCompare(
+        `${a.nom} ${a.type}`, "fr", { sensitivity:"base" }
+      );
+    }
+
+    const countA =
+      a.principal.length +
+      Object.values(a.satApp).reduce((n,l)=>n+l.length,0);
+
+    const countB =
+      b.principal.length +
+      Object.values(b.satApp).reduce((n,l)=>n+l.length,0);
+
+    if(triActif === "appmax") return countB - countA;
+    if(triActif === "appmin") return countA - countB;
+
+    return 0;
+  });
+}
+   
 function render(){
   postesZone.innerHTML = "";
 
   // Compteurs
   let nbPostes = 0, nbSats = 0, nbApp = 0, nbHp = 0;
 
-  viewKeys.forEach(key => {
+ trierKeys(viewKeys).forEach(key => {
     const p = postesMap[key];
     if(!p) return;
 
