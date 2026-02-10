@@ -4199,6 +4199,20 @@
     "hors_patrimoine": true
   },
   {
+    "nom": "Bethune",
+    "acces": "230-37A",
+    "latitude": 50.52467,
+    "longitude": 2.63011,
+    "description": "A manœuvrer lors de consignation du TT l'IA de Bethune à la demande du RSS",
+    "rss": "A",
+    "contact": "",
+    "portail": "",
+    "lignes": "",
+    "numero_ligne": "",
+    "pk": "",
+    "hors_patrimoine": true
+  },
+  {
     "nom": "Avion",
     "acces": "209-3",
     "latitude": 50.40928,
