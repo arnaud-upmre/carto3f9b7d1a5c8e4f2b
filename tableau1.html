@@ -429,17 +429,6 @@ h1{
     <button class="btn-home" onclick="location.href='index.html'">← Accueil</button>
   </div>
 
-  <div class="board-row">
-<div class="mode-switch">
-  <span class="mode-label active" id="label-patrimoine">Patrimoine</span>
-
-  <div class="switch" id="mode-switch">
-    <div class="knob"></div>
-  </div>
-
-  <span class="mode-label" id="label-hp">Hors patrimoine</span>
-</div>
-  </div>
 
   <div class="board-row">
     <input id="search" type="text" placeholder="Rechercher...">
@@ -485,7 +474,13 @@ let viewKeys = [];           // keys affichés après recherche
 // 1) Charger postes.json et construire la structure
 async function chargerPostes(){
   const res = await fetch(URL_POSTES, { cache: "no-store" });
-  const postes = await res.json();
+  let postes = await res.json();
+
+  // ⛔ EXCLUSION DES POSTES NON VOULUS
+  postes = postes.filter(p =>
+    p.special !== true &&
+    p.hors_patrimoine !== true
+  );
 
   const map = {};
 
@@ -514,11 +509,11 @@ async function chargerPostes(){
 
   postesMap = map;
 
-  // liste triée A→Z sur l’affichage (nom + type)
   postesList = Object.values(postesMap)
-    .sort((a,b) => `${a.nom} ${a.type}`.localeCompare(`${b.nom} ${b.type}`, "fr", { sensitivity:"base" }));
+    .sort((a,b) =>
+      `${a.nom} ${a.type}`.localeCompare(`${b.nom} ${b.type}`, "fr", { sensitivity:"base" })
+    );
 
-  // Affichage initial (postes vides)
   viewKeys = postesList.map(p => p.key);
   render();
 }
