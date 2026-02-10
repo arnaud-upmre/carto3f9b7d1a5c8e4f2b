@@ -741,7 +741,7 @@ if (marker.options.isAcces) {
   iconFile = "TT.png";
 
 } else if (
-  /^T\d+(\/\d+)?$/.test(id) ||
+  /^T\d+(\/\d+)?\b/.test(id) ||
   id.startsWith("T/") ||
   /^[0-9]/.test(id) ||
   id.startsWith("S") ||
