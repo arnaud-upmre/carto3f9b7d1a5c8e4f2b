@@ -3244,6 +3244,22 @@
     "description": ""
   },
   {
+    "nom": "Lens",
+    "type": "A",
+    "appareil": "TT IA2",
+    "latitude": 50.42401, 
+    "longitude": 2.83406,
+    "description": ""
+  },
+  {
+    "nom": "Lens",
+    "type": "A",
+    "appareil": "TC IA2",
+    "latitude": 50.42401, 
+    "longitude": 2.83406,
+    "description": ""
+  },
+  {
     "nom": "Lesquin",
     "type": "SP",
     "SAT": "",
