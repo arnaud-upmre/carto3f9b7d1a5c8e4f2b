@@ -651,7 +651,9 @@ function render(){
     const p = postesMap[key];
     if(!p) return;
 
-    nbPostes++;
+    if (p.type) {
+  nbPostes++;
+}
     nbSats += p.sats.size;
 
     nbApp += p.principal.length;
