@@ -3509,24 +3509,6 @@
     "poste_longitude": "1.62154"
   },
   {
-    "nom": "41",
-    "type": "PRCI",
-    "SAT": "",
-    "acces": "",
-    "latitude": 50.63237,
-    "longitude": 3.08324,
-    "description": "",
-    "rss": "",
-    "contact": "",
-    "portail": "",
-    "secure": "https://sncf.sharepoint.com/:w:/s/NonoMapsGrpO3652/Eed-LEigEfVHrmwVjlwWT38Bt4h8ufe4rAp6KOB_JvRJtw?e=RiGZdL",
-    "lignes": "",
-    "numero_ligne": "",
-    "pk": "",
-    "poste_latitude": "50.63201",
-    "poste_longitude": "3.08316"
-  },
-  {
     "nom": "Puyt Houck",
     "type": "SSPA",
     "SAT": "",
