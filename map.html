@@ -737,9 +737,8 @@ if (id.startsWith("DU")) {
   iconFile = "TT.png";
 
 } else if (
-  id.startsWith("T/") ||  
-  /^T([1-9]|10)\b/.test(id) ||
-  /^T([1-9]|10)\//.test(id) ||
+  /^T\d+(\/\d+)?$/.test(id) ||  
+  id.startsWith("T/") ||
   /^[0-9]/.test(id) ||
   id.startsWith("S") ||
   id.startsWith("ST") ||
@@ -749,6 +748,7 @@ if (id.startsWith("DU")) {
   id.startsWith("B")
 ) {
   iconFile = "sect.png";
+}
 
 } else if (id.startsWith("ALIM")) {
   iconFile = "alim.png";
@@ -1273,9 +1273,8 @@ if (ref.startsWith("DU")) {
   });
 
 } else if (
+  /^T\d+(\/\d+)?$/.test(ref) ||  
   ref.startsWith("T/") ||   
-  /^T([1-9]|10)$/.test(ref) ||
-  /^T([1-9]|10)\//.test(ref) ||
   /^[0-9]/.test(ref) ||
   ref.startsWith("S") ||
   ref.startsWith("ST") ||
