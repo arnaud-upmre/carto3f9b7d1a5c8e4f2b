@@ -5205,7 +5205,7 @@
   },
   {
     "nom": "Longueau",
-    "type": "",
+    "type": "type?",
     "SAT": "",
     "acces": "",
     "latitude": 49.86072,
@@ -5240,7 +5240,7 @@
   },
   {
     "nom": "Morcourt",
-    "type": "",
+    "type": "type?",
     "SAT": "",
     "acces": "",
     "latitude": 49.86364,
@@ -5983,7 +5983,7 @@
   }, 
   {
     "nom": "Bohain",
-    "type": "",
+    "type": "type?",
     "SAT": "",
     "acces": "",
     "latitude": 49.98822,
