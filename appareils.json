@@ -11,6 +11,48 @@
     "hors_patrimoine": true
   },
    {
+   "nom": "Alleux",
+   "type": "SP",
+   "SAT": "SAT2",
+   "accès": "",
+   "appareil": "I7114",
+   "latitude": 50.913599,
+   "longitude": 1.801629,
+   "description": ""
+},
+   {
+   "nom": "Alleux",
+   "type": "SP",
+   "SAT": "SAT2",
+   "accès": "",
+   "appareil": "T14",
+   "latitude": 50.913599,
+   "longitude": 1.801629,
+   "description": "",
+   "hors_patrimoine": true
+},
+   {
+   "nom": "Alleux",
+   "type": "SP",
+   "SAT": "SAT2",
+   "accès": "",
+   "appareil": "I7111",
+   "latitude": 50.913355,
+   "longitude": 1.802063,
+   "description": ""
+},
+ {
+   "nom": "Alleux",
+   "type": "SP",
+   "SAT": "SAT2",
+   "accès": "",
+   "appareil": "T11",
+   "latitude": 50.913355,
+   "longitude": 1.802063,
+   "description": "",
+   "hors_patrimoine": true
+},
+   {
     "nom": "Alleux",
     "type": "SP",
     "SAT": "",
