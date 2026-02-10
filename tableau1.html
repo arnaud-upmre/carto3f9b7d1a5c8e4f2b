@@ -9,6 +9,19 @@
 
 <style>
 
+   /* ===============================
+   Cartes "Ville de"
+================================ */
+.ville-card{
+    background:#f1f2f4;
+}
+
+@media (prefers-color-scheme: dark){
+    .ville-card{
+        background:#232428;
+    }
+}
+
    /* Espacement entre compteurs et champ de recherche */
 .board-row{
     margin-top:18px;
@@ -669,12 +682,15 @@ function renderPosteCard(p){
   // SAT : tri alpha par nom de SAT
   const satNames = Array.from(p.sats).sort((a,b)=>a.localeCompare(b,"fr",{sensitivity:"base"}));
 
-  let html = `
-    <div class="card">
+let html = `
+    <div class="card ${hasType ? "" : "ville-card"}">
       <div class="card-title">${title}</div>
 
-      <a class="section-title" href="${hrefPoste(p.nom, p.type)}">Poste principal</a>
-      ${principalPills}
+  ${hasType
+  ? `<a class="section-title" href="${hrefPoste(p.nom, p.type)}">Poste principal</a>
+     ${principalPills}`
+  : principalPills
+}
   `;
 
   satNames.forEach((sat, idx) => {
