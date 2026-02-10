@@ -10,12 +10,12 @@
 <style>
 
 .ville-card{
-    background:#f1f2f4 !important;
+    background:#eef3ff !important;
 }
 
 @media (prefers-color-scheme: dark){
     .ville-card{
-        background:#232428 !important;
+        background:#1f2636 !important;
     }
 }
 
@@ -34,77 +34,6 @@
     color:inherit;
     cursor:pointer;
 }
-
-
-/* ===============================
-   Popup bienvenue
-================================ */
-.welcome-overlay{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,0.45);
-    backdrop-filter:blur(4px);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    z-index:9999;
-}
-.welcome-overlay.hidden{
-    display:none;
-}
-
-.welcome-modal{
-    background:var(--card-bg);
-    color:var(--text);
-    max-width:460px;
-    width:90%;
-    padding:24px 26px;
-    border-radius:20px;
-    box-shadow:0 20px 50px rgba(0,0,0,0.35);
-    animation:popupIn 0.35s ease;
-    text-align:center;
-}
-
-.welcome-modal h2{
-    margin:0 0 14px;
-    font-size:22px;
-    font-weight:800;
-    font-family:"Comic Sans MS","Bradley Hand","Segoe Print",Inter,system-ui,sans-serif;
-}
-
-.welcome-modal p{
-    font-size:14px;
-    line-height:1.5;
-    margin-bottom:14px;
-}
-
-.welcome-modal button{
-    margin-top:10px;
-    padding:10px 18px;
-    border:none;
-    border-radius:14px;
-    background:#1a73e8;
-    color:white;
-    font-weight:700;
-    cursor:pointer;
-    box-shadow:0 6px 16px rgba(26,115,232,0.4);
-}
-
-.welcome-modal button:active{
-    transform:translateY(1px);
-}
-
-@keyframes popupIn{
-    from{
-        opacity:0;
-        transform:translateY(10px) scale(0.97);
-    }
-    to{
-        opacity:1;
-        transform:translateY(0) scale(1);
-    }
-}
-
 
 /* ===============================
    Variables thème
