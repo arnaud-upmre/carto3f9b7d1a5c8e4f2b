@@ -10,6 +10,49 @@
     "description": "",
     "hors_patrimoine": true
   },
+    {
+    "nom": "Alleux",
+    "type": "SP",
+    "SAT": "SAT4",
+    "acces": "",
+    "appareil": "6137JH",
+    "latitude": 50.91879953775369,
+    "longitude": 1.7910338938236106,
+    "description": "",
+    "hors_patrimoine": true
+  },
+    {
+    "nom": "Alleux",
+    "type": "SP",
+    "SAT": "SAT4",
+    "acces": "",
+    "appareil": "6139JT",
+    "latitude": 50.918785587651385,
+    "longitude": 1.7910911142826218,
+    "description": "Sectionneur manuel",
+    "hors_patrimoine": true
+  },
+    {
+    "nom": "Alleux",
+    "type": "SP",
+    "SAT": "SAT4",
+    "acces": "",
+    "appareil": "SM1",
+    "latitude": 50.917995920481125,
+    "longitude": 1.7927180975675585,
+    "description": ""
+  },
+    {
+    "nom": "Alleux",
+    "type": "SP",
+    "SAT": "SAT4",
+    "acces": "",
+    "appareil": "6192JT",
+    "latitude": 50.91579678742876,
+    "longitude": 1.7970623821020264,
+    "description": "Sectionneur manuel",
+    "hors_patrimoine": true
+  },
    {
    "nom": "Alleux",
    "type": "SP",
@@ -3884,6 +3927,17 @@
     "SAT": "SAT3",
     "acces": "",
     "appareil": "IP5",
+    "latitude": 50.9103266,
+    "longitude": 1.8060875,
+    "description": "",
+    "hors_patrimoine": true
+  },
+  {
+    "nom": "Pays Blanc",
+    "type": "P",
+    "SAT": "SAT3",
+    "acces": "",
+    "appareil": "T5",
     "latitude": 50.9103266,
     "longitude": 1.8060875,
     "description": ""
