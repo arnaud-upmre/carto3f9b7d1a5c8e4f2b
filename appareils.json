@@ -8058,5 +8058,14 @@
     "longitude": 1.81124,
     "description": "",
     "hors_patrimoine": true
+ },
+  {
+   "nom": "Wannehain",
+   "type": "PRCI",
+   "acces": "TT513",
+   "appareil": "TT513",
+   "latitude": 50.57504, 
+   "longitude": 3.25737,
+   "description": "TT Sel 513 voie 3"
  }
 ]
