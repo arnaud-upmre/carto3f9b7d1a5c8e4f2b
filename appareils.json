@@ -271,8 +271,19 @@
     "acces": "",
     "appareil": "IMP Tunnel",
     "latitude": 50.91268, 
-    "longitude": 1.80398,
+    "longitude": 1.80398,    
     "description": ""
+  },
+  {
+    "nom": "Alleux",
+    "type": "SP",
+    "SAT": "SAT3",
+    "acces": "",
+    "appareil": "T7",
+    "latitude": 50.91268, 
+    "longitude": 1.80398,    
+    "description": "",
+    "hors_patrimoine": true
   },
   {
     "nom": "Alleux",
@@ -283,6 +294,17 @@
     "latitude": 50.91272, 
     "longitude": 1.80382,
     "description": ""
+  },
+  {
+    "nom": "Alleux",
+    "type": "SP",
+    "SAT": "SAT3",
+    "acces": "",
+    "appareil": "T4",
+    "latitude": 50.91272, 
+    "longitude": 1.80382,
+    "description": "",
+    "hors_patrimoine": true
   },
   {
     "nom": "Alleux",
