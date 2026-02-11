@@ -257,12 +257,23 @@
   {
     "nom": "Alleux",
     "type": "SP",
-    "SAT": "",
+    "SAT": "SAT1",
     "acces": "",
     "appareil": "I7112",
     "latitude": 50.9108956,
     "longitude": 1.8052636,
     "description": ""
+  },
+  {
+    "nom": "Alleux",
+    "type": "SP",
+    "SAT": "SAT1",
+    "acces": "",
+    "appareil": "T12",
+    "latitude": 50.9108956,
+    "longitude": 1.8052636,
+    "description": "",
+    "hors_patrimoine": true
   },
   {
     "nom": "Alleux",
