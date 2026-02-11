@@ -4564,6 +4564,22 @@
     "poste_longitude": "3.26354"
   },
   {
+    "nom": "Wannehain",
+    "type": "PRCI",
+    "acces": "TT513",
+    "latitude": 50.57525,
+    "longitude": 3.25675,
+    "description": "",
+    "rss": "A",
+    "contact": "",
+    "portail": "",
+    "lignes": "GONESSE à LILLE-FRONTIERE (LGV)",
+    "numero_ligne": 226000,
+    "pk": "208,699",
+    "poste_latitude": "50.57433",
+    "poste_longitude": "3.26354"
+  },
+  {
     "nom": "Wattignies",
     "type": "SP",
     "SAT": "",
