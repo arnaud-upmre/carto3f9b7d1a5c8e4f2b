@@ -8067,5 +8067,14 @@
    "latitude": 50.57504, 
    "longitude": 3.25737,
    "description": "TT Sel 513 voie 3"
+ },
+  {
+   "nom": "Wannehain",
+   "type": "PRCI",
+   "acces": "I510",
+   "appareil": "I510",
+   "latitude": 50.57503, 
+   "longitude": 3.25540,
+   "description": "Bipolaire"
  }
 ]
