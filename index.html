@@ -826,22 +826,26 @@ function generateAppareilListHTML(currentLieu) {
   );
 
   const isSAT = currentLieu.SAT && currentLieu.SAT !== "";
+
+  let groupedAll = {};
+matchingApps.forEach(app => {
+  const sat = app.SAT || "Poste";
+  if (!groupedAll[sat]) groupedAll[sat] = [];
+  groupedAll[sat].push(app);
+});
+
+for (const sat in groupedAll) {
+  groupedAll[sat].sort((a, b) =>
+    a.appareil.localeCompare(b.appareil, "fr", { numeric: true })
+  );
+}
+
+const orderedKeys = sortGroupKeys(Object.keys(groupedAll));
+  
   const isAcces = !!currentLieu.acces;
 
 if (!isSAT && !isAcces) {
-  let groupedAll = {};
-  matchingApps.forEach(app => {
-    const sat = app.SAT || 'Poste';
-    if (!groupedAll[sat]) groupedAll[sat] = [];
-    groupedAll[sat].push(app);
-  });
-
-  for (const sat in groupedAll) {
-    groupedAll[sat].sort((a, b) => a.appareil.localeCompare(b.appareil, "fr", { numeric: true }));
-  }
-
   let html = `<p><strong>🧩 Appareils trouvés dans ce poste :</strong></p>`;
-  const orderedKeys = sortGroupKeys(Object.keys(groupedAll));
 
 for (const sat of orderedKeys) {
   const list = groupedAll[sat];
@@ -886,19 +890,7 @@ for (const sat of orderedKeys) {
     }
   }
 
-  let groupedAll = {};
-  matchingApps.forEach(app => {
-    const sat = app.SAT || 'Poste';
-    if (!groupedAll[sat]) groupedAll[sat] = [];
-    groupedAll[sat].push(app);
-  });
-
-  for (const sat in groupedAll) {
-    groupedAll[sat].sort((a, b) => a.appareil.localeCompare(b.appareil, "fr", { numeric: true }));
-  }
-
   html += `<p><strong>🧩 Appareils trouvés dans ce poste :</strong></p>`;
-const orderedKeys = sortGroupKeys(Object.keys(groupedAll));
 
 for (const sat of orderedKeys) {
   if (sat === currentLieu.SAT) continue;
