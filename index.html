@@ -797,6 +797,21 @@ function formatRSS(table, showPhones = true) {
   }
   return html;
 }
+
+    function sortGroupKeys(keys) {
+  return keys.sort((a, b) => {
+    if (a === "Poste") return -1;
+    if (b === "Poste") return 1;
+
+    const na = parseInt(a.replace(/\D/g, ""), 10);
+    const nb = parseInt(b.replace(/\D/g, ""), 10);
+
+    if (!isNaN(na) && !isNaN(nb)) return na - nb;
+
+    return a.localeCompare(b, "fr", { numeric: true });
+  });
+}
+    
     
 function generateAppareilListHTML(currentLieu) {
 
@@ -826,7 +841,10 @@ if (!isSAT && !isAcces) {
   }
 
   let html = `<p><strong>🧩 Appareils trouvés dans ce poste :</strong></p>`;
-  for (const [sat, list] of Object.entries(groupedAll)) {
+  const orderedKeys = sortGroupKeys(Object.keys(groupedAll));
+
+for (const sat of orderedKeys) {
+  const list = groupedAll[sat];
     html += `<p><strong>${sat} :</strong> `;
     html += list.map(app => (() => {   const id = crypto.randomUUID();   appareilStore[id] = app;   return `<a href="#" onclick="showAppareil(appareilStore['${id}'])">${app.appareil}</a>`; })()).join(", ");
     html += `</p>`;
@@ -880,23 +898,21 @@ if (!isSAT && !isAcces) {
   }
 
   html += `<p><strong>🧩 Appareils trouvés dans ce poste :</strong></p>`;
-  for (const [sat, list] of Object.entries(groupedAll)) {
-    if (sat === currentLieu.SAT) continue; 
-    html += `<p><strong>${sat} :</strong> `;
-    html += list.map(app => (() => {   const id = crypto.randomUUID();   appareilStore[id] = app;   return `<a href="#" onclick="showAppareil(appareilStore['${id}'])">${app.appareil}</a>`; })()).join(", ");
-    html += `</p>`;
-  }
+const orderedKeys = sortGroupKeys(Object.keys(groupedAll));
 
-  html += `
-    <div class="missing-box">
-      🤝 Appareil manquant ?
-      <a href="ajout_appareil.html?poste=${encodeURIComponent(formatNomCompletLieu(currentLieu))}">Aidez-nous à l’ajouter.</a>
-    </div>
-  `;
+for (const sat of orderedKeys) {
+  if (sat === currentLieu.SAT) continue;
+  const list = groupedAll[sat];
 
-  return html;
+  html += `<p><strong>${sat} :</strong> `;
+  html += list.map(app => (() => {
+    const id = crypto.randomUUID();
+    appareilStore[id] = app;
+    return `<a href="#" onclick="showAppareil(appareilStore['${id}'])">${app.appareil}</a>`;
+  })()).join(", ");
+  html += `</p>`;
 }
-    
+    return html;
     
 function generateAlias(appareil, nom, sat, posteType) {
   const alias = new Set();
@@ -2265,7 +2281,7 @@ function formatInformations(val) {
 </div>
 <footer class="about-footer">
   <a href="arnaud.html" class="footer-link">🔧 À propos</a>
-  <a href="version.html" class="footer-link version">📌 Nono Maps V1.14.2</a>
+  <a href="version.html" class="footer-link version">📌 Nono Maps V1.14.3</a>
 </footer>
 <script>
 (function(){
