@@ -28,26 +28,6 @@
   font-weight: 600;
 }
   
-.measure-point {
-  width: 10px;
-  height: 10px;
-  background: white;
-  border: 2px solid black;
-  border-radius: 50%;
-}
-
-.measure-label {
-  position: absolute;
-  background: rgba(0,0,0,0.75);
-  color: white;
-  padding: 3px 6px;
-  border-radius: 4px;
-  font-size: 12px;
-  pointer-events: none;
-  white-space: nowrap;
-  transform: translate(-50%, -12px);
-}
-  
   #legal-footer {
   position: fixed;
   bottom: 6px;
@@ -364,13 +344,6 @@
 .btn-toggle.active {
   background: #fff;
   color: #111;
-}
-
-:root {
-  --accent:#4f46e5;
-  --ink:#f9fafb;
-  --glass:rgba(17,19,23,.65);
-  --border:rgba(255,255,255,.12);
 }
 
 .icon-circle {
@@ -1094,7 +1067,6 @@ function renderTelecomPills(v) {
 fetch("postes.json")
   .then(r => r.json())
   .then(data => {
-    window._postesCache = data;
     const seenPostes = new Set();
 
     data.forEach(item => {
