@@ -9,8 +9,6 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
-<link rel="preload" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" as="script" crossorigin="anonymous">
-<link rel="preload" href="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js" as="script">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
 
@@ -656,7 +654,9 @@ function _tryOpenFromURL() {
   if (!isNaN(lat) && !isNaN(lon)) {
     const matches = allMarkers.filter(m => {
       const ll = m.getLatLng();
-      return ll.lat === lat && ll.lng === lon;
+     const EPS = 1e-6;
+return Math.abs(ll.lat - lat) < EPS && Math.abs(ll.lng - lon) < EPS;
+
     });
 
 if (matches.length > 0) {
@@ -746,9 +746,6 @@ link.addEventListener("click", (ev) => {
   ev.preventDefault();
   const idx = +ev.currentTarget.dataset.idx;
   const target = matches[idx];
-
-  if (postesLayer.hasLayer(target)) incrementCounter();
-  else if (appareilsLayer.hasLayer(target)) incrementCounterAppareil();
 
   const content = target.getPopup() ? target.getPopup().getContent() : "";
   L.popup({ maxWidth: 240 })
@@ -926,6 +923,9 @@ L.control.layers(
 
 
 const postesLayer = L.markerClusterGroup({
+  chunkedLoading: true,
+  chunkInterval: 80,
+  chunkDelay: 20,
   disableClusteringAtZoom: 18
 });
 
@@ -943,8 +943,10 @@ const appareilsLayer = L.markerClusterGroup({
   }
 });
 
- 
 const accesLayer = L.markerClusterGroup({
+  chunkedLoading: true,
+  chunkInterval: 80,
+  chunkDelay: 20,
   spiderfyOnMaxZoom: false,
   showCoverageOnHover: false,
   zoomToBoundsOnClick: false
@@ -993,8 +995,6 @@ document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link 
     ev.preventDefault();
     const idx = +ev.currentTarget.dataset.idx;
     const target = childMarkers[idx];
-
-    if (accesLayer.hasLayer(target)) incrementCounter();
 
     const content = target.getPopup() ? target.getPopup().getContent() : "";
     L.popup({ maxWidth: 240 })
@@ -1673,10 +1673,12 @@ document.getElementById("btn-orm").addEventListener("click", function () {
 
   ormUserEnabled = true;
 
-  if (map.hasLayer(speedLayer)) {
-    map.removeLayer(speedLayer);
-    document.getElementById("btn-speed").classList.remove("active");
-  }
+if (map.hasLayer(speedLayer)) {
+  speedUserEnabled = false;
+  map.removeLayer(speedLayer);
+  document.getElementById("btn-speed").classList.remove("active");
+}
+
 
   map.addLayer(orm);
   btn.classList.add("active");
@@ -1852,9 +1854,14 @@ document.getElementById("ctx-share").onclick = () => {
 document.getElementById("ctx-share-copy").onclick = () => {
   const url = `${location.origin}${location.pathname}?lat=${ctxLat}&lon=${ctxLng}&z=19&marker=true`;
 
-  navigator.clipboard.writeText(url).then(() => {
+navigator.clipboard.writeText(url)
+  .then(() => {
     showToast("🔗 Lien copié !");
+  })
+  .catch(() => {
+    showToast("⚠️ Copie impossible");
   });
+
 };
 
     
@@ -1974,9 +1981,11 @@ function resumeSpeed() {
 map.on("zoomstart", () => {
   lastZoomTime = performance.now();
   pauseORM();
-  pauseSpeed();   
+  pauseSpeed();
   if (ormTimer) clearTimeout(ormTimer);
+  if (speedTimer) clearTimeout(speedTimer);
 });
+
 
 map.on("zoomend", () => {
   const now = performance.now();
@@ -2002,9 +2011,11 @@ map.on("zoomend", () => {
 
 map.on("movestart", () => {
   pauseORM();
-  pauseSpeed(); 
+  pauseSpeed();
   if (ormTimer) clearTimeout(ormTimer);
+  if (speedTimer) clearTimeout(speedTimer);
 });
+
   
 
 map.on("moveend", () => {
@@ -2153,7 +2164,7 @@ panel.style.display = "block";
     
 </script>
 <div id="legal-footer">
-  Nono Maps v1.14.3_b | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.14.3_d | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
