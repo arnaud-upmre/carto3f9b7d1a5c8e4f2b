@@ -28,9 +28,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Nono Maps">
 
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
-
+  <script defer src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
    
   <style id="eale-intro-styles">
 
@@ -122,7 +120,7 @@ html, body {
   flex-direction: column;
 }
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+font-family: -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, Arial, sans-serif;
   background-color: #fff;
   color: #333;
   padding: 1rem;
@@ -708,7 +706,6 @@ function formatPortail(val) {
 
   const urlRegex = /(https?:\/\/[^\s]+)/;
   const urlMatch = val.match(urlRegex);
-  const video = urlMatch ? urlMatch[0] : null;
 
   const code = val.replace(urlRegex, "").trim();
 
@@ -764,16 +761,10 @@ function normalize(str) {
     .replace(/\s+/g, " ");
 }
 
-    function normalizeNomPoste(str) {
-  return normalize(str);
-}
-
-
 function formatNomCompletLieu(obj) {
   const base = `${obj.nom || ''} ${obj.type || ''} ${obj.SAT || ''}`.trim();
 return obj.acces ? `${base} – accès ${obj.acces}` : base;
 }
-
 
 function formatRSS(table, showPhones = true) {
   const tables = {
@@ -814,6 +805,7 @@ function formatRSS(table, showPhones = true) {
     
     
 function generateAppareilListHTML(currentLieu) {
+   for (const k in appareilStore) delete appareilStore[k];
 
   
   if (currentLieu.hors_patrimoine === true) {
@@ -1065,12 +1057,7 @@ html += `
   result.style.display = "block";
   incrementCounter();
 
-const _latPoste = (lieu.poste_latitude ?? "").toString();
-const _lonPoste = (lieu.poste_longitude ?? "").toString();
-const usePoste = _latPoste !== "" && _lonPoste !== "";
-const targetLat = usePoste ? _latPoste : lieu.latitude;
-const targetLon = usePoste ? _lonPoste : lieu.longitude;
-const urlMyMapsPoste = myMapsViewer(targetLat, targetLon, 20);
+const usePoste = lieu.poste_latitude != null && lieu.poste_longitude != null && lieu.poste_latitude !== "" && lieu.poste_longitude !== "";
 
 
 let telecomIcons = "";
@@ -1209,11 +1196,18 @@ if (lieu.SAT || lieu.acces) {
   result.innerHTML = html;
 }
 
-  let allItems = [], fuseMix;
+let fuseMix;
+
 
 Promise.all([
-  fetch(jsonUrl).then(r => r.json()),
-  fetch(appareilsUrl).then(r => r.json())
+  fetch(jsonUrl).then(r => {
+    if (!r.ok) throw new Error(`postes.json HTTP ${r.status}`);
+    return r.json();
+  }),
+  fetch(appareilsUrl).then(r => {
+    if (!r.ok) throw new Error(`appareils.json HTTP ${r.status}`);
+    return r.json();
+  })
 ]).then(([postes, apps]) => {
   lieux = postes;
   appareils = apps;
@@ -1234,9 +1228,10 @@ appareils.forEach(a => {
 
   const postesTagged = postes.map(p => ({ ...p, category: "poste" }));
   const appsTagged   = apps.map(a => ({ ...a, category: "appareil" }));
-  allItems = [...postesTagged, ...appsTagged];
+const allItems = [...postesTagged, ...appsTagged];
 
-  fuseMix = new Fuse(allItems, {
+fuseMix = new Fuse(allItems, {
+
     keys: [
       { name: "nom", weight: 0.8 },
       { name: "type", weight: 0.2 },
@@ -1280,9 +1275,14 @@ if (idParam) {
     }
   }
 }
+  })
+  .catch((err) => {
+    console.error("Erreur chargement JSON:", err);
+    showNotification("❌ Erreur de chargement des données (postes/appareils).", "error");
   });
 
     let selectedIndex = -1;
+    let searchTimer = null;
 
     function updateSelection(items) {
   items.forEach((li, i) => {
@@ -1297,6 +1297,9 @@ if (idParam) {
     
 
 document.getElementById("search").addEventListener("input", e => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => {
+
   const query = normalize(e.target.value.trim());
   const suggestionsEl = document.getElementById("suggestions");
   const resultEl = document.getElementById("result");
@@ -1315,7 +1318,8 @@ document.getElementById("search").addEventListener("input", e => {
 
       li.onclick = () => showAppareil(app);
       suggestionsEl.appendChild(li);
-    });
+});
+    
     return; 
   }
 
@@ -1347,36 +1351,38 @@ if (prefixWord) {
   });
 }
 
-results.forEach(it => {
-  const aliases = Array.isArray(it.alias) ? it.alias : [];
-  it.__directAliasHit = aliases.some(a => normalize(a) === query);
+    const normalizeLite = s => (s || "").toString().toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").trim().replace(/\s+/g, " ");
+const compactId = x => (x.appareil || "").toString().replace(/\s+/g, "").toLowerCase();
+
+results.forEach(item => {
+  item.__normNom = normalizeLite(item.nom || "");
+  item.__id = compactId(item);
+  item.__idDigits = item.__id.replace(/\D/g, "");
+  item.__aliasCompact = Array.isArray(item.alias) ? item.alias.map(s => s.replace(/\s+/g, "").toLowerCase()) : [];
 });
 
-results.sort((a, b) => {
-  const q = query.toLowerCase();
 
- 
-  const norm = s => (s || "").toString().toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").trim().replace(/\s+/g, " ");
-  const id = x => (x.appareil || "").toString().replace(/\s+/g, "").toLowerCase();    
-  const idDigits = x => id(x).replace(/\D/g, "");                                   
+results.sort((a, b) => {
+  const q = query.toLowerCase();                             
 
   const qId = cleanedQuery;          
   const qDigits = cleanedQuery.replace(/\D/g, "");
-  const aExactId = a.category === "appareil" && (id(a) === qId || (qDigits && idDigits(a) === qDigits));
-  const bExactId = b.category === "appareil" && (id(b) === qId || (qDigits && idDigits(b) === qDigits));
+const aExactId = a.category === "appareil" && (a.__id === qId || (qDigits && a.__idDigits === qDigits));
+const bExactId = b.category === "appareil" && (b.__id === qId || (qDigits && b.__idDigits === qDigits));
   if (aExactId && !bExactId) return -1;
   if (bExactId && !aExactId) return 1;
 
-  const aliasHit = (x) => Array.isArray(x.alias) && x.alias
-      .map(s => s.replace(/\s+/g, "").toLowerCase())
-      .some(s => s === qId || (qDigits && s.replace(/\D/g, "") === qDigits));
+const aliasHit = (x) => Array.isArray(x.__aliasCompact) && x.__aliasCompact
+    .some(s => s === qId || (qDigits && s.replace(/\D/g, "") === qDigits));
+
   const aAlias = a.category === "appareil" && aliasHit(a);
   const bAlias = b.category === "appareil" && aliasHit(b);
   if (aAlias && !bAlias) return -1;
   if (bAlias && !aAlias) return 1;
 
-  const aNom = norm(a.nom || "");
-  const bNom = norm(b.nom || "");
+const aNom = a.__normNom;
+const bNom = b.__normNom;
+
   const aStarts = aNom.startsWith(q);
   const bStarts = bNom.startsWith(q);
   if (aStarts && !bStarts) return -1;
@@ -1408,7 +1414,7 @@ results.sort((a, b) => {
   return label(a).localeCompare(label(b), "fr", { sensitivity: "base" });
 });
 
-const rawQuery = e.target.value.trim();  
+  results = results.slice(0, 30);
 
 suggestionsEl.innerHTML = "";
 
@@ -1447,19 +1453,13 @@ if (item.hors_patrimoine === true) {
 
   suggestionsEl.appendChild(li);
 });
-
-if (rawQuery.length >= 3) {
-  const queryNorm = normalizeNomPoste(rawQuery);
-
-  const exactMatch = results.some(item => {
-    if (item.category === "poste") {
-      return normalizeNomPoste(item.nom) === queryNorm;
-    } else {
-      return normalize(item.appareil || "") === normalize(rawQuery);
-    }
-  });
-}
-
+    results.forEach(item => {
+  delete item.__normNom;
+  delete item.__id;
+  delete item.__idDigits;
+  delete item.__aliasCompact;
+});
+      }, 120);
 });
 
     document.getElementById("search").addEventListener("keydown", (e) => {
@@ -1651,8 +1651,10 @@ document.getElementById("btn-localiser").addEventListener("click", () => {
         } else {
           alert("❌ Erreur inconnue de géolocalisation.");
         }
-      }
+      },
+      { enableHighAccuracy: false, timeout: 10000, maximumAge: 30000 }
     );
+
   } else {
     alert("La géolocalisation n’est pas supportée.");
   }
@@ -1715,8 +1717,6 @@ arr.push(...postesUniques.values());
 
   return arr;
 }
-
-const compteurContributionURL = "https://script.google.com/macros/s/AKfycbwSZ6PEcRuNYb-tyVgNnuStsAQgo_oXkbzuOh41ovRmiZMD30iJfyti6WvqdqMhKfuE/exec";
 
 
 let editMode = false;
@@ -1953,7 +1953,9 @@ function getDemandeur() {
   const regexNom = /^[A-Za-zÀ-ÖØ-öø-ÿ\s\-]{2,}$/;
 
   while (!demandeur || !regexNom.test(demandeur)) {
-    demandeur = prompt("👉 Entrez votre prénom et nom").trim();
+ const saisie = prompt("👉 Entrez votre prénom et nom");
+demandeur = (saisie || "").trim();
+
 
     if (!demandeur || !regexNom.test(demandeur)) {
       alert("⚠️ Nom invalide. Utilisez uniquement lettres / espaces / accents.");
@@ -2178,8 +2180,7 @@ if (repPosteInput) {
   const latPoste = (currentItem.poste_latitude ?? "").toString();
   const lonPoste = (currentItem.poste_longitude ?? "").toString();
   const usePoste = latPoste !== "" && lonPoste !== "";
-  const targetLat = usePoste ? latPoste : currentItem.latitude;
-  const targetLon = usePoste ? lonPoste : currentItem.longitude;
+
 bloc.innerHTML = usePoste
   ? `<a href="${myMapsViewer(currentItem.poste_latitude || currentItem.latitude, currentItem.poste_longitude || currentItem.longitude)}" target="_blank" rel="noopener">🛰️ Vue satellite</a>`
   : `<span class="placeholder">(non renseigné – fournir un lien Maps)</span>`;
@@ -2274,7 +2275,7 @@ function formatInformations(val) {
 </div>
 <footer class="about-footer">
   <a href="arnaud.html" class="footer-link">🔧 À propos</a>
-  <a href="version.html" class="footer-link version">📌 Nono Maps V1.14.3</a>
+  <a href="version.html" class="footer-link version">📌 Nono Maps V1.14.3-beta</a>
 </footer>
 <script>
 (function(){
@@ -2433,7 +2434,8 @@ document.getElementById("streetview-close").onclick = () => {
 <script>
 (async () => {
   const SHEET_ID = "1cBRNy-Ihlrz82SYeENPLoHDNm32nedQ0Gyia17-rYwY";
-  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=notification&_=${Date.now()}`;
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=notification`;
+
 
   try {
     const res = await fetch(url);
