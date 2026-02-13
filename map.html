@@ -1016,7 +1016,7 @@ const iconPoste = L.divIcon({
   popupAnchor: [0, -10]
 });
 
-const iconAppareil= L.divIcon({className:"icon-circle appareil",html:"⚡"});
+const iconAppareilDefault = L.divIcon({className:"icon-circle appareil",html:"⚡"});
 
 const iconAcces = L.divIcon({
   html: `<img src="ico/acces.png" class="icon-halo">`,
@@ -1250,7 +1250,7 @@ fetch("appareils.json")
   appareilIcon = iconAppareilALIM;
 
 } else {
-  appareilIcon = iconAppareil;
+appareilIcon = iconAppareilDefault;
 }
 
 
@@ -1425,6 +1425,15 @@ function chargerPN(btn) {
     .then(records => {
       console.info(`✅ ${records.length} PN filtrés (Hauts-de-France + 10 km au sud)`);
 
+      const iconPN = L.divIcon({
+  html: `<img src="ico/pn.png" class="icon-halo-appareil">`,
+  className: "",
+  iconSize: [24, 24],
+  iconAnchor: [12, 24],
+  popupAnchor: [0, -24]
+});
+
+
       records.forEach(pn => {
 
         const f = pn.fields || {};
@@ -1442,14 +1451,6 @@ const lat = Number(coords[0]);
 const lon = Number(coords[1]);
 
 if (!Number.isFinite(lat) || !Number.isFinite(lon)) return;
-
-
-        const iconPN = L.divIcon({
-          html: `<img src="ico/pn.png" class="icon-halo-appareil">`,
-          className: "",
-          iconAnchor: [16, 32],
-          popupAnchor: [0, -32]
-        });
 
         const classeCode = (f.mnemo || "").replace("CLASSE ", "").trim();
         const classeTexte = pnClasses[classeCode]
@@ -2144,7 +2145,7 @@ panel.style.display = "block";
     
 </script>
 <div id="legal-footer">
-  Nono Maps v1.14.3 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.14.3_a | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
