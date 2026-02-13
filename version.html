@@ -217,14 +217,17 @@
 
 <article class="card">
   <header class="version">
-    <span class="tag">v1.14.4</span>
-    <span class="date">13/02/2026 00:01</span>
+    <span class="tag">v1.14.3</span>
+    <span class="date">13/02/2026 00:33</span>
   </header>
 
   <p>
     💬 <em>Nono Maps est souvent décrit comme stable et fluide depuis le début.</em><br>
     <em>Cette version pousse encore plus loin le travail d’optimisation pour de meilleures performances ⚡</em><br>
-    <span style="opacity:0.7;">(≈ 6 heures de travail)</span>
+    <span style="opacity:0.7;">(≈ 6 heures de travail, certaines optimisations ont été accélérées grâce à Codex)</span><br>
+    <small style="opacity:0.75;">
+      <em>Codex est un agent d’ingénierie logicielle d’OpenAI qui peut aider à écrire, corriger et optimiser du code à partir d’instructions en langage naturel, afin d’accélérer certaines tâches de développement.</em>
+    </small>
   </p>
 
   <p>
@@ -263,6 +266,16 @@
     Corrections de la bascule ORM / vitesses.<br>
     Copie du lien de partage améliorée avec message d’erreur en cas d’échec.<br>
     Corrections internes de stabilité et de robustesse.
+  </p>
+
+  <hr style="margin:14px 0; opacity:0.25;">
+
+  <p><strong>📋 Tableau blanc — Performances & rendu</strong></p>
+  <p>
+    Chargement initial optimisé (code allégé, ressources inutiles supprimées).<br>
+    Affichage des cartes plus efficace (HTML injecté en une seule fois).<br>
+    Tri “+ appareils / − appareils” accéléré (comptage pré-calculé, moins de recalculs).<br>
+    Recherche plus fluide à la saisie (debounce ~150 ms pour limiter les traitements).
   </p>
 </article>
     
