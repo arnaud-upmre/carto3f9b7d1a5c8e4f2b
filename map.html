@@ -930,15 +930,19 @@ const postesLayer = L.markerClusterGroup({
 });
 
 const appareilsLayer = L.markerClusterGroup({
-  spiderfyOnMaxZoom: false,    
-  spiderfyOnEveryZoom: false,  
+  chunkedLoading: true,
+  chunkInterval: 80,
+  chunkDelay: 20,
+  spiderfyOnMaxZoom: false,
+  spiderfyOnEveryZoom: false,
   showCoverageOnHover: false,
-  zoomToBoundsOnClick: false,   
-  disableClusteringAtZoom: 22, 
+  zoomToBoundsOnClick: false,
+  disableClusteringAtZoom: 22,
   maxClusterRadius: function (zoom) {
     return zoom > 18 ? 20 : 60;
   }
 });
+
  
 const accesLayer = L.markerClusterGroup({
   spiderfyOnMaxZoom: false,
@@ -946,11 +950,15 @@ const accesLayer = L.markerClusterGroup({
   zoomToBoundsOnClick: false
 });
 
-    const pnLayer = L.markerClusterGroup({
+const pnLayer = L.markerClusterGroup({
+  chunkedLoading: true,
+  chunkInterval: 80,
+  chunkDelay: 20,
   spiderfyOnMaxZoom: false,
   showCoverageOnHover: false,
   zoomToBoundsOnClick: true
 });
+
 
 accesLayer.on('clusterclick', function (e) {
   const childMarkers = e.layer.getAllChildMarkers();
@@ -2145,7 +2153,7 @@ panel.style.display = "block";
     
 </script>
 <div id="legal-footer">
-  Nono Maps v1.14.3_a | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.14.3_b | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
