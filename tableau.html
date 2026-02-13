@@ -5,8 +5,6 @@
 <title>Tableau Blanc – Nono Maps</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
-
 <style>
 
 .ville-card{
@@ -68,9 +66,6 @@ body{
     color:var(--text);
 }
 
-h1{
-    display:none;
-}
 
 
 /* ===============================Pills================================ */
@@ -167,29 +162,6 @@ h1{
     }
 }
 
-
-/* ===============================Tabs / filtres / recherche ================================ */
-.tabs{
-    display:flex;
-    gap:10px;
-    margin-bottom:20px;
-}
-
-.tab{
-    padding:8px 16px;
-    background:#d0d2d8;
-    border-radius:12px;
-    cursor:pointer;
-    font-weight:600;
-    transition:0.2s;
-}
-
-.tab.active{
-    background:#1a73e8;
-    color:white;
-    box-shadow:0 3px 8px rgba(0,0,0,0.25);
-}
-
 #search{
     width:100%;
     padding:12px 18px;
@@ -260,52 +232,6 @@ h1{
     padding:10px 12px;
     font-weight:800;
     cursor:pointer;
-}
-
-
-/* ===============================Switch================================ */
-.mode-switch{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    margin-top:8px;
-}
-
-.mode-label{
-    font-size:13px;
-    font-weight:600;
-    opacity:0.5;
-}
-
-.mode-label.active{
-    opacity:1;
-}
-
-.switch{
-    width:44px;
-    height:24px;
-    background:#d0d2d8;
-    border-radius:999px;
-    position:relative;
-    cursor:pointer;
-}
-
-.switch .knob{
-    width:18px;
-    height:18px;
-    background:white;
-    border-radius:50%;
-    position:absolute;
-    top:3px;
-    left:3px;
-}
-
-.switch.hp{
-    background:#1a73e8;
-}
-
-.switch.hp .knob{
-    left:23px;
 }
 
 
@@ -381,7 +307,6 @@ const makePosteKey = (nom, type) => `${normKey(nom)}__${normKey(type)}`;
 // Données en mémoire
 let postesMap = {};          // { key: { nom, type, sats:Set, principal:[], satApp:{sat:[]}} }
 let postesList = [];         // [{key, ...}] triée
-let appareilsAll = [];       // brut
 let viewKeys = [];           // keys affichés après recherche
 let triActif = "az"; // az | za | appmax | appmin
 
@@ -411,7 +336,8 @@ async function chargerPostes(){
         type,
         sats: new Set(),
         principal: [],
-        satApp: {}
+        satApp: {},
+        appCount: 0
       };
     }
 
@@ -429,14 +355,13 @@ async function chargerPostes(){
     );
 
   viewKeys = postesList.map(p => p.key);
-  render();
 }
+
 
 // 2) Charger appareils.json et injecter
 async function chargerAppareils(){
   const res = await fetch(URL_APPAREILS, { cache: "no-store" });
   const appareils = await res.json();
-  appareilsAll = appareils;
 
   appareils.forEach(a => {
     const nom = norm(a.nom);
@@ -446,14 +371,16 @@ async function chargerAppareils(){
 
     // si le poste n’existe pas dans postes.json, on le crée quand même (sécurité)
     if(!postesMap[key]){
-      postesMap[key] = {
+          postesMap[key] = {
         key,
         nom,
         type,
         sats: new Set(),
         principal: [],
-        satApp: {}
+        satApp: {},
+        appCount: 0
       };
+
       postesList.push(postesMap[key]);
     }
 
@@ -463,20 +390,44 @@ async function chargerAppareils(){
       poste.sats.add(sat);
       if(!poste.satApp[sat]) poste.satApp[sat] = [];
       poste.satApp[sat].push(a);
+      poste.appCount++;
     }else{
       poste.principal.push(a);
+      poste.appCount++;
     }
+
   });
 
   // retri (au cas où des postes “fallback” ont été ajoutés)
   postesList = Object.values(postesMap)
     .sort((a,b) => `${a.nom} ${a.type}`.localeCompare(`${b.nom} ${b.type}`, "fr", { sensitivity:"base" }));
 
+  postesList.forEach(preparerTriPourAffichage);
+
   viewKeys = postesList.map(p => p.key);
-  render();
+}
+
+
+function preparerTriPourAffichage(poste){
+  poste.principalSorted = [...poste.principal].sort((a,b) =>
+    norm(a.appareil).localeCompare(norm(b.appareil), "fr", { sensitivity:"base" })
+  );
+
+  poste.satNamesSorted = Array.from(poste.sats).sort((a,b) =>
+    a.localeCompare(b, "fr", { sensitivity:"base" })
+  );
+
+  poste.satAppSorted = {};
+  poste.satNamesSorted.forEach(sat => {
+    poste.satAppSorted[sat] = (poste.satApp[sat] || []).slice().sort((a,b) =>
+      norm(a.appareil).localeCompare(norm(b.appareil), "fr", { sensitivity:"base" })
+    );
+  });
 }
 
 // Liens vers index
+
+    
 function hrefPoste(nom, type){
   const id = `${norm(nom)} ${norm(type)}`.trim();
   return `index.html?id=${encodeURIComponent(id)}`;
@@ -525,34 +476,26 @@ function escapeHtml(s){
       );
     }
 
-    const countA =
-      a.principal.length +
-      Object.values(a.satApp).reduce((n,l)=>n+l.length,0);
+    if(triActif === "appmax") return b.appCount - a.appCount;
+    if(triActif === "appmin") return a.appCount - b.appCount;
 
-    const countB =
-      b.principal.length +
-      Object.values(b.satApp).reduce((n,l)=>n+l.length,0);
-
-    if(triActif === "appmax") return countB - countA;
-    if(triActif === "appmin") return countA - countB;
 
     return 0;
   });
 }
    
 function render(){
-  postesZone.innerHTML = "";
-
   // Compteurs
   let nbPostes = 0, nbSats = 0, nbApp = 0, nbHp = 0;
+  let html = "";
 
- trierKeys(viewKeys).forEach(key => {
+  trierKeys(viewKeys).forEach(key => {
     const p = postesMap[key];
     if(!p) return;
 
     if (p.type) {
-  nbPostes++;
-}
+      nbPostes++;
+    }
     nbSats += p.sats.size;
 
     nbApp += p.principal.length;
@@ -563,11 +506,13 @@ function render(){
       p.satApp[s].forEach(a => { if(a.hors_patrimoine === true) nbHp++; });
     });
 
-    postesZone.insertAdjacentHTML("beforeend", renderPosteCard(p));
+    html += renderPosteCard(p);
   });
 
+  postesZone.innerHTML = html;
   countersEl.textContent = `Postes : ${nbPostes} • SAT : ${nbSats} • Appareils : ${nbApp}${nbHp ? ` • HP : ${nbHp}` : ""}`;
 }
+
 
 function renderPosteCard(p){
   const hasType = !!norm(p.type);
@@ -576,12 +521,13 @@ function renderPosteCard(p){
     ? `${escapeHtml(p.nom)} <span class="type-pill">${escapeHtml(p.type)}</span>`
     : `${escapeHtml(p.nom)} (Ville de)`;
 
-  // principal : tri alpha
-  const principal = [...p.principal].sort((a,b) => norm(a.appareil).localeCompare(norm(b.appareil), "fr", { sensitivity:"base" }));
+  // principal : déjà trié au chargement
+  const principal = p.principalSorted || [];
   const principalPills = principal.map(pillHtml).join("");
 
-  // SAT : tri alpha par nom de SAT
-  const satNames = Array.from(p.sats).sort((a,b)=>a.localeCompare(b,"fr",{sensitivity:"base"}));
+  // SAT : déjà trié au chargement
+  const satNames = p.satNamesSorted || [];
+
 
 let html = `
     <div class="card ${hasType ? "" : "ville-card"}">
@@ -595,7 +541,8 @@ let html = `
   `;
 
   satNames.forEach((sat, idx) => {
-    const list = (p.satApp[sat] || []).slice().sort((a,b) => norm(a.appareil).localeCompare(norm(b.appareil), "fr", { sensitivity:"base" }));
+    const list = (p.satAppSorted && p.satAppSorted[sat]) ? p.satAppSorted[sat] : [];
+
     const pills = list.map(pillHtml).join("");
 
     // séparateur : seulement si ça a du sens visuellement
@@ -657,7 +604,11 @@ function appliquerRecherche(){
   render();
 }
 
-searchEl?.addEventListener("input", appliquerRecherche);
+let searchTimer;
+searchEl?.addEventListener("input", () => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(appliquerRecherche, 150);
+});
 
 /* =========================Lancement========================= */
 (async function init(){
@@ -665,19 +616,21 @@ searchEl?.addEventListener("input", appliquerRecherche);
     countersEl.textContent = "Chargement…";
     await chargerPostes();     // affiche les postes/SAT même vides
     await chargerAppareils();  // injecte les appareils
+    render();
   }catch(e){
     console.error(e);
     countersEl.textContent = "Erreur de chargement (postes/appareils).";
   }
 })();
 
+
    // =========================Boutons de tri ========================= //
-document.querySelectorAll(".filters button").forEach(btn => {
+const sortButtons = document.querySelectorAll(".filters button");
+
+sortButtons.forEach(btn => {
   btn.addEventListener("click", () => {
     // reset visuel
-    document
-      .querySelectorAll(".filters button")
-      .forEach(b => b.classList.remove("activeFilter"));
+    sortButtons.forEach(b => b.classList.remove("activeFilter"));
 
     // activation du bouton cliqué
     btn.classList.add("activeFilter");
@@ -691,10 +644,10 @@ document.querySelectorAll(".filters button").forEach(btn => {
 });
 
 // A → Z actif par défaut
-
 document
   .querySelector('[data-sort="az"]')
   ?.classList.add("activeFilter");
+
 </script>
 
 
