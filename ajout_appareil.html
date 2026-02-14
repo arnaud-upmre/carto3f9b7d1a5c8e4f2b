@@ -140,8 +140,6 @@ input.error{border:2px solid #c62828!important;background:#ffecec}
   background: var(--accent);
   transition: width 0.3s ease;
 }
-    
-    input.error,textarea.error{border:2px solid red!important;background:#ffecec}
 
 .map-wrap.error { border: 2px solid #c62828 !important; }
 
@@ -625,16 +623,6 @@ document.querySelectorAll(".next").forEach(btn=>{
   btn.addEventListener("click", e=>{
   e.preventDefault();
 
-
-if (currentStep === 3) {
-    const val = $("appareil").value.trim();
-    if (!val) {
-        $("appareil").classList.add("error");
-        return; // On bloque ici
-    }
-}
-
-
 if (FROM_MAP && currentStep === 3) {
 
       $("presentValue").value = "non";
@@ -766,13 +754,16 @@ document.addEventListener("input", (e)=>{
 
 function $(id){return document.getElementById(id);}
 function toggle(el,show){el.style.display=show?"block":"none";}
-  function showHint(el, show){ 
-  el.classList.toggle("show", !!show); 
+  
+function showHint(el, show){
+  if (!el) return;
+  el.classList.toggle("show", !!show);
 }
 function markError(input, helpEl, on){
-  input.classList.toggle("error", !!on);
+  if (input) input.classList.toggle("error", !!on);
   showHint(helpEl, !!on);
 }
+
 $("pill-oui").onclick = () => {
   $("presentValue").value = "oui";
   $("pill-oui").classList.add("active");
@@ -1218,7 +1209,6 @@ if (params.has("poste")) {
   $("searchPoste").value = display;
   $("nextPoste").disabled = false;
 
-  steps[1].dataset.autoValidated = "1";
 }
 
 if (params.has("poste")) {
@@ -1273,8 +1263,6 @@ function resetForm(){
   const savedType = localStorage.getItem("lastType");
   if (savedType) $("type").value = savedType;
 
-
-steps[1].dataset.autoValidated = "1";
 $("poste").classList.remove("error");
 $("type").classList.remove("error");
 
@@ -1444,8 +1432,6 @@ const urlParams = new URLSearchParams(window.location.search);
 const urlLat = urlParams.get("lat");
 const urlLng = urlParams.get("lng");
 
-  let MAP_MODE_ACTIVE = false;
-
 window.FROM_MAP = false;
 window.AUTO_LINK = "";
 
@@ -1521,10 +1507,10 @@ searchPoste.addEventListener("input", () => {
   suggestionsPoste.innerHTML = "";
   suggestionsPoste.style.display = "none";
   nextPoste.disabled = true;
+  
+if (!q || !fusePostes) return;
+const results = fusePostes.search(q).slice(0, 8);
 
-  if (!q) return;
-
-  const results = fusePostes.search(q).slice(0, 8);
 
   if (results.length === 0) return;
 
