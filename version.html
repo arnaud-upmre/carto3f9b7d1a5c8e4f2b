@@ -7,270 +7,272 @@
 
   <style>
 
-    /* ===============================
-   Variables thème SNCF (UI pâle)
-================================ */
-:root{
-  --bg:#FFFFFF;
-  --text:#3C3732;              /* Carbone SNCF */
-  --muted:#6F6A65;
-
-  --accent:#5068F5;            /* Bleu SNCF */
-  --accent-soft:#EAF4FB;
-
-  --border:#B0CC93;            /* Vert lichen */
-  --shadow:rgba(0,0,0,0.10);
-
-  --card-bg:rgba(255,255,255,0.75);
+/* Reset sizing */
+*, *::before, *::after {
+  box-sizing: border-box;
 }
 
-/* ===============================
-   Dark mode SNCF
-================================ */
-/* ===============================
-   Dark mode SNCF — version propre
-================================ */
-@media (prefers-color-scheme: dark){
-  :root{
-    /* Fond neutre moderne */
-    --bg:#121212;
+/* Variables thème clair (aligné tableau blanc) */
+:root {
+  --bg: #ffffff;
+  --card-bg: #ffffff;
 
-    /* Texte */
-    --text:#FFFFFF;
-    --muted:#B8B8B8;
+  --text: #3c3732;
+  --muted: #6b7280;
 
-    /* Accent SNCF conservé */
-    --accent:#5068F5;
-    --accent-soft:#1E2A44;
+  --accent: #5068f5;
+  --accent-soft: #eaf4fb;
 
-    /* Bordures lisibles */
-    --border:#2A2A2A;
+  --border: #b0cc93;
+  --shadow: rgba(0, 0, 0, 0.1);
+}
 
-    /* Ombres */
-    --shadow:rgba(0,0,0,0.6);
+/* Dark mode (aligné tableau blanc) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #121212;
+    --card-bg: rgba(28, 28, 28, 0.75);
 
-    /* Cartes */
-    --card-bg:rgba(28,28,28,0.75);
+    --text: #ffffff;
+    --muted: #9ca3af;
+
+    --accent: #5068f5;
+    --accent-soft: #1e2a44;
+
+    --border: #2a2a2a;
+    --shadow: rgba(0, 0, 0, 0.6);
+  }
+
+  .board-header {
+    background: rgba(20, 20, 20, 0.75);
+    border: 1px solid var(--border);
+  }
+
+  .home-fab {
+    background: rgba(40, 40, 40, 0.85);
+    border: 1px solid var(--border);
   }
 }
 
-/* ===============================
-   Base
-================================ */
-body{
-  margin:0;
-  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  line-height:1.6;
-  user-select:none;
-  padding-bottom:90px; /* sécurité FAB */
+/* Base */
+body {
+  margin: 0;
+  padding: 20px;
+  padding-bottom: 90px;
+  font-family: Inter, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  user-select: none;
 }
 
-/* ===============================
-   Header SNCF
-================================ */
-header{
-  background:rgba(80,104,245,0.18);
-  backdrop-filter:blur(16px) saturate(180%);
-  -webkit-backdrop-filter:blur(16px) saturate(180%);
-  color:var(--text);
-  padding:14px 20px;
-  position:sticky;
-  top:0;
-  z-index:1000;
-  display:flex;
-  justify-content:flex-start;
-  align-items:center;
-  box-shadow:0 2px 12px var(--shadow);
+/* Header style tableau blanc */
+.board-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
-header h1{
-  margin:0;
-  font-size:20px;
-  font-weight:800;
+.board-title {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
 }
 
-/* ===============================
-   Layout
-================================ */
-.container{
-  max-width:980px;
-  margin:22px auto 32px;
-  padding:0 16px;
+.title-accent {
+  color: var(--accent);
+  font-weight: 900;
 }
 
-.intro{
-  margin-bottom:14px;
-  color:var(--muted);
-  font-size:14px;
+.board-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: center;
+  font-size: 13px;
+  color: var(--muted);
 }
 
-.section-title{
-  font-size:18px;
-  font-weight:800;
-  margin:26px 0 12px;
-  color:var(--accent);
+.board-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  margin-bottom: 16px;
+  padding: 14px;
+  border-radius: 18px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 10px 26px var(--shadow);
 }
 
-/* ===============================
-   Cards
-================================ */
-.card{
-  background:var(--card-bg);
-  backdrop-filter:blur(14px) saturate(180%);
-  -webkit-backdrop-filter:blur(14px) saturate(180%);
-  border-radius:22px;
-  padding:20px 22px;
-  margin-bottom:20px;
-  border:1px solid var(--border);
-  box-shadow:0 8px 24px var(--shadow);
-  transition:transform .18s;
+/* Layout */
+.container {
+  max-width: 980px;
+  margin: 0 auto 32px;
+  padding: 0 16px;
 }
 
-.card:hover{
-  transform:translateY(-2px);
+.intro {
+  margin-bottom: 14px;
+  color: var(--muted);
+  font-size: 14px;
 }
 
-/* ===============================
-   Version header
-================================ */
-.card header.version{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  margin-bottom:14px;
-  padding:10px 16px;
-  border-radius:18px;
-  background:var(--accent-soft);
-  backdrop-filter:blur(20px) saturate(160%);
-  box-shadow:0 4px 12px var(--shadow);
+.section-title {
+  font-size: 18px;
+  font-weight: 800;
+  margin: 26px 0 12px;
+  color: var(--accent);
 }
 
-.version .tag{
-  font-size:14px;
-  font-weight:700;
-  color:#FFFFFF;
-  background:var(--accent);
-  padding:6px 14px;
-  border-radius:999px;
+/* Cards */
+.card {
+  background: var(--card-bg);
+  backdrop-filter: blur(14px) saturate(180%);
+  -webkit-backdrop-filter: blur(14px) saturate(180%);
+  border-radius: 22px;
+  padding: 20px 22px;
+  margin-bottom: 20px;
+  border: 1px solid var(--border);
+  box-shadow: 0 8px 24px var(--shadow);
+  transition: transform 0.18s;
 }
 
-.version .date{
-  font-size:13px;
-  color:var(--muted);
+.card:hover {
+  transform: translateY(-2px);
 }
 
-/* ===============================
-   Details accordion
-================================ */
-details{
-  border-radius:20px;
-  margin-bottom:14px;
-  background:var(--card-bg);
-  backdrop-filter:blur(10px);
-  border:1px solid var(--border);
-  box-shadow:0 4px 12px var(--shadow);
+/* Header de version */
+.card header.version {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  padding: 10px 16px;
+  border-radius: 18px;
+  background: var(--accent-soft);
+  backdrop-filter: blur(20px) saturate(160%);
+  box-shadow: 0 4px 12px var(--shadow);
 }
 
-details summary{
-  padding:14px 20px;
-  cursor:pointer;
-  font-weight:800;
-  color:var(--accent);
-  list-style:none;
-  position:relative;
+.version .tag {
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
+  background: var(--accent);
+  padding: 6px 14px;
+  border-radius: 999px;
 }
 
-details summary::-webkit-details-marker{
-  display:none;
+.version .date {
+  font-size: 13px;
+  color: var(--muted);
 }
 
-details summary::after{
-  content:"▸";
-  position:absolute;
-  right:20px;
-  top:50%;
-  transform:translateY(-50%);
-  transition:transform .25s;
-  color:var(--muted);
+/* Details accordion */
+details {
+  border-radius: 20px;
+  margin-bottom: 14px;
+  background: var(--card-bg);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 12px var(--shadow);
 }
 
-details[open] summary::after{
-  transform:translateY(-50%) rotate(90deg);
+details summary {
+  padding: 14px 20px;
+  cursor: pointer;
+  font-weight: 800;
+  color: var(--accent);
+  list-style: none;
+  position: relative;
 }
 
-details .content{
-  padding:6px 20px 16px;
-  animation:expand .25s ease;
+details summary::-webkit-details-marker {
+  display: none;
 }
 
-@keyframes expand{
-  from{opacity:0;transform:translateY(-4px);}
-  to{opacity:1;transform:none;}
+details summary::after {
+  content: "▸";
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: transform 0.25s;
+  color: var(--muted);
 }
 
-/* ===============================
-   FAB Accueil — NonoMaps
-================================ */
-.home-fab{
-  position:fixed;
-  left:50%;
-  bottom:calc(18px + env(safe-area-inset-bottom,0px));
-  transform:translateX(-50%);
-  z-index:999;
-
-  padding:12px 22px;
-  border-radius:999px;
-  font-weight:700;
-  font-size:15px;
-  text-decoration:none;
-
-  color:var(--text);
-  background:rgba(255,255,255,0.75);
-  border:1px solid var(--border);
-
-  backdrop-filter:blur(12px);
-  -webkit-backdrop-filter:blur(12px);
-
-  box-shadow:0 10px 30px var(--shadow);
-  transition:all .18s ease;
-  will-change:transform,opacity;
+details[open] summary::after {
+  transform: translateY(-50%) rotate(90deg);
 }
 
-.home-fab:hover{
-  transform:translateX(-50%) translateY(-2px);
-  box-shadow:0 14px 36px var(--shadow);
-  border-color:var(--accent);
+details .content {
+  padding: 6px 20px 16px;
+  animation: expand 0.25s ease;
 }
 
-.home-fab:active{
-  transform:translateX(-50%) scale(0.96);
+@keyframes expand {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: none; }
 }
 
-.home-fab.hide{
-  transform:translateX(-50%) translateY(120%);
-  opacity:0;
-  pointer-events:none;
+/* FAB Accueil (aligné tableau blanc) */
+.home-fab {
+  position: fixed;
+  left: 50%;
+  bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+  transform: translateX(-50%);
+  z-index: 999;
+
+  padding: 12px 22px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 15px;
+  text-decoration: none;
+
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid var(--border);
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  box-shadow: 0 10px 30px var(--shadow);
+  transition: all 0.18s ease;
+  will-change: transform, opacity;
+}
+
+.home-fab:hover {
+  transform: translateX(-50%) translateY(-2px);
+  box-shadow: 0 14px 36px var(--shadow);
+  border-color: var(--accent);
+}
+
+.home-fab:active {
+  transform: translateX(-50%) scale(0.96);
+}
+
+.home-fab.hide {
+  transform: translateX(-50%) translateY(120%);
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* Mobile */
-@media (max-width:480px){
-  .home-fab{
-    padding:9px 16px;
-    font-size:13px;
-    bottom:calc(14px + env(safe-area-inset-bottom,0px));
-    box-shadow:0 6px 18px var(--shadow);
+@media (max-width: 480px) {
+  .home-fab {
+    padding: 9px 16px;
+    font-size: 13px;
+    bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+    box-shadow: 0 6px 18px var(--shadow);
+  }
+
+  .card {
+    border-radius: 18px;
+    padding: 16px;
   }
 }
 
-/* Dark */
-@media (prefers-color-scheme: dark){
-  .home-fab{
-    background:rgba(20,20,20,0.65);
-    color:#FFFFFF;
-  }
-}
     
   </style>
 
@@ -286,9 +288,16 @@ details .content{
 
 <body oncontextmenu="return false" oncopy="return false" oncut="return false" onpaste="return false">
 
-  <header>
-    <h1>📜 Historique des versions</h1>
-  </header>
+<div class="board-header">
+  <div class="board-title-wrap">
+    <div class="board-title">
+      Historique des versions <span class="title-accent">Nono Maps</span>
+    </div>
+    <div class="board-meta">
+      <span>Journal des mises à jour</span>
+    </div>
+  </div>
+</div>
 
   <div class="container">
     <p class="intro">Ce journal présente les <strong>dernières mises à jour détaillées</strong>. Les périodes plus anciennes sont <strong>regroupées</strong> et repliables pour garder une lecture fluide.</p>
