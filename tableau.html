@@ -13,7 +13,7 @@
 .home-fab{
     position:fixed;
     left:50%;
-    bottom:18px;
+bottom:calc(18px + env(safe-area-inset-bottom, 0px));
     transform:translateX(-50%);
     z-index:999;
 
@@ -46,6 +46,18 @@
     transform:translateX(-50%) scale(0.96);
 }
 
+   /* ===============================
+   FAB compact mobile
+================================ */
+@media (max-width:480px){
+    .home-fab{
+        padding:9px 16px;
+        font-size:13px;
+ bottom:calc(14px + env(safe-area-inset-bottom, 0px));
+        box-shadow:0 6px 18px var(--shadow);
+    }
+}
+
 /* ===============================
    Dark mode
 ================================ */
@@ -55,15 +67,6 @@
         color:#FFFFFF;
     }
 }
-
-/* ===============================
-   Sécurité scroll (évite chevauchement)
-================================ */
-body{
-    padding-bottom:90px;
-}
-
-
    
 
 /* ===============================
@@ -157,6 +160,7 @@ body{
     font-family:Inter,sans-serif;
     margin:0;
     padding:20px;
+    padding-bottom:90px; /* sécurité FAB */
     background:var(--bg);
     color:var(--text);
 }
@@ -323,12 +327,6 @@ body{
     font-family:"Comic Sans MS","Bradley Hand","Segoe Print",Inter,system-ui,sans-serif;
 }
 
-.btn-home{
-    border-radius:14px;
-    padding:10px 12px;
-    font-weight:800;
-    cursor:pointer;
-}
 
 /* ===============================
    Mobile
@@ -367,8 +365,6 @@ body{
       <div class="board-title">Tableau blanc — Nono Maps</div>
       <div class="board-sub" id="counters">Chargement…</div>
     </div>
-
-    <button class="btn-home" onclick="location.href='index.html'">← Accueil</button>
   </div>
 
 
