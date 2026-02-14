@@ -426,6 +426,8 @@ let postesMap = {};
 let postesList = [];      
 let viewKeys = [];       
 let triActif = "az"; 
+  let hpPosteKeys = new Set();
+
 
 const estHP = (a) => {
   const v = a?.hors_patrimoine;
@@ -436,9 +438,17 @@ const estHP = (a) => {
 async function chargerPostes(){
  const res = await fetch(URL_POSTES, { cache: "no-store" });
   if (!res.ok) throw new Error(`Impossible de charger ${URL_POSTES} (${res.status})`);
-  let postes = await res.json();
+let postes = await res.json();
+
+hpPosteKeys = new Set(
+  postes
+    .filter(estHP)
+    .map(p => makePosteKey(p.nom, p.type))
+);
+
 
 postes = postes.filter(p => p.special !== true);
+
 
   const map = {};
 
@@ -610,7 +620,10 @@ function render(){
     const p = postesMap[key];
     if(!p) return;
 
-    nbPostes++;
+if (!hpPosteKeys.has(key)) {
+  nbPostes++;
+}
+
     nbSats += (p.satNamesSorted || []).length;
     nbApp += (p.principalSorted || []).length;
     nbHp += (p.principalSorted || []).filter(estHP).length;
