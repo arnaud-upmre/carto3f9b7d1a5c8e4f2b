@@ -392,17 +392,16 @@ body{
 </head>
 <body>
 <div class="board-header">
-  <div class="board-top">
-    <div class="board-title-wrap">
-      <div class="board-title">
-        Tableau blanc <span class="title-accent">Nono Maps</span>
-      </div>
+  <div class="board-title-wrap">
+    <div class="board-title">
+      Tableau blanc <span class="title-accent">Nono Maps</span>
+    </div>
 
-      <div class="board-meta">
-        <span id="counters">Chargement…</span>
-      </div>
+    <div class="board-meta">
+      <span id="counters">Chargement…</span>
     </div>
   </div>
+
 
   <div class="board-row">
     <input id="search" type="text" placeholder="Rechercher...">
@@ -417,7 +416,8 @@ body{
     <button data-sort="appmin">- appareils</button>
 </div>
 
-<div id="postesZone" class="post-container patrimoine"></div>
+<div id="postesZone" class="post-container"></div>
+
 
 <script>
 
@@ -438,13 +438,22 @@ let postesMap = {};          // { key: { nom, type, sats:Set, principal:[], satA
 let postesList = [];         // [{key, ...}] triée
 let viewKeys = [];           // keys affichés après recherche
 let triActif = "az"; // az | za | appmax | appmin
+const excludedPosteKeys = new Set();
 
 // 1) Charger postes.json et construire la structure
 async function chargerPostes(){
-  const res = await fetch(URL_POSTES, { cache: "no-store" });
+ const res = await fetch(URL_POSTES, { cache: "no-store" });
+  if (!res.ok) throw new Error(`Impossible de charger ${URL_POSTES} (${res.status})`);
   let postes = await res.json();
 
-  //EXCLUSION DES POSTES NON VOULUS
+  // EXCLUSION DES POSTES NON VOULUS + mémorisation des clés exclues
+  excludedPosteKeys.clear();
+  postes.forEach(p => {
+    if (p.special === true || p.hors_patrimoine === true) {
+      excludedPosteKeys.add(makePosteKey(p.nom, p.type));
+    }
+  });
+
   postes = postes.filter(p =>
     p.special !== true &&
     p.hors_patrimoine !== true
@@ -457,8 +466,9 @@ async function chargerPostes(){
     const type = norm(p.type); // peut être ""
     const sat = norm(p.SAT);
 
-    const key = makePosteKey(nom, type);
-    if(!map[key]){
+const key = makePosteKey(nom, type);
+if(!map[key]){
+   
       map[key] = {
         key,
         nom,
@@ -490,28 +500,36 @@ async function chargerPostes(){
 // 2) Charger appareils.json et injecter
 async function chargerAppareils(){
   const res = await fetch(URL_APPAREILS, { cache: "no-store" });
+  if (!res.ok) throw new Error(`Impossible de charger ${URL_APPAREILS} (${res.status})`);
   const appareils = await res.json();
+
 
   appareils.forEach(a => {
     const nom = norm(a.nom);
     const type = norm(a.type);     // peut être ""
     const sat = norm(a.SAT);       // "" => principal
-    const key = makePosteKey(nom, type);
 
-    // si le poste n’existe pas dans postes.json, on le crée quand même (sécurité)
-    if(!postesMap[key]){
-          postesMap[key] = {
-        key,
-        nom,
-        type,
-        sats: new Set(),
-        principal: [],
-        satApp: {},
-        appCount: 0
-      };
+     const key = makePosteKey(nom, type);
 
-      postesList.push(postesMap[key]);
-    }
+if (excludedPosteKeys.has(key)) {
+  return;
+}
+
+// si le poste n’existe pas dans postes.json, on le crée quand même (sécurité)
+if(!postesMap[key]){
+  postesMap[key] = {
+    key,
+    nom,
+    type,
+    sats: new Set(),
+    principal: [],
+    satApp: {},
+    appCount: 0
+  };
+
+  postesList.push(postesMap[key]);
+}
+
 
     const poste = postesMap[key];
 
@@ -622,9 +640,8 @@ function render(){
     const p = postesMap[key];
     if(!p) return;
 
-    if (p.type) {
-      nbPostes++;
-    }
+nbPostes++;
+
     nbSats += p.sats.size;
 
     nbApp += p.principal.length;
@@ -669,19 +686,18 @@ let html = `
 }
   `;
 
-  satNames.forEach((sat, idx) => {
+   satNames.forEach((sat) => {
     const list = (p.satAppSorted && p.satAppSorted[sat]) ? p.satAppSorted[sat] : [];
 
     const pills = list.map(pillHtml).join("");
 
-    // séparateur : seulement si ça a du sens visuellement
-const needSep = true;
     html += `
-      <div class="${needSep ? "sat-block" : ""}">
+      <div class="sat-block">
         <a class="sat-pill" href="${hrefSat(p.nom, p.type, sat)}">${escapeHtml(sat)}</a>
         ${pills}
       </div>
     `;
+
   });
 
   html += `</div>`;
