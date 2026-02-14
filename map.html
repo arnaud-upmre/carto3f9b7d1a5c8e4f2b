@@ -13,9 +13,46 @@
 <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
 
 <style>
+*, *::before, *::after { box-sizing: border-box; }
+
+:root {
+  --bg: #ffffff;
+  --card: #ffffff;
+  --text: #3c3732;
+  --muted: #6b7280;
+  --accent: #5068f5;
+  --accent-soft: #eaf4fb;
+  --border: #b0cc93;
+  --shadow: rgba(0, 0, 0, 0.1);
+
+  --danger: #c80e0e;
+  --danger-soft: rgba(200, 14, 14, 0.12);
+
+  --glass-dark: rgba(20, 20, 20, 0.75);
+  --glass-mid: rgba(20, 20, 20, 0.6);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #121212;
+    --card: rgba(28, 28, 28, 0.75);
+    --text: #ffffff;
+    --muted: #9ca3af;
+    --accent: #5068f5;
+    --accent-soft: #1e2a44;
+    --border: #2a2a2a;
+    --shadow: rgba(0, 0, 0, 0.6);
+
+    --danger: #ff8a8a;
+    --danger-soft: rgba(200, 14, 14, 0.2);
+
+    --glass-dark: rgba(20, 20, 20, 0.85);
+    --glass-mid: rgba(20, 20, 20, 0.7);
+  }
+}
 
 .popup-share .leaflet-popup-content-wrapper {
-  padding: 0 !important;  
+  padding: 0 !important;
 }
 
 .popup-share .leaflet-popup-content {
@@ -24,17 +61,18 @@
   margin: 0 !important;
   width: 100% !important;
   font-weight: 600;
+  color: var(--text);
 }
-  
-  #legal-footer {
+
+#legal-footer {
   position: fixed;
   bottom: 6px;
   left: 50%;
   transform: translateX(-50%);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
-  font-size: 10px; 
-  color: rgba(255,255,255,0.75);
-  background: rgba(0,0,0,0.35);
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.9);
+  background: var(--glass-mid);
   padding: 3px 8px;
   border-radius: 6px;
   backdrop-filter: blur(6px);
@@ -42,23 +80,21 @@
   z-index: 9999;
   pointer-events: none;
   user-select: none;
-
-  white-space: nowrap !important;       
-  overflow: hidden !important;       
-  text-overflow: ellipsis !important;   
-
-  max-width: 95vw; 
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  max-width: 95vw;
 }
-  
-  html, body {
+
+html, body {
   height: 100%;
   margin: 0;
   background: transparent;
 }
 
-  #map {
-  width:100%;
-  height:100%;
+#map {
+  width: 100%;
+  height: 100%;
 }
 
 .fab-container {
@@ -67,19 +103,19 @@
   right: 10px;
   z-index: 10000;
   display: flex;
-  flex-direction: column-reverse; 
+  flex-direction: column-reverse;
   align-items: center;
-  gap: 20px; 
+  gap: 20px;
 }
 
 .fab {
   width: 55px;
   height: 55px;
   border-radius: 50%;
-  background: rgba(0,0,0,0.75);
-  color: white;
+  background: var(--glass-dark);
+  color: #ffffff;
   font-size: 24px;
-  border: none;
+  border: 1px solid var(--border);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -88,7 +124,7 @@
 
 .fab-options {
   width: 60px;
-  background: rgba(0,0,0,0.7);
+  background: var(--glass-mid);
   border-radius: 40px;
   padding: 12px 0;
   display: flex;
@@ -100,6 +136,7 @@
   overflow: hidden;
   pointer-events: none;
   transition: all 0.35s ease;
+  border: 1px solid var(--border);
 }
 .fab-options.show {
   opacity: 1;
@@ -109,7 +146,7 @@
 
 .fab-options button {
   border: none;
-  background: none;   
+  background: none;
   padding: 0;
   margin: 0;
   cursor: pointer;
@@ -130,18 +167,19 @@
 }
 
 .fab-options button.active {
-  background: rgba(255,255,255,0.50); 
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 999px;
 }
 .fab-options button.active img {
-  opacity: 1;  
+  opacity: 1;
 }
-  
+
 .toast {
   position: fixed;
   bottom: 140px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(37,99,235,0.9);
+  background: rgba(80, 104, 245, 0.92);
   color: white;
   padding: 8px 14px;
   border-radius: 8px;
@@ -158,44 +196,44 @@
 .leaflet-popup-content-wrapper {
   background: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.8) 0%,
-    rgba(255, 255, 255, 0.7) 100%
+    rgba(255, 255, 255, 0.88) 0%,
+    rgba(255, 255, 255, 0.78) 100%
   );
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
   border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.45);
-  box-shadow: inset 0 1px 4px rgba(255,255,255,0.4),
-              0 8px 24px rgba(0,0,0,0.25);
+  border: 1px solid rgba(176, 204, 147, 0.45);
+  box-shadow: inset 0 1px 4px rgba(255, 255, 255, 0.4),
+              0 8px 24px var(--shadow);
 }
 .leaflet-popup-tip {
   background: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.8) 0%,
-    rgba(255, 255, 255, 0.7) 100%
+    rgba(255, 255, 255, 0.88) 0%,
+    rgba(255, 255, 255, 0.78) 100%
   );
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
-  border: 1px solid rgba(255, 255, 255, 0.45);
+  border: 1px solid rgba(176, 204, 147, 0.45);
 }
-  
+
 .leaflet-popup-content {
-  max-width: 240px !important; 
-  min-width: 240px; 
+  max-width: 240px !important;
+  min-width: 240px;
   font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,sans-serif;
   font-size: 14px;
   line-height: 1.4;
-  color: #111;
-  overflow: hidden;    
-  text-align: left;      
+  color: var(--text);
+  overflow: hidden;
+  text-align: left;
 }
 .leaflet-popup-content div,
 .leaflet-popup-content p {
   display: flex;
   align-items: center;
-  gap: 6px;           
+  gap: 6px;
   margin: 4px 0;
-  flex-wrap: wrap;      
+  flex-wrap: wrap;
 }
 .leaflet-popup-content img,
 .leaflet-popup-content svg,
@@ -215,8 +253,8 @@
   display: block;
   padding: 8px 12px;
   border-radius: 8px;
-  background: #f3f4f6;
-  color: #007aff;
+  background: var(--accent-soft);
+  color: var(--accent);
   text-decoration: none;
   font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,sans-serif;
   font-size: 14px;
@@ -225,7 +263,7 @@
 }
 .leaflet-popup-content a.cluster-link:hover,
 .leaflet-popup-content a.cluster-link:active {
-  background: #e5e7eb;
+  background: rgba(80, 104, 245, 0.18);
 }
 
 #streetview-overlay {
@@ -233,10 +271,10 @@
   top: 0; left: 0;
   width: 100%; height: 100%;
   background: rgba(0,0,0,0.6);
-  backdrop-filter: blur(6px);     
+  backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   display: none;
-  z-index: 9999;           
+  z-index: 9999;
   align-items: center;
   justify-content: center;
 }
@@ -244,11 +282,12 @@
   width: 90%;
   max-width: 900px;
   height: 70%;
-  background: rgba(20,20,20,0.95);
+  background: var(--glass-dark);
   border-radius: 16px;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+  box-shadow: 0 12px 40px var(--shadow);
   overflow: hidden;
   position: relative;
+  border: 1px solid var(--border);
 }
 #streetview-box iframe {
   width: 100%;
@@ -259,9 +298,9 @@
   position: absolute;
   top: 12px; right: 12px;
   font-size: 24px;
-  background: rgba(0,0,0,0.6);
+  background: var(--glass-mid);
   color: white;
-  border: none;
+  border: 1px solid var(--border);
   border-radius: 50%;
   width: 40px; height: 40px;
   cursor: pointer;
@@ -273,23 +312,23 @@
   animation: pulseHalo 1.8s infinite;
 }
 @keyframes pulseHalo {
-  0%   { box-shadow: 0 0 0px rgba(255,255,255,0.6); }
-  50%  { box-shadow: 0 0 15px rgba(255,255,255,0.9), 0 0 30px rgba(255,255,255,0.4); }
-  100% { box-shadow: 0 0 0px rgba(255,255,255,0.6); }
+  0%   { box-shadow: 0 0 0 rgba(80,104,245,0.35); }
+  50%  { box-shadow: 0 0 15px rgba(80,104,245,0.75), 0 0 30px rgba(80,104,245,0.35); }
+  100% { box-shadow: 0 0 0 rgba(80,104,245,0.35); }
 }
 .icon-halo {
-  width: 36px;  
+  width: 36px;
   height: 36px;
   filter: drop-shadow(0 0 2px white) drop-shadow(0 0 4px white);
 }
 .icon-halo-appareil {
-  width: 24px;  
+  width: 24px;
   height: 24px;
   filter: drop-shadow(0 0 4px white) drop-shadow(0 0 8px white);
 }
 
 .marker-cluster {
-  background: transparent !important; 
+  background: transparent !important;
   border-radius: 50%;
 }
 .marker-cluster div {
@@ -303,45 +342,45 @@
   font-weight: 600;
   font-size: 16px;
   color: #ffffff;
-  text-shadow: 
-  0 0 4px rgba(0,0,0,1),
-  0 0 8px rgba(0,0,0,0.9),
-  0 0 12px rgba(0,0,0,0.8);
-  background: rgba(255, 255, 255, 0.35);   
-  backdrop-filter: blur(10px);             
+  text-shadow:
+    0 0 4px rgba(0,0,0,1),
+    0 0 8px rgba(0,0,0,0.9),
+    0 0 12px rgba(0,0,0,0.8);
+  background: rgba(80, 104, 245, 0.58);
+  backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border: 2px solid rgba(255,255,255,0.25);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+  border: 2px solid rgba(176, 204, 147, 0.45);
+  box-shadow: 0 6px 18px var(--shadow);
   transition: transform 0.25s ease, background 0.3s ease;
 }
 .marker-cluster:hover div {
   transform: scale(1.12);
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(80, 104, 245, 0.72);
 }
 
 .control-group {
-  margin-bottom: 10px; 
+  margin-bottom: 10px;
 }
 
 .btn-toggle{
-  background: rgba(0,0,0,.7);
-  border: 1px solid rgba(255,255,255,.12);
+  background: var(--glass-dark);
+  border: 1px solid rgba(176,204,147,0.35);
   border-radius: 50%;
-  width: 44px; height: 44px;       
+  width: 44px; height: 44px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 20px;                
+  font-size: 20px;
   color: #fff;
   cursor: pointer;
-  margin: 10px 5px;              
-  box-shadow: 0 4px 12px rgba(0,0,0,.25);
+  margin: 10px 5px;
+  box-shadow: 0 4px 12px var(--shadow);
   user-select: none;
   line-height: 1;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }
 .btn-toggle.active {
-  background: #fff;
-  color: #111;
+  background: #ffffff;
+  color: #3c3732;
 }
 
 .icon-circle {
@@ -356,25 +395,25 @@
   font-weight:bold;
 }
 
-.appareil { background:#facc15; }
+.appareil { background: #5068f5; }
 
 .telecom-mini {
   display:inline-flex;
   align-items:center;
   justify-content:center;
   padding:2px 6px;
-  background:#eef2ff;
-  color:#4f46e5;
+  background: var(--accent-soft);
+  color: var(--accent);
   border-radius:6px;
   font-size:11px;
   font-weight:600;
-  border:1px solid rgba(79,70,229,0.25);
+  border:1px solid rgba(80,104,245,0.25);
   margin:1px 3px 2px 0;
   white-space:nowrap;
 }
 
 .leaflet-popup-content .popup-pills {
-  display: block !important;   
+  display: block !important;
   width: 100%;
   margin-top: 2px !important;
   margin-bottom: 4px !important;
@@ -386,19 +425,19 @@
   margin-bottom: 0 !important;
 }
 
-
 #context-menu {
   position: absolute;
   min-width: 240px;
-  background: rgba(0,0,0,0.55);
+  background: var(--glass-mid);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border-radius: 14px;
   padding: 10px 0;
   display: none;
   flex-direction: column;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.45);
+  box-shadow: 0 12px 40px var(--shadow);
   z-index: 999999;
+  border: 1px solid var(--border);
 }
 
 .context-item {
@@ -445,8 +484,6 @@
   transform: translateX(3px);
 }
 
-
-
 .ping-marker {
   position: absolute;
   width: 18px;
@@ -467,15 +504,16 @@
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: red;
+  background: var(--danger);
   transform: translate(-50%, -50%);
-  box-shadow: 0 0 4px red;
+  box-shadow: 0 0 4px var(--danger);
 }
 
 @keyframes pingPulse {
   0%   { transform: translate(-50%,-50%) scale(1); opacity: 1; }
   100% { transform: translate(-50%,-50%) scale(2.3); opacity: 0; }
 }
+
   
 </style>
 
@@ -1062,7 +1100,7 @@ const iconAppareilALIM = createAppareilIcon("alim.png");
 
   if (!hasPortail && !isSecure) {
     return `<p><strong>🔑 Portail / Alarme :</strong> 
-      <span style="color:#777;font-style:italic;">(non renseigné)</span></p>`;
+      <span style="color:#6b7280;font-style:italic;">(non renseigné)</span></p>`;
   }
 
   if (isSecure) {
@@ -1110,7 +1148,7 @@ const cid = [item.nom, item.type, item.SAT, accesVal]
 
 let content = `
 <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
-            font-size:14px; color:#111; line-height:1.4; position:relative;">
+            font-size:14px; color:#3c3732; line-height:1.4; position:relative;">
 
 
 <div style="font-weight:600; font-size:16px; margin-bottom:14px; padding-right:32px;">
@@ -1138,7 +1176,7 @@ ${formatPortailDisplay(item.portail, item.secure)}
       .trim()
   )}"
      style="display:flex;align-items:center;justify-content:center;gap:6px;
-            background:#007aff;color:#fff;padding:10px 14px;border-radius:8px;
+            background:#5068f5;color:#fff;padding:10px 14px;border-radius:8px;
             text-decoration:none;width:100%;font-size:15px;font-weight:500;">
     ➕ Voir plus
   </a>
@@ -1164,7 +1202,7 @@ const m = L.marker([item.latitude, item.longitude], {
 
 let content = `
 <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
-            font-size:14px; color:#111; line-height:1.4;">
+            font-size:14px; color:#3c3732; line-height:1.4;">
 
 
 <div class="popup-header" style="font-weight:600; font-size:16px;">
@@ -1184,7 +1222,7 @@ let content = `
   <a href="${getImajnetURL(item, item.poste_latitude, item.poste_longitude)}"
    target="_blank"
    style="display:flex;align-items:center;justify-content:center;gap:6px;
-          background:#10b981;color:#fff;padding:7px 12px;border-radius:8px;
+          background:#5068f5;color:#fff;padding:7px 12px;border-radius:8px;
           text-decoration:none;width:100%;font-size:14px;font-weight:500;margin-top:8px;">
   🛣️ Voir sur Imajnet
 </a>
@@ -1195,7 +1233,7 @@ let content = `
       .trim()
   )}"
      style="display:flex;align-items:center;justify-content:center;gap:6px;
-            background:#007aff;color:#fff;padding:10px 14px;border-radius:8px;
+            background:#5068f5;color:#fff;padding:10px 14px;border-radius:8px;
             text-decoration:none;width:100%;font-size:15px;font-weight:500;">
     ➕ Voir plus
   </a>
@@ -1264,7 +1302,7 @@ appareilIcon = iconAppareilDefault;
 
       let content = `
 <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
-            font-size:14px; color:#111; line-height:1.4;">
+            font-size:14px; color:#3c3732; line-height:1.4;">
 
 <div style="font-size:15px; margin-bottom:10px;">
   <span style="font-weight:600;">${item.appareil || "Sans référence"}</span>
@@ -1280,9 +1318,9 @@ appareilIcon = iconAppareilDefault;
 ${item.hors_patrimoine ? `
   <div style="width:100%; display:flex; justify-content:center; margin:8px 0 12px 0;">
     <div style="
-      background:#fee2e2;
-      color:#b91c1c;
-      border:1px solid #b91c1c;
+      background:rgba(200,14,14,0.12);
+      color:#c80e0e;
+      border:1px solid #c80e0e;
       padding:6px 10px;
       border-radius:8px;
       font-weight:600;
@@ -1299,7 +1337,7 @@ ${item.hors_patrimoine ? `
 <a href="${getImajnetURL(item, item.latitude, item.longitude)}"
    target="_blank"
    style="display:flex;align-items:center;justify-content:center;gap:6px;
-          background:#10b981;color:#fff;padding:7px 12px;border-radius:8px;
+          background:#5068f5;color:#fff;padding:7px 12px;border-radius:8px;
           text-decoration:none;width:100%;font-size:14px;font-weight:500;
           margin:0 !important;">
   🛣️ Voir sur Imajnet
@@ -1309,7 +1347,7 @@ ${item.hors_patrimoine ? `
     [item.appareil, item.nom, item.type, item.SAT].filter(Boolean).join(" ").trim()
   )}"
      style="display:flex;align-items:center;justify-content:center;gap:6px;
-            background:#007aff;color:#fff;padding:7px 12px;border-radius:8px;
+            background:#5068f5;color:#fff;padding:7px 12px;border-radius:8px;
             text-decoration:none;width:100%;font-size:14px;font-weight:500;
             margin:0 !important;">
     ➕ Voir plus
@@ -1470,7 +1508,7 @@ if (!Number.isFinite(lat) || !Number.isFinite(lon)) return;
 
         const popup = `
 <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
-            font-size:14px; color:#111; line-height:1.5; text-align:left;">
+            font-size:14px; color:#3c3732; line-height:1.5; text-align:left;">
   <div style="font-weight:700; font-size:16px; margin-bottom:8px;">
     🚧 PN ${libelle}
   </div>
@@ -1480,11 +1518,11 @@ if (!Number.isFinite(lat) || !Number.isFinite(lon)) return;
   <div style="display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:16px;width:100%;">
     <a href="https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${lat},${lon};"
        target="_blank"
-       style="display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 16px;border-radius:8px;background:#10b981;color:white;text-decoration:none;font-size:14px;font-weight:500;min-width:180px;">
+       style="display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 16px;border-radius:8px;background:#5068f5;color:white;text-decoration:none;font-size:14px;font-weight:500;min-width:180px;">
       🚄 Voir sur Imajnet
     </a>
     <button onclick="openStreetView(${lat},${lon})"
-       style="display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 16px;border:none;border-radius:8px;background:#3b82f6;color:white;cursor:pointer;font-size:14px;font-weight:500;min-width:180px;">
+       style="display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 16px;border:none;border-radius:8px;background:#5068f5;color:white;cursor:pointer;font-size:14px;font-weight:500;min-width:180px;">
       🌍 Voir en Street View
     </button>
   </div>
@@ -1569,8 +1607,8 @@ locateBtn.onclick = () => {
       } else {
         userMarker = L.circleMarker([lat, lng], {
           radius: 8,
-          color: "#3b82f6",
-          fillColor: "#3b82f6",
+          color: "#5068f5",
+ fillColor: "#5068f5",
           fillOpacity: 0.6
         }).addTo(map);
       }
@@ -1622,7 +1660,7 @@ if (isNaN(lat) || isNaN(lon)) { console.warn("URL lat/lon invalides", {lat, lon}
 
 function renderInformation(value) {
   if (!value) {
-    return `<span style="color:#777;font-style:italic;">Non renseigné</span>`;
+    return `<span style="color:#6b7280;font-style:italic;">Non renseigné</span>`;
   }
 
   return escHtml(String(value));
