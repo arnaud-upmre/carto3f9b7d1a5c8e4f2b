@@ -7,7 +7,7 @@
 
 <style>
 
- /* ===============================
+/* ===============================
    VARIABLES THÈME SNCF — CLAIR
 ================================ */
 :root{
@@ -40,7 +40,7 @@
 }
 
 /* ===============================
-   DARK MODE — EXACT VERSION
+   DARK MODE — VERSION PROPRE
 ================================ */
 @media (prefers-color-scheme: dark){
   :root{
@@ -65,22 +65,23 @@
     --shadow:rgba(0,0,0,0.6);
   }
 
- @media (prefers-color-scheme: dark){
+  /* header dark */
   .board-header{
     background:rgba(20,20,20,0.75);
     border:1px solid var(--border);
   }
-}
 
-  /* type pill en dark */
+  /* type pill dark */
   .type-pill{
     background:#1F2937;
     color:#D1D5DB;
     border-color:#374151;
   }
 
+  /* ville card dark différenciée */
   .ville-card{
-    background:#1E2A44 !important;
+    background:rgba(255,255,255,0.06) !important;
+    border:1px solid rgba(255,255,255,0.08);
   }
 }
 
@@ -147,7 +148,7 @@
 }
 
 /* ===============================
-   Cartes ville
+   Cartes ville (clair)
 ================================ */
 .ville-card{
     background:#EAF4FB !important;
@@ -246,7 +247,7 @@ body{
 }
 
 .card{
-    background:linear-gradient(180deg, rgba(32,32,32,0.85), rgba(22,22,22,0.9));
+    background:var(--card-bg);
     padding:14px;
     border-radius:14px;
     box-shadow:0 4px 12px var(--shadow);
@@ -306,7 +307,7 @@ body{
 .filters button{
     padding:8px 16px;
     border-radius:12px;
-    background:rgba(255,255,255,0.04);
+    background:rgba(255,255,255,0.06);
     border:1px solid var(--border);
     cursor:pointer;
     font-weight:600;
@@ -315,13 +316,11 @@ body{
     backdrop-filter:blur(6px);
 }
 
-/* hover */
 .filters button:hover{
     border-color:var(--accent);
     transform:translateY(-1px);
 }
 
-/* bouton actif — bien visible */
 .filters button.activeFilter{
     background:linear-gradient(135deg, #5B6EFF, #5068F5);
     color:#FFFFFF;
@@ -343,47 +342,16 @@ body{
     box-shadow:0 10px 26px var(--shadow);
 }
 
-.board-top,
-.board-row{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:12px;
-    flex-wrap:wrap;
-}
-
-.board-title{
-    font-size:22px;
-    font-weight:800;
-    transform:rotate(-0.4deg);
-    font-family:"Comic Sans MS","Bradley Hand","Segoe Print",Inter,system-ui,sans-serif;
-}
-
 /* ===============================
    Mobile
 ================================ */
 @media (max-width:480px){
-    .card{
-        padding:14px;
-        border-radius:14px;
-    }
-
-    .card-title{
-        font-size:16px;
-    }
-
-    .pill{
-        font-size:12px;
-        padding:4px 8px;
-    }
-
-    .sat-pill,
-    .section-title{
-        font-size:12px;
-        padding:4px 10px;
-    }
+    .card{ padding:14px; border-radius:14px; }
+    .card-title{ font-size:16px; }
+    .pill{ font-size:12px; padding:4px 8px; }
+    .sat-pill, .section-title{ font-size:12px; padding:4px 10px; }
 }
-
+ 
 </style>
 
     
