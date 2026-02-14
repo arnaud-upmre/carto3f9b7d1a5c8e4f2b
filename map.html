@@ -1417,26 +1417,31 @@ const pnUrls = [
     + "&rows=3000"
 ];
 
-  const tryFetchPN = async () => {
-    let lastError = null;
+const tryFetchPN = async () => {
+  let all = [];
+  let start = 0;
+  const rows = 1000;
 
-    for (const url of pnUrls) {
-      try {
-        const response = await fetch(url);
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  while (true) {
+    const url =
+      "https://ressources.data.sncf.com/api/records/1.0/search/"
+      + "?dataset=liste-des-passages-a-niveau"
+      + `&rows=${rows}&start=${start}`;
 
-        const data = await response.json();
-        const records = data.records || [];
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
-        if (records.length > 0) return records;
-        lastError = new Error("Aucun enregistrement PN retourné");
-      } catch (err) {
-        lastError = err;
-      }
-    }
+    const data = await response.json();
+    const records = data.records || [];
 
-    throw lastError || new Error("Impossible de charger les PN");
-  };
+    all.push(...records);
+
+    if (records.length < rows) break;
+    start += rows;
+  }
+
+  return all;
+};
 
   tryFetchPN()
     .then(records => {
@@ -1454,24 +1459,28 @@ const pnUrls = [
       records.forEach(pn => {
 
         const f = pn.fields || {};
+        
+let lat, lon;
 
-const coords =
-  Array.isArray(f.geo_point_2d) ? f.geo_point_2d :
-  Array.isArray(f.geopoint) ? f.geopoint :
-  (Array.isArray(pn.geometry?.coordinates)
-    ? [pn.geometry.coordinates[1], pn.geometry.coordinates[0]]
-    : null);
+if (Array.isArray(f.geo_point_2d)) {
+  lat = Number(f.geo_point_2d[0]);
+  lon = Number(f.geo_point_2d[1]);
 
-if (!coords) return;
+} else if (Array.isArray(f.geopoint)) {
+  lat = Number(f.geopoint[0]);
+  lon = Number(f.geopoint[1]);
 
-        console.log("PN coords raw:", coords);
+} else if (Array.isArray(pn.geometry?.coordinates)) {
+  lon = Number(pn.geometry.coordinates[0]);
+  lat = Number(pn.geometry.coordinates[1]);
 
-const lat = Number(coords[0]);
-const lon = Number(coords[1]);
-
-        if (lat < 49.0 || lat > 51.6 || lon < 0.5 || lon > 5.5) return;
+} else {
+  return;
+}
 
 if (!Number.isFinite(lat) || !Number.isFinite(lon)) return;
+
+        if (lat < 49.0 || lat > 51.6 || lon < 0.5 || lon > 5.5) return;
 
         const classeCode = (f.mnemo || "").replace("CLASSE ", "").trim();
         const classeTexte = pnClasses[classeCode]
@@ -2177,7 +2186,7 @@ panel.style.display = "block";
     
 </script>
 <div id="legal-footer">
-  Nono Maps v1.15.a | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.15.1 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
