@@ -9,44 +9,48 @@
 
 /* ===============================
    Variables thème SNCF
+   (palette officielle SNCF Réseau)
 ================================ */
 :root{
-    --bg:#f1f3f5;
-    --card-bg:#ffffff;
-    --text:#111;
+    --bg:#FFFFFF;                 /* Blanc charte */
+    --card-bg:#FFFFFF;
+    --text:#000000;               /* Noir charte */
 
-    --pill-bg:#e6f2fb;
-    --pill-text:#0088ce;
+    /* Bleu acier */
+    --pill-bg:#97C7EC;            /* bleu acier clair */
+    --pill-text:#264FC4;          /* bleu acier foncé */
 
-    --sat-bg:#fff2cc;
-    --sat-text:#8a6d00;
+    /* Jaune or */
+    --sat-bg:#F1D18A;             /* jaune clair */
+    --sat-text:#DE511D;           /* orange mécanique (contraste) */
 
-    --hp-bg:rgba(213,43,30,0.18);
-    --hp-text:#d52b1e;
+    /* Rouge feu */
+    --hp-bg:rgba(200,14,14,0.18);
+    --hp-text:#C80E0E;
 
-    --accent:#0088ce;
-    --border:#d0d7de;
+    --accent:#264FC4;             /* bleu acier */
+    --border:#B0CC93;             /* vert lichen clair */
 
     --shadow:rgba(0,0,0,0.12);
 }
 
 @media (prefers-color-scheme: dark){
     :root{
-        --bg:#1c1d20;
-        --card-bg:#2a2b2e;
-        --text:#f5f5f5;
+        --bg:#015147;             /* vert sapin */
+        --card-bg:#015147;
+        --text:#FFFFFF;
 
-        --pill-bg:#2f3b57;
-        --pill-text:#9bb8ff;
+        --pill-bg:#508ECC;        /* bleu acier clair */
+        --pill-text:#FFFFFF;
 
-        --sat-bg:#695a00;
-        --sat-text:#ffe58a;
+        --sat-bg:#DE511D;         /* orange mécanique */
+        --sat-text:#FFFFFF;
 
-        --hp-bg:rgba(213,43,30,0.35);
-        --hp-text:#ffb3b8;
+        --hp-bg:rgba(200,14,14,0.35);
+        --hp-text:#F08992;        /* rouge clair charte */
 
-        --accent:#3aa0e6;
-        --border:#3a3b3f;
+        --accent:#5068F5;         /* bleu cobalt */
+        --border:#28A092;         /* vert trèfle clair */
 
         --shadow:rgba(0,0,0,0.45);
     }
@@ -56,12 +60,12 @@
    Cartes ville
 ================================ */
 .ville-card{
-    background:#eef3ff !important;
+    background:#97C7EC !important;   /* bleu acier clair */
 }
 
 @media (prefers-color-scheme: dark){
     .ville-card{
-        background:#1f2636 !important;
+        background:#264FC4 !important; /* bleu acier foncé */
     }
 }
 
@@ -195,7 +199,7 @@ body{
 
 #search:focus{
     border-color:var(--accent);
-    box-shadow:0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent);
+    box-shadow:0 0 0 3px rgba(38,79,196,0.20);
 }
 
 .filters{
@@ -216,7 +220,7 @@ body{
 
 .filters button.activeFilter{
     background:var(--accent);
-    color:white;
+    color:#FFFFFF;
 }
 
 /* ===============================
