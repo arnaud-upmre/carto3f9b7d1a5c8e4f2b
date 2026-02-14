@@ -958,7 +958,8 @@ const pnLayer = L.markerClusterGroup({
   chunkDelay: 20,
   spiderfyOnMaxZoom: false,
   showCoverageOnHover: false,
-  zoomToBoundsOnClick: true
+  zoomToBoundsOnClick: true,
+  removeOutsideVisibleBounds: true
 });
 
       pnLayer.on('clusterclick', function (e) {
@@ -1411,11 +1412,6 @@ function chargerPN(btn) {
   toast.textContent = "⏳ Chargement des passages à niveau en cours...";
   toast.classList.add("show");
 
-const pnUrls = [
-  "https://ressources.data.sncf.com/api/records/1.0/search/"
-    + "?dataset=liste-des-passages-a-niveau"
-    + "&rows=3000"
-];
 
 const tryFetchPN = async () => {
   let all = [];
@@ -1461,7 +1457,7 @@ const tryFetchPN = async () => {
   
   tryFetchPN()
     .then(records => {
-      console.info(`✅ ${records.length} PN filtrés (Hauts-de-France + 10 km au sud)`);
+      console.info(`✅ ${records.length} PN récupérés (France brute)`);
 
       const iconPN = L.divIcon({
   html: `<img src="ico/pn.webp" class="icon-halo-appareil">`,
@@ -1476,23 +1472,10 @@ const tryFetchPN = async () => {
 
         const f = pn.fields || {};
         
-let lat, lon;
+if (!Array.isArray(f.geo_point_2d)) return;
 
-if (Array.isArray(f.geo_point_2d)) {
-  lat = Number(f.geo_point_2d[0]);
-  lon = Number(f.geo_point_2d[1]);
-
-} else if (Array.isArray(f.geopoint)) {
-  lat = Number(f.geopoint[0]);
-  lon = Number(f.geopoint[1]);
-
-} else if (Array.isArray(pn.geometry?.coordinates)) {
-  lon = Number(pn.geometry.coordinates[0]);
-  lat = Number(pn.geometry.coordinates[1]);
-
-} else {
-  return;
-}
+const lat = Number(f.geo_point_2d[0]);
+const lon = Number(f.geo_point_2d[1]);
 
 if (!Number.isFinite(lat) || !Number.isFinite(lon)) return;
 
@@ -2202,7 +2185,7 @@ panel.style.display = "block";
     
 </script>
 <div id="legal-footer">
-  Nono Maps v1.15.2 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.15.3 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
