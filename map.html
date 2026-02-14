@@ -953,12 +953,9 @@ const accesLayer = L.markerClusterGroup({
 });
 
 const pnLayer = L.markerClusterGroup({
-  chunkedLoading: true,
-  chunkInterval: 80,
-  chunkDelay: 20,
   spiderfyOnMaxZoom: false,
   showCoverageOnHover: false,
-  zoomToBoundsOnClick: true,
+  zoomToBoundsOnClick: true
 });
 
       pnLayer.on('clusterclick', function (e) {
@@ -1515,6 +1512,7 @@ if (!Number.isFinite(lat) || !Number.isFinite(lon)) return;
         allMarkers.push(marker);
       });
 
+      console.warn("PN dans cluster :", pnLayer.getLayers().length);
       pnLoaded = true;
       pnLoading = false;
 
@@ -2191,7 +2189,7 @@ panel.style.display = "block";
     
 </script>
 <div id="legal-footer">
-  Nono Maps v1.15.2 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.15.1 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
