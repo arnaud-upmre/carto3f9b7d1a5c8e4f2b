@@ -1468,14 +1468,33 @@ const tryFetchPN = async () => {
 
         const f = pn.fields || {};
         
-if (!Array.isArray(f.geo_point_2d)) return;
+let lat, lon;
 
-const lat = Number(f.geo_point_2d[0]);
-const lon = Number(f.geo_point_2d[1]);
+// ✅ cas tableau
+if (Array.isArray(f.geo_point_2d)) {
+  lat = Number(f.geo_point_2d[0]);
+  lon = Number(f.geo_point_2d[1]);
+
+// ✅ cas string "lat,lon" (TRÈS IMPORTANT)
+} else if (typeof f.geo_point_2d === "string") {
+  const parts = f.geo_point_2d.split(",");
+  if (parts.length === 2) {
+    lat = Number(parts[0]);
+    lon = Number(parts[1]);
+  }
+
+// ✅ fallback geometry
+} else if (Array.isArray(pn.geometry?.coordinates)) {
+  lon = Number(pn.geometry.coordinates[0]);
+  lat = Number(pn.geometry.coordinates[1]);
+
+} else {
+  return;
+}
 
 if (!Number.isFinite(lat) || !Number.isFinite(lon)) return;
 
-        //if (lat < 49.0 || lat > 51.6 || lon < 0.5 || lon > 5.5) return;
+  
 
         const classeCode = (f.mnemo || "").replace("CLASSE ", "").trim();
         const classeTexte = pnClasses[classeCode]
@@ -2189,7 +2208,7 @@ panel.style.display = "block";
     
 </script>
 <div id="legal-footer">
-  Nono Maps v1.15.1 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.15.2 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
