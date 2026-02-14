@@ -16,9 +16,11 @@
 
 <style>
 
+
 .popup-share .leaflet-popup-content-wrapper {
   padding: 0 !important;  
 }
+
 
 .popup-share .leaflet-popup-content {
   padding: 12px 16px !important;
@@ -26,6 +28,26 @@
   margin: 0 !important;
   width: 100% !important;
   font-weight: 600;
+}
+  
+.measure-point {
+  width: 10px;
+  height: 10px;
+  background: white;
+  border: 2px solid black;
+  border-radius: 50%;
+}
+
+.measure-label {
+  position: absolute;
+  background: rgba(0,0,0,0.75);
+  color: white;
+  padding: 3px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+  pointer-events: none;
+  white-space: nowrap;
+  transform: translate(-50%, -12px);
 }
   
   #legal-footer {
@@ -344,6 +366,13 @@
 .btn-toggle.active {
   background: #fff;
   color: #111;
+}
+
+:root {
+  --accent:#4f46e5;
+  --ink:#f9fafb;
+  --glass:rgba(17,19,23,.65);
+  --border:rgba(255,255,255,.12);
 }
 
 .icon-circle {
@@ -686,14 +715,10 @@ let iconFile = null;
 
 if (marker.options.isAcces) {
   iconFile = "acces.png";
-
 } else if (id.includes("POSTE")) {
   iconFile = "poste.png";
-
-} else if (id.startsWith("ALIM")) {
-  iconFile = "alim.png";
-
-} else if (id.startsWith("DU")) {
+} else {
+if (id.startsWith("DU")) {
   iconFile = "stop.png";
 
 } else if (
@@ -714,8 +739,8 @@ if (marker.options.isAcces) {
   iconFile = "TT.png";
 
 } else if (
-  /^T\d+(\/\d+)?\b/.test(id) ||
-  id.startsWith("T/") ||
+  id.startsWith("T/") ||  
+  /^T([1-9]|10)\b/.test(id) ||     
   /^[0-9]/.test(id) ||
   id.startsWith("S") ||
   id.startsWith("ST") ||
@@ -725,6 +750,10 @@ if (marker.options.isAcces) {
   id.startsWith("B")
 ) {
   iconFile = "sect.png";
+
+} else if (id.startsWith("ALIM")) {
+  iconFile = "alim.png";
+}
 }
 
         return `
@@ -1067,6 +1096,7 @@ function renderTelecomPills(v) {
 fetch("postes.json")
   .then(r => r.json())
   .then(data => {
+    window._postesCache = data;
     const seenPostes = new Set();
 
     data.forEach(item => {
@@ -1194,7 +1224,7 @@ fetch("appareils.json")
       if (!item.latitude || !item.longitude) return;
 
       let appareilIcon;
-      const ref = (item.appareil || "").toUpperCase().trim();
+      const ref = (item.appareil || "").toUpperCase();
 if (ref.startsWith("DU")) {
   appareilIcon = L.divIcon({
     html: `
@@ -1244,8 +1274,8 @@ if (ref.startsWith("DU")) {
   });
 
 } else if (
-  /^T\d+(\/\d+)?$/.test(ref) ||  
   ref.startsWith("T/") ||   
+  /^T([1-9]|10)$/.test(ref) || 
   /^[0-9]/.test(ref) ||
   ref.startsWith("S") ||
   ref.startsWith("ST") ||
@@ -2130,7 +2160,7 @@ panel.style.display = "block";
     
 </script>
 <div id="legal-footer">
-  Nono Maps v1.14.2 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.13.7 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
