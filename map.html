@@ -1428,21 +1428,37 @@ const tryFetchPN = async () => {
       + "?dataset=liste-des-passages-a-niveau"
       + `&rows=${rows}&start=${start}`;
 
-    const response = await fetch(url);
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    let response;
+    try {
+      response = await fetch(url);
+    } catch (e) {
+      break;
+    }
+
+    if (!response.ok) {
+      if (response.status === 400) {
+        console.info("ℹ️ Fin pagination PN atteinte");
+        break;
+      }
+      throw new Error(`HTTP ${response.status}`);
+    }
 
     const data = await response.json();
     const records = data.records || [];
 
+    if (!records.length) break;
+
     all.push(...records);
 
     if (records.length < rows) break;
+
     start += rows;
   }
 
   return all;
 };
 
+  
   tryFetchPN()
     .then(records => {
       console.info(`✅ ${records.length} PN filtrés (Hauts-de-France + 10 km au sud)`);
@@ -2186,7 +2202,7 @@ panel.style.display = "block";
     
 </script>
 <div id="legal-footer">
-  Nono Maps v1.15.1 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.15.2 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
