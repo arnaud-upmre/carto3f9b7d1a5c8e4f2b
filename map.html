@@ -1520,10 +1520,17 @@ if (!Number.isFinite(lat) || !Number.isFinite(lon)) return;
       pnLoading = false;
 
       toast.textContent = `✅ ${records.length} passages à niveau chargés`;
-      setTimeout(() => {
-        toast.classList.remove("show");
-        toggleLayer(pnLayer, btn, "Passages à niveau");
-      }, 1500);
+      
+setTimeout(() => {
+  toast.classList.remove("show");
+
+  // ✅ on force l'affichage au premier chargement
+  if (!map.hasLayer(pnLayer)) {
+    map.addLayer(pnLayer);
+  }
+
+  btn.classList.add("active");
+}, 1500);
     })
     .catch(err => {
       pnLoading = false;
@@ -2185,7 +2192,7 @@ panel.style.display = "block";
     
 </script>
 <div id="legal-footer">
-  Nono Maps v1.15.1 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.15.2 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
