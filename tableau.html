@@ -72,29 +72,38 @@ bottom:calc(18px + env(safe-area-inset-bottom, 0px));
 }
 
 /* ===============================
-   Dark mode SNCF
+   Dark mode — vrai dark moderne
 ================================ */
 @media (prefers-color-scheme: dark){
   :root{
-    /* Fond neutre moderne */
+    /* Fond */
     --bg:#121212;
+    --card-bg:rgba(28,28,28,0.75);
 
     /* Texte */
     --text:#FFFFFF;
     --muted:#B8B8B8;
 
-    /* Accent SNCF conservé */
-    --accent:#5068F5;
-    --accent-soft:#1E2A44;
+    /* Pills appareils (bleu SNCF lisible dark) */
+    --pill-bg:#1E2A44;
+    --pill-text:#8FA8FF;
 
-    /* Bordures lisibles */
+    /* SAT */
+    --sat-bg:#2A1E12;
+    --sat-text:#FFB784;
+
+    /* Hors patrimoine */
+    --hp-bg:rgba(200,14,14,0.25);
+    --hp-text:#FF8A8A;
+
+    /* Accent */
+    --accent:#5068F5;
+
+    /* Bordures */
     --border:#2A2A2A;
 
     /* Ombres */
     --shadow:rgba(0,0,0,0.6);
-
-    /* Cartes */
-    --card-bg:rgba(28,28,28,0.75);
   }
 }
    
