@@ -7,6 +7,70 @@
 
 <style>
 
+   /* ===============================
+   Header premium NonoMaps
+================================ */
+
+.board-title-wrap{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+}
+
+/* Titre principal */
+.board-title{
+    font-size:24px;
+    font-weight:800;
+    letter-spacing:0.2px;
+}
+
+/* Accent Nono Maps */
+.title-accent{
+    color:var(--accent);
+    font-weight:900;
+}
+
+/* Ligne meta (compteurs + légende) */
+.board-meta{
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
+    align-items:center;
+    font-size:13px;
+    color:var(--muted);
+}
+
+/* Compteurs plus discrets */
+#counters{
+    opacity:0.9;
+}
+
+/* Légende HP */
+.hp-legend{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-size:12px;
+    opacity:0.85;
+}
+
+/* Petit point rouge */
+.hp-dot{
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:#C80E0E; /* rouge SNCF */
+    box-shadow:0 0 0 2px rgba(200,14,14,0.15);
+}
+
+/* Dark mode — point HP adapté */
+@media (prefers-color-scheme: dark){
+  .hp-dot{
+    background:#FF6B6B;
+    box-shadow:0 0 0 2px rgba(255,107,107,0.25);
+  }
+}
+
    /* Fix sizing global */
 *, *::before, *::after{
     box-sizing:border-box;
@@ -362,20 +426,27 @@ body{
     
 </head>
 <body>
-
 <div class="board-header">
   <div class="board-top">
-    <div>
-      <div class="board-title">Tableau blanc — Nono Maps</div>
-      <div class="board-sub" id="counters">Chargement…</div>
+    <div class="board-title-wrap">
+      <div class="board-title">
+        Tableau blanc <span class="title-accent">Nono Maps</span>
+      </div>
+
+      <div class="board-meta">
+        <span id="counters">Chargement…</span>
+        <span class="hp-legend">
+          <span class="hp-dot"></span>
+          Hors patrimoine
+        </span>
+      </div>
     </div>
   </div>
-
 
   <div class="board-row">
     <input id="search" type="text" placeholder="Rechercher...">
   </div>
-</div> 
+</div>
 
 
 <div class="filters">
