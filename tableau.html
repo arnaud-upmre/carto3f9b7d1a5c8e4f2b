@@ -7,78 +7,16 @@
 
 <style>
 
-   /* ===============================
-   Header premium NonoMaps
-================================ */
-
-.board-title-wrap{
-    display:flex;
-    flex-direction:column;
-    gap:4px;
-}
-
-/* Titre principal */
-.board-title{
-    font-size:24px;
-    font-weight:800;
-    letter-spacing:0.2px;
-}
-
-/* Accent Nono Maps */
-.title-accent{
-    color:var(--accent);
-    font-weight:900;
-}
-
-/* Ligne meta (compteurs + légende) */
-.board-meta{
-    display:flex;
-    flex-wrap:wrap;
-    gap:14px;
-    align-items:center;
-    font-size:13px;
-    color:var(--muted);
-}
-
-/* Compteurs plus discrets */
-#counters{
-    opacity:0.9;
-}
-
-/* Légende HP */
-.hp-legend{
-    display:inline-flex;
-    align-items:center;
-    gap:6px;
-    font-size:12px;
-    opacity:0.85;
-}
-
-/* Petit point rouge */
-.hp-dot{
-    width:8px;
-    height:8px;
-    border-radius:50%;
-    background:#C80E0E; /* rouge SNCF */
-    box-shadow:0 0 0 2px rgba(200,14,14,0.15);
-}
-
-/* Dark mode — point HP adapté */
-@media (prefers-color-scheme: dark){
-  .hp-dot{
-    background:#FF6B6B;
-    box-shadow:0 0 0 2px rgba(255,107,107,0.25);
-  }
-}
-
-   /* Fix sizing global */
+/* ======================================
+   Reset sizing
+====================================== */
 *, *::before, *::after{
     box-sizing:border-box;
 }
 
-/* ===============================
+/* ======================================
    VARIABLES THÈME SNCF — CLAIR
-================================ */
+====================================== */
 :root{
     --bg:#FFFFFF;
     --card-bg:#FFFFFF;
@@ -108,9 +46,9 @@
     --shadow:rgba(0,0,0,0.10);
 }
 
-/* ===============================
-   DARK MODE — VERSION PROPRE
-================================ */
+/* ======================================
+   DARK MODE — PROPRE
+====================================== */
 @media (prefers-color-scheme: dark){
   :root{
     --bg:#121212;
@@ -134,29 +72,65 @@
     --shadow:rgba(0,0,0,0.6);
   }
 
-  /* header dark */
   .board-header{
     background:rgba(20,20,20,0.75);
     border:1px solid var(--border);
   }
 
-  /* type pill dark */
   .type-pill{
     background:#1F2937;
     color:#D1D5DB;
     border-color:#374151;
   }
 
-  /* ville card dark différenciée */
   .ville-card{
     background:rgba(255,255,255,0.06) !important;
     border:1px solid rgba(255,255,255,0.08);
   }
+
+  /* FAB lisible en dark */
+  .home-fab{
+    background:rgba(40,40,40,0.85);
+    border:1px solid var(--border);
+  }
 }
 
-/* ===============================
+/* ======================================
+   Header premium NonoMaps
+====================================== */
+.board-title-wrap{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+}
+
+.board-title{
+    font-size:24px;
+    font-weight:800;
+    letter-spacing:0.2px;
+}
+
+.title-accent{
+    color:var(--accent);
+    font-weight:900;
+}
+
+.board-meta{
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
+    align-items:center;
+    font-size:13px;
+    color:var(--muted);
+}
+
+#counters{
+    opacity:0.9;
+}
+
+/* ======================================
    FAB Smart Hide
-================================ */
+====================================== */
 .home-fab{
     will-change:transform, opacity;
 }
@@ -167,9 +141,9 @@
     pointer-events:none;
 }
 
-/* ===============================
-   FAB Accueil — standard NonoMaps
-================================ */
+/* ======================================
+   FAB Accueil
+====================================== */
 .home-fab{
     position:fixed;
     left:50%;
@@ -204,9 +178,7 @@
     transform:translateX(-50%) scale(0.96);
 }
 
-/* ===============================
-   FAB mobile
-================================ */
+/* Mobile FAB */
 @media (max-width:480px){
     .home-fab{
         padding:9px 16px;
@@ -216,16 +188,9 @@
     }
 }
 
-/* ===============================
-   Cartes ville (clair)
-================================ */
-.ville-card{
-    background:#EAF4FB !important;
-}
-
-/* ===============================
+/* ======================================
    Layout
-================================ */
+====================================== */
 body{
     font-family:Inter,sans-serif;
     margin:0;
@@ -239,9 +204,9 @@ body{
     margin-top:18px;
 }
 
-/* ===============================
+/* ======================================
    Liens cliquables
-================================ */
+====================================== */
 .section-title,
 .sat-pill{
     text-decoration:none;
@@ -250,9 +215,9 @@ body{
     transition:0.15s;
 }
 
-/* ===============================
+/* ======================================
    Pills
-================================ */
+====================================== */
 .pill,
 .sat-pill,
 .section-title,
@@ -306,9 +271,9 @@ body{
     color:var(--hp-text);
 }
 
-/* ===============================
+/* ======================================
    Cartes / grille
-================================ */
+====================================== */
 .post-container{
     display:grid;
     grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
@@ -345,9 +310,9 @@ body{
     }
 }
 
-/* ===============================
+/* ======================================
    Recherche
-================================ */
+====================================== */
 #search{
     width:100%;
     padding:12px 18px;
@@ -363,9 +328,9 @@ body{
     box-shadow:0 0 0 3px rgba(80,104,245,0.18);
 }
 
-/* ===============================
+/* ======================================
    Filtres
-================================ */
+====================================== */
 .filters{
     display:flex;
     gap:10px;
@@ -397,9 +362,9 @@ body{
     box-shadow:0 6px 18px rgba(80,104,245,0.35);
 }
 
-/* ===============================
-   Header
-================================ */
+/* ======================================
+   Header container
+====================================== */
 .board-header{
     position:sticky;
     top:0;
@@ -411,9 +376,9 @@ body{
     box-shadow:0 10px 26px var(--shadow);
 }
 
-/* ===============================
+/* ======================================
    Mobile
-================================ */
+====================================== */
 @media (max-width:480px){
     .card{ padding:14px; border-radius:14px; }
     .card-title{ font-size:16px; }
@@ -435,10 +400,6 @@ body{
 
       <div class="board-meta">
         <span id="counters">Chargement…</span>
-        <span class="hp-legend">
-          <span class="hp-dot"></span>
-          Hors patrimoine
-        </span>
       </div>
     </div>
   </div>
