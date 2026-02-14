@@ -1414,7 +1414,6 @@ function chargerPN(btn) {
 const pnUrls = [
   "https://ressources.data.sncf.com/api/records/1.0/search/"
     + "?dataset=liste-des-passages-a-niveau"
-    + "&geofilter.bbox=1.4,49.4,4.5,51.2"
     + "&rows=3000"
 ];
 
@@ -1469,6 +1468,8 @@ if (!coords) return;
 
 const lat = Number(coords[0]);
 const lon = Number(coords[1]);
+
+        if (lat < 49.0 || lat > 51.6 || lon < 0.5 || lon > 5.5) return;
 
 if (!Number.isFinite(lat) || !Number.isFinite(lon)) return;
 
@@ -2176,7 +2177,7 @@ panel.style.display = "block";
     
 </script>
 <div id="legal-footer">
-  Nono Maps v1.15.1 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.15.a | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
