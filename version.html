@@ -27,19 +27,30 @@
 /* ===============================
    Dark mode SNCF
 ================================ */
+/* ===============================
+   Dark mode SNCF — version propre
+================================ */
 @media (prefers-color-scheme: dark){
   :root{
-    --bg:#015147;
+    /* Fond neutre moderne */
+    --bg:#121212;
+
+    /* Texte */
     --text:#FFFFFF;
-    --muted:#C7D6D3;
+    --muted:#B8B8B8;
 
+    /* Accent SNCF conservé */
     --accent:#5068F5;
-    --accent-soft:#2F6F8F;
+    --accent-soft:#1E2A44;
 
-    --border:#28A092;
-    --shadow:rgba(0,0,0,0.45);
+    /* Bordures lisibles */
+    --border:#2A2A2A;
 
-    --card-bg:rgba(15,63,57,0.65);
+    /* Ombres */
+    --shadow:rgba(0,0,0,0.6);
+
+    /* Cartes */
+    --card-bg:rgba(28,28,28,0.75);
   }
 }
 
