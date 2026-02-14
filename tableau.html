@@ -426,24 +426,19 @@ let postesMap = {};
 let postesList = [];      
 let viewKeys = [];       
 let triActif = "az"; 
-const excludedPosteKeys = new Set();
+
+const estHP = (a) => {
+  const v = a?.hors_patrimoine;
+  return v === true || String(v).toLowerCase() === "true" || String(v) === "1";
+};
+
 
 async function chargerPostes(){
  const res = await fetch(URL_POSTES, { cache: "no-store" });
   if (!res.ok) throw new Error(`Impossible de charger ${URL_POSTES} (${res.status})`);
   let postes = await res.json();
 
-  excludedPosteKeys.clear();
-  postes.forEach(p => {
-    if (p.special === true || p.hors_patrimoine === true) {
-      excludedPosteKeys.add(makePosteKey(p.nom, p.type));
-    }
-  });
-
-  postes = postes.filter(p =>
-    p.special !== true &&
-    p.hors_patrimoine !== true
-  );
+postes = postes.filter(p => p.special !== true);
 
   const map = {};
 
@@ -485,7 +480,8 @@ async function chargerPostes(){
 async function chargerAppareils(){
   const res = await fetch(URL_APPAREILS, { cache: "no-store" });
   if (!res.ok) throw new Error(`Impossible de charger ${URL_APPAREILS} (${res.status})`);
-  const appareils = await res.json();
+const appareils = await res.json();
+
 
   appareils.forEach(a => {
     const nom = norm(a.nom);
@@ -494,9 +490,6 @@ async function chargerAppareils(){
 
     const key = makePosteKey(nom, type);
 
-    if (excludedPosteKeys.has(key)) {
-      return;
-    }
 
 // si le poste n’existe pas dans postes.json, on le crée quand même
 if(!postesMap[key]){
@@ -571,7 +564,8 @@ function hrefAppareil(appareil, nom, type, sat){
 function pillHtml(a){
   const label = norm(a.appareil) || "Appareil";
   const sat = norm(a.SAT);
-  const hp = (a.hors_patrimoine === true);
+const hp = estHP(a);
+
   const inner = `<a class="pill" href="${hrefAppareil(label, a.nom, a.type, sat)}">${escapeHtml(label)}</a>`;
   return hp ? `<span class="hp">${inner}</span>` : inner;
 }
@@ -608,15 +602,17 @@ function escapeHtml(s){
     return 0;
   });
 }
-   
+
 function render(){
-  // Compteurs
-  let nbPostes = 0, nbSats = 0, nbApp = 0, nbHp = 0;
   let html = "";
+  let nbPostes = 0;
+  let nbSats = 0;
+  let nbApp = 0;
+  let nbHp = 0;
 
   if(viewKeys.length === 0){
     postesZone.innerHTML = `<div class="card"><div class="card-title">Aucun résultat</div></div>`;
-    countersEl.textContent = "Postes : 0 • SAT : 0 • Appareils : 0";
+    countersEl.textContent = "Postes : 0 • SAT : 0 • Appareils : 0 • HP : 0";
     return;
   }
 
@@ -625,21 +621,24 @@ function render(){
     if(!p) return;
 
     nbPostes++;
-    nbSats += p.sats.size;
-    nbApp += p.principal.length;
-    p.principal.forEach(a => { if(a.hors_patrimoine === true) nbHp++; });
+    nbSats += (p.satNamesSorted || []).length;
+    nbApp += (p.principalSorted || []).length;
+    nbHp += (p.principalSorted || []).filter(estHP).length;
 
-    Object.keys(p.satApp).forEach(s => {
-      nbApp += p.satApp[s].length;
-      p.satApp[s].forEach(a => { if(a.hors_patrimoine === true) nbHp++; });
+    (p.satNamesSorted || []).forEach(sat => {
+      const list = (p.satAppSorted && p.satAppSorted[sat]) ? p.satAppSorted[sat] : [];
+      nbApp += list.length;
+      nbHp += list.filter(estHP).length;
     });
 
     html += renderPosteCard(p);
   });
 
   postesZone.innerHTML = html;
-  countersEl.textContent = `Postes : ${nbPostes} • SAT : ${nbSats} • Appareils : ${nbApp}${nbHp ? ` • HP : ${nbHp}` : ""}`;
+  countersEl.textContent = `Postes : ${nbPostes} • SAT : ${nbSats} • Appareils : ${nbApp} • HP : ${nbHp}`;
 }
+
+
 
 function renderPosteCard(p){
   const hasType = !!norm(p.type);
