@@ -840,47 +840,57 @@ if (!isSAT && !isAcces) {
   let html = `<p><strong>🧩 Appareils trouvés dans ce poste :</strong></p>`;
 
 for (const sat of orderedKeys) {
+  if (sat === currentLieu.SAT) continue;
   const list = groupedAll[sat];
-    html += `<p><strong>${sat} :</strong> `;
-    html += list.map(app => (() => {   const id = crypto.randomUUID();   appareilStore[id] = app;   return `<a href="#" onclick="showAppareil(appareilStore['${id}'])">${app.appareil}</a>`; })()).join(", ");
-    html += `</p>`;
-  }
 
-  html += `
-    <div class="missing-box">
-      🤝 Appareil manquant ?
-      <a href="ajout_appareil.html?poste=${encodeURIComponent(formatNomCompletLieu(currentLieu))}">Aidez-nous à l’ajouter.</a>
-    </div>
-  `;
+  html += `<p><strong>${sat} :</strong> `;
+  html += list.map(app => (() => {
+    const id = crypto.randomUUID();
+    appareilStore[id] = app;
+    return `<a href="#" onclick="showAppareil(appareilStore['${id}'])">${app.appareil}</a>`;
+  })()).join(", ");
+  html += `</p>`;
+}
 
-  return html;
+html += `
+  <div class="missing-box">
+    🤝 Appareil manquant ? Aidez-nous à l’ajouter.
+    <a href="ajout_appareil.html?poste=${encodeURIComponent(formatNomCompletLieu(currentLieu))}">
+      Aidez-nous à l’ajouter.
+    </a>
+  </div>
+`;
+
+return html;
 }
 
   let html = "";
 
   if (isSAT) {
-    const matchingAppsForSAT = matchingApps.filter(app => (app.SAT || "") === currentLieu.SAT);
+  const matchingAppsForSAT = matchingApps.filter(app => (app.SAT || "") === currentLieu.SAT);
 
-    let groupedSAT = {};
-    matchingAppsForSAT.forEach(app => {
-      const sat = app.SAT || 'Poste';
-      if (!groupedSAT[sat]) groupedSAT[sat] = [];
-      groupedSAT[sat].push(app);
-    });
+  let groupedSAT = {};
+  matchingAppsForSAT.forEach(app => {
+    const sat = app.SAT || 'Poste';
+    if (!groupedSAT[sat]) groupedSAT[sat] = [];
+    groupedSAT[sat].push(app);
+  });
 
-    for (const sat in groupedSAT) {
-      groupedSAT[sat].sort((a, b) => a.appareil.localeCompare(b.appareil, "fr", { numeric: true }));
-    }
-
-    html += `<p><strong>🧩 Appareils trouvés dans ce SAT :</strong></p>`;
-    for (const [sat, list] of Object.entries(groupedSAT)) {
-     html += `<p>${list.map(app => (() => {
-  const id = crypto.randomUUID();
-  appareilStore[id] = app;
-  return `<a href="#" onclick="showAppareil(appareilStore['${id}'])">${app.appareil}</a>`;
-})()).join(", ")}</p>`;
-    }
+  for (const sat in groupedSAT) {
+    groupedSAT[sat].sort((a, b) =>
+      a.appareil.localeCompare(b.appareil, "fr", { numeric: true })
+    );
   }
+
+  html += `<p><strong>🧩 Appareils trouvés dans ce SAT :</strong></p>`;
+  for (const [sat, list] of Object.entries(groupedSAT)) {
+    html += `<p>${list.map(app => (() => {
+      const id = crypto.randomUUID();
+      appareilStore[id] = app;
+      return `<a href="#" onclick="showAppareil(appareilStore['${id}'])">${app.appareil}</a>`;
+    })()).join(", ")}</p>`;
+  }
+}
 
   html += `<p><strong>🧩 Appareils trouvés dans ce poste :</strong></p>`;
 
@@ -896,7 +906,16 @@ for (const sat of orderedKeys) {
   })()).join(", ");
   html += `</p>`;
 }
-    return html;
+html += `
+  <div class="missing-box">
+🤝 Appareil manquant dans ce SAT ? Aidez-nous à l’ajouter.
+    <a href="ajout_appareil.html?poste=${encodeURIComponent(formatNomCompletLieu(currentLieu))}">
+      Aidez-nous à l’ajouter.
+    </a>
+  </div>
+`;
+
+return html;
   }
     
 function generateAlias(appareil, nom, sat, posteType) {
