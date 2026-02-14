@@ -84,7 +84,7 @@ bottom:calc(18px + env(safe-area-inset-bottom, 0px));
     --text:#FFFFFF;
     --muted:#B8B8B8;
 
-    /* Pills appareils (bleu SNCF lisible dark) */
+    /* Pills appareils */
     --pill-bg:#1E2A44;
     --pill-text:#8FA8FF;
 
@@ -106,8 +106,15 @@ bottom:calc(18px + env(safe-area-inset-bottom, 0px));
     --shadow:rgba(0,0,0,0.6);
   }
 }
-   
 
+   @media (prefers-color-scheme: dark){
+  .type-pill{
+    background:#1F2937;
+    color:#D1D5DB;
+    border-color:#374151;
+  }
+}
+   
 /* ===============================
    Variables thème SNCF (version UI pâle)
 ================================ */
@@ -139,27 +146,7 @@ bottom:calc(18px + env(safe-area-inset-bottom, 0px));
     --shadow:rgba(0,0,0,0.10);
 }
 
-@media (prefers-color-scheme: dark){
-    :root{
-        --bg:#015147;
-        --card-bg:#0F3F39;
-        --text:#FFFFFF;
 
-        --pill-bg:#2F6F8F;
-        --pill-text:#FFFFFF;
-
-        --sat-bg:#DE511D;
-        --sat-text:#FFFFFF;
-
-        --hp-bg:rgba(200,14,14,0.30);
-        --hp-text:#F08992;
-
-        --accent:#5068F5;
-        --border:#28A092;
-
-        --shadow:rgba(0,0,0,0.45);
-    }
-}
 
 /* ===============================
    Cartes ville
