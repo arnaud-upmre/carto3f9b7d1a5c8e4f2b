@@ -8,6 +8,19 @@
 <style>
 
    /* ===============================
+   FAB Smart Hide
+================================ */
+.home-fab{
+    will-change:transform, opacity;
+}
+
+.home-fab.hide{
+    transform:translateX(-50%) translateY(120%);
+    opacity:0;
+    pointer-events:none;
+}
+
+   /* ===============================
    FAB Accueil — standard NonoMaps
 ================================ */
 .home-fab{
@@ -746,6 +759,52 @@ document
    <a href="index.html" class="home-fab">
   ← Accueil
 </a>
+
+   <script>
+/* ===============================
+   Smart hide FAB — NonoMaps
+================================ */
+(function(){
+  const fab = document.querySelector('.home-fab');
+  if(!fab) return;
+
+  let lastScroll = window.scrollY;
+  let ticking = false;
+  const SHOW_DELTA = 6; // tolérance micro scroll
+
+  function update(){
+    const current = window.scrollY;
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+
+    // Toujours visible en haut
+    if(current <= 10){
+      fab.classList.remove('hide');
+    }
+    // Toujours visible proche du bas
+    else if(current >= maxScroll - 20){
+      fab.classList.remove('hide');
+    }
+    // Scroll vers le bas → on cache
+    else if(current > lastScroll + SHOW_DELTA){
+      fab.classList.add('hide');
+    }
+    // Scroll vers le haut → on montre
+    else if(current < lastScroll - SHOW_DELTA){
+      fab.classList.remove('hide');
+    }
+
+    lastScroll = current;
+    ticking = false;
+  }
+
+  window.addEventListener('scroll', () => {
+    if(!ticking){
+      window.requestAnimationFrame(update);
+      ticking = true;
+    }
+  }, { passive:true });
+})();
+</script>
 
 </body>
 </html>
