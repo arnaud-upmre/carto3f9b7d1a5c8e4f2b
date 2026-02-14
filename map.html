@@ -1479,7 +1479,7 @@ const lon = Number(f.geo_point_2d[1]);
 
 if (!Number.isFinite(lat) || !Number.isFinite(lon)) return;
 
-        if (lat < 49.0 || lat > 51.6 || lon < 0.5 || lon > 5.5) return;
+        //if (lat < 49.0 || lat > 51.6 || lon < 0.5 || lon > 5.5) return;
 
         const classeCode = (f.mnemo || "").replace("CLASSE ", "").trim();
         const classeTexte = pnClasses[classeCode]
@@ -2185,7 +2185,7 @@ panel.style.display = "block";
     
 </script>
 <div id="legal-footer">
-  Nono Maps v1.15.3 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.15.1 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
