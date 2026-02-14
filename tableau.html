@@ -65,6 +65,13 @@
     --shadow:rgba(0,0,0,0.6);
   }
 
+ @media (prefers-color-scheme: dark){
+  .board-header{
+    background:rgba(20,20,20,0.75);
+    border:1px solid var(--border);
+  }
+}
+
   /* type pill en dark */
   .type-pill{
     background:#1F2937;
@@ -239,7 +246,7 @@ body{
 }
 
 .card{
-    background:var(--card-bg);
+    background:linear-gradient(180deg, rgba(32,32,32,0.85), rgba(22,22,22,0.9));
     padding:14px;
     border-radius:14px;
     box-shadow:0 4px 12px var(--shadow);
@@ -298,16 +305,28 @@ body{
 
 .filters button{
     padding:8px 16px;
-    border-radius:10px;
-    background:var(--card-bg);
+    border-radius:12px;
+    background:rgba(255,255,255,0.04);
     border:1px solid var(--border);
     cursor:pointer;
     font-weight:600;
+    color:var(--text);
+    transition:all .15s ease;
+    backdrop-filter:blur(6px);
 }
 
+/* hover */
+.filters button:hover{
+    border-color:var(--accent);
+    transform:translateY(-1px);
+}
+
+/* bouton actif — bien visible */
 .filters button.activeFilter{
-    background:var(--accent);
+    background:linear-gradient(135deg, #5B6EFF, #5068F5);
     color:#FFFFFF;
+    border-color:#5068F5;
+    box-shadow:0 6px 18px rgba(80,104,245,0.35);
 }
 
 /* ===============================
