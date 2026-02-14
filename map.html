@@ -961,6 +961,20 @@ const pnLayer = L.markerClusterGroup({
   zoomToBoundsOnClick: true
 });
 
+      pnLayer.on('clusterclick', function (e) {
+  const markers = e.layer.getAllChildMarkers();
+  if (!markers.length) return;
+
+  const first = markers[0].getLatLng();
+  const allSameCoords = markers.every(m => m.getLatLng().equals(first));
+
+  if (allSameCoords) {
+    map.setView(first, map.getZoom() + 2);
+  } else {
+    map.fitBounds(e.layer.getBounds());
+  }
+});
+
 
 accesLayer.on('clusterclick', function (e) {
   const childMarkers = e.layer.getAllChildMarkers();
@@ -1397,16 +1411,12 @@ function chargerPN(btn) {
   toast.textContent = "⏳ Chargement des passages à niveau en cours...";
   toast.classList.add("show");
 
-  const pnUrls = [
-    "https://ressources.data.sncf.com/api/records/1.0/search/"
-      + "?dataset=liste-des-passages-a-niveau"
-      + "&geofilter.bbox=49.4,1.4,51.2,4.5"
-      + "&rows=3000",
-    "https://ressources.data.sncf.com/api/records/1.0/search/"
-      + "?dataset=liste-des-passages-a-niveau"
-      + "&geofilter.bbox=1.4,49.4,4.5,51.2"
-      + "&rows=3000"
-  ];
+const pnUrls = [
+  "https://ressources.data.sncf.com/api/records/1.0/search/"
+    + "?dataset=liste-des-passages-a-niveau"
+    + "&geofilter.bbox=1.4,49.4,4.5,51.2"
+    + "&rows=3000"
+];
 
   const tryFetchPN = async () => {
     let lastError = null;
@@ -1454,6 +1464,8 @@ const coords =
     : null);
 
 if (!coords) return;
+
+        console.log("PN coords raw:", coords);
 
 const lat = Number(coords[0]);
 const lon = Number(coords[1]);
@@ -2164,7 +2176,7 @@ panel.style.display = "block";
     
 </script>
 <div id="legal-footer">
-  Nono Maps v1.15 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.15.1 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
