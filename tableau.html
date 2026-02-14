@@ -266,6 +266,21 @@ body {
   animation: fadeIn 0.45s ease forwards;
 }
 
+.card.hp-poste{
+  background: linear-gradient(135deg, #fff1f1, #ffe4e4);
+  border: 1px solid #ef9a9a;
+  box-shadow: 0 6px 16px rgba(200, 14, 14, 0.18);
+}
+
+@media (prefers-color-scheme: dark){
+  .card.hp-poste{
+    background: linear-gradient(135deg, rgba(120,20,20,0.45), rgba(80,10,10,0.35));
+    border: 1px solid rgba(255,138,138,0.55);
+    box-shadow: 0 6px 18px rgba(255, 80, 80, 0.18);
+  }
+}
+
+
 .card-title {
   font-size: 18px;
   font-weight: 700;
@@ -644,7 +659,9 @@ if (!hpPosteKeys.has(key)) {
 
 
 function renderPosteCard(p){
-  const hasType = !!norm(p.type);
+const hasType = !!norm(p.type);
+const isHpPoste = hpPosteKeys.has(p.key);
+
 
   const title = hasType
     ? `${escapeHtml(p.nom)} <span class="type-pill">${escapeHtml(p.type)}</span>`
@@ -658,7 +675,8 @@ function renderPosteCard(p){
   const satNames = p.satNamesSorted || [];
 
 let html = `
-    <div class="card ${hasType ? "" : "ville-card"}">
+   <div class="card ${hasType ? "" : "ville-card"} ${isHpPoste ? "hp-poste" : ""}">
+
       <div class="card-title">${title}</div>
 
   ${hasType
