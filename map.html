@@ -565,11 +565,11 @@
 
   <div class="fab-options" id="fabOptions">
   <button class="btn-toggle active" onclick="toggleLayer(accesLayer, this, 'Accès routiers')">
-  <img src="ico/acces.png" alt="Accès routiers">
+  <img src="ico/acces.webp" alt="Accès routiers">
   </button>
   
   <button class="btn-toggle active" onclick="toggleLayer(postesLayer, this, 'Postes')">
-  <img src="ico/poste.png" alt="Postes">
+  <img src="ico/poste.webp" alt="Postes">
   </button>
    
   <button class="btn-toggle active" onclick="toggleLayer(appareilsLayer, this, 'Appareils')">
@@ -577,15 +577,15 @@
   </button>
     
   <button class="btn-toggle" onclick="chargerPN(this)">
-  <img src="ico/pn.png" alt="Passages à niveau">
+  <img src="ico/pn.webp" alt="Passages à niveau">
   </button>
 
   <button class="btn-toggle" id="btn-orm" title="OpenRailwayMap">
-  <img src="ico/ligne.png" alt="ORM">
+  <img src="ico/ligne.webp" alt="ORM">
   </button>
     
   <button class="btn-toggle" id="btn-speed" title="Vitesses ferroviaires">
-  <img src="ico/160.png" alt="Vitesses">
+  <img src="ico/160.webp" alt="Vitesses">
   </button>
 
   </div>
@@ -685,16 +685,16 @@ map.setView(first, zoom);
 let iconFile = null;
 
 if (marker.options.isAcces) {
-  iconFile = "acces.png";
+  iconFile = "acces.webp";
 
 } else if (id.includes("POSTE")) {
-  iconFile = "poste.png";
+  iconFile = "poste.webp";
 
 } else if (id.startsWith("ALIM")) {
-  iconFile = "alim.png";
+  iconFile = "alim.webp";
 
 } else if (id.startsWith("DU")) {
-  iconFile = "stop.png";
+  iconFile = "stop.webp";
 
 } else if (
   id.startsWith("I") ||
@@ -711,7 +711,7 @@ if (marker.options.isAcces) {
   /^GT[0-9]+$/.test(id) ||
   /^AT[0-9]+$/.test(id)
 ) {
-  iconFile = "TT.png";
+  iconFile = "TT.webp";
 
 } else if (
   /^T\d+(\/\d+)?\b/.test(id) ||
@@ -724,7 +724,7 @@ if (marker.options.isAcces) {
   id.startsWith("FB") ||
   id.startsWith("B")
 ) {
-  iconFile = "sect.png";
+  iconFile = "sect.webp";
 }
 
         return `
@@ -979,7 +979,7 @@ accesLayer.on('clusterclick', function (e) {
       ${items.map(it => `
         <a href="#" class="cluster-link" data-idx="${it.idx}" 
            style="display:flex;align-items:center;gap:6px;">
-          <img src="ico/acces.png" style="width:16px;height:16px;">
+          <img src="ico/acces.webp" style="width:16px;height:16px;">
           <span>${it.label}</span>
         </a>`).join("")}
     </div>`;
@@ -1017,7 +1017,7 @@ map.addLayer(appareilsLayer);
 map.addLayer(accesLayer);
 
 const iconPoste = L.divIcon({
-  html: `<img src="ico/poste.png" class="icon-halo">`,
+  html: `<img src="ico/poste.webp" class="icon-halo">`,
   className: "",
   iconSize: [36, 36],
   iconAnchor: [18, 36],   
@@ -1027,7 +1027,7 @@ const iconPoste = L.divIcon({
 const iconAppareilDefault = L.divIcon({className:"icon-circle appareil",html:"⚡"});
 
 const iconAcces = L.divIcon({
-  html: `<img src="ico/acces.png" class="icon-halo">`,
+  html: `<img src="ico/acces.webp" class="icon-halo">`,
   className: "",
   iconSize: [36, 36],
   iconAnchor: [18, 28], 
@@ -1048,11 +1048,11 @@ const iconAcces = L.divIcon({
   });
 }
 
-const iconAppareilDU = createAppareilIcon("stop.png", 18);
+const iconAppareilDU = createAppareilIcon("stop.webp", 18);
 const iconAppareilINT = createAppareilIcon("int.webp");
-const iconAppareilTT = createAppareilIcon("TT.png");
-const iconAppareilSECT = createAppareilIcon("sect.png");
-const iconAppareilALIM = createAppareilIcon("alim.png");
+const iconAppareilTT = createAppareilIcon("TT.webp");
+const iconAppareilSECT = createAppareilIcon("sect.webp");
+const iconAppareilALIM = createAppareilIcon("alim.webp");
 
 
     function formatPortailDisplay(val, secure) {
@@ -1122,7 +1122,7 @@ let content = `
 
 <span onclick="openStreetView(${item.latitude}, ${item.longitude})"
       style="cursor:pointer; position:absolute; top:10px; right:12px;">
-  <img src="ico/street.png" alt="Street View" style="width:26px; height:26px;">
+  <img src="ico/street.webp" alt="Street View" style="width:26px; height:26px;">
 </span>
              
 <div style="margin-bottom:10px;">
@@ -1434,7 +1434,7 @@ function chargerPN(btn) {
       console.info(`✅ ${records.length} PN filtrés (Hauts-de-France + 10 km au sud)`);
 
       const iconPN = L.divIcon({
-  html: `<img src="ico/pn.png" class="icon-halo-appareil">`,
+  html: `<img src="ico/pn.webp" class="icon-halo-appareil">`,
   className: "",
   iconSize: [24, 24],
   iconAnchor: [12, 24],
