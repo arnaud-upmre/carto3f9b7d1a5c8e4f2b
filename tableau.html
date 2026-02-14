@@ -88,6 +88,7 @@
     text-decoration:none;
     color:inherit;
     cursor:pointer;
+    transition:0.15s;
 }
 
 /* ===============================
@@ -122,8 +123,10 @@ body{
     transition:0.15s;
 }
 
-.pill:hover{
-    transform:translateY(-2px);
+.pill:hover,
+.sat-pill:hover,
+.section-title:hover{
+    transform:translateY(-2px) scale(1.02);
     box-shadow:0 3px 10px var(--shadow);
 }
 
@@ -150,6 +153,7 @@ body{
     margin-bottom:8px;
 }
 
+   
 .hp .pill{
     background:var(--hp-bg);
     color:var(--hp-text);
@@ -580,7 +584,7 @@ let html = `
     const pills = list.map(pillHtml).join("");
 
     // séparateur : seulement si ça a du sens visuellement
-    const needSep = (principal.length > 0 && idx === 0) || (idx > 0);
+const needSep = true;
     html += `
       <div class="${needSep ? "sat-block" : ""}">
         <a class="sat-pill" href="${hrefSat(p.nom, p.type, sat)}">${escapeHtml(sat)}</a>
