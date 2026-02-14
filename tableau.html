@@ -491,20 +491,10 @@ const appareils = await res.json();
     const key = makePosteKey(nom, type);
 
 
-// si le poste n’existe pas dans postes.json, on le crée quand même
 if(!postesMap[key]){
-  postesMap[key] = {
-    key,
-    nom,
-    type,
-    sats: new Set(),
-    principal: [],
-    satApp: {},
-    appCount: 0
-  };
-
-  postesList.push(postesMap[key]);
+  return;
 }
+
 
     const poste = postesMap[key];
 
