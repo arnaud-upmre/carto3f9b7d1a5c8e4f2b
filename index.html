@@ -32,6 +32,27 @@
    
   <style id="eale-intro-styles">
 
+    .sat-pill {
+  display: inline-block;
+  padding: 2px 8px;
+  margin-right: 6px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  background: #eef3ff;
+  color: #1a73e8;
+  border: 1px solid #1a73e8;
+  vertical-align: middle;
+}
+
+@media (prefers-color-scheme: dark) {
+  .sat-pill {
+    background: rgba(144,202,249,0.15);
+    color: #90caf9;
+    border-color: #90caf9;
+  }
+}
+
     body::before {
   content: "";
   position: fixed;
@@ -843,7 +864,7 @@ for (const sat of orderedKeys) {
   if (sat === currentLieu.SAT) continue;
   const list = groupedAll[sat];
 
-  html += `<p><strong>${sat} :</strong> `;
+  html += `<p><span class="sat-pill">${sat}</span> `;
   html += list.map(app => (() => {
     const id = crypto.randomUUID();
     appareilStore[id] = app;
@@ -898,7 +919,7 @@ for (const sat of orderedKeys) {
   if (sat === currentLieu.SAT) continue;
   const list = groupedAll[sat];
 
-  html += `<p><strong>${sat} :</strong> `;
+  html += `<p><span class="sat-pill">${sat}</span> `;
   html += list.map(app => (() => {
     const id = crypto.randomUUID();
     appareilStore[id] = app;
@@ -2294,7 +2315,7 @@ function formatInformations(val) {
 </div>
 <footer class="about-footer">
   <a href="arnaud.html" class="footer-link">🔧 À propos</a>
-  <a href="version.html" class="footer-link version">📌 Nono Maps V1.14.4</a>
+  <a href="version.html" class="footer-link version">📌 Nono Maps V1.14.4_a</a>
 </footer>
 <script>
 (function(){
