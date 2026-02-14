@@ -7,7 +7,77 @@
 
 <style>
 
-   /* ===============================
+ /* ===============================
+   VARIABLES THÈME SNCF — CLAIR
+================================ */
+:root{
+    --bg:#FFFFFF;
+    --card-bg:#FFFFFF;
+
+    /* Texte carbone SNCF */
+    --text:#3C3732;
+    --muted:#6B7280;
+
+    /* Bleu SNCF adouci */
+    --pill-bg:#EAF4FB;
+    --pill-text:#264FC4;
+
+    /* Jaune / orange SAT */
+    --sat-bg:#F6E4B5;
+    --sat-text:#DE511D;
+
+    /* Hors patrimoine */
+    --hp-bg:rgba(200,14,14,0.12);
+    --hp-text:#C80E0E;
+
+    /* Accent */
+    --accent:#5068F5;
+
+    /* Bordures */
+    --border:#B0CC93;
+
+    --shadow:rgba(0,0,0,0.10);
+}
+
+/* ===============================
+   DARK MODE — EXACT VERSION
+================================ */
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#121212;
+    --card-bg:rgba(28,28,28,0.75);
+
+    --text:#FFFFFF;
+    --muted:#9CA3AF;
+
+    --pill-bg:#1E2A44;
+    --pill-text:#8FA8FF;
+
+    --sat-bg:#2A1E12;
+    --sat-text:#FFB784;
+
+    --hp-bg:rgba(200,14,14,0.25);
+    --hp-text:#FF8A8A;
+
+    --accent:#5068F5;
+    --border:#2A2A2A;
+
+    --shadow:rgba(0,0,0,0.6);
+  }
+
+  /* type pill en dark */
+  .type-pill{
+    background:#1F2937;
+    color:#D1D5DB;
+    border-color:#374151;
+  }
+
+  .ville-card{
+    background:#1E2A44 !important;
+  }
+}
+
+/* ===============================
    FAB Smart Hide
 ================================ */
 .home-fab{
@@ -20,13 +90,13 @@
     pointer-events:none;
 }
 
-   /* ===============================
+/* ===============================
    FAB Accueil — standard NonoMaps
 ================================ */
 .home-fab{
     position:fixed;
     left:50%;
-bottom:calc(18px + env(safe-area-inset-bottom, 0px));
+    bottom:calc(18px + env(safe-area-inset-bottom, 0px));
     transform:translateX(-50%);
     z-index:999;
 
@@ -47,106 +117,27 @@ bottom:calc(18px + env(safe-area-inset-bottom, 0px));
     transition:all .18s ease;
 }
 
-/* Hover desktop */
 .home-fab:hover{
     transform:translateX(-50%) translateY(-2px);
     box-shadow:0 14px 36px var(--shadow);
     border-color:var(--accent);
 }
 
-/* Active mobile */
 .home-fab:active{
     transform:translateX(-50%) scale(0.96);
 }
 
-   /* ===============================
-   FAB compact mobile
+/* ===============================
+   FAB mobile
 ================================ */
 @media (max-width:480px){
     .home-fab{
         padding:9px 16px;
         font-size:13px;
- bottom:calc(14px + env(safe-area-inset-bottom, 0px));
+        bottom:calc(14px + env(safe-area-inset-bottom, 0px));
         box-shadow:0 6px 18px var(--shadow);
     }
 }
-
-/* ===============================
-   Dark mode — vrai dark moderne
-================================ */
-@media (prefers-color-scheme: dark){
-  :root{
-    /* Fond */
-    --bg:#121212;
-    --card-bg:rgba(28,28,28,0.75);
-
-    /* Texte */
-    --text:#FFFFFF;
-    --muted:#B8B8B8;
-
-    /* Pills appareils */
-    --pill-bg:#1E2A44;
-    --pill-text:#8FA8FF;
-
-    /* SAT */
-    --sat-bg:#2A1E12;
-    --sat-text:#FFB784;
-
-    /* Hors patrimoine */
-    --hp-bg:rgba(200,14,14,0.25);
-    --hp-text:#FF8A8A;
-
-    /* Accent */
-    --accent:#5068F5;
-
-    /* Bordures */
-    --border:#2A2A2A;
-
-    /* Ombres */
-    --shadow:rgba(0,0,0,0.6);
-  }
-}
-
-   @media (prefers-color-scheme: dark){
-  .type-pill{
-    background:#1F2937;
-    color:#D1D5DB;
-    border-color:#374151;
-  }
-}
-   
-/* ===============================
-   Variables thème SNCF (version UI pâle)
-================================ */
-:root{
-    --bg:#FFFFFF;
-    --card-bg:#FFFFFF;
-
-    /* Texte Carbone SNCF */
-    --text:#3C3732;
-
-    /* Bleu SNCF adouci */
-    --pill-bg:#EAF4FB;
-    --pill-text:#264FC4;
-
-    /* Jaune or adouci */
-    --sat-bg:#F6E4B5;
-    --sat-text:#DE511D;
-
-    /* Rouge feu adouci */
-    --hp-bg:rgba(200,14,14,0.12);
-    --hp-text:#C80E0E;
-
-    /* Accent */
-    --accent:#5068F5;
-
-    /* Bordures douces (vert lichen clair) */
-    --border:#B0CC93;
-
-    --shadow:rgba(0,0,0,0.10);
-}
-
-
 
 /* ===============================
    Cartes ville
@@ -155,21 +146,24 @@ bottom:calc(18px + env(safe-area-inset-bottom, 0px));
     background:#EAF4FB !important;
 }
 
-@media (prefers-color-scheme: dark){
-    .ville-card{
-        background:#264FC4 !important;
-    }
+/* ===============================
+   Layout
+================================ */
+body{
+    font-family:Inter,sans-serif;
+    margin:0;
+    padding:20px;
+    padding-bottom:90px;
+    background:var(--bg);
+    color:var(--text);
 }
 
-/* ===============================
-   Espacement entre compteurs et champ de recherche
-================================ */
 .board-row{
     margin-top:18px;
 }
 
 /* ===============================
-   Liens cliquables (poste / sat)
+   Liens cliquables
 ================================ */
 .section-title,
 .sat-pill{
@@ -177,18 +171,6 @@ bottom:calc(18px + env(safe-area-inset-bottom, 0px));
     color:inherit;
     cursor:pointer;
     transition:0.15s;
-}
-
-/* ===============================
-   Base layout
-================================ */
-body{
-    font-family:Inter,sans-serif;
-    margin:0;
-    padding:20px;
-    padding-bottom:90px; /* sécurité FAB */
-    background:var(--bg);
-    color:var(--text);
 }
 
 /* ===============================
@@ -220,9 +202,9 @@ body{
 }
 
 .type-pill{
-    background:#E6ECEF;          /* gris SNCF doux */
-    color:#3C3732;               /* carbone */
-    border:1px solid #B0CC93;    /* vert lichen */
+    background:#E6ECEF;
+    color:#3C3732;
+    border:1px solid #B0CC93;
     padding:3px 10px;
     border-radius:8px;
     font-size:11px;
@@ -242,7 +224,6 @@ body{
     margin-bottom:8px;
 }
 
-   
 .hp .pill{
     background:var(--hp-bg);
     color:var(--hp-text);
@@ -287,6 +268,9 @@ body{
     }
 }
 
+/* ===============================
+   Recherche
+================================ */
 #search{
     width:100%;
     padding:12px 18px;
@@ -302,6 +286,9 @@ body{
     box-shadow:0 0 0 3px rgba(80,104,245,0.18);
 }
 
+/* ===============================
+   Filtres
+================================ */
 .filters{
     display:flex;
     gap:10px;
@@ -324,7 +311,7 @@ body{
 }
 
 /* ===============================
-   Header / navigation
+   Header
 ================================ */
 .board-header{
     position:sticky;
@@ -352,7 +339,6 @@ body{
     transform:rotate(-0.4deg);
     font-family:"Comic Sans MS","Bradley Hand","Segoe Print",Inter,system-ui,sans-serif;
 }
-
 
 /* ===============================
    Mobile
