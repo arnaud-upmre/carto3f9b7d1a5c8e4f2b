@@ -7,6 +7,54 @@
 
 <style>
 
+/* ===============================
+   Variables thème SNCF
+================================ */
+:root{
+    --bg:#f1f3f5;
+    --card-bg:#ffffff;
+    --text:#111;
+
+    --pill-bg:#e6f2fb;
+    --pill-text:#0088ce;
+
+    --sat-bg:#fff2cc;
+    --sat-text:#8a6d00;
+
+    --hp-bg:rgba(213,43,30,0.18);
+    --hp-text:#d52b1e;
+
+    --accent:#0088ce;
+    --border:#d0d7de;
+
+    --shadow:rgba(0,0,0,0.12);
+}
+
+@media (prefers-color-scheme: dark){
+    :root{
+        --bg:#1c1d20;
+        --card-bg:#2a2b2e;
+        --text:#f5f5f5;
+
+        --pill-bg:#2f3b57;
+        --pill-text:#9bb8ff;
+
+        --sat-bg:#695a00;
+        --sat-text:#ffe58a;
+
+        --hp-bg:rgba(213,43,30,0.35);
+        --hp-text:#ffb3b8;
+
+        --accent:#3aa0e6;
+        --border:#3a3b3f;
+
+        --shadow:rgba(0,0,0,0.45);
+    }
+}
+
+/* ===============================
+   Cartes ville
+================================ */
 .ville-card{
     background:#eef3ff !important;
 }
@@ -17,13 +65,16 @@
     }
 }
 
-   /* Espacement entre compteurs et champ de recherche */
+/* ===============================
+   Espacement entre compteurs et champ de recherche
+================================ */
 .board-row{
     margin-top:18px;
 }
 
-
-/* ===============================Liens cliquables (poste / sat)================================ */
+/* ===============================
+   Liens cliquables (poste / sat)
+================================ */
 .section-title,
 .sat-pill{
     text-decoration:none;
@@ -31,33 +82,9 @@
     cursor:pointer;
 }
 
-/* ===============================Variables thème================================ */
-:root{
-    --bg:#f2f3f7;
-    --card-bg:#ffffff;
-    --text:#111;
-    --pill-bg:#e5ebff;
-    --pill-text:#1a4ce8;
-    --sat-bg:#fff6c4;
-    --sat-text:#8a6d00;
-    --shadow:rgba(0,0,0,0.12);
-}
-
-@media (prefers-color-scheme: dark){
-    :root{
-        --bg:#1c1d20;
-        --card-bg:#2a2b2e;
-        --text:#f5f5f5;
-        --pill-bg:#2f3b57;
-        --pill-text:#9bb8ff;
-        --sat-bg:#695a00;
-        --sat-text:#ffe58a;
-        --shadow:rgba(0,0,0,0.45);
-    }
-}
-
-
-/* ===============================Base layout================================ */
+/* ===============================
+   Base layout
+================================ */
 body{
     font-family:Inter,sans-serif;
     margin:0;
@@ -66,9 +93,9 @@ body{
     color:var(--text);
 }
 
-
-
-/* ===============================Pills================================ */
+/* ===============================
+   Pills
+================================ */
 .pill,
 .sat-pill,
 .section-title,
@@ -89,7 +116,7 @@ body{
 
 .pill:hover{
     transform:translateY(-2px);
-    box-shadow:0 3px 10px rgba(0,0,0,0.25);
+    box-shadow:0 3px 10px var(--shadow);
 }
 
 .type-pill{
@@ -113,19 +140,13 @@ body{
 }
 
 .hp .pill{
-    background:rgba(220,53,69,0.18);
-    color:#b02a37;
+    background:var(--hp-bg);
+    color:var(--hp-text);
 }
 
-@media (prefers-color-scheme: dark){
-    .hp .pill{
-        background:rgba(220,53,69,0.35);
-        color:#ffb3b8;
-    }
-}
-
-
-/* ===============================Cartes / grille================================ */
+/* ===============================
+   Cartes / grille
+================================ */
 .post-container{
     display:grid;
     grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
@@ -152,7 +173,7 @@ body{
 .sat-block{
     margin-top:16px;
     padding-top:12px;
-    border-top:1px dashed #ccc;
+    border-top:1px dashed var(--border);
 }
 
 @keyframes fadeIn{
@@ -167,14 +188,14 @@ body{
     padding:12px 18px;
     font-size:15px;
     border-radius:14px;
-    border:1px solid #bbb;
+    border:1px solid var(--border);
     background:var(--card-bg);
     color:var(--text);
 }
 
 #search:focus{
-    border-color:#1a73e8;
-    box-shadow:0 0 0 3px #1a73e825;
+    border-color:var(--accent);
+    box-shadow:0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent);
 }
 
 .filters{
@@ -188,18 +209,19 @@ body{
     padding:8px 16px;
     border-radius:10px;
     background:var(--card-bg);
-    border:1px solid #bbb;
+    border:1px solid var(--border);
     cursor:pointer;
     font-weight:600;
 }
 
 .filters button.activeFilter{
-    background:#1a73e8;
+    background:var(--accent);
     color:white;
 }
 
-
-/* ===============================Header / navigation================================ */
+/* ===============================
+   Header / navigation
+================================ */
 .board-header{
     position:sticky;
     top:0;
@@ -208,7 +230,7 @@ body{
     padding:14px;
     border-radius:18px;
     backdrop-filter:blur(8px);
-    box-shadow:0 10px 26px rgba(0,0,0,0.10);
+    box-shadow:0 10px 26px var(--shadow);
 }
 
 .board-top,
@@ -234,8 +256,9 @@ body{
     cursor:pointer;
 }
 
-
-/* ===============================Mobile================================ */
+/* ===============================
+   Mobile
+================================ */
 @media (max-width:480px){
     .card{
         padding:14px;
