@@ -627,7 +627,8 @@ function render(){
 
   if(viewKeys.length === 0){
     postesZone.innerHTML = `<div class="card"><div class="card-title">Aucun résultat</div></div>`;
-    countersEl.textContent = "Postes : 0 • SAT : 0 • Appareils : 0 • HP : 0";
+countersEl.textContent = "Postes : 0 • SAT : 0 • Appareils : 0 dont 0 hors patrimoine";
+
     return;
   }
 
@@ -653,7 +654,8 @@ if (!hpPosteKeys.has(key)) {
   });
 
   postesZone.innerHTML = html;
-  countersEl.textContent = `Postes : ${nbPostes} • SAT : ${nbSats} • Appareils : ${nbApp} • HP : ${nbHp}`;
+countersEl.textContent = `Postes : ${nbPostes} • SAT : ${nbSats} • Appareils : ${nbApp} dont ${nbHp} hors patrimoine`;
+
 }
 
 
