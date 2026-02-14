@@ -7,6 +7,65 @@
 
 <style>
 
+   /* ===============================
+   FAB Accueil — standard NonoMaps
+================================ */
+.home-fab{
+    position:fixed;
+    left:50%;
+    bottom:18px;
+    transform:translateX(-50%);
+    z-index:999;
+
+    padding:12px 22px;
+    border-radius:999px;
+    font-weight:700;
+    font-size:15px;
+    text-decoration:none;
+
+    color:var(--text);
+    background:rgba(255,255,255,0.75);
+    border:1px solid var(--border);
+
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+
+    box-shadow:0 10px 30px var(--shadow);
+    transition:all .18s ease;
+}
+
+/* Hover desktop */
+.home-fab:hover{
+    transform:translateX(-50%) translateY(-2px);
+    box-shadow:0 14px 36px var(--shadow);
+    border-color:var(--accent);
+}
+
+/* Active mobile */
+.home-fab:active{
+    transform:translateX(-50%) scale(0.96);
+}
+
+/* ===============================
+   Dark mode
+================================ */
+@media (prefers-color-scheme: dark){
+    .home-fab{
+        background:rgba(20,20,20,0.65);
+        color:#FFFFFF;
+    }
+}
+
+/* ===============================
+   Sécurité scroll (évite chevauchement)
+================================ */
+body{
+    padding-bottom:90px;
+}
+
+
+   
+
 /* ===============================
    Variables thème SNCF (version UI pâle)
 ================================ */
@@ -688,6 +747,9 @@ document
 
 </script>
 
+   <a href="index.html" class="home-fab">
+  ← Accueil
+</a>
 
 </body>
 </html>
