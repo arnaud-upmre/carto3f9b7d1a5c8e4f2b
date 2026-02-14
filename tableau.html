@@ -7,384 +7,376 @@
 
 <style>
 
-/* ======================================
-   Reset sizing
-====================================== */
-*, *::before, *::after{
-    box-sizing:border-box;
+/* Reset sizing */
+*, *::before, *::after {
+  box-sizing: border-box;
 }
 
-/* ======================================
-   VARIABLES THÈME SNCF — CLAIR
-====================================== */
-:root{
-    --bg:#FFFFFF;
-    --card-bg:#FFFFFF;
+/* Variables theme clair */
+:root {
+  --bg: #ffffff;
+  --card-bg: #ffffff;
 
-    /* Texte carbone SNCF */
-    --text:#3C3732;
-    --muted:#6B7280;
+  /* Texte */
+  --text: #3c3732;
+  --muted: #6b7280;
 
-    /* Bleu SNCF adouci */
-    --pill-bg:#EAF4FB;
-    --pill-text:#264FC4;
+  /* Pills */
+  --pill-bg: #eaf4fb;
+  --pill-text: #264fc4;
 
-    /* Jaune / orange SAT */
-    --sat-bg:#F6E4B5;
-    --sat-text:#DE511D;
+  /* SAT */
+  --sat-bg: #f6e4b5;
+  --sat-text: #de511d;
 
-    /* Hors patrimoine */
-    --hp-bg:rgba(200,14,14,0.12);
-    --hp-text:#C80E0E;
+  /* Hors patrimoine */
+  --hp-bg: rgba(200, 14, 14, 0.12);
+  --hp-text: #c80e0e;
 
-    /* Accent */
-    --accent:#5068F5;
-
-    /* Bordures */
-    --border:#B0CC93;
-
-    --shadow:rgba(0,0,0,0.10);
+  /* Accent / bordure / ombre */
+  --accent: #5068f5;
+  --border: #b0cc93;
+  --shadow: rgba(0, 0, 0, 0.1);
 }
 
-/* ======================================
-   DARK MODE — PROPRE
-====================================== */
-@media (prefers-color-scheme: dark){
-  :root{
-    --bg:#121212;
-    --card-bg:rgba(28,28,28,0.75);
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #121212;
+    --card-bg: rgba(28, 28, 28, 0.75);
 
-    --text:#FFFFFF;
-    --muted:#9CA3AF;
+    --text: #ffffff;
+    --muted: #9ca3af;
 
-    --pill-bg:#1E2A44;
-    --pill-text:#8FA8FF;
+    --pill-bg: #1e2a44;
+    --pill-text: #8fa8ff;
 
-    --sat-bg:#2A1E12;
-    --sat-text:#FFB784;
+    --sat-bg: #2a1e12;
+    --sat-text: #ffb784;
 
-    --hp-bg:rgba(200,14,14,0.25);
-    --hp-text:#FF8A8A;
+    --hp-bg: rgba(200, 14, 14, 0.25);
+    --hp-text: #ff8a8a;
 
-    --accent:#5068F5;
-    --border:#2A2A2A;
-
-    --shadow:rgba(0,0,0,0.6);
+    --accent: #5068f5;
+    --border: #2a2a2a;
+    --shadow: rgba(0, 0, 0, 0.6);
   }
 
-  .board-header{
-    background:rgba(20,20,20,0.75);
-    border:1px solid var(--border);
+  .board-header {
+    background: rgba(20, 20, 20, 0.75);
+    border: 1px solid var(--border);
   }
 
-  .type-pill{
-    background:#1F2937;
-    color:#D1D5DB;
-    border-color:#374151;
+  .type-pill {
+    background: #1f2937;
+    color: #d1d5db;
+    border-color: #374151;
   }
 
-  .ville-card{
-    background:rgba(255,255,255,0.06) !important;
-    border:1px solid rgba(255,255,255,0.08);
+  .ville-card {
+    background: rgba(255, 255, 255, 0.06) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08);
   }
 
-  /* FAB lisible en dark */
-  .home-fab{
-    background:rgba(40,40,40,0.85);
-    border:1px solid var(--border);
+  .home-fab {
+    background: rgba(40, 40, 40, 0.85);
+    border: 1px solid var(--border);
   }
 }
 
-/* ======================================
-   Header premium NonoMaps
-====================================== */
-.board-title-wrap{
-    display:flex;
-    flex-direction:column;
-    gap:4px;
+/* Header */
+.board-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
-.board-title{
-    font-size:24px;
-    font-weight:800;
-    letter-spacing:0.2px;
+.board-title {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
 }
 
-.title-accent{
-    color:var(--accent);
-    font-weight:900;
+.title-accent {
+  color: var(--accent);
+  font-weight: 900;
 }
 
-.board-meta{
-    display:flex;
-    flex-wrap:wrap;
-    gap:14px;
-    align-items:center;
-    font-size:13px;
-    color:var(--muted);
+.board-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: center;
+  font-size: 13px;
+  color: var(--muted);
 }
 
-#counters{
-    opacity:0.9;
+#counters {
+  opacity: 0.9;
 }
 
-/* ======================================
-   FAB Smart Hide
-====================================== */
-.home-fab{
-    will-change:transform, opacity;
+/* FAB smart hide */
+.home-fab {
+  will-change: transform, opacity;
 }
 
-.home-fab.hide{
-    transform:translateX(-50%) translateY(120%);
-    opacity:0;
-    pointer-events:none;
+.home-fab.hide {
+  transform: translateX(-50%) translateY(120%);
+  opacity: 0;
+  pointer-events: none;
 }
 
-/* ======================================
-   FAB Accueil
-====================================== */
-.home-fab{
-    position:fixed;
-    left:50%;
-    bottom:calc(18px + env(safe-area-inset-bottom, 0px));
-    transform:translateX(-50%);
-    z-index:999;
+/* FAB */
+.home-fab {
+  position: fixed;
+  left: 50%;
+  bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+  transform: translateX(-50%);
+  z-index: 999;
 
-    padding:12px 22px;
-    border-radius:999px;
-    font-weight:700;
-    font-size:15px;
-    text-decoration:none;
+  padding: 12px 22px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 15px;
+  text-decoration: none;
 
-    color:var(--text);
-    background:rgba(255,255,255,0.75);
-    border:1px solid var(--border);
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid var(--border);
 
-    backdrop-filter:blur(12px);
-    -webkit-backdrop-filter:blur(12px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 
-    box-shadow:0 10px 30px var(--shadow);
-    transition:all .18s ease;
+  box-shadow: 0 10px 30px var(--shadow);
+  transition: all 0.18s ease;
 }
 
-.home-fab:hover{
-    transform:translateX(-50%) translateY(-2px);
-    box-shadow:0 14px 36px var(--shadow);
-    border-color:var(--accent);
+.home-fab:hover {
+  transform: translateX(-50%) translateY(-2px);
+  box-shadow: 0 14px 36px var(--shadow);
+  border-color: var(--accent);
 }
 
-.home-fab:active{
-    transform:translateX(-50%) scale(0.96);
+.home-fab:active {
+  transform: translateX(-50%) scale(0.96);
 }
 
-/* Mobile FAB */
-@media (max-width:480px){
-    .home-fab{
-        padding:9px 16px;
-        font-size:13px;
-        bottom:calc(14px + env(safe-area-inset-bottom, 0px));
-        box-shadow:0 6px 18px var(--shadow);
-    }
+@media (max-width: 480px) {
+  .home-fab {
+    padding: 9px 16px;
+    font-size: 13px;
+    bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+    box-shadow: 0 6px 18px var(--shadow);
+  }
 }
 
-/* ======================================
-   Layout
-====================================== */
-body{
-    font-family:Inter,sans-serif;
-    margin:0;
-    padding:20px;
-    padding-bottom:90px;
-    background:var(--bg);
-    color:var(--text);
+/* Layout */
+body {
+  font-family: Inter, sans-serif;
+  margin: 0;
+  padding: 20px;
+  padding-bottom: 90px;
+  background: var(--bg);
+  color: var(--text);
 }
 
-.board-row{
-    margin-top:18px;
+.board-row {
+  margin-top: 18px;
 }
 
-/* ======================================
-   Liens cliquables
-====================================== */
+/* Liens cliquables */
 .section-title,
-.sat-pill{
-    text-decoration:none;
-    color:inherit;
-    cursor:pointer;
-    transition:0.15s;
+.sat-pill {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition: 0.15s;
 }
 
-/* ======================================
-   Pills
-====================================== */
+/* Pills */
 .pill,
 .sat-pill,
 .section-title,
-.type-pill{
-    display:inline-block;
+.type-pill {
+  display: inline-block;
 }
 
-.pill{
-    padding:4px 8px;
-    background:var(--pill-bg);
-    color:var(--pill-text);
-    border-radius:10px;
-    font-size:12px;
-    margin:4px 6px 4px 0;
-    cursor:pointer;
-    transition:0.15s;
+.pill {
+  padding: 4px 8px;
+  background: var(--pill-bg);
+  color: var(--pill-text);
+  border-radius: 10px;
+  font-size: 12px;
+  margin: 4px 6px 4px 0;
+  cursor: pointer;
+  transition: 0.15s;
+  text-decoration: none;
 }
 
 .pill:hover,
 .sat-pill:hover,
-.section-title:hover{
-    transform:translateY(-2px) scale(1.02);
-    box-shadow:0 3px 10px var(--shadow);
+.section-title:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 3px 10px var(--shadow);
 }
 
-.type-pill{
-    background:#E6ECEF;
-    color:#3C3732;
-    border:1px solid #B0CC93;
-    padding:3px 10px;
-    border-radius:8px;
-    font-size:11px;
-    font-weight:700;
-    letter-spacing:0.3px;
-    margin-left:6px;
+.type-pill {
+  background: #e6ecef;
+  color: #3c3732;
+  border: 1px solid #b0cc93;
+  padding: 3px 10px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  margin-left: 6px;
 }
 
 .sat-pill,
-.section-title{
-    background:var(--sat-bg);
-    color:var(--sat-text);
-    padding:4px 10px;
-    font-size:12px;
-    border-radius:10px;
-    font-weight:600;
-    margin-bottom:8px;
+.section-title {
+  background: var(--sat-bg);
+  color: var(--sat-text);
+  padding: 4px 10px;
+  font-size: 12px;
+  border-radius: 10px;
+  font-weight: 600;
+  margin-bottom: 8px;
 }
 
-.hp .pill{
-    background:var(--hp-bg);
-    color:var(--hp-text);
+.hp .pill {
+  background: var(--hp-bg);
+  color: var(--hp-text);
 }
 
-/* ======================================
-   Cartes / grille
-====================================== */
-.post-container{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
-    gap:20px;
+/* Cartes / grille */
+.post-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
 }
 
-.card{
-    background:var(--card-bg);
-    padding:14px;
-    border-radius:14px;
-    box-shadow:0 4px 12px var(--shadow);
-    border:1px solid rgba(255,255,255,0.05);
-    opacity:0;
-    transform:translateY(10px);
-    animation:fadeIn 0.45s ease forwards;
+.card {
+  background: var(--card-bg);
+  padding: 14px;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px var(--shadow);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeIn 0.45s ease forwards;
 }
 
-.card-title{
-    font-size:18px;
-    font-weight:700;
-    margin-bottom:14px;
+.card-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 14px;
 }
 
-.sat-block{
-    margin-top:16px;
-    padding-top:12px;
-    border-top:1px dashed var(--border);
+.sat-block {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--border);
 }
 
-@keyframes fadeIn{
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* ======================================
-   Recherche
-====================================== */
-#search{
-    width:100%;
-    padding:12px 18px;
-    font-size:15px;
-    border-radius:14px;
-    border:1px solid var(--border);
-    background:var(--card-bg);
-    color:var(--text);
+/* Recherche */
+#search {
+  width: 100%;
+  padding: 12px 18px;
+  font-size: 15px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  color: var(--text);
 }
 
-#search:focus{
-    border-color:var(--accent);
-    box-shadow:0 0 0 3px rgba(80,104,245,0.18);
+#search:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(80, 104, 245, 0.18);
 }
 
-/* ======================================
-   Filtres
-====================================== */
-.filters{
-    display:flex;
-    gap:10px;
-    margin-bottom:20px;
-    flex-wrap:wrap;
+/* Filtres */
+.filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
 }
 
-.filters button{
-    padding:8px 16px;
-    border-radius:12px;
-    background:rgba(255,255,255,0.06);
-    border:1px solid var(--border);
-    cursor:pointer;
-    font-weight:600;
-    color:var(--text);
-    transition:all .15s ease;
-    backdrop-filter:blur(6px);
+.filters button {
+  padding: 8px 16px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--text);
+  transition: all 0.15s ease;
+  backdrop-filter: blur(6px);
 }
 
-.filters button:hover{
-    border-color:var(--accent);
-    transform:translateY(-1px);
+.filters button:hover {
+  border-color: var(--accent);
+  transform: translateY(-1px);
 }
 
-.filters button.activeFilter{
-    background:linear-gradient(135deg, #5B6EFF, #5068F5);
-    color:#FFFFFF;
-    border-color:#5068F5;
-    box-shadow:0 6px 18px rgba(80,104,245,0.35);
+.filters button.activeFilter {
+  background: linear-gradient(135deg, #5b6eff, #5068f5);
+  color: #ffffff;
+  border-color: #5068f5;
+  box-shadow: 0 6px 18px rgba(80, 104, 245, 0.35);
 }
 
-/* ======================================
-   Header container
-====================================== */
-.board-header{
-    position:sticky;
-    top:0;
-    z-index:50;
-    margin-bottom:16px;
-    padding:14px;
-    border-radius:18px;
-    backdrop-filter:blur(8px);
-    box-shadow:0 10px 26px var(--shadow);
+.pill:focus-visible,
+.sat-pill:focus-visible,
+.section-title:focus-visible,
+.home-fab:focus-visible,
+.filters button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
-/* ======================================
-   Mobile
-====================================== */
-@media (max-width:480px){
-    .card{ padding:14px; border-radius:14px; }
-    .card-title{ font-size:16px; }
-    .pill{ font-size:12px; padding:4px 8px; }
-    .sat-pill, .section-title{ font-size:12px; padding:4px 10px; }
+/* Header container */
+.board-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  margin-bottom: 16px;
+  padding: 14px;
+  border-radius: 18px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 10px 26px var(--shadow);
 }
+
+/* Mobile */
+@media (max-width: 480px) {
+  .card {
+    padding: 14px;
+    border-radius: 14px;
+  }
+
+  .card-title {
+    font-size: 16px;
+  }
+
+  .pill {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+
+  .sat-pill,
+  .section-title {
+    font-size: 12px;
+    padding: 4px 10px;
+  }
+}
+
  
 </style>
 
@@ -397,17 +389,15 @@ body{
       Tableau blanc <span class="title-accent">Nono Maps</span>
     </div>
 
-    <div class="board-meta">
+  <div class="board-meta">
       <span id="counters">Chargement…</span>
     </div>
-  </div>
 
-
-  <div class="board-row">
-    <input id="search" type="text" placeholder="Rechercher...">
+ <div class="board-row">
+    <input id="search" type="text" placeholder="Rechercher..." aria-label="Rechercher un poste, SAT ou appareil" autocomplete="off">
   </div>
 </div>
-
+</div>
 
 <div class="filters">
     <button data-sort="az">A → Z</button>
@@ -418,12 +408,10 @@ body{
 
 <div id="postesZone" class="post-container"></div>
 
-
 <script>
 
 const URL_POSTES = "postes.json";
 const URL_APPAREILS = "appareils.json";
-
 const postesZone = document.getElementById("postesZone");
 const searchEl = document.getElementById("search");
 const countersEl = document.getElementById("counters");
@@ -434,19 +422,17 @@ const normKey = (s) => norm(s).toLowerCase().replace(/\s+/g, " ");
 const makePosteKey = (nom, type) => `${normKey(nom)}__${normKey(type)}`;
 
 // Données en mémoire
-let postesMap = {};          // { key: { nom, type, sats:Set, principal:[], satApp:{sat:[]}} }
-let postesList = [];         // [{key, ...}] triée
-let viewKeys = [];           // keys affichés après recherche
-let triActif = "az"; // az | za | appmax | appmin
+let postesMap = {};         
+let postesList = [];      
+let viewKeys = [];       
+let triActif = "az"; 
 const excludedPosteKeys = new Set();
 
-// 1) Charger postes.json et construire la structure
 async function chargerPostes(){
  const res = await fetch(URL_POSTES, { cache: "no-store" });
   if (!res.ok) throw new Error(`Impossible de charger ${URL_POSTES} (${res.status})`);
   let postes = await res.json();
 
-  // EXCLUSION DES POSTES NON VOULUS + mémorisation des clés exclues
   excludedPosteKeys.clear();
   postes.forEach(p => {
     if (p.special === true || p.hors_patrimoine === true) {
@@ -466,9 +452,8 @@ async function chargerPostes(){
     const type = norm(p.type); // peut être ""
     const sat = norm(p.SAT);
 
-const key = makePosteKey(nom, type);
-if(!map[key]){
-   
+    const key = makePosteKey(nom, type);
+    if(!map[key]){
       map[key] = {
         key,
         nom,
@@ -496,26 +481,24 @@ if(!map[key]){
   viewKeys = postesList.map(p => p.key);
 }
 
-
 // 2) Charger appareils.json et injecter
 async function chargerAppareils(){
   const res = await fetch(URL_APPAREILS, { cache: "no-store" });
   if (!res.ok) throw new Error(`Impossible de charger ${URL_APPAREILS} (${res.status})`);
   const appareils = await res.json();
 
-
   appareils.forEach(a => {
     const nom = norm(a.nom);
     const type = norm(a.type);     // peut être ""
     const sat = norm(a.SAT);       // "" => principal
 
-     const key = makePosteKey(nom, type);
+    const key = makePosteKey(nom, type);
 
-if (excludedPosteKeys.has(key)) {
-  return;
-}
+    if (excludedPosteKeys.has(key)) {
+      return;
+    }
 
-// si le poste n’existe pas dans postes.json, on le crée quand même (sécurité)
+// si le poste n’existe pas dans postes.json, on le crée quand même
 if(!postesMap[key]){
   postesMap[key] = {
     key,
@@ -529,7 +512,6 @@ if(!postesMap[key]){
 
   postesList.push(postesMap[key]);
 }
-
 
     const poste = postesMap[key];
 
@@ -545,7 +527,7 @@ if(!postesMap[key]){
 
   });
 
-  // retri (au cas où des postes “fallback” ont été ajoutés)
+  // retri
   postesList = Object.values(postesMap)
     .sort((a,b) => `${a.nom} ${a.type}`.localeCompare(`${b.nom} ${b.type}`, "fr", { sensitivity:"base" }));
 
@@ -553,7 +535,6 @@ if(!postesMap[key]){
 
   viewKeys = postesList.map(p => p.key);
 }
-
 
 function preparerTriPourAffichage(poste){
   poste.principalSorted = [...poste.principal].sort((a,b) =>
@@ -573,8 +554,6 @@ function preparerTriPourAffichage(poste){
 }
 
 // Liens vers index
-
-    
 function hrefPoste(nom, type){
   const id = `${norm(nom)} ${norm(type)}`.trim();
   return `index.html?id=${encodeURIComponent(id)}`;
@@ -593,7 +572,7 @@ function pillHtml(a){
   const label = norm(a.appareil) || "Appareil";
   const sat = norm(a.SAT);
   const hp = (a.hors_patrimoine === true);
-  const inner = `<span class="pill" onclick="location.href='${hrefAppareil(label, a.nom, a.type, sat)}'">${escapeHtml(label)}</span>`;
+  const inner = `<a class="pill" href="${hrefAppareil(label, a.nom, a.type, sat)}">${escapeHtml(label)}</a>`;
   return hp ? `<span class="hp">${inner}</span>` : inner;
 }
 
@@ -626,7 +605,6 @@ function escapeHtml(s){
     if(triActif === "appmax") return b.appCount - a.appCount;
     if(triActif === "appmin") return a.appCount - b.appCount;
 
-
     return 0;
   });
 }
@@ -636,14 +614,18 @@ function render(){
   let nbPostes = 0, nbSats = 0, nbApp = 0, nbHp = 0;
   let html = "";
 
+  if(viewKeys.length === 0){
+    postesZone.innerHTML = `<div class="card"><div class="card-title">Aucun résultat</div></div>`;
+    countersEl.textContent = "Postes : 0 • SAT : 0 • Appareils : 0";
+    return;
+  }
+
   trierKeys(viewKeys).forEach(key => {
     const p = postesMap[key];
     if(!p) return;
 
-nbPostes++;
-
+    nbPostes++;
     nbSats += p.sats.size;
-
     nbApp += p.principal.length;
     p.principal.forEach(a => { if(a.hors_patrimoine === true) nbHp++; });
 
@@ -659,7 +641,6 @@ nbPostes++;
   countersEl.textContent = `Postes : ${nbPostes} • SAT : ${nbSats} • Appareils : ${nbApp}${nbHp ? ` • HP : ${nbHp}` : ""}`;
 }
 
-
 function renderPosteCard(p){
   const hasType = !!norm(p.type);
 
@@ -674,7 +655,6 @@ function renderPosteCard(p){
   // SAT : déjà trié au chargement
   const satNames = p.satNamesSorted || [];
 
-
 let html = `
     <div class="card ${hasType ? "" : "ville-card"}">
       <div class="card-title">${title}</div>
@@ -685,8 +665,8 @@ let html = `
   : principalPills
 }
   `;
-
-   satNames.forEach((sat) => {
+   
+  satNames.forEach((sat) => {
     const list = (p.satAppSorted && p.satAppSorted[sat]) ? p.satAppSorted[sat] : [];
 
     const pills = list.map(pillHtml).join("");
@@ -714,7 +694,6 @@ function appliquerRecherche(){
   }
 
   const hits = [];
-
   postesList.forEach(p => {
     const hayPoste = `${p.nom} ${p.type}`.toLowerCase();
 
@@ -768,7 +747,6 @@ searchEl?.addEventListener("input", () => {
   }
 })();
 
-
    // =========================Boutons de tri ========================= //
 const sortButtons = document.querySelectorAll(".filters button");
 
@@ -794,15 +772,11 @@ document
   ?.classList.add("activeFilter");
 
 </script>
-
-   <a href="index.html" class="home-fab">
+<a href="index.html" class="home-fab">
   ← Accueil
 </a>
+<script>
 
-   <script>
-/* ===============================
-   Smart hide FAB — NonoMaps
-================================ */
 (function(){
   const fab = document.querySelector('.home-fab');
   if(!fab) return;
@@ -844,6 +818,5 @@ document
   }, { passive:true });
 })();
 </script>
-
 </body>
 </html>
