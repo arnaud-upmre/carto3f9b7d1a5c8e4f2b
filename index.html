@@ -1297,7 +1297,8 @@ if (idParam) {
   })
   .catch((err) => {
     console.error("Erreur chargement JSON:", err);
-    showNotification("❌ Erreur de chargement des données (postes/appareils).", "error");
+    showNotification(`❌ Erreur: ${err.message}`, "error");
+
   });
 
     let selectedIndex = -1;
