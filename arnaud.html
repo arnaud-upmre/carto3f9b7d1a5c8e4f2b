@@ -2,205 +2,266 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>🔧 À propos</title>
+<title>À propos – Nono Maps</title>
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex, nofollow" />
   <style>
 
-
-    .pill-link {
-  display: inline-block;
-  padding: 10px 18px;
-  border-radius: 999px;
-  font-size: 14px;
-  font-weight: 500;
-  text-decoration: none;
-  transition: all 0.25s ease;
-  border: 1px solid #1a73e8;
-  color: #1a73e8;
-  background: #f5f9ff;
+/* Reset sizing */
+*, *::before, *::after {
+  box-sizing: border-box;
 }
 
-.pill-link:hover {
-  background: #1a73e8;
-  color: #fff;
+/* Variables SNCF (uniforme tableau blanc + version) */
+:root {
+  --bg: #ffffff;
+  --card-bg: #ffffff;
+  --text: #3c3732;
+  --muted: #6b7280;
+  --accent: #5068f5;
+  --accent-soft: #eaf4fb;
+  --border: #b0cc93;
+  --shadow: rgba(0, 0, 0, 0.1);
 }
 
-.home-pill {
-  font-size: 15px;
-  font-weight: 600;
-}
-
+/* Dark mode uniforme */
 @media (prefers-color-scheme: dark) {
-  .pill-link {
-    background: #1e1e1e;
-    color: #90caf9;
-    border: 1px solid #90caf9;
+  :root {
+    --bg: #121212;
+    --card-bg: rgba(28, 28, 28, 0.75);
+    --text: #ffffff;
+    --muted: #9ca3af;
+    --accent: #5068f5;
+    --accent-soft: #1e2a44;
+    --border: #2a2a2a;
+    --shadow: rgba(0, 0, 0, 0.6);
   }
-  .pill-link:hover {
-    background: #90caf9;
-    color: #121212;
+
+  .board-header {
+    background: rgba(20, 20, 20, 0.75);
+    border: 1px solid var(--border);
+  }
+
+  .home-fab {
+    background: rgba(40, 40, 40, 0.85);
+    border: 1px solid var(--border);
   }
 }
-    
-    a {
-  color: #0055cc;
+
+/* Base */
+body {
+  margin: 0;
+  padding: 20px;
+  padding-bottom: 90px;
+  font-family: Inter, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.8;
+  user-select: none;
+}
+
+/* Liens */
+a {
+  color: var(--accent);
   text-decoration: underline;
 }
 a:hover {
-  color: #0040a8;
+  opacity: 0.9;
 }
 
-@media (prefers-color-scheme: dark) {
-  a {
-    color: #4da3ff;  
+/* Header identique style tableau blanc */
+.board-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.board-title {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+}
+
+.title-accent {
+  color: var(--accent);
+  font-weight: 900;
+}
+
+.board-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: center;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.board-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  margin-bottom: 16px;
+  padding: 14px;
+  border-radius: 18px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 10px 26px var(--shadow);
+}
+
+/* Typo contenu */
+h2 {
+  font-size: 1.3rem;
+  margin-top: 0;
+  margin-bottom: 0.8rem;
+}
+p {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  text-align: justify;
+}
+.mt-lg { margin-top: 1.25rem; }
+.mt-xl { margin-top: 1.8rem; }
+
+/* Citation */
+blockquote {
+  margin: 1.8rem 0 0 0;
+  padding: 1rem 1.2rem;
+  background: var(--accent-soft);
+  border-left: 4px solid var(--border);
+  font-style: italic;
+  border-radius: 8px;
+}
+
+/* Layout */
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* Cartes uniformisées */
+.card,
+.stats-box {
+  background: var(--card-bg);
+  backdrop-filter: blur(14px) saturate(180%);
+  -webkit-backdrop-filter: blur(14px) saturate(180%);
+  border-radius: 18px;
+  box-shadow: 0 8px 24px var(--shadow);
+  border: 1px solid var(--border);
+  padding: 2rem 1.5rem;
+  flex: 1 1 auto;
+}
+
+/* Stats */
+.stats-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-top: 0.5rem;
+}
+.stat-pill {
+  background: var(--accent);
+  color: #ffffff;
+  padding: 0.5rem 0.9rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
+
+/* Badge */
+.conclusion-card { position: relative; }
+.badge-rd {
+  position: absolute;
+  top: 0.8rem;
+  right: 1rem;
+  background: var(--accent);
+  color: #ffffff;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px var(--shadow);
+}
+
+/* Bouton Accueil identique autres pages */
+.home-fab {
+  position: fixed;
+  left: 50%;
+  bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+  transform: translateX(-50%);
+  z-index: 999;
+
+  padding: 12px 22px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 15px;
+  text-decoration: none;
+
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid var(--border);
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  box-shadow: 0 10px 30px var(--shadow);
+  transition: all 0.18s ease;
+  will-change: transform, opacity;
+}
+.home-fab:hover {
+  transform: translateX(-50%) translateY(-2px);
+  box-shadow: 0 14px 36px var(--shadow);
+  border-color: var(--accent);
+}
+.home-fab:active {
+  transform: translateX(-50%) scale(0.96);
+}
+.home-fab.hide {
+  transform: translateX(-50%) translateY(120%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  body {
+    padding: 14px;
+    padding-bottom: 90px;
   }
-  a:hover {
-    color: #82c0ff; 
+
+  .card,
+  .stats-box {
+    padding: 1.2rem;
+    border-radius: 14px;
+  }
+
+  .home-fab {
+    padding: 9px 16px;
+    font-size: 13px;
+    bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+    box-shadow: 0 6px 18px var(--shadow);
   }
 }
-    body {
-      font-family: 'Segoe UI', 'Inter', sans-serif;
-      background-color: #f5f5f5;
-      color: #333;
-      margin: 0;
-      padding: 1rem;
-      padding-bottom: 7rem;
-      line-height: 1.8;
-      user-select: none;
-    }
-    h1 {
-      font-size: 1.6rem;
-      text-align: center;
-      margin-bottom: 1.5rem;
-    }
-    h2 {
-      font-size: 1.3rem;
-      margin-top: 0;
-      margin-bottom: 0.8rem;
-    }
-    p {
-      font-size: 1rem;
-      margin-bottom: 1rem;
-      text-align: justify;
-    }
-    .mt-lg { margin-top: 1.25rem; }
-    .mt-xl { margin-top: 1.8rem; }
 
-    blockquote {
-      margin: 1.8rem 0 0 0;
-      padding: 1rem 1.2rem;
-      background: #f0f0f0;
-      border-left: 4px solid #ccc;
-      font-style: italic;
-      border-radius: 4px;
-    }
-
-    .container {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-      max-width: 1000px;
-      margin: auto;
-    }
-    .card,
-    .stats-box {
-      background: #fff;
-      border-radius: 0.6rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-      padding: 2rem 1.5rem;
-      flex: 1 1 auto;
-      box-sizing: border-box;
-    }
-
-    .stats-content {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.7rem;
-      margin-top: 0.5rem;
-    }
-    .stat-pill {
-      background: #0055cc;
-      color: #fff;
-      padding: 0.5rem 0.9rem;
-      border-radius: 999px;
-      font-weight: 500;
-      font-size: 0.95rem;
-      white-space: nowrap;
-    }
-
-    .conclusion-card { position: relative; }
-    .badge-rd {
-      position: absolute;
-      top: 0.8rem;
-      right: 1rem;
-      background: #0055cc;
-      color: #fff;
-      padding: 0.3rem 0.7rem;
-      border-radius: 999px;
-      font-weight: 500;
-      font-size: 0.8rem;
-      white-space: nowrap;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
-    }
-
-    .btn-box {
-      background: #fff;
-      border-radius: 0.6rem 0.6rem 0 0;
-      box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
-      padding: 1rem;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      width: 100%;
-      max-width: 1000px;
-      margin: auto;
-      box-sizing: border-box;
-    }
-    .btn-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.6rem;
-      justify-content: center;
-    }
-    .btn {
-      flex: 1 1 calc(50% - 0.6rem);
-      text-align: center;
-      padding: 0.8rem;
-      background-color: #0055cc;
-      color: white;
-      border-radius: 0.5rem;
-      font-size: 0.95rem;
-      text-decoration: none;
-      font-weight: 500;
-      transition: background-color 0.3s ease;
-      white-space: nowrap;
-      max-width: 200px;
-    }
-    .btn:hover { background-color: #0040a8; }
-
-    @media (max-width: 480px) {
-      .btn { flex: 1 1 100%; max-width: none; }
-      body { padding-bottom: 9rem; }
-    }
-    @media (prefers-color-scheme: dark) {
-      body { background-color: #121212; color: #e0e0e0; }
-      .card, .stats-box, .btn-box {
-        background: #1e1e1e;
-        box-shadow: 0 2px 8px rgba(255,255,255,0.05);
-      }
-      blockquote { background: #2a2a2a; border-left: 4px solid #555; }
-      .btn { background-color: #1976d2; }
-      .btn:hover { background-color: #1565c0; }
-      .badge-rd, .stat-pill { box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
-    }
   </style>
 </head>
 <body>
   
-  <h1>🔧 À propos</h1>
-  
+<div class="board-header">
+  <div class="board-title-wrap">
+    <div class="board-title">
+      À propos <span class="title-accent">Nono Maps</span>
+    </div>
+    <div class="board-meta">
+      <span>Présentation et origine du projet</span>
+    </div>
+  </div>
+  </div>
   <div class="container">
 
     <div class="card">
@@ -235,7 +296,7 @@ a:hover {
     interventions terrain.
   </p>
 
-          <p style="margin-top:1.2rem; font-size:0.95rem; color:#555;"><i>
+         <p style="margin-top:1.2rem; font-size:0.95rem; color:var(--muted);"><i>
   Nono Maps est un outil personnel d’aide au repérage, construit à partir de
   données publiques et d’informations de terrain non sensibles. Les contenus
   sont fournis à titre indicatif et peuvent évoluer. Aucune garantie de
@@ -302,11 +363,13 @@ a:hover {
       <div class="stats-content" id="stats"></div>
     </div>
 
-    <div class="card">
+<div class="card">
   <h2>⚡ Bilan d’utilisation</h2>
+  <p>
     Depuis son lancement, mi septembre 2025, la webapp a déjà généré 
     <strong id="total-req">…</strong> affichages de fiches :
   </p>
+
 <div class="stats-content">
   <span class="stat-pill">📍 <span id="counterPostes">Chargement…</span> affichages de postes</span>
   <span class="stat-pill">💡 <span id="counterAppareils">Chargement…</span> affichages d’appareils</span>
@@ -328,13 +391,7 @@ a:hover {
 <p>Traitez les gens avec respect, faites un effort pour intégrer les nouveaux, partagez, soutenez, aidez-vous les uns les autres, célébrez + partagez joies / succès ensemble, soyez solidaires, saluez-vous et communiquez entre vous, créez des liens avec d’autres équipes, faites passer les informations sans relâche, soyez conscient, acceptez la pression, utilisez la concurrence de façon saine.</p>
 <p>Ferroviairement,<br><strong>Arnaud</strong></p>
 </div>
-
- 
-<div class="btn-box">
-  <div class="btn-container">
-    <a href="index.html" class="pill-link home-pill">🏠 Retour à l’accueil</a>
-  </div>
-  </div>
+</div> 
   
   <script>
     async function fetchCounts() {
@@ -392,5 +449,43 @@ a:hover {
 
   fetchBilan();
 </script>
+    <a href="index.html" class="home-fab">← Accueil</a>
+
+    <script>
+(function(){
+  const fab = document.querySelector('.home-fab');
+  if(!fab) return;
+
+  let lastScroll = window.scrollY;
+  let ticking = false;
+  const SHOW_DELTA = 6;
+
+  function update(){
+    const current = window.scrollY;
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+
+    if(current <= 10){
+      fab.classList.remove('hide');
+    } else if(current >= maxScroll - 20){
+      fab.classList.remove('hide');
+    } else if(current > lastScroll + SHOW_DELTA){
+      fab.classList.add('hide');
+    } else if(current < lastScroll - SHOW_DELTA){
+      fab.classList.remove('hide');
+    }
+
+    lastScroll = current;
+    ticking = false;
+  }
+
+  window.addEventListener('scroll', () => {
+    if(!ticking){
+      window.requestAnimationFrame(update);
+      ticking = true;
+    }
+  }, { passive: true });
+})();
+</script>
+
 </body>
 </html>
