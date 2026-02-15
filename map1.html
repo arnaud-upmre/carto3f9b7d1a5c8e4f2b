@@ -1590,20 +1590,26 @@ function updatePKVisibility() {
 
   const zoom = map.getZoom();
   pkLayer.clearLayers();
-  if (zoom < 15) return;
+  if (zoom < 14) return;
 
   const bounds = map.getBounds();
 
-const step = getPKStep(zoom);
+let created = 0; 
+pkData.forEach((p) => {
 
-pkData.forEach((p, i) => {
-const hecto = Math.round((p.pk % 1) * 10); // 0 à 9
-if (zoom === 15 && hecto !== 0) return;       // tous les 1 km
-if (zoom === 16 && hecto % 5 !== 0) return;   // tous les 500 m
-if (zoom === 17 && hecto % 2 !== 0) return;   // tous les 200 m
-if (p.lat == null || p.lon == null || p.pk == null) return;
+  if (p.lat == null || p.lon == null || p.pk == null) return;
+
+  const hecto = Math.round(((p.pk % 1) * 10) + 1e-6);
+  const km = Math.floor(p.pk);
+
+  if (zoom <= 14 && km % 2 !== 0) return;      // 2 km
+  if (zoom === 15 && hecto !== 0) return;      // 1 km
+  if (zoom === 16 && hecto % 5 !== 0) return;  // 500 m
+  if (zoom === 17 && hecto % 2 !== 0) return;  // 200 m
+  // Z18+ → tout passe
+
   if (!bounds.contains([p.lat, p.lon])) return;
-
+  
   const marker = L.marker([p.lat, p.lon], {
     interactive: false,
     icon: L.divIcon({
@@ -1615,7 +1621,10 @@ if (p.lat == null || p.lon == null || p.pk == null) return;
   });
 
   pkLayer.addLayer(marker);
+  created++;
 });
+
+console.debug(`[PK] zoom=${zoom} visibles=${created} / total=${pkData.length}`);
   }
     
     const leftControls = L.control({ position: "topleft" });
@@ -2099,7 +2108,6 @@ map.on("zoomend", () => {
     resumeSpeed();
   }, delay);
 
-  // ⭐⭐⭐ AJOUTE CETTE LIGNE ⭐⭐⭐
   updatePKVisibility();
 });
 
@@ -2223,13 +2231,6 @@ map.on("click", function (e) {
   updateMeasurePanel();
 });
 
-    function getPKStep(zoom) {
-  if (zoom >= 18) return 1;   // 100 m
-  if (zoom === 17) return 2;  // 200 m ≈ 250 visuel
-  if (zoom === 16) return 5;  // 500 m
-  if (zoom === 15) return 10; // 1 km
-  return Infinity;
-}
 
 function updateMeasurePanel() {
   if (mesurePoints.length < 2) return;
@@ -2268,7 +2269,7 @@ panel.style.display = "block";
     
 </script>
 <div id="legal-footer">
-  Nono Maps v1.15_2 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.15_PK | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
