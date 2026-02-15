@@ -1602,7 +1602,11 @@ pkData.forEach((p) => {
   const hecto = Math.round(((p.pk % 1) * 10) + 1e-6);
   const km = Math.floor(p.pk);
 
-  if (zoom <= 14 && km % 2 !== 0) return;      // 2 km
+if (zoom === 14) {
+  if (hecto !== 0) return;      // uniquement PK kilométriques
+  if (km % 2 !== 0) return;     // tous les 2 km
+}
+
   if (zoom === 15 && hecto !== 0) return;      // 1 km
   if (zoom === 16 && hecto % 5 !== 0) return;  // 500 m
   if (zoom === 17 && hecto % 2 !== 0) return;  // 200 m
@@ -2269,7 +2273,7 @@ panel.style.display = "block";
     
 </script>
 <div id="legal-footer">
-  Nono Maps v1.15_PK | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.15A_PK | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
