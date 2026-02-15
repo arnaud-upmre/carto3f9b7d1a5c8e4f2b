@@ -1488,6 +1488,7 @@ const tryFetchPN = async () => {
   tryFetchPN()
     .then(records => {
       console.info(`✅ ${records.length} PN récupérés (France brute)`);
+      const pnSeen = new Set(); // anti-doublons PN
 
       const iconPN = L.divIcon({
   html: `<img src="ico/pn.webp" class="icon-halo-appareil">`,
@@ -1524,6 +1525,12 @@ if (Array.isArray(f.geo_point_2d)) {
 
 if (!Number.isFinite(lat) || !Number.isFinite(lon)) return;
 if (!isInHDF(lat, lon)) return;
+
+// anti-doublon 
+const key = `${lat.toFixed(4)}_${lon.toFixed(4)}_${f.code_ligne || ""}_${f.pk || ""}`;
+
+if (pnSeen.has(key)) return;
+pnSeen.add(key);
 
         const classeCode = (f.mnemo || "").replace("CLASSE ", "").trim();
         const classeTexte = pnClasses[classeCode]
@@ -1564,7 +1571,7 @@ if (!isInHDF(lat, lon)) return;
       pnLoaded = true;
       pnLoading = false;
 
-      toast.textContent = `✅ ${records.length} passages à niveau chargés`;
+ toast.textContent = `✅ ${pnLayer.getLayers().length} passages à niveau chargés`;
       
 setTimeout(() => {
   toast.classList.remove("show");
