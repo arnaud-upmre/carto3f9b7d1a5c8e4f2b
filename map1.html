@@ -1556,19 +1556,27 @@ async function chargerPK(btn) {
     const res = await fetch("pk.json");
     const data = await res.json();
 
-    data.forEach(p => {
-      if (!p.lat || !p.lon) return;
+data.forEach(p => {
+  if (!p.lat || !p.lon || p.pk == null) return;
 
-      const marker = L.circleMarker([p.lat, p.lon], {
-        radius: 2,
-        color: "#2563eb",
-        weight: 1,
-        fillOpacity: 0.8,
-        interactive: false
-      });
+  if (map.getZoom() < 18) return;
 
-      pkLayer.addLayer(marker);
-    });
+  const marker = L.marker([p.lat, p.lon], {
+    interactive: false,
+    icon: L.divIcon({
+      className: "",
+      html: `
+        <div class="pk-label">
+          ${Math.round(p.pk)}
+        </div>
+      `,
+      iconSize: [40, 16],
+      iconAnchor: [20, 8]
+    })
+  });
+
+  pkLayer.addLayer(marker);
+});
 
     pkLoaded = true;
     map.addLayer(pkLayer);
