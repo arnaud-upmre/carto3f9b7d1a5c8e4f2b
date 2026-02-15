@@ -1425,10 +1425,27 @@ if (pnLoading) {
         popupAnchor: [0, -24]
       });
 
-      records.forEach(pn => {
-        const lat = Number(pn.latitude);
-        const lon = Number(pn.longitude);
-        if (!Number.isFinite(lat) || !Number.isFinite(lon)) return;
+records.forEach(pn => {
+
+  // ✅ lecture tolérante des coordonnées
+  let lat = Number(
+    pn.latitude ??
+    pn.lat ??
+    pn.geo_point_2d?.[0]
+  );
+
+  let lon = Number(
+    pn.longitude ??
+    pn.lon ??
+    pn.lng ??
+    pn.geo_point_2d?.[1]
+  );
+
+  // ✅ si toujours invalide → on ignore
+  if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
+    console.warn("PN ignoré (coords invalides) :", pn);
+    return;
+  }
 
 const classeCode = Number(pn.classe);
 const classeTexte = pnClasses[classeCode]
@@ -2147,7 +2164,7 @@ panel.style.display = "block";
     
 </script>
 <div id="legal-footer">
-  Nono Maps v1.15.2PN | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.15.1PN | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
