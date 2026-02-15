@@ -1431,10 +1431,10 @@ records.forEach(pn => {
 
   let lat, lon;
 
-  // 🥇 TON pn.json (structure c_geo)
+
 if (f.c_geo && f.c_geo.lat != null && f.c_geo.lon != null) {
-  lat = Number(f.c_geo.lat);
-  lon = Number(f.c_geo.lon);
+lat = Number(f.c_geo.lon);
+lon = Number(f.c_geo.lat);
 
   if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
     console.warn("PN ignoré (coords NaN) :", pn);
