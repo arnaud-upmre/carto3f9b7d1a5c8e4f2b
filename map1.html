@@ -1590,12 +1590,15 @@ function updatePKVisibility() {
 
   const zoom = map.getZoom();
   pkLayer.clearLayers();
-  if (zoom < 16) return;
+  if (zoom < 15) return;
 
   const bounds = map.getBounds();
 
-pkData.forEach(p => {
-  if (!p.lat || !p.lon || p.pk == null) return;
+const step = getPKStep(zoom);
+
+pkData.forEach((p, i) => {
+  if (i % step !== 0) return;
+if (p.lat == null || p.lon == null || p.pk == null) return;
   if (!bounds.contains([p.lat, p.lon])) return;
 
   const marker = L.marker([p.lat, p.lon], {
@@ -1603,14 +1606,14 @@ pkData.forEach(p => {
     icon: L.divIcon({
       className: "",
       html: `<div class="pk-label">${formatPK(p.pk)}</div>`,
-      iconSize: null,      
-      iconAnchor: [0, 0] 
+      iconSize: null,
+      iconAnchor: [0, 0]
     })
   });
 
   pkLayer.addLayer(marker);
 });
-}
+  }
     
     const leftControls = L.control({ position: "topleft" });
 leftControls.onAdd = function() {
@@ -2217,6 +2220,14 @@ map.on("click", function (e) {
   updateMeasurePanel();
 });
 
+    function getPKStep(zoom) {
+  if (zoom >= 18) return 1;   // 100 m
+  if (zoom === 17) return 2;  // 200 m ≈ 250 visuel
+  if (zoom === 16) return 5;  // 500 m
+  if (zoom === 15) return 10; // 1 km
+  return Infinity;
+}
+
 function updateMeasurePanel() {
   if (mesurePoints.length < 2) return;
 
@@ -2254,7 +2265,7 @@ panel.style.display = "block";
     
 </script>
 <div id="legal-footer">
-  Nono Maps v1.15_beta | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.15_1 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
