@@ -1,0 +1,2307 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Nono Maps</title>
+  
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<link rel="icon" href="favicon/favicon.ico" type="image/x-icon" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+
+<style>
+
+  .leaflet-tooltip {
+  background: rgba(0,0,0,0.75);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  padding: 6px 8px;
+  backdrop-filter: blur(4px);
+}
+
+.pk-label{
+  display:inline-block;        
+  background:white;
+  border:1px solid #111;
+  border-radius:4px;
+  padding:1px 6px;
+  font-size:10px;
+  font-weight:700;
+  color:#111;
+  white-space:nowrap;
+  box-shadow:0 1px 3px rgba(0,0,0,.25);
+  transform: translate(-50%, -50%); 
+  pointer-events:none;
+}
+
+.popup-share .leaflet-popup-content-wrapper {
+  padding: 0 !important;  
+}
+
+.popup-share .leaflet-popup-content {
+  padding: 12px 16px !important;
+  text-align: center !important;
+  margin: 0 !important;
+  width: 100% !important;
+  font-weight: 600;
+}
+  
+  #legal-footer {
+  position: fixed;
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+  font-size: 10px; 
+  color: rgba(255,255,255,0.75);
+  background: rgba(0,0,0,0.35);
+  padding: 3px 8px;
+  border-radius: 6px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 9999;
+  pointer-events: none;
+  user-select: none;
+
+  white-space: nowrap !important;       
+  overflow: hidden !important;       
+  text-overflow: ellipsis !important;   
+
+  max-width: 95vw; 
+}
+  
+  html, body {
+  height: 100%;
+  margin: 0;
+  background: transparent;
+}
+
+  #map {
+  width:100%;
+  height:100%;
+}
+
+.fab-container {
+  position: fixed;
+  bottom: 30px;
+  right: 10px;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column-reverse; 
+  align-items: center;
+  gap: 20px; 
+}
+
+.fab {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.75);
+  color: white;
+  font-size: 24px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fab-options {
+  width: 60px;
+  background: rgba(0,0,0,0.7);
+  border-radius: 40px;
+  padding: 12px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  pointer-events: none;
+  transition: all 0.35s ease;
+}
+.fab-options.show {
+  opacity: 1;
+  max-height: 400px;
+  pointer-events: auto;
+}
+
+.fab-options button {
+  border: none;
+  background: none;   
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fab-options button img {
+  width: 35px;
+  height: 35px;
+  transition: opacity .2s, filter .2s;
+}
+
+.fab-options button:not(.active) img {
+  opacity: 0.5;
+  filter: none;
+}
+
+.fab-options button.active {
+  background: rgba(255,255,255,0.50); 
+}
+.fab-options button.active img {
+  opacity: 1;  
+}
+  
+.toast {
+  position: fixed;
+  bottom: 140px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(37,99,235,0.9);
+  color: white;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s;
+  z-index: 10001;
+}
+.toast.show {
+  opacity: 1;
+}
+
+.leaflet-popup-content-wrapper {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.8) 0%,
+    rgba(255, 255, 255, 0.7) 100%
+  );
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.45);
+  box-shadow: inset 0 1px 4px rgba(255,255,255,0.4),
+              0 8px 24px rgba(0,0,0,0.25);
+}
+.leaflet-popup-tip {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.8) 0%,
+    rgba(255, 255, 255, 0.7) 100%
+  );
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+}
+  
+.leaflet-popup-content {
+  max-width: 240px !important; 
+  min-width: 240px; 
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,sans-serif;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #111;
+  overflow: hidden;    
+  text-align: left;      
+}
+.leaflet-popup-content div,
+.leaflet-popup-content p {
+  display: flex;
+  align-items: center;
+  gap: 6px;           
+  margin: 4px 0;
+  flex-wrap: wrap;      
+}
+.leaflet-popup-content img,
+.leaflet-popup-content svg,
+.leaflet-popup-content i {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+.leaflet-popup-content a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-decoration: none;
+}
+.leaflet-popup-content a.cluster-link {
+  display: block;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: #f3f4f6;
+  color: #007aff;
+  text-decoration: none;
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,sans-serif;
+  font-size: 14px;
+  margin: 2px 0;
+  transition: background 0.2s;
+}
+.leaflet-popup-content a.cluster-link:hover,
+.leaflet-popup-content a.cluster-link:active {
+  background: #e5e7eb;
+}
+
+#streetview-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(6px);     
+  -webkit-backdrop-filter: blur(6px);
+  display: none;
+  z-index: 9999;           
+  align-items: center;
+  justify-content: center;
+}
+#streetview-box {
+  width: 90%;
+  max-width: 900px;
+  height: 70%;
+  background: rgba(20,20,20,0.95);
+  border-radius: 16px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+  overflow: hidden;
+  position: relative;
+}
+#streetview-box iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+#streetview-close {
+  position: absolute;
+  top: 12px; right: 12px;
+  font-size: 24px;
+  background: rgba(0,0,0,0.6);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px; height: 40px;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.btn-return {
+  position: relative;
+  animation: pulseHalo 1.8s infinite;
+}
+@keyframes pulseHalo {
+  0%   { box-shadow: 0 0 0px rgba(255,255,255,0.6); }
+  50%  { box-shadow: 0 0 15px rgba(255,255,255,0.9), 0 0 30px rgba(255,255,255,0.4); }
+  100% { box-shadow: 0 0 0px rgba(255,255,255,0.6); }
+}
+.icon-halo {
+  width: 36px;  
+  height: 36px;
+  filter: drop-shadow(0 0 2px white) drop-shadow(0 0 4px white);
+}
+.icon-halo-appareil {
+  width: 24px;  
+  height: 24px;
+  filter: drop-shadow(0 0 4px white) drop-shadow(0 0 8px white);
+}
+
+.marker-cluster {
+  background: transparent !important; 
+  border-radius: 50%;
+}
+.marker-cluster div {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: -apple-system, BlinkMacSystemFont,"Segoe UI",Roboto,Inter,sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  color: #ffffff;
+  text-shadow: 
+  0 0 4px rgba(0,0,0,1),
+  0 0 8px rgba(0,0,0,0.9),
+  0 0 12px rgba(0,0,0,0.8);
+  background: rgba(255, 255, 255, 0.35);   
+  backdrop-filter: blur(10px);             
+  -webkit-backdrop-filter: blur(10px);
+  border: 2px solid rgba(255,255,255,0.25);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+  transition: transform 0.25s ease, background 0.3s ease;
+}
+.marker-cluster:hover div {
+  transform: scale(1.12);
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.control-group {
+  margin-bottom: 10px; 
+}
+
+.btn-toggle{
+  background: rgba(0,0,0,.7);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 50%;
+  width: 44px; height: 44px;       
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;                
+  color: #fff;
+  cursor: pointer;
+  margin: 10px 5px;              
+  box-shadow: 0 4px 12px rgba(0,0,0,.25);
+  user-select: none;
+  line-height: 1;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.btn-toggle.active {
+  background: #fff;
+  color: #111;
+}
+
+.icon-circle {
+  width:26px;
+  height:26px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:white;
+  font-size:15px;
+  font-weight:bold;
+}
+
+.appareil { background:#facc15; }
+
+.telecom-mini {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:2px 6px;
+  background:#eef2ff;
+  color:#4f46e5;
+  border-radius:6px;
+  font-size:11px;
+  font-weight:600;
+  border:1px solid rgba(79,70,229,0.25);
+  margin:1px 3px 2px 0;
+  white-space:nowrap;
+}
+
+.leaflet-popup-content .popup-pills {
+  display: block !important;   
+  width: 100%;
+  margin-top: 2px !important;
+  margin-bottom: 4px !important;
+}
+
+.leaflet-popup-content .popup-header {
+  display: flex !important;
+  align-items: center;
+  margin-bottom: 0 !important;
+}
+
+#context-menu {
+  position: absolute;
+  min-width: 240px;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 14px;
+  padding: 10px 0;
+  display: none;
+  flex-direction: column;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.45);
+  z-index: 999999;
+}
+
+.context-item {
+  padding: 10px 14px;
+  color: white;
+  font-size: 14px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.context-item:hover {
+  background: rgba(255,255,255,0.12);
+}
+
+.context-separator {
+  height: 1px;
+  background: rgba(255,255,255,0.15);
+  margin: 6px 0;
+}
+
+#context-submenu {
+  display: none;
+  flex-direction: column;
+  background: rgba(0,0,0,0.40);
+  padding: 6px 0;
+}
+
+.sub-item {
+  padding: 10px 18px;
+  color: white;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.sub-item:hover {
+  background: rgba(255,255,255,0.15);
+  transform: translateX(3px);
+}
+
+.ping-marker {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 0 10px white, 0 0 20px rgba(255,255,255,0.6);
+  transform: translate(-50%, -50%);
+  animation: pingPulse 1.5s infinite;
+  pointer-events: none;
+  z-index: 999998;
+}
+
+.ping-marker::after {
+  content: "";
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: red;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 4px red;
+}
+
+@keyframes pingPulse {
+  0%   { transform: translate(-50%,-50%) scale(1); opacity: 1; }
+  100% { transform: translate(-50%,-50%) scale(2.3); opacity: 0; }
+}
+  
+</style>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EMSCVXG71V"></script>
+  
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-EMSCVXG71V');
+</script>
+</head>
+<body>
+  
+  <div id="map"></div>
+
+<div id="measure-panel" style="
+  position: fixed;
+  bottom: 27px;
+  left: 20px;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color: white;
+  padding: 10px 16px 12px 16px; 
+  border-radius: 10px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Roboto;
+  font-size: 14px;
+  display: none;
+  z-index: 999999;
+  max-width: 260px;
+  white-space: pre-line;
+">
+  <div id="measure-text"></div>
+</div>
+
+<div id="context-menu">
+  <div class="context-item" id="ctx-coord"></div>
+  <div class="context-item" id="ctx-share">
+  🔗 Partager la position
+</div>
+  <div id="ctx-submenu-share" style="
+  display:none;
+  flex-direction:column;
+  background:rgba(0,0,0,0.35);
+  padding:6px 0;
+  border-radius:10px;
+">
+  <div class="sub-item" id="ctx-share-copy">📋 Copier le lien</div>
+  <div class="sub-item" id="ctx-share-sms">💬 Par SMS</div>
+  <div class="sub-item" id="ctx-share-mail">✉️ Par mail</div>
+</div>
+
+  <div class="context-item" id="ctx-itin">
+    🚗 Itinéraire vers ici
+  </div>
+  <div id="context-submenu">
+<div class="sub-item" id="ctx-gmaps">🚙 Google Maps</div>
+<div class="sub-item" id="ctx-waze"> 🚙 Waze</div>
+<div class="sub-item" id="ctx-apple">🚙 Apple Plans</div>
+  </div>
+      <div class="context-separator"></div>
+  <div class="context-item" id="ctx-regle">📏 Règle / Traçage</div>
+  
+  <div class="context-separator"></div>
+ <div class="context-item" id="ctx-gmaps-marker">📌 Google Maps</div>
+  <div class="context-item" id="ctx-street">🌍 Street View</div>
+  <div class="context-item" id="ctx-imajnet">🛣️ Imajnet</div>
+
+  <div class="context-separator"></div>
+  
+<div class="context-item" id="ctx-add-appareil">📍 Ajouter un appareil ici</div>
+
+<div id="ctx-submenu-add" style="display:none; flex-direction:column; background:rgba(0,0,0,0.35); padding:6px 0; border-radius:10px;">
+  <div class="sub-item" id="ctx-add-form">📝 Via le formulaire</div>
+  <div class="sub-item" id="ctx-add-email">📬 Par email</div>
+</div>
+</div>
+  
+<div id="ping-marker" class="ping-marker" style="display:none;"></div>
+
+<div class="fab-container">
+  <button class="fab" id="fabBtn">☰</button>
+
+  <div class="fab-options" id="fabOptions">
+  <button class="btn-toggle active" onclick="toggleLayer(accesLayer, this, 'Accès routiers')">
+  <img src="ico/acces.webp" alt="Accès routiers">
+  </button>
+  
+  <button class="btn-toggle active" onclick="toggleLayer(postesLayer, this, 'Postes')">
+  <img src="ico/poste.webp" alt="Postes">
+  </button>
+   
+  <button class="btn-toggle active" onclick="toggleLayer(appareilsLayer, this, 'Appareils')">
+  <img src="ico/int.webp" alt="Appareils">
+  </button>
+    
+  <button class="btn-toggle" onclick="chargerPN(this)">
+  <img src="ico/pn.webp" alt="Passages à niveau">
+  </button>
+
+    <button class="btn-toggle" onclick="chargerPK(this)">
+  <img src="ico/ligne.webp" alt="PK">
+</button>
+
+  <button class="btn-toggle" id="btn-orm" title="OpenRailwayMap">
+  <img src="ico/ligne.webp" alt="ORM">
+  </button>
+    
+  <button class="btn-toggle" id="btn-speed" title="Vitesses ferroviaires">
+  <img src="ico/160.webp" alt="Vitesses">
+  </button>
+
+  </div>
+  </div>
+
+<div class="toast" id="toast"></div>
+
+<div id="streetview-overlay">
+  <div id="streetview-box">
+    <button id="streetview-close">❌</button>
+    <iframe id="streetview-frame"></iframe>
+  </div>
+</div>
+  <script>
+
+window.addEventListener("unhandledrejection", (event) => {
+  console.error("[DEBUG] Unhandled Promise:", event.reason);
+});
+
+window.addEventListener("error", (event) => {
+  if (event.target && event.target.src) {
+    console.error("[DEBUG] Ressource KO:", event.target.src);
+  } else {
+    console.error("[DEBUG] Erreur:", event);
+  }
+}, true);
+
+const defaultCenter = [50.3, 2.6];
+const defaultZoom = 9;      
+
+const boundsFrance = [
+  [41.0, -5.5],  
+  [51.5, 9.5]    
+];
+
+const map = L.map('map', {
+  zoomControl: false,
+  attributionControl: false,
+  minZoom: 5,                  
+  maxZoom: 21,                 
+  maxBounds: boundsFrance,     
+  maxBoundsViscosity: 1.0      
+  }).setView(defaultCenter, (window.innerWidth < 768 ? defaultZoom - 1 : defaultZoom));
+
+    const ormPane = map.createPane("orm");
+ormPane.style.zIndex = 350;
+ 
+const allMarkers = [];
+const params = new URLSearchParams(window.location.search);
+const lat = parseFloat(params.get("lat"));
+const lon = parseFloat(params.get("lon"));
+const zoom = parseInt(params.get("z")) || 19;
+const showMarker = params.get("marker") === "true";
+
+let _datasetsLoaded = 0;
+function _tryOpenFromURL() {
+  _datasetsLoaded++;
+  if (_datasetsLoaded < 2) return; 
+
+  if (!isNaN(lat) && !isNaN(lon)) {
+    const matches = allMarkers.filter(m => {
+      const ll = m.getLatLng();
+     const EPS = 1e-6;
+return Math.abs(ll.lat - lat) < EPS && Math.abs(ll.lng - lon) < EPS;
+
+    });
+
+if (matches.length > 0) {
+  const first = matches[0].getLatLng();
+  const allSameCoords = matches.every(m => m.getLatLng().equals(first));
+
+map.setView(first, zoom);
+
+ setTimeout(() => {
+  if (matches.length === 1) {
+
+    matches[0].openPopup();
+
+  } else if (allSameCoords) {
+
+    const items = matches.map((m, i) => {
+      let label = m.options.customId || `Élément ${i + 1}`;
+      return { label: label.replace(/\bposte\b/gi, "").trim(), idx: i };
+    }).sort((a, b) => a.label.localeCompare(b.label, "fr", { numeric: true, sensitivity: "base" }));
+
+    const html = `<div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
+      ${items.map(it => {
+       const marker = matches[it.idx];
+        const id = (marker.options.customId || "").toUpperCase();
+        
+let iconFile = null;
+
+if (marker.options.isAcces) {
+  iconFile = "acces.webp";
+
+} else if (id.includes("POSTE")) {
+  iconFile = "poste.webp";
+
+} else if (id.startsWith("ALIM")) {
+  iconFile = "alim.webp";
+
+} else if (id.startsWith("DU")) {
+  iconFile = "stop.webp";
+
+} else if (
+  id.startsWith("I") ||
+  id.startsWith("SI") ||
+  id.startsWith("D")
+) {
+  iconFile = "int.webp";
+
+} else if (
+  id.startsWith("TT") ||
+  id.startsWith("TSA") ||
+  id.startsWith("TC") ||
+  id.startsWith("TRA") ||
+  /^GT[0-9]+$/.test(id) ||
+  /^AT[0-9]+$/.test(id)
+) {
+  iconFile = "TT.webp";
+
+} else if (
+  /^T\d+(\/\d+)?\b/.test(id) ||
+  id.startsWith("T/") ||
+  /^[0-9]/.test(id) ||
+  id.startsWith("S") ||
+  id.startsWith("ST") ||
+  id.startsWith("F") ||
+  id.startsWith("P") ||
+  id.startsWith("FB") ||
+  id.startsWith("B")
+) {
+  iconFile = "sect.webp";
+}
+
+        return `
+          <a href="#" class="cluster-link" data-idx="${it.idx}" style="display:flex;align-items:center;gap:6px;">
+            ${iconFile ? `<img src="ico/${iconFile}" style="width:16px;height:16px;">` : ""}
+            <span>${it.label}</span>
+          </a>`;
+      }).join("")}
+    </div>`;
+
+    L.popup()
+      .setLatLng(first)
+      .setContent(html)
+      .openOn(map);
+
+    setTimeout(() => {
+      document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
+link.addEventListener("click", (ev) => {
+  ev.preventDefault();
+  const idx = +ev.currentTarget.dataset.idx;
+  const target = matches[idx];
+
+  const content = target.getPopup() ? target.getPopup().getContent() : "";
+  L.popup({ maxWidth: 240 })
+    .setLatLng(target.getLatLng())
+    .setContent(content)
+    .openOn(map);
+
+  map.panTo(target.getLatLng());
+});
+         });
+    }, 0);
+  } else {
+
+    const group = L.featureGroup(matches);
+    map.fitBounds(group.getBounds());
+  }
+}, 300);
+
+   
+} else {
+  map.setView([lat, lon], zoom);
+}
+   }
+
+if (showMarker && !isNaN(lat) && !isNaN(lon)) {
+
+  const shared = L.marker([lat, lon], {
+    icon: L.divIcon({
+      html: `<div style="font-size:38px; line-height:38px;">📍</div>`,
+      className: "",
+      iconSize: [38, 38],
+      iconAnchor: [19, 38]
+    })
+  }).addTo(map);
+
+shared.bindPopup("📍 Position partagée ici", {
+  className: "popup-share",
+  closeButton: false
+}).openPopup();
+
+  shared.on("popupclose", () => {
+    setTimeout(() => {
+      if (map.hasLayer(shared)) {
+        map.removeLayer(shared);
+      }
+    }, 5000); 
+  });
+}
+}
+
+  const planIGN = L.tileLayer(
+  "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
+  + "&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&STYLE=normal&FORMAT=image/png"
+  + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
+  {
+    attribution: "",
+    maxZoom: 21,       
+    maxNativeZoom: 19, 
+    tileSize: 256,
+    crossOrigin: 'anonymous'
+  }
+);
+
+const orthoIGN = L.tileLayer(
+  "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
+  + "&LAYER=ORTHOIMAGERY.ORTHOPHOTOS&STYLE=normal&FORMAT=image/jpeg"
+  + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
+  {
+    attribution: "© IGN – Géoplateforme",
+    maxZoom: 21,      
+    maxNativeZoom: 19, 
+    tileSize: 256,
+    crossOrigin: 'anonymous'
+  }
+);
+
+const osm = L.tileLayer(
+  "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+  { 
+    attribution: "© OpenStreetMap contributors", 
+    maxZoom: 21,        
+    maxNativeZoom: 19   
+  }
+);
+
+const esriSat = L.tileLayer(
+  "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+  {
+    attribution: "© Esri, Maxar, Earthstar Geographics",
+    maxZoom: 21,       
+    maxNativeZoom: 19, 
+    tileSize: 256
+  }
+);
+
+const orm = L.tileLayer(
+  "https://{s}.tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png",
+  {
+    pane: "orm",
+    maxZoom: 21,
+    maxNativeZoom: 19,
+    tileSize: 256,
+    opacity: 0.7,
+    attribution: "© OpenRailwayMap & OpenStreetMap contributors",
+
+    updateWhenIdle: true,        
+    updateWhenZooming: false,   
+    keepBuffer: 2       
+  }
+);
+
+let ormUserEnabled = true;  
+let ormIsPaused = false;    
+let ormTimer = null;    
+let lastZoomTime = 0;   
+let speedUserEnabled = false;
+let speedIsPaused = false;
+let speedTimer = null;
+
+const speedLayer = L.tileLayer(
+  "https://{s}.tiles.openrailwaymap.org/maxspeed/{z}/{x}/{y}.png",
+  {
+    pane: "orm",        
+    maxZoom: 21,
+    maxNativeZoom: 19,
+    tileSize: 256,
+    opacity: 1,
+    attribution: "© OpenRailwayMap & OpenStreetMap contributors"
+  }
+);
+
+const mixte = L.layerGroup([
+  orthoIGN,
+  L.tileLayer(
+    "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
+    + "&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&STYLE=normal&FORMAT=image/png"
+    + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
+    {
+      attribution: "© IGN – Géoplateforme",
+      maxZoom: 19,
+      tileSize: 256,
+      crossOrigin: 'anonymous',
+      opacity: 0.4  
+    }
+  )
+]);
+    
+orthoIGN.addTo(map);
+
+setTimeout(() => {
+  orm.addTo(map);
+  document.getElementById("btn-orm").classList.add("active");
+}, 1000);
+
+
+L.control.layers(
+      { 
+        "🛰️ Satellite IGN": orthoIGN,
+        "🛰️ Satellite Open": esriSat,
+        "🗺️ Plan IGN": planIGN,
+        "🌍 Plan Open": osm,
+        "🛰️+🗺️ Mixte": mixte
+      },
+).addTo(map);
+
+    L.control.zoom({ position: 'topright' }).addTo(map);
+
+    planIGN.on("tileerror", e => console.warn("IGN PLAN tile error", e));
+    orthoIGN.on("tileerror", e => console.warn("IGN ORTHO tile error", e));
+
+
+const postesLayer = L.markerClusterGroup({
+  chunkedLoading: true,
+  chunkInterval: 80,
+  chunkDelay: 20,
+  disableClusteringAtZoom: 18
+});
+
+const appareilsLayer = L.markerClusterGroup({
+  chunkedLoading: true,
+  chunkInterval: 80,
+  chunkDelay: 20,
+  spiderfyOnMaxZoom: false,
+  spiderfyOnEveryZoom: false,
+  showCoverageOnHover: false,
+  zoomToBoundsOnClick: false,
+  disableClusteringAtZoom: 22,
+  maxClusterRadius: function (zoom) {
+    return zoom > 18 ? 20 : 60;
+  }
+});
+
+const accesLayer = L.markerClusterGroup({
+  chunkedLoading: true,
+  chunkInterval: 80,
+  chunkDelay: 20,
+  spiderfyOnMaxZoom: false,
+  showCoverageOnHover: false,
+  zoomToBoundsOnClick: false
+});
+
+const pnLayer = L.markerClusterGroup({
+  spiderfyOnMaxZoom: false,
+  showCoverageOnHover: false,
+  zoomToBoundsOnClick: true
+});
+
+    const pkLayer = L.layerGroup();
+let pkLoaded = false;
+
+      pnLayer.on('clusterclick', function (e) {
+  const markers = e.layer.getAllChildMarkers();
+  if (!markers.length) return;
+
+  const first = markers[0].getLatLng();
+  const allSameCoords = markers.every(m => m.getLatLng().equals(first));
+
+  if (allSameCoords) {
+    map.setView(first, map.getZoom() + 2);
+  } else {
+    map.fitBounds(e.layer.getBounds());
+  }
+});
+
+accesLayer.on('clusterclick', function (e) {
+  const childMarkers = e.layer.getAllChildMarkers();
+  if (childMarkers.length === 0) return;
+
+  const first = childMarkers[0].getLatLng();
+  const allSameCoords = childMarkers.every(m => m.getLatLng().equals(first));
+
+  if (allSameCoords) {
+    const items = childMarkers.map((m, i) => {
+      let label = m.options.customId || `Accès ${i + 1}`;
+      return { label: label.replace(/\bposte\b/gi, "").trim(), idx: i };
+    }).sort((a, b) => a.label.localeCompare(b.label, "fr", { numeric: true, sensitivity: "base" }));
+
+    const html = `<div style="min-width:220px;display:flex;flex-direction:column;gap:6px">
+      ${items.map(it => `
+        <a href="#" class="cluster-link" data-idx="${it.idx}" 
+           style="display:flex;align-items:center;gap:6px;">
+          <img src="ico/acces.webp" style="width:16px;height:16px;">
+          <span>${it.label}</span>
+        </a>`).join("")}
+    </div>`;
+
+    L.popup()
+      .setLatLng(first)
+      .setContent(html)
+      .openOn(map);
+
+setTimeout(() => {
+document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link => {
+  link.addEventListener("click", (ev) => {
+    ev.preventDefault();
+    const idx = +ev.currentTarget.dataset.idx;
+    const target = childMarkers[idx];
+
+    const content = target.getPopup() ? target.getPopup().getContent() : "";
+    L.popup({ maxWidth: 240 })
+      .setLatLng(target.getLatLng())
+      .setContent(content)
+      .openOn(map);
+
+    map.panTo(target.getLatLng());
+  });
+});
+}, 0);
+
+  } else {
+    map.fitBounds(e.layer.getBounds());
+  }
+});
+
+map.addLayer(postesLayer);
+map.addLayer(appareilsLayer);
+map.addLayer(accesLayer);
+
+const iconPoste = L.divIcon({
+  html: `<img src="ico/poste.webp" class="icon-halo">`,
+  className: "",
+  iconSize: [36, 36],
+  iconAnchor: [18, 36],   
+  popupAnchor: [0, -10]
+});
+
+const iconAppareilDefault = L.divIcon({className:"icon-circle appareil",html:"⚡"});
+
+const iconAcces = L.divIcon({
+  html: `<img src="ico/acces.webp" class="icon-halo">`,
+  className: "",
+  iconSize: [36, 36],
+  iconAnchor: [18, 28], 
+  popupAnchor: [0, -10]
+});
+
+    function createAppareilIcon(file, iconAnchorY = 12) {
+  return L.divIcon({
+    html: `
+      <div style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;">
+        <img src="ico/${file}" class="icon-halo-appareil" style="width:24px;height:24px;">
+      </div>
+    `,
+    className:"",
+    iconSize:[36,36],
+    iconAnchor:[18,iconAnchorY],
+    popupAnchor:[0,-20]
+  });
+}
+
+const iconAppareilDU = createAppareilIcon("stop.webp", 18);
+const iconAppareilINT = createAppareilIcon("int.webp");
+const iconAppareilTT = createAppareilIcon("TT.webp");
+const iconAppareilSECT = createAppareilIcon("sect.webp");
+const iconAppareilALIM = createAppareilIcon("alim.webp");
+
+
+    function formatPortailDisplay(val, secure) {
+  const isSecure = secure && secure.trim() !== "";
+  const hasPortail = val && val.trim() !== "";
+
+
+  if (!hasPortail && !isSecure) {
+    return `<p><strong>🔑 Portail / Alarme :</strong> 
+      <span style="color:#777;font-style:italic;">(non renseigné)</span></p>`;
+  }
+
+  if (isSecure) {
+    let html = `<p><strong>🔑 Portail / Alarme :</strong> 
+      <a href="${secure}" target="_blank" rel="noopener">🔐 Afficher les codes d’accès</a>`;
+    if (hasPortail) html += ` – ${val}`;
+    html += `</p>`;
+    return html;
+  }
+
+  return `<p><strong>🔑 Portail / Alarme :</strong> ${val}</p>`;
+}
+
+function renderTelecomPills(v) {
+  if (!v) return "";
+  return String(v)
+    .split("/")                  
+    .map(t => t.trim())
+    .filter(Boolean)
+    .map(t => `<span class="telecom-mini">${escHtml(t)}</span>`)
+    .join("");
+}
+
+    function getImajnetURL(item, lat, lon) {
+  if (item.imajnet && item.imajnet.trim() !== "") {
+    return item.imajnet.trim();
+  }
+  return `https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${lat},${lon};`;
+}
+ 
+fetch("postes.json")
+  .then(r => r.json())
+  .then(data => {
+    const seenPostes = new Set();
+
+    data.forEach(item => {
+
+     if (item.latitude && item.longitude) {
+
+const accesVal = (item["accès"] ?? item.acces ?? "").toString().trim();
+
+const cid = [item.nom, item.type, item.SAT, accesVal]
+  .filter(Boolean)
+  .join(" ");
+
+let content = `
+<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
+            font-size:14px; color:#111; line-height:1.4; position:relative;">
+
+
+<div style="font-weight:600; font-size:16px; margin-bottom:14px; padding-right:32px;">
+  🚙 ${item.nom || "Sans nom"}
+  ${item.type ? " " + item.type : ""}
+  ${item.SAT ? " " + item.SAT : ""}
+  ${accesVal ? " – accès " + accesVal : ""}
+</div>
+
+<span onclick="openStreetView(${item.latitude}, ${item.longitude})"
+      style="cursor:pointer; position:absolute; top:10px; right:12px;">
+  <img src="ico/street.webp" alt="Street View" style="width:26px; height:26px;">
+</span>
+             
+<div style="margin-bottom:10px;">
+✍🏻 <strong>Information :</strong> ${ renderInformation(item.description_acces) }
+</div>
+
+${formatPortailDisplay(item.portail, item.secure)}
+
+  <a href="index.html?id=${encodeURIComponent(
+    (`${item.nom || ''} ${item.type || ''} ${item.SAT || ''}${accesVal ? ' – accès ' + accesVal : ''}`)
+      .replace(/\s+/g, " ")
+      .trim()
+  )}"
+     style="display:flex;align-items:center;justify-content:center;gap:6px;
+            background:#007aff;color:#fff;padding:10px 14px;border-radius:8px;
+            text-decoration:none;width:100%;font-size:15px;font-weight:500;">
+    ➕ Voir plus
+  </a>
+</div>
+`;
+
+const m = L.marker([item.latitude, item.longitude], {
+  icon: iconAcces,
+  customId: cid,
+  isAcces: true   
+}).bindPopup(content).addTo(accesLayer);
+
+  allMarkers.push(m);
+}
+
+      if (item.poste_latitude && item.poste_longitude) {
+        const key = `${item.poste_latitude}_${item.poste_longitude}`;
+        
+        if (!seenPostes.has(key)) {
+          seenPostes.add(key);
+
+  const cid = [item.nom, item.type, item.SAT, "poste"].filter(Boolean).join(" ");
+
+let content = `
+<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
+            font-size:14px; color:#111; line-height:1.4;">
+
+
+<div class="popup-header" style="font-weight:600; font-size:16px;">
+  📍 ${item.nom || "Sans nom"} 
+  ${item.type ? " " + item.type : ""} 
+  ${item.SAT ? " " + item.SAT : ""}
+</div>
+
+<div class="popup-pills telecom-zone">
+  ${renderTelecomPills(item.description_telecommande)}
+</div>
+
+  <div style="margin-bottom:10px;">
+✍🏻 <strong>Information :</strong> ${ renderInformation(item.description) }
+  </div>
+
+  <a href="${getImajnetURL(item, item.poste_latitude, item.poste_longitude)}"
+   target="_blank"
+   style="display:flex;align-items:center;justify-content:center;gap:6px;
+          background:#10b981;color:#fff;padding:7px 12px;border-radius:8px;
+          text-decoration:none;width:100%;font-size:14px;font-weight:500;margin-top:8px;">
+  🛣️ Voir sur Imajnet
+</a>
+ 
+  <a href="index.html?id=${encodeURIComponent(
+    (`${item.nom || ''} ${item.type || ''} ${item.SAT || ''}`)
+      .replace(/\s+/g, " ")
+      .trim()
+  )}"
+     style="display:flex;align-items:center;justify-content:center;gap:6px;
+            background:#007aff;color:#fff;padding:10px 14px;border-radius:8px;
+            text-decoration:none;width:100%;font-size:15px;font-weight:500;">
+    ➕ Voir plus
+  </a>
+</div>
+`;
+
+const m = L.marker([item.poste_latitude, item.poste_longitude], {
+  icon: iconPoste,
+  customId: cid
+}).bindPopup(content).addTo(postesLayer);
+
+allMarkers.push(m);
+        }
+      }
+
+    });
+    _tryOpenFromURL();
+  })
+  .catch(() => {});
+    
+fetch("appareils.json")
+  .then(r => r.json())
+  .then(data => {
+    data.forEach(item => {
+      if (!item.latitude || !item.longitude) return;
+
+      let appareilIcon;
+      const ref = (item.appareil || "").toUpperCase().trim();
+
+      if (ref.startsWith("DU")) {
+  appareilIcon = iconAppareilDU;
+
+} else if (ref.startsWith("I") || ref.startsWith("SI") || ref.startsWith("D")) {
+  appareilIcon = iconAppareilINT;
+
+} else if (
+  ref.startsWith("TT") ||
+  ref.startsWith("TSA") ||
+  ref.startsWith("TC") ||
+  ref.startsWith("TRA") ||
+  /^GT[0-9]+$/.test(ref) ||
+  /^AT[0-9]+$/.test(ref)
+) {
+  appareilIcon = iconAppareilTT;
+
+} else if (
+  /^T\d+(\/\d+)?$/.test(ref) ||
+  ref.startsWith("T/") ||
+  /^[0-9]/.test(ref) ||
+  ref.startsWith("S") ||
+  ref.startsWith("ST") ||
+  ref.startsWith("F") ||
+  ref.startsWith("P") ||
+  ref.startsWith("FB") ||
+  ref.startsWith("B")
+) {
+  appareilIcon = iconAppareilSECT;
+
+} else if (ref.startsWith("ALIM")) {
+  appareilIcon = iconAppareilALIM;
+
+} else {
+appareilIcon = iconAppareilDefault;
+}
+
+      let content = `
+<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
+            font-size:14px; color:#111; line-height:1.4;">
+
+<div style="font-size:15px; margin-bottom:10px;">
+  <span style="font-weight:600;">${item.appareil || "Sans référence"}</span>
+  ${item.nom || item.type || item.SAT 
+    ? " (" + 
+        [item.nom, item.type, item.SAT]
+          .filter(Boolean)               
+          .join(" ")                     
+          .trim() + ")"                  
+    : ""}
+</div>
+
+${item.hors_patrimoine ? `
+  <div style="width:100%; display:flex; justify-content:center; margin:8px 0 12px 0;">
+    <div style="
+      background:#fee2e2;
+      color:#b91c1c;
+      border:1px solid #b91c1c;
+      padding:6px 10px;
+      border-radius:8px;
+      font-weight:600;
+      text-align:center;
+      white-space:nowrap;
+    ">
+      ⚠️ Hors patrimoine UP MRE
+    </div>
+  </div>
+` : ""}
+
+  ${item.description ? `<div style="margin-bottom:14px;">✍🏻 <strong>Information :</strong> ${item.description}</div>` : ""}
+
+<a href="${getImajnetURL(item, item.latitude, item.longitude)}"
+   target="_blank"
+   style="display:flex;align-items:center;justify-content:center;gap:6px;
+          background:#10b981;color:#fff;padding:7px 12px;border-radius:8px;
+          text-decoration:none;width:100%;font-size:14px;font-weight:500;
+          margin:0 !important;">
+  🛣️ Voir sur Imajnet
+</a>
+
+  <a href="index.html?id=${encodeURIComponent(
+    [item.appareil, item.nom, item.type, item.SAT].filter(Boolean).join(" ").trim()
+  )}"
+     style="display:flex;align-items:center;justify-content:center;gap:6px;
+            background:#007aff;color:#fff;padding:7px 12px;border-radius:8px;
+            text-decoration:none;width:100%;font-size:14px;font-weight:500;
+            margin:0 !important;">
+    ➕ Voir plus
+  </a>
+</div>
+`;
+
+      const cid = [item.appareil, item.nom, item.type, item.SAT]
+        .filter(Boolean)
+        .join(" ");
+
+      const m = L.marker([item.latitude, item.longitude], {
+        icon: appareilIcon,
+        customId: cid
+      }).bindPopup(content);
+
+      appareilsLayer.addLayer(m);
+      allMarkers.push(m);
+      });
+    _tryOpenFromURL();
+  })
+  .catch(() => {});
+
+const pnClasses = {
+  10: "PN public pour voitures sans barrières (protection assurée par un agent)",
+  11: "PN public pour voitures avec barrières gardé sans passage piétons accolé (manœuvré à pied d'œuvre)",
+  12: "PN public pour voitures avec barrières gardé sans passage piétons accolé (manœuvré à distance)",
+  13: "PN public pour voitures avec barrières gardé sans passage piétons accolé (manœuvré pied d'œuvre + distance)",
+  14: "PN public pour voitures avec barrières gardé avec passage piétons accolé (manœuvré à pied d'œuvre)",
+  15: "PN public pour voitures avec barrières gardé avec passage piétons accolé (manœuvré à distance)",
+  16: "PN public pour voitures avec barrières gardé avec passage piétons accolé (manœuvré pied d'œuvre + distance)",
+  17: "PN public pour voitures avec barrières ou 1/2 barrières non gardé à SAL 2 / SAL 2B",
+  18: "PN public pour voitures avec barrières ou 1/2 barrières non gardé à SAL 2 + îlot séparateur",
+  19: "PN public pour voitures avec barrières ou 1/2 barrières non gardé à SAL 4",
+  20: "PN public pour voitures sans barrières sans SAL",
+  21: "PN public pour voitures sans barrières avec SAL 0",
+  31: "PN public isolé pour piétons sans portillons",
+  32: "PN public isolé pour piétons avec portillons",
+  41: "PN privé pour voitures sans barrières",
+  42: "PN privé pour voitures avec barrières sans passage piétons accolé",
+  43: "PN privé pour voitures avec barrières avec passage piétons accolé public",
+  44: "PN privé pour voitures avec barrières avec passage piétons accolé privé",
+  45: "PN privé isolé pour piétons sans portillons",
+  46: "PN privé isolé pour piétons avec portillons"
+};
+    
+appareilsLayer.on('clusterclick', function (e) {
+  const markers = e.layer.getAllChildMarkers();
+  if (markers.length <= 1) return;
+
+  const first = markers[0].getLatLng();
+  const allSameCoords = markers.every(m => m.getLatLng().equals(first));
+  const zoom = map.getZoom();
+
+  if (allSameCoords && zoom >= 19) {
+    e.originalEvent.preventDefault();
+    e.originalEvent.stopPropagation();
+    map.closePopup();
+
+    if (!e.layer._spiderfied) e.layer.spiderfy();
+    else e.layer.unspiderfy();
+    return;
+  }
+
+  map.fitBounds(e.layer.getBounds());
+});
+
+let pnLoaded = false;
+let pnLoading = false;
+
+function chargerPN(btn) {
+  console.log("🔄 Déclenchement du chargement PN (lazy load)");
+
+  if (pnLoading) {
+    showToast("⏳ Chargement des passages à niveau en cours...");
+    return;
+  }
+
+  if (pnLoaded) {
+    toggleLayer(pnLayer, btn, "Passages à niveau");
+    return;
+  }
+
+  pnLoading = true;
+  toast.textContent = "⏳ Chargement des passages à niveau en cours...";
+  toast.classList.add("show");
+
+
+const tryFetchPN = async () => {
+  let all = [];
+  let start = 0;
+  const rows = 1000;
+
+  while (true) {
+    const url =
+      "https://ressources.data.sncf.com/api/records/1.0/search/"
+      + "?dataset=liste-des-passages-a-niveau"
+      + `&rows=${rows}&start=${start}`;
+
+    let response;
+    try {
+      response = await fetch(url);
+    } catch (e) {
+      break;
+    }
+
+    if (!response.ok) {
+      if (response.status === 400) {
+        console.info("ℹ️ Fin pagination PN atteinte");
+        break;
+      }
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    const data = await response.json();
+    const records = data.records || [];
+
+    if (!records.length) break;
+
+    all.push(...records);
+
+    if (records.length < rows) break;
+
+    start += rows;
+  }
+
+  return all;
+};
+
+
+  tryFetchPN()
+    .then(records => {
+      console.info(`✅ ${records.length} PN récupérés (France brute)`);
+
+      const iconPN = L.divIcon({
+  html: `<img src="ico/pn.webp" class="icon-halo-appareil">`,
+  className: "",
+  iconSize: [24, 24],
+  iconAnchor: [12, 24],
+  popupAnchor: [0, -24]
+});
+
+      records.forEach(pn => {
+      const f = pn.fields || {};
+        
+let lat, lon;
+
+
+if (Array.isArray(f.geo_point_2d)) {
+  lat = Number(f.geo_point_2d[0]);
+  lon = Number(f.geo_point_2d[1]);
+
+} else if (typeof f.geo_point_2d === "string") {
+  const parts = f.geo_point_2d.split(",");
+  if (parts.length === 2) {
+    lat = Number(parts[0]);
+    lon = Number(parts[1]);
+  }
+
+} else if (Array.isArray(pn.geometry?.coordinates)) {
+  lon = Number(pn.geometry.coordinates[0]);
+  lat = Number(pn.geometry.coordinates[1]);
+
+} else {
+  return;
+}
+
+if (!Number.isFinite(lat) || !Number.isFinite(lon)) return;
+
+        const classeCode = (f.mnemo || "").replace("CLASSE ", "").trim();
+        const classeTexte = pnClasses[classeCode]
+          ? `🛑 Classe ${classeCode} : ${pnClasses[classeCode]}`
+          : "";
+
+        let libelle = (f.libelle || "").trim();
+        if (/^PN\s*/i.test(libelle)) libelle = libelle.replace(/^PN\s*/i, "");
+
+        const popup = `
+<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
+            font-size:14px; color:#111; line-height:1.5; text-align:left;">
+  <div style="font-weight:700; font-size:16px; margin-bottom:8px;">
+    🚧 PN ${libelle}
+  </div>
+  <div>🚄 PK ${f.pk || "?"} sur la ligne n°${f.code_ligne || "?"}</div>
+  ${classeTexte ? `<div>${classeTexte}</div>` : ""}
+
+  <div style="display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:16px;width:100%;">
+    <a href="https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${lat},${lon};"
+       target="_blank"
+       style="display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 16px;border-radius:8px;background:#10b981;color:white;text-decoration:none;font-size:14px;font-weight:500;min-width:180px;">
+      🚄 Voir sur Imajnet
+    </a>
+    <button onclick="openStreetView(${lat},${lon})"
+       style="display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 16px;border:none;border-radius:8px;background:#3b82f6;color:white;cursor:pointer;font-size:14px;font-weight:500;min-width:180px;">
+      🌍 Voir en Street View
+    </button>
+  </div>
+</div>`;
+
+        const marker = L.marker([lat, lon], { icon: iconPN }).bindPopup(popup);
+        pnLayer.addLayer(marker);
+        allMarkers.push(marker);
+      });
+
+      console.warn("PN dans cluster :", pnLayer.getLayers().length);
+      pnLoaded = true;
+      pnLoading = false;
+
+      toast.textContent = `✅ ${records.length} passages à niveau chargés`;
+      
+setTimeout(() => {
+  toast.classList.remove("show");
+
+  if (!map.hasLayer(pnLayer)) {
+    map.addLayer(pnLayer);
+  }
+
+  btn.classList.add("active");
+}, 1500);
+    })
+    .catch(err => {
+      pnLoading = false;
+      pnLoaded = false;
+
+      console.error("❌ Erreur API PN SNCF :", err);
+      toast.textContent = "⚠️ Erreur de chargement depuis le site SNCF Open Data";
+      setTimeout(() => toast.classList.remove("show"), 2500);
+    });
+}
+
+
+// ===============================
+// Chargement PK (version stable)
+// ===============================
+let pkData = [];
+
+async function chargerPK(btn) {
+  if (pkLoaded) {
+    toggleLayer(pkLayer, btn, "Points kilométriques");
+    return;
+  }
+
+  showToast("⏳ Chargement des PK...");
+
+  try {
+    const res = await fetch("pk.json");
+    pkData = await res.json();
+
+    pkLoaded = true;
+    map.addLayer(pkLayer);
+    btn.classList.add("active");
+
+    updatePKVisibility();
+
+    showToast(`✅ ${pkData.length} PK prêts`);
+  } catch (e) {
+    console.error("PK load error", e);
+    showToast("⚠️ Erreur chargement PK");
+  }
+}
+
+function updatePKVisibility() {
+  if (!pkLoaded) return;
+
+  const zoom = map.getZoom();
+  pkLayer.clearLayers();
+  if (zoom < 14) return;
+
+  const bounds = map.getBounds();
+
+let created = 0; 
+pkData.forEach((p) => {
+
+  if (p.lat == null || p.lon == null || p.pk == null) return;
+
+  const hecto = Math.round(((p.pk % 1) * 10) + 1e-6);
+  const km = Math.floor(p.pk);
+
+if (zoom === 14) {
+  if (hecto !== 0) return;      // uniquement PK kilométriques
+  if (km % 2 !== 0) return;     // tous les 2 km
+}
+
+  if (zoom === 15 && hecto !== 0) return;      // 1 km
+  if (zoom === 16 && hecto % 5 !== 0) return;  // 500 m
+  if (zoom === 17 && hecto % 2 !== 0) return;  // 200 m
+  // Z18+ → tout passe
+
+  if (!bounds.contains([p.lat, p.lon])) return;
+  
+const marker = L.marker([p.lat, p.lon], {
+  interactive: true, 
+  icon: L.divIcon({
+    className: "",
+    html: `<div class="pk-label">${formatPK(p.pk)}</div>`,
+    iconSize: null,
+    iconAnchor: [0, 0]
+  })
+});
+
+
+marker.bindTooltip(
+  `
+  <div style="font-weight:600;">
+    📍 Ligne ${p.code_ligne ?? "?"}
+  </div>
+  <div>
+    ⛰️ Altitude : ${p.altitude ?? "?"} m
+  </div>
+  `,
+  {
+    direction: "top",
+    offset: [0, -10],
+    opacity: 0.95,
+    sticky: true
+  }
+);
+
+  pkLayer.addLayer(marker);
+  created++;
+});
+
+console.debug(`[PK] zoom=${zoom} visibles=${created} / total=${pkData.length}`);
+  }
+    
+    const leftControls = L.control({ position: "topleft" });
+leftControls.onAdd = function() {
+  const container = L.DomUtil.create("div");
+  const topGroup = L.DomUtil.create("div", "control-group", container);
+const backBtn = L.DomUtil.create("div", "btn-toggle btn-return", topGroup);
+backBtn.innerHTML = "🔍";
+
+backBtn.onclick = () => {
+  window.location.href = "index.html";
+};
+L.DomEvent.disableClickPropagation(backBtn);
+L.DomEvent.disableScrollPropagation(backBtn);
+  
+const recenterBtn = L.DomUtil.create("div", "btn-toggle", topGroup);
+recenterBtn.innerHTML = "🎯";
+
+recenterBtn.onclick = () => {
+  if (allMarkers.length > 0) {
+    recenterBtn.classList.add("active"); 
+ map.setView(defaultCenter, defaultZoom);
+
+    setTimeout(() => {
+    recenterBtn.classList.remove("active");
+    }, 800); 
+  }
+};
+
+L.DomEvent.disableClickPropagation(recenterBtn);
+L.DomEvent.disableScrollPropagation(recenterBtn);
+
+let userMarker;
+
+const locateBtn = L.DomUtil.create("div", "btn-toggle", topGroup);
+locateBtn.innerHTML = "📍";
+
+locateBtn.onclick = () => {
+  if (!navigator.geolocation) {
+    alert("Géolocalisation non supportée.");
+    return;
+  }
+
+  locateBtn.classList.add("active");
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      const lat = pos.coords.latitude;
+      const lng = pos.coords.longitude;
+
+      if (userMarker) {
+        userMarker.setLatLng([lat, lng]);
+      } else {
+        userMarker = L.circleMarker([lat, lng], {
+          radius: 8,
+          color: "#3b82f6",
+          fillColor: "#3b82f6",
+          fillOpacity: 0.6
+        }).addTo(map);
+      }
+
+      map.setView([lat, lng], 15);
+
+      // une fois localisé : revient état normal (plus blanc)
+      setTimeout(() => locateBtn.classList.remove("active"), 250);
+    },
+    (err) => {
+      console.warn("Erreur géoloc:", err);
+      alert("Impossible d’obtenir la position.");
+
+      // en cas d'erreur : revient état normal
+      locateBtn.classList.remove("active");
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 0
+    }
+  );
+};
+
+L.DomEvent.disableClickPropagation(locateBtn);
+L.DomEvent.disableScrollPropagation(locateBtn);
+
+  return container;
+};
+leftControls.addTo(map);
+    
+ function openStreetView(lat, lng) {
+    const iframe = document.getElementById("streetview-frame");
+    iframe.src = `https://www.google.com/maps?q=&layer=c&cbll=${lat},${lng}&cbp=11,0,0,0,0&output=svembed`;
+    document.getElementById("streetview-overlay").style.display = "flex";
+  }
+
+  document.getElementById("streetview-close").onclick = () => {
+    document.getElementById("streetview-overlay").style.display = "none";
+    document.getElementById("streetview-frame").src = ""; 
+  };
+
+console.info("[Nono Maps] boot", {
+  leaflet: L.version,
+  clusters: { postes: !!postesLayer, appareils: !!appareilsLayer, acces: !!accesLayer }
+});
+
+if (isNaN(lat) || isNaN(lon)) { console.warn("URL lat/lon invalides", {lat, lon}); }
+
+function renderInformation(value) {
+  if (!value) {
+    return `<span style="color:#777;font-style:italic;">Non renseigné</span>`;
+  }
+
+  return escHtml(String(value));
+}
+
+function escHtml(s){return String(s).replace(/[&<>"]/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[m]));}
+
+
+const fabBtn = document.getElementById("fabBtn");
+const fabOptions = document.getElementById("fabOptions");
+const toast = document.getElementById("toast");
+
+fabBtn.addEventListener("click", () => {
+  fabOptions.classList.toggle("show");
+});
+
+function toggleLayer(layer, btn, label) {
+  if (map.hasLayer(layer)) {
+    map.removeLayer(layer);
+    btn.classList.remove("active");
+    showToast(`❌ ${label} masqués`);
+  } else {
+    map.addLayer(layer);
+    btn.classList.add("active");
+    showToast(`✅ ${label} affichés`);
+  }
+}
+
+function showToast(message) {
+  toast.textContent = message;
+  toast.classList.add("show");
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 5000);
+}
+
+document.getElementById("btn-orm").addEventListener("click", function () {
+  const btn = this;
+
+  if (map.hasLayer(orm)) {
+    ormUserEnabled = false;
+    map.removeLayer(orm);
+    btn.classList.remove("active");
+    showToast("❌ ORM masqué");
+    return;
+  }
+
+  ormUserEnabled = true;
+
+if (map.hasLayer(speedLayer)) {
+  speedUserEnabled = false;
+  map.removeLayer(speedLayer);
+  document.getElementById("btn-speed").classList.remove("active");
+}
+
+
+  map.addLayer(orm);
+  btn.classList.add("active");
+  showToast("✅ ORM affiché");
+
+  if (!map.hasLayer(orthoIGN)) {
+    map.addLayer(orthoIGN);
+  }
+});
+
+document.getElementById("btn-speed").addEventListener("click", function () {
+  const btnSpeed = this;
+  const btnORM = document.getElementById("btn-orm");
+
+  if (map.hasLayer(speedLayer)) {
+    speedUserEnabled = false;
+    map.removeLayer(speedLayer);
+    btnSpeed.classList.remove("active");
+    showToast("❌ Vitesses masquées");
+    return;
+  }
+
+  speedUserEnabled = true;
+
+  if (map.hasLayer(orm)) {
+    ormUserEnabled = false;
+    map.removeLayer(orm);
+    btnORM.classList.remove("active");
+  }
+
+  map.addLayer(speedLayer);
+  btnSpeed.classList.add("active");
+  showToast(" ⚠️ Vitesse affichée à titre indicatif. Se référer aux documents réglementaires internes pour les vitesses de ligne applicables.");
+});
+
+const compteurURL =
+  "https://script.google.com/macros/s/AKfycbzUFaek89LYosR0FSw9gyxn2IZXlFlWXA_dIFIDwox-szE3DgH-l8IVbGfaoIgGK04h/exec";
+
+const compteurAppareilURL =
+  "https://script.google.com/macros/s/AKfycbwJIlvcfNYREJn1oPiVAhQqHACXXar8ZbRl6aChwYw4TFSAaMTFEHTT5X2T7BKLJ3gsJw/exec";
+
+function incrementCounter() {
+  fetch(compteurURL + "?increment=true", { mode: "no-cors" })
+    .catch(() => {});
+}
+
+function incrementCounterAppareil() {
+  fetch(compteurAppareilURL + "?increment=true", { mode: "no-cors" })
+    .catch(() => {});
+}
+
+map.on("popupopen", function (e) {
+  const marker = e.popup._source;
+  if (!marker) return;
+
+  if (postesLayer.hasLayer(marker)) incrementCounter();
+  else if (accesLayer.hasLayer(marker)) incrementCounter();
+  else if (appareilsLayer.hasLayer(marker)) incrementCounterAppareil();
+});
+
+
+const ctxMenu = document.getElementById("context-menu");
+const ctxSubmenu = document.getElementById("context-submenu");
+const pingMarker = document.getElementById("ping-marker");
+
+let ctxLat = null;
+let ctxLng = null;
+
+
+function showPing(latlng) {
+  const pt = map.latLngToContainerPoint(latlng);
+  pingMarker.style.left = pt.x + "px";
+  pingMarker.style.top = pt.y + "px";
+  pingMarker.style.display = "block";
+}
+
+function hidePing() {
+  pingMarker.style.display = "none";
+}
+
+function openContextMenu(latlng, containerPoint) {
+   hidePing();
+  
+  ctxLat = latlng.lat;
+  ctxLng = latlng.lng;
+
+ 
+  document.getElementById("ctx-coord").innerHTML =
+    `📍 ${ctxLat.toFixed(5)}, ${ctxLng.toFixed(5)}`;
+
+  showPing(latlng);
+
+  ctxMenu.style.display = "flex";
+
+
+  const menuWidth = ctxMenu.offsetWidth;
+  const menuHeight = ctxMenu.offsetHeight;
+
+  let left = containerPoint.x + 15;
+  let top = containerPoint.y + 15;
+
+  if (left + menuWidth > window.innerWidth - 10) {
+    left = containerPoint.x - menuWidth - 15;
+  }
+
+  if (left < 10) left = 10;
+  if (top < 10) {
+    top = 10;
+  }
+  if (top + menuHeight > window.innerHeight - 10) {
+    top = window.innerHeight - menuHeight - 10;
+  }
+
+  ctxMenu.style.left = left + "px";
+  ctxMenu.style.top = top + "px";
+  }
+
+
+function closeContextMenu() {
+  ctxMenu.style.display = "none";
+  ctxSubmenu.style.display = "none";
+  hidePing();
+}
+
+
+map.on("contextmenu", function(e) {
+  if (mesureActive) return; 
+
+  e.originalEvent.preventDefault();
+  openContextMenu(e.latlng, map.latLngToContainerPoint(e.latlng));
+});
+
+let touchTimer = null;
+
+map.on("touchstart", function(e) {
+  if (!e.latlng) return;
+
+  if (mesureActive) {
+    touchTimer = setTimeout(() => {
+      resetMesure();    
+      mesureActive = false;
+      showToast("📏 Mode mesure désactivé");
+    }, 600);       
+    return;        
+  }
+
+  touchTimer = setTimeout(() => {
+    openContextMenu(e.latlng, map.latLngToContainerPoint(e.latlng));
+  }, 500);
+});
+
+map.on("touchend", () => clearTimeout(touchTimer));
+
+document.addEventListener("click", function(e) {
+  if (!ctxMenu.contains(e.target)) closeContextMenu();
+});
+
+map.on("movestart", closeContextMenu);
+map.on("zoomstart", closeContextMenu);
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") closeContextMenu();
+});
+
+
+document.getElementById("ctx-share").onclick = () => {
+  const sub = document.getElementById("ctx-submenu-share");
+  sub.style.display = (sub.style.display === "flex") ? "none" : "flex";
+};
+
+document.getElementById("ctx-share-copy").onclick = () => {
+  const url = `${location.origin}${location.pathname}?lat=${ctxLat}&lon=${ctxLng}&z=19&marker=true`;
+
+navigator.clipboard.writeText(url)
+  .then(() => {
+    showToast("🔗 Lien copié !");
+  })
+  .catch(() => {
+    showToast("⚠️ Copie impossible");
+  });
+};
+
+    document.getElementById("ctx-share-sms").onclick = () => {
+  const url = `${location.origin}${location.pathname}?lat=${ctxLat}&lon=${ctxLng}&z=19&marker=true`;
+  window.location.href = `sms:?body=${encodeURIComponent(url)}`;
+};
+    
+document.getElementById("ctx-itin").onclick = () => {
+  ctxSubmenu.style.display =
+    ctxSubmenu.style.display === "flex" ? "none" : "flex";
+};
+
+    document.getElementById("ctx-share-mail").onclick = () => {
+  const url = `${location.origin}${location.pathname}?lat=${ctxLat}&lon=${ctxLng}&z=19&marker=true`;
+
+  const subject = "📍 Position à partager";
+  const body = `Voici la position :\n${url}`;
+
+  window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+};
+
+document.getElementById("ctx-gmaps").onclick = () => {
+  window.open(`https://www.google.com/maps/dir/?api=1&destination=${ctxLat},${ctxLng}`);
+};
+
+document.getElementById("ctx-waze").onclick = () => {
+  window.open(`https://waze.com/ul?ll=${ctxLat},${ctxLng}&navigate=yes`);
+};
+
+if (!/iPhone|iPad|Macintosh/.test(navigator.userAgent)) {
+  document.getElementById("ctx-apple").style.display = "none";
+}
+document.getElementById("ctx-apple").onclick = () => {
+  window.open(`http://maps.apple.com/?daddr=${ctxLat},${ctxLng}`);
+};
+
+document.getElementById("ctx-street").onclick = () => {
+  openStreetView(ctxLat, ctxLng);
+};
+
+document.getElementById("ctx-imajnet").onclick = () => {
+  window.open(`https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${ctxLat},${ctxLng};`);
+};
+
+document.getElementById("ctx-gmaps-marker").onclick = () => {
+  window.open(`https://www.google.com/maps?q=${ctxLat},${ctxLng}`);
+};
+
+document.getElementById("ctx-add-appareil").onclick = () => {
+  const sub = document.getElementById("ctx-submenu-add");
+  sub.style.display = (sub.style.display === "flex") ? "none" : "flex";
+};
+
+    
+document.getElementById("ctx-add-form").onclick = () => {
+  window.location.href = `ajout_appareil.html?lat=${ctxLat}&lng=${ctxLng}`;
+};
+
+
+document.getElementById("ctx-add-email").onclick = () => {
+
+  const subject = encodeURIComponent("➕ Ajout d'un appareil");
+  const body = encodeURIComponent(
+`Bonjour Arnaud,
+
+Voici la position de l’appareil (à préciser)
+au poste de (à préciser) :
+
+Existe-t-il d’autres appareils sur le même support ? (si oui, précisez)
+
+Coordonnées GPS :
+Latitude : ${ctxLat}
+Longitude : ${ctxLng}
+
+📍 Lien Google Maps :
+https://www.google.com/maps?q=${ctxLat},${ctxLng}
+
+Bonne journée,`
+);
+
+  window.location.href = `mailto:arnaud.debaecker@sncf.fr?subject=${subject}&body=${body}`;
+};
+
+function pauseORM() {
+  if (!ormUserEnabled) return;    
+  if (ormIsPaused) return;     
+
+  ormIsPaused = true;
+  if (map.hasLayer(orm)) map.removeLayer(orm);
+}
+
+function resumeORM() {
+  if (!ormUserEnabled) return;   
+  ormIsPaused = false;
+  if (!map.hasLayer(orm)) map.addLayer(orm);
+}
+
+    function pauseSpeed() {
+  if (!speedUserEnabled) return;
+  if (speedIsPaused) return;
+
+  speedIsPaused = true;
+  if (map.hasLayer(speedLayer)) map.removeLayer(speedLayer);
+}
+
+function resumeSpeed() {
+  if (!speedUserEnabled) return;
+
+  speedIsPaused = false;
+  if (!map.hasLayer(speedLayer)) map.addLayer(speedLayer);
+}
+
+map.on("zoomstart", () => {
+  lastZoomTime = performance.now();
+  pauseORM();
+  pauseSpeed();
+  if (ormTimer) clearTimeout(ormTimer);
+  if (speedTimer) clearTimeout(speedTimer);
+});
+
+
+map.on("zoomend", () => {
+  const now = performance.now();
+  const zoomSpeed = now - lastZoomTime;
+
+  let delay = 200;
+  if (zoomSpeed < 120) delay = 900;
+  else if (zoomSpeed < 200) delay = 600;
+  else if (zoomSpeed < 350) delay = 400;
+  else delay = 250;
+
+  if (ormTimer) clearTimeout(ormTimer);
+  ormTimer = setTimeout(() => {
+    resumeORM();
+  }, delay);
+
+  if (speedTimer) clearTimeout(speedTimer);
+  speedTimer = setTimeout(() => {
+    resumeSpeed();
+  }, delay);
+
+  updatePKVisibility();
+});
+
+map.on("movestart", () => {
+  pauseORM();
+  pauseSpeed();
+  if (ormTimer) clearTimeout(ormTimer);
+  if (speedTimer) clearTimeout(speedTimer);
+});
+
+map.on("moveend", () => {
+  if (ormTimer) clearTimeout(ormTimer);
+  ormTimer = setTimeout(() => {
+    resumeORM();
+  }, 350);
+
+  if (speedTimer) clearTimeout(speedTimer);
+  speedTimer = setTimeout(() => {
+    resumeSpeed();
+  }, 350);
+
+  updatePKVisibility(); 
+});
+
+
+let mesureActive = false;
+let mesurePoints = [];
+let mesureLines = [];
+
+    const panel = document.getElementById("measure-panel");
+
+    function formatPK(pk) {
+  const km = Math.floor(pk);
+  const metres = Math.round((pk - km) * 1000);
+  return `PK ${km}+${metres.toString().padStart(3, "0")}`;
+}
+    
+function resetMesure() {
+  mesurePoints.forEach(p => map.removeLayer(p));
+  mesureLines.forEach(l => map.removeLayer(l));
+
+  mesurePoints = [];
+  mesureLines = [];
+
+  panel.style.display = "none";
+document.getElementById("measure-text").textContent = "";
+  mesureActive = false;
+
+  showToast("🧽 Mesure effacée");
+}
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") resetMesure();
+});
+
+document.getElementById("ctx-regle").onclick = () => {
+  closeContextMenu();
+  resetMesure();
+  mesureActive = true;
+  showToast("📏 Mode mesure activé — cliquez pour poser des points");
+};
+    
+let lastTapTime = 0;
+    
+map.on("click", function (e) {
+  if (!mesureActive) return;
+
+  const now = Date.now();
+  if (now - lastTapTime < 300) {
+    resetMesure();
+    return;
+  }
+  lastTapTime = now;
+
+  const latlng = e.latlng;
+  const idx = mesurePoints.length; 
+  const letter = String.fromCharCode(65 + idx);
+
+  const point = L.marker(latlng, {
+    interactive: false,
+    icon: L.divIcon({
+      className: "",
+      html: `
+        <div style="position: relative; transform: translate(-6px, -6px);">
+          <div style="
+            width:12px;height:12px;
+            background:white;border:2px solid black;border-radius:50%;
+          "></div>
+          <div style="
+            position:absolute;
+            top:-16px; left:50%;
+            transform: translateX(-50%);
+            background:rgba(0,0,0,0.7);
+            color:white;
+            padding:1px 4px;
+            border-radius:4px;
+            font-size:11px;
+            font-weight:600;
+            white-space:nowrap;
+          ">${letter}</div>
+        </div>
+      `,
+      iconSize: [12, 12]
+    })
+  }).addTo(map);
+
+  mesurePoints.push(point);
+
+  if (mesurePoints.length >= 2) {
+    const p1 = mesurePoints[mesurePoints.length - 2].getLatLng();
+    const p2 = latlng;
+
+    const line = L.polyline([p1, p2], {
+      color: "red",
+      weight: 3
+    }).addTo(map);
+
+    mesureLines.push(line);
+  }
+
+  updateMeasurePanel();
+});
+
+
+function updateMeasurePanel() {
+  if (mesurePoints.length < 2) return;
+
+  let text = "";
+  let total = 0;
+
+  for (let i = 1; i < mesurePoints.length; i++) {
+    const A = String.fromCharCode(64 + i);      // A, B, C...
+    const B = String.fromCharCode(65 + i);      // B, C, D...
+
+    const d = map.distance(
+      mesurePoints[i - 1].getLatLng(),
+      mesurePoints[i].getLatLng()
+    );
+
+    total += d;
+
+text += `${A} → ${B} : ${formatDistance(d)}\n`;
+  }
+
+  text += "---------------------\n";
+text += `Total : ${formatDistance(total)}`;
+
+document.getElementById("measure-text").textContent = text.trimEnd();
+panel.style.display = "block";
+}
+
+    function formatDistance(m) {
+  if (m < 1000) {
+    return m.toFixed(1) + " m";
+  } else {
+    return (m / 1000).toFixed(2) + " km";
+  }
+}
+    
+</script>
+<div id="legal-footer">
+  Nono Maps v1.15A_PK | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+</div>
+</body>
+</html>
