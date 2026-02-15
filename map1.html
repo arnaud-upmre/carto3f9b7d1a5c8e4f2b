@@ -1623,8 +1623,8 @@ map.addLayer(pkLayer);
 btn.classList.add("active");
 
 updatePKVisibility();
-    
-    showToast(`✅ ${pkData.length} PK prêts`);
+    console.info(`[PK] ${pkData.length} points kilométriques chargés`);
+    showToast("🔍 Zoomez pour afficher davantage de PK");
   } catch (e) {
     console.error("PK load error", e);
     showToast("⚠️ Erreur chargement PK");
