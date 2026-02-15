@@ -14,6 +14,16 @@
 
 <style>
 
+  .leaflet-tooltip {
+  background: rgba(0,0,0,0.75);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  padding: 6px 8px;
+  backdrop-filter: blur(4px);
+}
+
 .pk-label{
   display:inline-block;        
   background:white;
@@ -591,7 +601,7 @@
   </button>
 
     <button class="btn-toggle" onclick="chargerPK(this)">
-  <img src="ico/ligne.webp" alt="PK">
+  <img src="ico/pk.webp" alt="PK">
 </button>
 
   <button class="btn-toggle" id="btn-orm" title="OpenRailwayMap">
@@ -885,20 +895,22 @@ const speedLayer = L.tileLayer(
   }
 );
 
+const planIGNMix = L.tileLayer(
+  "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
+  + "&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&STYLE=normal&FORMAT=image/png"
+  + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
+  {
+    attribution: "© IGN – Géoplateforme",
+    maxZoom: 19,
+    tileSize: 256,
+    crossOrigin: 'anonymous',
+    opacity: 0.4
+  }
+);
+
 const mixte = L.layerGroup([
   orthoIGN,
-  L.tileLayer(
-    "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0"
-    + "&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&STYLE=normal&FORMAT=image/png"
-    + "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
-    {
-      attribution: "© IGN – Géoplateforme",
-      maxZoom: 19,
-      tileSize: 256,
-      crossOrigin: 'anonymous',
-      opacity: 0.4  
-    }
-  )
+  planIGNMix
 ]);
     
 orthoIGN.addTo(map);
@@ -961,8 +973,9 @@ const pnLayer = L.markerClusterGroup({
   zoomToBoundsOnClick: true
 });
 
-    const pkLayer = L.layerGroup();
+const pkLayer = L.layerGroup();
 let pkLoaded = false;
+
 
       pnLayer.on('clusterclick', function (e) {
   const markers = e.layer.getAllChildMarkers();
@@ -1554,11 +1567,10 @@ setTimeout(() => {
     });
 }
 
-
-// ===============================
-// Chargement PK (version stable)
-// ===============================
+//Chargement PK
 let pkData = [];
+let pkMarkersCache = [];
+let pkTimer = null;
 
 async function chargerPK(btn) {
   if (pkLoaded) {
@@ -1570,14 +1582,48 @@ async function chargerPK(btn) {
 
   try {
     const res = await fetch("pk.json");
-    pkData = await res.json();
 
-    pkLoaded = true;
-    map.addLayer(pkLayer);
-    btn.classList.add("active");
+pkData = await res.json();
 
-    updatePKVisibility();
+pkMarkersCache = pkData.map(p => {
+  if (p.lat == null || p.lon == null || p.pk == null) return null;
 
+  const marker = L.marker([p.lat, p.lon], {
+    interactive: true,
+    icon: L.divIcon({
+      className: "",
+      html: `<div class="pk-label">${formatPK(p.pk)}</div>`,
+      iconSize: null,
+      iconAnchor: [0, 0]
+    })
+  });
+
+  marker.bindTooltip(
+    `
+    <div style="font-weight:600;">
+      📍 Ligne ${p.code_ligne ?? "?"}
+    </div>
+    <div>
+      ⛰️ Altitude : ${p.altitude ?? "?"} m
+    </div>
+    `,
+    {
+      direction: "top",
+      offset: [0, -10],
+      opacity: 0.95,
+      sticky: true
+    }
+  );
+
+  return { data: p, marker };
+}).filter(Boolean);
+
+pkLoaded = true;
+map.addLayer(pkLayer);
+btn.classList.add("active");
+
+updatePKVisibility();
+    
     showToast(`✅ ${pkData.length} PK prêts`);
   } catch (e) {
     console.error("PK load error", e);
@@ -1594,10 +1640,8 @@ function updatePKVisibility() {
 
   const bounds = map.getBounds();
 
-let created = 0; 
-pkData.forEach((p) => {
-
-  if (p.lat == null || p.lon == null || p.pk == null) return;
+let created = 0;
+pkMarkersCache.forEach(({ data: p, marker }) => {
 
   const hecto = Math.round(((p.pk % 1) * 10) + 1e-6);
   const km = Math.floor(p.pk);
@@ -1612,24 +1656,20 @@ if (zoom === 14) {
   if (zoom === 17 && hecto % 2 !== 0) return;  // 200 m
   // Z18+ → tout passe
 
-  if (!bounds.contains([p.lat, p.lon])) return;
+if (!bounds.contains(marker.getLatLng())) return;
   
-  const marker = L.marker([p.lat, p.lon], {
-    interactive: false,
-    icon: L.divIcon({
-      className: "",
-      html: `<div class="pk-label">${formatPK(p.pk)}</div>`,
-      iconSize: null,
-      iconAnchor: [0, 0]
-    })
-  });
-
   pkLayer.addLayer(marker);
   created++;
 });
-
-console.debug(`[PK] zoom=${zoom} visibles=${created} / total=${pkData.length}`);
   }
+
+    function schedulePKUpdate(delay = 250) {
+  if (pkTimer) clearTimeout(pkTimer);
+
+  pkTimer = setTimeout(() => {
+    updatePKVisibility();
+  }, delay);
+}
     
     const leftControls = L.control({ position: "topleft" });
 leftControls.onAdd = function() {
@@ -2112,7 +2152,7 @@ map.on("zoomend", () => {
     resumeSpeed();
   }, delay);
 
-  updatePKVisibility();
+schedulePKUpdate(300);
 });
 
 map.on("movestart", () => {
@@ -2133,7 +2173,7 @@ map.on("moveend", () => {
     resumeSpeed();
   }, 350);
 
-  updatePKVisibility(); 
+schedulePKUpdate(300);
 });
 
 
@@ -2273,7 +2313,7 @@ panel.style.display = "block";
     
 </script>
 <div id="legal-footer">
-  Nono Maps v1.15A_PK | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.15.1 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
