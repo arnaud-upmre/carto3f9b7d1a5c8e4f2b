@@ -14,16 +14,19 @@
 
 <style>
 
-  .pk-label{
+.pk-label{
+  display:inline-block;        
   background:white;
   border:1px solid #111;
-  border-radius:3px;
-  padding:1px 4px;
-  font-size:9px;
+  border-radius:4px;
+  padding:1px 6px;
+  font-size:10px;
   font-weight:700;
   color:#111;
   white-space:nowrap;
   box-shadow:0 1px 3px rgba(0,0,0,.25);
+  transform: translate(-50%, -50%); 
+  pointer-events:none;
 }
 
 .popup-share .leaflet-popup-content-wrapper {
@@ -1591,24 +1594,23 @@ function updatePKVisibility() {
 
   const bounds = map.getBounds();
 
-  pkData.forEach(p => {
-    if (!p.lat || !p.lon || p.pk == null) return;
-    if (!bounds.contains([p.lat, p.lon])) return;
+pkData.forEach(p => {
+  if (!p.lat || !p.lon || p.pk == null) return;
+  if (!bounds.contains([p.lat, p.lon])) return;
 
-    const marker = L.marker([p.lat, p.lon], {
-      interactive: false,
-      icon: L.divIcon({
-        className: "",
-html: `<div class="pk-label">${formatPK(p.pk)}</div>`,
-iconSize: [40, 16],
-        iconAnchor: [20, 8]
-      })
-    });
-
-    pkLayer.addLayer(marker);
+  const marker = L.marker([p.lat, p.lon], {
+    interactive: false,
+    icon: L.divIcon({
+      className: "",
+      html: `<div class="pk-label">${formatPK(p.pk)}</div>`,
+      iconSize: null,      
+      iconAnchor: [0, 0] 
+    })
   });
+
+  pkLayer.addLayer(marker);
+});
 }
-   
     
     const leftControls = L.control({ position: "topleft" });
 leftControls.onAdd = function() {
@@ -2252,7 +2254,7 @@ panel.style.display = "block";
     
 </script>
 <div id="legal-footer">
-  Nono Maps v1.15pkA | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.15_beta | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
