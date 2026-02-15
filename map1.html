@@ -1731,14 +1731,11 @@ locateBtn.onclick = () => {
 
       map.setView([lat, lng], 15);
 
-      // une fois localisé : revient état normal (plus blanc)
       setTimeout(() => locateBtn.classList.remove("active"), 250);
     },
     (err) => {
       console.warn("Erreur géoloc:", err);
       alert("Impossible d’obtenir la position.");
-
-      // en cas d'erreur : revient état normal
       locateBtn.classList.remove("active");
     },
     {
@@ -1918,14 +1915,12 @@ function openContextMenu(latlng, containerPoint) {
   ctxLat = latlng.lat;
   ctxLng = latlng.lng;
 
- 
   document.getElementById("ctx-coord").innerHTML =
     `📍 ${ctxLat.toFixed(5)}, ${ctxLng.toFixed(5)}`;
 
   showPing(latlng);
 
   ctxMenu.style.display = "flex";
-
 
   const menuWidth = ctxMenu.offsetWidth;
   const menuHeight = ctxMenu.offsetHeight;
@@ -1949,13 +1944,11 @@ function openContextMenu(latlng, containerPoint) {
   ctxMenu.style.top = top + "px";
   }
 
-
 function closeContextMenu() {
   ctxMenu.style.display = "none";
   ctxSubmenu.style.display = "none";
   hidePing();
 }
-
 
 map.on("contextmenu", function(e) {
   if (mesureActive) return; 
