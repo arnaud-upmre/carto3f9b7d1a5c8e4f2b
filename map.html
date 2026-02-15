@@ -1382,6 +1382,24 @@ const pnClasses = {
   45: "PN privé isolé pour piétons sans portillons",
   46: "PN privé isolé pour piétons avec portillons"
 };
+
+    
+const HDF_BOUNDS = {
+  minLat: 49.0,
+  maxLat: 51.6,
+  minLon: 1.0,
+  maxLon: 4.9
+};
+
+function isInHDF(lat, lon) {
+  return (
+    lat >= HDF_BOUNDS.minLat &&
+    lat <= HDF_BOUNDS.maxLat &&
+    lon >= HDF_BOUNDS.minLon &&
+    lon <= HDF_BOUNDS.maxLon
+  );
+}
+    
     
 appareilsLayer.on('clusterclick', function (e) {
   const markers = e.layer.getAllChildMarkers();
@@ -1505,6 +1523,7 @@ if (Array.isArray(f.geo_point_2d)) {
 }
 
 if (!Number.isFinite(lat) || !Number.isFinite(lon)) return;
+if (!isInHDF(lat, lon)) return;
 
         const classeCode = (f.mnemo || "").replace("CLASSE ", "").trim();
         const classeTexte = pnClasses[classeCode]
