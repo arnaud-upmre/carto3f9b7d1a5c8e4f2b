@@ -1597,7 +1597,10 @@ function updatePKVisibility() {
 const step = getPKStep(zoom);
 
 pkData.forEach((p, i) => {
-  if (i % step !== 0) return;
+const hecto = Math.round((p.pk % 1) * 10); // 0 à 9
+if (zoom === 15 && hecto !== 0) return;       // tous les 1 km
+if (zoom === 16 && hecto % 5 !== 0) return;   // tous les 500 m
+if (zoom === 17 && hecto % 2 !== 0) return;   // tous les 200 m
 if (p.lat == null || p.lon == null || p.pk == null) return;
   if (!bounds.contains([p.lat, p.lon])) return;
 
@@ -2265,7 +2268,7 @@ panel.style.display = "block";
     
 </script>
 <div id="legal-footer">
-  Nono Maps v1.15_1 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.15_2 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
