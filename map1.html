@@ -9,45 +9,21 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
-<link rel="preload" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" as="script" crossorigin="anonymous">
-<link rel="preload" href="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js" as="script">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
 
 <style>
 
-
 .popup-share .leaflet-popup-content-wrapper {
   padding: 0 !important;  
 }
 
-/* On remet un padding propre et centré */
 .popup-share .leaflet-popup-content {
   padding: 12px 16px !important;
   text-align: center !important;
   margin: 0 !important;
   width: 100% !important;
   font-weight: 600;
-}
-  
-.measure-point {
-  width: 10px;
-  height: 10px;
-  background: white;
-  border: 2px solid black;
-  border-radius: 50%;
-}
-
-.measure-label {
-  position: absolute;
-  background: rgba(0,0,0,0.75);
-  color: white;
-  padding: 3px 6px;
-  border-radius: 4px;
-  font-size: 12px;
-  pointer-events: none;
-  white-space: nowrap;
-  transform: translate(-50%, -12px);
 }
   
   #legal-footer {
@@ -368,13 +344,6 @@
   color: #111;
 }
 
-:root {
-  --accent:#4f46e5;
-  --ink:#f9fafb;
-  --glass:rgba(17,19,23,.65);
-  --border:rgba(255,255,255,.12);
-}
-
 .icon-circle {
   width:26px;
   height:26px;
@@ -596,27 +565,27 @@
 
   <div class="fab-options" id="fabOptions">
   <button class="btn-toggle active" onclick="toggleLayer(accesLayer, this, 'Accès routiers')">
-  <img src="ico/acces.png" alt="Accès routiers">
+  <img src="ico/acces.webp" alt="Accès routiers">
   </button>
   
   <button class="btn-toggle active" onclick="toggleLayer(postesLayer, this, 'Postes')">
-  <img src="ico/poste.png" alt="Postes">
+  <img src="ico/poste.webp" alt="Postes">
   </button>
    
   <button class="btn-toggle active" onclick="toggleLayer(appareilsLayer, this, 'Appareils')">
-  <img src="ico/int.png" alt="Appareils">
+  <img src="ico/int.webp" alt="Appareils">
   </button>
     
   <button class="btn-toggle" onclick="chargerPN(this)">
-  <img src="ico/pn.png" alt="Passages à niveau">
+  <img src="ico/pn.webp" alt="Passages à niveau">
   </button>
 
   <button class="btn-toggle" id="btn-orm" title="OpenRailwayMap">
-  <img src="ico/ligne.png" alt="ORM">
+  <img src="ico/ligne.webp" alt="ORM">
   </button>
     
   <button class="btn-toggle" id="btn-speed" title="Vitesses ferroviaires">
-  <img src="ico/160.png" alt="Vitesses">
+  <img src="ico/160.webp" alt="Vitesses">
   </button>
 
   </div>
@@ -685,7 +654,9 @@ function _tryOpenFromURL() {
   if (!isNaN(lat) && !isNaN(lon)) {
     const matches = allMarkers.filter(m => {
       const ll = m.getLatLng();
-      return ll.lat === lat && ll.lng === lon;
+     const EPS = 1e-6;
+return Math.abs(ll.lat - lat) < EPS && Math.abs(ll.lng - lon) < EPS;
+
     });
 
 if (matches.length > 0) {
@@ -714,32 +685,37 @@ map.setView(first, zoom);
 let iconFile = null;
 
 if (marker.options.isAcces) {
-  iconFile = "acces.png";
+  iconFile = "acces.webp";
+
 } else if (id.includes("POSTE")) {
-  iconFile = "poste.png";
-} else {
-if (id.startsWith("DU")) {
-  iconFile = "stop.png";
+  iconFile = "poste.webp";
+
+} else if (id.startsWith("ALIM")) {
+  iconFile = "alim.webp";
+
+} else if (id.startsWith("DU")) {
+  iconFile = "stop.webp";
 
 } else if (
   id.startsWith("I") ||
   id.startsWith("SI") ||
   id.startsWith("D")
 ) {
-  iconFile = "int.png";
+  iconFile = "int.webp";
 
 } else if (
   id.startsWith("TT") ||
   id.startsWith("TSA") ||
   id.startsWith("TC") ||
   id.startsWith("TRA") ||
-  id === "GT1" ||
-  id === "GT2"
+  /^GT[0-9]+$/.test(id) ||
+  /^AT[0-9]+$/.test(id)
 ) {
-  iconFile = "TT.png";
+  iconFile = "TT.webp";
 
 } else if (
-  /^T([1-9]|10)\b/.test(id) ||      // ← FIX !!!
+  /^T\d+(\/\d+)?\b/.test(id) ||
+  id.startsWith("T/") ||
   /^[0-9]/.test(id) ||
   id.startsWith("S") ||
   id.startsWith("ST") ||
@@ -748,11 +724,7 @@ if (id.startsWith("DU")) {
   id.startsWith("FB") ||
   id.startsWith("B")
 ) {
-  iconFile = "sect.png";
-
-} else if (id.startsWith("ALIM")) {
-  iconFile = "alim.png";
-}
+  iconFile = "sect.webp";
 }
 
         return `
@@ -774,9 +746,6 @@ link.addEventListener("click", (ev) => {
   ev.preventDefault();
   const idx = +ev.currentTarget.dataset.idx;
   const target = matches[idx];
-
-  if (postesLayer.hasLayer(target)) incrementCounter();
-  else if (appareilsLayer.hasLayer(target)) incrementCounterAppareil();
 
   const content = target.getPopup() ? target.getPopup().getContent() : "";
   L.popup({ maxWidth: 240 })
@@ -940,7 +909,7 @@ L.control.layers(
       { 
         "🛰️ Satellite IGN": orthoIGN,
         "🛰️ Satellite Open": esriSat,
-        "🗺️ Plan IGN (défaut)": planIGN,
+        "🗺️ Plan IGN": planIGN,
         "🌍 Plan Open": osm,
         "🛰️+🗺️ Mixte": mixte
       },
@@ -954,31 +923,55 @@ L.control.layers(
 
 
 const postesLayer = L.markerClusterGroup({
+  chunkedLoading: true,
+  chunkInterval: 80,
+  chunkDelay: 20,
   disableClusteringAtZoom: 18
 });
 
 const appareilsLayer = L.markerClusterGroup({
-  spiderfyOnMaxZoom: false,    
-  spiderfyOnEveryZoom: false,  
+  chunkedLoading: true,
+  chunkInterval: 80,
+  chunkDelay: 20,
+  spiderfyOnMaxZoom: false,
+  spiderfyOnEveryZoom: false,
   showCoverageOnHover: false,
-  zoomToBoundsOnClick: false,   
-  disableClusteringAtZoom: 22, 
+  zoomToBoundsOnClick: false,
+  disableClusteringAtZoom: 22,
   maxClusterRadius: function (zoom) {
     return zoom > 18 ? 20 : 60;
   }
 });
- 
+
 const accesLayer = L.markerClusterGroup({
+  chunkedLoading: true,
+  chunkInterval: 80,
+  chunkDelay: 20,
   spiderfyOnMaxZoom: false,
   showCoverageOnHover: false,
   zoomToBoundsOnClick: false
 });
 
-    const pnLayer = L.markerClusterGroup({
+const pnLayer = L.markerClusterGroup({
   spiderfyOnMaxZoom: false,
   showCoverageOnHover: false,
   zoomToBoundsOnClick: true
 });
+
+      pnLayer.on('clusterclick', function (e) {
+  const markers = e.layer.getAllChildMarkers();
+  if (!markers.length) return;
+
+  const first = markers[0].getLatLng();
+  const allSameCoords = markers.every(m => m.getLatLng().equals(first));
+
+  if (allSameCoords) {
+    map.setView(first, map.getZoom() + 2);
+  } else {
+    map.fitBounds(e.layer.getBounds());
+  }
+});
+
 
 accesLayer.on('clusterclick', function (e) {
   const childMarkers = e.layer.getAllChildMarkers();
@@ -997,7 +990,7 @@ accesLayer.on('clusterclick', function (e) {
       ${items.map(it => `
         <a href="#" class="cluster-link" data-idx="${it.idx}" 
            style="display:flex;align-items:center;gap:6px;">
-          <img src="ico/acces.png" style="width:16px;height:16px;">
+          <img src="ico/acces.webp" style="width:16px;height:16px;">
           <span>${it.label}</span>
         </a>`).join("")}
     </div>`;
@@ -1013,8 +1006,6 @@ document.querySelectorAll(".leaflet-popup-content a.cluster-link").forEach(link 
     ev.preventDefault();
     const idx = +ev.currentTarget.dataset.idx;
     const target = childMarkers[idx];
-
-    if (accesLayer.hasLayer(target)) incrementCounter();
 
     const content = target.getPopup() ? target.getPopup().getContent() : "";
     L.popup({ maxWidth: 240 })
@@ -1037,22 +1028,43 @@ map.addLayer(appareilsLayer);
 map.addLayer(accesLayer);
 
 const iconPoste = L.divIcon({
-  html: `<img src="ico/poste.png" class="icon-halo">`,
+  html: `<img src="ico/poste.webp" class="icon-halo">`,
   className: "",
   iconSize: [36, 36],
   iconAnchor: [18, 36],   
   popupAnchor: [0, -10]
 });
 
-const iconAppareil= L.divIcon({className:"icon-circle appareil",html:"⚡"});
+const iconAppareilDefault = L.divIcon({className:"icon-circle appareil",html:"⚡"});
 
 const iconAcces = L.divIcon({
-  html: `<img src="ico/acces.png" class="icon-halo">`,
+  html: `<img src="ico/acces.webp" class="icon-halo">`,
   className: "",
   iconSize: [36, 36],
   iconAnchor: [18, 28], 
   popupAnchor: [0, -10]
 });
+
+    function createAppareilIcon(file, iconAnchorY = 12) {
+  return L.divIcon({
+    html: `
+      <div style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;">
+        <img src="ico/${file}" class="icon-halo-appareil" style="width:24px;height:24px;">
+      </div>
+    `,
+    className:"",
+    iconSize:[36,36],
+    iconAnchor:[18,iconAnchorY],
+    popupAnchor:[0,-20]
+  });
+}
+
+const iconAppareilDU = createAppareilIcon("stop.webp", 18);
+const iconAppareilINT = createAppareilIcon("int.webp");
+const iconAppareilTT = createAppareilIcon("TT.webp");
+const iconAppareilSECT = createAppareilIcon("sect.webp");
+const iconAppareilALIM = createAppareilIcon("alim.webp");
+
 
     function formatPortailDisplay(val, secure) {
   const isSecure = secure && secure.trim() !== "";
@@ -1095,7 +1107,6 @@ function renderTelecomPills(v) {
 fetch("postes.json")
   .then(r => r.json())
   .then(data => {
-    window._postesCache = data;
     const seenPostes = new Set();
 
     data.forEach(item => {
@@ -1122,7 +1133,7 @@ let content = `
 
 <span onclick="openStreetView(${item.latitude}, ${item.longitude})"
       style="cursor:pointer; position:absolute; top:10px; right:12px;">
-  <img src="ico/street.png" alt="Street View" style="width:26px; height:26px;">
+  <img src="ico/street.webp" alt="Street View" style="width:26px; height:26px;">
 </span>
              
 <div style="margin-bottom:10px;">
@@ -1223,55 +1234,27 @@ fetch("appareils.json")
       if (!item.latitude || !item.longitude) return;
 
       let appareilIcon;
-      const ref = (item.appareil || "").toUpperCase();
-if (ref.startsWith("DU")) {
-  appareilIcon = L.divIcon({
-    html: `
-      <div style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;">
-        <img src="ico/stop.png" class="icon-halo-appareil" style="width:24px;height:24px;">
-      </div>
-    `,
-    className:"",
-    iconSize:[36,36],
-    iconAnchor:[18,18],
-    popupAnchor:[0,-20]
-  });
+      const ref = (item.appareil || "").toUpperCase().trim();
+
+      if (ref.startsWith("DU")) {
+  appareilIcon = iconAppareilDU;
 
 } else if (ref.startsWith("I") || ref.startsWith("SI") || ref.startsWith("D")) {
-  appareilIcon = L.divIcon({
-    html: `
-      <div style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;">
-        <img src="ico/int.png" class="icon-halo-appareil" style="width:24px;height:24px;">
-      </div>
-    `,
-    className:"",
-    iconSize:[36,36],
-    iconAnchor:[18,12],
-    popupAnchor:[0,-20]
-  });
+  appareilIcon = iconAppareilINT;
 
 } else if (
   ref.startsWith("TT") ||
   ref.startsWith("TSA") ||
   ref.startsWith("TC") ||
-  ref.startsWith("TRA")||
-  ref === "GT1" ||
-  ref === "GT2"
+  ref.startsWith("TRA") ||
+  /^GT[0-9]+$/.test(ref) ||
+  /^AT[0-9]+$/.test(ref)
 ) {
-  appareilIcon = L.divIcon({
-    html: `
-      <div style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;">
-        <img src="ico/TT.png" class="icon-halo-appareil" style="width:24px;height:24px;">
-      </div>
-    `,
-    className:"",
-    iconSize:[36,36],
-    iconAnchor:[18,12],
-    popupAnchor:[0,-20]
-  });
+  appareilIcon = iconAppareilTT;
 
 } else if (
-  /^T([1-9]|10)$/.test(ref) || 
+  /^T\d+(\/\d+)?$/.test(ref) ||
+  ref.startsWith("T/") ||
   /^[0-9]/.test(ref) ||
   ref.startsWith("S") ||
   ref.startsWith("ST") ||
@@ -1280,34 +1263,15 @@ if (ref.startsWith("DU")) {
   ref.startsWith("FB") ||
   ref.startsWith("B")
 ) {
-  appareilIcon = L.divIcon({
-    html: `
-      <div style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;">
-        <img src="ico/sect.png" class="icon-halo-appareil" style="width:24px;height:24px;">
-      </div>
-    `,
-    className:"",
-    iconSize:[36,36],
-    iconAnchor:[18,12],
-    popupAnchor:[0,-20]
-  });
+  appareilIcon = iconAppareilSECT;
 
 } else if (ref.startsWith("ALIM")) {
-  appareilIcon = L.divIcon({
-    html: `
-      <div style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;">
-        <img src="ico/alim.png" class="icon-halo-appareil" style="width:24px;height:24px;">
-      </div>
-    `,
-    className:"",
-    iconSize:[36,36],
-    iconAnchor:[18,12],
-    popupAnchor:[0,-20]
-  });
+  appareilIcon = iconAppareilALIM;
 
 } else {
-  appareilIcon = iconAppareil;
+appareilIcon = iconAppareilDefault;
 }
+
 
       let content = `
 <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
@@ -1423,100 +1387,116 @@ appareilsLayer.on('clusterclick', function (e) {
 
   map.fitBounds(e.layer.getBounds());
 });
+    
 
-let pnLoaded = false; 
+let pnLoaded = false;
+let pnLoading = false;
 
 function chargerPN(btn) {
   console.log("🔄 Déclenchement du chargement PN (lazy load)");
 
+if (pnLoading) {
+  toast.textContent = "⏳ Chargement des passages à niveau en cours...";
+  toast.classList.add("show");
+  return;
+}
+
+  // ✅ déjà chargés → simple toggle
   if (pnLoaded) {
     toggleLayer(pnLayer, btn, "Passages à niveau");
     return;
   }
 
-  pnLoaded = true;
+  // 🚀 PREMIER CHARGEMENT UNIQUEMENT ICI
+  pnLoading = true;
   toast.textContent = "⏳ Chargement des passages à niveau en cours...";
   toast.classList.add("show");
 
-fetch("https://ressources.data.sncf.com/api/records/1.0/search/"
-  + "?dataset=liste-des-passages-a-niveau"
-  + "&geofilter.bbox=49.4,1.4,51.2,4.5"
-  + "&rows=3000")
-  
-  .then(r => r.json())
-  .then(data => {
-      let records = data.records || [];
+  fetch("pn.json")
+    .then(r => r.json())
+    .then(records => {
+      console.info(`✅ ${records.length} PN chargés (pn.json)`);
 
-      console.info(`✅ ${records.length} PN filtrés (Hauts-de-France + 10 km au sud)`);
-  
+      const iconPN = L.divIcon({
+        html: `<img src="ico/pn.webp" class="icon-halo-appareil">`,
+        className: "",
+        iconSize: [24, 24],
+        iconAnchor: [12, 24],
+        popupAnchor: [0, -24]
+      });
+
       records.forEach(pn => {
-        const f = pn.fields;
-        if (!f || !f.geo_point_2d) return;
-        const lat = f.geo_point_2d[0];
-        const lon = f.geo_point_2d[1];
+        const lat = Number(pn.latitude);
+        const lon = Number(pn.longitude);
+        if (!Number.isFinite(lat) || !Number.isFinite(lon)) return;
 
-        const iconPN = L.divIcon({
-          html: `<img src="ico/pn.png" class="icon-halo-appareil">`,
-          className: "",
-          iconAnchor: [16, 32],
-          popupAnchor: [0, -32]
-        });
-
-        const classeCode = (f.mnemo || "").replace("CLASSE ", "").trim();
-        const classeTexte = pnClasses[classeCode]
+const classeCode = Number(pn.classe);
+const classeTexte = pnClasses[classeCode]
           ? `🛑 Classe ${classeCode} : ${pnClasses[classeCode]}`
           : "";
 
-        let libelle = (f.libelle || "").trim();
-        if (/^PN\s*/i.test(libelle)) libelle = libelle.replace(/^PN\s*/i, "");
+        let libelle = (pn.libelle || "").toString().trim();
+        if (/^PN\s*/i.test(libelle)) {
+          libelle = libelle.replace(/^PN\s*/i, "");
+        }
 
         const popup = `
-  <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
-              font-size:14px; color:#111; line-height:1.5; text-align:left;">
-  
-    <div style="font-weight:700; font-size:16px; margin-bottom:8px;">
-      🚧 PN ${libelle}
-    </div>
+<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;
+            font-size:14px; color:#111; line-height:1.5; text-align:left;">
+  <div style="font-weight:700; font-size:16px; margin-bottom:8px;">
+    🚧 PN ${libelle}
+  </div>
+  <div>🚄 PK ${pn.pk || "?"} sur la ligne n°${pn.code_ligne || "?"}</div>
+  ${classeTexte ? `<div>${classeTexte}</div>` : ""}
 
-    <div>🚄 PK ${f.pk || "?"} sur la ligne n°${f.code_ligne || "?"}</div>
-    ${classeTexte ? `<div>${classeTexte}</div>` : ""}
+  <div style="display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:16px;width:100%;">
+    <a href="https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${lat},${lon};"
+       target="_blank"
+       style="display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 16px;border-radius:8px;background:#10b981;color:white;text-decoration:none;font-size:14px;font-weight:500;min-width:180px;">
+      🚄 Voir sur Imajnet
+    </a>
 
-<div style="display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:16px;width:100%;">
-  <a href="https://gecko.imajnet.net/#map=OSM;zoom=18;loc=${f.geo_point_2d[0]},${f.geo_point_2d[1]};"
-     target="_blank"
-     style="display:inline-flex;align-items:center;justify-content:center;
-            gap:6px;padding:10px 16px;border-radius:8px;
-            background:#10b981;color:white;text-decoration:none;
-            font-size:14px;font-weight:500;min-width:180px;">
-    🚄 Voir sur Imajnet
-  </a>
-  <button onclick="openStreetView(${f.geo_point_2d[0]},${f.geo_point_2d[1]})"
-     style="display:inline-flex;align-items:center;justify-content:center;
-            gap:6px;padding:10px 16px;border:none;border-radius:8px;
-            background:#3b82f6;color:white;cursor:pointer;
-            font-size:14px;font-weight:500;min-width:180px;">
-    🌍 Voir en Street View
-  </button>
-</div>
-  </div>`;
+    <button onclick="openStreetView(${lat},${lon})"
+       style="display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 16px;border:none;border-radius:8px;background:#3b82f6;color:white;cursor:pointer;font-size:14px;font-weight:500;min-width:180px;">
+      🌍 Voir en Street View
+    </button>
+  </div>
+</div>`;
 
         const marker = L.marker([lat, lon], { icon: iconPN }).bindPopup(popup);
         pnLayer.addLayer(marker);
         allMarkers.push(marker);
       });
 
+      console.warn("PN dans cluster :", pnLayer.getLayers().length);
+
+      pnLoaded = true;
+      pnLoading = false;
+      console.info("PN layer ready");
+
       toast.textContent = `✅ ${records.length} passages à niveau chargés`;
-      setTimeout(() => {
-        toast.classList.remove("show");
-        toggleLayer(pnLayer, btn, "Passages à niveau");
-      }, 1500);
+
+setTimeout(() => {
+  toast.classList.remove("show");
+
+  map.addLayer(pnLayer);
+  btn.classList.add("active");
+}, 1500);
+      
     })
     .catch(err => {
-      console.error("❌ Erreur API PN SNCF :", err);
-      toast.textContent = "⚠️ Erreur de chargement depuis le site SNCF Open Data";
+      pnLoading = false;
+      pnLoaded = false;
+
+      console.error("❌ Erreur chargement pn.json :", err);
+      toast.textContent = "⚠️ Erreur de chargement du fichier pn.json";
       setTimeout(() => toast.classList.remove("show"), 2500);
     });
 }
+
+
+
+
 
 const leftControls = L.control({ position: "topleft" });
 leftControls.onAdd = function() {
@@ -1549,40 +1529,53 @@ L.DomEvent.disableClickPropagation(recenterBtn);
 L.DomEvent.disableScrollPropagation(recenterBtn);
 
 let userMarker;
-let geoWatchId = null;
+
 const locateBtn = L.DomUtil.create("div", "btn-toggle", topGroup);
 locateBtn.innerHTML = "📍";
 
 locateBtn.onclick = () => {
-  if (!navigator.geolocation) return alert("Géolocalisation non supportée.");
-
-  if (geoWatchId !== null) {
-    navigator.geolocation.clearWatch(geoWatchId);
-    geoWatchId = null;
-    if (userMarker) {
-      map.removeLayer(userMarker);
-      userMarker = null;
-    }
-    locateBtn.classList.remove("active");
+  if (!navigator.geolocation) {
+    alert("Géolocalisation non supportée.");
     return;
   }
 
-  geoWatchId = navigator.geolocation.watchPosition(pos => {
-    const lat = pos.coords.latitude, lng = pos.coords.longitude;
-    if (userMarker) {
-      userMarker.setLatLng([lat, lng]);
-    } else {
-      userMarker = L.circleMarker([lat, lng], {
-        radius: 8,
-        color: "#3b82f6",
-        fillColor: "#3b82f6",
-        fillOpacity: 0.6
-      }).addTo(map);
-    }
-    map.setView([lat, lng], 15);
-  });
-
+  // devient blanc pendant la demande
   locateBtn.classList.add("active");
+
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      const lat = pos.coords.latitude;
+      const lng = pos.coords.longitude;
+
+      if (userMarker) {
+        userMarker.setLatLng([lat, lng]);
+      } else {
+        userMarker = L.circleMarker([lat, lng], {
+          radius: 8,
+          color: "#3b82f6",
+          fillColor: "#3b82f6",
+          fillOpacity: 0.6
+        }).addTo(map);
+      }
+
+      map.setView([lat, lng], 15);
+
+      // une fois localisé : revient état normal (plus blanc)
+      setTimeout(() => locateBtn.classList.remove("active"), 250);
+    },
+    (err) => {
+      console.warn("Erreur géoloc:", err);
+      alert("Impossible d’obtenir la position.");
+
+      // en cas d'erreur : revient état normal
+      locateBtn.classList.remove("active");
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 0
+    }
+  );
 };
 
 L.DomEvent.disableClickPropagation(locateBtn);
@@ -1663,10 +1656,12 @@ document.getElementById("btn-orm").addEventListener("click", function () {
 
   ormUserEnabled = true;
 
-  if (map.hasLayer(speedLayer)) {
-    map.removeLayer(speedLayer);
-    document.getElementById("btn-speed").classList.remove("active");
-  }
+if (map.hasLayer(speedLayer)) {
+  speedUserEnabled = false;
+  map.removeLayer(speedLayer);
+  document.getElementById("btn-speed").classList.remove("active");
+}
+
 
   map.addLayer(orm);
   btn.classList.add("active");
@@ -1839,25 +1834,18 @@ document.getElementById("ctx-share").onclick = () => {
 
     
 
-document.getElementById("ctx-share-copy").onclick = async () => {
-  const longUrl = `${location.origin}${location.pathname}?lat=${ctxLat}&lon=${ctxLng}&z=19&marker=true`;
+document.getElementById("ctx-share-copy").onclick = () => {
+  const url = `${location.origin}${location.pathname}?lat=${ctxLat}&lon=${ctxLng}&z=19&marker=true`;
 
-  try {
-    // Appel API is.gd (format simple = renvoie juste le lien)
-    const response = await fetch(
-      `https://is.gd/create.php?format=simple&url=${encodeURIComponent(longUrl)}`
-    );
+navigator.clipboard.writeText(url)
+  .then(() => {
+    showToast("🔗 Lien copié !");
+  })
+  .catch(() => {
+    showToast("⚠️ Copie impossible");
+  });
 
-    const shortUrl = await response.text();
-
-    await navigator.clipboard.writeText(shortUrl);
-
-    showToast("🔗 Lien court copié !");
-  } catch (err) {
-    showToast("⚠️ Erreur : impossible de créer le lien court");
-  }
 };
-
 
     
 
@@ -1976,9 +1964,11 @@ function resumeSpeed() {
 map.on("zoomstart", () => {
   lastZoomTime = performance.now();
   pauseORM();
-  pauseSpeed();   
+  pauseSpeed();
   if (ormTimer) clearTimeout(ormTimer);
+  if (speedTimer) clearTimeout(speedTimer);
 });
+
 
 map.on("zoomend", () => {
   const now = performance.now();
@@ -2004,9 +1994,11 @@ map.on("zoomend", () => {
 
 map.on("movestart", () => {
   pauseORM();
-  pauseSpeed(); 
+  pauseSpeed();
   if (ormTimer) clearTimeout(ormTimer);
+  if (speedTimer) clearTimeout(speedTimer);
 });
+
   
 
 map.on("moveend", () => {
@@ -2155,7 +2147,7 @@ panel.style.display = "block";
     
 </script>
 <div id="legal-footer">
-  Nono Maps v1.13.5 | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
+  Nono Maps v1.15.2PN | © IGN – Géoplateforme, © OpenRailwayMap & OpenStreetMap contributors · SNCF Open Data
 </div>
 </body>
 </html>
