@@ -1669,15 +1669,17 @@ function updatePKVisibility() {
   const bounds = map.getBounds();
   let created = 0;
 
-  // 🎯 nouvelle grille intelligente
+  // 🎯 ta nouvelle grille
   let step = 0;
 
-  if (zoom === 11) step = 10000;     // 10 km
-  else if (zoom === 12) step = 5000; // 5 km
-  else if (zoom === 13) step = 2000; // 2 km
-  else if (zoom === 14) step = 1000; // 1 km
-  else if (zoom === 15) step = 500;  // 500 m
-  else step = 0; // Z16+
+  if (zoom === 11) step = 15000;     // 15 km
+  else if (zoom === 12) step = 10000; // 10 km
+  else if (zoom === 13) step = 5000;  // 5 km
+  else if (zoom === 14) step = 2000;  // 2 km
+  else if (zoom === 15) step = 1000;  // 1 km
+  else if (zoom === 16) step = 500;   // 500 m
+  else if (zoom === 17) step = 200;   // 200 m
+  else step = 0; // Z18+
 
   const TOLERANCE = 50;
 
