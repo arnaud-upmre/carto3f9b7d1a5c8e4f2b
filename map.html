@@ -1662,35 +1662,44 @@ function updatePKVisibility() {
 
   const zoom = map.getZoom();
   pkLayer.clearLayers();
-  if (zoom < 14) return;
-
-  const bounds = map.getBounds();
-
-let created = 0;
-
-pkMarkersCache.forEach(({ data: p, marker }) => {
-
-  const zoom = map.getZoom();
-  const metres = Math.round(p.pk * 1000);
 
   // 🚫 rien avant Z10
   if (zoom < 10) return;
 
-  // 🎯 règles par zoom
-  if (zoom === 10 && metres % 2000 !== 0) return;
-  if (zoom === 11 && metres % 1500 !== 0) return;
-  if (zoom === 12 && metres % 1000 !== 0) return;
-  if (zoom === 13 && metres % 800 !== 0) return;
-  if (zoom === 14 && metres % 400 !== 0) return;
-  if (zoom === 15 && metres % 200 !== 0) return;
-  // Z16+ → tout passe
+  const bounds = map.getBounds();
+  let created = 0;
 
-  if (!bounds.contains(marker.getLatLng())) return;
+  // 🎯 déterminer le pas cible selon le zoom
+  let step = 0; // 0 = tout afficher
 
-  pkLayer.addLayer(marker);
-  created++;
-});
+  if (zoom === 10) step = 2000;
+  else if (zoom === 11) step = 1500;
+  else if (zoom === 12) step = 1000;
+  else if (zoom === 13) step = 800;
+  else if (zoom === 14) step = 400;
+  else if (zoom === 15) step = 200;
+  else step = 0; // Z16+
+
+  pkMarkersCache.forEach(({ data: p, marker }) => {
+    const metres = Math.round(p.pk * 1000);
+
+    // ✅ filtrage robuste (tolérant aux datasets imparfaits)
+    if (step > 0) {
+      const index = Math.round(metres / step);
+      if (Math.abs(metres - index * step) > step / 2) return;
+    }
+
+    // ✅ filtrage viewport
+    if (!bounds.contains(marker.getLatLng())) return;
+
+    pkLayer.addLayer(marker);
+    created++;
+  });
+
+  // 🔍 debug console
+  console.debug(`[PK] affichés: ${created} (zoom ${zoom})`);
 }
+
 
     function schedulePKUpdate(delay = 250) {
   if (pkTimer) clearTimeout(pkTimer);
