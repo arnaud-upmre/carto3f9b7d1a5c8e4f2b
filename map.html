@@ -1663,30 +1663,27 @@ function updatePKVisibility() {
   const zoom = map.getZoom();
   pkLayer.clearLayers();
 
-  // 🚫 rien avant Z10
-  if (zoom < 10) return;
+  // 🚫 rien avant Z11
+  if (zoom < 11) return;
 
   const bounds = map.getBounds();
   let created = 0;
 
-  // 🎯 pas cible selon zoom
+  // 🎯 nouvelle grille intelligente
   let step = 0;
 
-  if (zoom === 10) step = 2000;
-  else if (zoom === 11) step = 1500;
-  else if (zoom === 12) step = 1000;
-  else if (zoom === 13) step = 800;
-  else if (zoom === 14) step = 400;
-  else if (zoom === 15) step = 200;
+  if (zoom === 11) step = 10000;     // 10 km
+  else if (zoom === 12) step = 5000; // 5 km
+  else if (zoom === 13) step = 2000; // 2 km
+  else if (zoom === 14) step = 1000; // 1 km
+  else if (zoom === 15) step = 500;  // 500 m
   else step = 0; // Z16+
 
-  // 🎯 tolérance stricte (en mètres)
   const TOLERANCE = 50;
 
   pkMarkersCache.forEach(({ data: p, marker }) => {
     const metres = Math.round(p.pk * 1000);
 
-    // ✅ filtrage strict mais robuste
     if (step > 0) {
       const index = Math.round(metres / step);
       if (Math.abs(metres - index * step) > TOLERANCE) return;
