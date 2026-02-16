@@ -1663,22 +1663,28 @@ function updatePKVisibility() {
   const zoom = map.getZoom();
   pkLayer.clearLayers();
 
+  // 📱 détection mobile
+  const isMobile = window.innerWidth < 768;
+
+  // 🔥 zoom effectif (mobile = +1 niveau de détail)
+  const effectiveZoom = zoom + (isMobile ? 1 : 0);
+
   // 🚫 rien avant Z11
-  if (zoom < 11) return;
+  if (effectiveZoom < 11) return;
 
   const bounds = map.getBounds();
   let created = 0;
 
-  // 🎯 ta nouvelle grille
+  // 🎯 ta grille
   let step = 0;
 
-  if (zoom === 11) step = 15000;     // 15 km
-  else if (zoom === 12) step = 10000; // 10 km
-  else if (zoom === 13) step = 5000;  // 5 km
-  else if (zoom === 14) step = 2000;  // 2 km
-  else if (zoom === 15) step = 1000;  // 1 km
-  else if (zoom === 16) step = 500;   // 500 m
-  else if (zoom === 17) step = 200;   // 200 m
+  if (effectiveZoom === 11) step = 15000;     // 15 km
+  else if (effectiveZoom === 12) step = 10000; // 10 km
+  else if (effectiveZoom === 13) step = 5000;  // 5 km
+  else if (effectiveZoom === 14) step = 2000;  // 2 km
+  else if (effectiveZoom === 15) step = 1000;  // 1 km
+  else if (effectiveZoom === 16) step = 500;   // 500 m
+  else if (effectiveZoom === 17) step = 200;   // 200 m
   else step = 0; // Z18+
 
   const TOLERANCE = 50;
@@ -1697,7 +1703,7 @@ function updatePKVisibility() {
     created++;
   });
 
-  console.debug(`[PK] affichés: ${created} (zoom ${zoom})`);
+  console.debug(`[PK] affichés: ${created} (zoom ${zoom}, eff ${effectiveZoom})`);
 }
 
 
