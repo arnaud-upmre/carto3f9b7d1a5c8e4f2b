@@ -1667,27 +1667,29 @@ function updatePKVisibility() {
   const bounds = map.getBounds();
 
 let created = 0;
+
 pkMarkersCache.forEach(({ data: p, marker }) => {
 
-  const hecto = Math.round(((p.pk % 1) * 10) + 1e-6);
-  const km = Math.floor(p.pk);
+  const zoom = map.getZoom();
+  const metres = Math.round(p.pk * 1000);
 
-if (zoom === 14) {
-  if (hecto !== 0) return;      // uniquement PK kilométriques
-  if (km % 2 !== 0) return;     // tous les 2 km
-}
+  // 🚫 rien avant Z10
+  if (zoom < 10) return;
 
-  if (zoom === 15 && hecto !== 0) return;      // 1 km
-  if (zoom === 16 && hecto % 5 !== 0) return;  // 500 m
-  if (zoom === 17 && hecto % 2 !== 0) return;  // 200 m
-  // Z18+ → tout passe
+  // 🎯 règles par zoom
+  if (zoom === 10 && metres % 2000 !== 0) return;
+  if (zoom === 11 && metres % 1500 !== 0) return;
+  if (zoom === 12 && metres % 1000 !== 0) return;
+  if (zoom === 13 && metres % 800 !== 0) return;
+  if (zoom === 14 && metres % 400 !== 0) return;
+  if (zoom === 15 && metres % 200 !== 0) return;
+  // Z16+ → tout passe
 
-if (!bounds.contains(marker.getLatLng())) return;
-  
+  if (!bounds.contains(marker.getLatLng())) return;
+
   pkLayer.addLayer(marker);
   created++;
 });
-  }
 
     function schedulePKUpdate(delay = 250) {
   if (pkTimer) clearTimeout(pkTimer);
