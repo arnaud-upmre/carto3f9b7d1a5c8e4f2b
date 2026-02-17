@@ -4051,6 +4051,16 @@
    "type": "SST",
    "SAT": "",
    "accès": "",
+   "appareil": "TT Pont de briques - Dannes V1",
+   "latitude": 50.683758011620455,
+   "longitude": 1.624667388973813,
+   "description": ""
+},
+   {
+   "nom": "Pont de briques",
+   "type": "SST",
+   "SAT": "",
+   "accès": "",
    "appareil": "SIS",
    "latitude": 50.683805030237494,
    "longitude": 1.624568508841451,
@@ -4062,7 +4072,7 @@
    "type": "SST",
    "SAT": "",
    "accès": "",
-   "appareil": "TT Pont de briques -  Hauteville V1",
+   "appareil": "TT Pont de briques - Hauteville V1",
    "latitude": 50.683805030237494,
    "longitude": 1.624568508841451,
    "description": ""
@@ -4072,17 +4082,17 @@
    "type": "SST",
    "SAT": "",
    "accès": "",
-   "appareil": "TT5622",
+   "appareil": "TT Pont de briques - Dannes V2",
    "latitude": 50.683726636643975,
    "longitude": 1.6247210230703768,
-   "description": "S.Sr Pont de Briques - Dannes V2"
+   "description": ""
 },
    {
    "nom": "Pont de briques",
    "type": "SST",
    "SAT": "",
    "accès": "",
-   "appareil": "Tt Pt Briques - Hauteville V2",
+   "appareil": "TT Pont de briques - Hauteville V2",
    "latitude": 50.6837768469079,
    "longitude": 1.6246046780514383,
    "description": ""
