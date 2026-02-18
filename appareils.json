@@ -4051,10 +4051,10 @@
    "type": "SST",
    "SAT": "",
    "accès": "",
-   "appareil": "TT Pont de briques - Dannes V1",
+   "appareil": "TT 5621",
    "latitude": 50.683758011620455,
    "longitude": 1.624667388973813,
-   "description": ""
+   "description": "S.sr Pont de briques - Dannes V1"
 },
    {
    "nom": "Pont de briques",
@@ -4072,30 +4072,30 @@
    "type": "SST",
    "SAT": "",
    "accès": "",
-   "appareil": "TT Pont de briques - Hauteville V1",
+   "appareil": "TT 5733",
    "latitude": 50.683805030237494,
    "longitude": 1.624568508841451,
-   "description": ""
+   "description": "S.sr Pont de briques - Hauteville V1"
 },
    {
    "nom": "Pont de briques",
    "type": "SST",
    "SAT": "",
    "accès": "",
-   "appareil": "TT Pont de briques - Dannes V2",
+   "appareil": "TT 5622",
    "latitude": 50.683726636643975,
    "longitude": 1.6247210230703768,
-   "description": ""
+   "description": "S.sr Pont de briques - Dannes V2"
 },
    {
    "nom": "Pont de briques",
    "type": "SST",
    "SAT": "",
    "accès": "",
-   "appareil": "TT Pont de briques - Hauteville V2",
+   "appareil": "TT 5732",
    "latitude": 50.6837768469079,
    "longitude": 1.6246046780514383,
-   "description": ""
+   "description": "S.sr Pont de briques - Hauteville V2"
 },
   {
     "nom": "Quilleval",
