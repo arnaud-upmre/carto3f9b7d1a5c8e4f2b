@@ -3,10 +3,10 @@
 <head>
   <meta name="robots" content="noindex, nofollow" />
   <meta charset="UTF-8" />
-<title>Nono Maps</title>
+<title>ALICE</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
  
-  <meta property="og:title" content="Nono Maps">
+  <meta property="og:title" content="ALICE">
   <meta property="og:description" content="Application de Localisation des Installations de Conduite des EALE">
   <meta property="og:image" content="https://arnaud-upmre.github.io/carto3f9b7d1a5c8e4f2b/icon-512.png">
   <meta property="og:type" content="website">
@@ -26,7 +26,7 @@
   <meta name="mobile-web-app-capable" content="yes"> 
   <meta name="apple-mobile-web-app-capable" content="yes"> 
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="Nono Maps">
+  <meta name="apple-mobile-web-app-title" content="ALICE">
 
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
    
@@ -2381,7 +2381,7 @@ function formatInformations(val) {
 </div>
 <footer class="about-footer">
   <a href="arnaud.html" class="footer-link">🔧 À propos</a>
-  <a href="version.html" class="footer-link version">📌 Nono Maps V1.15.1</a>
+  <a href="version.html" class="footer-link version">📌 ALICE V1.15.1</a>
 </footer>
 
   <script>
@@ -2612,53 +2612,43 @@ function getDistance(lat1, lon1, lat2, lon2) {
   <div class="alice-popup">
     <img src="alice.webp" alt="ALICE logo" />
     
-    <h3>🔔 NonoMaps évolue</h3>
+<h3>🔔 Nouvelle interface disponible</h3>
 
-    <p>
-      NonoMaps va prochainement devenir <strong>ALICE</strong><br>
-      <em>
-        <strong>A</strong>pplication de <strong>L</strong>ocalisation des 
-        <strong>I</strong>nstallations de <strong>C</strong>onduite 
-        <strong>E</strong>ALE
-      </em><br><br>
-      L’interface va évoluer prochainement.
-    </p>
+<p>
+  Bienvenue sur <strong>ALICE</strong><br>
+  <em>Application de Localisation des Installations de Conduite EALE</em><br><br>
+  👉 Une version modernisée, plus fluide et renforcée pour les usages professionnels.
+</p>
 
-    <button id="alice-close" class="alice-btn">Compris</button>
+<button id="alice-close" class="alice-btn">
+  🚀 Accéder à ALICE
+</button>
   </div>
 </div>
 
 <script>
-/* ===== POPUP ALICE (affichage unique) ===== */
 (function(){
-
-  const KEY = "alice_transition_seen_v1";
   const overlay = document.getElementById("alice-overlay");
   const btnClose = document.getElementById("alice-close");
-
   if (!overlay) return;
 
-  // Affichage une seule fois
-  if (!localStorage.getItem(KEY)) {
-    setTimeout(() => {
-      overlay.style.display = "flex";
-    }, 700);
-  }
+  overlay.style.display = "flex";
 
-  // Fermeture bouton
+  // ✅ bloque le scroll derrière
+  document.documentElement.style.overflow = "hidden";
+  document.body.style.overflow = "hidden";
+
+  // ✅ bloque clic sur fond (par sécurité)
+  overlay.addEventListener("click", (e) => e.stopPropagation(), true);
+
+  // ✅ optionnel : bloque ESC
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") e.preventDefault();
+  }, { passive:false });
+
   btnClose?.addEventListener("click", () => {
-    overlay.style.display = "none";
-    localStorage.setItem(KEY, "1");
+    window.location.href = "https://arnaud-upmre.github.io/ALICE";
   });
-
-  // clic en dehors
-  overlay.addEventListener("click", (e) => {
-    if (e.target === overlay) {
-      overlay.style.display = "none";
-      localStorage.setItem(KEY, "1");
-    }
-  });
-
 })();
 </script>
 
