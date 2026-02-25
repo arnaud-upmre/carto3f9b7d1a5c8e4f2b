@@ -2642,19 +2642,17 @@ function getDistance(lat1, lon1, lat2, lon2) {
   });
 
   popup.addEventListener("click", (e) => e.stopPropagation());
+btnClose.addEventListener("click", (e) => {
+  e.preventDefault();
 
-  btnClose.addEventListener("click", (e) => {
-    e.preventDefault();
-    const url = "https://arnaud-upmre.github.io/ALICE/";
+  const fallback = "https://arnaud-upmre.github.io/ALICE/";
+  const intentUrl =
+    "intent://arnaud-upmre.github.io/ALICE/#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=" +
+    encodeURIComponent(fallback) +
+    ";end";
 
-    const a = document.createElement("a");
-    a.href = url;
-    a.target = "_blank";
-    a.rel = "noopener noreferrer external";
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-  });
+  window.location.href = intentUrl;
+});
 
   window.addEventListener("keydown", (e) => {
     if (e.key === "Escape") e.preventDefault();
