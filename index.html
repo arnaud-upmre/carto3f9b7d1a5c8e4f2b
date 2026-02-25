@@ -2634,28 +2634,28 @@ function getDistance(lat1, lon1, lat2, lon2) {
   if (!overlay || !popup || !btnClose) return;
 
   overlay.style.display = "flex";
-
-  // bloque le scroll derrière
   document.documentElement.style.overflow = "hidden";
   document.body.style.overflow = "hidden";
 
-  // clic sur le fond (overlay) = ne fait rien
   overlay.addEventListener("click", (e) => {
-    if (e.target === overlay) {
-      e.preventDefault();
-    }
+    if (e.target === overlay) e.preventDefault();
   });
 
-  // clic dans la popup = ne remonte pas au fond
   popup.addEventListener("click", (e) => e.stopPropagation());
 
-  // bouton => redirection
   btnClose.addEventListener("click", (e) => {
     e.preventDefault();
-    window.location.assign("https://arnaud-upmre.github.io/ALICE");
+    const url = "https://arnaud-upmre.github.io/ALICE/";
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer external";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
   });
 
-  // optionnel : bloque ESC
   window.addEventListener("keydown", (e) => {
     if (e.key === "Escape") e.preventDefault();
   }, { passive:false });
